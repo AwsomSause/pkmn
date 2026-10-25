@@ -1,0 +1,17 @@
+{
+  "id": "gen9-baseline",
+  "description": "Modern (Gen 9-style) single-battle mechanics without IVs, EVs, natures, abilities or held items. Director decision D2.",
+  "critMultiplier": 1.5,
+  "critChanceByStage": [0.041666666666666664, 0.125, 0.5, 1],
+  "stabMultiplier": 1.5,
+  "randomFactorMin": 85,
+  "burnAttackMultiplier": 0.5,
+  "burnResidualFraction": 0.0625,
+  "poisonResidualFraction": 0.125,
+  "paralysisSpeedMultiplier": 0.5,
+  "fullParalysisChance": 0.25,
+  "freezeThawChance": 0.2,
+  "sleepTurnsMin": 1,
+  "sleepTurnsMax": 3,
+  "struggleMoveId": "struggle"
+}

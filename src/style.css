@@ -1,0 +1,63 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #05080f;
+  overflow: hidden;
+}
+
+#game {
+  width: 100vw;
+  height: 100vh;
+}
+
+#game canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#fatal-error {
+  position: fixed;
+  inset: 20px;
+  padding: 20px;
+  background: #3a0d0d;
+  color: #ffd8d8;
+  font: 16px/1.4 monospace;
+  white-space: pre-wrap;
+  border: 2px solid #ff6b6b;
+  overflow: auto;
+}
+
+#debug-panel {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  width: 340px;
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  background: rgba(10, 14, 24, 0.94);
+  color: #dfe6f0;
+  font: 12px/1.4 monospace;
+  border: 1px solid #4a5670;
+  border-radius: 6px;
+  padding: 10px;
+  z-index: 10;
+}
+
+#debug-panel h3 {
+  margin: 8px 0 4px;
+  font-size: 12px;
+  color: #ffd166;
+}
+
+#debug-panel button,
+#debug-panel select,
+#debug-panel input {
+  font: 12px monospace;
+  margin: 2px 2px 2px 0;
+}
+
+#debug-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
