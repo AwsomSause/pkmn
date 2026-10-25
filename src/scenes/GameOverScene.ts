@@ -18,27 +18,28 @@ export class GameOverScene extends Phaser.Scene {
     const { session } = services();
     const run = session.run;
     this.add.text(GAME_WIDTH / 2, 80, 'Your run has ended', textStyle(52, COLORS.textLight)).setOrigin(0.5);
-    drawPanel(this, GAME_WIDTH / 2 - 260, 140, 520, 230);
+    drawPanel(this, GAME_WIDTH / 2 - 260, 130, 520, 256);
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];
       const leadName = lead ? `${session.content.species.get(lead.speciesId)?.name} (Lv${lead.level})` : '—';
       this.add.text(
         GAME_WIDTH / 2 - 230,
-        160,
+        146,
         [
           `Trainer: ${archetype}`,
           `Starter: ${leadName}`,
           `Encounters cleared: ${run.encountersCompleted}`,
           `Rewards taken: ${run.log.rewardsTaken.length}`,
           `Money earned: ₽${run.money}`,
+          `Candies earned: ${run.candies} (kept)`,
           `Seed: ${run.seed}`,
         ].join('\n'),
         textStyle(26, COLORS.text, { lineSpacing: 6 }),
       );
     }
     this.add
-      .text(GAME_WIDTH / 2, 392, 'Permanent rewards for runs arrive in a later milestone.\nYour profile statistics were saved.', textStyle(18, '#8090a8', { align: 'center' }))
+      .text(GAME_WIDTH / 2, 392, 'Candies go to your profile. Spending them arrives in a later milestone.\nYour profile statistics were saved.', textStyle(18, '#8090a8', { align: 'center' }))
       .setOrigin(0.5, 0);
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,

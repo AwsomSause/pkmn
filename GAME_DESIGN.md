@@ -131,17 +131,17 @@ Each has permanent value + run modifier → effective value, clamped to 0–100 
 - **D5 Starter pool for the prototype.** Decided (2026-10-25): ~12 hand-picked Gen 1 first-stage Pokémon for now.
 
 **Needed before later milestones**
-- **D1 Campaign length.** ~1,600 encounters per full run. Keep it, or shrink (e.g. fewer levels per stage or fewer stages per region)? I'll build it so these numbers are config values either way.
-- **D6 Regions.** Are the nine regions Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar, Paldea? What is the Grand Region (all species? a mix?), and is its 8-stage structure right?
-- **D7 Candies.** What are candies for? (Leveling up? Evolving? Shop currency?)
-- **D8 Luck formula and shiny rules.** Shiny odds, and how much a shiny adds to Luck.
-- **D9 Attribute effects.** Exact formula for each of the ten. Are Rage/Peace and Good/Evil opposite ends of one meter, or independent?
-- **D10 Permanent attributes.** How are permanent attribute points earned?
-- **D11 Bank.** What can bank currency buy, and what are the deposit/withdraw rules?
-- **D12 Trainer unlocks.** Which trainers come next and how are they unlocked?
-- **D13 Elite Four rewards.** A reward draft after each Elite Four member, or only after the champion?
-- **D14 Level caps.** Level range per region (e.g. region 1 caps at 20, region 9 at 100). Pokémon cap at level 100, so the later regions and the Grand Region need a different way to get harder.
-- **D15 Evolution timing.** Standard level-up evolution, or roguelike-style item/candy evolution?
+- **D1 Campaign length.** Decided (2026-10-25): keep the full length (9 regions × 8 stages × 20 levels, plus the Grand Region).
+- **D6 Regions.** Decided (2026-10-25): the regions are a mix of the original regions and custom regions. Every gym leader, Elite Four member and champion is chosen at random, and none repeats within one run. *(Still open: the list of custom regions, and what the Grand Region contains.)*
+- **D7 Candies.** Decided (2026-10-25): candies are a permanent currency spent outside a run (unlocking trainers, starting buffs, etc.). Candies earned in a run are added to the profile when the run ends.
+- **D8 Shiny odds.** Decided (2026-10-25): 1/2000 per wild Pokémon. *(Still open: the luck formula and how much a shiny adds to Luck.)*
+- **D9 Attribute meters.** Decided (2026-10-25): Rage/Peace and Good/Evil are each one meter with two ends. *(Still open: exact formulas for each attribute's effects.)*
+- **D10 Permanent attributes.** Decided (2026-10-25): earned through actions such as catching Pokémon of certain types, battling, healing and Pokémon interactions. *(Exact action → attribute amounts to be proposed in Milestone 7.)*
+- **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Deposit rules and fees to be proposed in Milestone 5.)*
+- **D12 Trainer unlocks.** Decided (2026-10-25): future trainers include Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker and more. *(Unlock conditions and pros/cons to be proposed in Milestone 5.)*
+- **D13 Elite Four rewards.** Decided (2026-10-25): a reward draft after each Elite Four member.
+- **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. *(Question for the director: that passes level 100 in region 3. Should levels go above 100, as in PokeRogue? To confirm before Milestone 4.)*
+- **D15 Evolution.** Decided (2026-10-25): standard level-up evolution.
 
 ## 13. Assets: what you supplied
 

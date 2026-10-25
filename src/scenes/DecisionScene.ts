@@ -1,0 +1,215 @@
+// Choices the run waits on between battles, one at a time:
+//   - a Pokémon wants to learn a move but already knows four
+//   - a Pokémon was caught: add it, replace a party member, or release it
+// Replacing, releasing and forgetting can't be undone, so each asks to confirm.
+
+import Phaser from 'phaser';
+import { candiesForRelease } from '../core/encounters';
+import { calcStats, getSpecies } from '../core/pokemon';
+import type { DecisionChoice } from '../core/run';
+import type { PokemonInstance } from '../core/state';
+import { services } from '../game/services';
+import { playMusic, playSfx } from '../ui/audio';
+import { onInputAction, type InputAction } from '../ui/input';
+import { partyRows, Picker } from '../ui/partyPanel';
+import { pokemonVisual } from '../ui/sprites';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
+import { drawPanel, Menu } from '../ui/widgets';
+import { sceneForRun } from './routing';
+
+export class DecisionScene extends Phaser.Scene {
+  private menu: Menu | null = null;
+  private picker: Picker | null = null;
+  private confirmMenu: Menu | null = null;
+  private confirmLayer: Phaser.GameObjects.Container | null = null;
+  private done = false;
+
+  constructor() {
+    super('Decision');
+  }
+
+  create(): void {
+    const { session } = services();
+    const run = session.run!;
+    const decision = run.pending[0]!;
+    this.menu = null;
+    this.picker = null;
+    this.confirmMenu = null;
+    this.confirmLayer = null;
+    this.done = false;
+    playMusic(this, 'bgm.menu');
+
+    onInputAction(this, (a) => this.handleInput(a));
+    if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);
+    else this.buildCaught(decision.mon);
+  }
+
+  private handleInput(action: InputAction): void {
+    if (this.done) return;
+    if (this.confirmMenu) this.confirmMenu.handle(action);
+    else if (this.picker) this.picker.handle(action);
+    else this.menu?.handle(action);
+  }
+
+  private resolve(choice: DecisionChoice): void {
+    if (this.done) return;
+    this.done = true;
+    const result = services().session.resolveDecision(choice);
+    this.closeConfirm();
+    this.picker?.close();
+    this.picker = null;
+    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.75).setOrigin(0).setDepth(150);
+    this.add
+      .text(GAME_WIDTH / 2, GAME_HEIGHT / 2, result.message, textStyle(30, COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
+      .setOrigin(0.5)
+      .setDepth(151);
+    this.time.delayedCall(1300, () => this.scene.start(sceneForRun(result.run)));
+  }
+
+  /** A Yes/No box over the screen. */
+  private confirm(text: string, onYes: () => void): void {
+    const layer = this.add.container(0, 0).setDepth(120);
+    layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive());
+    layer.add(drawPanel(this, 160, 170, GAME_WIDTH - 320, 200));
+    layer.add(this.add.text(GAME_WIDTH / 2, 190, text, textStyle(26, COLORS.text, { align: 'center', wordWrap: { width: GAME_WIDTH - 380 } })).setOrigin(0.5, 0));
+    this.confirmLayer = layer;
+    this.confirmMenu = new Menu(this, {
+      x: GAME_WIDTH / 2 - 140,
+      y: 310,
+      options: [{ label: 'Yes' }, { label: 'No' }],
+      columns: 2,
+      itemWidth: 160,
+      fontSize: 30,
+      onSelect: (i) => (i === 0 ? onYes() : this.closeConfirm()),
+      onBack: () => this.closeConfirm(),
+    });
+    this.confirmMenu.container.setDepth(121);
+    // Default to "No" for choices that can't be undone.
+    this.confirmMenu.focus(1, false);
+  }
+
+  private closeConfirm(): void {
+    this.confirmMenu?.destroy();
+    this.confirmMenu = null;
+    this.confirmLayer?.destroy();
+    this.confirmLayer = null;
+  }
+
+  // ---------- learning a move ----------
+
+  private buildLearnMove(uid: string, moveId: string): void {
+    const { session } = services();
+    const content = session.content;
+    const mon = session.run!.party.find((p) => p.uid === uid);
+    const newMove = content.moves.get(moveId)!;
+    if (!mon) {
+      this.resolve({ kind: 'skipMove' });
+      return;
+    }
+    const name = getSpecies(content, mon.speciesId).name;
+    pokemonVisual(this, getSpecies(content, mon.speciesId), 'front', 150, 260, 3, mon.shiny);
+    this.add.text(300, 40, `${name} wants to learn ${newMove.name}!`, textStyle(34, COLORS.textLight));
+    this.add.text(300, 86, 'But it already knows four moves. Forget one to make room?', textStyle(22, '#c8d0e0'));
+    const describe = (id: string, pp?: number) => {
+      const m = content.moves.get(id)!;
+      const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
+      return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${pp ?? m.pp}/${m.pp}`;
+    };
+    drawPanel(this, 300, 124, 620, 70, { fill: COLORS.panelDark, border: TYPE_COLORS[newMove.type] ?? 0x808080 });
+    this.add.text(320, 132, `NEW: ${newMove.name}`, textStyle(24, COLORS.textLight));
+    this.add.text(320, 162, describe(moveId), textStyle(18, '#c8d0e0'));
+
+    const options = [
+      ...mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, detail: describe(slot.id, slot.pp) })),
+      { label: `Don't learn ${newMove.name}` },
+    ];
+    drawPanel(this, 300, 210, 620, 310);
+    this.menu = new Menu(this, {
+      x: 316,
+      y: 222,
+      options,
+      itemHeight: 58,
+      itemWidth: 600,
+      fontSize: 24,
+      onSelect: (i) => {
+        if (i >= mon.moves.length) {
+          this.confirm(`Give up on learning ${newMove.name}?`, () => this.resolve({ kind: 'skipMove' }));
+          return;
+        }
+        const old = content.moves.get(mon.moves[i]!.id)!;
+        this.confirm(`${name} will forget ${old.name} and learn ${newMove.name}. OK?`, () => this.resolve({ kind: 'forgetMove', moveIndex: i }));
+      },
+    });
+  }
+
+  // ---------- a caught Pokémon ----------
+
+  private buildCaught(caught: PokemonInstance): void {
+    const { session } = services();
+    const content = session.content;
+    const run = session.run!;
+    const species = getSpecies(content, caught.speciesId);
+    const candies = candiesForRelease(content, caught.level);
+    const full = run.party.length >= content.balance.partyMax;
+
+    pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny);
+    this.add.text(400, 40, `You caught ${species.name}!`, textStyle(40, COLORS.textLight));
+    const stats = calcStats(content, caught);
+    const lines = [
+      `${species.name}${caught.shiny ? '  ★ Shiny' : ''}   Lv${caught.level}`,
+      `Type: ${species.types.map((t) => t.toUpperCase()).join(' / ')}`,
+      `HP ${caught.hp}/${stats.hp}   Atk ${stats.atk}  Def ${stats.def}  Spe ${stats.spe}`,
+      `Moves: ${caught.moves.map((m) => content.moves.get(m.id)!.name).join(', ')}`,
+    ];
+    this.add.text(400, 100, lines.join('\n'), textStyle(22, '#c8d0e0', { lineSpacing: 6, wordWrap: { width: 520 } }));
+    this.add.text(400, 250, full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`, textStyle(22, full ? '#f0c028' : '#a0e0a0'));
+
+    const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
+    const options = full
+      ? [{ label: 'Replace a party Pokémon' }, { label: `Release it (+${candyText})` }]
+      : [{ label: 'Add to party' }, { label: `Release it (+${candyText})` }];
+    drawPanel(this, 400, 300, 520, 140);
+    this.menu = new Menu(this, {
+      x: 420,
+      y: 320,
+      options,
+      itemWidth: 480,
+      itemHeight: 52,
+      fontSize: 28,
+      onSelect: (i) => {
+        if (i === 0 && !full) this.resolve({ kind: 'addToParty' });
+        else if (i === 0) this.openReplace(caught);
+        else
+          this.confirm(`Release ${species.name}? You'll get ${candyText}. This can't be undone.`, () => {
+            playSfx(this, 'se.ball_release');
+            this.resolve({ kind: 'release' });
+          });
+      },
+    });
+    this.add.text(GAME_WIDTH / 2, 500, 'Candies are kept after the run ends.', textStyle(18, '#8090a8')).setOrigin(0.5);
+  }
+
+  private openReplace(caught: PokemonInstance): void {
+    const { session } = services();
+    const content = session.content;
+    const run = session.run!;
+    const newName = getSpecies(content, caught.speciesId).name;
+    this.picker = new Picker(this, {
+      title: `Which Pokémon leaves to make room for ${newName}?`,
+      columns: 2,
+      rowHeight: 78,
+      rows: partyRows(content, run.party, () => null, undefined, () => 'It will be gone for good, and gives no candies.'),
+      onSelect: (i) => {
+        const old = run.party[i]!;
+        const oldName = getSpecies(content, old.speciesId).name;
+        this.confirm(`Send away ${oldName}${old.shiny ? ' ★' : ''} (Lv${old.level}) and keep ${newName}? This can't be undone.`, () =>
+          this.resolve({ kind: 'replace', partyIndex: i }),
+        );
+      },
+      onBack: () => {
+        this.picker?.close();
+        this.picker = null;
+      },
+    });
+  }
+}

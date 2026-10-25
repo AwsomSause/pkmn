@@ -25,7 +25,7 @@ Controls: **arrow keys** to move, **Enter / Space / Z** to confirm, **Esc / X** 
 Handy extras:
 
 - Add `?seed=anything` to the address to replay the exact same run (same starters, encounters and rewards).
-- Press **F2** (or **`**) in dev mode to open the debug panel: run state, heal, swap the wild Pokémon, start a seeded run, and see missing assets. In a production build, add `?debug=1` to the address to enable it.
+- Press **F2** (or **`**) in dev mode to open the debug panel: run state, heal, swap the wild Pokémon, give items, add a Pokémon to the party, start a seeded run, and see missing assets. In a production build, add `?debug=1` to the address to enable it.
 
 ## Checking the code
 
@@ -53,11 +53,11 @@ The folder should contain `images.zip`, `audio.zip` and `fonts.zip` as supplied.
 ## Project layout
 
 ```
-src/core/      game rules (no Phaser): RNG, Pokémon, battle engine, rewards, run state
+src/core/      game rules (no Phaser): RNG, Pokémon, battle engine, catching, items, evolution, rewards, run state
 src/data/      game content as JSON (species, moves, types, rewards, trainers, balance)
 src/save/      versioned save system (browser storage now; cloud-ready interface)
 src/game/      connects rules to saving (GameSession) and shared services
-src/scenes/    Phaser screens: menu, trainer select, starters, battle, rewards, game over
+src/scenes/    Phaser screens: menu, trainer select, starters, battle, decisions (moves, catches), rewards, game over
 src/ui/        reusable widgets, sprites, audio, text
 src/debug/     developer panel
 src/assets/    asset catalog (all file names)

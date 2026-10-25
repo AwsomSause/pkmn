@@ -1,0 +1,153 @@
+[
+ {
+  "id": "poke-ball",
+  "name": "Poké Ball",
+  "description": "A ball for catching wild Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.pb",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1
+  }
+ },
+ {
+  "id": "great-ball",
+  "name": "Great Ball",
+  "description": "A better ball: 1.5× catch rate.",
+  "category": "ball",
+  "iconAssetId": "ball.gb",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1.5
+  }
+ },
+ {
+  "id": "ultra-ball",
+  "name": "Ultra Ball",
+  "description": "A high-performance ball: 2× catch rate.",
+  "category": "ball",
+  "iconAssetId": "ball.ub",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 2
+  }
+ },
+ {
+  "id": "potion",
+  "name": "Potion",
+  "description": "Restores 20 HP.",
+  "category": "healing",
+  "iconAssetId": "item.potion",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "healHp",
+   "amount": 20
+  }
+ },
+ {
+  "id": "super-potion",
+  "name": "Super Potion",
+  "description": "Restores 60 HP.",
+  "category": "healing",
+  "iconAssetId": "item.super_potion",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "healHp",
+   "amount": 60
+  }
+ },
+ {
+  "id": "hyper-potion",
+  "name": "Hyper Potion",
+  "description": "Restores 120 HP.",
+  "category": "healing",
+  "iconAssetId": "item.hyper_potion",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "healHp",
+   "amount": 120
+  }
+ },
+ {
+  "id": "full-heal",
+  "name": "Full Heal",
+  "description": "Cures any status condition.",
+  "category": "healing",
+  "iconAssetId": "item.full_heal",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "cureStatus"
+  }
+ },
+ {
+  "id": "full-restore",
+  "name": "Full Restore",
+  "description": "Fully restores HP and cures status.",
+  "category": "healing",
+  "iconAssetId": "item.full_restore",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "fullRestore"
+  }
+ },
+ {
+  "id": "ether",
+  "name": "Ether",
+  "description": "Restores 10 PP to each move.",
+  "category": "pp",
+  "iconAssetId": "item.ether",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "restorePp",
+   "amount": 10
+  }
+ },
+ {
+  "id": "revive",
+  "name": "Revive",
+  "description": "Revives a fainted Pokémon with half its HP.",
+  "category": "revive",
+  "iconAssetId": "item.revive",
+  "usableInBattle": true,
+  "usableOutside": true,
+  "target": "fainted",
+  "effect": {
+   "kind": "revive",
+   "fraction": 0.5
+  }
+ },
+ {
+  "id": "last-stand-charm",
+  "name": "Last Stand Charm",
+  "description": "Rare. When your last Pokémon would faint, it holds on with 1 HP instead. Used up when it activates (once per battle).",
+  "category": "charm",
+  "iconAssetId": "item.focus_sash",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "lastStand"
+  }
+ }
+]

@@ -4,8 +4,8 @@ import { enemyLevel, generateStarterChoices } from '../../src/core/encounters';
 import { createPokemon, getSpecies, xpForDefeat } from '../../src/core/pokemon';
 import { applyReward, generateDraft, RewardConfigError } from '../../src/core/rewards';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { chooseReward, chooseStarter, createRun, takeTurn } from '../../src/core/run';
-import type { RunState } from '../../src/core/state';
+import { chooseReward, chooseStarter, createRun, resolveDecision, takeTurn as takeAction } from '../../src/core/run';
+import { currentEnemy, type RunState } from '../../src/core/state';
 import { buildContent, RAW_CONTENT } from '../../src/data';
 import { content } from './helpers';
 
@@ -13,13 +13,23 @@ function newRun(seed = 'run-seed', archetypeId = 'red'): RunState {
   return createRun(content, { runId: 'run1', seed, archetypeId });
 }
 
-/** Plays the current battle to the end using the first move with PP. */
+const takeTurn = (c: typeof content, run: RunState, index: number) => takeAction(c, run, { kind: 'move', index });
+
+/** Plays the current battle to the end using the first move with PP, then skips any move-learning decisions. */
 function playBattle(run: RunState): RunState {
   let guard = 0;
   while (run.phase === 'battle' && guard++ < 300) {
     const mon = run.party[run.battle!.activeIndex]!;
     const idx = mon.moves.findIndex((m) => m.pp > 0);
     run = takeTurn(content, run, idx).run;
+  }
+  return skipDecisions(run);
+}
+
+function skipDecisions(run: RunState): RunState {
+  while (run.phase === 'decision') {
+    const kind = run.pending[0]!.kind;
+    run = resolveDecision(content, run, kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
   }
   return run;
 }
@@ -101,13 +111,12 @@ describe('reward draft', () => {
     expect(run.money).toBe(125);
   });
 
-  it('a potion heals but never above max HP', () => {
+  it('item rewards go into the Bag', () => {
     const run = chooseStarter(content, newRun(), 0);
-    const lead = run.party[0]!;
-    const max = lead.hp;
-    lead.hp = max - 5;
-    applyReward(content, run, getArchetype(content, 'red'), 'potion');
-    expect(lead.hp).toBe(max);
+    const before = run.inventory.potion ?? 0;
+    const result = applyReward(content, run, getArchetype(content, 'red'), 'potion');
+    expect(run.inventory.potion).toBe(before + 2);
+    expect(result.messages[0]).toMatch(/Bag/);
   });
 });
 
@@ -146,23 +155,26 @@ describe('run flow', () => {
     for (const archetypeId of ['red', 'blue', 'green']) {
       let run = chooseStarter(content, newRun('xp', archetypeId), 0);
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 40, run.party[0]!.uid);
-      const enemy = run.battle!.enemy;
+      const enemy = currentEnemy(run.battle!);
       const archetype = getArchetype(content, archetypeId);
       const expectedXp = xpForDefeat(getSpecies(content, enemy.speciesId).baseExp, enemy.level, 40, xpMultiplier(archetype));
       const expectedMoney = Math.floor(content.balance.money.wildPerEnemyLevel * enemy.level * moneyMultiplier(archetype));
       let result;
+      const xpBefore = run.party[0]!.xp;
       while (run.phase === 'battle') {
         result = takeTurn(content, run, run.party[0]!.moves.findIndex((m) => m.pp > 0));
         run = result.run;
       }
-      expect(result!.victory).toEqual(expect.objectContaining({ xpGained: expectedXp, moneyGained: expectedMoney }));
+      expect(result!.end).toEqual(expect.objectContaining({ outcome: 'win', moneyGained: expectedMoney }));
+      expect(result!.events).toContainEqual({ type: 'xp', uid: run.party[0]!.uid, amount: expectedXp });
+      expect(run.party[0]!.xp - xpBefore).toBe(expectedXp);
     }
   });
 
   it('losing with no healthy Pokémon ends the run', () => {
     let run = chooseStarter(content, newRun('lose'), 0);
     run.party[0]!.hp = 1;
-    run.battle!.enemy = createPokemon(content, 'growlithe', 40, 'e99');
+    run.battle!.enemyTeam = [createPokemon(content, 'growlithe', 40, 'e99')];
     run = playBattle(run);
     expect(run.phase).toBe('over');
   });

@@ -111,10 +111,10 @@ describe('profile and run end', () => {
     session.newRun('red', 'defeat-seed');
     session.chooseStarter(0);
     session.run!.party[0]!.hp = 1;
-    session.run!.battle!.enemy = createPokemon(content, 'growlithe', 40, 'e-big');
+    session.run!.battle!.enemyTeam = [createPokemon(content, 'growlithe', 40, 'e-big')];
     let guard = 0;
     while (session.run!.phase === 'battle' && guard++ < 50) {
-      session.takeTurn(session.run!.party[0]!.moves.findIndex((m) => m.pp > 0));
+      session.takeTurn({ kind: 'move', index: session.run!.party[0]!.moves.findIndex((m) => m.pp > 0) });
     }
     expect(session.run!.phase).toBe('over');
     expect(storage.get('pkr.run')).toBeNull();
@@ -131,7 +131,7 @@ describe('game session save/load', () => {
     const a = new GameSession(content, storage);
     a.newRun('blue', 'continue-seed');
     a.chooseStarter(1);
-    a.takeTurn(0);
+    a.takeTurn({ kind: 'move', index: 0 });
     const b = new GameSession(content, storage);
     expect(b.canContinue).toBe(true);
     expect(b.continueRun()).toEqual(a.run);
@@ -143,7 +143,7 @@ describe('game session save/load', () => {
     a.newRun('red', 'reward-seed');
     a.chooseStarter(0);
     a.run!.party[0] = createPokemon(content, a.run!.party[0]!.speciesId, 40, a.run!.party[0]!.uid);
-    while (a.run!.phase === 'battle') a.takeTurn(a.run!.party[0]!.moves.findIndex((m) => m.pp > 0));
+    while (a.run!.phase === 'battle') a.takeTurn({ kind: 'move', index: a.run!.party[0]!.moves.findIndex((m) => m.pp > 0) });
     expect(a.run!.phase).toBe('reward');
     a.chooseReward(0);
     const moneyAfter = a.run!.money;
@@ -160,7 +160,7 @@ describe('game session save/load', () => {
     a.newRun('red', 'same-draft');
     a.chooseStarter(0);
     a.run!.party[0] = createPokemon(content, a.run!.party[0]!.speciesId, 40, a.run!.party[0]!.uid);
-    while (a.run!.phase === 'battle') a.takeTurn(a.run!.party[0]!.moves.findIndex((m) => m.pp > 0));
+    while (a.run!.phase === 'battle') a.takeTurn({ kind: 'move', index: a.run!.party[0]!.moves.findIndex((m) => m.pp > 0) });
     const b = new GameSession(content, storage);
     expect(b.continueRun().draft).toEqual(a.run!.draft);
   });

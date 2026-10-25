@@ -114,8 +114,8 @@ export interface LevelUpResult {
 
 /**
  * Adds experience (or levels) and handles level-ups. Max HP gains are added to
- * current HP. New moves are learned while there is a free slot; choosing a move
- * to forget arrives in Milestone 2, so extras are reported as skipped.
+ * current HP. New moves are learned while there is a free slot; extras are
+ * reported as skipped (the run then asks the player whether to forget a move).
  */
 export function gainXp(content: Content, mon: PokemonInstance, amount: number): LevelUpResult {
   const species = getSpecies(content, mon.speciesId);

@@ -64,7 +64,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const s = session.profile.stats;
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs started ${s.runsStarted}  ·  Battles won ${s.battlesWon}  ·  Best run ${s.bestEncounters} encounters`, textStyle(18, '#8090a8'))
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs started ${s.runsStarted}  ·  Battles won ${s.battlesWon}  ·  Best run ${s.bestEncounters} encounters  ·  Candies ${session.profile.candies}`, textStyle(18, '#8090a8'))
       .setOrigin(0.5);
     this.add.text(16, GAME_HEIGHT - 28, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(16, '#5a6680'));
   }

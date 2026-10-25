@@ -28,11 +28,11 @@ async function waitForScene(page: Page, key: string, timeout = 20_000) {
   await page.waitForTimeout(250);
 }
 
-/** Presses Enter until the battle ends (Enter advances text and picks the first move). */
+/** Presses Enter until the battle ends (Enter advances text, opens Fight and picks the first move). */
 async function fightUntilOver(page: Page): Promise<string> {
   for (let i = 0; i < 400; i++) {
     const s = await scene(page);
-    if (s === 'Reward' || s === 'GameOver') return s;
+    if (s === 'Reward' || s === 'GameOver' || s === 'Decision') return s;
     await page.keyboard.press('Enter');
     await page.waitForTimeout(150);
   }

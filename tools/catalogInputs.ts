@@ -11,9 +11,11 @@ export function readCatalogInputs(): CatalogInputs {
   const species = readJson('species.json') as { dex: number }[];
   const archetypes = readJson('archetypes.json') as { spriteAssetId: string }[];
   const rewards = readJson('rewards.json') as { iconAssetId: string }[];
+  const items = readJson('items.json') as { iconAssetId: string }[];
+  const trainers = readJson('trainers.json') as { spriteAssetId: string }[];
   return {
     speciesDex: species.map((s) => s.dex),
-    trainerAssetIds: archetypes.map((a) => a.spriteAssetId),
-    itemAssetIds: rewards.map((r) => r.iconAssetId),
+    trainerAssetIds: [...archetypes, ...trainers].map((a) => a.spriteAssetId),
+    itemAssetIds: [...rewards, ...items].map((r) => r.iconAssetId),
   };
 }

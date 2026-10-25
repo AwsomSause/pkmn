@@ -6,19 +6,23 @@ import { z } from 'zod';
 import {
   ArchetypeSchema,
   BalanceSchema,
+  ItemSchema,
   MoveSchema,
   RewardSchema,
   RulesetSchema,
   SpeciesSchema,
+  TrainerClassSchema,
   TypeChartSchema,
   type Content,
 } from '../core/contentSchema';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
+import itemsJson from './items.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
 import rulesetJson from './ruleset.json';
 import speciesJson from './species.json';
+import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 
 export class ContentError extends Error {
@@ -34,6 +38,8 @@ export interface RawContent {
   typeChart: unknown;
   archetypes: unknown;
   rewards: unknown;
+  items: unknown;
+  trainers: unknown;
   ruleset: unknown;
   balance: unknown;
 }
@@ -44,6 +50,8 @@ export const RAW_CONTENT: RawContent = {
   typeChart: typeChartJson,
   archetypes: archetypesJson,
   rewards: rewardsJson,
+  items: itemsJson,
+  trainers: trainersJson,
   ruleset: rulesetJson,
   balance: balanceJson,
 };
@@ -73,9 +81,11 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const typeChart = parse(TypeChartSchema, raw.typeChart, 'typeChart.json', problems);
   const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
+  const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
+  const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !rewards || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !rewards || !items || !trainers || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -85,6 +95,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     typeChart,
     archetypes: toMap(archetypes, 'archetypes.json', problems),
     rewards: toMap(rewards, 'rewards.json', problems),
+    items: toMap(items, 'items.json', problems),
+    trainers: toMap(trainers, 'trainers.json', problems),
     ruleset,
     balance,
   };
@@ -95,6 +107,18 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       if (!content.moves.has(entry.move)) problems.push(`species "${s.id}" learns unknown move "${entry.move}"`);
     }
     if (!s.learnset.some((e) => e.level <= 1)) problems.push(`species "${s.id}" has no level-1 move`);
+    for (const evo of s.evolutions) {
+      if (!content.species.has(evo.to)) problems.push(`species "${s.id}" evolves into unknown species "${evo.to}"`);
+    }
+  }
+  for (const r of content.rewards.values()) {
+    if (r.effect.kind === 'addItem' && !content.items.has(r.effect.item)) problems.push(`reward "${r.id}" gives unknown item "${r.effect.item}"`);
+  }
+  for (const id of Object.keys(balance.startingItems)) {
+    if (!content.items.has(id)) problems.push(`balance.startingItems has unknown item "${id}"`);
+  }
+  for (const t of content.trainers.values()) {
+    for (const id of t.pool) if (!content.species.has(id)) problems.push(`trainer class "${t.id}" uses unknown species "${id}"`);
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
   for (const id of [...balance.starterPool, ...balance.wildPool]) {

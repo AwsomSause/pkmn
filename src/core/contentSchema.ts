@@ -50,6 +50,8 @@ export const SpeciesSchema = z.object({
   /** 1 = has no pre-evolution (eligible as a "stage-one" starter). */
   evolutionStage: z.number().int().min(1).max(3),
   learnset: z.array(z.object({ level: z.number().int().min(1).max(100), move: z.string() })).min(1),
+  /** Standard level-up evolutions (director decision D15). */
+  evolutions: z.array(z.object({ to: z.string(), level: z.number().int().min(2).max(100) })).default([]),
   assets: z.object({ front: z.string(), back: z.string(), cry: z.string().optional() }),
 });
 export type Species = z.infer<typeof SpeciesSchema>;
@@ -121,11 +123,44 @@ export const RARITIES = ['common', 'uncommon', 'rare'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
-export const RewardEffectSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('healHp'), amount: z.union([z.number().int().positive(), z.literal('full')]) }),
+export const ItemEffectSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
+  z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('cureStatus') }),
   z.object({ kind: z.literal('fullRestore') }),
   z.object({ kind: z.literal('restorePp'), amount: z.number().int().positive() }),
+  z.object({ kind: z.literal('revive'), fraction: z.number().positive().max(1) }),
+  z.object({ kind: z.literal('lastStand') }),
+]);
+export type ItemEffect = z.infer<typeof ItemEffectSchema>;
+
+export const ItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm']),
+  iconAssetId: z.string(),
+  usableInBattle: z.boolean(),
+  usableOutside: z.boolean(),
+  /** party = a healthy party member, fainted = a fainted one, enemy = the wild Pokémon. */
+  target: z.enum(['party', 'fainted', 'enemy', 'none']),
+  effect: ItemEffectSchema,
+});
+export type Item = z.infer<typeof ItemSchema>;
+
+export const TrainerClassSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  spriteAssetId: z.string(),
+  /** Prize money = moneyPerLevel × the level of their highest-level Pokémon. */
+  moneyPerLevel: z.number().int().positive(),
+  names: z.array(z.string()).min(1),
+  pool: z.array(z.string()).min(1),
+});
+export type TrainerClass = z.infer<typeof TrainerClassSchema>;
+
+export const RewardEffectSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('addItem'), item: z.string(), quantity: z.number().int().positive() }),
   z.object({ kind: z.literal('money'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('levelUp'), levels: z.number().int().positive() }),
   z.object({ kind: z.literal('vitamin'), stat: StatNameSchema }),
@@ -141,8 +176,8 @@ export const RewardSchema = z.object({
   effect: RewardEffectSchema,
   /** How repeated picks combine: applied once now, or stacks up to a limit. */
   stacking: z.enum(['instant', 'stacks']),
-  /** Who receives it. "lead" = the first Pokémon in the party. */
-  scope: z.enum(['lead', 'run']),
+  /** Who receives it: the run (Bag, money) or a Pokémon the player picks. */
+  scope: z.enum(['pokemon', 'run']),
   /** Whether trainer money multipliers apply (only for currency rewards). */
   moneyMultiplierApplies: z.boolean().default(false),
   iconAssetId: z.string(),
@@ -165,6 +200,7 @@ export const RulesetSchema = z.object({
   sleepTurnsMin: z.number().int().min(1),
   sleepTurnsMax: z.number().int().min(1),
   struggleMoveId: z.string(),
+  catchStatusMultipliers: z.record(StatusIdSchema, z.number().positive()),
 });
 export type Ruleset = z.infer<typeof RulesetSchema>;
 
@@ -188,6 +224,18 @@ export const BalanceSchema = z.object({
   money: z.object({ startingMoney: z.number().int().min(0), wildPerEnemyLevel: z.number().min(0) }),
   attributeMin: z.number(),
   attributeMax: z.number(),
+  startingItems: z.record(z.string(), z.number().int().positive()),
+  /** Chance that a wild Pokémon is shiny (director decision D8: 1/2000). */
+  shinyChance: z.number().min(0).max(1),
+  /** Prototype schedule: every Nth encounter is a trainer battle. */
+  trainerEvery: z.number().int().min(2),
+  trainerTeam: z.object({
+    minSize: z.number().int().min(1),
+    maxSize: z.number().int().min(1).max(6),
+    encountersPerExtraPokemon: z.number().int().min(1),
+  }),
+  /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
+  candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
@@ -197,6 +245,8 @@ export interface Content {
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   rewards: Map<string, Reward>;
+  items: Map<string, Item>;
+  trainers: Map<string, TrainerClass>;
   ruleset: Ruleset;
   balance: Balance;
 }

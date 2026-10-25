@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createWildBattle, resolveTurn, type BattleEvent } from '../../src/core/battle/engine';
+import { createBattle, resolveTurn as resolveAction, type BattleContext, type BattleEvent } from '../../src/core/battle/engine';
 import { createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
 import type { PokemonInstance } from '../../src/core/state';
@@ -9,10 +9,14 @@ function setup(playerSpecies: string, playerLevel: number, enemySpecies: string,
   const player = createPokemon(content, playerSpecies, playerLevel, 'p1');
   const enemy = createPokemon(content, enemySpecies, enemyLevel, 'e1');
   const party: PokemonInstance[] = [player];
-  const battle = createWildBattle(enemy, 0, player.uid);
+  const battle = createBattle('wild', [enemy], 0, player.uid);
   const rng = new Rng(hashSeed(seed));
-  return { player, enemy, party, battle, ctx: { content, battle, party, rng } };
+  const ctx: BattleContext = { content, battle, party, inventory: {}, rng, captureRng: new Rng(hashSeed(`${seed}-capture`)), catchMultiplier: 1 };
+  return { player, enemy, party, battle, ctx };
 }
+
+/** Uses the move in slot `index` (-1 = Struggle). */
+const resolveTurn = (ctx: BattleContext, index: number) => resolveAction(ctx, { kind: 'move', index });
 
 function setMoves(mon: PokemonInstance, ...ids: string[]) {
   mon.moves = ids.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
