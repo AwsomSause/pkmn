@@ -90,7 +90,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 |---|---|---|---|
 | **M0** | **Baseline.** Repo, Vite+TS+Phaser+Vitest+Playwright, CI on GitHub, lint rule keeping Phaser out of `core/`, asset manifest tool, placeholder art, empty boot scene. | Repo decision (D0) | Open a blank game page; `npm test` passes. |
 | **M1** | **Vertical slice** (details in §6). | M0, D2–D5 | Start a run, pick trainer + starter, fight wild battles, draft rewards, save/quit/continue. |
-| M2 | **Battle completeness.** Status conditions, switching, battle items, capture + full party flow (replace/candies), trainer battles with teams, move learning, Last Stand Charm, defeat → run end. | M1, D7 | Catch Pokémon, build a party, lose a run properly. |
+| M2 | **Battle completeness.** Switching, battle items, capture + full party flow (replace/candies), trainer battles with teams, move learning, Last Stand Charm, defeat → run end. | M1, D7 | Catch Pokémon, build a party, lose a run properly. |
 | M3 | **One full stage.** Layered map generator + validator, map screen with forks and risk labels, difficulty model with debug readout, optional nodes (heal, shop stub), 2 trainers, gym leader at level 20. | M2 | Play a complete 20-level stage. |
 | M4 | **One full region + dev campaign.** 8 stages, Elite Four with healing, champion, region transition, shuffled region order, short developer campaign, shops with real stock. | M3, D6, D13, D14 | Beat a region; test whole-campaign flow in minutes. |
 | M5 | **Permanent progression.** Profile, bank, run-end payout (duplicate-proof), trainer unlocks, achievements, statistics, save export/import, save migrations, corrupt-save recovery. | M4, D10–D12 | Runs feed a permanent profile that survives refreshes. |
@@ -101,8 +101,10 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 
 ## 6. Milestone 1 — the smallest playable prototype
 
+**Built 2026-10-25.** Differences from the original plan, all small: status conditions and stat-stage moves were pulled forward from Milestone 2 (most early-game moves have side effects like a 10% burn, so leaving them out would have meant fake moves); the Settings stub became a working Sound on/off option; Poké Balls were left out of the reward pool until catching exists. See CHECKLIST.md for exactly what works.
+
 **In scope**
-1. **Main menu:** New Run, Continue (only enabled if a valid save exists), Settings stub *(documented as a stub)*, plus a hidden debug toggle.
+1. **Main menu:** New Run, Continue (only enabled if a valid save exists), Sound on/off, plus a debug panel (F2).
 2. **Trainer select:** Red/Blue/Green from `archetypes.json`, with their modifiers listed.
 3. **Starter select:** 3 distinct species from a ~12-species prototype pool, seeded.
 4. **Wild battle:** Fight only (no running, per D3). Real damage formula, type chart, accuracy, crits, priority → Speed → seeded tie-break, fainting, win/lose. Simple enemy AI (random usable move). ~25 moves, ~20 species.
@@ -113,7 +115,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 9. **Defeat:** game-over screen, run save cleared. *(Full run-end payout is M5.)*
 10. **Debug panel:** show seed, set seed, force a specific wild Pokémon, give a reward, heal.
 
-**Out of scope for M1 (listed so nothing pretends to work):** capture, switching, status conditions, trainers, maps, shops, attributes' effects, permanent profile, animations from the anim pack, music beyond menu/battle.
+**Out of scope for M1 (listed so nothing pretends to work):** capture, switching, trainers, maps, shops, attributes' effects, permanent currency, animations from the anim pack, music beyond menu/battle.
 
 **Tests in M1**
 - Same seed → same starters, same encounters, same rewards, same battle outcome.

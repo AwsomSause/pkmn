@@ -1,0 +1,26 @@
+{
+  "partyMax": 6,
+  "starterLevel": 5,
+  "starterChoices": 3,
+  "starterPool": [
+    "bulbasaur", "charmander", "squirtle", "vulpix", "psyduck", "mankey",
+    "growlithe", "poliwag", "machop", "geodude", "gastly", "magnemite"
+  ],
+  "wildPool": [
+    "caterpie", "pidgey", "rattata", "spearow", "ekans", "sandshrew", "oddish", "diglett", "meowth"
+  ],
+  "draftSize": 5,
+  "rarityWeights": { "common": 60, "uncommon": 30, "rare": 10 },
+  "vitaminMultiplierPerStack": 0.1,
+  "vitaminMaxStacks": 3,
+  "prototypeEncounters": {
+    "baseLevel": 3,
+    "levelsPerEncounter": 0.5,
+    "variance": 1,
+    "minLevel": 2,
+    "maxLevel": 30
+  },
+  "money": { "startingMoney": 0, "wildPerEnemyLevel": 8 },
+  "attributeMin": 0,
+  "attributeMax": 100
+}

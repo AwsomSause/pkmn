@@ -1,0 +1,968 @@
+[
+ {
+  "id": "bulbasaur",
+  "dex": 1,
+  "name": "Bulbasaur",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 45,
+   "atk": 49,
+   "def": 49,
+   "spa": 65,
+   "spd": 65,
+   "spe": 45
+  },
+  "catchRate": 45,
+  "baseExp": 64,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "growl"
+   },
+   {
+    "level": 3,
+    "move": "vine-whip"
+   },
+   {
+    "level": 6,
+    "move": "growth"
+   },
+   {
+    "level": 12,
+    "move": "razor-leaf"
+   },
+   {
+    "level": 15,
+    "move": "poison-powder"
+   },
+   {
+    "level": 15,
+    "move": "sleep-powder"
+   },
+   {
+    "level": 18,
+    "move": "seed-bomb"
+   },
+   {
+    "level": 21,
+    "move": "take-down"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.1",
+   "back": "pokemon.back.1",
+   "cry": "cry.1"
+  }
+ },
+ {
+  "id": "charmander",
+  "dex": 4,
+  "name": "Charmander",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 39,
+   "atk": 52,
+   "def": 43,
+   "spa": 60,
+   "spd": 50,
+   "spe": 65
+  },
+  "catchRate": 45,
+  "baseExp": 62,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "growl"
+   },
+   {
+    "level": 4,
+    "move": "ember"
+   },
+   {
+    "level": 8,
+    "move": "smokescreen"
+   },
+   {
+    "level": 17,
+    "move": "fire-fang"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.4",
+   "back": "pokemon.back.4",
+   "cry": "cry.4"
+  }
+ },
+ {
+  "id": "squirtle",
+  "dex": 7,
+  "name": "Squirtle",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 44,
+   "atk": 48,
+   "def": 65,
+   "spa": 50,
+   "spd": 64,
+   "spe": 43
+  },
+  "catchRate": 45,
+  "baseExp": 63,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "tail-whip"
+   },
+   {
+    "level": 3,
+    "move": "water-gun"
+   },
+   {
+    "level": 6,
+    "move": "withdraw"
+   },
+   {
+    "level": 12,
+    "move": "bite"
+   },
+   {
+    "level": 18,
+    "move": "bubble-beam"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.7",
+   "back": "pokemon.back.7",
+   "cry": "cry.7"
+  }
+ },
+ {
+  "id": "vulpix",
+  "dex": 37,
+  "name": "Vulpix",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 38,
+   "atk": 41,
+   "def": 40,
+   "spa": 50,
+   "spd": 65,
+   "spe": 65
+  },
+  "catchRate": 190,
+  "baseExp": 60,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "ember"
+   },
+   {
+    "level": 1,
+    "move": "tail-whip"
+   },
+   {
+    "level": 8,
+    "move": "quick-attack"
+   },
+   {
+    "level": 20,
+    "move": "fire-fang"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.37",
+   "back": "pokemon.back.37",
+   "cry": "cry.37"
+  }
+ },
+ {
+  "id": "psyduck",
+  "dex": 54,
+  "name": "Psyduck",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 52,
+   "def": 48,
+   "spa": 65,
+   "spd": 50,
+   "spe": 55
+  },
+  "catchRate": 190,
+  "baseExp": 64,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "tail-whip"
+   },
+   {
+    "level": 3,
+    "move": "water-gun"
+   },
+   {
+    "level": 15,
+    "move": "bubble-beam"
+   },
+   {
+    "level": 20,
+    "move": "headbutt"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.54",
+   "back": "pokemon.back.54",
+   "cry": "cry.54"
+  }
+ },
+ {
+  "id": "mankey",
+  "dex": 56,
+  "name": "Mankey",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 80,
+   "def": 35,
+   "spa": 35,
+   "spd": 45,
+   "spe": 70
+  },
+  "catchRate": 190,
+  "baseExp": 61,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "leer"
+   },
+   {
+    "level": 5,
+    "move": "karate-chop"
+   },
+   {
+    "level": 12,
+    "move": "low-sweep"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.56",
+   "back": "pokemon.back.56",
+   "cry": "cry.56"
+  }
+ },
+ {
+  "id": "growlithe",
+  "dex": 58,
+  "name": "Growlithe",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 70,
+   "def": 45,
+   "spa": 70,
+   "spd": 50,
+   "spe": 60
+  },
+  "catchRate": 190,
+  "baseExp": 70,
+  "growthRate": "slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "ember"
+   },
+   {
+    "level": 1,
+    "move": "leer"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 20,
+    "move": "fire-fang"
+   },
+   {
+    "level": 28,
+    "move": "take-down"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.58",
+   "back": "pokemon.back.58",
+   "cry": "cry.58"
+  }
+ },
+ {
+  "id": "poliwag",
+  "dex": 60,
+  "name": "Poliwag",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 50,
+   "def": 40,
+   "spa": 40,
+   "spd": 40,
+   "spe": 90
+  },
+  "catchRate": 255,
+  "baseExp": 60,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "water-gun"
+   },
+   {
+    "level": 6,
+    "move": "pound"
+   },
+   {
+    "level": 12,
+    "move": "mud-shot"
+   },
+   {
+    "level": 18,
+    "move": "bubble-beam"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.60",
+   "back": "pokemon.back.60",
+   "cry": "cry.60"
+  }
+ },
+ {
+  "id": "machop",
+  "dex": 66,
+  "name": "Machop",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 80,
+   "def": 50,
+   "spa": 35,
+   "spd": 35,
+   "spe": 35
+  },
+  "catchRate": 180,
+  "baseExp": 61,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "leer"
+   },
+   {
+    "level": 1,
+    "move": "karate-chop"
+   },
+   {
+    "level": 12,
+    "move": "low-sweep"
+   },
+   {
+    "level": 20,
+    "move": "take-down"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.66",
+   "back": "pokemon.back.66",
+   "cry": "cry.66"
+  }
+ },
+ {
+  "id": "geodude",
+  "dex": 74,
+  "name": "Geodude",
+  "types": [
+   "rock",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 80,
+   "def": 100,
+   "spa": 30,
+   "spd": 30,
+   "spe": 20
+  },
+  "catchRate": 255,
+  "baseExp": 60,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "defense-curl"
+   },
+   {
+    "level": 6,
+    "move": "mud-slap"
+   },
+   {
+    "level": 10,
+    "move": "rock-throw"
+   },
+   {
+    "level": 24,
+    "move": "take-down"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.74",
+   "back": "pokemon.back.74",
+   "cry": "cry.74"
+  }
+ },
+ {
+  "id": "gastly",
+  "dex": 92,
+  "name": "Gastly",
+  "types": [
+   "ghost",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 30,
+   "atk": 35,
+   "def": 30,
+   "spa": 100,
+   "spd": 35,
+   "spe": 80
+  },
+  "catchRate": 190,
+  "baseExp": 62,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "lick"
+   },
+   {
+    "level": 5,
+    "move": "night-shade"
+   },
+   {
+    "level": 12,
+    "move": "poison-sting"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.92",
+   "back": "pokemon.back.92",
+   "cry": "cry.92"
+  }
+ },
+ {
+  "id": "magnemite",
+  "dex": 81,
+  "name": "Magnemite",
+  "types": [
+   "electric",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 25,
+   "atk": 35,
+   "def": 70,
+   "spa": 95,
+   "spd": 55,
+   "spe": 45
+  },
+  "catchRate": 190,
+  "baseExp": 65,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 4,
+    "move": "thunder-shock"
+   },
+   {
+    "level": 8,
+    "move": "thunder-wave"
+   },
+   {
+    "level": 16,
+    "move": "spark"
+   },
+   {
+    "level": 20,
+    "move": "metal-claw"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.81",
+   "back": "pokemon.back.81",
+   "cry": "cry.81"
+  }
+ },
+ {
+  "id": "caterpie",
+  "dex": 10,
+  "name": "Caterpie",
+  "types": [
+   "bug"
+  ],
+  "baseStats": {
+   "hp": 45,
+   "atk": 30,
+   "def": 35,
+   "spa": 20,
+   "spd": 20,
+   "spe": 45
+  },
+  "catchRate": 255,
+  "baseExp": 39,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "string-shot"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.10",
+   "back": "pokemon.back.10",
+   "cry": "cry.10"
+  }
+ },
+ {
+  "id": "pidgey",
+  "dex": 16,
+  "name": "Pidgey",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 45,
+   "def": 40,
+   "spa": 35,
+   "spd": 35,
+   "spe": 56
+  },
+  "catchRate": 255,
+  "baseExp": 50,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 5,
+    "move": "sand-attack"
+   },
+   {
+    "level": 9,
+    "move": "gust"
+   },
+   {
+    "level": 13,
+    "move": "quick-attack"
+   },
+   {
+    "level": 21,
+    "move": "wing-attack"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.16",
+   "back": "pokemon.back.16",
+   "cry": "cry.16"
+  }
+ },
+ {
+  "id": "rattata",
+  "dex": 19,
+  "name": "Rattata",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 30,
+   "atk": 56,
+   "def": 35,
+   "spa": 25,
+   "spd": 35,
+   "spe": 72
+  },
+  "catchRate": 255,
+  "baseExp": 51,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "tail-whip"
+   },
+   {
+    "level": 4,
+    "move": "quick-attack"
+   },
+   {
+    "level": 10,
+    "move": "bite"
+   },
+   {
+    "level": 16,
+    "move": "take-down"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.19",
+   "back": "pokemon.back.19",
+   "cry": "cry.19"
+  }
+ },
+ {
+  "id": "spearow",
+  "dex": 21,
+  "name": "Spearow",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 60,
+   "def": 30,
+   "spa": 31,
+   "spd": 31,
+   "spe": 70
+  },
+  "catchRate": 255,
+  "baseExp": 52,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "peck"
+   },
+   {
+    "level": 1,
+    "move": "growl"
+   },
+   {
+    "level": 4,
+    "move": "leer"
+   },
+   {
+    "level": 11,
+    "move": "wing-attack"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.21",
+   "back": "pokemon.back.21",
+   "cry": "cry.21"
+  }
+ },
+ {
+  "id": "ekans",
+  "dex": 23,
+  "name": "Ekans",
+  "types": [
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 35,
+   "atk": 60,
+   "def": 44,
+   "spa": 40,
+   "spd": 54,
+   "spe": 55
+  },
+  "catchRate": 255,
+  "baseExp": 58,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "leer"
+   },
+   {
+    "level": 4,
+    "move": "poison-sting"
+   },
+   {
+    "level": 9,
+    "move": "bite"
+   },
+   {
+    "level": 17,
+    "move": "acid"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.23",
+   "back": "pokemon.back.23",
+   "cry": "cry.23"
+  }
+ },
+ {
+  "id": "sandshrew",
+  "dex": 27,
+  "name": "Sandshrew",
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 75,
+   "def": 85,
+   "spa": 20,
+   "spd": 30,
+   "spe": 40
+  },
+  "catchRate": 255,
+  "baseExp": 60,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "defense-curl"
+   },
+   {
+    "level": 3,
+    "move": "sand-attack"
+   },
+   {
+    "level": 9,
+    "move": "mud-slap"
+   },
+   {
+    "level": 15,
+    "move": "metal-claw"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.27",
+   "back": "pokemon.back.27",
+   "cry": "cry.27"
+  }
+ },
+ {
+  "id": "oddish",
+  "dex": 43,
+  "name": "Oddish",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 45,
+   "atk": 50,
+   "def": 55,
+   "spa": 75,
+   "spd": 65,
+   "spe": 30
+  },
+  "catchRate": 255,
+  "baseExp": 64,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "absorb"
+   },
+   {
+    "level": 1,
+    "move": "growth"
+   },
+   {
+    "level": 4,
+    "move": "acid"
+   },
+   {
+    "level": 12,
+    "move": "mega-drain"
+   },
+   {
+    "level": 14,
+    "move": "poison-powder"
+   },
+   {
+    "level": 16,
+    "move": "stun-spore"
+   },
+   {
+    "level": 18,
+    "move": "sleep-powder"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.43",
+   "back": "pokemon.back.43",
+   "cry": "cry.43"
+  }
+ },
+ {
+  "id": "diglett",
+  "dex": 50,
+  "name": "Diglett",
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 10,
+   "atk": 55,
+   "def": 25,
+   "spa": 35,
+   "spd": 45,
+   "spe": 95
+  },
+  "catchRate": 255,
+  "baseExp": 53,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "sand-attack"
+   },
+   {
+    "level": 4,
+    "move": "growl"
+   },
+   {
+    "level": 8,
+    "move": "mud-slap"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.50",
+   "back": "pokemon.back.50",
+   "cry": "cry.50"
+  }
+ },
+ {
+  "id": "meowth",
+  "dex": 52,
+  "name": "Meowth",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 45,
+   "def": 35,
+   "spa": 40,
+   "spd": 40,
+   "spe": 90
+  },
+  "catchRate": 255,
+  "baseExp": 58,
+  "growthRate": "medium-fast",
+  "evolutionStage": 1,
+  "learnset": [
+   {
+    "level": 1,
+    "move": "scratch"
+   },
+   {
+    "level": 1,
+    "move": "growl"
+   },
+   {
+    "level": 12,
+    "move": "bite"
+   }
+  ],
+  "assets": {
+   "front": "pokemon.front.52",
+   "back": "pokemon.back.52",
+   "cry": "cry.52"
+  }
+ }
+]

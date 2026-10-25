@@ -1,0 +1,225 @@
+[
+ {
+  "id": "potion",
+  "name": "Potion",
+  "description": "Restores 20 HP to your lead Pokémon.",
+  "category": "healing",
+  "rarity": "common",
+  "effect": {
+   "kind": "healHp",
+   "amount": 20
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.potion"
+ },
+ {
+  "id": "super-potion",
+  "name": "Super Potion",
+  "description": "Restores 60 HP to your lead Pokémon.",
+  "category": "healing",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "healHp",
+   "amount": 60
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.super_potion"
+ },
+ {
+  "id": "hyper-potion",
+  "name": "Hyper Potion",
+  "description": "Restores 120 HP to your lead Pokémon.",
+  "category": "healing",
+  "rarity": "rare",
+  "effect": {
+   "kind": "healHp",
+   "amount": 120
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.hyper_potion"
+ },
+ {
+  "id": "full-heal",
+  "name": "Full Heal",
+  "description": "Cures your lead Pokémon's status condition.",
+  "category": "healing",
+  "rarity": "common",
+  "effect": {
+   "kind": "cureStatus"
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.full_heal"
+ },
+ {
+  "id": "full-restore",
+  "name": "Full Restore",
+  "description": "Fully restores HP and cures status of your lead Pokémon.",
+  "category": "healing",
+  "rarity": "rare",
+  "effect": {
+   "kind": "fullRestore"
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.full_restore"
+ },
+ {
+  "id": "ether",
+  "name": "Ether",
+  "description": "Restores 10 PP to each of your lead Pokémon's moves.",
+  "category": "consumable",
+  "rarity": "common",
+  "effect": {
+   "kind": "restorePp",
+   "amount": 10
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ether"
+ },
+ {
+  "id": "nugget",
+  "name": "Nugget",
+  "description": "Gain ₽100 (trainer money bonuses apply).",
+  "category": "currency",
+  "rarity": "common",
+  "effect": {
+   "kind": "money",
+   "amount": 100
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": true,
+  "iconAssetId": "item.nugget"
+ },
+ {
+  "id": "big-nugget",
+  "name": "Big Nugget",
+  "description": "Gain ₽300 (trainer money bonuses apply).",
+  "category": "currency",
+  "rarity": "rare",
+  "effect": {
+   "kind": "money",
+   "amount": 300
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": true,
+  "iconAssetId": "item.big_nugget"
+ },
+ {
+  "id": "rare-candy",
+  "name": "Rare Candy",
+  "description": "Your lead Pokémon gains 1 level.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "levelUp",
+   "levels": 1
+  },
+  "stacking": "instant",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.rare_candy"
+ },
+ {
+  "id": "hp-up",
+  "name": "HP Up",
+  "description": "Lead Pokémon's max HP +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "hp"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.hp_up"
+ },
+ {
+  "id": "protein",
+  "name": "Protein",
+  "description": "Lead Pokémon's Attack +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "atk"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.protein"
+ },
+ {
+  "id": "iron",
+  "name": "Iron",
+  "description": "Lead Pokémon's Defense +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "def"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.iron"
+ },
+ {
+  "id": "calcium",
+  "name": "Calcium",
+  "description": "Lead Pokémon's Sp. Atk +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "spa"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.calcium"
+ },
+ {
+  "id": "zinc",
+  "name": "Zinc",
+  "description": "Lead Pokémon's Sp. Def +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "spd"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.zinc"
+ },
+ {
+  "id": "carbos",
+  "name": "Carbos",
+  "description": "Lead Pokémon's Speed +10% (stacks up to 3 times).",
+  "category": "stat-buff",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "vitamin",
+   "stat": "spe"
+  },
+  "stacking": "stacks",
+  "scope": "lead",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.carbos"
+ }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "red",
+    "name": "Red",
+    "description": "The classic trainer. A balanced run with no surprises.",
+    "pros": ["No penalties"],
+    "cons": ["No bonuses"],
+    "unlockedByDefault": true,
+    "spriteAssetId": "trainer.red",
+    "modifiers": []
+  },
+  {
+    "id": "blue",
+    "name": "Blue",
+    "description": "Pushes hard and levels fast, but draws tougher opponents.",
+    "pros": ["Pokémon gain 25% more experience"],
+    "cons": ["Enemy Pokémon are 2 levels higher"],
+    "unlockedByDefault": true,
+    "spriteAssetId": "trainer.blue",
+    "modifiers": [
+      { "kind": "xpMultiplier", "value": 1.25 },
+      { "kind": "enemyLevelOffset", "value": 2 }
+    ]
+  },
+  {
+    "id": "green",
+    "name": "Green",
+    "description": "Earns more and meets gentler Pokémon, but they are harder to catch.",
+    "pros": ["Earn 25% more money", "Enemy Pokémon are 1 level lower"],
+    "cons": ["Catching is 15% harder (from Milestone 2, when catching arrives)"],
+    "unlockedByDefault": true,
+    "spriteAssetId": "trainer.green",
+    "modifiers": [
+      { "kind": "moneyMultiplier", "value": 1.25 },
+      { "kind": "enemyLevelOffset", "value": -1 },
+      { "kind": "captureMultiplier", "value": 0.85 }
+    ]
+  }
+]
