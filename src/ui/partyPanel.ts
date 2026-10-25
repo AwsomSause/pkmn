@@ -2,7 +2,7 @@
 // choose a target for an item or reward, set the lead) and the Bag.
 
 import Phaser from 'phaser';
-import type { Content } from '../core/contentSchema';
+import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
 import { calcStats, getSpecies } from '../core/pokemon';
 import type { PokemonInstance } from '../core/state';
@@ -203,6 +203,19 @@ export function bagRow(content: Content, inventory: Record<string, number>, item
       box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
       box.add(scene.add.text(56, h / 2, item.name, textStyle(24)).setOrigin(0, 0.5));
       box.add(scene.add.text(w - 16, h / 2, `×${itemCount(inventory, itemId)}`, textStyle(24)).setOrigin(1, 0.5));
+    },
+  };
+}
+
+/** A row naming a species (with its icon and types), e.g. for choosing an evolution. */
+export function speciesRow(species: Species): PickerRow {
+  const types = species.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join(' / ');
+  return {
+    problem: null,
+    hint: `${species.name}: ${types}`,
+    draw: (scene, box, _w, h) => {
+      box.add(pokemonIcon(scene, species, 30, h / 2, 1));
+      box.add(scene.add.text(64, h / 2, species.name, textStyle(24)).setOrigin(0, 0.5));
     },
   };
 }

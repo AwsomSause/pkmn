@@ -20,7 +20,10 @@
   "champions": [
    "lance"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   1
+  ]
  },
  {
   "id": "johto",
@@ -43,7 +46,10 @@
   "champions": [
    "lance"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   2
+  ]
  },
  {
   "id": "hoenn",
@@ -68,7 +74,10 @@
    "steven",
    "wallace"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   3
+  ]
  },
  {
   "id": "sinnoh",
@@ -92,7 +101,10 @@
   "champions": [
    "cynthia"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   4
+  ]
  },
  {
   "id": "unova",
@@ -121,7 +133,10 @@
    "alder",
    "iris"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   5
+  ]
  },
  {
   "id": "kalos",
@@ -145,7 +160,10 @@
   "champions": [
    "diantha"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   6
+  ]
  },
  {
   "id": "alola",
@@ -162,7 +180,10 @@
    "kukui",
    "hau"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   7
+  ]
  },
  {
   "id": "galar",
@@ -187,7 +208,10 @@
   "champions": [
    "leon"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   8
+  ]
  },
  {
   "id": "paldea",
@@ -217,7 +241,10 @@
    "nemona",
    "kieran"
   ],
-  "grand": false
+  "grand": false,
+  "generations": [
+   9
+  ]
  },
  {
   "id": "grand",
@@ -225,6 +252,7 @@
   "gymLeaders": [],
   "eliteFour": [],
   "champions": [],
-  "grand": true
+  "grand": true,
+  "generations": []
  }
 ]

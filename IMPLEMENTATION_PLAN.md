@@ -95,7 +95,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | M4 | **One full region + dev campaign.** 8 stages, Elite Four with healing, champion, region transition, shuffled region order, short developer campaign, shops with real stock. | M3, D6, D13, D14 | Beat a region; test whole-campaign flow in minutes. |
 | M5 | **Out-of-Run** (GAME_DESIGN §14, director priorities 1–2). Hub, Bank with Bank Credits and duplicate-proof run-end payout, bank tiers, Trainer Archive with data-defined unlocks, Achievement Hall with event tracking and tiered/hidden achievements, Run History, Research Points from discoveries, save export/import. One unlock architecture: requirement → progress → reward → claim. | M4, D10–D12, D16 | Runs feed a permanent profile; earn credits, achievements and new trainers. |
 | M5.5 | **Run-Prep** (GAME_DESIGN §14, director priorities 3–4). Starter pools in data and the Starter Laboratory, draft modifiers, the Run-Prep flow (mode → trainer → preparation → build summary → starters → briefing), loadout presets, preparation tokens, seed copy. | M5 | Prepare each run deliberately before it starts. |
-| M6 | **Content scale-up.** Data import for all species/moves, region eligibility, sprite/cry manifest at scale, lazy-loading audio, evolution rules. | M2 (can run alongside M3–M5) | Full Pokédex available. |
+| M6 ✅ | **Content scale-up.** Data import for all species/moves, region eligibility, sprite/cry manifest at scale, lazy-loading audio, evolution rules. | M2 (can run alongside M3–M5) | Full Pokédex available. |
 | M7 | **Attributes & luck.** Implement each attribute only after you approve its formula; luck-weighted rewards; shiny rules. | M5, D8, D9 | Attributes visibly matter. |
 | M8 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. | M6, M7 | Key items unlock real mechanics. |
 | M9 | **Grand Region, ending, polish, deploy.** Battle animation player for the supplied anim JSON, music, final boss, ending, static deploy. | All, D1, D4 | Complete game from start to credits. |
@@ -178,6 +178,18 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Run History** keeps the last 20 runs (`runHistorySize`).
 - **Save export/import** writes the profile and settings to a file; import checks the file and keeps a backup of the old profile in local storage.
 - Save format is now profile version 3 (Bank currency renamed to Bank Credits, new fields) and run version 5 (new log fields). Older saves upgrade automatically.
+
+## 6f. Milestone 6 — content scale-up
+
+**Built 2026-10-25** (alongside M5). What changed from the M6 row above, and why:
+- **All species and forms from PokeAPI's open data** (`npm run data:species -- <move dataset folder> <images.zip> <audio.zip>`; the CSVs are downloaded into `.cache/pokeapi`). 1,289 entries: 1,025 species, 57 regional, 52 alternate, 97 Mega, 34 Gigantamax, 2 Primal and 22 battle-only forms. Ids are PokeAPI's (`raichu-alola`, `rotom-wash`); old ids are unchanged. Cosmetic forms with identical stats (Unown letters, Vivillon patterns, Koraidon's builds, …) are left out. New species fields: `generation`, `evolvesFrom`, `tags`, `form`, and `assets` now holds file names (sprite, icon, cry) because forms don't follow the dex number.
+- **Level-up moves still come from the director's sheet**, now kept whole: moves the engine can't run stay in learnsets and are skipped at runtime (`isUsableMove`). This replaces `npm run data:movesets`, which dropped them. Forms the sheet doesn't list use their base form's moves. Egg and other learnable moves go to `learnables.json` for tools (the boss team generator); the game doesn't load it.
+- **Every move is imported** (`npm run data:moves`): 611 moves get `supported: false` and `needs` (the effect text still to build). Priority and missing categories come from PokeAPI. Re-running the tool after the engine learns an effect switches those moves on.
+- **Evolution rules** (GAME_DESIGN.md §5c): evolutions are `{to, level}` or `{to, item}` with optional `region` and `condition`. Non-level methods became 44 evolution items. This was a design decision made here (the main games' trade, friendship and location methods don't exist in a roguelike); it is easy to change in the import tool.
+- **Region eligibility** is a weight, not a filter: themes need every species they can get, so native Pokémon are 3× as likely (`nativeWeight`) rather than exclusive. Regions list their `generations` in `regions.json`. Applied to wild Pokémon and ordinary trainers; bosses get their own teams (boss teams work).
+- **Wild Pokémon** now follow `isWildEligible` (stage 1, not legendary/mythical/special forms, base stats ≤ `wildMaxBaseStats` 560, has supported moves) instead of "nothing evolves into it", which would have hidden Pikachu (Pichu evolves into it).
+- **Assets at scale:** `public/assets` grew from 32 MB to about 205 MB (every species' 4 sprites, icon and cry, about 13,000 files). Pokémon assets are marked `lazy` in the catalog: the boot screen no longer loads them; each screen queues the Pokémon it shows in `preload()`, and anything else is fetched the first time it is drawn (`ui/lazyAssets.ts`). Cries are lazy too and now play in battle.
+- **No save format change.** Old saves keep working: species ids are unchanged and new fields live in the data, not the save.
 
 ## 7. Risks
 

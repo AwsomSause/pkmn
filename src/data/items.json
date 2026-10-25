@@ -149,5 +149,577 @@
   "effect": {
    "kind": "lastStand"
   }
+ },
+ {
+  "id": "auspicious-armor",
+  "name": "Auspicious Armor",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Auspicious Armor.",
+  "category": "evolution",
+  "iconAssetId": "item.auspicious_armor",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "black-augurite",
+  "name": "Black Augurite",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Black Augurite.",
+  "category": "evolution",
+  "iconAssetId": "item.black_augurite",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "cracked-pot",
+  "name": "Cracked Pot",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Cracked Pot.",
+  "category": "evolution",
+  "iconAssetId": "item.cracked_pot",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "dawn-stone",
+  "name": "Dawn Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Dawn Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.dawn_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "deep-sea-scale",
+  "name": "Deep Sea Scale",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Deep Sea Scale.",
+  "category": "evolution",
+  "iconAssetId": "item.deep_sea_scale",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "deep-sea-tooth",
+  "name": "Deep Sea Tooth",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Deep Sea Tooth.",
+  "category": "evolution",
+  "iconAssetId": "item.deep_sea_tooth",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "dragon-scale",
+  "name": "Dragon Scale",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Dragon Scale.",
+  "category": "evolution",
+  "iconAssetId": "item.dragon_scale",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "dubious-disc",
+  "name": "Dubious Disc",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Dubious Disc.",
+  "category": "evolution",
+  "iconAssetId": "item.dubious_disc",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "dusk-stone",
+  "name": "Dusk Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Dusk Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.dusk_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "electirizer",
+  "name": "Electirizer",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Electirizer.",
+  "category": "evolution",
+  "iconAssetId": "item.electirizer",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "fire-stone",
+  "name": "Fire Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Fire Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.fire_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "galarica-cuff",
+  "name": "Galarica Cuff",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Galarica Cuff.",
+  "category": "evolution",
+  "iconAssetId": "item.galarica_cuff",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "galarica-wreath",
+  "name": "Galarica Wreath",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Galarica Wreath.",
+  "category": "evolution",
+  "iconAssetId": "item.galarica_wreath",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "ice-stone",
+  "name": "Ice Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Ice Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.ice_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "kings-rock",
+  "name": "King’s Rock",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the King’s Rock.",
+  "category": "evolution",
+  "iconAssetId": "item.kings_rock",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "leaf-stone",
+  "name": "Leaf Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Leaf Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.leaf_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "linking-cord",
+  "name": "Linking Cord",
+  "description": "Evolves Pokémon that evolve by trading (Kadabra, Machoke, Graveler, Haunter, ...).",
+  "category": "evolution",
+  "iconAssetId": "item.linking_cord",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "magmarizer",
+  "name": "Magmarizer",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Magmarizer.",
+  "category": "evolution",
+  "iconAssetId": "item.magmarizer",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "malicious-armor",
+  "name": "Malicious Armor",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Malicious Armor.",
+  "category": "evolution",
+  "iconAssetId": "item.malicious_armor",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "metal-alloy",
+  "name": "Metal Alloy",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Metal Alloy.",
+  "category": "evolution",
+  "iconAssetId": "item.metal_alloy",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "metal-coat",
+  "name": "Metal Coat",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Metal Coat.",
+  "category": "evolution",
+  "iconAssetId": "item.metal_coat",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "moon-stone",
+  "name": "Moon Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Moon Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.moon_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "oval-stone",
+  "name": "Oval Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Oval Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.oval_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "peat-block",
+  "name": "Peat Block",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Peat Block.",
+  "category": "evolution",
+  "iconAssetId": "item.peat_block",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "prism-scale",
+  "name": "Prism Scale",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Prism Scale.",
+  "category": "evolution",
+  "iconAssetId": "item.prism_scale",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "protector",
+  "name": "Protector",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Protector.",
+  "category": "evolution",
+  "iconAssetId": "item.protector",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "razor-claw",
+  "name": "Razor Claw",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Razor Claw.",
+  "category": "evolution",
+  "iconAssetId": "item.razor_claw",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "razor-fang",
+  "name": "Razor Fang",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Razor Fang.",
+  "category": "evolution",
+  "iconAssetId": "item.razor_fang",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "reaper-cloth",
+  "name": "Reaper Cloth",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Reaper Cloth.",
+  "category": "evolution",
+  "iconAssetId": "item.reaper_cloth",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "sachet",
+  "name": "Sachet",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Sachet.",
+  "category": "evolution",
+  "iconAssetId": "item.sachet",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "scroll-of-darkness",
+  "name": "Scroll of Darkness",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Scroll of Darkness.",
+  "category": "evolution",
+  "iconAssetId": "item.scroll_of_darkness",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "scroll-of-waters",
+  "name": "Scroll of Waters",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Scroll of Waters.",
+  "category": "evolution",
+  "iconAssetId": "item.scroll_of_waters",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "shiny-stone",
+  "name": "Shiny Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Shiny Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.shiny_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "soothe-bell",
+  "name": "Soothe Bell",
+  "description": "Evolves Pokémon that evolve through friendship (Pichu, Golbat, Eevee, ...).",
+  "category": "evolution",
+  "iconAssetId": "item.soothe_bell",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "strawberry-sweet",
+  "name": "Strawberry Sweet",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Strawberry Sweet.",
+  "category": "evolution",
+  "iconAssetId": "item.strawberry_sweet",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "sun-stone",
+  "name": "Sun Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Sun Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.sun_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "sweet-apple",
+  "name": "Sweet Apple",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Sweet Apple.",
+  "category": "evolution",
+  "iconAssetId": "item.sweet_apple",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "syrupy-apple",
+  "name": "Syrupy Apple",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Syrupy Apple.",
+  "category": "evolution",
+  "iconAssetId": "item.syrupy_apple",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "tart-apple",
+  "name": "Tart Apple",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Tart Apple.",
+  "category": "evolution",
+  "iconAssetId": "item.tart_apple",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "thunder-stone",
+  "name": "Thunder Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Thunder Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.thunder_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "unremarkable-teacup",
+  "name": "Unremarkable Teacup",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Unremarkable Teacup.",
+  "category": "evolution",
+  "iconAssetId": "item.unremarkable_teacup",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "up-grade",
+  "name": "Upgrade",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Upgrade.",
+  "category": "evolution",
+  "iconAssetId": "item.upgrade",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "water-stone",
+  "name": "Water Stone",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Water Stone.",
+  "category": "evolution",
+  "iconAssetId": "item.water_stone",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
+ },
+ {
+  "id": "whipped-dream",
+  "name": "Whipped Dream",
+  "description": "An evolution item. Use it on a Pokémon that evolves with the Whipped Dream.",
+  "category": "evolution",
+  "iconAssetId": "item.whipped_dream",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "evolve"
+  }
  }
 ]

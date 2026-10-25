@@ -1,10 +1,13 @@
 // Creates Pokémon, trainer and item visuals. Uses the real art when it was
 // loaded, otherwise a clearly-labelled placeholder (never a broken image).
+// Pokémon art is loaded on demand (ui/lazyAssets.ts): if it isn't loaded yet,
+// the placeholder is shown and swapped for the art when it arrives.
 
 import Phaser from 'phaser';
 import { pokemonAssetIds } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
 import { services } from '../game/services';
+import { loadAssets } from './lazyAssets';
 import { COLORS, PIXEL_SCALE, TYPE_COLORS, textStyle } from './theme';
 
 /** Builds a looping animation from every frame of a loaded atlas (once per atlas). */
@@ -45,16 +48,32 @@ function placeholder(scene: Phaser.Scene, x: number, y: number, size: number, co
 
 export type Visual = Phaser.GameObjects.Sprite | Phaser.GameObjects.Container;
 
-/** A Pokémon's battle sprite. Shiny Pokémon use the shiny art when it was loaded, otherwise the normal art. */
+/** True if the art exists in the pack but hasn't been loaded into this game yet. */
+function notLoadedYet(scene: Phaser.Scene, key: string): boolean {
+  return services().assets.has(key) && !scene.textures.exists(key);
+}
+
+/** A Pokémon's battle sprite. Shiny Pokémon use the shiny art when it exists, otherwise the normal art. */
 export function pokemonVisual(scene: Phaser.Scene, species: Species, side: 'front' | 'back', x: number, y: number, scale = PIXEL_SCALE, shiny = false): Visual {
-  const key = side === 'front' ? species.assets.front : species.assets.back;
-  const ids = pokemonAssetIds(species.dex);
+  const ids = pokemonAssetIds(species.assets);
+  const key = side === 'front' ? ids.front : ids.back;
   const shinyKey = side === 'front' ? ids.shinyFront : ids.shinyBack;
-  return (
-    (shiny ? atlasSprite(scene, shinyKey, x, y, scale) : null) ??
-    atlasSprite(scene, key, x, y, scale) ??
-    placeholder(scene, x, y, 40 * scale, TYPE_COLORS[species.types[0] ?? 'normal'] ?? 0x888888, species.name)
-  );
+  const wanted = shiny ? [shinyKey, key] : [key];
+  const ready = (shiny ? atlasSprite(scene, shinyKey, x, y, scale) : null) ?? atlasSprite(scene, key, x, y, scale);
+  if (ready && !(shiny && notLoadedYet(scene, shinyKey))) return ready;
+  ready?.destroy();
+  const color = TYPE_COLORS[species.types[0] ?? 'normal'] ?? 0x888888;
+  const holder = placeholder(scene, x, y, 40 * scale, color, species.name);
+  if (wanted.some((k) => notLoadedYet(scene, k))) {
+    void loadAssets(scene, wanted).then(() => {
+      if (!holder.active) return;
+      const sprite = (shiny ? atlasSprite(scene, shinyKey, 0, 0, scale) : null) ?? atlasSprite(scene, key, 0, 0, scale);
+      if (!sprite) return;
+      holder.removeAll(true);
+      holder.add(sprite);
+    });
+  }
+  return holder;
 }
 
 export function trainerVisual(scene: Phaser.Scene, assetId: string, name: string, x: number, y: number, scale = 2): Visual {
@@ -71,12 +90,20 @@ export function itemVisual(scene: Phaser.Scene, assetId: string, x: number, y: n
   return g;
 }
 
-/** The small menu icon for a Pokémon (centred on x, y), or a coloured dot when the icon is missing. */
+/** The small menu icon for a Pokémon (centred on x, y), or a coloured dot until (or if) the icon is loaded. */
 export function pokemonIcon(scene: Phaser.Scene, species: Species, x: number, y: number, scale = 1): Phaser.GameObjects.GameObject {
-  const key = pokemonAssetIds(species.dex).icon;
+  const key = pokemonAssetIds(species.assets).icon;
   if (services().assets.has(key) && scene.textures.exists(key)) return scene.add.image(x, y, key).setScale(scale);
-  const g = scene.add.graphics({ x, y });
+  const g = scene.add.graphics();
   g.fillStyle(TYPE_COLORS[species.types[0] ?? 'normal'] ?? 0x888888, 1);
   g.fillCircle(0, 0, 14 * scale);
-  return g;
+  const holder = scene.add.container(x, y, [g]);
+  if (notLoadedYet(scene, key)) {
+    void loadAssets(scene, [key]).then(() => {
+      if (!holder.active || !scene.textures.exists(key)) return;
+      holder.removeAll(true);
+      holder.add(scene.add.image(0, 0, key).setScale(scale));
+    });
+  }
+  return holder;
 }

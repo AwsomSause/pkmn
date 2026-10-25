@@ -2,6 +2,7 @@
 // battle engine because they need the opponent.
 
 import type { Content, Item } from './contentSchema';
+import { evolve, itemEvolutionTargets } from './evolution';
 import { getSpecies, maxHp } from './pokemon';
 import type { PokemonInstance } from './state';
 
@@ -26,8 +27,8 @@ export function consumeItem(inventory: Record<string, number>, id: string): void
   else inventory[id] = count - 1;
 }
 
-/** Why an item can't be used on this Pokémon, or null if it can. */
-export function itemUseProblem(content: Content, item: Item, mon: PokemonInstance): string | null {
+/** Why an item can't be used on this Pokémon, or null if it can. `regionId` decides regional evolutions. */
+export function itemUseProblem(content: Content, item: Item, mon: PokemonInstance, regionId?: string): string | null {
   const fainted = mon.hp <= 0;
   const name = getSpecies(content, mon.speciesId).name;
   switch (item.effect.kind) {
@@ -46,16 +47,28 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
       return mon.moves.some((m) => m.pp < content.moves.get(m.id)!.pp) ? null : `${name}'s PP is already full.`;
     case 'revive':
       return fainted ? null : `${name} hasn't fainted.`;
+    case 'evolve':
+      if (fainted) return `${name} has fainted.`;
+      return itemEvolutionTargets(content, mon, item.id, regionId).length > 0 ? null : `It won't have any effect on ${name}.`;
     case 'catch':
     case 'lastStand':
       return `${item.name} can't be used on your Pokémon.`;
   }
 }
 
-/** Applies a healing/revive/PP item to a Pokémon (mutates it). Returns a message. Does not consume the item. */
-/** Uses an item on a Pokémon. `healMultiplier` scales HP restored by healing items (a trainer passive). */
-export function applyItemToPokemon(content: Content, item: Item, mon: PokemonInstance, healMultiplier = 1): string {
-  const problem = itemUseProblem(content, item, mon);
+export interface ItemUseOptions {
+  /** The current region (for regional evolutions). */
+  regionId?: string;
+  /** For an evolution item with several possible results (Eevee), the one the player chose. */
+  evolveTo?: string;
+  /** Scales HP restored by healing items (a trainer passive). */
+  healMultiplier?: number;
+}
+
+/** Uses an item on a Pokémon (mutates it). Returns a message. Does not consume the item. */
+export function applyItemToPokemon(content: Content, item: Item, mon: PokemonInstance, opts: ItemUseOptions = {}): string {
+  const problem = itemUseProblem(content, item, mon, opts.regionId);
+  const healMultiplier = opts.healMultiplier ?? 1;
   if (problem) throw new Error(problem);
   const name = getSpecies(content, mon.speciesId).name;
   const max = maxHp(content, mon);
@@ -79,6 +92,16 @@ export function applyItemToPokemon(content: Content, item: Item, mon: PokemonIns
       mon.hp = Math.max(1, Math.floor(max * item.effect.fraction));
       mon.status = null;
       return `${name} was revived!`;
+    case 'evolve': {
+      const targets = itemEvolutionTargets(content, mon, item.id, opts.regionId);
+      const to = opts.evolveTo ?? (targets.length === 1 ? targets[0] : undefined);
+      if (!to || !targets.includes(to)) throw new Error(`Choose what ${name} evolves into`);
+      const result = evolve(content, mon, to);
+      const newName = getSpecies(content, to).name;
+      const learned = result.learnedMoves.map((m) => ` ${newName} learned ${content.moves.get(m)!.name}!`).join('');
+      const skipped = result.wantsToLearn.length > 0 ? ` (It already knows four moves, so it didn't learn ${result.wantsToLearn.map((m) => content.moves.get(m)!.name).join(', ')}.)` : '';
+      return `${name} evolved into ${newName}!${learned}${skipped}`;
+    }
     default:
       throw new Error(`${item.name} can't be used on a Pokémon`);
   }

@@ -10,12 +10,17 @@ import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual } from '../ui/sprites';
 import { textStyle } from '../ui/theme';
 import { sceneForRun } from './routing';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 export class ShopScene extends Phaser.Scene {
   private picker: Picker | null = null;
 
   constructor() {
     super('Shop');
+  }
+
+  preload(): void {
+    preloadPokemon(this, partySpecies(), { icon: true });
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {

@@ -158,8 +158,8 @@ export class GameSession {
     return result;
   }
 
-  useItem(itemId: string, partyIndex: number): string {
-    const result = Run.useItemOutsideBattle(this.content, this.requireRun(), itemId, partyIndex);
+  useItem(itemId: string, partyIndex: number, evolveTo?: string): string {
+    const result = Run.useItemOutsideBattle(this.content, this.requireRun(), itemId, partyIndex, evolveTo);
     this.run = result.run;
     this.persistRun();
     return result.message;

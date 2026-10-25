@@ -223,7 +223,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
       const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, scale, bonus, r);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex]);
     });
     const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
@@ -245,7 +245,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
           return planChampion(content, archetype, stage.leaderId, run.regionIndex, regionThemes, scale, r);
         }
         default:
-          return planTrainer(content, archetype, theme, stageNumber, scale, r);
+          return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
     const team = plan.members.map((m) => createPokemon(content, m.speciesId, m.level, nextUid(run, 'e')));
@@ -466,7 +466,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of run.party) {
-    for (const evo of evolveFully(content, mon)) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex])) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
@@ -659,17 +659,23 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
 }
 
 /** Uses a Bag item on a party member between battles. */
-export function useItemOutsideBattle(content: Content, current: RunState, itemId: string, partyIndex: number): { run: RunState; message: string } {
+export function useItemOutsideBattle(content: Content, current: RunState, itemId: string, partyIndex: number, evolveTo?: string): { run: RunState; message: string } {
   assertPhase(current, 'reward', 'decision', 'map', 'shop');
   const item = getItem(content, itemId);
   if (!item.usableOutside) throw new Error(`${item.name} can't be used outside battle`);
   if (itemCount(current.inventory, itemId) <= 0) throw new Error(`You have no ${item.name}`);
   const target = current.party[partyIndex];
   if (!target) throw new Error('Choose a Pokémon');
-  const problem = itemUseProblem(content, item, target);
+  const regionId = current.regionOrder[current.regionIndex];
+  const problem = itemUseProblem(content, item, target, regionId);
   if (problem) throw new Error(problem);
   const run = structuredClone(current);
-  const message = applyItemToPokemon(content, item, run.party[partyIndex]!, healingMultiplier(getArchetype(content, run.archetypeId)));
+  const message = applyItemToPokemon(content, item, run.party[partyIndex]!, {
+    regionId,
+    evolveTo,
+    healMultiplier: healingMultiplier(getArchetype(content, run.archetypeId)),
+  });
+  if (item.effect.kind === 'evolve') count(run, 'evolutions');
   consumeItem(run.inventory, itemId);
   return { run, message };
 }

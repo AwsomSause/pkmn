@@ -44,7 +44,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Encounters are a straight sequence, not a stage map (Milestone 3).
 - Luck and the other nine attributes are stored but have no effect until their formulas are approved.
 - Move animations from the supplied pack are not played yet (hit flashes only).
-- Prototype learnsets are hand-written and simplified to supported moves; full data import is Milestone 6.
+- ~~Prototype learnsets are hand-written and simplified to supported moves~~ (full data import done in Milestone 6).
 - Damage uses whole-number rounding after each step; the main games use a slightly different rounding, so results can differ by about 1 HP.
 - If both Pokémon faint in the same turn (e.g. from recoil), the player wins.
 
@@ -149,6 +149,26 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Achievements are checked at the end of a run, not the moment they happen.
 - Oak and N aren't in the Archive until they have sprites; Cynthia's passive comes later.
 - Research Points pile up but have nothing to buy until the Starter Laboratory (M5.5).
+
+## Milestone 6 — Content scale-up ✅
+
+- [x] Every species (1,025) and 264 forms from PokeAPI's open data (`npm run data:species`): types, base stats, catch rates, experience, growth rates (incl. erratic and fluctuating), legendary/mythical/baby tags, pre-evolutions
+- [x] Regional forms (57), alternate forms (52), and Mega/Gigantamax/Primal/battle-only forms stored for M8 (never met yet)
+- [x] Level-up moves for every species and form from the director's move dataset; egg and other learnable moves in `learnables.json` (tools only)
+- [x] All 934 moves from the director's move list; 611 flagged "not supported" with what they need, kept in learnsets, never learned or used
+- [x] Evolution rules: level, stones and other items, trade (held item or Linking Cord), friendship (Soothe Bell), branches, Tyrogue, regional evolutions
+- [x] 44 evolution items: usable from the Bag, with a choice when there are several results; in the reward draft only when useful; stones in shops
+- [x] Trainers' Pokémon evolve by item at level 30 (babies at 15)
+- [x] Wild eligibility (first stage, not legendary/mythical/special forms, base stats ≤ 560, has supported moves) and region eligibility (native Pokémon 3× as likely)
+- [x] Sprites, shiny sprites, icons and cries for every species and form (form-aware file names), loaded on demand instead of at start-up
+- [x] Cries play when a Pokémon appears in battle
+
+### Known limits in Milestone 6 (by design, documented)
+
+- 611 moves (Protect, multi-hit moves, weather, healing, …) are not supported by the battle engine yet, so many Pokémon know fewer moves than in the main games. Ditto, Smeargle, Unown, Cosmog and Abra have no supported moves and don't appear.
+- Gender, time of day and weather don't exist, so evolutions that depend on them use the rules in GAME_DESIGN.md §5c.
+- A few forms have no art of their own in the pack and use their species' art (White-Striped Basculin, Mega Floette, Mega Meowstic).
+- Battle animations from the pack are still not played (M9).
 
 ## Milestone 5.5+ — not started
 

@@ -97,6 +97,12 @@
  },
  "minThemePool": 3,
  "dualTypeWeight": 3,
+ "nativeWeight": 3,
+ "wildMaxBaseStats": 560,
+ "evolution": {
+  "trainerItemLevel": 30,
+  "trainerBabyLevel": 15
+ },
  "harderRarityWeights": {
   "common": 40,
   "uncommon": 40,

@@ -34,25 +34,67 @@ const StatBlockSchema = z.object({
   spe: z.number().int().positive(),
 });
 
-export const GROWTH_RATES = ['fast', 'medium-fast', 'medium-slow', 'slow'] as const;
+export const GROWTH_RATES = ['fast', 'medium-fast', 'medium-slow', 'slow', 'erratic', 'fluctuating'] as const;
 export const GrowthRateSchema = z.enum(GROWTH_RATES);
 export type GrowthRate = z.infer<typeof GrowthRateSchema>;
+
+export const SPECIES_TAGS = ['baby', 'legendary', 'mythical'] as const;
+export type SpeciesTag = (typeof SPECIES_TAGS)[number];
+
+/**
+ * Forms besides a species' usual one. Regional and alternate forms are ordinary
+ * Pokémon; Mega, Gigantamax, Primal and battle-only forms (Zen Mode, Ash-Greninja,
+ * ...) only appear through mechanics that arrive in Milestone 8, so they are never
+ * met in the wild, on trainers' teams or as starters.
+ */
+export const FORM_KINDS = ['regional', 'alternate', 'mega', 'gigantamax', 'primal', 'battle'] as const;
+export type FormKind = (typeof FORM_KINDS)[number];
+
+/**
+ * How one species evolves into another (GAME_DESIGN.md §5c). Exactly one of
+ * `level` (standard level-up, D15) or `item` (use the item from the Bag).
+ * `region`: in that region this branch is preferred (Pikachu becomes Alolan
+ * Raichu in Alola). `condition`: Tyrogue's Attack/Defense comparison.
+ */
+export const EvolutionSchema = z
+  .object({
+    to: z.string(),
+    level: z.number().int().min(2).max(100).optional(),
+    item: z.string().optional(),
+    region: z.string().optional(),
+    condition: z.enum(['atkGtDef', 'atkLtDef', 'atkEqDef']).optional(),
+  })
+  .refine((e) => (e.level === undefined) !== (e.item === undefined), { message: 'an evolution needs exactly one of level or item' });
+export type Evolution = z.infer<typeof EvolutionSchema>;
 
 export const SpeciesSchema = z.object({
   id: z.string().min(1),
   dex: z.number().int().positive(),
   name: z.string().min(1),
+  /** The generation it (or this form) was introduced in, 1–9. Regions prefer their own generation's Pokémon. */
+  generation: z.number().int().min(1).max(9),
   types: z.array(TypeNameSchema).min(1).max(2),
   baseStats: StatBlockSchema,
   catchRate: z.number().int().min(1).max(255),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
-  /** 1 = has no pre-evolution (eligible as a "stage-one" starter). */
+  /**
+   * 1 = has no pre-evolution (eligible as a "stage-one" starter and in the wild).
+   * Baby Pokémon don't count, so Pikachu (from Pichu) is still stage 1.
+   */
   evolutionStage: z.number().int().min(1).max(3),
+  /** The species it evolves from, if any. */
+  evolvesFrom: z.string().nullable().default(null),
+  tags: z.array(z.enum(SPECIES_TAGS)).default([]),
+  /** Set for forms: what kind, and the species it is a form of. */
+  form: z
+    .object({ kind: z.enum(FORM_KINDS), base: z.string(), region: z.string().optional() })
+    .optional(),
+  /** Level-up moves, including moves the battle engine doesn't support yet (they are skipped). */
   learnset: z.array(z.object({ level: z.number().int().min(1).max(100), move: z.string() })).min(1),
-  /** Standard level-up evolutions (director decision D15). */
-  evolutions: z.array(z.object({ to: z.string(), level: z.number().int().min(2).max(100) })).default([]),
-  assets: z.object({ front: z.string(), back: z.string(), cry: z.string().optional() }),
+  evolutions: z.array(EvolutionSchema).default([]),
+  /** File names in the asset pack: sprite "2019" → images/pokemon/2019.png, icon "7/2019", cry "19". */
+  assets: z.object({ sprite: z.string(), icon: z.string(), cry: z.string() }),
 });
 export type Species = z.infer<typeof SpeciesSchema>;
 
@@ -77,6 +119,14 @@ export const MoveSchema = z.object({
   critStage: z.number().int().min(0).max(3).default(0),
   target: z.enum(['enemy', 'self']),
   flags: z.array(z.enum(['powder', 'typeless'])).default([]),
+  /**
+   * False for moves whose effects the battle engine can't run yet. They stay
+   * in the data (and in learnsets) so they can be switched on later, but no
+   * Pokémon learns or uses them until then.
+   */
+  supported: z.boolean().default(true),
+  /** For unsupported moves: what still has to be built (the move list's effect text). */
+  needs: z.string().optional(),
   effects: z
     .object({
       status: z.object({ id: StatusIdSchema, chance: z.number().min(1).max(100) }).optional(),
@@ -220,6 +270,8 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('restorePp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('revive'), fraction: z.number().positive().max(1) }),
   z.object({ kind: z.literal('lastStand') }),
+  /** Evolves a Pokémon that has an evolution using this item (stones, Linking Cord, Soothe Bell, ...). */
+  z.object({ kind: z.literal('evolve') }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -227,7 +279,7 @@ export const ItemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm']),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution']),
   iconAssetId: z.string(),
   usableInBattle: z.boolean(),
   usableOutside: z.boolean(),
@@ -276,6 +328,8 @@ export const RegionSchema = z.object({
   champions: z.array(z.string()),
   /** The Grand Region always comes last. */
   grand: z.boolean().default(false),
+  /** The generations of Pokémon native to this region (empty = every generation is native). */
+  generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
 export type Region = z.infer<typeof RegionSchema>;
 
@@ -459,6 +513,18 @@ export const BalanceSchema = z.object({
     randomExtra: z.number().int().min(0),
     maxSize: z.number().int().min(1).max(6),
   }),
+  /**
+   * Trainers' Pokémon evolve by item (stones, trades, friendship) once they reach
+   * trainerItemLevel, or trainerBabyLevel for baby Pokémon (Pichu, Togepi, ...).
+   */
+  evolution: z.object({ trainerItemLevel: z.number().int().min(2).max(100), trainerBabyLevel: z.number().int().min(2).max(100) }),
+  /**
+   * Region eligibility: in a region, wild and trainer Pokémon from its own
+   * generation(s) are this many times as likely as others (still themed).
+   */
+  nativeWeight: z.number().min(1),
+  /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
+  wildMaxBaseStats: z.number().int().positive(),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */

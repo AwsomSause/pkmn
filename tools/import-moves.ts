@@ -4,13 +4,21 @@
 //
 //   npm run data:moves -- <path to pokemon_moves_list.html>
 //
-// A move is only added when every sentence of its effect is something the
-// battle engine already does (plain damage, stat changes, status, flinching,
-// draining, recoil, priority, high critical-hit ratio, level damage). The rest
-// are listed so they can be built later. Moves already in moves.json keep
-// their effects; their power, accuracy and PP are checked against the list.
+// Every move in the list is added. A move is "supported" only when every
+// sentence of its effect is something the battle engine already does (plain
+// damage, stat changes, status, flinching, draining, recoil, priority, high
+// critical-hit ratio, level damage). The rest are added with
+// `supported: false` and `needs` (the effect text still to build), so
+// learnsets can list them and the game skips them until they work. Supported
+// moves already in moves.json keep their effects; their power, accuracy and
+// PP are checked against the list. Unsupported moves are rebuilt each run, so
+// a move becomes supported as soon as the engine (and this tool) can run it.
+//
+// Priority and gaps in the list (Z-Moves and Max Moves have no category) are
+// filled from PokeAPI's moves.csv, downloaded into .cache/pokeapi if missing.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const listPath = process.argv[2];
@@ -45,6 +53,8 @@ type MoveRow = {
   target: 'enemy' | 'self';
   flags: string[];
   effects: Effects;
+  supported?: false;
+  needs?: string;
 };
 
 /** Recoil is "User receives recoil damage." in the list, without the amount; these are the official fractions. */
@@ -173,12 +183,56 @@ function readList(path: string): ListRow[] {
   return rows;
 }
 
+/** PokeAPI's move table (priority, category, type, power, accuracy, PP) by move id. */
+function readPokeApiMoves(): Map<string, Record<string, string>> {
+  const dir = join(import.meta.dirname, '..', '.cache', 'pokeapi');
+  const path = join(dir, 'moves.csv');
+  if (!existsSync(path)) {
+    mkdirSync(dir, { recursive: true });
+    execFileSync('curl', ['-sSfL', '-o', path, 'https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/moves.csv']);
+  }
+  const [header, ...rows] = readFileSync(path, 'utf8').trim().split('\n').map((l) => l.split(','));
+  return new Map(rows.map((r) => [r[1]!, Object.fromEntries(header!.map((h, i) => [h, r[i] ?? '']))]));
+}
+const POKEAPI_TYPES = ['', 'normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel', 'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark', 'fairy'];
+const POKEAPI_CATEGORY = ['', 'status', 'physical', 'special'] as const;
+
 const list = readList(listPath);
-const moves = JSON.parse(readFileSync(movesPath, 'utf8')) as MoveRow[];
+const pokeApi = readPokeApiMoves();
+// Unsupported moves are rebuilt from the list every time.
+const moves = (JSON.parse(readFileSync(movesPath, 'utf8')) as MoveRow[]).filter((m) => m.supported !== false);
 const known = new Map(moves.map((m) => [m.id, m]));
 
 const added: string[] = [];
 const skipped: { name: string; effect: string }[] = [];
+
+/** Adds a move the battle engine can't run yet, with whatever the list and PokeAPI know about it. */
+function addUnsupported(row: ListRow, id: string, needs: string): void {
+  const api = pokeApi.get(id);
+  const category = (['physical', 'special', 'status'].includes(row.category) ? row.category : POKEAPI_CATEGORY[Number(api?.damage_class_id)] || 'status') as MoveRow['category'];
+  const num = (v: string | undefined) => (v && /^\d+$/.test(v) ? Number(v) : null);
+  const type = POKEAPI_TYPES.includes(row.type) ? row.type : POKEAPI_TYPES[Number(api?.type_id)] || 'normal';
+  const move: MoveRow = {
+    id,
+    name: row.name,
+    type,
+    category,
+    // The list writes 0 for "never misses" and "varies"; the game uses null for both.
+    power: category === 'status' ? null : row.power || num(api?.power) || null,
+    accuracy: row.accuracy || num(api?.accuracy) || null,
+    pp: row.pp || num(api?.pp) || 1,
+    priority: Number(api?.priority ?? 0),
+    critStage: 0,
+    target: 'enemy',
+    flags: [],
+    effects: {},
+    supported: false,
+    needs,
+  };
+  moves.push(move);
+  known.set(id, move);
+  skipped.push({ name: row.name, effect: needs });
+}
 const corrected: string[] = [];
 for (const row of list) {
   const id = moveId(row.name);
@@ -192,9 +246,12 @@ for (const row of list) {
     if (fixes.length) corrected.push(`${existing.name}: ${fixes.join(', ')}`);
     continue;
   }
-  if (!['physical', 'special', 'status'].includes(row.category) || row.pp === null || /Z-Move|Max Move|Dynamax/.test(row.effect)) continue;
+  if (!['physical', 'special', 'status'].includes(row.category) || row.pp === null || /Z-Move|Max Move|Dynamax/.test(row.effect)) {
+    addUnsupported(row, id, row.effect || 'Z-Move or Max Move');
+    continue;
+  }
   if (row.category !== 'status' && row.power === null && !/damage equal to user's level/.test(row.effect)) {
-    skipped.push({ name: row.name, effect: row.effect || '(variable power)' });
+    addUnsupported(row, id, row.effect || '(variable power)');
     continue;
   }
   const move: MoveRow = {
@@ -216,7 +273,7 @@ for (const row of list) {
   // A status move has to do something the engine understands.
   const doesSomething = move.category !== 'status' || move.effects.status || move.effects.statChanges?.length;
   if (!ok || !doesSomething) {
-    skipped.push({ name: row.name, effect: row.effect });
+    addUnsupported(row, id, row.effect || '(no effect text)');
     continue;
   }
   const changes = move.effects.statChanges ?? [];
@@ -227,7 +284,7 @@ for (const row of list) {
 }
 
 writeFileSync(movesPath, JSON.stringify(moves, null, 1) + '\n');
-console.log(`Added ${added.length} moves (${moves.length} total).`);
+console.log(`Added ${added.length} supported moves; ${moves.length} moves in total.`);
 if (corrected.length) console.log(`Corrected ${corrected.length} existing moves to match the list:\n  ${corrected.join('\n  ')}`);
-console.log(`Skipped ${skipped.length} moves whose effects the battle engine can't do yet. First 30:`);
+console.log(`${skipped.length} moves are flagged as not supported yet (the battle engine can't run their effects). First 30:`);
 for (const s of skipped.slice(0, 30)) console.log(`  ${s.name}: ${s.effect}`);

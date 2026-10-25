@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { buildContent, ContentError, RAW_CONTENT } from '../../src/data';
 import { content } from './helpers';
+import { movesAtLevel } from '../../src/core/pokemon';
+import { wildEligibleSpecies } from '../../src/core/themes';
 
 describe('game data', () => {
   it('all data files pass validation', () => {
@@ -20,9 +22,12 @@ describe('game data', () => {
     expect(() => buildContent({ ...RAW_CONTENT, species })).toThrow(/not a first-stage/);
   });
 
-  it('every species knows at least one move at level 1', () => {
-    for (const s of content.species.values()) {
-      expect(s.learnset.some((e) => e.level === 1)).toBe(true);
+  it('every species that can be met knows at least one supported move at level 1', () => {
+    for (const s of wildEligibleSpecies(content)) {
+      expect(movesAtLevel(content, s, 1).length, s.id).toBeGreaterThan(0);
+    }
+    for (const id of content.balance.starterPool) {
+      expect(movesAtLevel(content, content.species.get(id)!, content.balance.starterLevel).length, id).toBeGreaterThan(0);
     }
   });
 
