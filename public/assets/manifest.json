@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T17:16:59.877Z",
+  "generatedAt": "2026-10-25T17:45:22.600Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -3690,6 +3690,31 @@
       "path": "images/bosses/green.png"
     },
     {
+      "id": "boss.brock",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/brock.png"
+    },
+    {
+      "id": "boss.misty",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/misty.png"
+    },
+    {
+      "id": "trainer.giovanni",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/giovanni.png",
+      "atlasPath": "images/trainer/giovanni.json"
+    },
+    {
+      "id": "boss.cynthia-gen7",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/cynthia-gen7.png"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -3809,22 +3834,10 @@
       "atlasPath": "images/trainer/fairy_tale_girl.json"
     },
     {
-      "id": "boss.brock",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/brock.png"
-    },
-    {
       "id": "boss.brock-masters",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/brock-masters.png"
-    },
-    {
-      "id": "boss.misty",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/misty.png"
     },
     {
       "id": "boss.ltsurge",
@@ -3879,13 +3892,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/blaine-lgpe.png"
-    },
-    {
-      "id": "trainer.giovanni",
-      "kind": "atlas",
-      "category": "trainer",
-      "path": "images/trainer/giovanni.png",
-      "atlasPath": "images/trainer/giovanni.json"
     },
     {
       "id": "boss.lorelei-lgpe",
@@ -4329,12 +4335,6 @@
       "category": "trainer",
       "path": "images/trainer/lucian.png",
       "atlasPath": "images/trainer/lucian.json"
-    },
-    {
-      "id": "boss.cynthia-gen7",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/cynthia-gen7.png"
     },
     {
       "id": "boss.cynthia-masters4",

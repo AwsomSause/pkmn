@@ -162,15 +162,94 @@ Each has permanent value + run modifier → effective value, clamped to 0–100 
 **Needed before later milestones**
 - **D1 Campaign length.** Decided (2026-10-25): keep the full length (9 regions × 8 stages × 20 levels, plus the Grand Region).
 - **D6 Regions.** Decided (2026-10-25): the regions are a mix of the original regions and custom regions. Every gym leader, Elite Four member and champion is chosen at random, and none repeats within one run. *(Still open: the list of custom regions, and what the Grand Region contains.)*
-- **D7 Candies.** Decided (2026-10-25): candies are a permanent currency spent outside a run (unlocking trainers, starting buffs, etc.). Candies earned in a run are added to the profile when the run ends.
+- **D7 Candies.** Decided (2026-10-25): candies are a permanent currency spent outside a run (unlocking trainers, starting buffs, etc.). Candies earned in a run are added to the profile when the run ends. *(Confirmed 2026-10-25 with the Out-of-Run design: candies stay as a fourth currency beside Poké Dollars, Bank Credits and Research Points, see D16.)*
 - **D8 Shiny odds.** Decided (2026-10-25): 1/2000 per wild Pokémon. *(Still open: the luck formula and how much a shiny adds to Luck.)*
 - **D9 Attribute meters.** Decided (2026-10-25): Rage/Peace and Good/Evil are each one meter with two ends. *(Still open: exact formulas for each attribute's effects.)*
 - **D10 Permanent attributes.** Decided (2026-10-25): earned through actions such as catching Pokémon of certain types, battling, healing and Pokémon interactions. *(Exact action → attribute amounts to be proposed in Milestone 7.)*
-- **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Deposit rules and fees to be proposed in Milestone 5.)*
+- **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Superseded in detail by the Out-of-Run design, §14: the Bank's currency is Bank Credits.)*
 - **D12 Trainer unlocks.** Decided (2026-10-25): future trainers include Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker and more. *(Unlock conditions and pros/cons to be proposed in Milestone 5.)*
 - **D13 Elite Four rewards.** Decided (2026-10-25): a reward draft after each Elite Four member.
 - **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. *(Question for the director: that passes level 100 in region 3. Should levels go above 100, as in PokeRogue? To confirm before Milestone 4.)*
 - **D15 Evolution.** Decided (2026-10-25): standard level-up evolution.
+- **D16 Currencies.** Decided (2026-10-25): four currencies. Poké Dollars (spent during a run), Bank Credits (permanent upgrades and unlocks), Research Points (Pokédex, starters, research) and candies (kept as a separate fourth currency, D7).
+
+## 14. Out-of-Run and Run-Prep (director design, 2026-10-25)
+
+The director's expanded design. **Guiding rule:** permanent progression should open up more choices and strategies. It should not make veteran players so strong that early content becomes trivial.
+
+Two layers:
+- **Out-of-Run (Milestone 5):** permanent progression, collection, unlocks, achievements, banking, long-term goals.
+- **Run-Prep (Milestone 5.5):** decisions made just before a run: campaign mode, trainer, starter options, loadout, optional preparation bonuses.
+
+### 14.1 The hub
+Before a run the player is in a hub that can grow visually as they unlock things. Rooms: **Bank**, **Trainer Archive**, **Achievement Hall**, **Starter Laboratory**, **Preparation Desk**, **Pokédex & Research**, and a **Run History** terminal (past runs, what ended them, builds, best achievements).
+
+### 14.2 Bank and currencies (D16)
+| Currency | Earned from | Used for |
+|---|---|---|
+| Poké Dollars | battles, shops, events, selling items | spending during a run |
+| Bank Credits | run completion, achievements, milestones, conversion bonuses | permanent upgrades and unlocks |
+| Research Points | discovering species, catching, seeing forms and moves | Pokédex, starters, research unlocks |
+| Candies (D7) | releasing Pokémon | kept as a fourth currency |
+
+Bank features:
+- **Savings:** at run end a percentage of leftover Poké Dollars converts to Bank Credits, plus bonuses for stages, champions and new regions, plus a fixed stipend based on progress so a failed run still counts.
+- **Bank tiers** unlock services rather than multiplying rewards: 1 basic savings and purchases; 2 better item catalog and extra loadout presets; 3 research exchange and special contracts; 4 regional item catalog and advanced preparation; 5 Grand Region archive and prestige cosmetics.
+- **Daily/weekly contracts** (e.g. win five battles with a Water-type, beat a gym leader without losing a Pokémon) pay credits, research, cosmetics or unlock progress.
+- **Permanent item catalog:** unlocking an item makes it *eligible* to appear in future runs, not guaranteed.
+- More: interest-free savings milestones, Emergency Reserve (protects a little run money on defeat), Exchange Counter, Collector's Vault, Regional Accounts (shop stock after certain champions), Loan Challenges (extra starting resources with a repayment condition), savings milestones that unlock titles and decorations.
+- **Investment Licenses** (the big idea): spend credits to *broaden options* rather than buy stats. Field Medic (a healing item among starting preparation choices), Scavenger (small chance of bonus currency in special encounters), Research (more unusual starter candidates), Type Specialist (type-focused preparation options), Fortune (new reward modifiers in the pool), Survival (a rare defeat-prevention item in shop stock).
+
+### 14.3 Player trainers
+Each trainer has: identity, portrait and unlock requirement; one primary passive; a drawback where fitting; a signature preparation option or interaction; optional mastery challenges; cosmetic variants and titles. One trainer per run, with effects readable before the run starts. All numbers live in data.
+- **Red** (starting): no passive, no drawback; the baseline. Mastery: win a champion battle with at least three Pokémon standing.
+- **Blue** (starting): +25% experience; enemies +2 levels before caps. Mastery: beat a champion with a party averaging below the regional benchmark.
+- **Green** (starting): +25% money from eligible rewards, enemies −1 level; catching 15% harder. Mastery: complete a region with a minimum number of catches and a money target.
+- **Professor Oak** (discover 100 species): more Research Points from new species and forms; less money from ordinary battles; once per stage preview an unknown encounter.
+- **Brock** (clear a region without a party wipe): healing items work better; Poké Balls cost more; starts with a small healing supply.
+- **Misty** (win a run with a Water-type leading every boss battle): small Water-type combat bonus; more danger from encounters that hit Water's weaknesses; a Water-focused preparation option.
+- **Cynthia** (defeat champions in several regions): more information about boss teams before battle; no economy or experience bonus.
+- **Giovanni** (collect rare items or reach a high lifetime earnings milestone): better special shop stock; healing costs more; occasional black-market merchants.
+- **N** (a friendship and Pokémon-care challenge): stronger friendship effects; some aggressive event choices unavailable; friendship opens alternate event outcomes.
+
+**Mastery tracks** per trainer (e.g. Blue: win 10 battles → badge; 3 gym leaders in one run → alternate portrait; regional champion → title; restricted region clear → cosmetic; final campaign → emblem). Mastery gives cosmetics, titles, options and collection content, not stacking combat multipliers. **Trainer Research:** using a trainer reveals their background, dialogue and special events.
+
+### 14.4 Achievements
+Nine categories: Campaign, Pokémon collection, Battle, Exploration, Economy, Roguelike, Relationship, Secret, Endgame. Examples: First Steps (win your first battle, 100 Bank Credits), Champion Material (first champion: title and trainer unlock progress), A Little Different (first shiny), Beyond the Regions (final Grand Region boss). **Chains** with tiers (catch 10 → 50 → 100 species → full Pokédex; gym leaders 1 → 10 → 50 → all; shinies 1 → 5 → 20; finish a run → region → campaign → challenge campaign). **Hidden achievements** such as Against the Odds, Penny Pincher, No Turning Back, The Collector, One of a Kind, The Long Game, Lucky Break, Wrong Way Right Result, No Safety Net. Progress is tracked automatically. The strongest gameplay unlocks come from meaningful milestones, not grinding.
+
+### 14.5 Starters: the Starter Laboratory
+- **Pools** in data (eligibility never hard-coded): Classic (Kanto starters, available from the start), Johto, Hoenn, Regional, Rare (hard achievements), Research (unusual first-stage species, bought or earned with licenses), Grand (endgame).
+- **Draft modifiers** (optional rules, not power): Expanded Research, Type Focus, Regional Research, Rare Specimen License, Evolution Specialist, Blind Draft, Balanced Draft. The draft must never reroll forever chasing an impossible rule; it shows a clear fallback instead.
+- **Starter mastery** per species (e.g. Bulbasaur: win five battles with it, evolve it, a Grass-type boss win, a stage without it fainting, a campaign with it surviving), rewarding badges, backgrounds, palettes (with supplied art), titles, Research Points and events. Mastery is account-level and never carries a previous run's levels.
+- **Research panel:** encountered, caught, used against bosses, evolutions, forms, shinies, move and type interactions, mastered starters. Research unlocks information more than power.
+- **Starter events** driven by species tags; **legendary and mythical starters** in a separate Special Specimen category with restrictions.
+
+### 14.6 More Out-of-Run systems (later)
+Pokédex and Collection Archive; Trainer Wardrobe (outfits, frames, poses, hub decorations); Research Laboratory (spend Research Points on encounter pools, species info, events, starters); Battle Records and Hall of Fame; Berry Garden (grows per completed run); Move Research and Training Center; Regional Intelligence Board; Permanent Item Museum.
+
+### 14.7 Run-Prep flow
+1. Select campaign mode (standard, challenge, unlocked modifiers). 2. Select trainer. 3. Configure preparation (optional license, limited consumable, or draft modifier). 4. Review permanent bonuses (attributes, research unlocks, challenge conditions). 5. Roll three starters and pick one. 6. Campaign briefing (region order, seed, starting resources, special rules). 7. Begin.
+
+Features: **loadout presets** (store preferences only; an option that became unavailable must be resolved before starting); **preparation tokens** from achievements and progression, one token choice per run at first (extra money, a basic healing item, better odds for a starter type, first-region intel, an item category in the reward pool, a small run attribute bonus); **challenge modifiers** with their difficulty and reward shown before confirming; **campaign briefing**; **seed management** (copy/export a seed, a developer reproduction tool, shared seeds later). A **Run Build Summary** before starting shows the combined effect of trainer, attributes, token, licenses and modifiers.
+
+### 14.8 Bigger systems (later)
+Trainer Network (non-selected trainers give small utility services; only one main passive), Research Tree, Prestige and Legacy (never deletes collection or achievements), Contract Board, Legacy Records and Rival Ghosts.
+
+### 14.9 Balancing rules
+Progression mainly unlocks choices, information and customization; combat bonuses have documented stacking rules and caps; luck shifts odds without guarantees; rare items and defeat prevention stay valuable; starter mastery gives collection and cosmetics; Bank Credits can't be duplicated by saving, loading or repeat claims; challenge modifiers pay more only when genuinely harder; optional content is never needed to beat the default campaign.
+
+### 14.10 Order and scope
+The director's priorities: 1 profile, banks, trainer unlocks; 2 achievements and event tracking; 3 starter pools and selection; 4 Run-Prep and presets; 5 Pokédex and research; 6 contracts and challenge modifiers; 7 wardrobe, hub upgrades, legacy records; 8 prestige, trainer network, rival ghosts. **First package = priorities 1–4**, built as Milestone 5 (1–2) and Milestone 5.5 (3–4). Every unlock uses one architecture: a data-defined requirement, a progress tracker, a reward definition, and a claim or activation rule.
+
+### 14.11 Conflicts with earlier decisions (flagged, not guessed)
+| # | Conflict | Status |
+|---|---|---|
+| C9 | D7/D11 made candies the out-of-run currency; this design adds Bank Credits and Research Points. | **Resolved** by the director: candies stay as a fourth currency (D16). |
+| C10 | D12 listed future trainers Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker; this design proposes Oak, Brock, Misty, Cynthia, Giovanni, N. | Proposed: both lists are wanted; this design's six come first because their passives are specified. |
+| C11 | Brock, Misty, Cynthia and Giovanni are also gym leaders and a champion in the boss roster, so a run could pit player-trainer Brock against Gym Leader Brock. | Proposed: allow it for now (they are separate entries); revisit if it reads oddly. |
+| C12 | The asset pack has no sprites for Professor Oak or N (and none for Green, as before). | Oak and N wait until art is supplied or a stand-in is chosen. |
+| C13 | Several trainer passives need systems that don't exist yet: friendship (N), events and merchants (Giovanni's black market, Oak's preview), boss intel (Cynthia), Research Points from forms. | Each trainer ships when the systems behind its passive exist; the Archive shows them as "coming later". |
+| C14 | "Discover 100 species" (Oak) is more than the game's current 89 species. | Kept as written; reachable once Milestone 6 adds the full Pokédex. |
 
 ## 13. Assets: what you supplied
 

@@ -98,11 +98,88 @@ export type Move = z.infer<typeof MoveSchema>;
 export const TypeChartSchema = z.partialRecord(TypeNameSchema, z.partialRecord(TypeNameSchema, z.number().min(0).max(2)));
 export type TypeChart = z.infer<typeof TypeChartSchema>;
 
+// ---------- permanent progression (GAME_DESIGN.md §14) ----------
+
+/** Things the game counts during a run; each run's counts are added to the profile when it ends. */
+export const BASE_COUNTER_NAMES = [
+  'battlesWon',
+  'wildDefeated',
+  'trainersDefeated',
+  'gymLeadersDefeated',
+  'eliteFourDefeated',
+  'championsDefeated',
+  'regionsCleared',
+  /** Regions cleared without the Last Stand Charm saving the run. */
+  'regionsClearedNoCharm',
+  'runsFinished',
+  'runsWon',
+  'pokemonCaught',
+  'shiniesFound',
+  'evolutions',
+  'moneyEarned',
+  'candiesEarned',
+] as const;
+/** Also counted: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>". */
+export const COUNTER_NAMES: readonly string[] = [...BASE_COUNTER_NAMES, ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`)];
+export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes(s), { message: 'unknown counter' });
+
+/**
+ * A data-defined unlock requirement, shared by achievements and trainers:
+ *   total       — a counter summed over every run
+ *   best        — a counter's best value in a single run
+ *   distinct    — how many different species have been seen or caught
+ *   achievement — another achievement has been earned
+ */
+export const RequirementSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('total'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
+  z.object({ kind: z.literal('best'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
+  z.object({ kind: z.literal('distinct'), set: z.enum(['speciesSeen', 'speciesCaught']), atLeast: z.number().int().positive() }),
+  z.object({ kind: z.literal('achievement'), id: z.string() }),
+]);
+export type Requirement = z.infer<typeof RequirementSchema>;
+
+/** What earning an achievement pays out. */
+export const UnlockRewardSchema = z.object({
+  bankCredits: z.number().int().min(0).default(0),
+  researchPoints: z.number().int().min(0).default(0),
+  candies: z.number().int().min(0).default(0),
+  /** A profile title the player can show (cosmetic). */
+  title: z.string().optional(),
+});
+export type UnlockReward = z.infer<typeof UnlockRewardSchema>;
+
+export const ACHIEVEMENT_CATEGORIES = ['campaign', 'collection', 'battle', 'exploration', 'economy', 'roguelike', 'relationship', 'secret', 'endgame'] as const;
+
+export const AchievementSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  category: z.enum(ACHIEVEMENT_CATEGORIES),
+  /** Hidden achievements show as "???" until earned. */
+  hidden: z.boolean().default(false),
+  /** Tiered achievements share a chain id and count up through tiers 1, 2, 3... */
+  chain: z.string().optional(),
+  tier: z.number().int().min(1).optional(),
+  requirement: RequirementSchema,
+  reward: UnlockRewardSchema,
+});
+export type Achievement = z.infer<typeof AchievementSchema>;
+
 export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('xpMultiplier'), value: z.number().positive() }),
   z.object({ kind: z.literal('moneyMultiplier'), value: z.number().positive() }),
   z.object({ kind: z.literal('enemyLevelOffset'), value: z.number().int() }),
   z.object({ kind: z.literal('captureMultiplier'), value: z.number().positive() }),
+  /** HP restored by healing items (Potion, Super Potion...). */
+  z.object({ kind: z.literal('healingMultiplier'), value: z.number().positive() }),
+  /** Shop price of the listed items. */
+  z.object({ kind: z.literal('priceMultiplier'), items: z.array(z.string()).min(1), value: z.number().positive() }),
+  /** Shop stock unlocks this many badges sooner (positive) or later (negative). */
+  z.object({ kind: z.literal('shopUnlockOffset'), value: z.number().int() }),
+  /** Damage dealt by your Pokémon of this type. */
+  z.object({ kind: z.literal('typeDamageMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
+  /** Super-effective damage taken by your Pokémon of this type. */
+  z.object({ kind: z.literal('weaknessDamageTakenMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -110,12 +187,24 @@ export type ArchetypeModifierKind = ArchetypeModifier['kind'];
 export const ArchetypeSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  /** A short tagline, e.g. "The Survivalist". */
+  title: z.string().default(''),
   description: z.string(),
   pros: z.array(z.string()),
   cons: z.array(z.string()),
   unlockedByDefault: z.boolean(),
+  /** What unlocks this trainer (null for starting trainers). */
+  unlock: RequirementSchema.nullable().default(null),
+  /** Plain-language version of `unlock`, shown in the Trainer Archive. */
+  unlockText: z.string().default(''),
+  /** Bank Credits to claim the trainer once its requirement is met. */
+  unlockCost: z.number().int().min(0).default(0),
+  /** False for trainers whose passives need systems that don't exist yet; shown as "coming later". */
+  available: z.boolean().default(true),
   spriteAssetId: z.string(),
   modifiers: z.array(ArchetypeModifierSchema),
+  /** Items added to the Bag at the start of a run (a signature preparation). */
+  startingItems: z.record(z.string(), z.number().int().positive()).default({}),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
@@ -247,6 +336,8 @@ export const CampaignSchema = z.object({
   regularRegions: z.number().int().min(1),
   /** Whether the Grand Region comes after them. */
   grandRegion: z.boolean(),
+  /** False for test campaigns: their runs still pay out, but don't count toward achievements and unlocks. */
+  countsForProgress: z.boolean().default(true),
   stagesPerRegion: z.number().int().min(1),
   /** Numbered levels per stage (the last is the gym leader). */
   columns: z.number().int().min(3),
@@ -414,6 +505,28 @@ export const BalanceSchema = z.object({
   }),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
+  /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
+  bank: z.object({
+    /** Share of leftover Poké Dollars that becomes Bank Credits. */
+    moneyConversionRate: z.number().min(0).max(1),
+    /** The stipend: credits for progress, paid even when the run is lost. */
+    stipend: z.object({
+      perRun: z.number().int().min(0),
+      perEncounter: z.number().min(0),
+      perBadge: z.number().int().min(0),
+      perEliteFour: z.number().int().min(0),
+      perChampion: z.number().int().min(0),
+      perRegion: z.number().int().min(0),
+    }),
+  }),
+  /** Research Points for discoveries (first time ever seen or caught). */
+  research: z.object({
+    perSpeciesSeen: z.number().int().min(0),
+    perSpeciesCaught: z.number().int().min(0),
+    perShiny: z.number().int().min(0),
+  }),
+  /** How many finished runs the Run History keeps. */
+  runHistorySize: z.number().int().min(1),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
@@ -422,6 +535,7 @@ export interface Content {
   moves: Map<string, Move>;
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
+  achievements: Map<string, Achievement>;
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;

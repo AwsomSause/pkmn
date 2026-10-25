@@ -7,6 +7,7 @@
 // Speed, then a seeded coin flip), then end-of-turn burn/poison damage, then
 // fainted Pokémon are replaced.
 
+import type { TypeModifiers } from '../archetypes';
 import type { BoostStat, Content, Move, StatusId } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
@@ -74,6 +75,10 @@ export interface BattleContext {
   captureRng: Rng;
   /** Multiplier on the final catch probability (e.g. Green's 0.85). */
   catchMultiplier: number;
+  /** Multiplier on HP restored by healing items used in battle (a trainer passive). */
+  healMultiplier?: number;
+  /** The trainer's type-based damage multipliers for the player's side. */
+  typeModifiers?: TypeModifiers;
 }
 
 export function createBattle(
@@ -306,7 +311,7 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
     return;
   }
   const target = ctx.party[targetIndex!]!;
-  const message = applyItemToPokemon(content, item, target);
+  const message = applyItemToPokemon(content, item, target, ctx.healMultiplier ?? 1);
   events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
 }
 
@@ -374,6 +379,16 @@ function canAct(content: Content, rng: Rng, user: Combatant, events: BattleEvent
  * Removes HP, applying the Last Stand Charm if this would knock out the
  * player's last usable Pokémon. Returns the HP actually lost.
  */
+/** The trainer's type passives: more damage from your Pokémon of a type, more super-effective damage taken by them. */
+function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number): number {
+  const mods = ctx.typeModifiers;
+  if (!mods) return damage;
+  let multiplier = 1;
+  if (user.side === 'player') for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
+  if (target.side === 'player' && effectiveness > 1) for (const t of getSpecies(ctx.content, target.mon.speciesId).types) multiplier *= mods.weaknessTaken[t] ?? 1;
+  return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
+}
+
 function takeHp(ctx: BattleContext, c: Combatant, amount: number): { lost: number; lastStand: string | null } {
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
@@ -451,6 +466,7 @@ function executeMove(
       burned: user.mon.status?.id === 'brn',
       physical,
     });
+    damage = applyTypeModifiers(ctx, user, target, effectiveness, damage);
   }
 
   const { lost: dealt, lastStand } = takeHp(ctx, target, damage);

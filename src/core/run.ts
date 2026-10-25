@@ -12,7 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
-import { captureMultiplier, getArchetype, moneyMultiplier, xpMultiplier } from './archetypes';
+import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
 import type { Content } from './contentSchema';
 import {
@@ -36,6 +36,7 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
+import { count, discover } from './progress';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
 import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
@@ -50,7 +51,9 @@ export interface NewRunOptions {
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
-  getArchetype(content, opts.archetypeId); // throws if unknown
+  const archetype = getArchetype(content, opts.archetypeId);
+  const inventory = { ...content.balance.startingItems };
+  for (const [id, n] of Object.entries(archetype.startingItems)) addItem(inventory, id, n);
   const campaign = getCampaign(content, opts.campaignId ?? 'full');
   const rng = createStreams(opts.seed);
   const starterChoices = withStream(rng, 'starter', (r) => generateStarterChoices(content, r));
@@ -63,7 +66,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     starterChoices,
     party: [],
     money: content.balance.money.startingMoney,
-    inventory: { ...content.balance.startingItems },
+    inventory,
     candies: 0,
     encountersCompleted: 0,
     battle: null,
@@ -82,7 +85,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     attributeModifiers: Object.fromEntries(ATTRIBUTE_NAMES.map((a) => [a, 0])),
     rng,
     nextUid: 1,
-    log: { rewardsTaken: [], battlesWon: 0 },
+    log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null },
   };
 }
 
@@ -182,6 +185,7 @@ function enterNextRegion(content: Content, run: RunState): void {
     return;
   }
   run.regionIndex += 1;
+  run.log.charmUsedInRegion = false;
   enterStage(content, run, 0);
 }
 
@@ -224,6 +228,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     });
     const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
+    if (plan.shiny) count(run, 'shiniesFound');
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
   } else {
@@ -247,6 +252,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
   }
+  for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
 }
 
@@ -278,8 +284,18 @@ function healParty(content: Content, run: RunState): void {
 }
 
 /** What the shop sells right now: more stock unlocks as the player earns badges. */
-export function shopStock(content: Content, run: Pick<RunState, 'badges'>): Content['shop'] {
-  return content.shop.filter((e) => run.badges.length >= e.minBadges);
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'>): Content['shop'] {
+  return content.shop.filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e));
+}
+
+/** Badges needed before the shop sells an entry, after the trainer's shopUnlockOffset. */
+export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetypeId'>, entry: Content['shop'][number]): number {
+  return Math.max(0, entry.minBadges - shopUnlockOffset(getArchetype(content, run.archetypeId)));
+}
+
+/** An entry's price for this run's trainer (some trainers pay more for some items). */
+export function shopPrice(content: Content, run: Pick<RunState, 'archetypeId'>, entry: Content['shop'][number]): number {
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item));
 }
 
 /** Buys one of an item at the shop. */
@@ -288,12 +304,14 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   const entry = content.shop.find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
-  if (current.badges.length < entry.minBadges) throw new Error(`The shop sells ${item.name} once you have ${entry.minBadges} badges.`);
-  if (current.money < entry.price) throw new Error(`You need ₽${entry.price} for a ${item.name}.`);
+  const badges = shopBadgesNeeded(content, current, entry);
+  if (current.badges.length < badges) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
+  const price = shopPrice(content, current, entry);
+  if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
   const run = structuredClone(current);
-  run.money -= entry.price;
+  run.money -= price;
   addItem(run.inventory, itemId, 1);
-  return { run, message: `You bought a ${item.name} for ₽${entry.price}.` };
+  return { run, message: `You bought a ${item.name} for ₽${price}.` };
 }
 
 export function leaveShop(current: RunState): RunState {
@@ -340,11 +358,22 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
   const engineEvents = resolveTurn(
-    { content, battle, party: run.party, inventory: run.inventory, rng, captureRng, catchMultiplier: captureMultiplier(archetype) },
+    {
+      content,
+      battle,
+      party: run.party,
+      inventory: run.inventory,
+      rng,
+      captureRng,
+      catchMultiplier: captureMultiplier(archetype),
+      healMultiplier: healingMultiplier(archetype),
+      typeModifiers: typeModifiers(archetype),
+    },
     action,
   );
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
+  if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
 
   const events = awardExperience(content, run, engineEvents);
 
@@ -353,6 +382,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     return { run, events, end, defeated: false };
   }
   if (battle.outcome === 'lose') {
+    const enemy = currentEnemy(battle);
+    run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
     run.phase = 'over';
     return { run, events, end: null, defeated: true };
   }
@@ -420,6 +451,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   const moneyGained = Math.floor(base * moneyMultiplier(archetype));
   run.money += moneyGained;
+  count(run, 'moneyEarned', moneyGained);
 
   let caughtSpeciesId: string | null = null;
   const caughtPending: PendingDecision[] = [];
@@ -427,6 +459,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
     caughtSpeciesId = caught.speciesId;
+    count(run, 'pokemonCaught');
+    discover(run, caught.speciesId, true);
     caughtPending.push({ kind: 'caught', mon: caught });
   }
 
@@ -437,6 +471,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
   }
+  count(run, 'evolutions', evolutions.length);
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
 
@@ -444,12 +479,25 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const won = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
   const badge = won && classId === GYM_LEADER_CLASS ? won : null;
   if (badge) run.badges.push(badge);
+  if (outcome === 'win') {
+    count(run, 'battlesWon');
+    const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
+    if (role) {
+      count(run, role);
+      const lead = run.party[battle.activeIndex];
+      for (const type of lead ? getSpecies(content, lead.speciesId).types : []) count(run, `bossWinsLead.${type}`);
+    } else {
+      count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
+    }
+  }
   // The Elite Four heal your party after each battle.
   if (won && classId === ELITE_FOUR_CLASS) healParty(content, run);
   let regionCleared: string | null = null;
   if (won && classId === CHAMPION_CLASS) {
     regionCleared = currentRegion(content, run).id;
     run.regionsCleared.push(regionCleared);
+    count(run, 'regionsCleared');
+    if (!run.log.charmUsedInRegion) count(run, 'regionsClearedNoCharm');
     if (run.regionIndex + 1 >= run.regionOrder.length) run.victory = true;
   }
   run.battle = null;
@@ -573,6 +621,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else if (choice.kind === 'release') {
       const candies = candiesForRelease(content, caught.level);
       run.candies += candies;
+      count(run, 'candiesEarned', candies);
       message = `${name} was released. You got ${candies} cand${candies === 1 ? 'y' : 'ies'}.`;
     } else {
       throw new Error('Choose what to do with the caught Pokémon');
@@ -601,6 +650,7 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
   if (problem) throw new Error(problem);
   const run = structuredClone(current);
   const reward = applyReward(content, run, getArchetype(content, run.archetypeId), rewardId, targetIndex);
+  count(run, 'moneyEarned', run.money - current.money);
   run.draft = null;
   run.pending.push(...reward.pending);
   run.afterDecisions = 'map';
@@ -619,7 +669,7 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
   const problem = itemUseProblem(content, item, target);
   if (problem) throw new Error(problem);
   const run = structuredClone(current);
-  const message = applyItemToPokemon(content, item, run.party[partyIndex]!);
+  const message = applyItemToPokemon(content, item, run.party[partyIndex]!, healingMultiplier(getArchetype(content, run.archetypeId)));
   consumeItem(run.inventory, itemId);
   return { run, message };
 }

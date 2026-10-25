@@ -1,0 +1,482 @@
+[
+ {
+  "id": "first-steps",
+  "name": "First Steps",
+  "description": "Win your first battle.",
+  "category": "battle",
+  "chain": "battles",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "battlesWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "battles-100",
+  "name": "Seasoned",
+  "description": "Win 100 battles.",
+  "category": "battle",
+  "chain": "battles",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "battlesWon",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "battles-1000",
+  "name": "Battle Hardened",
+  "description": "Win 1,000 battles.",
+  "category": "battle",
+  "chain": "battles",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "battlesWon",
+   "atLeast": 1000
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Veteran"
+  }
+ },
+ {
+  "id": "trainers-10",
+  "name": "Trainer Tamer",
+  "description": "Defeat 10 trainers.",
+  "category": "battle",
+  "requirement": {
+   "kind": "total",
+   "counter": "trainersDefeated",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 150
+  }
+ },
+ {
+  "id": "first-badge",
+  "name": "First Gym Badge",
+  "description": "Defeat your first gym leader.",
+  "category": "campaign",
+  "chain": "gym-leaders",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 150
+  }
+ },
+ {
+  "id": "gym-leaders-10",
+  "name": "Badge Collector",
+  "description": "Defeat 10 gym leaders.",
+  "category": "campaign",
+  "chain": "gym-leaders",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "gym-leaders-50",
+  "name": "Gym Conqueror",
+  "description": "Defeat 50 gym leaders.",
+  "category": "campaign",
+  "chain": "gym-leaders",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 50
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Gym Conqueror"
+  }
+ },
+ {
+  "id": "elite-challenger",
+  "name": "Elite Challenger",
+  "description": "Defeat an Elite Four member.",
+  "category": "campaign",
+  "requirement": {
+   "kind": "total",
+   "counter": "eliteFourDefeated",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "champion-material",
+  "name": "Champion Material",
+  "description": "Defeat your first regional champion.",
+  "category": "campaign",
+  "requirement": {
+   "kind": "total",
+   "counter": "championsDefeated",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 500,
+   "title": "Champion"
+  }
+ },
+ {
+  "id": "region-cleared",
+  "name": "Region Cleared",
+  "description": "Clear a whole region, champion included.",
+  "category": "campaign",
+  "chain": "regions",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "regionsCleared",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "three-regions",
+  "name": "Region Hopper",
+  "description": "Clear 3 regions in one run.",
+  "category": "campaign",
+  "chain": "regions",
+  "tier": 2,
+  "requirement": {
+   "kind": "best",
+   "counter": "regionsCleared",
+   "atLeast": 3
+  },
+  "reward": {
+   "bankCredits": 800
+  }
+ },
+ {
+  "id": "nine-regions",
+  "name": "Nine Regions Conquered",
+  "description": "Clear 9 regions in one run.",
+  "category": "campaign",
+  "chain": "regions",
+  "tier": 3,
+  "requirement": {
+   "kind": "best",
+   "counter": "regionsCleared",
+   "atLeast": 9
+  },
+  "reward": {
+   "bankCredits": 2000,
+   "title": "Conqueror"
+  }
+ },
+ {
+  "id": "grand-victor",
+  "name": "Grand Region Victor",
+  "description": "Win a full campaign.",
+  "category": "endgame",
+  "requirement": {
+   "kind": "total",
+   "counter": "runsWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 5000,
+   "title": "Grand Champion"
+  }
+ },
+ {
+  "id": "first-catch",
+  "name": "First Catch",
+  "description": "Catch your first Pokémon.",
+  "category": "collection",
+  "requirement": {
+   "kind": "total",
+   "counter": "pokemonCaught",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 50,
+   "researchPoints": 10
+  }
+ },
+ {
+  "id": "species-10",
+  "name": "Budding Collector",
+  "description": "Catch 10 different species.",
+  "category": "collection",
+  "chain": "species-caught",
+  "tier": 1,
+  "requirement": {
+   "kind": "distinct",
+   "set": "speciesCaught",
+   "atLeast": 10
+  },
+  "reward": {
+   "researchPoints": 50
+  }
+ },
+ {
+  "id": "species-50",
+  "name": "Collector",
+  "description": "Catch 50 different species.",
+  "category": "collection",
+  "chain": "species-caught",
+  "tier": 2,
+  "requirement": {
+   "kind": "distinct",
+   "set": "speciesCaught",
+   "atLeast": 50
+  },
+  "reward": {
+   "researchPoints": 200
+  }
+ },
+ {
+  "id": "species-100",
+  "name": "Master Collector",
+  "description": "Catch 100 different species.",
+  "category": "collection",
+  "chain": "species-caught",
+  "tier": 3,
+  "requirement": {
+   "kind": "distinct",
+   "set": "speciesCaught",
+   "atLeast": 100
+  },
+  "reward": {
+   "researchPoints": 500,
+   "title": "Collector"
+  }
+ },
+ {
+  "id": "seen-25",
+  "name": "Field Researcher",
+  "description": "Meet 25 different species.",
+  "category": "collection",
+  "requirement": {
+   "kind": "distinct",
+   "set": "speciesSeen",
+   "atLeast": 25
+  },
+  "reward": {
+   "researchPoints": 50
+  }
+ },
+ {
+  "id": "shiny-1",
+  "name": "A Little Different",
+  "description": "Find your first shiny Pokémon.",
+  "category": "collection",
+  "chain": "shinies",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "shiniesFound",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200,
+   "title": "Shiny Seeker"
+  }
+ },
+ {
+  "id": "shiny-5",
+  "name": "Sparkle Hunter",
+  "description": "Find 5 shiny Pokémon.",
+  "category": "collection",
+  "chain": "shinies",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "shiniesFound",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 500
+  }
+ },
+ {
+  "id": "shiny-20",
+  "name": "Shiny Hunter",
+  "description": "Find 20 shiny Pokémon.",
+  "category": "collection",
+  "chain": "shinies",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "shiniesFound",
+   "atLeast": 20
+  },
+  "reward": {
+   "bankCredits": 1500,
+   "title": "Shiny Hunter"
+  }
+ },
+ {
+  "id": "evolution-1",
+  "name": "It's Evolving!",
+  "description": "Watch a Pokémon evolve.",
+  "category": "collection",
+  "requirement": {
+   "kind": "total",
+   "counter": "evolutions",
+   "atLeast": 1
+  },
+  "reward": {
+   "researchPoints": 10
+  }
+ },
+ {
+  "id": "evolution-25",
+  "name": "Evolution Expert",
+  "description": "See 25 evolutions.",
+  "category": "collection",
+  "requirement": {
+   "kind": "total",
+   "counter": "evolutions",
+   "atLeast": 25
+  },
+  "reward": {
+   "researchPoints": 100
+  }
+ },
+ {
+  "id": "money-10k",
+  "name": "Saver",
+  "description": "Earn ₽10,000 in total.",
+  "category": "economy",
+  "requirement": {
+   "kind": "total",
+   "counter": "moneyEarned",
+   "atLeast": 10000
+  },
+  "reward": {
+   "bankCredits": 150
+  }
+ },
+ {
+  "id": "money-100k",
+  "name": "Tycoon",
+  "description": "Earn ₽100,000 in total.",
+  "category": "economy",
+  "requirement": {
+   "kind": "total",
+   "counter": "moneyEarned",
+   "atLeast": 100000
+  },
+  "reward": {
+   "bankCredits": 800,
+   "title": "Tycoon"
+  }
+ },
+ {
+  "id": "runs-1",
+  "name": "Finish a Run",
+  "description": "Finish your first run, win or lose.",
+  "category": "roguelike",
+  "chain": "runs",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "runsFinished",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 50
+  }
+ },
+ {
+  "id": "runs-10",
+  "name": "Back Again",
+  "description": "Finish 10 runs.",
+  "category": "roguelike",
+  "chain": "runs",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "runsFinished",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "no-safety-net",
+  "name": "No Safety Net",
+  "description": "Clear a region without the Last Stand Charm saving you.",
+  "category": "roguelike",
+  "requirement": {
+   "kind": "total",
+   "counter": "regionsClearedNoCharm",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "water-works",
+  "name": "Water Works",
+  "description": "Beat 5 bosses in one run with a Water-type leading.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "best",
+   "counter": "bossWinsLead.water",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "sweet-tooth",
+  "name": "Sweet Tooth",
+  "description": "Earn 50 candies by releasing Pokémon.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "candiesEarned",
+   "atLeast": 50
+  },
+  "reward": {
+   "candies": 10
+  }
+ },
+ {
+  "id": "wild-100",
+  "name": "Wild at Heart",
+  "description": "Defeat 100 wild Pokémon.",
+  "category": "exploration",
+  "requirement": {
+   "kind": "total",
+   "counter": "wildDefeated",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ }
+]

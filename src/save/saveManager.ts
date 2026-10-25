@@ -22,7 +22,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 4, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 3, run: 5, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -32,6 +32,26 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
   profile: {
     // v2 (Milestone 2): candies, the permanent currency.
     1: (data) => ({ ...(data as Json), candies: 0 }),
+    // v3 (Milestone 5): the Bank (Bank Credits), Research Points, counters,
+    // discoveries, achievements, titles and the Run History.
+    2: (data) => {
+      const { bankCurrency, ...profile } = data as Json;
+      return {
+        ...profile,
+        bankCredits: typeof bankCurrency === 'number' ? bankCurrency : 0,
+        researchPoints: 0,
+        counters: {},
+        best: {},
+        speciesSeen: [],
+        speciesCaught: [],
+        achievements: {},
+        titles: [],
+        activeTitle: null,
+        lifetimeBankCredits: 0,
+        runHistory: [],
+        lastPayout: null,
+      };
+    },
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -62,6 +82,13 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     // the first region of a full campaign; it gets its shuffled region order
     // when it is next loaded (that needs the game data and the run's RNG).
     3: (data) => ({ ...(data as Json), campaignId: 'full', regionOrder: [], regionIndex: 0, regionsCleared: [], victory: false }),
+    // v5 (Milestone 5): the run counts things for achievements and discoveries.
+    // An older run starts counting from now.
+    4: (data) => {
+      const run = data as Json;
+      const log = run.log as Json;
+      return { ...run, log: { ...log, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null } };
+    },
   },
   settings: {},
   meta: {},
@@ -277,6 +304,49 @@ export class SaveManager {
 
   saveProfile(profile: Profile): SaveResult {
     return this.write('profile', profile);
+  }
+
+  // ---------- export / import ----------
+
+  /** The profile and settings as one JSON text, for a file the player keeps. */
+  exportSave(): string {
+    const envelope = (record: RecordName) => {
+      const raw = this.storage.get(this.key(record));
+      return raw === null ? null : (JSON.parse(raw) as unknown);
+    };
+    return JSON.stringify({ format: SAVE_FORMAT, kind: 'export', exportedAt: this.now().toISOString(), profile: envelope('profile'), settings: envelope('settings') }, null, 1);
+  }
+
+  /**
+   * Reads an exported save. Nothing is written unless the whole file checks
+   * out; the profile it replaces is kept under a backup key.
+   */
+  importSave(text: string): { ok: true; profile: Profile; settings: Settings | null; backup: string | null } | { ok: false; reason: string } {
+    let file: Json;
+    try {
+      file = JSON.parse(text) as Json;
+    } catch {
+      return { ok: false, reason: 'That file is not valid JSON.' };
+    }
+    if (!file || file.format !== SAVE_FORMAT || file.kind !== 'export' || !file.profile) return { ok: false, reason: 'That file is not an exported save for this game.' };
+    const profile = this.decode('profile', JSON.stringify(file.profile), ProfileSchema);
+    if (profile.status !== 'ok') return { ok: false, reason: 'reason' in profile ? profile.reason : 'The profile in that file is missing.' };
+    const settings = file.settings ? this.decode('settings', JSON.stringify(file.settings), SettingsSchema) : null;
+    if (settings && settings.status !== 'ok') return { ok: false, reason: 'reason' in settings ? settings.reason : 'The settings in that file are damaged.' };
+    let backup: string | null = null;
+    try {
+      const current = this.storage.get(this.key('profile'));
+      if (current !== null) {
+        backup = `${this.key('profile')}.before-import.${this.now().getTime()}`;
+        this.storage.set(backup, current);
+      }
+    } catch {
+      backup = null;
+    }
+    const saved = this.saveProfile(profile.data);
+    if (!saved.ok) return { ok: false, reason: saved.reason };
+    if (settings?.status === 'ok') this.saveSettings(settings.data);
+    return { ok: true, profile: profile.data, settings: settings?.status === 'ok' ? settings.data : null, backup };
   }
 
   // ---------- settings ----------

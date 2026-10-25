@@ -193,6 +193,15 @@ export const RunStateSchema = z.object({
   log: z.object({
     rewardsTaken: z.array(z.string()),
     battlesWon: z.number().int().min(0),
+    /** This run's counters (names in contentSchema COUNTER_NAMES); added to the profile when the run ends. */
+    counters: z.record(z.string(), z.number().int().min(0)),
+    /** Species met and caught this run, for the profile's discoveries. */
+    speciesSeen: z.array(z.string()),
+    speciesCaught: z.array(z.string()),
+    /** True once the Last Stand Charm has saved the run in the current region. */
+    charmUsedInRegion: z.boolean(),
+    /** What ended the run, when it was lost. */
+    defeatedBy: z.object({ speciesId: z.string(), level: z.number().int(), trainer: z.string().nullable() }).nullable(),
   }),
 });
 export type RunState = z.infer<typeof RunStateSchema>;
@@ -203,12 +212,47 @@ export const ATTRIBUTE_NAMES = [
 ] as const;
 export type AttributeName = (typeof ATTRIBUTE_NAMES)[number];
 
+/** The Bank's payout for one finished run (GAME_DESIGN.md §14.2). */
+export const PayoutSchema = z.object({
+  /** Leftover Poké Dollars converted at the Bank's rate. */
+  savings: z.number().int().min(0),
+  /** Credits for progress, paid even for a lost run. */
+  stipend: z.number().int().min(0),
+  /** Credits from achievements earned at the end of this run. */
+  achievements: z.number().int().min(0),
+  total: z.number().int().min(0),
+});
+export type Payout = z.infer<typeof PayoutSchema>;
+
+/** One finished run, kept in the Run History. */
+export const RunRecordSchema = z.object({
+  runId: z.string(),
+  endedAt: z.string(),
+  seed: z.string(),
+  archetypeId: z.string(),
+  campaignId: z.string(),
+  victory: z.boolean(),
+  regionsCleared: z.number().int().min(0),
+  regions: z.number().int().min(0),
+  badges: z.number().int().min(0),
+  encounters: z.number().int().min(0),
+  defeatedBy: z.object({ speciesId: z.string(), level: z.number().int(), trainer: z.string().nullable() }).nullable(),
+  party: z.array(z.object({ speciesId: z.string(), level: z.number().int() })),
+  bankCredits: z.number().int().min(0),
+  researchPoints: z.number().int().min(0),
+  achievements: z.array(z.string()),
+});
+export type RunRecord = z.infer<typeof RunRecordSchema>;
+
 export const ProfileSchema = z.object({
   profileId: z.string(),
   unlockedArchetypes: z.array(z.string()),
   attributes: z.record(z.string(), z.number()),
-  bankCurrency: z.number().int().min(0),
-  /** Permanent candies (director decision D7). */
+  /** Permanent Bank currency for upgrades and unlocks (D16). */
+  bankCredits: z.number().int().min(0),
+  /** Earned from discoveries; spent on starters and research (D16). */
+  researchPoints: z.number().int().min(0),
+  /** Permanent candies (D7), the fourth currency. */
   candies: z.number().int().min(0),
   stats: z.object({
     runsStarted: z.number().int().min(0),
@@ -216,6 +260,21 @@ export const ProfileSchema = z.object({
     battlesWon: z.number().int().min(0),
     bestEncounters: z.number().int().min(0),
   }),
+  /** Every counter summed over all runs that count for progress. */
+  counters: z.record(z.string(), z.number().int().min(0)),
+  /** Each counter's best value in a single run. */
+  best: z.record(z.string(), z.number().int().min(0)),
+  speciesSeen: z.array(z.string()),
+  speciesCaught: z.array(z.string()),
+  /** Earned achievements: id → when. */
+  achievements: z.record(z.string(), z.object({ earnedAt: z.string() })),
+  /** Titles earned from achievements, and the one on show. */
+  titles: z.array(z.string()),
+  activeTitle: z.string().nullable(),
+  lifetimeBankCredits: z.number().int().min(0),
+  runHistory: z.array(RunRecordSchema),
+  /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
+  lastPayout: PayoutSchema.nullable(),
   /** Recently finalized run ids, so a run's result is never applied twice. */
   finalizedRunIds: z.array(z.string()),
 });

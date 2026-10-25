@@ -16,6 +16,7 @@ import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
 import { addItem } from './items';
 import { addLevels, maxHp } from './pokemon';
+import { count } from './progress';
 import { runLevelCap } from './regions';
 import type { Rng } from './rng';
 import type { PendingDecision, RunState } from './state';
@@ -111,6 +112,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
       for (const evo of evolveFully(content, mon)) {
+        count(run, 'evolutions');
         messages.push(`${nameOf(content, evo.from)} evolved into ${nameOf(content, evo.to)}!`);
         for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);
         for (const m of evo.wantsToLearn) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
