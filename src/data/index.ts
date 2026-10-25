@@ -6,22 +6,28 @@ import { z } from 'zod';
 import {
   ArchetypeSchema,
   BalanceSchema,
+  GymLeaderSchema,
   ItemSchema,
   MoveSchema,
   RewardSchema,
   RulesetSchema,
+  ShopEntrySchema,
   SpeciesSchema,
+  ThemesFileSchema,
   TrainerClassSchema,
   TypeChartSchema,
   type Content,
 } from '../core/contentSchema';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
+import gymLeadersJson from './gymLeaders.json';
 import itemsJson from './items.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
 import rulesetJson from './ruleset.json';
+import shopJson from './shop.json';
 import speciesJson from './species.json';
+import themesJson from './themes.json';
 import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 
@@ -40,6 +46,9 @@ export interface RawContent {
   rewards: unknown;
   items: unknown;
   trainers: unknown;
+  gymLeaders: unknown;
+  themes: unknown;
+  shop: unknown;
   ruleset: unknown;
   balance: unknown;
 }
@@ -52,6 +61,9 @@ export const RAW_CONTENT: RawContent = {
   rewards: rewardsJson,
   items: itemsJson,
   trainers: trainersJson,
+  gymLeaders: gymLeadersJson,
+  themes: themesJson,
+  shop: shopJson,
   ruleset: rulesetJson,
   balance: balanceJson,
 };
@@ -83,9 +95,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
   const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
+  const gymLeaders = parse(z.array(GymLeaderSchema), raw.gymLeaders, 'gymLeaders.json', problems);
+  const themes = parse(ThemesFileSchema, raw.themes, 'themes.json', problems);
+  const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !rewards || !items || !trainers || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !rewards || !items || !trainers || !gymLeaders || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -97,6 +112,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     rewards: toMap(rewards, 'rewards.json', problems),
     items: toMap(items, 'items.json', problems),
     trainers: toMap(trainers, 'trainers.json', problems),
+    gymLeaders: toMap(gymLeaders, 'gymLeaders.json', problems),
+    themes: toMap(themes.themes, 'themes.json', problems),
+    arenas: themes.arenas,
+    shop,
     ruleset,
     balance,
   };
@@ -117,8 +136,25 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const id of Object.keys(balance.startingItems)) {
     if (!content.items.has(id)) problems.push(`balance.startingItems has unknown item "${id}"`);
   }
-  for (const t of content.trainers.values()) {
-    for (const id of t.pool) if (!content.species.has(id)) problems.push(`trainer class "${t.id}" uses unknown species "${id}"`);
+  const pairs = new Set<string>();
+  const themeNames = new Set<string>();
+  for (const t of content.themes.values()) {
+    const [a, b] = t.types;
+    if (a === b) problems.push(`theme "${t.id}" uses the same type twice`);
+    const key = [a, b].sort().join('/');
+    if (pairs.has(key)) problems.push(`theme "${t.id}" repeats the type pair ${key}`);
+    pairs.add(key);
+    if (themeNames.has(t.name)) problems.push(`theme name "${t.name}" is used twice`);
+    themeNames.add(t.name);
+  }
+  if (content.gymLeaders.size === 0) problems.push('gymLeaders.json has no gym leaders');
+  for (const entry of shop) {
+    if (!content.items.has(entry.item)) problems.push(`shop.json sells unknown item "${entry.item}"`);
+  }
+  const { stage } = balance;
+  if (stage.minWidth > stage.maxWidth) problems.push('balance.stage.minWidth is larger than maxWidth');
+  for (const [first, last] of stage.trainerColumns) {
+    if (first > last || last >= stage.columns - 1) problems.push(`balance.stage.trainerColumns range [${first}, ${last}] must end before column ${stage.columns - 1}`);
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
   for (const id of [...balance.starterPool, ...balance.wildPool]) {

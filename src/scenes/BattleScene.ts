@@ -5,8 +5,10 @@
 import Phaser from 'phaser';
 import { itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { calcStats, getSpecies, xpForLevel } from '../core/pokemon';
+import { findNode } from '../core/map';
 import type { RunEvent, TurnResult } from '../core/run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
+import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { eventText, type Names } from '../ui/battleText';
@@ -66,7 +68,10 @@ export class BattleScene extends Phaser.Scene {
     this.playerSprite = null;
     this.enemySprite = null;
 
-    if (assets.has('bg.battle')) this.add.image(0, 0, 'bg.battle').setOrigin(0).setScale(PIXEL_SCALE);
+    // The stage theme's arena (its first type), or the default field.
+    const arena = run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
+    const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
+    if (assets.has(bg)) this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE);
     else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0);
 
     this.shown = { player: structuredClone(this.activeMon()), enemy: structuredClone(currentEnemy(battle)) };
@@ -101,8 +106,20 @@ export class BattleScene extends Phaser.Scene {
   private trainerTitle(): string | null {
     const trainer = this.run.battle?.trainer;
     if (!trainer) return null;
+    if (trainer.leaderId) return `Gym Leader ${trainer.name}`;
     const cls = services().session.content.trainers.get(trainer.classId);
     return cls ? `${cls.name} ${trainer.name}` : trainer.name;
+  }
+
+  /** The opposing trainer's sprite asset and a fallback label. */
+  private trainerArt(): { assetId: string; label: string } | null {
+    const trainer = this.run.battle?.trainer;
+    if (!trainer) return null;
+    const content = services().session.content;
+    const leader = trainer.leaderId ? content.gymLeaders.get(trainer.leaderId) : undefined;
+    if (leader) return { assetId: leader.spriteAssetId, label: leader.name };
+    const cls = content.trainers.get(trainer.classId);
+    return cls ? { assetId: cls.spriteAssetId, label: cls.name } : null;
   }
 
   private names(trainer: string | null): Names {
@@ -192,7 +209,14 @@ export class BattleScene extends Phaser.Scene {
 
   private updateHeader(): void {
     const run = this.run;
-    this.header.setText(`Encounter ${run.encountersCompleted + 1}  ·  ₽${run.money}`);
+    const stage = run.stage;
+    if (!stage) {
+      this.header.setText(`Encounter ${run.encountersCompleted + 1}  ·  ₽${run.money}`);
+      return;
+    }
+    const column = stage.current ? findNode(stage.map, stage.current).column : 0;
+    const theme = getTheme(services().session.content, stage.themeId);
+    this.header.setText(`Stage ${stage.index + 1} · ${theme.name} · Level ${column}/${stage.map.columns}  ·  ₽${run.money}`);
   }
 
   // ---------- input and messages ----------
@@ -238,9 +262,9 @@ export class BattleScene extends Phaser.Scene {
     const battle = this.run.battle!;
     const title = this.trainerTitle();
     if (battle.turn === 1 && !battle.needsSwitch) {
-      if (title && battle.trainer) {
-        const cls = services().session.content.trainers.get(battle.trainer.classId)!;
-        const trainerSprite = trainerVisual(this, cls.spriteAssetId, cls.name, ENEMY_POS.x, ENEMY_POS.y, 2.5);
+      const art = this.trainerArt();
+      if (title && art) {
+        const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
         await this.say(`${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
@@ -448,6 +472,12 @@ export class BattleScene extends Phaser.Scene {
     const end = result.end!;
     if (end.outcome === 'win' && trainer) await this.say(`You defeated ${trainer}!`);
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
+    if (end.badge) {
+      playSfx(this, 'se.level_up');
+      const leaderName = content.gymLeaders.get(end.badge)?.name ?? end.badge;
+      await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
+      await this.say('The next stage awaits…');
+    }
     this.updateHeader();
     for (const evo of end.evolutions) {
       const fromName = getSpecies(content, evo.from).name;

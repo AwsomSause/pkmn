@@ -96,6 +96,7 @@ export function createBattle(
     needsSwitch: false,
     lastStandUsed: false,
     outcome: null,
+    levelInfo: [],
   };
 }
 

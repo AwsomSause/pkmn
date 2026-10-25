@@ -865,5 +865,882 @@
     }
    ]
   }
+ },
+ {
+  "id": "confusion",
+  "name": "Confusion",
+  "type": "psychic",
+  "category": "special",
+  "power": 50,
+  "accuracy": 100,
+  "pp": 25,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "psybeam",
+  "name": "Psybeam",
+  "type": "psychic",
+  "category": "special",
+  "power": 65,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "psychic",
+  "name": "Psychic",
+  "type": "psychic",
+  "category": "special",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spd",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 10
+    }
+   ]
+  }
+ },
+ {
+  "id": "extrasensory",
+  "name": "Extrasensory",
+  "type": "psychic",
+  "category": "special",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 10
+  }
+ },
+ {
+  "id": "hypnosis",
+  "name": "Hypnosis",
+  "type": "psychic",
+  "category": "status",
+  "power": null,
+  "accuracy": 60,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "slp",
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "powder-snow",
+  "name": "Powder Snow",
+  "type": "ice",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 25,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "frz",
+    "chance": 10
+   }
+  }
+ },
+ {
+  "id": "ice-shard",
+  "name": "Ice Shard",
+  "type": "ice",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 1,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "ice-fang",
+  "name": "Ice Fang",
+  "type": "ice",
+  "category": "physical",
+  "power": 65,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "frz",
+    "chance": 10
+   },
+   "flinchChance": 10
+  }
+ },
+ {
+  "id": "aurora-beam",
+  "name": "Aurora Beam",
+  "type": "ice",
+  "category": "special",
+  "power": 65,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 10
+    }
+   ]
+  }
+ },
+ {
+  "id": "icy-wind",
+  "name": "Icy Wind",
+  "type": "ice",
+  "category": "special",
+  "power": 55,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "dragon-breath",
+  "name": "Dragon Breath",
+  "type": "dragon",
+  "category": "special",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "twister",
+  "name": "Twister",
+  "type": "dragon",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 20
+  }
+ },
+ {
+  "id": "dragon-claw",
+  "name": "Dragon Claw",
+  "type": "dragon",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "dragon-pulse",
+  "name": "Dragon Pulse",
+  "type": "dragon",
+  "category": "special",
+  "power": 85,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "feint-attack",
+  "name": "Feint Attack",
+  "type": "dark",
+  "category": "physical",
+  "power": 60,
+  "accuracy": null,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "pursuit",
+  "name": "Pursuit",
+  "type": "dark",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "crunch",
+  "name": "Crunch",
+  "type": "dark",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 20
+    }
+   ]
+  }
+ },
+ {
+  "id": "snarl",
+  "name": "Snarl",
+  "type": "dark",
+  "category": "special",
+  "power": 55,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "night-slash",
+  "name": "Night Slash",
+  "type": "dark",
+  "category": "physical",
+  "power": 70,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 1,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "fairy-wind",
+  "name": "Fairy Wind",
+  "type": "fairy",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "disarming-voice",
+  "name": "Disarming Voice",
+  "type": "fairy",
+  "category": "special",
+  "power": 40,
+  "accuracy": null,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "draining-kiss",
+  "name": "Draining Kiss",
+  "type": "fairy",
+  "category": "special",
+  "power": 50,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "drain": 0.75
+  }
+ },
+ {
+  "id": "charm",
+  "name": "Charm",
+  "type": "fairy",
+  "category": "status",
+  "power": null,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "play-rough",
+  "name": "Play Rough",
+  "type": "fairy",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 10
+    }
+   ]
+  }
+ },
+ {
+  "id": "bug-bite",
+  "name": "Bug Bite",
+  "type": "bug",
+  "category": "physical",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "struggle-bug",
+  "name": "Struggle Bug",
+  "type": "bug",
+  "category": "special",
+  "power": 50,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "fury-cutter",
+  "name": "Fury Cutter",
+  "type": "bug",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 95,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "poison-jab",
+  "name": "Poison Jab",
+  "type": "poison",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "psn",
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "rock-tomb",
+  "name": "Rock Tomb",
+  "type": "rock",
+  "category": "physical",
+  "power": 60,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "rock-slide",
+  "name": "Rock Slide",
+  "type": "rock",
+  "category": "physical",
+  "power": 75,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 30
+  }
+ },
+ {
+  "id": "astonish",
+  "name": "Astonish",
+  "type": "ghost",
+  "category": "physical",
+  "power": 30,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 30
+  }
+ },
+ {
+  "id": "shadow-sneak",
+  "name": "Shadow Sneak",
+  "type": "ghost",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 1,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "shadow-ball",
+  "name": "Shadow Ball",
+  "type": "ghost",
+  "category": "special",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spd",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 20
+    }
+   ]
+  }
+ },
+ {
+  "id": "iron-defense",
+  "name": "Iron Defense",
+  "type": "steel",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "metal-sound",
+  "name": "Metal Sound",
+  "type": "steel",
+  "category": "status",
+  "power": null,
+  "accuracy": 85,
+  "pp": 40,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spd",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "flash-cannon",
+  "name": "Flash Cannon",
+  "type": "steel",
+  "category": "special",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spd",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 10
+    }
+   ]
+  }
+ },
+ {
+  "id": "iron-head",
+  "name": "Iron Head",
+  "type": "steel",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 30
+  }
+ },
+ {
+  "id": "thunder-fang",
+  "name": "Thunder Fang",
+  "type": "electric",
+  "category": "physical",
+  "power": 65,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 10
+   },
+   "flinchChance": 10
+  }
+ },
+ {
+  "id": "thunderbolt",
+  "name": "Thunderbolt",
+  "type": "electric",
+  "category": "special",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 10
+   }
+  }
+ },
+ {
+  "id": "flame-wheel",
+  "name": "Flame Wheel",
+  "type": "fire",
+  "category": "physical",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 25,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "brn",
+    "chance": 10
+   }
+  }
+ },
+ {
+  "id": "flamethrower",
+  "name": "Flamethrower",
+  "type": "fire",
+  "category": "special",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "status": {
+    "id": "brn",
+    "chance": 10
+   }
+  }
+ },
+ {
+  "id": "aqua-tail",
+  "name": "Aqua Tail",
+  "type": "water",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "water-pulse",
+  "name": "Water Pulse",
+  "type": "water",
+  "category": "special",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "air-slash",
+  "name": "Air Slash",
+  "type": "flying",
+  "category": "special",
+  "power": 75,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "flinchChance": 30
+  }
+ },
+ {
+  "id": "slash",
+  "name": "Slash",
+  "type": "normal",
+  "category": "physical",
+  "power": 70,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 1,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "agility",
+  "name": "Agility",
+  "type": "psychic",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 30,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "screech",
+  "name": "Screech",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": 85,
+  "pp": 40,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "scary-face",
+  "name": "Scary Face",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  }
 ]

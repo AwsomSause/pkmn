@@ -10,7 +10,9 @@ import { BootScene } from './scenes/BootScene';
 import { DecisionScene } from './scenes/DecisionScene';
 import { GameOverScene } from './scenes/GameOverScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
+import { MapScene } from './scenes/MapScene';
 import { RewardScene } from './scenes/RewardScene';
+import { ShopScene } from './scenes/ShopScene';
 import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
 import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
@@ -59,7 +61,7 @@ function start(): void {
     backgroundColor: '#101828',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, TrainerSelectScene, StarterSelectScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
+    scene: [BootScene, MainMenuScene, TrainerSelectScene, StarterSelectScene, MapScene, ShopScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
     },

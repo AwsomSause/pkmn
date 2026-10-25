@@ -40,6 +40,17 @@ export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
 export type Stages = z.infer<typeof StagesSchema>;
 
+export const LevelBreakdownSchema = z.object({
+  base: z.number(),
+  progress: z.number(),
+  variance: z.number(),
+  archetypeOffset: z.number(),
+  bonus: z.number(),
+  unclamped: z.number(),
+  level: z.number(),
+});
+export type LevelBreakdown = z.infer<typeof LevelBreakdownSchema>;
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -49,7 +60,8 @@ export const BattleStateSchema = z.object({
   enemyTeam: z.array(PokemonInstanceSchema).min(1).max(6),
   /** Which member of enemyTeam is out. */
   enemyIndex: z.number().int().min(0),
-  trainer: z.object({ classId: z.string(), name: z.string() }).nullable(),
+  /** The opposing trainer. `leaderId` is set for gym leaders (classId is then "gym-leader"). */
+  trainer: z.object({ classId: z.string(), name: z.string(), leaderId: z.string().nullable().default(null) }).nullable(),
   playerStages: StagesSchema,
   enemyStages: StagesSchema,
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
@@ -59,8 +71,58 @@ export const BattleStateSchema = z.object({
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
+  /** How each enemy's level was worked out (shown in the debug panel). */
+  levelInfo: z.array(LevelBreakdownSchema).default([]),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
+
+// ---------- stage maps ----------
+
+export const SideStopSchema = z.object({
+  id: z.string(),
+  kind: z.enum(['heal', 'shop']),
+  /** A healing stop works once; a shop can be visited again. */
+  used: z.boolean(),
+});
+export type SideStop = z.infer<typeof SideStopSchema>;
+
+export const MapNodeSchema = z.object({
+  id: z.string(),
+  /** 1-based level number on the stage (every route visits each column once). */
+  column: z.number().int().min(1),
+  /** Position within the column, top to bottom. */
+  row: z.number().int().min(0),
+  kind: z.enum(['wild', 'trainer', 'gym']),
+  /** A harder route: stronger enemies, better rewards. */
+  harder: z.boolean(),
+  /** ids of the nodes in the next column this node leads to. */
+  next: z.array(z.string()),
+  /** Optional stops beside this node (they don't count as levels). */
+  sides: z.array(SideStopSchema),
+  /** How the generator made this node, for debugging. */
+  note: z.string(),
+});
+export type MapNode = z.infer<typeof MapNodeSchema>;
+
+export const StageMapSchema = z.object({
+  columns: z.number().int().min(1),
+  nodes: z.array(MapNodeSchema).min(1),
+  trainerColumns: z.array(z.number().int()),
+});
+export type StageMap = z.infer<typeof StageMapSchema>;
+
+export const StageStateSchema = z.object({
+  /** 0 for the first stage of the run. */
+  index: z.number().int().min(0),
+  themeId: z.string(),
+  /** The gym leader waiting at the last column. */
+  leaderId: z.string(),
+  map: StageMapSchema,
+  /** The node the player is on (null before choosing the first one). */
+  current: z.string().nullable(),
+  visited: z.array(z.string()),
+});
+export type StageState = z.infer<typeof StageStateSchema>;
 
 export function currentEnemy(battle: BattleState): PokemonInstance {
   const enemy = battle.enemyTeam[battle.enemyIndex];
@@ -77,7 +139,7 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
 
-export const RunPhaseSchema = z.enum(['starter', 'battle', 'decision', 'reward', 'over']);
+export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
 export const RunStateSchema = z.object({
@@ -98,7 +160,14 @@ export const RunStateSchema = z.object({
   /** Decisions to make after a battle, oldest first. */
   pending: z.array(PendingDecisionSchema),
   /** Where the run goes once all pending decisions are made. */
-  afterDecisions: z.enum(['reward', 'battle']),
+  afterDecisions: z.enum(['reward', 'map']),
+  /** The current stage and its map (null only for saves from before stage maps existed). */
+  stage: StageStateSchema.nullable(),
+  /** Themes and gym leaders already used this run (they never repeat, D6). */
+  usedThemes: z.array(z.string()),
+  usedLeaders: z.array(z.string()),
+  /** Gym leaders beaten, in order. */
+  badges: z.array(z.string()),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
   /** Run-only additive modifiers for the ten attributes (no effects yet). */

@@ -81,6 +81,28 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Candies can be earned but not spent yet.
 - Levels are capped at 100 for now (see the open question on D14).
 
-## Milestone 3+ — not started
+## Milestone 3 — One full stage ✅
+
+- [x] Stage themes: all 153 type pairs, each with a name (director's examples kept); theme decides wild Pokémon, trainers and gym leader
+- [x] 89 species and 94 moves (every type has wild Pokémon and a trainer class); 70 gym leaders with sprites
+- [x] Layered stage map: 20 columns of 1–3 nodes, forks, no crossing paths, exactly 2 trainer columns, gym in column 20
+- [x] Map validator (dead ends, unreachable nodes, skipped columns, trainer columns, single gym), checked over hundreds of seeds
+- [x] Map screen: theme name and types, level counter, money, badges, scrolling, risk labels on harder routes
+- [x] Harder routes: +1–2 enemy levels and better reward odds; gym rewards use the best odds
+- [x] Healing spot (once) and shop (buy with run money) beside nodes; a healing spot always before the gym
+- [x] Gym leader battle with intro, sprite and badge; then the next stage starts with a new theme and leader
+- [x] Battle backgrounds follow the theme (arena art from the asset pack)
+- [x] Difficulty model with a full breakdown in the debug panel; debug jump to any column
+- [x] Party and Bag usable from the map
+- [x] Save format v3 with automatic upgrade of v2 runs; reload resumes on the map
+
+### Known limits in Milestone 3 (by design, documented)
+
+- Shop prices are placeholders, and the shop has a fixed stock.
+- The difficulty curve is a straight line tuned for the first gym (about level 20); it needs a per-region curve in M4.
+- Gym leaders use the theme's Pokémon rather than their famous teams.
+- After the first gym the run continues into more stages, but regions, the Elite Four and the champion come in M4.
+
+## Milestone 4+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.

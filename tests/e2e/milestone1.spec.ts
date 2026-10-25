@@ -39,12 +39,20 @@ async function fightUntilOver(page: Page): Promise<string> {
   throw new Error('Battle did not finish');
 }
 
+/** On the map: waits for the stage banner to clear, then picks the focused node (Enter). */
+async function enterFromMap(page: Page) {
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
 });
 
-test('menu → trainer → starter → battle → reward → next battle, then save and continue', async ({ page }) => {
+test('menu → trainer → starter → map → battle → reward → map → next battle, then save and continue', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
 
@@ -58,7 +66,7 @@ test('menu → trainer → starter → battle → reward → next battle, then s
   expect(new Set(choices).size).toBe(3);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // second starter
-  await waitForScene(page, 'Battle');
+  await enterFromMap(page);
   expect((await run(page))!.party[0]!.speciesId).toBe(choices[1]);
   const startXp = (await run(page))!.party[0]!.xp;
 
@@ -74,7 +82,7 @@ test('menu → trainer → starter → battle → reward → next battle, then s
   await page.waitForTimeout(300);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // take the second reward
-  await waitForScene(page, 'Battle');
+  await enterFromMap(page);
   const next = (await run(page))!;
   expect(next.log.rewardsTaken).toEqual([afterWin.draft![1]]);
   expect(next.encountersCompleted).toBe(1);
@@ -112,7 +120,7 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   await page.keyboard.press('Enter');
   await waitForScene(page, 'StarterSelect');
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'Battle');
+  await enterFromMap(page);
   // Use the debug tools to face a much stronger opponent.
   await page.evaluate(() => (window as any).__pkr.session.debugReplaceEnemy('growlithe', 40));
   await page.evaluate(() => {

@@ -138,6 +138,18 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Shinies (D8, 1/2000)** roll for wild Pokémon and use the shiny sprites from the asset pack.
 - Save format is now version 2 for the run and the profile. Version 1 saves upgrade automatically.
 
+## 6c. Milestone 3 — one full stage
+
+**Built 2026-10-25.** What changed from the M3 row above, and why:
+- **Stage themes (director rule).** Every stage is themed after one of the 153 type pairs (GAME_DESIGN.md §5b). The theme picks the wild Pokémon, trainer classes and team members, and the gym leader.
+- **48 species and 48 moves were pulled forward from Milestone 6.** The original 41 species had no Ice, Psychic, Dragon, Dark or Fairy Pokémon, so many themes would have been empty. The new species use official base stats, types, growth rates and level-up moves (limited to moves the game supports). Every type now has wild Pokémon.
+- **Trainer pools were replaced by theme pools.** `trainers.json` now gives each class its speciality types (11 classes were added so every type has one). 70 gym leaders (Kanto to Paldea) are in `gymLeaders.json`, with their sprites from the asset pack.
+- **The "trainer every 4th encounter" placeholder is gone.** The stage map places the two trainer columns.
+- **Wild Pokémon are always first-stage species** (nothing in the data evolves into them). Trainers' Pokémon still arrive evolved for their level.
+- **Difficulty:** `round(baseLevel + levelsPerColumn × columns travelled) ± variance + archetype offset + bonus` (trainers +1, gym +3, the gym's last Pokémon +1 more, harder routes +1–2). With `levelsPerColumn` 0.65 the first gym's ace is about level 20. This straight line would pass level 100 around stage 8, so it needs a per-region curve when regions arrive (M4, together with D14). The debug panel shows the breakdown for every enemy.
+- **Heal stops** fully heal the party and PP, once. One always sits in the column before the gym. **Shops** sell 8 items at placeholder prices (`shop.json`) and can be revisited.
+- Save format is now version 3 for the run. A version 2 run keeps going and gets its first stage map after its next reward.
+
 ## 7. Risks
 
 | # | Risk | Impact | Mitigation |

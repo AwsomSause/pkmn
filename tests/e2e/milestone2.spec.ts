@@ -12,6 +12,14 @@ async function waitForScene(page: Page, key: string, timeout = 20_000) {
   await page.waitForTimeout(250);
 }
 
+/** On the map: waits for the stage banner to clear, then picks the focused node (Enter). */
+async function enterFromMap(page: Page) {
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+}
+
 async function startRun(page: Page, seed: string) {
   await page.goto(`/?seed=${seed}&debug=1`);
   await waitForScene(page, 'MainMenu');
@@ -20,7 +28,7 @@ async function startRun(page: Page, seed: string) {
   await page.keyboard.press('Enter');
   await waitForScene(page, 'StarterSelect');
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'Battle');
+  await enterFromMap(page);
 }
 
 /** Presses Enter until the battle shows the Fight / Bag / Pokémon menu. */
@@ -114,6 +122,9 @@ test('switch Pokémon from the party menu, and give a reward to a chosen Pokémo
   const secondUid = await page.evaluate(() => {
     const { session } = (window as any).__pkr;
     session.debugAddToParty(session.run.party[0].speciesId, 40);
+    // Stage themes vary the wild Pokémon; fix the opponent and the move so the fight is about the menus, not luck.
+    session.debugReplaceEnemy('rattata', 4);
+    session.run.party[1].moves = [{ id: 'ember', pp: 25 }];
     (window as any).__pkr.game.scene.getScene('Battle').scene.restart();
     return session.run.party[1].uid as string;
   });

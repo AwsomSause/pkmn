@@ -6,6 +6,13 @@ import { CURRENT_VERSIONS, MIGRATIONS, SaveManager } from '../../src/save/saveMa
 import { MemoryStorageProvider, StorageUnavailableError, type StorageProvider } from '../../src/save/storage';
 import { createPokemon } from '../../src/core/pokemon';
 import { content } from './helpers';
+import { nextChoices } from '../../src/core/map';
+
+/** Moves a session from the map into the first normal node's battle. */
+function enterBattle(session: GameSession): void {
+  const node = nextChoices(session.run!.stage!).find((n) => !n.harder)!;
+  session.chooseNode(node.id);
+}
 
 function makeRun() {
   return chooseStarter(content, createRun(content, { runId: 'run-a', seed: 'save-seed', archetypeId: 'green' }), 0);
@@ -110,6 +117,7 @@ describe('profile and run end', () => {
     const session = new GameSession(content, storage);
     session.newRun('red', 'defeat-seed');
     session.chooseStarter(0);
+    enterBattle(session);
     session.run!.party[0]!.hp = 1;
     session.run!.battle!.enemyTeam = [createPokemon(content, 'growlithe', 40, 'e-big')];
     let guard = 0;
@@ -131,6 +139,7 @@ describe('game session save/load', () => {
     const a = new GameSession(content, storage);
     a.newRun('blue', 'continue-seed');
     a.chooseStarter(1);
+    enterBattle(a);
     a.takeTurn({ kind: 'move', index: 0 });
     const b = new GameSession(content, storage);
     expect(b.canContinue).toBe(true);
@@ -142,6 +151,7 @@ describe('game session save/load', () => {
     const a = new GameSession(content, storage);
     a.newRun('red', 'reward-seed');
     a.chooseStarter(0);
+    enterBattle(a);
     a.run!.party[0] = createPokemon(content, a.run!.party[0]!.speciesId, 40, a.run!.party[0]!.uid);
     while (a.run!.phase === 'battle') a.takeTurn({ kind: 'move', index: a.run!.party[0]!.moves.findIndex((m) => m.pp > 0) });
     expect(a.run!.phase).toBe('reward');
@@ -149,7 +159,7 @@ describe('game session save/load', () => {
     const moneyAfter = a.run!.money;
     const b = new GameSession(content, storage);
     const resumed = b.continueRun();
-    expect(resumed.phase).toBe('battle');
+    expect(resumed.phase).toBe('map');
     expect(resumed.log.rewardsTaken).toHaveLength(1);
     expect(resumed.money).toBe(moneyAfter);
   });
@@ -159,6 +169,7 @@ describe('game session save/load', () => {
     const a = new GameSession(content, storage);
     a.newRun('red', 'same-draft');
     a.chooseStarter(0);
+    enterBattle(a);
     a.run!.party[0] = createPokemon(content, a.run!.party[0]!.speciesId, 40, a.run!.party[0]!.uid);
     while (a.run!.phase === 'battle') a.takeTurn({ kind: 'move', index: a.run!.party[0]!.moves.findIndex((m) => m.pp > 0) });
     const b = new GameSession(content, storage);

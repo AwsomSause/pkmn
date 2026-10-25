@@ -1,0 +1,1248 @@
+{
+ "arenas": {
+  "normal": "bg.arena.plains",
+  "fire": "bg.arena.volcano",
+  "water": "bg.arena.sea",
+  "electric": "bg.arena.power_plant",
+  "grass": "bg.arena.tall_grass",
+  "ice": "bg.arena.ice_cave",
+  "fighting": "bg.arena.dojo",
+  "poison": "bg.arena.swamp",
+  "ground": "bg.arena.desert",
+  "flying": "bg.arena.mountain",
+  "psychic": "bg.arena.ruins",
+  "bug": "bg.arena.forest",
+  "rock": "bg.arena.cave",
+  "ghost": "bg.arena.graveyard",
+  "dragon": "bg.arena.wasteland",
+  "dark": "bg.arena.abyss",
+  "steel": "bg.arena.factory",
+  "fairy": "bg.arena.fairy_cave"
+ },
+ "themes": [
+  {
+   "id": "normal-fire",
+   "name": "Hearth and Home",
+   "types": [
+    "normal",
+    "fire"
+   ]
+  },
+  {
+   "id": "normal-water",
+   "name": "Lazy Rivers",
+   "types": [
+    "normal",
+    "water"
+   ]
+  },
+  {
+   "id": "normal-electric",
+   "name": "Static Streets",
+   "types": [
+    "normal",
+    "electric"
+   ]
+  },
+  {
+   "id": "normal-grass",
+   "name": "Quiet Meadows",
+   "types": [
+    "normal",
+    "grass"
+   ]
+  },
+  {
+   "id": "normal-ice",
+   "name": "Snowed-In Village",
+   "types": [
+    "normal",
+    "ice"
+   ]
+  },
+  {
+   "id": "normal-fighting",
+   "name": "Backyard Brawl",
+   "types": [
+    "normal",
+    "fighting"
+   ]
+  },
+  {
+   "id": "normal-poison",
+   "name": "Back Alley Fumes",
+   "types": [
+    "normal",
+    "poison"
+   ]
+  },
+  {
+   "id": "normal-ground",
+   "name": "Dusty Trails",
+   "types": [
+    "normal",
+    "ground"
+   ]
+  },
+  {
+   "id": "normal-flying",
+   "name": "Open Skies",
+   "types": [
+    "normal",
+    "flying"
+   ]
+  },
+  {
+   "id": "normal-psychic",
+   "name": "Daydream Lane",
+   "types": [
+    "normal",
+    "psychic"
+   ]
+  },
+  {
+   "id": "normal-bug",
+   "name": "Picnic Pests",
+   "types": [
+    "normal",
+    "bug"
+   ]
+  },
+  {
+   "id": "normal-rock",
+   "name": "Pebble Path",
+   "types": [
+    "normal",
+    "rock"
+   ]
+  },
+  {
+   "id": "normal-ghost",
+   "name": "The Empty House",
+   "types": [
+    "normal",
+    "ghost"
+   ]
+  },
+  {
+   "id": "normal-dragon",
+   "name": "Humble Legends",
+   "types": [
+    "normal",
+    "dragon"
+   ]
+  },
+  {
+   "id": "normal-dark",
+   "name": "Midnight Market",
+   "types": [
+    "normal",
+    "dark"
+   ]
+  },
+  {
+   "id": "normal-steel",
+   "name": "Town Machinery",
+   "types": [
+    "normal",
+    "steel"
+   ]
+  },
+  {
+   "id": "normal-fairy",
+   "name": "Sweet Little Town",
+   "types": [
+    "normal",
+    "fairy"
+   ]
+  },
+  {
+   "id": "fire-water",
+   "name": "Steam Springs",
+   "types": [
+    "fire",
+    "water"
+   ]
+  },
+  {
+   "id": "fire-electric",
+   "name": "Blazing Circuits",
+   "types": [
+    "fire",
+    "electric"
+   ]
+  },
+  {
+   "id": "fire-grass",
+   "name": "Wildfire Woods",
+   "types": [
+    "fire",
+    "grass"
+   ]
+  },
+  {
+   "id": "fire-ice",
+   "name": "Frost and Flame",
+   "types": [
+    "fire",
+    "ice"
+   ]
+  },
+  {
+   "id": "fire-fighting",
+   "name": "Burning Dojo",
+   "types": [
+    "fire",
+    "fighting"
+   ]
+  },
+  {
+   "id": "fire-poison",
+   "name": "Toxic Smoke",
+   "types": [
+    "fire",
+    "poison"
+   ]
+  },
+  {
+   "id": "fire-ground",
+   "name": "Scorched Earth",
+   "types": [
+    "fire",
+    "ground"
+   ]
+  },
+  {
+   "id": "fire-flying",
+   "name": "Phoenix Heights",
+   "types": [
+    "fire",
+    "flying"
+   ]
+  },
+  {
+   "id": "fire-psychic",
+   "name": "Firey Promises",
+   "types": [
+    "fire",
+    "psychic"
+   ]
+  },
+  {
+   "id": "fire-bug",
+   "name": "Ember Swarm",
+   "types": [
+    "fire",
+    "bug"
+   ]
+  },
+  {
+   "id": "fire-rock",
+   "name": "Volcanic Ridge",
+   "types": [
+    "fire",
+    "rock"
+   ]
+  },
+  {
+   "id": "fire-ghost",
+   "name": "Will-o'-the-Wisps",
+   "types": [
+    "fire",
+    "ghost"
+   ]
+  },
+  {
+   "id": "fire-dragon",
+   "name": "Dragonfire Peaks",
+   "types": [
+    "fire",
+    "dragon"
+   ]
+  },
+  {
+   "id": "fire-dark",
+   "name": "Hellhound Hollow",
+   "types": [
+    "fire",
+    "dark"
+   ]
+  },
+  {
+   "id": "fire-steel",
+   "name": "The Forge",
+   "types": [
+    "fire",
+    "steel"
+   ]
+  },
+  {
+   "id": "fire-fairy",
+   "name": "Candlelit Wishes",
+   "types": [
+    "fire",
+    "fairy"
+   ]
+  },
+  {
+   "id": "water-electric",
+   "name": "Thunderous Tides",
+   "types": [
+    "water",
+    "electric"
+   ]
+  },
+  {
+   "id": "water-grass",
+   "name": "Lily Pad Lake",
+   "types": [
+    "water",
+    "grass"
+   ]
+  },
+  {
+   "id": "water-ice",
+   "name": "Frozen Coast",
+   "types": [
+    "water",
+    "ice"
+   ]
+  },
+  {
+   "id": "water-fighting",
+   "name": "Crashing Waves",
+   "types": [
+    "water",
+    "fighting"
+   ]
+  },
+  {
+   "id": "water-poison",
+   "name": "Murky Bay",
+   "types": [
+    "water",
+    "poison"
+   ]
+  },
+  {
+   "id": "water-ground",
+   "name": "Muddy Marsh",
+   "types": [
+    "water",
+    "ground"
+   ]
+  },
+  {
+   "id": "water-flying",
+   "name": "Seabird Cliffs",
+   "types": [
+    "water",
+    "flying"
+   ]
+  },
+  {
+   "id": "water-psychic",
+   "name": "Mirror Lake",
+   "types": [
+    "water",
+    "psychic"
+   ]
+  },
+  {
+   "id": "water-bug",
+   "name": "Pond Skimmers",
+   "types": [
+    "water",
+    "bug"
+   ]
+  },
+  {
+   "id": "water-rock",
+   "name": "Tidepool Rocks",
+   "types": [
+    "water",
+    "rock"
+   ]
+  },
+  {
+   "id": "water-ghost",
+   "name": "The Sunken Ship",
+   "types": [
+    "water",
+    "ghost"
+   ]
+  },
+  {
+   "id": "water-dragon",
+   "name": "Leviathan's Deep",
+   "types": [
+    "water",
+    "dragon"
+   ]
+  },
+  {
+   "id": "water-dark",
+   "name": "Abyssal Trench",
+   "types": [
+    "water",
+    "dark"
+   ]
+  },
+  {
+   "id": "water-steel",
+   "name": "Shipwreck Harbor",
+   "types": [
+    "water",
+    "steel"
+   ]
+  },
+  {
+   "id": "water-fairy",
+   "name": "Mermaid Lagoon",
+   "types": [
+    "water",
+    "fairy"
+   ]
+  },
+  {
+   "id": "electric-grass",
+   "name": "Charged Thicket",
+   "types": [
+    "electric",
+    "grass"
+   ]
+  },
+  {
+   "id": "electric-ice",
+   "name": "Frozen Sparks",
+   "types": [
+    "electric",
+    "ice"
+   ]
+  },
+  {
+   "id": "electric-fighting",
+   "name": "Shock Gym",
+   "types": [
+    "electric",
+    "fighting"
+   ]
+  },
+  {
+   "id": "electric-poison",
+   "name": "Neon Sludge",
+   "types": [
+    "electric",
+    "poison"
+   ]
+  },
+  {
+   "id": "electric-ground",
+   "name": "Power Line Badlands",
+   "types": [
+    "electric",
+    "ground"
+   ]
+  },
+  {
+   "id": "electric-flying",
+   "name": "Storm Front",
+   "types": [
+    "electric",
+    "flying"
+   ]
+  },
+  {
+   "id": "electric-psychic",
+   "name": "Brainwave Lab",
+   "types": [
+    "electric",
+    "psychic"
+   ]
+  },
+  {
+   "id": "electric-bug",
+   "name": "Buzzing Wires",
+   "types": [
+    "electric",
+    "bug"
+   ]
+  },
+  {
+   "id": "electric-rock",
+   "name": "Lightning Crag",
+   "types": [
+    "electric",
+    "rock"
+   ]
+  },
+  {
+   "id": "electric-ghost",
+   "name": "Stormy Nightmares",
+   "types": [
+    "electric",
+    "ghost"
+   ]
+  },
+  {
+   "id": "electric-dragon",
+   "name": "Thunder Drakes",
+   "types": [
+    "electric",
+    "dragon"
+   ]
+  },
+  {
+   "id": "electric-dark",
+   "name": "Blackout City",
+   "types": [
+    "electric",
+    "dark"
+   ]
+  },
+  {
+   "id": "electric-steel",
+   "name": "The Power Plant",
+   "types": [
+    "electric",
+    "steel"
+   ]
+  },
+  {
+   "id": "electric-fairy",
+   "name": "Twinkling Lights",
+   "types": [
+    "electric",
+    "fairy"
+   ]
+  },
+  {
+   "id": "grass-ice",
+   "name": "Frosted Garden",
+   "types": [
+    "grass",
+    "ice"
+   ]
+  },
+  {
+   "id": "grass-fighting",
+   "name": "Jungle Trials",
+   "types": [
+    "grass",
+    "fighting"
+   ]
+  },
+  {
+   "id": "grass-poison",
+   "name": "Poison Ivy Grove",
+   "types": [
+    "grass",
+    "poison"
+   ]
+  },
+  {
+   "id": "grass-ground",
+   "name": "Rooted Valley",
+   "types": [
+    "grass",
+    "ground"
+   ]
+  },
+  {
+   "id": "grass-flying",
+   "name": "Windswept Fields",
+   "types": [
+    "grass",
+    "flying"
+   ]
+  },
+  {
+   "id": "grass-psychic",
+   "name": "Enchanted Orchard",
+   "types": [
+    "grass",
+    "psychic"
+   ]
+  },
+  {
+   "id": "grass-bug",
+   "name": "Bramble Hive",
+   "types": [
+    "grass",
+    "bug"
+   ]
+  },
+  {
+   "id": "grass-rock",
+   "name": "Overgrown Ruins",
+   "types": [
+    "grass",
+    "rock"
+   ]
+  },
+  {
+   "id": "grass-ghost",
+   "name": "Haunted Forest",
+   "types": [
+    "grass",
+    "ghost"
+   ]
+  },
+  {
+   "id": "grass-dragon",
+   "name": "Ancient Jungle",
+   "types": [
+    "grass",
+    "dragon"
+   ]
+  },
+  {
+   "id": "grass-dark",
+   "name": "Shadowed Thicket",
+   "types": [
+    "grass",
+    "dark"
+   ]
+  },
+  {
+   "id": "grass-steel",
+   "name": "Iron Greenhouse",
+   "types": [
+    "grass",
+    "steel"
+   ]
+  },
+  {
+   "id": "grass-fairy",
+   "name": "Flower Crown Glade",
+   "types": [
+    "grass",
+    "fairy"
+   ]
+  },
+  {
+   "id": "ice-fighting",
+   "name": "Frozen Arena",
+   "types": [
+    "ice",
+    "fighting"
+   ]
+  },
+  {
+   "id": "ice-poison",
+   "name": "Bitter Frost",
+   "types": [
+    "ice",
+    "poison"
+   ]
+  },
+  {
+   "id": "ice-ground",
+   "name": "Permafrost Tundra",
+   "types": [
+    "ice",
+    "ground"
+   ]
+  },
+  {
+   "id": "ice-flying",
+   "name": "Blizzard Heights",
+   "types": [
+    "ice",
+    "flying"
+   ]
+  },
+  {
+   "id": "ice-psychic",
+   "name": "Crystal Visions",
+   "types": [
+    "ice",
+    "psychic"
+   ]
+  },
+  {
+   "id": "ice-bug",
+   "name": "Frostbitten Hive",
+   "types": [
+    "ice",
+    "bug"
+   ]
+  },
+  {
+   "id": "ice-rock",
+   "name": "Glacier Pass",
+   "types": [
+    "ice",
+    "rock"
+   ]
+  },
+  {
+   "id": "ice-ghost",
+   "name": "Frozen Spirits",
+   "types": [
+    "ice",
+    "ghost"
+   ]
+  },
+  {
+   "id": "ice-dragon",
+   "name": "Frost Wyrm Peak",
+   "types": [
+    "ice",
+    "dragon"
+   ]
+  },
+  {
+   "id": "ice-dark",
+   "name": "The Long Polar Night",
+   "types": [
+    "ice",
+    "dark"
+   ]
+  },
+  {
+   "id": "ice-steel",
+   "name": "Frozen Foundry",
+   "types": [
+    "ice",
+    "steel"
+   ]
+  },
+  {
+   "id": "ice-fairy",
+   "name": "Snowflake Dreams",
+   "types": [
+    "ice",
+    "fairy"
+   ]
+  },
+  {
+   "id": "fighting-poison",
+   "name": "Dirty Fighting",
+   "types": [
+    "fighting",
+    "poison"
+   ]
+  },
+  {
+   "id": "fighting-ground",
+   "name": "Desert Arena",
+   "types": [
+    "fighting",
+    "ground"
+   ]
+  },
+  {
+   "id": "fighting-flying",
+   "name": "Sky Duel",
+   "types": [
+    "fighting",
+    "flying"
+   ]
+  },
+  {
+   "id": "fighting-psychic",
+   "name": "Mind and Fist",
+   "types": [
+    "fighting",
+    "psychic"
+   ]
+  },
+  {
+   "id": "fighting-bug",
+   "name": "Beetle Brawl",
+   "types": [
+    "fighting",
+    "bug"
+   ]
+  },
+  {
+   "id": "fighting-rock",
+   "name": "Mountain Training",
+   "types": [
+    "fighting",
+    "rock"
+   ]
+  },
+  {
+   "id": "fighting-ghost",
+   "name": "Phantom Dojo",
+   "types": [
+    "fighting",
+    "ghost"
+   ]
+  },
+  {
+   "id": "fighting-dragon",
+   "name": "Dragon's Gauntlet",
+   "types": [
+    "fighting",
+    "dragon"
+   ]
+  },
+  {
+   "id": "fighting-dark",
+   "name": "Street Fights",
+   "types": [
+    "fighting",
+    "dark"
+   ]
+  },
+  {
+   "id": "fighting-steel",
+   "name": "Iron Fist Factory",
+   "types": [
+    "fighting",
+    "steel"
+   ]
+  },
+  {
+   "id": "fighting-fairy",
+   "name": "Knights of the Glade",
+   "types": [
+    "fighting",
+    "fairy"
+   ]
+  },
+  {
+   "id": "poison-ground",
+   "name": "Toxic Wasteland",
+   "types": [
+    "poison",
+    "ground"
+   ]
+  },
+  {
+   "id": "poison-flying",
+   "name": "Poisoned Winds",
+   "types": [
+    "poison",
+    "flying"
+   ]
+  },
+  {
+   "id": "poison-psychic",
+   "name": "Venom Visions",
+   "types": [
+    "poison",
+    "psychic"
+   ]
+  },
+  {
+   "id": "poison-bug",
+   "name": "Stinging Swamp",
+   "types": [
+    "poison",
+    "bug"
+   ]
+  },
+  {
+   "id": "poison-rock",
+   "name": "Acid Caves",
+   "types": [
+    "poison",
+    "rock"
+   ]
+  },
+  {
+   "id": "poison-ghost",
+   "name": "Graveyard Fog",
+   "types": [
+    "poison",
+    "ghost"
+   ]
+  },
+  {
+   "id": "poison-dragon",
+   "name": "Venom Drake Den",
+   "types": [
+    "poison",
+    "dragon"
+   ]
+  },
+  {
+   "id": "poison-dark",
+   "name": "Black Market Alleys",
+   "types": [
+    "poison",
+    "dark"
+   ]
+  },
+  {
+   "id": "poison-steel",
+   "name": "The Chemical Plant",
+   "types": [
+    "poison",
+    "steel"
+   ]
+  },
+  {
+   "id": "poison-fairy",
+   "name": "Poisoned Apples",
+   "types": [
+    "poison",
+    "fairy"
+   ]
+  },
+  {
+   "id": "ground-flying",
+   "name": "Canyon Winds",
+   "types": [
+    "ground",
+    "flying"
+   ]
+  },
+  {
+   "id": "ground-psychic",
+   "name": "Desert Mirages",
+   "types": [
+    "ground",
+    "psychic"
+   ]
+  },
+  {
+   "id": "ground-bug",
+   "name": "Anthill Plains",
+   "types": [
+    "ground",
+    "bug"
+   ]
+  },
+  {
+   "id": "ground-rock",
+   "name": "Rocky Badlands",
+   "types": [
+    "ground",
+    "rock"
+   ]
+  },
+  {
+   "id": "ground-ghost",
+   "name": "Buried Secrets",
+   "types": [
+    "ground",
+    "ghost"
+   ]
+  },
+  {
+   "id": "ground-dragon",
+   "name": "Dune Dragons",
+   "types": [
+    "ground",
+    "dragon"
+   ]
+  },
+  {
+   "id": "ground-dark",
+   "name": "Underground Tunnels",
+   "types": [
+    "ground",
+    "dark"
+   ]
+  },
+  {
+   "id": "ground-steel",
+   "name": "The Mining Quarry",
+   "types": [
+    "ground",
+    "steel"
+   ]
+  },
+  {
+   "id": "ground-fairy",
+   "name": "Fairy Rings",
+   "types": [
+    "ground",
+    "fairy"
+   ]
+  },
+  {
+   "id": "flying-psychic",
+   "name": "Starlit Visions",
+   "types": [
+    "flying",
+    "psychic"
+   ]
+  },
+  {
+   "id": "flying-bug",
+   "name": "Summer Swarm",
+   "types": [
+    "flying",
+    "bug"
+   ]
+  },
+  {
+   "id": "flying-rock",
+   "name": "Eagle's Crag",
+   "types": [
+    "flying",
+    "rock"
+   ]
+  },
+  {
+   "id": "flying-ghost",
+   "name": "Spirit Winds",
+   "types": [
+    "flying",
+    "ghost"
+   ]
+  },
+  {
+   "id": "flying-dragon",
+   "name": "Dragon Skies",
+   "types": [
+    "flying",
+    "dragon"
+   ]
+  },
+  {
+   "id": "flying-dark",
+   "name": "Night Raptors",
+   "types": [
+    "flying",
+    "dark"
+   ]
+  },
+  {
+   "id": "flying-steel",
+   "name": "Steel Skies",
+   "types": [
+    "flying",
+    "steel"
+   ]
+  },
+  {
+   "id": "flying-fairy",
+   "name": "Cloud Castle",
+   "types": [
+    "flying",
+    "fairy"
+   ]
+  },
+  {
+   "id": "psychic-bug",
+   "name": "The Hivemind",
+   "types": [
+    "psychic",
+    "bug"
+   ]
+  },
+  {
+   "id": "psychic-rock",
+   "name": "Ancient Temple",
+   "types": [
+    "psychic",
+    "rock"
+   ]
+  },
+  {
+   "id": "psychic-ghost",
+   "name": "Séance Hall",
+   "types": [
+    "psychic",
+    "ghost"
+   ]
+  },
+  {
+   "id": "psychic-dragon",
+   "name": "Dreaming Dragons",
+   "types": [
+    "psychic",
+    "dragon"
+   ]
+  },
+  {
+   "id": "psychic-dark",
+   "name": "Twisted Minds",
+   "types": [
+    "psychic",
+    "dark"
+   ]
+  },
+  {
+   "id": "psychic-steel",
+   "name": "Silver Labs",
+   "types": [
+    "psychic",
+    "steel"
+   ]
+  },
+  {
+   "id": "psychic-fairy",
+   "name": "Moonlit Reveries",
+   "types": [
+    "psychic",
+    "fairy"
+   ]
+  },
+  {
+   "id": "bug-rock",
+   "name": "Fossil Cliffs",
+   "types": [
+    "bug",
+    "rock"
+   ]
+  },
+  {
+   "id": "bug-ghost",
+   "name": "Whispering Webs",
+   "types": [
+    "bug",
+    "ghost"
+   ]
+  },
+  {
+   "id": "bug-dragon",
+   "name": "Wings of Wyrms",
+   "types": [
+    "bug",
+    "dragon"
+   ]
+  },
+  {
+   "id": "bug-dark",
+   "name": "Creeping Shadows",
+   "types": [
+    "bug",
+    "dark"
+   ]
+  },
+  {
+   "id": "bug-steel",
+   "name": "Clockwork Hive",
+   "types": [
+    "bug",
+    "steel"
+   ]
+  },
+  {
+   "id": "bug-fairy",
+   "name": "Butterfly Garden",
+   "types": [
+    "bug",
+    "fairy"
+   ]
+  },
+  {
+   "id": "rock-ghost",
+   "name": "Tombstone Hill",
+   "types": [
+    "rock",
+    "ghost"
+   ]
+  },
+  {
+   "id": "rock-dragon",
+   "name": "Dragon's Spine",
+   "types": [
+    "rock",
+    "dragon"
+   ]
+  },
+  {
+   "id": "rock-dark",
+   "name": "Bandit Canyon",
+   "types": [
+    "rock",
+    "dark"
+   ]
+  },
+  {
+   "id": "rock-steel",
+   "name": "Iron Mountain",
+   "types": [
+    "rock",
+    "steel"
+   ]
+  },
+  {
+   "id": "rock-fairy",
+   "name": "Crystal Caverns",
+   "types": [
+    "rock",
+    "fairy"
+   ]
+  },
+  {
+   "id": "ghost-dragon",
+   "name": "Dragon Graveyard",
+   "types": [
+    "ghost",
+    "dragon"
+   ]
+  },
+  {
+   "id": "ghost-dark",
+   "name": "The Witching Hour",
+   "types": [
+    "ghost",
+    "dark"
+   ]
+  },
+  {
+   "id": "ghost-steel",
+   "name": "Haunted Armory",
+   "types": [
+    "ghost",
+    "steel"
+   ]
+  },
+  {
+   "id": "ghost-fairy",
+   "name": "Fading Fairy Tales",
+   "types": [
+    "ghost",
+    "fairy"
+   ]
+  },
+  {
+   "id": "dragon-dark",
+   "name": "Wyrm's Lair",
+   "types": [
+    "dragon",
+    "dark"
+   ]
+  },
+  {
+   "id": "dragon-steel",
+   "name": "Iron Dragons",
+   "types": [
+    "dragon",
+    "steel"
+   ]
+  },
+  {
+   "id": "dragon-fairy",
+   "name": "Dragon's Lullaby",
+   "types": [
+    "dragon",
+    "fairy"
+   ]
+  },
+  {
+   "id": "dark-steel",
+   "name": "Shadow Syndicate",
+   "types": [
+    "dark",
+    "steel"
+   ]
+  },
+  {
+   "id": "dark-fairy",
+   "name": "Midnight Masquerade",
+   "types": [
+    "dark",
+    "fairy"
+   ]
+  },
+  {
+   "id": "steel-fairy",
+   "name": "Silver Charms",
+   "types": [
+    "steel",
+    "fairy"
+   ]
+  }
+ ]
+}

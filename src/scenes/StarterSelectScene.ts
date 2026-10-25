@@ -7,6 +7,7 @@ import { onInputAction } from '../ui/input';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { badge, drawPanel } from '../ui/widgets';
+import { sceneForRun } from './routing';
 
 export class StarterSelectScene extends Phaser.Scene {
   private index = 0;
@@ -83,7 +84,7 @@ export class StarterSelectScene extends Phaser.Scene {
   }
 
   private choose(i: number): void {
-    services().session.chooseStarter(i);
-    this.scene.start('Battle');
+    const run = services().session.chooseStarter(i);
+    this.scene.start(sceneForRun(run));
   }
 }

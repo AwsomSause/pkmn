@@ -1,0 +1,34 @@
+[
+ {
+  "item": "poke-ball",
+  "price": 100
+ },
+ {
+  "item": "great-ball",
+  "price": 300
+ },
+ {
+  "item": "ultra-ball",
+  "price": 600
+ },
+ {
+  "item": "potion",
+  "price": 150
+ },
+ {
+  "item": "super-potion",
+  "price": 350
+ },
+ {
+  "item": "full-heal",
+  "price": 200
+ },
+ {
+  "item": "ether",
+  "price": 600
+ },
+ {
+  "item": "revive",
+  "price": 1000
+ }
+]

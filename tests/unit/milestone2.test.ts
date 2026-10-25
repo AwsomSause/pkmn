@@ -24,12 +24,12 @@ import {
 import { currentEnemy, type PokemonInstance, type RunState } from '../../src/core/state';
 import { MIGRATIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content } from './helpers';
+import { content, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 
 function newRun(seed = 'm2', archetypeId = 'red'): RunState {
-  return chooseStarter(content, createRun(content, { runId: 'run-m2', seed, archetypeId }), 0);
+  return toBattle(chooseStarter(content, createRun(content, { runId: 'run-m2', seed, archetypeId }), 0));
 }
 
 function setMoves(mon: PokemonInstance, ...ids: string[]) {
@@ -37,7 +37,7 @@ function setMoves(mon: PokemonInstance, ...ids: string[]) {
 }
 
 function engine(party: PokemonInstance[], enemies: PokemonInstance[], kind: 'wild' | 'trainer' = 'wild', inventory: Record<string, number> = {}, seed = 'eng') {
-  const battle = createBattle(kind, enemies, 0, party[0]!.uid, kind === 'trainer' ? { classId: 'youngster', name: 'Joey' } : null);
+  const battle = createBattle(kind, enemies, 0, party[0]!.uid, kind === 'trainer' ? { classId: 'youngster', name: 'Joey', leaderId: null } : null);
   const ctx: BattleContext = { content, battle, party, inventory, rng: new Rng(hashSeed(seed)), captureRng: new Rng(hashSeed(`${seed}-c`)), catchMultiplier: 1 };
   return { battle, ctx };
 }
@@ -230,15 +230,16 @@ describe('trainer battles', () => {
     expect(team.every((m) => m.hp === 0)).toBe(true);
   });
 
-  it('every 4th encounter is a trainer, and winning pays moneyPerLevel × highest level', () => {
+  it('trainer battles come from trainer columns on the map, and winning pays moneyPerLevel × highest level', () => {
     for (const archetypeId of ['red', 'green']) {
       let run = newRun('trainer-money', archetypeId);
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 70, run.party[0]!.uid);
       while (run.battle?.kind !== 'trainer') {
         run = skipDecisions(fightOut(run).run);
-        if (run.phase === 'reward') run = skipDecisions(chooseReward(content, run, 0).run);
+        if (run.phase === 'reward') run = toBattle(skipDecisions(chooseReward(content, run, 0).run));
       }
-      expect(run.encountersCompleted + 1).toBe(content.balance.trainerEvery);
+      const column = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!.column;
+      expect(column).toBe(run.stage!.map.trainerColumns[0]);
       const battle = run.battle!;
       const cls = content.trainers.get(battle.trainer!.classId)!;
       const expected = Math.floor(cls.moneyPerLevel * Math.max(...battle.enemyTeam.map((m) => m.level)) * moneyMultiplier(getArchetype(content, archetypeId)));
@@ -250,8 +251,9 @@ describe('trainer battles', () => {
   it('trainer Pokémon arrive already evolved for their level', () => {
     expect(evolvedFormAt(content, 'charmander', 15)).toBe('charmander');
     expect(evolvedFormAt(content, 'charmander', 16)).toBe('charmeleon');
-    const plan = planTrainer(content, RED, 40, new Rng(hashSeed('plan')));
-    expect(plan.members.length).toBeGreaterThanOrEqual(content.balance.trainerTeam.minSize);
+    const theme = content.themes.get('fire-psychic')!;
+    const plan = planTrainer(content, RED, theme, 3, 120, new Rng(hashSeed('plan')));
+    expect(plan.members.length).toBeGreaterThanOrEqual(content.balance.trainerTeam.baseSize);
     expect(plan.members.length).toBeLessThanOrEqual(content.balance.trainerTeam.maxSize);
     for (const m of plan.members) expect(evolvedFormAt(content, m.speciesId, m.level)).toBe(m.speciesId);
   });
@@ -364,7 +366,7 @@ describe('rewards, move learning and evolution', () => {
 
     const learned = resolveDecision(content, asked, { kind: 'forgetMove', moveIndex: 1 }).run;
     expect(learned.party[0]!.moves.map((m) => m.id)).toEqual(['scratch', 'fire-fang', 'ember', 'smokescreen']);
-    expect(learned.phase).toBe('battle');
+    expect(learned.phase).toBe('map');
 
     const skipped = resolveDecision(content, asked, { kind: 'skipMove' }).run;
     expect(skipped.party[0]!.moves.map((m) => m.id)).toEqual(['scratch', 'growl', 'ember', 'smokescreen']);
