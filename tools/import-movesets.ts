@@ -69,6 +69,7 @@ const supported = new Set((JSON.parse(readFileSync(join(dataDir, 'moves.json'), 
 const missingSpecies: string[] = [];
 const unsupported = new Map<string, string[]>();
 const noLevelOne: string[] = [];
+const movedToLevelOne: string[] = [];
 for (const s of species) {
   const fromSheet = sheet.get(s.name.toLowerCase());
   if (!fromSheet) {
@@ -82,10 +83,15 @@ for (const s of species) {
   const learnset = kept
     .sort((a, b) => a.level - b.level)
     .filter((e) => (seen.has(e.move) ? false : (seen.add(e.move), true)));
-  if (!learnset.some((e) => e.level === 1)) {
-    // Every Pokémon needs a move at level 1; keep the current data for this one and report it.
+  if (learnset.length === 0) {
     noLevelOne.push(s.name);
     continue;
+  }
+  if (!learnset.some((e) => e.level === 1)) {
+    // Every Pokémon needs a move at level 1. Some sheet lists start later (or with a move the
+    // game doesn't support yet), so the earliest supported move is moved to level 1.
+    movedToLevelOne.push(`${s.name} (${learnset[0]!.move} from level ${learnset[0]!.level})`);
+    learnset[0]!.level = 1;
   }
   s.learnset = learnset;
 }
@@ -94,7 +100,8 @@ writeFileSync(speciesPath, JSON.stringify(species, null, 1) + '\n');
 
 console.log(`Updated learnsets for ${species.length - missingSpecies.length - noLevelOne.length} of ${species.length} species.`);
 if (missingSpecies.length) console.log(`Not in the sheet (unchanged): ${missingSpecies.join(', ')}`);
-if (noLevelOne.length) console.log(`No supported level-1 move in the sheet (unchanged): ${noLevelOne.join(', ')}`);
+if (noLevelOne.length) console.log(`No supported moves in the sheet (unchanged): ${noLevelOne.join(', ')}`);
+if (movedToLevelOne.length) console.log(`Earliest move moved to level 1: ${movedToLevelOne.join(', ')}`);
 const top = [...unsupported.entries()].sort((a, b) => b[1].length - a[1].length);
 console.log(`${top.length} moves in these learnsets are not supported yet (left out). Most common:`);
 for (const [move, who] of top.slice(0, 25)) console.log(`  ${move} (${who.length})`);
