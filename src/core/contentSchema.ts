@@ -34,25 +34,67 @@ const StatBlockSchema = z.object({
   spe: z.number().int().positive(),
 });
 
-export const GROWTH_RATES = ['fast', 'medium-fast', 'medium-slow', 'slow'] as const;
+export const GROWTH_RATES = ['fast', 'medium-fast', 'medium-slow', 'slow', 'erratic', 'fluctuating'] as const;
 export const GrowthRateSchema = z.enum(GROWTH_RATES);
 export type GrowthRate = z.infer<typeof GrowthRateSchema>;
+
+export const SPECIES_TAGS = ['baby', 'legendary', 'mythical'] as const;
+export type SpeciesTag = (typeof SPECIES_TAGS)[number];
+
+/**
+ * Forms besides a species' usual one. Regional and alternate forms are ordinary
+ * Pokémon; Mega, Gigantamax, Primal and battle-only forms (Zen Mode, Ash-Greninja,
+ * ...) only appear through mechanics that arrive in Milestone 8, so they are never
+ * met in the wild, on trainers' teams or as starters.
+ */
+export const FORM_KINDS = ['regional', 'alternate', 'mega', 'gigantamax', 'primal', 'battle'] as const;
+export type FormKind = (typeof FORM_KINDS)[number];
+
+/**
+ * How one species evolves into another (GAME_DESIGN.md §5c). Exactly one of
+ * `level` (standard level-up, D15) or `item` (use the item from the Bag).
+ * `region`: in that region this branch is preferred (Pikachu becomes Alolan
+ * Raichu in Alola). `condition`: Tyrogue's Attack/Defense comparison.
+ */
+export const EvolutionSchema = z
+  .object({
+    to: z.string(),
+    level: z.number().int().min(2).max(100).optional(),
+    item: z.string().optional(),
+    region: z.string().optional(),
+    condition: z.enum(['atkGtDef', 'atkLtDef', 'atkEqDef']).optional(),
+  })
+  .refine((e) => (e.level === undefined) !== (e.item === undefined), { message: 'an evolution needs exactly one of level or item' });
+export type Evolution = z.infer<typeof EvolutionSchema>;
 
 export const SpeciesSchema = z.object({
   id: z.string().min(1),
   dex: z.number().int().positive(),
   name: z.string().min(1),
+  /** The generation it (or this form) was introduced in, 1–9. Regions prefer their own generation's Pokémon. */
+  generation: z.number().int().min(1).max(9),
   types: z.array(TypeNameSchema).min(1).max(2),
   baseStats: StatBlockSchema,
   catchRate: z.number().int().min(1).max(255),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
-  /** 1 = has no pre-evolution (eligible as a "stage-one" starter). */
+  /**
+   * 1 = has no pre-evolution (eligible as a "stage-one" starter and in the wild).
+   * Baby Pokémon don't count, so Pikachu (from Pichu) is still stage 1.
+   */
   evolutionStage: z.number().int().min(1).max(3),
+  /** The species it evolves from, if any. */
+  evolvesFrom: z.string().nullable().default(null),
+  tags: z.array(z.enum(SPECIES_TAGS)).default([]),
+  /** Set for forms: what kind, and the species it is a form of. */
+  form: z
+    .object({ kind: z.enum(FORM_KINDS), base: z.string(), region: z.string().optional() })
+    .optional(),
+  /** Level-up moves, including moves the battle engine doesn't support yet (they are skipped). */
   learnset: z.array(z.object({ level: z.number().int().min(1).max(100), move: z.string() })).min(1),
-  /** Standard level-up evolutions (director decision D15). */
-  evolutions: z.array(z.object({ to: z.string(), level: z.number().int().min(2).max(100) })).default([]),
-  assets: z.object({ front: z.string(), back: z.string(), cry: z.string().optional() }),
+  evolutions: z.array(EvolutionSchema).default([]),
+  /** File names in the asset pack: sprite "2019" → images/pokemon/2019.png, icon "7/2019", cry "19". */
+  assets: z.object({ sprite: z.string(), icon: z.string(), cry: z.string() }),
 });
 export type Species = z.infer<typeof SpeciesSchema>;
 
@@ -77,6 +119,14 @@ export const MoveSchema = z.object({
   critStage: z.number().int().min(0).max(3).default(0),
   target: z.enum(['enemy', 'self']),
   flags: z.array(z.enum(['powder', 'typeless'])).default([]),
+  /**
+   * False for moves whose effects the battle engine can't run yet. They stay
+   * in the data (and in learnsets) so they can be switched on later, but no
+   * Pokémon learns or uses them until then.
+   */
+  supported: z.boolean().default(true),
+  /** For unsupported moves: what still has to be built (the move list's effect text). */
+  needs: z.string().optional(),
   effects: z
     .object({
       status: z.object({ id: StatusIdSchema, chance: z.number().min(1).max(100) }).optional(),
@@ -208,6 +258,71 @@ export const ArchetypeSchema = z.object({
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
+// ---------- Run-Prep (GAME_DESIGN.md §14.5, §14.7) ----------
+
+/**
+ * A pool of starters for the Starter Laboratory. Species that aren't in the
+ * game yet are skipped, so a pool can list species ahead of the full Pokédex;
+ * a pool with too few known first-stage species shows as "coming later".
+ */
+export const StarterPoolSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  species: z.array(z.string()).min(1),
+  unlockedByDefault: z.boolean().default(false),
+  /** What must happen before the pool can be bought (null: nothing). */
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+  /** A Bank license that must be owned before the pool can be bought. */
+  license: z.string().nullable().default(null),
+  /** Research Points to unlock the pool. */
+  researchCost: z.number().int().min(0).default(0),
+});
+export type StarterPool = z.infer<typeof StarterPoolSchema>;
+
+/** How the three starters are drawn from the pool. Rules change the choice, not the power. */
+export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind'] as const;
+export const DraftRuleSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  kind: z.enum(DRAFT_RULE_KINDS),
+  license: z.string().nullable().default(null),
+});
+export type DraftRule = z.infer<typeof DraftRuleSchema>;
+
+/** A preparation choice: one per run, chosen on the Preparation Desk. */
+export const PrepTokenSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+  license: z.string().nullable().default(null),
+  money: z.number().int().min(0).default(0),
+  items: z.record(z.string(), z.number().int().positive()).default({}),
+});
+export type PrepToken = z.infer<typeof PrepTokenSchema>;
+
+/** Investment licenses: bought once with Bank Credits; they open up options rather than add power. */
+export const LicenseSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  cost: z.number().int().min(0),
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+});
+export type License = z.infer<typeof LicenseSchema>;
+
+export const RunPrepFileSchema = z.object({
+  starterPools: z.array(StarterPoolSchema).min(1),
+  draftRules: z.array(DraftRuleSchema).min(1),
+  tokens: z.array(PrepTokenSchema),
+  licenses: z.array(LicenseSchema),
+});
+
 export const RARITIES = ['common', 'uncommon', 'rare'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
@@ -220,6 +335,8 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('restorePp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('revive'), fraction: z.number().positive().max(1) }),
   z.object({ kind: z.literal('lastStand') }),
+  /** Evolves a Pokémon that has an evolution using this item (stones, Linking Cord, Soothe Bell, ...). */
+  z.object({ kind: z.literal('evolve') }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -227,7 +344,7 @@ export const ItemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm']),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution']),
   iconAssetId: z.string(),
   usableInBattle: z.boolean(),
   usableOutside: z.boolean(),
@@ -325,6 +442,8 @@ export const RegionSchema = z.object({
   champions: z.array(z.string()),
   /** The Grand Region always comes last. */
   grand: z.boolean().default(false),
+  /** The generations of Pokémon native to this region (empty = every generation is native). */
+  generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
 export type Region = z.infer<typeof RegionSchema>;
 
@@ -418,7 +537,6 @@ export const BalanceSchema = z.object({
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
-  starterPool: z.array(z.string()).min(1),
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
@@ -503,6 +621,18 @@ export const BalanceSchema = z.object({
     randomExtra: z.number().int().min(0),
     maxSize: z.number().int().min(1).max(6),
   }),
+  /**
+   * Trainers' Pokémon evolve by item (stones, trades, friendship) once they reach
+   * trainerItemLevel, or trainerBabyLevel for baby Pokémon (Pichu, Togepi, ...).
+   */
+  evolution: z.object({ trainerItemLevel: z.number().int().min(2).max(100), trainerBabyLevel: z.number().int().min(2).max(100) }),
+  /**
+   * Region eligibility: in a region, wild and trainer Pokémon from its own
+   * generation(s) are this many times as likely as others (still themed).
+   */
+  nativeWeight: z.number().min(1),
+  /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
+  wildMaxBaseStats: z.number().int().positive(),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
@@ -527,6 +657,8 @@ export const BalanceSchema = z.object({
   }),
   /** How many finished runs the Run History keeps. */
   runHistorySize: z.number().int().min(1),
+  /** How many loadout presets the Preparation Desk can store. */
+  presetSlots: z.number().int().min(1),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
@@ -536,6 +668,10 @@ export interface Content {
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   achievements: Map<string, Achievement>;
+  starterPools: Map<string, StarterPool>;
+  draftRules: Map<string, DraftRule>;
+  prepTokens: Map<string, PrepToken>;
+  licenses: Map<string, License>;
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;

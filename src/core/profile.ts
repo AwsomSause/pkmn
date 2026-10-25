@@ -25,6 +25,10 @@ export function createProfile(content: Content, profileId: string): Profile {
     lifetimeBankCredits: 0,
     runHistory: [],
     lastPayout: null,
+    unlockedPools: [],
+    licenses: [],
+    presets: [],
+    lastPrep: null,
     finalizedRunIds: [],
   };
 }

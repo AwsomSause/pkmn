@@ -311,7 +311,7 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
     return;
   }
   const target = ctx.party[targetIndex!]!;
-  const message = applyItemToPokemon(content, item, target, ctx.healMultiplier ?? 1);
+  const message = applyItemToPokemon(content, item, target, { healMultiplier: ctx.healMultiplier ?? 1 });
   events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
 }
 

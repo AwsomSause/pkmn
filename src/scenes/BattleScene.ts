@@ -12,7 +12,7 @@ import type { RunEvent, TurnResult } from '../core/run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playCry, playMusic, playSfx } from '../ui/audio';
 import { eventText, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
@@ -20,6 +20,7 @@ import { itemVisual, pokemonVisual, trainerVisual, type Visual } from '../ui/spr
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 const ENEMY_POS = { x: 690, y: 250 };
@@ -56,6 +57,14 @@ export class BattleScene extends Phaser.Scene {
 
   constructor() {
     super('Battle');
+  }
+
+  preload(): void {
+    // Every party member (switching), the whole enemy team, and the cries.
+    const { session } = services();
+    const enemies = (session.run?.battle?.enemyTeam ?? []).flatMap((m) => session.content.species.get(m.speciesId) ?? []);
+    preloadPokemon(this, partySpecies(), { back: true, shiny: true, icon: true, cry: true });
+    preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
   }
 
   create(): void {
@@ -150,8 +159,9 @@ export class BattleScene extends Phaser.Scene {
 
   // ---------- sprites and info boxes ----------
 
-  private showSprite(side: 'player' | 'enemy', mon: PokemonInstance): Visual {
+  private showSprite(side: 'player' | 'enemy', mon: PokemonInstance, cry = true): Visual {
     const species = getSpecies(services().session.content, mon.speciesId);
+    if (cry) playCry(this, species);
     if (side === 'player') {
       this.playerSprite?.destroy();
       this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, PIXEL_SCALE + 1, mon.shiny);
@@ -300,10 +310,10 @@ export class BattleScene extends Phaser.Scene {
       await this.refreshInfoBox(this.playerBox, this.shown.player, false);
       await this.say(`Go! ${this.speciesName(this.shown.player)}!`);
     } else {
-      this.showSprite('enemy', this.shown.enemy);
+      this.showSprite('enemy', this.shown.enemy, false);
       await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
       if (!battle.needsSwitch) {
-        this.showSprite('player', this.shown.player);
+        this.showSprite('player', this.shown.player, false);
         await this.refreshInfoBox(this.playerBox, this.shown.player, false);
       }
       await this.say(`The battle continues! (turn ${battle.turn})`);

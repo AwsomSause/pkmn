@@ -19,7 +19,6 @@ import {
   candiesForRelease,
   CHAMPION_CLASS,
   ELITE_FOUR_CLASS,
-  generateStarterChoices,
   GYM_LEADER_CLASS,
   createPlannedPokemon,
   leagueScale,
@@ -37,26 +36,32 @@ import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { count, discover } from './progress';
+import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
-import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
 
 export interface NewRunOptions {
   runId: string;
   seed: string;
   archetypeId: string;
-  /** "full" (default) or a shorter campaign such as "dev". */
+  /** "full" (default) or a shorter campaign such as "dev". Ignored when `prep` is given. */
   campaignId?: string;
+  /** The Preparation Desk's choices (default: the classic pool, the standard draft, no token). */
+  prep?: RunPrep;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
-  const inventory = { ...content.balance.startingItems };
-  for (const [id, n] of Object.entries(archetype.startingItems)) addItem(inventory, id, n);
-  const campaign = getCampaign(content, opts.campaignId ?? 'full');
+  const prep: RunPrep = opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' };
+  const resources = startingResources(content, archetype, prep);
+  const inventory: Record<string, number> = {};
+  for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, n);
+  const campaign = getCampaign(content, prep.campaignId);
   const rng = createStreams(opts.seed);
-  const starterChoices = withStream(rng, 'starter', (r) => generateStarterChoices(content, r));
+  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
+  const starterChoices = draft.choices;
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   return {
     runId: opts.runId,
@@ -64,8 +69,9 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     archetypeId: opts.archetypeId,
     phase: 'starter',
     starterChoices,
+    prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
-    money: content.balance.money.startingMoney,
+    money: resources.money,
     inventory,
     candies: 0,
     encountersCompleted: 0,
@@ -224,7 +230,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
       const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, scale, bonus, r);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex]);
     });
     const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
@@ -244,7 +250,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
         case 'champion':
           return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r);
         default:
-          return planTrainer(content, archetype, theme, stageNumber, scale, r);
+          return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
     const team = plan.members.map((m) => createPlannedPokemon(content, m, nextUid(run, 'e')));
@@ -466,7 +472,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of run.party) {
-    for (const evo of evolveFully(content, mon)) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex])) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
@@ -659,17 +665,23 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
 }
 
 /** Uses a Bag item on a party member between battles. */
-export function useItemOutsideBattle(content: Content, current: RunState, itemId: string, partyIndex: number): { run: RunState; message: string } {
+export function useItemOutsideBattle(content: Content, current: RunState, itemId: string, partyIndex: number, evolveTo?: string): { run: RunState; message: string } {
   assertPhase(current, 'reward', 'decision', 'map', 'shop');
   const item = getItem(content, itemId);
   if (!item.usableOutside) throw new Error(`${item.name} can't be used outside battle`);
   if (itemCount(current.inventory, itemId) <= 0) throw new Error(`You have no ${item.name}`);
   const target = current.party[partyIndex];
   if (!target) throw new Error('Choose a Pokémon');
-  const problem = itemUseProblem(content, item, target);
+  const regionId = current.regionOrder[current.regionIndex];
+  const problem = itemUseProblem(content, item, target, regionId);
   if (problem) throw new Error(problem);
   const run = structuredClone(current);
-  const message = applyItemToPokemon(content, item, run.party[partyIndex]!, healingMultiplier(getArchetype(content, run.archetypeId)));
+  const message = applyItemToPokemon(content, item, run.party[partyIndex]!, {
+    regionId,
+    evolveTo,
+    healMultiplier: healingMultiplier(getArchetype(content, run.archetypeId)),
+  });
+  if (item.effect.kind === 'evolve') count(run, 'evolutions');
   consumeItem(run.inventory, itemId);
   return { run, message };
 }

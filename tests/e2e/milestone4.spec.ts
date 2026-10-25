@@ -25,8 +25,12 @@ async function startDevRun(page: Page, seed: string) {
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter'); // Roll starters
   await waitForScene(page, 'StarterSelect');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter'); // Begin the run
   await waitForScene(page, 'Map');
 }
 

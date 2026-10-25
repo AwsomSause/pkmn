@@ -19,11 +19,26 @@ export interface AssetEntry {
   path: string;
   /** Atlas JSON path (TexturePacker multi-atlas format, as in the supplied packs). */
   atlasPath?: string;
+  /**
+   * Loaded when a screen first needs it instead of at start-up. Every Pokémon's
+   * sprites, icon and cry are lazy: there are over a thousand of them.
+   */
+  lazy?: boolean;
+}
+
+/** A species' file names in the asset pack (species.json `assets`). */
+export interface PokemonArt {
+  /** "25" → images/pokemon/25.png (+ back/, shiny/, back/shiny/). Regional forms use PokeRogue's numbers (Alolan Rattata is 2019). */
+  sprite: string;
+  /** "<generation folder>/<name>" → images/pokemon/icons/7/2019.png. */
+  icon: string;
+  /** "25" → audio/cry/25.m4a. */
+  cry: string;
 }
 
 /** What the catalog needs to know about the game data. */
 export interface CatalogInputs {
-  speciesDex: number[];
+  pokemon: PokemonArt[];
   trainerAssetIds: string[];
   itemAssetIds: string[];
   /** Battle backgrounds ("bg.arena.<name>"), e.g. the arena for each stage theme's type. */
@@ -83,41 +98,35 @@ export function backgroundEntry(assetId: string): AssetEntry {
   return { id: assetId, kind: 'image', category: 'background', path: `images/arenas/${assetId.replace(/^bg\.arena\./, '')}_bg.png` };
 }
 
-/** Last National Dex number of each generation (the icon pack is split into folders by generation). */
-const GENERATION_ENDS = [151, 251, 386, 493, 649, 721, 809, 905, 1025];
-
-export function generationOf(dex: number): number {
-  const index = GENERATION_ENDS.findIndex((end) => dex <= end);
-  return index === -1 ? GENERATION_ENDS.length : index + 1;
-}
-
-/** Asset IDs for one Pokémon's art, derived from its National Dex number. */
-export const pokemonAssetIds = (dex: number) => ({
-  front: `pokemon.front.${dex}`,
-  back: `pokemon.back.${dex}`,
-  shinyFront: `pokemon.shiny.front.${dex}`,
-  shinyBack: `pokemon.shiny.back.${dex}`,
-  icon: `pokemon.icon.${dex}`,
-  cry: `cry.${dex}`,
+/** Asset IDs for one Pokémon's art. */
+export const pokemonAssetIds = (art: PokemonArt) => ({
+  front: `pokemon.front.${art.sprite}`,
+  back: `pokemon.back.${art.sprite}`,
+  shinyFront: `pokemon.shiny.front.${art.sprite}`,
+  shinyBack: `pokemon.shiny.back.${art.sprite}`,
+  icon: `pokemon.icon.${art.icon.slice(art.icon.indexOf('/') + 1)}`,
+  cry: `cry.${art.cry}`,
 });
 
-export function pokemonEntries(dex: number): AssetEntry[] {
-  const ids = pokemonAssetIds(dex);
-  return [
-    atlas(ids.front, 'pokemon', `images/pokemon/${dex}`),
-    atlas(ids.back, 'pokemon', `images/pokemon/back/${dex}`),
-    atlas(ids.shinyFront, 'pokemon', `images/pokemon/shiny/${dex}`),
-    atlas(ids.shinyBack, 'pokemon', `images/pokemon/back/shiny/${dex}`),
-    { id: ids.icon, kind: 'image', category: 'pokemon', path: `images/pokemon/icons/${generationOf(dex)}/${dex}.png` },
-    { id: ids.cry, kind: 'audio', category: 'sound', path: `audio/cry/${dex}.m4a` },
+export function pokemonEntries(art: PokemonArt): AssetEntry[] {
+  const ids = pokemonAssetIds(art);
+  const lazy = (e: AssetEntry): AssetEntry => ({ ...e, lazy: true });
+  const entries: AssetEntry[] = [
+    atlas(ids.front, 'pokemon', `images/pokemon/${art.sprite}`),
+    atlas(ids.back, 'pokemon', `images/pokemon/back/${art.sprite}`),
+    atlas(ids.shinyFront, 'pokemon', `images/pokemon/shiny/${art.sprite}`),
+    atlas(ids.shinyBack, 'pokemon', `images/pokemon/back/shiny/${art.sprite}`),
+    { id: ids.icon, kind: 'image', category: 'pokemon', path: `images/pokemon/icons/${art.icon}.png` },
+    { id: ids.cry, kind: 'audio', category: 'sound', path: `audio/cry/${art.cry}.m4a` },
   ];
+  return entries.map(lazy);
 }
 
 /** Every asset the current game data could ask for. */
 export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
   const entries = [
     ...FIXED_ASSETS,
-    ...inputs.speciesDex.flatMap(pokemonEntries),
+    ...inputs.pokemon.flatMap(pokemonEntries),
     ...inputs.trainerAssetIds.map(trainerEntry),
     ...inputs.itemAssetIds.map(itemEntry),
     ...inputs.backgroundAssetIds.map(backgroundEntry),

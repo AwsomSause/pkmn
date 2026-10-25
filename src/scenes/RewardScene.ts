@@ -13,6 +13,7 @@ import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel } from '../ui/widgets';
 import { sceneForRun } from './routing';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 export class RewardScene extends Phaser.Scene {
   /** 0..draft-1 are the cards; then the Party and Bag buttons. */
@@ -24,6 +25,10 @@ export class RewardScene extends Phaser.Scene {
 
   constructor() {
     super('Reward');
+  }
+
+  preload(): void {
+    preloadPokemon(this, partySpecies(), { icon: true });
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {

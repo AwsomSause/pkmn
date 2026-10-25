@@ -49,6 +49,15 @@ export function xpForLevel(rate: GrowthRate, level: number): number {
       return Math.max(0, Math.floor((6 / 5) * n ** 3 - 15 * n ** 2 + 100 * n - 140));
     case 'slow':
       return Math.floor((5 * n ** 3) / 4);
+    case 'erratic':
+      if (n <= 50) return Math.floor((n ** 3 * (100 - n)) / 50);
+      if (n <= 68) return Math.floor((n ** 3 * (150 - n)) / 100);
+      if (n <= 98) return Math.floor((n ** 3 * Math.floor((1911 - 10 * n) / 3)) / 500);
+      return Math.floor((n ** 3 * (160 - n)) / 100);
+    case 'fluctuating':
+      if (n <= 15) return Math.floor((n ** 3 * (Math.floor((n + 1) / 3) + 24)) / 50);
+      if (n <= 36) return Math.floor((n ** 3 * (n + 14)) / 50);
+      return Math.floor((n ** 3 * (Math.floor(n / 2) + 32)) / 50);
   }
 }
 
@@ -58,12 +67,26 @@ export function levelFromXp(rate: GrowthRate, xp: number): number {
   return level;
 }
 
-/** Moves a species knows at a given level: the last four learned, in order. */
+/** Whether a Pokémon can learn and use this move (it exists and the battle engine supports it). */
+export function isUsableMove(content: Content, moveId: string): boolean {
+  return content.moves.get(moveId)?.supported === true;
+}
+
+/** A species' level-up moves that the game supports, in order. */
+export function usableLearnset(content: Content, species: Species): Species['learnset'] {
+  return species.learnset.filter((entry) => isUsableMove(content, entry.move));
+}
+
+/**
+ * Moves a species knows at a given level: the last four learned, in order.
+ * If it has learned no supported move yet (its first moves aren't supported),
+ * it knows its earliest supported move.
+ */
 export function movesAtLevel(content: Content, species: Species, level: number): string[] {
-  const learned = species.learnset
-    .filter((entry) => entry.level <= level && content.moves.has(entry.move))
-    .map((entry) => entry.move);
+  const usable = usableLearnset(content, species);
+  const learned = usable.filter((entry) => entry.level <= level).map((entry) => entry.move);
   const unique = [...new Set(learned)];
+  if (unique.length === 0 && usable[0]) return [usable[0].move];
   return unique.slice(-4);
 }
 
@@ -74,8 +97,10 @@ export function createPokemon(
   uid: string,
 ): PokemonInstance {
   const species = getSpecies(content, speciesId);
-  const moves = movesAtLevel(content, species, level).map((id) => ({ id, pp: content.moves.get(id)!.pp }));
-  if (moves.length === 0) throw new Error(`Species "${speciesId}" knows no supported moves at level ${level}`);
+  // A species with no supported moves at all (Ditto, Smeargle, ...) only has Struggle until its moves are built.
+  const known = movesAtLevel(content, species, level);
+  const moveIds = known.length > 0 ? known : [content.ruleset.struggleMoveId];
+  const moves = moveIds.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   const vitamins = Object.fromEntries(STAT_NAMES.map((s) => [s, 0])) as Record<StatName, number>;
   const mon: PokemonInstance = {
     uid,
@@ -130,9 +155,7 @@ export function gainXp(content: Content, mon: PokemonInstance, amount: number, l
   if (mon.level > oldLevel) {
     const newMax = maxHp(content, mon);
     if (mon.hp > 0) mon.hp = Math.min(newMax, mon.hp + (newMax - oldMax));
-    const newMoves = species.learnset.filter(
-      (e) => e.level > oldLevel && e.level <= mon.level && content.moves.has(e.move),
-    );
+    const newMoves = usableLearnset(content, species).filter((e) => e.level > oldLevel && e.level <= mon.level);
     for (const entry of newMoves) {
       if (mon.moves.some((m) => m.id === entry.move)) continue;
       if (mon.moves.length < 4) {

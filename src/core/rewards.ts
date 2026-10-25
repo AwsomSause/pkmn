@@ -14,7 +14,7 @@ import { moneyMultiplier } from './archetypes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
-import { addItem } from './items';
+import { addItem, itemUseProblem } from './items';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
 import { runLevelCap } from './regions';
@@ -35,6 +35,11 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
     return run.party.some((p) => (p.vitamins[stat] ?? 0) < content.balance.vitaminMaxStacks);
   }
   if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < runLevelCap(content, run));
+  // Evolution items are only offered when someone in the party can evolve with them.
+  const item = reward.effect.kind === 'addItem' ? content.items.get(reward.effect.item) : undefined;
+  if (item?.effect.kind === 'evolve') {
+    return run.party.some((p) => itemUseProblem(content, item, p, run.regionOrder[run.regionIndex]) === null);
+  }
   return true;
 }
 
@@ -111,7 +116,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
-      for (const evo of evolveFully(content, mon)) {
+      for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex])) {
         count(run, 'evolutions');
         messages.push(`${nameOf(content, evo.from)} evolved into ${nameOf(content, evo.to)}!`);
         for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);

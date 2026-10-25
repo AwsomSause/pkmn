@@ -21,6 +21,10 @@ export class AssetRegistry {
     return this.byId.has(id) && !this.failed.includes(id);
   }
 
+  get(id: string): AssetEntry | undefined {
+    return this.byId.get(id);
+  }
+
   entries(): AssetEntry[] {
     return [...this.byId.values()];
   }

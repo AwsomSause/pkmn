@@ -43,5 +43,65 @@
   "item": "full-restore",
   "price": 3000,
   "minBadges": 7
+ },
+ {
+  "item": "soothe-bell",
+  "price": 2500,
+  "minBadges": 1
+ },
+ {
+  "item": "dawn-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "dusk-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "fire-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "ice-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "leaf-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "moon-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "shiny-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "sun-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "thunder-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "water-stone",
+  "price": 3000,
+  "minBadges": 2
+ },
+ {
+  "item": "linking-cord",
+  "price": 3000,
+  "minBadges": 3
  }
 ]

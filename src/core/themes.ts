@@ -4,6 +4,7 @@
 // waits at the end. Themes and gym leaders never repeat within a run (D6).
 
 import type { Boss, Content, Species, Theme, TrainerClass, TypeName } from './contentSchema';
+import { isUsableMove } from './pokemon';
 import type { Rng } from './rng';
 
 export function getTheme(content: Content, id: string): Theme {
@@ -16,15 +17,37 @@ const sharesType = (types: readonly TypeName[], other: readonly TypeName[]) => t
 
 const wildCache = new WeakMap<Content, Species[]>();
 
-/** Species that can be met in the wild: no species in the data evolves into them by levelling up. */
+const baseStatTotal = (s: Species) => Object.values(s.baseStats).reduce((a, b) => a + b, 0);
+
+/**
+ * Whether a species can be met in the wild (and drawn for ordinary trainers' teams before
+ * evolving): a first-stage species, not legendary or mythical, not a Mega/Gigantamax/battle
+ * form, with at least one move the battle engine supports, and base stats no higher than
+ * balance.wildMaxBaseStats (which keeps Ultra Beasts and Paradox Pokémon out of early routes).
+ */
+export function isWildEligible(content: Content, s: Species): boolean {
+  if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
+  if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
+  if (baseStatTotal(s) > content.balance.wildMaxBaseStats) return false;
+  return s.learnset.some((e) => isUsableMove(content, e.move));
+}
+
+/** Species that can be met in the wild (see isWildEligible). */
 export function wildEligibleSpecies(content: Content): Species[] {
   let cached = wildCache.get(content);
   if (!cached) {
-    const evolvedForms = new Set([...content.species.values()].flatMap((s) => s.evolutions.map((e) => e.to)));
-    cached = [...content.species.values()].filter((s) => !evolvedForms.has(s.id));
+    cached = [...content.species.values()].filter((s) => isWildEligible(content, s));
     wildCache.set(content, cached);
   }
   return cached;
+}
+
+/** Region eligibility: a species is native to a region if it is from one of the region's generations or is its regional form. */
+export function isNative(content: Content, s: Species, regionId: string | undefined): boolean {
+  const region = regionId ? content.regions.get(regionId) : undefined;
+  if (!region) return false;
+  if (s.form?.region) return s.form.region === region.id;
+  return region.generations.length === 0 || region.generations.includes(s.generation);
 }
 
 export interface PoolEntry {
@@ -34,19 +57,23 @@ export interface PoolEntry {
 
 /**
  * The wild Pokémon of a theme: every wild-eligible species with either of the
- * theme's types. Species with both types are more common (dualTypeWeight).
- * If the pool is very small it is topped up from balance.wildPool.
+ * theme's types. Species with both types are more common (dualTypeWeight), and
+ * so are species native to the region (nativeWeight). If the pool is very
+ * small it is topped up from balance.wildPool.
  */
-export function themePool(content: Content, theme: Theme): PoolEntry[] {
-  return typesPool(content, theme.types);
+export function themePool(content: Content, theme: Theme, regionId?: string): PoolEntry[] {
+  return typesPool(content, theme.types, regionId);
 }
 
 /** Like themePool, for any list of types (an Elite Four member's speciality, for example). */
-export function typesPool(content: Content, types: readonly TypeName[]): PoolEntry[] {
-  const { dualTypeWeight, minThemePool, wildPool } = content.balance;
+export function typesPool(content: Content, types: readonly TypeName[], regionId?: string): PoolEntry[] {
+  const { dualTypeWeight, nativeWeight, minThemePool, wildPool } = content.balance;
   const pool: PoolEntry[] = wildEligibleSpecies(content)
     .filter((s) => sharesType(s.types, types))
-    .map((s) => ({ speciesId: s.id, weight: types.length > 1 && types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1 }));
+    .map((s) => ({
+      speciesId: s.id,
+      weight: (types.length > 1 && types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1) * (isNative(content, s, regionId) ? nativeWeight : 1),
+    }));
   if (pool.length < minThemePool) {
     for (const id of wildPool) if (!pool.some((p) => p.speciesId === id)) pool.push({ speciesId: id, weight: 1 });
   }
@@ -54,8 +81,8 @@ export function typesPool(content: Content, types: readonly TypeName[]): PoolEnt
 }
 
 /** Picks a species from the theme, preferring ones that share a type with `prefer` (e.g. a trainer's speciality). */
-export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[]): string {
-  return pickFromPool(content, themePool(content, theme), rng, prefer);
+export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[], regionId?: string): string {
+  return pickFromPool(content, themePool(content, theme, regionId), rng, prefer);
 }
 
 export function pickTypeSpecies(content: Content, types: readonly TypeName[], rng: Rng): string {

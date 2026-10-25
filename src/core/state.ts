@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { BoostStatSchema, StatNameSchema, StatusIdSchema } from './contentSchema';
+import { BoostStatSchema, StatNameSchema, StatusIdSchema, TypeNameSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -146,6 +146,22 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
 
+/** The choices made on the Preparation Desk before a run (GAME_DESIGN.md §14.7). */
+export const RunPrepSchema = z.object({
+  campaignId: z.string(),
+  poolId: z.string(),
+  draftRuleId: z.string(),
+  /** The chosen type, for the Type Focus draft rule. */
+  typeFocus: TypeNameSchema.nullable(),
+  /** The preparation token for this run, or none. */
+  tokenId: z.string().nullable(),
+});
+export type RunPrep = z.infer<typeof RunPrepSchema>;
+
+/** A saved loadout: a trainer and preparation choices (preferences only, nothing is reserved). */
+export const LoadoutPresetSchema = RunPrepSchema.extend({ name: z.string(), archetypeId: z.string() });
+export type LoadoutPreset = z.infer<typeof LoadoutPresetSchema>;
+
 export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
@@ -155,6 +171,8 @@ export const RunStateSchema = z.object({
   archetypeId: z.string(),
   phase: RunPhaseSchema,
   starterChoices: z.array(z.string()),
+  /** How the run was prepared, and a note when the draft rule had to fall back. */
+  prep: RunPrepSchema.extend({ note: z.string().nullable() }),
   party: z.array(PokemonInstanceSchema),
   money: z.number().int().min(0),
   /** Bag contents: item id → count. */
@@ -275,6 +293,14 @@ export const ProfileSchema = z.object({
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),
+  /** Starter pools bought in the Starter Laboratory (pools unlocked from the start aren't listed). */
+  unlockedPools: z.array(z.string()),
+  /** Bank licenses owned. */
+  licenses: z.array(z.string()),
+  /** Loadout presets by slot (null: empty slot). */
+  presets: z.array(LoadoutPresetSchema.nullable()),
+  /** The last run's trainer and preparation, offered again next time. */
+  lastPrep: LoadoutPresetSchema.nullable(),
   /** Recently finalized run ids, so a run's result is never applied twice. */
   finalizedRunIds: z.array(z.string()),
 });

@@ -309,5 +309,709 @@
   "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.carbos"
+ },
+ {
+  "id": "evo-auspicious-armor",
+  "name": "Auspicious Armor",
+  "description": "The Auspicious Armor for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "auspicious-armor",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.auspicious_armor"
+ },
+ {
+  "id": "evo-black-augurite",
+  "name": "Black Augurite",
+  "description": "The Black Augurite for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "black-augurite",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.black_augurite"
+ },
+ {
+  "id": "evo-cracked-pot",
+  "name": "Cracked Pot",
+  "description": "The Cracked Pot for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "cracked-pot",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.cracked_pot"
+ },
+ {
+  "id": "evo-dawn-stone",
+  "name": "Dawn Stone",
+  "description": "The Dawn Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "dawn-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dawn_stone"
+ },
+ {
+  "id": "evo-deep-sea-scale",
+  "name": "Deep Sea Scale",
+  "description": "The Deep Sea Scale for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "deep-sea-scale",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.deep_sea_scale"
+ },
+ {
+  "id": "evo-deep-sea-tooth",
+  "name": "Deep Sea Tooth",
+  "description": "The Deep Sea Tooth for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "deep-sea-tooth",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.deep_sea_tooth"
+ },
+ {
+  "id": "evo-dragon-scale",
+  "name": "Dragon Scale",
+  "description": "The Dragon Scale for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "dragon-scale",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dragon_scale"
+ },
+ {
+  "id": "evo-dubious-disc",
+  "name": "Dubious Disc",
+  "description": "The Dubious Disc for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "dubious-disc",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dubious_disc"
+ },
+ {
+  "id": "evo-dusk-stone",
+  "name": "Dusk Stone",
+  "description": "The Dusk Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "dusk-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dusk_stone"
+ },
+ {
+  "id": "evo-electirizer",
+  "name": "Electirizer",
+  "description": "The Electirizer for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "electirizer",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.electirizer"
+ },
+ {
+  "id": "evo-fire-stone",
+  "name": "Fire Stone",
+  "description": "The Fire Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fire-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fire_stone"
+ },
+ {
+  "id": "evo-galarica-cuff",
+  "name": "Galarica Cuff",
+  "description": "The Galarica Cuff for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "galarica-cuff",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.galarica_cuff"
+ },
+ {
+  "id": "evo-galarica-wreath",
+  "name": "Galarica Wreath",
+  "description": "The Galarica Wreath for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "galarica-wreath",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.galarica_wreath"
+ },
+ {
+  "id": "evo-ice-stone",
+  "name": "Ice Stone",
+  "description": "The Ice Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "ice-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ice_stone"
+ },
+ {
+  "id": "evo-kings-rock",
+  "name": "King’s Rock",
+  "description": "The King’s Rock for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "kings-rock",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.kings_rock"
+ },
+ {
+  "id": "evo-leaf-stone",
+  "name": "Leaf Stone",
+  "description": "The Leaf Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "leaf-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.leaf_stone"
+ },
+ {
+  "id": "evo-linking-cord",
+  "name": "Linking Cord",
+  "description": "The Linking Cord for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "linking-cord",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.linking_cord"
+ },
+ {
+  "id": "evo-magmarizer",
+  "name": "Magmarizer",
+  "description": "The Magmarizer for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "magmarizer",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.magmarizer"
+ },
+ {
+  "id": "evo-malicious-armor",
+  "name": "Malicious Armor",
+  "description": "The Malicious Armor for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "malicious-armor",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.malicious_armor"
+ },
+ {
+  "id": "evo-metal-alloy",
+  "name": "Metal Alloy",
+  "description": "The Metal Alloy for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "metal-alloy",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.metal_alloy"
+ },
+ {
+  "id": "evo-metal-coat",
+  "name": "Metal Coat",
+  "description": "The Metal Coat for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "metal-coat",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.metal_coat"
+ },
+ {
+  "id": "evo-moon-stone",
+  "name": "Moon Stone",
+  "description": "The Moon Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "moon-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.moon_stone"
+ },
+ {
+  "id": "evo-oval-stone",
+  "name": "Oval Stone",
+  "description": "The Oval Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "oval-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.oval_stone"
+ },
+ {
+  "id": "evo-peat-block",
+  "name": "Peat Block",
+  "description": "The Peat Block for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "peat-block",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.peat_block"
+ },
+ {
+  "id": "evo-prism-scale",
+  "name": "Prism Scale",
+  "description": "The Prism Scale for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "prism-scale",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.prism_scale"
+ },
+ {
+  "id": "evo-protector",
+  "name": "Protector",
+  "description": "The Protector for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "protector",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.protector"
+ },
+ {
+  "id": "evo-razor-claw",
+  "name": "Razor Claw",
+  "description": "The Razor Claw for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "razor-claw",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.razor_claw"
+ },
+ {
+  "id": "evo-razor-fang",
+  "name": "Razor Fang",
+  "description": "The Razor Fang for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "razor-fang",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.razor_fang"
+ },
+ {
+  "id": "evo-reaper-cloth",
+  "name": "Reaper Cloth",
+  "description": "The Reaper Cloth for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "reaper-cloth",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.reaper_cloth"
+ },
+ {
+  "id": "evo-sachet",
+  "name": "Sachet",
+  "description": "The Sachet for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "sachet",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.sachet"
+ },
+ {
+  "id": "evo-scroll-of-darkness",
+  "name": "Scroll of Darkness",
+  "description": "The Scroll of Darkness for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "scroll-of-darkness",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.scroll_of_darkness"
+ },
+ {
+  "id": "evo-scroll-of-waters",
+  "name": "Scroll of Waters",
+  "description": "The Scroll of Waters for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "scroll-of-waters",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.scroll_of_waters"
+ },
+ {
+  "id": "evo-shiny-stone",
+  "name": "Shiny Stone",
+  "description": "The Shiny Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "shiny-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.shiny_stone"
+ },
+ {
+  "id": "evo-soothe-bell",
+  "name": "Soothe Bell",
+  "description": "The Soothe Bell for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "soothe-bell",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.soothe_bell"
+ },
+ {
+  "id": "evo-strawberry-sweet",
+  "name": "Strawberry Sweet",
+  "description": "The Strawberry Sweet for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "strawberry-sweet",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.strawberry_sweet"
+ },
+ {
+  "id": "evo-sun-stone",
+  "name": "Sun Stone",
+  "description": "The Sun Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "sun-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.sun_stone"
+ },
+ {
+  "id": "evo-sweet-apple",
+  "name": "Sweet Apple",
+  "description": "The Sweet Apple for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "sweet-apple",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.sweet_apple"
+ },
+ {
+  "id": "evo-syrupy-apple",
+  "name": "Syrupy Apple",
+  "description": "The Syrupy Apple for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "syrupy-apple",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.syrupy_apple"
+ },
+ {
+  "id": "evo-tart-apple",
+  "name": "Tart Apple",
+  "description": "The Tart Apple for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "tart-apple",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.tart_apple"
+ },
+ {
+  "id": "evo-thunder-stone",
+  "name": "Thunder Stone",
+  "description": "The Thunder Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "thunder-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.thunder_stone"
+ },
+ {
+  "id": "evo-unremarkable-teacup",
+  "name": "Unremarkable Teacup",
+  "description": "The Unremarkable Teacup for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "unremarkable-teacup",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.unremarkable_teacup"
+ },
+ {
+  "id": "evo-up-grade",
+  "name": "Upgrade",
+  "description": "The Upgrade for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "up-grade",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.upgrade"
+ },
+ {
+  "id": "evo-water-stone",
+  "name": "Water Stone",
+  "description": "The Water Stone for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "water-stone",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.water_stone"
+ },
+ {
+  "id": "evo-whipped-dream",
+  "name": "Whipped Dream",
+  "description": "The Whipped Dream for your Bag. A Pokémon in your party can evolve with it.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "whipped-dream",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.whipped_dream"
  }
 ]

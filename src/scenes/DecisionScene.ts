@@ -16,6 +16,7 @@ import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 export class DecisionScene extends Phaser.Scene {
   private menu: Menu | null = null;
@@ -26,6 +27,12 @@ export class DecisionScene extends Phaser.Scene {
 
   constructor() {
     super('Decision');
+  }
+
+  preload(): void {
+    const { session } = services();
+    const caught = (session.run?.pending ?? []).flatMap((d) => (d.kind === 'caught' ? (session.content.species.get(d.mon.speciesId) ?? []) : []));
+    preloadPokemon(this, [...partySpecies(), ...caught], { front: true, shiny: true, icon: true });
   }
 
   create(): void {

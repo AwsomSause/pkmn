@@ -83,6 +83,25 @@ Every stage has a **theme**: a named pair of two types. Examples from the direct
 - The battle background is the arena for the theme's first type.
 - Themes and gym leaders don't repeat within a run (D6).
 
+### 5c. Pokémon, forms, evolution and region eligibility (Milestone 6)
+
+- **The whole Pokédex is in the game data:** all 1,025 species plus 264 forms (regional, alternate, Mega, Gigantamax, Primal and battle-only forms). Base data comes from PokeAPI's open data; level-up moves come from the director's move dataset. Megas, Gigantamax, Primal and battle-only forms wait for their mechanics (M8) and never appear in the wild, on teams or as starters.
+- **Moves the battle engine can't run yet** are in the data, flagged "not supported", and skipped: no Pokémon learns or uses them until they are built (they then switch on by re-running the move import). A Pokémon whose moves are all unsupported (Ditto, Smeargle, Unown, Cosmog, Abra) never appears until its moves work.
+- **Wild Pokémon** are first-stage species (babies don't count as a stage, so Pikachu is first-stage) that are not legendary or mythical, with a base stat total of at most 560 (keeps Ultra Beasts and Paradox Pokémon out). Regional forms appear like any other species.
+- **Region eligibility:** within a stage's theme, Pokémon native to the current region (its generation, or its regional forms, e.g. Alolan Vulpix in Alola, Hisuian forms in Sinnoh) are 3× as likely as others (`nativeWeight`). The Grand Region treats everyone as native.
+- **Evolution rules.** Level evolutions happen by level (D15). Every other method becomes an **evolution item** used from the Bag:
+  - stones and other "use an item" evolutions use that item (Fire Stone, Galarica Cuff, Tart Apple, …);
+  - trade evolutions use their held item (Metal Coat, King's Rock, …) or a **Linking Cord**;
+  - friendship and affection evolutions use a **Soothe Bell**;
+  - location evolutions use their modern stone (Magnezone and Probopass: Thunder Stone; Leafeon: Leaf Stone; Glaceon: Ice Stone);
+  - "knows a move" evolutions happen at the level the Pokémon learns that move;
+  - methods the game has no equivalent for (steps walked, critical hits, Gimmighoul coins, …) become a fixed level, listed in `tools/import-species.ts`. Shedinja can't be obtained by evolution.
+  - The game has no gender, time of day or weather, so those conditions are ignored. Where several evolutions apply at the same level (Wurmple, Burmy, Rockruff, Toxel, Cosmoem), one is picked from the Pokémon's id, so it is always the same for that Pokémon; Tyrogue follows its Attack and Defense.
+  - **Regional evolutions** happen in their region: Pikachu, Exeggcute and Cubone evolve into their Alolan forms in Alola, Koffing and Mime Jr. into Galarian ones in Galar, and the Hisuian final forms in Sinnoh.
+  - When an item has several possible results (Eevee and a Soothe Bell: Espeon, Umbreon or Sylveon), the player chooses.
+  - Trainers' Pokémon evolve by item at level 30 (level 15 for baby Pokémon).
+- **Evolution items** appear in the reward draft only when someone in the party can use them (stones, Linking Cord and Soothe Bell are uncommon, the rest rare), and shops sell the Soothe Bell (1 badge), the ten stones (2 badges) and the Linking Cord (3 badges).
+
 ## 6. Battles
 
 Traditional single battles (1v1 active Pokémon), turn-based.

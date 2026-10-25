@@ -16,6 +16,7 @@
     "check": "npm run typecheck && npm test && npm run build",
     "data:movesets": "node tools/import-movesets.ts",
     "data:moves": "node tools/import-moves.ts",
+    "data:species": "node tools/import-species.ts",
     "data:bosses": "node tools/build-boss-teams.ts"
   },
   "devDependencies": {

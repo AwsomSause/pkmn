@@ -2,9 +2,10 @@
 // the lead Pokémon, or use an item on a party member.
 
 import type Phaser from 'phaser';
+import { itemEvolutionTargets } from '../core/evolution';
 import { itemUseProblem } from '../core/items';
 import { services } from '../game/services';
-import { bagRow, partyRows, Picker } from './partyPanel';
+import { bagRow, partyRows, Picker, speciesRow } from './partyPanel';
 
 export interface FieldMenuHost {
   scene: Phaser.Scene;
@@ -43,13 +44,14 @@ export function openBagMenu(host: FieldMenuHost): void {
   const run = session.run!;
   const content = session.content;
   const allIds = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0);
+  const regionId = run.regionOrder[run.regionIndex];
   const picker: Picker = new Picker(host.scene, {
     title: 'Bag',
     columns: 2,
     rowHeight: 48,
     rows: allIds.map((id) => {
       const item = content.items.get(id)!;
-      const anyTarget = item.usableOutside && run.party.some((mon) => itemUseProblem(content, item, mon) === null);
+      const anyTarget = item.usableOutside && run.party.some((mon) => itemUseProblem(content, item, mon, regionId) === null);
       const problem = !item.usableOutside ? `${item.name}: ${item.description}` : anyTarget ? null : `No Pokémon needs the ${item.name} right now.`;
       return bagRow(content, run.inventory, id, problem);
     }),
@@ -67,19 +69,46 @@ function openItemTarget(host: FieldMenuHost, itemId: string): void {
   const run = session.run!;
   const content = session.content;
   const item = content.items.get(itemId)!;
+  const regionId = run.regionOrder[run.regionIndex];
   const picker: Picker = new Picker(host.scene, {
     title: `Use the ${item.name} on which Pokémon?`,
     columns: 2,
     rowHeight: 78,
-    rows: partyRows(content, run.party, (i) => itemUseProblem(content, item, run.party[i]!)),
+    rows: partyRows(content, run.party, (i) => itemUseProblem(content, item, run.party[i]!, regionId)),
     onSelect: (i) => {
-      const message = session.useItem(itemId, i);
+      const targets = item.effect.kind === 'evolve' ? itemEvolutionTargets(content, run.party[i]!, itemId, regionId) : [];
       close(host, picker);
-      host.changed(message);
+      if (targets.length > 1) {
+        openEvolutionChoice(host, itemId, i, targets);
+        return;
+      }
+      host.changed(session.useItem(itemId, i));
     },
     onBack: () => {
       close(host, picker);
       openBagMenu(host);
+    },
+  });
+  host.setPicker(picker);
+}
+
+/** An evolution item with several possible results (Eevee and a Soothe Bell): the player picks one. */
+function openEvolutionChoice(host: FieldMenuHost, itemId: string, partyIndex: number, targets: string[]): void {
+  const { session } = services();
+  const content = session.content;
+  const name = content.species.get(session.run!.party[partyIndex]!.speciesId)!.name;
+  const picker: Picker = new Picker(host.scene, {
+    title: `What should ${name} evolve into?`,
+    columns: 2,
+    rowHeight: 48,
+    rows: targets.map((id) => speciesRow(content.species.get(id)!)),
+    onSelect: (i) => {
+      close(host, picker);
+      host.changed(session.useItem(itemId, partyIndex, targets[i]!));
+    },
+    onBack: () => {
+      close(host, picker);
+      openItemTarget(host, itemId);
     },
   });
   host.setPicker(picker);
