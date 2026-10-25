@@ -125,7 +125,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 ### Known limits in Milestone 4 (by design, documented)
 
 - Levels stop at 100 until D14 (levels above 100) is decided, so regions 3 onward are all level 100.
-- A full run needs more gym leaders (80) and Elite Four members (40) than the data has (70 and 38); the last regions reuse people.
+- ~~A full run needs more gym leaders (80) and Elite Four members (40) than the data has (70 and 38); the last regions reuse people.~~ Fixed by the boss teams below (229 bosses).
 - The Grand Region has no roster, final boss or ending yet (M9); it plays like a regular region with borrowed leaders.
 - ~~Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.~~ Fixed by the boss teams below.
 - The profile doesn't count wins yet (M5).
@@ -198,8 +198,8 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - [x] 11 attribute rewards in the after-battle draft, 9 attribute items in the shop
 - [x] Hub Attributes room, attributes on the Run Build Summary, Briefing and run-end screen
 - [x] Saves upgrade (profile v5, run v7)
-- [ ] Special encounters and "Between-Level" interactions that change attributes (needs an event system; later milestone)
-- [ ] Friendship from Charisma (no friendship system yet)
+- [ ] Special encounters and "Between-Level" interactions that change attributes (moved to Milestone 8.75, part A/B)
+- [ ] Friendship from Charisma (moved to Milestone 8.75, part B)
 
 ## Milestone 8 — Custom Pokémon and forms ✅
 
@@ -216,7 +216,25 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Sprites are single frames (the pack has no animations); a missing shiny reuses the normal sprite, a missing back sprite the mirrored front.
 - Cries are the base species' cries.
 
-## Milestone 8.5+ — not started
+## Milestone 8.5 — Advanced mechanics (not started)
+
+See IMPLEMENTATION_PLAN.md §5.
+
+## Milestone 8.75 — Planned features catch-up (planned)
+
+Everything planned but not yet in a milestone, gathered on 2026-10-25. Details in IMPLEMENTATION_PLAN.md §6j.
+
+- [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes
+- [ ] B. Friendship on each Pokémon; Charisma raises friendship; "Between-Level" interactions; real friendship evolutions; N's passive
+- [ ] C. Unsupported moves in tiers (611); abilities; held items; enemy trainers use items and switch; damage rounding and double-faint rule
+- [ ] D. Bank tiers 1–5; Scavenger, Fortune and Survival licenses; challenge modifiers and challenge campaigns; contracts; item catalog and the other Bank services; spending candies; more preparation tokens
+- [ ] E. Pokédex & Research room; starter mastery and trainer mastery tracks; remaining draft rules; starter events; Special Specimen starters; achievements checked as they happen
+- [ ] F. Cynthia's passive; Oak and N (need sprites); Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker; Trainer Research
+- [ ] G. Party-strength correction in difficulty; D14 (levels above 100); Peace 100 and Charisma 100; D6 custom region list
+- [ ] H. Later Out-of-Run systems (wardrobe, hub upgrades, Hall of Fame, Berry Garden, Training Center, Intelligence Board, Item Museum, Research Tree, Prestige, Legacy, Trainer Network, Rival Ghosts, shared seeds)
+- [ ] Optional: IVs/EVs/natures; gender, time of day and weather
+
+## Milestone 9 — Grand Region, ending, deploy (not started)
 
 See IMPLEMENTATION_PLAN.md §5.
 

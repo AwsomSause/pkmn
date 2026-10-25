@@ -99,6 +99,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | M7 ✅ | **Attributes & luck.** Implement each attribute only after you approve its formula; luck-weighted rewards; shiny rules. | M5, D8, D9 | Attributes visibly matter. |
 | M8 ✅ | **Custom Pokémon and forms** (director request, 2026-10-25): the director's sprite pack of Pokémon Insurgence Delta species, Z-Forms, Spooky forms and new Megas, with types, stats, evolutions and learnsets (§6i). | M6 | Over 300 new Pokémon and forms to meet, catch and evolve. |
 | M8.5 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. (Was M8; renumbered by the director, 2026-10-25.) | M6, M7, M8 | Key items unlock real mechanics, including the new Megas. |
+| M8.75 | **Planned features catch-up** (director request, 2026-10-25): everything planned but not yet in a milestone (§6j). Event system and new map stops (special encounters, events, trades, detours, rare Pokémon), friendship and "Between-Level" interactions, the unsupported moves, abilities and held items, Bank tiers, the other licenses, challenge modifiers, contracts and spending candies, Pokédex & Research and starter mastery, Cynthia and the D12 trainers, party-strength difficulty, and the open rules (D14 and others). | M7, M8 (M8.5 for anything that touches Megas or Z-Moves) | Every planned system has a home; the run gets events, side stops and relationships. |
 | M9 | **Grand Region, ending, polish, deploy.** Battle animation player for the supplied anim JSON, music, final boss, ending, static deploy. | All, D1, D4 | Complete game from start to credits. |
 | M10 | **Visuals and presentation** (director request, 2026-10-25). Purely about looks: make every screen stunning and consistent. A shared visual style (palette, fonts, window frames from the asset pack's `ui/` art, spacing); redesigned menus, Hub, Preparation Desk, map, battle and reward screens; scene transitions and small animations (cursor, cards, HP and EXP bars, level-up and catch effects); battle backgrounds per theme; readable layouts at every screen size; a final pass for clipped or overlapping text. No gameplay changes. | M9 (can start earlier, screen by screen, once a screen's features are stable) | The whole game looks finished and well put together. |
 
@@ -213,7 +214,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Eight attributes:** six plain (0–100) and two meters (−100–100). The profile's attributes are recomputed from lifetime counters whenever a counting run ends (`permanentAttributes`); a run copies them at the start (`baseAttributes`) and adds `attributeModifiers` from rewards and shop items.
 - **New counters:** `defeatedOrCaught.<type>` (every enemy fainted or caught, by each of its types) and `statsBoosted` (stats your Pokémon raise on themselves), plus a few general ones (`encountersCompleted`, `moneySpent`, `healStopsUsed`, `caughtKept`, `caughtToCandies`, `regionsClearedWithStarter`).
 - **Where effects apply:** battle damage and turn order (engine), catching, healing, shop prices, experience, prize money, the reward draft's rarity weights and the shiny roll. Love adds an `endure` battle event.
-- **Attribute sources:** 11 draft rewards and 9 shop items (effect `attribute`, used when bought). Special encounters and "Between-Level" interactions need an event system, planned later.
+- **Attribute sources:** 11 draft rewards and 9 shop items (effect `attribute`, used when bought). Special encounters and "Between-Level" interactions need an event system, planned for Milestone 8.75.
 - **Screens:** an Attributes room in the Hub (values, effects, how each grows), an Attributes line on the Run Build Summary and the Briefing, and attribute changes on the run-end screen.
 - **Save format:** profile version 5 and run version 7; older saves upgrade automatically (attributes start at 0 and are recomputed at the next run end).
 
@@ -226,6 +227,65 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Art:** every sprite becomes a one-frame atlas in `images/pokemon/**/custom/`; Insurgence's double-size sprites are halved; a missing shiny uses the normal sprite and a missing back sprite the mirrored front. Pokémon without an icon use Minior's (director rule).
 - **Tags:** `delta`, `zform`, `spooky`. First-stage forms (120) can be met in the wild like regional forms; Megas and battle-only forms wait for M8.5.
 - **No save format change.**
+
+## 6j. Milestone 8.75 — planned features catch-up
+
+**Planned 2026-10-25** (director request: "pull everything that has been planned but not put into a Milestone and create a new milestone to use before M9"). Collected from the director's Master Development Brief and Design Decisions, the Out-of-Run/Run-Prep design (GAME_DESIGN §14), every milestone's "known limits", and every project thread. Work that already has a milestone stays there: Mega/Tera/Z-Moves/Dynamax in **M8.5**; the Grand Region roster, final boss, ending, battle animations, music and deploy in **M9**; looks in **M10**. The parts below can ship as separate pull requests, in this order.
+
+**A. Events and new map stops** (brief §7 and §9)
+- An **event system** in data: an event has a trigger, text, choices, requirements (attributes, items, party) and outcomes (items, money, Pokémon, attribute changes, map changes). Seeded like the rest of the run.
+- New optional map stops beside heal and shop: **special encounters**, **events**, **trades**, **detours** (a short side path with its own risk and reward), **rare Pokémon** and other discoveries. Route choices can change their odds.
+- Special encounters and events can **change attributes** (director reminder, M7).
+- Merchants, including **Giovanni's black market**.
+
+**B. Friendship and "Between-Level" interactions** (M7, brief §11 Love)
+- A **friendship** value on each Pokémon, raised by battling, healing, items and interactions.
+- **Charisma raises friendship gain** (director's M7 doc). Love and friendship work together.
+- **"Between-Level" interactions:** between levels on the map you can spend time with a Pokémon (feed, train, play, talk). These can change attributes and friendship.
+- **Friendship evolutions** by real friendship, with the Soothe Bell kept as a shortcut.
+- **N's** friendship passive and alternate event outcomes (needs N's sprite).
+
+**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits)
+- The **611 unsupported moves**, in tiers: confusion, multi-hit, recharge, healing and drain, Protect, weather and terrain, then the rare ones. Each tier makes more Pokémon learnable (Ditto, Smeargle, Unown, Cosmog and Abra come back).
+- **Abilities**, then **held items** (also as a reward category, brief §8).
+- Smarter enemy trainers: they use items and switch on purpose.
+- Small rule fixes: main-game damage rounding; the "both faint in the same turn" rule.
+
+**D. Bank, licenses, challenges and candies** (GAME_DESIGN §14.2, priority 6; D7)
+- **Bank tiers 1–5** (services, not multipliers).
+- The other licenses: **Scavenger, Fortune, Survival**.
+- **Challenge modifiers** with their difficulty and reward shown before you confirm, and **challenge campaigns**.
+- **Daily/weekly contracts** and the Contract Board.
+- **Permanent item catalog**, Emergency Reserve, Exchange Counter, Collector's Vault, Regional Accounts, Loan Challenges, savings milestones with titles.
+- **Spending candies** (D7: trainer unlocks, starting buffs). Candies are earned today but can't be spent.
+- More preparation tokens (first-region intel, an item category in the reward pool, better odds for a starter type).
+
+**E. Starters, Pokédex and research** (§14.5, priority 5)
+- The **Pokédex & Research** room and the Research panel (encountered, caught, forms, shinies, used against bosses).
+- **Starter mastery** per species, plus trainer **mastery tracks** (badges, titles, portraits, never combat power).
+- The remaining draft rules: **Expanded Research, Regional Research, Evolution Specialist, Rare Specimen**.
+- **Starter events** from species tags; legendary and mythical starters in a **Special Specimen** category.
+- Achievements checked the moment they happen, not only at run end.
+
+**F. Trainers** (D12, §14.3)
+- **Cynthia's** passive (boss team intel before battle), so she leaves "coming later".
+- **Professor Oak** and **N**, once their sprites are supplied.
+- The D12 trainers with unlock conditions and pros and cons: **Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker**. Each one is proposed to the director before it is built.
+- **Trainer Research** (backgrounds, dialogue, special events).
+
+**G. Difficulty and open rules** (brief §10, D6, D14, M7)
+- **Party-strength correction** in the difficulty model (brief §10: judge the whole usable party, so weak parties don't spiral). Today enemy levels follow only the region curve, route and archetype.
+- **D14:** should levels go above 100? Open since M2; today everything from region 3 onward is level 100.
+- **Peace 100** (1 damage per hit) and **Charisma 100** (free shop): confirm or tone down.
+- **D6:** the list of custom regions.
+
+**H. Later Out-of-Run systems** (§14.6, §14.8, priorities 7–8; the biggest part, may become its own milestone)
+- Trainer Wardrobe and hub upgrades, Battle Records and Hall of Fame, Berry Garden, Move Research and Training Center, Regional Intelligence Board, Permanent Item Museum, Research Laboratory and Research Tree.
+- Prestige and Legacy, Legacy Records, Trainer Network, Rival Ghosts, shared seeds.
+
+**Optional, only if the director wants them:** IVs/EVs/natures (D2 left them out "for now"); gender, time of day and weather, so evolutions that need them work without the §5c stand-in rules.
+
+**Questions for the director before building:** D14, Peace/Charisma 100, the custom region list (D6), sprites for Oak and N, and whether part H stays here or becomes its own milestone.
 
 ## 7. Risks
 

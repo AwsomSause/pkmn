@@ -171,7 +171,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 - +1 Luck per 10 Pokémon caught, +5 per shiny found.
 - +1 Love per evolution and per region cleared with your starter still in the party.
 
-**Run modifiers:** after-battle rewards (Power Band, Shiny Charm, …: +15 to +30) and shop items bought from 1 badge (the Plates, Lucky Egg, Love Sweet: +5 each, used as soon as they're bought). Special encounters and "Between-Level" interactions with your Pokémon will also change attributes once those events exist (planned for a later milestone).
+**Run modifiers:** after-battle rewards (Power Band, Shiny Charm, …: +15 to +30) and shop items bought from 1 badge (the Plates, Lucky Egg, Love Sweet: +5 each, used as soon as they're bought). Special encounters and "Between-Level" interactions with your Pokémon will also change attributes once those events exist (Milestone 8.75).
 
 ## 10. Items, shops, economy
 
@@ -275,7 +275,7 @@ Nine categories: Campaign, Pokémon collection, Battle, Exploration, Economy, Ro
 - **Research panel:** encountered, caught, used against bosses, evolutions, forms, shinies, move and type interactions, mastered starters. Research unlocks information more than power.
 - **Starter events** driven by species tags; **legendary and mythical starters** in a separate Special Specimen category with restrictions.
 
-### 14.6 More Out-of-Run systems (later)
+### 14.6 More Out-of-Run systems (later; Milestone 8.75 part H)
 Pokédex and Collection Archive; Trainer Wardrobe (outfits, frames, poses, hub decorations); Research Laboratory (spend Research Points on encounter pools, species info, events, starters); Battle Records and Hall of Fame; Berry Garden (grows per completed run); Move Research and Training Center; Regional Intelligence Board; Permanent Item Museum.
 
 ### 14.7 Run-Prep flow
@@ -283,7 +283,7 @@ Pokédex and Collection Archive; Trainer Wardrobe (outfits, frames, poses, hub d
 
 Features: **loadout presets** (store preferences only; an option that became unavailable must be resolved before starting); **preparation tokens** from achievements and progression, one token choice per run at first (extra money, a basic healing item, better odds for a starter type, first-region intel, an item category in the reward pool, a small run attribute bonus); **challenge modifiers** with their difficulty and reward shown before confirming; **campaign briefing**; **seed management** (copy/export a seed, a developer reproduction tool, shared seeds later). A **Run Build Summary** before starting shows the combined effect of trainer, attributes, token, licenses and modifiers.
 
-### 14.8 Bigger systems (later)
+### 14.8 Bigger systems (later; Milestone 8.75 part H)
 Trainer Network (non-selected trainers give small utility services; only one main passive), Research Tree, Prestige and Legacy (never deletes collection or achievements), Contract Board, Legacy Records and Rival Ghosts.
 
 ### 14.9 Balancing rules
