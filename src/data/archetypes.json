@@ -29,7 +29,7 @@
     "pros": ["Earn 25% more money", "Enemy Pokémon are 1 level lower"],
     "cons": ["Catching is 15% harder (from Milestone 2, when catching arrives)"],
     "unlockedByDefault": true,
-    "spriteAssetId": "trainer.green",
+    "spriteAssetId": "boss.green",
     "modifiers": [
       { "kind": "moneyMultiplier", "value": 1.25 },
       { "kind": "enemyLevelOffset", "value": -1 },

@@ -61,6 +61,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
 ];
 
 export function trainerEntry(assetId: string): AssetEntry {
+  // "boss.cynthia-gen7" -> images/bosses/cynthia-gen7.png (a single picture from the director's boss pack)
+  if (assetId.startsWith('boss.')) {
+    return { id: assetId, kind: 'image', category: 'trainer', path: `images/bosses/${assetId.slice('boss.'.length)}.png` };
+  }
   // "trainer.red" -> images/trainer/red
   return atlas(assetId, 'trainer', `images/trainer/${assetId.replace(/^trainer\./, '')}`);
 }

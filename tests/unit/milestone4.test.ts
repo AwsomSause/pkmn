@@ -138,18 +138,18 @@ describe('the Pokémon League', () => {
     expect(validateLeagueMap(broken).join()).toMatch(/champion/);
   });
 
-  it('Elite Four teams use their speciality; the region 1 league stays under the level cap', () => {
+  it('Elite Four and champion teams come from bossTeams.json; the region 1 league stays under the level cap', () => {
     const scale = leagueScale(content, 0);
     for (let i = 0; i < 20; i++) {
       const plan = planEliteFour(content, RED, 'lorelei', 0, scale, new Rng(hashSeed(`e4-${i}`)));
       expect(plan.classId).toBe('elite-four');
+      expect(plan.members.map((m) => m.speciesId)).toEqual(content.bosses.get('lorelei')!.teams.elite[0]!.members.map((m) => m.speciesId));
       for (const m of plan.members) {
-        expect(content.species.get(m.speciesId)!.types).toContain('ice');
         expect(m.level).toBeLessThanOrEqual(50);
         expect(m.level).toBeGreaterThanOrEqual(44);
       }
-      const champ = planChampion(content, RED, 'cynthia', 0, [content.themes.get('fire-psychic')!], scale, new Rng(hashSeed(`ch-${i}`)));
-      expect(champ.members.length).toBeGreaterThanOrEqual(content.balance.championTeam.baseSize);
+      const champ = planChampion(content, RED, 'cynthia', 0, scale, new Rng(hashSeed(`ch-${i}`)));
+      expect(champ.members.length).toBe(6);
       const ace = Math.max(...champ.members.map((m) => m.level));
       expect(ace).toBeGreaterThanOrEqual(48);
       expect(ace).toBeLessThanOrEqual(50);

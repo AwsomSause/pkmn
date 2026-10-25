@@ -15,7 +15,8 @@
     "assets:manifest": "node tools/build-asset-manifest.ts",
     "check": "npm run typecheck && npm test && npm run build",
     "data:movesets": "node tools/import-movesets.ts",
-    "data:moves": "node tools/import-moves.ts"
+    "data:moves": "node tools/import-moves.ts",
+    "data:bosses": "node tools/build-boss-teams.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

@@ -21,6 +21,7 @@ import {
   ELITE_FOUR_CLASS,
   generateStarterChoices,
   GYM_LEADER_CLASS,
+  createPlannedPokemon,
   leagueScale,
   levelScale,
   planChampion,
@@ -229,22 +230,21 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) => {
       switch (node.kind) {
         case 'gym':
-          return planGymLeader(content, archetype, theme, stage.leaderId, stageNumber, scale, r);
+          return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r);
         case 'elite': {
           const memberId = stage.eliteFour[node.column - 1];
           if (!memberId) throw new Error(`No Elite Four member for column ${node.column}`);
           return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r);
         }
-        case 'champion': {
-          const regionThemes = run.usedThemes.slice(-campaign.stagesPerRegion).map((id) => getTheme(content, id));
-          return planChampion(content, archetype, stage.leaderId, run.regionIndex, regionThemes, scale, r);
-        }
+        case 'champion':
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r);
         default:
           return planTrainer(content, archetype, theme, stageNumber, scale, r);
       }
     });
-    const team = plan.members.map((m) => createPokemon(content, m.speciesId, m.level, nextUid(run, 'e')));
+    const team = plan.members.map((m) => createPlannedPokemon(content, m, nextUid(run, 'e')));
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
+    run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
   }
   run.phase = 'battle';

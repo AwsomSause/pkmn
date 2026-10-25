@@ -24,6 +24,7 @@ export function ensureAtlasAnimation(scene: Phaser.Scene, key: string): string |
 
 function atlasSprite(scene: Phaser.Scene, key: string, x: number, y: number, scale: number): Phaser.GameObjects.Sprite | null {
   if (!services().assets.has(key) || !scene.textures.exists(key)) return null;
+  // Atlases have named frames; a single picture (e.g. a boss portrait) has none.
   const frames = scene.textures.get(key).getFrameNames().sort();
   const sprite = scene.add.sprite(x, y, key, frames[0]).setOrigin(0.5, 1).setScale(scale);
   const anim = ensureAtlasAnimation(scene, key);

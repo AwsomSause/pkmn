@@ -127,9 +127,20 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Levels stop at 100 until D14 (levels above 100) is decided, so regions 3 onward are all level 100.
 - A full run needs more gym leaders (80) and Elite Four members (40) than the data has (70 and 38); the last regions reuse people.
 - The Grand Region has no roster, final boss or ending yet (M9); it plays like a regular region with borrowed leaders.
-- Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.
+- ~~Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.~~ Fixed by the boss teams below.
 - The profile doesn't count wins yet (M5).
 
 ## Milestone 5+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.
+
+## Boss teams (director request, 2026-10-25)
+
+- [x] 229 bosses in `bosses.json` (every trainer in the boss pack plus the earlier gym leaders, Elite Four and champions), with the pack's portraits
+- [x] Any boss can be a gym leader, Elite Four member or champion; nobody repeats in a run (229 bosses cover the 130 boss battles of a full run)
+- [x] 16 gym teams per boss (1–8 first eight stages, 9–16 next eight, 16 repeats after)
+- [x] 10 Elite Four teams and 10 champion teams per boss, one per region, getting harder
+- [x] Team generator `npm run data:bosses` (signature Pokémon, moves, training, clever move choice)
+- [x] Green's archetype uses the boss pack's Green portrait
+- [ ] Rebuild teams on the full species data (M6) so every signature Pokémon is used
+

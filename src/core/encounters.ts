@@ -2,12 +2,12 @@
 // Elite Four and champion encounters.
 
 import { enemyLevelOffset } from './archetypes';
-import type { Archetype, Campaign, Content, Theme } from './contentSchema';
-import { getSpecies } from './pokemon';
+import type { Archetype, BossTeam, Campaign, Content, StatName, Theme } from './contentSchema';
+import { createPokemon, getSpecies, maxHp } from './pokemon';
 import type { Rng } from './rng';
-import type { LevelBreakdown } from './state';
-import { levelCap, type BossRole } from './regions';
-import { pickThemeSpecies, pickTypeSpecies, trainerClassesFor } from './themes';
+import type { LevelBreakdown, PokemonInstance } from './state';
+import { getBoss, levelCap, type BossRole } from './regions';
+import { pickThemeSpecies, trainerClassesFor } from './themes';
 
 /**
  * Picks `count` different species from the starter pool. Only first-stage
@@ -107,13 +107,34 @@ export function planWild(content: Content, archetype: Archetype, theme: Theme, s
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng) };
 }
 
+export interface PlannedMember {
+  speciesId: string;
+  level: number;
+  /** Bosses only: the moves from their team (otherwise the latest level-up moves). */
+  moves?: string[];
+  /** Bosses only: extra vitamin-style stacks per stat. */
+  training?: Partial<Record<StatName, number>>;
+}
+
 export interface TrainerPlan {
   classId: string;
   name: string;
   /** Set for gym leaders, Elite Four members and champions. */
   leaderId: string | null;
-  members: { speciesId: string; level: number }[];
+  members: PlannedMember[];
   levelInfo: EnemyLevelBreakdown[];
+  /** 0–1: how often the trainer picks its best move instead of a random one (bosses only). */
+  ai: number;
+}
+
+/** Creates a planned Pokémon, with a boss's moves and training when it has them. */
+export function createPlannedPokemon(content: Content, member: PlannedMember, uid: string): PokemonInstance {
+  const mon = createPokemon(content, member.speciesId, member.level, uid);
+  const moves = (member.moves ?? []).filter((id) => content.moves.has(id));
+  if (moves.length > 0) mon.moves = moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
+  for (const [stat, stacks] of Object.entries(member.training ?? {})) mon.vitamins[stat as StatName] = stacks;
+  mon.hp = maxHp(content, mon);
+  return mon;
 }
 
 /** Builds a team: one level breakdown and species per member; the last member gets `aceBonus` more levels. */
@@ -145,7 +166,7 @@ export function planTrainer(content: Content, archetype: Archetype, theme: Theme
   const name = rng.pick(trainerClass.names);
   const size = teamSize(content.balance.trainerTeam, stageNumber, rng);
   const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types), rng);
-  return { classId: trainerClass.id, name, leaderId: null, ...team };
+  return { classId: trainerClass.id, name, leaderId: null, ai: 0, ...team };
 }
 
 /** The class ids used for boss battles (they aren't trainer classes in trainers.json). */
@@ -161,42 +182,48 @@ export function bossRoleForClass(classId: string): BossRole | null {
   return null;
 }
 
-/** The gym leader's team: drawn from the theme, a little stronger, with a stronger last Pokémon (their ace). */
-export function planGymLeader(content: Content, archetype: Archetype, theme: Theme, leaderId: string, stageNumber: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  const leader = content.gymLeaders.get(leaderId);
-  if (!leader) throw new Error(`Unknown gym leader "${leaderId}"`);
-  const { gymBonus, aceBonus } = content.balance.difficulty;
-  const size = teamSize(content.balance.gymTeam, stageNumber, rng);
-  const team = buildTeam(content, archetype, scale, size, gymBonus, aceBonus, () => pickThemeSpecies(content, theme, rng), rng);
-  return { classId: GYM_LEADER_CLASS, name: leader.name, leaderId, ...team };
-}
+/** Gym teams per boss: team 1–8 for the run's first eight stages, 9–16 for the next eight, then team 16 again. */
+export const GYM_TEAM_COUNT = 16;
+/** Elite Four and champion teams per boss: one per region (the Grand Region is the tenth). */
+export const LEAGUE_TEAM_COUNT = 10;
 
-/** An Elite Four member's team: Pokémon of their speciality type. Teams grow with each region. */
-export function planEliteFour(content: Content, archetype: Archetype, memberId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  const member = content.eliteFour.get(memberId);
-  if (!member) throw new Error(`Unknown Elite Four member "${memberId}"`);
-  const { eliteFourBonus, aceBonus } = content.balance.difficulty;
-  const size = teamSize(content.balance.eliteFourTeam, regionIndex, rng);
-  const team = buildTeam(content, archetype, scale, size, eliteFourBonus, aceBonus, () => pickTypeSpecies(content, member.types, rng), rng);
-  return { classId: ELITE_FOUR_CLASS, name: member.name, leaderId: memberId, ...team };
+/** Which of a boss's teams a battle uses: the stage number (gyms) or region number (league), capped at the last team. */
+export function bossTeamIndex(role: BossRole, number: number): number {
+  const count = role === 'gym' ? GYM_TEAM_COUNT : LEAGUE_TEAM_COUNT;
+  return Math.max(0, Math.min(count - 1, number));
 }
 
 /**
- * The champion's team. A champion with a speciality uses that type; the others
- * bring one Pokémon from each of the region's stage themes, most recent first.
+ * A boss's team for a battle: the species, moves and training come from
+ * bossTeams.json; levels follow the difficulty curve with the role's bonus,
+ * and the last Pokémon (the ace) gets `aceBonus` more.
  */
-export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, regionThemes: readonly Theme[], scale: LevelScale, rng: Rng): TrainerPlan {
-  const champion = content.champions.get(championId);
-  if (!champion) throw new Error(`Unknown champion "${championId}"`);
-  const { championBonus, aceBonus } = content.balance.difficulty;
-  const size = teamSize(content.balance.championTeam, regionIndex, rng);
-  const themes = [...regionThemes].reverse();
-  const pick = (i: number) =>
-    champion.types.length > 0 || themes.length === 0
-      ? pickTypeSpecies(content, champion.types.length > 0 ? champion.types : ['normal'], rng)
-      : pickThemeSpecies(content, themes[i % themes.length]!, rng);
-  const team = buildTeam(content, archetype, scale, size, championBonus, aceBonus, pick, rng);
-  return { classId: CHAMPION_CLASS, name: champion.name, leaderId: championId, ...team };
+function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId: string, number: number, scale: LevelScale, bonus: number, classId: string, rng: Rng): TrainerPlan {
+  const boss = getBoss(content, bossId);
+  const team: BossTeam = boss.teams[role][bossTeamIndex(role, number)]!;
+  const { aceBonus } = content.balance.difficulty;
+  const levelInfo: EnemyLevelBreakdown[] = [];
+  const members = team.members.map((m, i) => {
+    const info = enemyLevel(content, archetype, scale, bonus + (i === team.members.length - 1 ? aceBonus : 0), rng);
+    levelInfo.push(info);
+    return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training };
+  });
+  return { classId, name: boss.name, leaderId: bossId, members, levelInfo, ai: team.ai };
+}
+
+/** The gym leader's team for the run's `stageNumber`-th stage (0-based). */
+export function planGymLeader(content: Content, archetype: Archetype, leaderId: string, stageNumber: number, scale: LevelScale, rng: Rng): TrainerPlan {
+  return planBoss(content, archetype, 'gym', leaderId, stageNumber, scale, content.balance.difficulty.gymBonus, GYM_LEADER_CLASS, rng);
+}
+
+/** An Elite Four member's team for region `regionIndex` (0-based). Teams get harder every region. */
+export function planEliteFour(content: Content, archetype: Archetype, memberId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
+  return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus, ELITE_FOUR_CLASS, rng);
+}
+
+/** The champion's team for region `regionIndex` (0-based): the hardest battle of the region. */
+export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
+  return planBoss(content, archetype, 'champion', championId, regionIndex, scale, content.balance.difficulty.championBonus, CHAMPION_CLASS, rng);
 }
 
 /** Rolls whether a wild Pokémon is shiny (D8: 1/2000). */

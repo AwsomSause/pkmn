@@ -73,6 +73,8 @@ export const BattleStateSchema = z.object({
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
+  /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */
+  ai: z.number().min(0).max(1).default(0),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
