@@ -13,9 +13,11 @@
 import { moneyMultiplier } from './archetypes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
+import { evolveFully } from './evolution';
+import { addItem } from './items';
 import { addLevels, maxHp } from './pokemon';
 import type { Rng } from './rng';
-import type { RunState } from './state';
+import type { PendingDecision, RunState } from './state';
 
 export class RewardConfigError extends Error {
   constructor(message: string) {
@@ -25,13 +27,25 @@ export class RewardConfigError extends Error {
 }
 
 export function isRewardEligible(content: Content, run: RunState, reward: Reward): boolean {
-  const lead = run.party[0];
-  if (reward.scope === 'lead' && !lead) return false;
-  if (reward.effect.kind === 'vitamin' && lead) {
-    return (lead.vitamins[reward.effect.stat] ?? 0) < content.balance.vitaminMaxStacks;
+  if (reward.scope === 'pokemon' && run.party.length === 0) return false;
+  if (reward.effect.kind === 'vitamin') {
+    const stat = reward.effect.stat;
+    return run.party.some((p) => (p.vitamins[stat] ?? 0) < content.balance.vitaminMaxStacks);
   }
-  if (reward.effect.kind === 'levelUp' && lead) return lead.level < 100;
+  if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < 100);
   return true;
+}
+
+/** Why this reward can't go to this Pokémon, or null if it can. */
+export function rewardTargetProblem(content: Content, run: RunState, reward: Reward, targetIndex: number): string | null {
+  if (reward.scope !== 'pokemon') return null;
+  const mon = run.party[targetIndex];
+  if (!mon) return 'Choose a Pokémon.';
+  if (reward.effect.kind === 'vitamin' && (mon.vitamins[reward.effect.stat] ?? 0) >= content.balance.vitaminMaxStacks) {
+    return 'That Pokémon has already had the maximum.';
+  }
+  if (reward.effect.kind === 'levelUp' && mon.level >= 100) return 'That Pokémon is already level 100.';
+  return null;
 }
 
 export function generateDraft(content: Content, run: RunState, rng: Rng): string[] {
@@ -56,68 +70,62 @@ export function generateDraft(content: Content, run: RunState, rng: Rng): string
 
 export interface RewardResult {
   rewardId: string;
-  message: string;
+  messages: string[];
+  /** Moves a levelled-up Pokémon wants to learn (it already knows four). */
+  pending: PendingDecision[];
 }
 
-/** Applies a reward to the run (mutates `run`). Returns a message for the player. */
-export function applyReward(content: Content, run: RunState, archetype: Archetype, rewardId: string): RewardResult {
+/**
+ * Applies a reward to the run (mutates `run`). Rewards with scope "pokemon"
+ * go to `targetIndex` in the party. Returns messages for the player.
+ */
+export function applyReward(content: Content, run: RunState, archetype: Archetype, rewardId: string, targetIndex = 0): RewardResult {
   const reward = content.rewards.get(rewardId);
   if (!reward) throw new Error(`Unknown reward "${rewardId}"`);
-  const lead = run.party[0];
+  const problem = rewardTargetProblem(content, run, reward, targetIndex);
+  if (problem) throw new Error(problem);
+  const target = run.party[targetIndex];
   const effect = reward.effect;
-  let message = '';
+  const messages: string[] = [];
+  const pending: PendingDecision[] = [];
   switch (effect.kind) {
-    case 'healHp': {
-      if (!lead) break;
-      const max = maxHp(content, lead);
-      const before = lead.hp;
-      lead.hp = effect.amount === 'full' ? max : Math.min(max, lead.hp + effect.amount);
-      message = `${nameOf(content, lead.speciesId)} recovered ${lead.hp - before} HP.`;
+    case 'addItem': {
+      addItem(run.inventory, effect.item, effect.quantity);
+      const item = content.items.get(effect.item)!;
+      messages.push(`${item.name}${effect.quantity > 1 ? ` ×${effect.quantity}` : ''} added to your Bag.`);
       break;
     }
-    case 'cureStatus':
-      if (!lead) break;
-      lead.status = null;
-      message = `${nameOf(content, lead.speciesId)} is cured of status problems.`;
-      break;
-    case 'fullRestore':
-      if (!lead) break;
-      lead.hp = maxHp(content, lead);
-      lead.status = null;
-      message = `${nameOf(content, lead.speciesId)} is fully restored.`;
-      break;
-    case 'restorePp':
-      if (!lead) break;
-      for (const slot of lead.moves) {
-        const max = content.moves.get(slot.id)!.pp;
-        slot.pp = Math.min(max, slot.pp + effect.amount);
-      }
-      message = `${nameOf(content, lead.speciesId)}'s moves regained PP.`;
-      break;
     case 'money': {
       const multiplier = reward.moneyMultiplierApplies ? moneyMultiplier(archetype) : 1;
       const amount = Math.floor(effect.amount * multiplier);
       run.money += amount;
-      message = `You received ₽${amount}.`;
+      messages.push(`You received ₽${amount}.`);
       break;
     }
     case 'levelUp': {
-      if (!lead) break;
-      const result = addLevels(content, lead, effect.levels);
-      message = `${nameOf(content, lead.speciesId)} grew to level ${result.newLevel}!`;
+      const mon = target!;
+      const result = addLevels(content, mon, effect.levels);
+      messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
+      for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
+      for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
+      for (const evo of evolveFully(content, mon)) {
+        messages.push(`${nameOf(content, evo.from)} evolved into ${nameOf(content, evo.to)}!`);
+        for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);
+        for (const m of evo.wantsToLearn) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
+      }
       break;
     }
     case 'vitamin': {
-      if (!lead) break;
-      const before = maxHp(content, lead);
-      lead.vitamins[effect.stat] = Math.min(content.balance.vitaminMaxStacks, (lead.vitamins[effect.stat] ?? 0) + 1);
-      if (effect.stat === 'hp') lead.hp += maxHp(content, lead) - before;
-      message = `${nameOf(content, lead.speciesId)}'s ${STAT_LABELS[effect.stat]} rose!`;
+      const mon = target!;
+      const before = maxHp(content, mon);
+      mon.vitamins[effect.stat] = Math.min(content.balance.vitaminMaxStacks, (mon.vitamins[effect.stat] ?? 0) + 1);
+      if (effect.stat === 'hp' && mon.hp > 0) mon.hp += maxHp(content, mon) - before;
+      messages.push(`${nameOf(content, mon.speciesId)}'s ${STAT_LABELS[effect.stat]} rose!`);
       break;
     }
   }
   run.log.rewardsTaken.push(rewardId);
-  return { rewardId, message };
+  return { rewardId, messages, pending };
 }
 
 const STAT_LABELS = { hp: 'HP', atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed' } as const;

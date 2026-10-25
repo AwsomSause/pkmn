@@ -128,6 +128,16 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - Save: round-trip; version mismatch → migration or clean error; reloading after a reward pick doesn't re-grant it.
 - Playwright: menu → Blue → pick starter → win a battle → pick reward → reload page → Continue → next battle begins.
 
+## 6b. Milestone 2 — battle completeness
+
+**Built 2026-10-25.** What changed from the M2 row above, and why:
+- **Standard level-up evolution (D15) was pulled forward from Milestone 6.** Levelling up and Rare Candies made Pokémon reach their evolution levels, so leaving evolution out would have felt broken. The 20 prototype species gained their evolved forms (41 species total). Stone evolutions (Vulpix, Growlithe) wait for items in a later milestone.
+- **Trainer battles appear every 4th encounter** as a placeholder schedule until the stage map (M3) decides where trainers go. Trainer classes, names, and team pools live in `trainers.json`; team size grows from 1 to 3 with progress. Trainers' Pokémon arrive already evolved for their level.
+- **Replacing a party member gives no candies; releasing the caught Pokémon does** (1 + 1 per 10 levels, in `balance.json`). Candies go to the profile when the run ends (D7); spending them is a later milestone.
+- **Healing is now items.** Potions and the other healing rewards go into the Bag instead of applying instantly, so the player decides when to use them (in battle, or on the reward screen).
+- **Shinies (D8, 1/2000)** roll for wild Pokémon and use the shiny sprites from the asset pack.
+- Save format is now version 2 for the run and the profile. Version 1 saves upgrade automatically.
+
 ## 7. Risks
 
 | # | Risk | Impact | Mitigation |

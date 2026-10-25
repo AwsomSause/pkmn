@@ -23,8 +23,8 @@ export class BootScene extends Phaser.Scene {
     const manifest = (this.cache.json.get('manifest') as AssetManifest | undefined) ?? null;
     const catalog = buildCatalog({
       speciesDex: [...content.species.values()].map((s) => s.dex),
-      trainerAssetIds: [...content.archetypes.values()].map((a) => a.spriteAssetId),
-      itemAssetIds: [...content.rewards.values()].map((r) => r.iconAssetId),
+      trainerAssetIds: [...content.archetypes.values(), ...content.trainers.values()].map((a) => a.spriteAssetId),
+      itemAssetIds: [...content.rewards.values(), ...content.items.values()].map((r) => r.iconAssetId),
     });
     const assets = new AssetRegistry(manifest, catalog);
     setServices({ session, assets });

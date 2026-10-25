@@ -2,12 +2,13 @@
 // method that changes the run saves it at a safe checkpoint:
 //   - after the starter is chosen
 //   - after every completed battle turn
-//   - after a reward is chosen
+//   - after a reward is chosen, a decision is answered, or an item is used
 //   - when the run ends (profile first, then the run record is cleared)
 
 import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { makeRandomSeed } from '../core/rng';
+import type { PlayerAction } from '../core/battle/engine';
 import * as Run from '../core/run';
 import type { Profile, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -102,19 +103,38 @@ export class GameSession {
     return this.run;
   }
 
-  takeTurn(moveIndex: number): Run.TurnResult {
-    const result = Run.takeTurn(this.content, this.requireRun(), moveIndex);
+  takeTurn(action: PlayerAction): Run.TurnResult {
+    const result = Run.takeTurn(this.content, this.requireRun(), action);
     this.run = result.run;
     this.persistRun();
     if (result.defeated) this.finishRun();
     return result;
   }
 
-  chooseReward(index: number): Run.RewardChoiceResult {
-    const result = Run.chooseReward(this.content, this.requireRun(), index);
+  chooseReward(index: number, targetIndex = 0): Run.RewardChoiceResult {
+    const result = Run.chooseReward(this.content, this.requireRun(), index, targetIndex);
     this.run = result.run;
     this.persistRun();
     return result;
+  }
+
+  resolveDecision(choice: Run.DecisionChoice): Run.DecisionResult {
+    const result = Run.resolveDecision(this.content, this.requireRun(), choice);
+    this.run = result.run;
+    this.persistRun();
+    return result;
+  }
+
+  useItem(itemId: string, partyIndex: number): string {
+    const result = Run.useItemOutsideBattle(this.content, this.requireRun(), itemId, partyIndex);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  setLead(partyIndex: number): void {
+    this.run = Run.setLead(this.requireRun(), partyIndex);
+    this.persistRun();
   }
 
   /**
@@ -149,6 +169,16 @@ export class GameSession {
 
   debugReplaceEnemy(speciesId: string, level: number): void {
     this.run = Run.debugReplaceEnemy(this.content, this.requireRun(), speciesId, level);
+    this.persistRun();
+  }
+
+  debugAddToParty(speciesId: string, level: number): void {
+    this.run = Run.debugAddToParty(this.content, this.requireRun(), speciesId, level);
+    this.persistRun();
+  }
+
+  debugGiveItem(itemId: string, quantity: number): void {
+    this.run = Run.debugGiveItem(this.content, this.requireRun(), itemId, quantity);
     this.persistRun();
   }
 

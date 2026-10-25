@@ -1,0 +1,109 @@
+[
+ {
+  "id": "youngster",
+  "name": "Youngster",
+  "spriteAssetId": "trainer.youngster_m",
+  "moneyPerLevel": 16,
+  "names": [
+   "Joey",
+   "Ben",
+   "Calvin",
+   "Timmy",
+   "Dan"
+  ],
+  "pool": [
+   "rattata",
+   "spearow",
+   "meowth",
+   "sandshrew",
+   "ekans"
+  ]
+ },
+ {
+  "id": "bug-catcher",
+  "name": "Bug Catcher",
+  "spriteAssetId": "trainer.bug_catcher",
+  "moneyPerLevel": 16,
+  "names": [
+   "Rick",
+   "Doug",
+   "Sammy",
+   "Kent",
+   "Greg"
+  ],
+  "pool": [
+   "caterpie",
+   "metapod"
+  ]
+ },
+ {
+  "id": "hiker",
+  "name": "Hiker",
+  "spriteAssetId": "trainer.hiker",
+  "moneyPerLevel": 36,
+  "names": [
+   "Marcos",
+   "Russell",
+   "Lenny",
+   "Alan",
+   "Clark"
+  ],
+  "pool": [
+   "geodude",
+   "sandshrew",
+   "diglett",
+   "machop"
+  ]
+ },
+ {
+  "id": "fisherman",
+  "name": "Fisherman",
+  "spriteAssetId": "trainer.fisherman",
+  "moneyPerLevel": 32,
+  "names": [
+   "Ned",
+   "Wade",
+   "Elliot",
+   "Barny",
+   "Ralph"
+  ],
+  "pool": [
+   "poliwag",
+   "psyduck"
+  ]
+ },
+ {
+  "id": "bird-keeper",
+  "name": "Bird Keeper",
+  "spriteAssetId": "trainer.bird_keeper_m",
+  "moneyPerLevel": 32,
+  "names": [
+   "Abe",
+   "Rod",
+   "Toby",
+   "Perry",
+   "Bret"
+  ],
+  "pool": [
+   "pidgey",
+   "spearow"
+  ]
+ },
+ {
+  "id": "black-belt",
+  "name": "Black Belt",
+  "spriteAssetId": "trainer.black_belt_m",
+  "moneyPerLevel": 32,
+  "names": [
+   "Kiyo",
+   "Koichi",
+   "Hitoshi",
+   "Lao",
+   "Ricky"
+  ],
+  "pool": [
+   "mankey",
+   "machop"
+  ]
+ }
+]

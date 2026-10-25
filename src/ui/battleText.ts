@@ -1,7 +1,8 @@
 // Turns battle events into the sentences shown in the battle message box.
 
-import type { BattleEvent, Side } from '../core/battle/engine';
+import type { Side } from '../core/battle/engine';
 import type { Content } from '../core/contentSchema';
+import type { RunEvent } from '../core/run';
 
 const STAT_NAMES: Record<string, string> = {
   atk: 'Attack', def: 'Defense', spa: 'Sp. Atk', spd: 'Sp. Def', spe: 'Speed', acc: 'accuracy', eva: 'evasiveness',
@@ -12,13 +13,23 @@ const STATUS_INFLICTED: Record<string, string> = {
 };
 
 export interface Names {
+  /** Name of the player's Pokémon currently in battle. */
   player: string;
+  /** Name of the opponent's Pokémon currently in battle. */
   enemy: string;
+  /** "Youngster Joey" in a trainer battle; null for a wild Pokémon. */
+  trainer: string | null;
+  /** Name of any party Pokémon by its uid (for experience messages). */
+  nameOf: (uid: string) => string;
 }
 
-export function eventText(content: Content, names: Names, e: BattleEvent): string | null {
-  const who = (side: Side) => (side === 'player' ? names.player : `The wild ${names.enemy}`);
-  const whoLower = (side: Side) => (side === 'player' ? names.player : `the wild ${names.enemy}`);
+const BALL_FAIL = ['Oh no! The Pokémon broke free!', 'Aww! It appeared to be caught!', 'Aargh! Almost had it!', 'Gah! It was so close, too!'];
+
+export function eventText(content: Content, names: Names, e: RunEvent): string | null {
+  const foe = names.trainer ? 'opposing' : 'wild';
+  const who = (side: Side) => (side === 'player' ? names.player : `The ${foe} ${names.enemy}`);
+  const whoLower = (side: Side) => (side === 'player' ? names.player : `the ${foe} ${names.enemy}`);
+  const species = (id: string) => content.species.get(id)?.name ?? id;
   switch (e.type) {
     case 'move':
       return `${who(e.side)} used ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
@@ -69,5 +80,23 @@ export function eventText(content: Content, names: Names, e: BattleEvent): strin
       return `${who(e.side)} is damaged by recoil!`;
     case 'faint':
       return `${who(e.side)} fainted!`;
+    case 'lastStand':
+      return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
+    case 'switchOut':
+      return e.side === 'player' ? `Come back, ${names.player}!` : null;
+    case 'switchIn':
+      return e.side === 'player' ? `Go! ${species(e.speciesId)}!` : `${names.trainer ?? 'The trainer'} sent out ${species(e.speciesId)}!`;
+    case 'item':
+      return e.message;
+    case 'ball':
+      return e.caught ? `Gotcha! ${names.enemy} was caught!` : BALL_FAIL[e.shakes] ?? BALL_FAIL[0]!;
+    case 'xp':
+      return `${names.nameOf(e.uid)} gained ${e.amount} Exp. Points!`;
+    case 'levelUp':
+      return `${names.nameOf(e.uid)} grew to Lv. ${e.level}!`;
+    case 'learnedMove':
+      return `${names.nameOf(e.uid)} learned ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
+    case 'wantsMove':
+      return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
   }
 }

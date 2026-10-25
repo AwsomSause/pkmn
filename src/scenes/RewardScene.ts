@@ -1,35 +1,44 @@
-// The five-choice reward draft. The player must take exactly one.
+// The five-choice reward draft. The player must take exactly one. Rewards for
+// a single Pokémon (vitamins, Rare Candy) ask which party member gets them.
+// Before choosing, the player can also use Bag items or change the lead.
 
 import Phaser from 'phaser';
-import { calcStats, getSpecies } from '../core/pokemon';
+import { itemUseProblem } from '../core/items';
+import { rewardTargetProblem } from '../core/rewards';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
-import { itemVisual, pokemonVisual } from '../ui/sprites';
-import { COLORS, GAME_WIDTH, STATUS_LABELS, textStyle } from '../ui/theme';
+import { bagRow, partyRows, Picker } from '../ui/partyPanel';
+import { itemVisual, pokemonIcon } from '../ui/sprites';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel } from '../ui/widgets';
+import { sceneForRun } from './routing';
 
 export class RewardScene extends Phaser.Scene {
+  /** 0..draft-1 are the cards; then the Party and Bag buttons. */
   private index = 0;
   private cursors: Phaser.GameObjects.Graphics[] = [];
+  private picker: Picker | null = null;
+  private notice: Phaser.GameObjects.Text | null = null;
   private chosen = false;
 
   constructor() {
     super('Reward');
   }
 
-  create(): void {
+  create(data: { notice?: string; focus?: number } = {}): void {
     const { session } = services();
     const run = session.run!;
     const content = session.content;
     const draft = run.draft!;
     this.index = 0;
     this.cursors = [];
+    this.picker = null;
     this.chosen = false;
 
-    this.add.text(GAME_WIDTH / 2, 34, 'Choose one reward', textStyle(44, COLORS.textLight)).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 30, 'Choose one reward', textStyle(44, COLORS.textLight)).setOrigin(0.5);
     this.add
-      .text(GAME_WIDTH / 2, 72, `Encounter ${run.encountersCompleted} cleared  ·  ₽${run.money}`, textStyle(20, '#8090a8'))
+      .text(GAME_WIDTH / 2, 66, `Encounter ${run.encountersCompleted} cleared  ·  ₽${run.money}  ·  Candies ${run.candies}`, textStyle(20, '#8090a8'))
       .setOrigin(0.5);
 
     const cardW = 172;
@@ -38,65 +47,202 @@ export class RewardScene extends Phaser.Scene {
     draft.forEach((rewardId, i) => {
       const reward = content.rewards.get(rewardId)!;
       const x = startX + i * (cardW + gap);
-      const y = 100;
+      const y = 92;
       const rarityColor = COLORS.rarity[reward.rarity] ?? 0x808080;
-      drawPanel(this, x, y, cardW, 280, { border: rarityColor });
-      const highlight = this.add.graphics();
-      highlight.lineStyle(6, COLORS.accent, 1);
-      highlight.strokeRoundedRect(x - 5, y - 5, cardW + 10, 290, 12);
-      this.cursors.push(highlight);
-      itemVisual(this, reward.iconAssetId, x + cardW / 2, y + 50, 2.5);
-      this.add.text(x + cardW / 2, y + 92, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0);
+      drawPanel(this, x, y, cardW, 270, { border: rarityColor });
+      this.cursors.push(this.highlight(x, y, cardW, 270));
+      itemVisual(this, reward.iconAssetId, x + cardW / 2, y + 46, 2.5);
+      this.add.text(x + cardW / 2, y + 84, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0);
       this.add
-        .text(x + cardW / 2, y + 126, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba))
+        .text(x + cardW / 2, y + 118, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba))
         .setOrigin(0.5, 0);
-      this.add.text(x + 12, y + 152, reward.description, textStyle(17, COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
-
-      const hit = this.add.zone(x, y, cardW, 280).setOrigin(0).setInteractive({ useHandCursor: true });
-      hit.on('pointerover', () => this.focus(i));
-      hit.on('pointerdown', () => {
-        this.focus(i);
-        this.choose(i);
-      });
+      this.add.text(x + 12, y + 144, reward.description, textStyle(17, COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
+      this.clickZone(x, y, cardW, 270, i);
     });
-    this.focus(0);
 
-    // Lead Pokémon summary so the choice is informed.
-    const lead = run.party[0]!;
-    const species = getSpecies(content, lead.speciesId);
-    const stats = calcStats(content, lead);
-    drawPanel(this, 80, 400, GAME_WIDTH - 160, 104, { fill: COLORS.panelDark, border: 0x101420 });
-    pokemonVisual(this, species, 'front', 150, 496, 2.2);
-    const status = lead.status ? `  ${STATUS_LABELS[lead.status.id]!.label}` : '';
-    const pp = lead.moves.map((m) => `${content.moves.get(m.id)!.name} ${m.pp}/${content.moves.get(m.id)!.pp}`).join('   ');
-    this.add.text(220, 412, `${species.name}  Lv${lead.level}   HP ${lead.hp}/${stats.hp}${status}`, textStyle(24, COLORS.textLight));
-    this.add.text(220, 446, pp, textStyle(17, '#c8d0e0', { wordWrap: { width: 640 } }));
+    // Party strip, with buttons to manage the party and use items.
+    drawPanel(this, 40, 380, GAME_WIDTH - 80, 112, { fill: COLORS.panelDark, border: 0x101420 });
+    run.party.forEach((mon, i) => {
+      const species = content.species.get(mon.speciesId)!;
+      const x = 80 + i * 92;
+      pokemonIcon(this, species, x, 412, 1.5);
+      this.add.text(x, 440, `Lv${mon.level}`, textStyle(16, COLORS.textLight)).setOrigin(0.5, 0);
+      this.add.text(x, 458, mon.hp <= 0 ? 'FNT' : `${mon.hp} HP`, textStyle(16, mon.hp <= 0 ? '#f08080' : '#a0e0a0')).setOrigin(0.5, 0);
+      if (i === 0) this.add.text(x, 384, 'LEAD', textStyle(12, '#f0c028')).setOrigin(0.5, 0);
+    });
+    const buttons = [
+      { label: 'Party', x: 680 },
+      { label: 'Bag', x: 800 },
+    ];
+    buttons.forEach((b, n) => {
+      drawPanel(this, b.x, 404, 104, 64, { fill: COLORS.panel });
+      this.add.text(b.x + 52, 436, b.label, textStyle(26)).setOrigin(0.5);
+      this.cursors.push(this.highlight(b.x, 404, 104, 64));
+      this.clickZone(b.x, 404, 104, 64, draft.length + n);
+    });
 
-    this.add.text(GAME_WIDTH / 2, 522, '←/→ choose  ·  Enter take reward', textStyle(16, '#8090a8')).setOrigin(0.5);
+    this.notice = this.add.text(GAME_WIDTH / 2, 508, data.notice ?? '', textStyle(18, '#f0e0a0')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 528, '←/→ ↑/↓ move  ·  Enter choose', textStyle(14, '#8090a8')).setOrigin(0.5);
+    this.focus(data.focus ?? 0, false);
 
     onInputAction(this, (action) => {
+      if (this.picker) {
+        this.picker.handle(action);
+        return;
+      }
       if (this.chosen) return;
-      if (action === 'left') this.focus((this.index + draft.length - 1) % draft.length);
-      if (action === 'right') this.focus((this.index + 1) % draft.length);
-      if (action === 'confirm') this.choose(this.index);
+      const cards = draft.length;
+      const total = cards + buttons.length;
+      if (action === 'left') this.focus((this.index + total - 1) % total);
+      if (action === 'right') this.focus((this.index + 1) % total);
+      if (action === 'down' && this.index < cards) this.focus(cards);
+      if (action === 'up' && this.index >= cards) this.focus(0);
+      if (action === 'confirm') this.activate(this.index);
     });
   }
 
-  private focus(i: number): void {
-    if (i !== this.index) playSfx(this, 'ui.select', 0.5);
+  private highlight(x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
+    const g = this.add.graphics();
+    g.lineStyle(6, COLORS.accent, 1);
+    g.strokeRoundedRect(x - 5, y - 5, w + 10, h + 10, 12);
+    return g;
+  }
+
+  private clickZone(x: number, y: number, w: number, h: number, index: number): void {
+    const hit = this.add.zone(x, y, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
+    hit.on('pointerover', () => !this.picker && this.focus(index));
+    hit.on('pointerdown', () => {
+      if (this.picker || this.chosen) return;
+      this.focus(index);
+      this.activate(index);
+    });
+  }
+
+  private focus(i: number, sound = true): void {
+    if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
   }
 
-  private choose(i: number): void {
+  private activate(i: number): void {
+    const draft = services().session.run!.draft!;
+    if (i < draft.length) this.pickReward(i);
+    else if (i === draft.length) this.openParty();
+    else this.openBag();
+  }
+
+  private closePicker(): void {
+    this.picker?.close();
+    this.picker = null;
+  }
+
+  private restart(notice: string): void {
+    this.scene.restart({ notice, focus: this.index });
+  }
+
+  private pickReward(draftIndex: number): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    const reward = content.rewards.get(run.draft![draftIndex]!)!;
+    if (reward.scope !== 'pokemon' || run.party.length === 1) {
+      const problem = rewardTargetProblem(content, run, reward, 0);
+      if (problem) {
+        playSfx(this, 'ui.error');
+        this.notice?.setText(problem);
+        return;
+      }
+      this.choose(draftIndex, 0);
+      return;
+    }
+    this.picker = new Picker(this, {
+      title: `Give the ${reward.name} to which Pokémon?`,
+      columns: 2,
+      rowHeight: 78,
+      rows: partyRows(content, run.party, (i) => rewardTargetProblem(content, run, reward, i)),
+      onSelect: (i) => {
+        this.closePicker();
+        this.choose(draftIndex, i);
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openParty(): void {
+    const { session } = services();
+    const run = session.run!;
+    this.picker = new Picker(this, {
+      title: 'Choose a Pokémon to lead the next battle',
+      columns: 2,
+      rowHeight: 78,
+      rows: partyRows(session.content, run.party, (i) => (i === 0 ? 'Already leading.' : null), (i) => (i === 0 ? 'LEAD' : undefined), () => 'Move this Pokémon to the front.'),
+      onSelect: (i) => {
+        const name = session.content.species.get(run.party[i]!.speciesId)!.name;
+        session.setLead(i);
+        this.restart(`${name} will lead the next battle.`);
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openBag(): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    const ids = Object.keys(run.inventory).filter((id) => content.items.get(id)?.usableOutside && run.inventory[id]! > 0);
+    const allIds = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0);
+    this.picker = new Picker(this, {
+      title: 'Bag',
+      columns: 2,
+      rowHeight: 48,
+      rows: allIds.map((id) => {
+        const item = content.items.get(id)!;
+        const usable = ids.includes(id);
+        const anyTarget = usable && run.party.some((mon) => itemUseProblem(content, item, mon) === null);
+        const problem = !usable ? `${item.name}: ${item.description}` : anyTarget ? null : `No Pokémon needs the ${item.name} right now.`;
+        return bagRow(content, run.inventory, id, problem);
+      }),
+      onSelect: (i) => {
+        const id = allIds[i]!;
+        this.closePicker();
+        this.openItemTarget(id);
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openItemTarget(itemId: string): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    const item = content.items.get(itemId)!;
+    this.picker = new Picker(this, {
+      title: `Use the ${item.name} on which Pokémon?`,
+      columns: 2,
+      rowHeight: 78,
+      rows: partyRows(content, run.party, (i) => itemUseProblem(content, item, run.party[i]!)),
+      onSelect: (i) => {
+        const message = session.useItem(itemId, i);
+        this.restart(message);
+      },
+      onBack: () => {
+        this.closePicker();
+        this.openBag();
+      },
+    });
+  }
+
+  private choose(draftIndex: number, targetIndex: number): void {
     if (this.chosen) return;
     this.chosen = true;
-    const result = services().session.chooseReward(i);
+    const result = services().session.chooseReward(draftIndex, targetIndex);
     playSfx(this, 'se.level_up', 0.6);
-    const overlay = this.add.rectangle(0, 0, GAME_WIDTH, 540, 0x000000, 0.7).setOrigin(0);
-    const text = this.add.text(GAME_WIDTH / 2, 250, `${result.reward.message}\n\nOn to encounter ${result.run.encountersCompleted + 1}…`, textStyle(30, COLORS.textLight, { align: 'center' })).setOrigin(0.5);
-    void overlay;
-    void text;
-    this.time.delayedCall(1300, () => this.scene.start('Battle'));
+    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.75).setOrigin(0).setDepth(50);
+    const next = result.run.phase === 'battle' ? `On to encounter ${result.run.encountersCompleted + 1}…` : '';
+    this.add
+      .text(GAME_WIDTH / 2, 250, [...result.reward.messages, '', next].join('\n'), textStyle(28, COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
+      .setOrigin(0.5)
+      .setDepth(51);
+    this.time.delayedCall(1500, () => this.scene.start(sceneForRun(result.run)));
   }
 }

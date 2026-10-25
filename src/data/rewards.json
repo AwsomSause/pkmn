@@ -1,91 +1,179 @@
 [
  {
   "id": "potion",
-  "name": "Potion",
-  "description": "Restores 20 HP to your lead Pokémon.",
+  "name": "Potion ×2",
+  "description": "Two Potions for your Bag (restore 20 HP each).",
   "category": "healing",
   "rarity": "common",
   "effect": {
-   "kind": "healHp",
-   "amount": 20
+   "kind": "addItem",
+   "item": "potion",
+   "quantity": 2
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.potion"
  },
  {
   "id": "super-potion",
-  "name": "Super Potion",
-  "description": "Restores 60 HP to your lead Pokémon.",
+  "name": "Super Potion ×2",
+  "description": "Two Super Potions (restore 60 HP each).",
   "category": "healing",
   "rarity": "uncommon",
   "effect": {
-   "kind": "healHp",
-   "amount": 60
+   "kind": "addItem",
+   "item": "super-potion",
+   "quantity": 2
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.super_potion"
  },
  {
   "id": "hyper-potion",
   "name": "Hyper Potion",
-  "description": "Restores 120 HP to your lead Pokémon.",
+  "description": "A Hyper Potion (restores 120 HP).",
   "category": "healing",
   "rarity": "rare",
   "effect": {
-   "kind": "healHp",
-   "amount": 120
+   "kind": "addItem",
+   "item": "hyper-potion",
+   "quantity": 1
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.hyper_potion"
  },
  {
   "id": "full-heal",
-  "name": "Full Heal",
-  "description": "Cures your lead Pokémon's status condition.",
+  "name": "Full Heal ×2",
+  "description": "Two Full Heals (cure status).",
   "category": "healing",
   "rarity": "common",
   "effect": {
-   "kind": "cureStatus"
+   "kind": "addItem",
+   "item": "full-heal",
+   "quantity": 2
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.full_heal"
  },
  {
   "id": "full-restore",
   "name": "Full Restore",
-  "description": "Fully restores HP and cures status of your lead Pokémon.",
+  "description": "A Full Restore (full HP and status cure).",
   "category": "healing",
   "rarity": "rare",
   "effect": {
-   "kind": "fullRestore"
+   "kind": "addItem",
+   "item": "full-restore",
+   "quantity": 1
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.full_restore"
  },
  {
   "id": "ether",
-  "name": "Ether",
-  "description": "Restores 10 PP to each of your lead Pokémon's moves.",
+  "name": "Ether ×2",
+  "description": "Two Ethers (restore 10 PP to each move).",
   "category": "consumable",
   "rarity": "common",
   "effect": {
-   "kind": "restorePp",
-   "amount": 10
+   "kind": "addItem",
+   "item": "ether",
+   "quantity": 2
   },
-  "stacking": "instant",
-  "scope": "lead",
+  "stacking": "stacks",
+  "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.ether"
+ },
+ {
+  "id": "revive",
+  "name": "Revive",
+  "description": "A Revive (brings back a fainted Pokémon with half HP).",
+  "category": "healing",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "revive",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.revive"
+ },
+ {
+  "id": "poke-balls",
+  "name": "Poké Ball ×5",
+  "description": "Five Poké Balls.",
+  "category": "consumable",
+  "rarity": "common",
+  "effect": {
+   "kind": "addItem",
+   "item": "poke-ball",
+   "quantity": 5
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "ball.pb"
+ },
+ {
+  "id": "great-balls",
+  "name": "Great Ball ×3",
+  "description": "Three Great Balls (1.5× catch rate).",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "great-ball",
+   "quantity": 3
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "ball.gb"
+ },
+ {
+  "id": "ultra-balls",
+  "name": "Ultra Ball ×2",
+  "description": "Two Ultra Balls (2× catch rate).",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "ultra-ball",
+   "quantity": 2
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "ball.ub"
+ },
+ {
+  "id": "last-stand-charm",
+  "name": "Last Stand Charm",
+  "description": "When your last Pokémon would faint, it holds on with 1 HP. One use.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "last-stand-charm",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.focus_sash"
  },
  {
   "id": "nugget",
@@ -120,7 +208,7 @@
  {
   "id": "rare-candy",
   "name": "Rare Candy",
-  "description": "Your lead Pokémon gains 1 level.",
+  "description": "A Pokémon of your choice gains 1 level.",
   "category": "consumable",
   "rarity": "rare",
   "effect": {
@@ -128,14 +216,14 @@
    "levels": 1
   },
   "stacking": "instant",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.rare_candy"
  },
  {
   "id": "hp-up",
   "name": "HP Up",
-  "description": "Lead Pokémon's max HP +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: max HP +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -143,14 +231,14 @@
    "stat": "hp"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.hp_up"
  },
  {
   "id": "protein",
   "name": "Protein",
-  "description": "Lead Pokémon's Attack +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: Attack +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -158,14 +246,14 @@
    "stat": "atk"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.protein"
  },
  {
   "id": "iron",
   "name": "Iron",
-  "description": "Lead Pokémon's Defense +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: Defense +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -173,14 +261,14 @@
    "stat": "def"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.iron"
  },
  {
   "id": "calcium",
   "name": "Calcium",
-  "description": "Lead Pokémon's Sp. Atk +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: Sp. Atk +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -188,14 +276,14 @@
    "stat": "spa"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.calcium"
  },
  {
   "id": "zinc",
   "name": "Zinc",
-  "description": "Lead Pokémon's Sp. Def +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: Sp. Def +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -203,14 +291,14 @@
    "stat": "spd"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.zinc"
  },
  {
   "id": "carbos",
   "name": "Carbos",
-  "description": "Lead Pokémon's Speed +10% (stacks up to 3 times).",
+  "description": "A Pokémon of your choice: Speed +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
   "rarity": "uncommon",
   "effect": {
@@ -218,7 +306,7 @@
    "stat": "spe"
   },
   "stacking": "stacks",
-  "scope": "lead",
+  "scope": "pokemon",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.carbos"
  }

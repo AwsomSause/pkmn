@@ -3,14 +3,36 @@
   "starterLevel": 5,
   "starterChoices": 3,
   "starterPool": [
-    "bulbasaur", "charmander", "squirtle", "vulpix", "psyduck", "mankey",
-    "growlithe", "poliwag", "machop", "geodude", "gastly", "magnemite"
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "vulpix",
+    "psyduck",
+    "mankey",
+    "growlithe",
+    "poliwag",
+    "machop",
+    "geodude",
+    "gastly",
+    "magnemite"
   ],
   "wildPool": [
-    "caterpie", "pidgey", "rattata", "spearow", "ekans", "sandshrew", "oddish", "diglett", "meowth"
+    "caterpie",
+    "pidgey",
+    "rattata",
+    "spearow",
+    "ekans",
+    "sandshrew",
+    "oddish",
+    "diglett",
+    "meowth"
   ],
   "draftSize": 5,
-  "rarityWeights": { "common": 60, "uncommon": 30, "rare": 10 },
+  "rarityWeights": {
+    "common": 60,
+    "uncommon": 30,
+    "rare": 10
+  },
   "vitaminMultiplierPerStack": 0.1,
   "vitaminMaxStacks": 3,
   "prototypeEncounters": {
@@ -20,7 +42,25 @@
     "minLevel": 2,
     "maxLevel": 30
   },
-  "money": { "startingMoney": 0, "wildPerEnemyLevel": 8 },
+  "money": {
+    "startingMoney": 0,
+    "wildPerEnemyLevel": 8
+  },
   "attributeMin": 0,
-  "attributeMax": 100
+  "attributeMax": 100,
+  "startingItems": {
+    "poke-ball": 5,
+    "potion": 2
+  },
+  "shinyChance": 0.0005,
+  "trainerEvery": 4,
+  "trainerTeam": {
+    "minSize": 1,
+    "maxSize": 3,
+    "encountersPerExtraPokemon": 6
+  },
+  "candies": {
+    "perRelease": 1,
+    "perLevels": 10
+  }
 }

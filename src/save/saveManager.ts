@@ -21,14 +21,33 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 1, run: 1, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 2, settings: 1, meta: 1 };
 
-/**
- * Migrations upgrade a record from version N to N+1.
- * Example for the future: MIGRATIONS.run[1] = (data) => ({ ...data, newField: 0 }) turns v1 into v2.
- */
+/** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
-export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = { profile: {}, run: {}, settings: {}, meta: {} };
+type Json = Record<string, unknown>;
+
+export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
+  profile: {
+    // v2 (Milestone 2): candies, the permanent currency.
+    1: (data) => ({ ...(data as Json), candies: 0 }),
+  },
+  run: {
+    // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
+    // a team (trainer battles) instead of a single wild Pokémon.
+    1: (data) => {
+      const run = data as Json;
+      let battle = run.battle as Json | null;
+      if (battle) {
+        const { enemy, ...rest } = battle;
+        battle = { ...rest, kind: 'wild', enemyTeam: [enemy], enemyIndex: 0, trainer: null, needsSwitch: false, lastStandUsed: false };
+      }
+      return { ...run, battle, inventory: {}, candies: 0, pending: [], afterDecisions: 'reward' };
+    },
+  },
+  settings: {},
+  meta: {},
+};
 
 interface Envelope {
   format: string;
@@ -150,12 +169,20 @@ export class SaveManager {
   private findRunReferenceProblem(run: RunState): string | null {
     const c = this.content;
     if (!c.archetypes.has(run.archetypeId)) return `Unknown trainer "${run.archetypeId}" in save.`;
-    const mons = [...run.party, ...(run.battle ? [run.battle.enemy] : [])];
+    const caught = run.pending.flatMap((d) => (d.kind === 'caught' ? [d.mon] : []));
+    const mons = [...run.party, ...(run.battle ? run.battle.enemyTeam : []), ...caught];
     for (const mon of mons) {
       if (!c.species.has(mon.speciesId)) return `Unknown Pokémon "${mon.speciesId}" in save.`;
       for (const slot of mon.moves) if (!c.moves.has(slot.id)) return `Unknown move "${slot.id}" in save.`;
     }
     for (const id of run.draft ?? []) if (!c.rewards.has(id)) return `Unknown reward "${id}" in save.`;
+    for (const id of Object.keys(run.inventory)) if (!c.items.has(id)) return `Unknown item "${id}" in save.`;
+    for (const d of run.pending) if (d.kind === 'learnMove' && !c.moves.has(d.moveId)) return `Unknown move "${d.moveId}" in save.`;
+    if (run.battle) {
+      if (!run.battle.enemyTeam[run.battle.enemyIndex]) return 'Battle data is damaged in the save.';
+      if (run.battle.trainer && !c.trainers.has(run.battle.trainer.classId)) return `Unknown trainer class "${run.battle.trainer.classId}" in save.`;
+    }
+    if (run.phase === 'decision' && run.pending.length === 0) return 'The save is waiting on a decision that is missing.';
     if (run.phase === 'battle' && (!run.battle || !run.party[run.battle.activeIndex])) return 'Battle data is missing from the save.';
     if (run.phase === 'reward' && !run.draft) return 'Reward choices are missing from the save.';
     if (run.phase !== 'starter' && run.party.length === 0) return 'The save has no party.';

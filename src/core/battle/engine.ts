@@ -2,11 +2,17 @@
 // battle state plus the player's choice, changes the state, and returns a list
 // of events ("Bulbasaur used Vine Whip", "It's super effective!", ...) that the
 // battle screen plays back in order.
+//
+// Turn order: switching and items happen first, then moves (priority, then
+// Speed, then a seeded coin flip), then end-of-turn burn/poison damage, then
+// fainted Pokémon are replaced.
 
 import type { BoostStat, Content, Move, StatusId } from '../contentSchema';
+import { catchProbability, resolveCatchRoll } from '../capture';
+import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
-import { freshStages, type BattleState, type PokemonInstance, type Stages } from '../state';
+import { currentEnemy, freshStages, type BattleState, type PokemonInstance, type Stages } from '../state';
 import {
   calcDamage,
   clampStage,
@@ -36,7 +42,18 @@ export type BattleEvent =
   | { type: 'residual'; side: Side; status: StatusId; amount: number; hpAfter: number }
   | { type: 'drain'; side: Side; amount: number; hpAfter: number }
   | { type: 'recoil'; side: Side; amount: number; hpAfter: number }
-  | { type: 'faint'; side: Side };
+  | { type: 'lastStand'; side: Side; itemId: string }
+  /** `uid` and `participants` let the run award experience for this faint. */
+  | { type: 'faint'; side: Side; uid: string; participants: string[] }
+  | { type: 'switchOut'; side: Side; uid: string }
+  | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
+  | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
+  | { type: 'ball'; itemId: string; shakes: number; caught: boolean };
+
+export type PlayerAction =
+  | { kind: 'move'; index: number }
+  | { kind: 'switch'; partyIndex: number }
+  | { kind: 'item'; itemId: string; targetIndex?: number };
 
 interface Combatant {
   side: Side;
@@ -49,19 +66,35 @@ export interface BattleContext {
   content: Content;
   battle: BattleState;
   party: PokemonInstance[];
+  /** Bag contents (items used in battle are removed from here). */
+  inventory: Record<string, number>;
   /** The "battle" random stream. */
   rng: Rng;
+  /** The "capture" random stream. */
+  captureRng: Rng;
+  /** Multiplier on the final catch probability (e.g. Green's 0.85). */
+  catchMultiplier: number;
 }
 
-export function createWildBattle(enemy: PokemonInstance, activeIndex: number, activeUid: string): BattleState {
+export function createBattle(
+  kind: BattleState['kind'],
+  enemyTeam: PokemonInstance[],
+  activeIndex: number,
+  activeUid: string,
+  trainer: BattleState['trainer'] = null,
+): BattleState {
   return {
-    kind: 'wild',
+    kind,
     turn: 1,
     activeIndex,
-    enemy,
+    enemyTeam,
+    enemyIndex: 0,
+    trainer,
     playerStages: freshStages(),
     enemyStages: freshStages(),
     participants: [activeUid],
+    needsSwitch: false,
+    lastStandUsed: false,
     outcome: null,
   };
 }
@@ -77,56 +110,156 @@ export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng): number {
   return rng.pick(usable).i;
 }
 
+/** Why the player can't switch to this party slot, or null if they can. */
+export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'>, partyIndex: number): string | null {
+  const mon = ctx.party[partyIndex];
+  if (!mon) return 'There is no Pokémon in that slot.';
+  if (partyIndex === ctx.battle.activeIndex && !ctx.battle.needsSwitch) return 'That Pokémon is already in battle.';
+  if (mon.hp <= 0) return 'That Pokémon has fainted.';
+  return null;
+}
+
 /**
- * Plays one full turn. `playerMoveIndex` is the chosen move slot, or -1 for
- * Struggle (only allowed when no move has PP left).
+ * Plays one player action. Usually that's a full turn. When the active
+ * Pokémon has fainted (`battle.needsSwitch`), the only allowed action is a
+ * switch, which happens immediately and doesn't use a turn.
  */
-export function resolveTurn(ctx: BattleContext, playerMoveIndex: number): BattleEvent[] {
+export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEvent[] {
   const { battle, content, rng } = ctx;
   if (battle.outcome) throw new Error('Battle is already over');
-  const playerMon = ctx.party[battle.activeIndex];
-  if (!playerMon) throw new Error('No active Pokémon');
-  validateChoice(playerMon, playerMoveIndex);
-
   const events: BattleEvent[] = [];
-  const player: Combatant = { side: 'player', mon: playerMon, stages: battle.playerStages, flinched: false };
-  const enemy: Combatant = { side: 'enemy', mon: battle.enemy, stages: battle.enemyStages, flinched: false };
 
+  if (battle.needsSwitch) {
+    if (action.kind !== 'switch') throw new Error('Choose a Pokémon to send out');
+    const problem = switchProblem(ctx, action.partyIndex);
+    if (problem) throw new Error(problem);
+    switchIn(ctx, action.partyIndex, events);
+    battle.needsSwitch = false;
+    return events;
+  }
+
+  validateAction(ctx, action);
+  const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, flinched: false };
   const enemyMoveIndex = chooseEnemyMove(enemy.mon, rng);
-  const playerMove = resolveMove(content, playerMon, playerMoveIndex);
   const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
-  const order = decideOrder(content, rng, player, playerMove, enemy, enemyMove);
-  const actions = order === 'player'
-    ? [{ user: player, target: enemy, move: playerMove, slot: playerMoveIndex }, { user: enemy, target: player, move: enemyMove, slot: enemyMoveIndex }]
-    : [{ user: enemy, target: player, move: enemyMove, slot: enemyMoveIndex }, { user: player, target: enemy, move: playerMove, slot: playerMoveIndex }];
-
-  actions.forEach((action, index) => {
-    if (battle.outcome || action.user.mon.hp <= 0) return;
-    executeMove(ctx, action.user, action.target, action.move, action.slot, index === 0, events);
-    checkFaints(ctx, player, enemy, events);
-  });
-
-  if (!battle.outcome) {
-    for (const c of order === 'player' ? [player, enemy] : [enemy, player]) {
-      applyResidual(content, c, events);
-      checkFaints(ctx, player, enemy, events);
-      if (battle.outcome) break;
+  // 1. Switching and items go before any move.
+  if (action.kind === 'switch') {
+    events.push({ type: 'switchOut', side: 'player', uid: ctx.party[battle.activeIndex]!.uid });
+    switchIn(ctx, action.partyIndex, events);
+  } else if (action.kind === 'item') {
+    useItemInBattle(ctx, action.itemId, action.targetIndex, events);
+    if (battle.outcome === 'caught') {
+      battle.turn += 1;
+      return events;
     }
   }
 
+  const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, flinched: false });
+  const playerC = player();
+
+  // 2. Moves.
+  if (action.kind === 'move') {
+    const playerMove = resolveMove(content, playerC.mon, action.index);
+    const order = decideOrder(content, rng, playerC, playerMove, enemy, enemyMove);
+    const actions =
+      order === 'player'
+        ? [{ user: playerC, target: enemy, move: playerMove, slot: action.index }, { user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }]
+        : [{ user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }, { user: playerC, target: enemy, move: playerMove, slot: action.index }];
+    actions.forEach((a, index) => {
+      if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
+      executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events);
+    });
+  } else {
+    executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events);
+  }
+  recordFaints(ctx, playerC, enemy, events);
+
+  // 3. End of turn: burn and poison.
+  if (!anyFainted(playerC, enemy)) {
+    for (const c of [playerC, enemy]) {
+      applyResidual(ctx, c, events);
+    }
+    recordFaints(ctx, playerC, enemy, events);
+  }
+
+  // 4. Decide the outcome or replace fainted Pokémon.
+  settleFaints(ctx, events);
   battle.turn += 1;
   return events;
 }
 
-function validateChoice(mon: PokemonInstance, index: number): void {
-  if (index === -1) {
-    if (hasUsableMove(mon)) throw new Error('Struggle is only allowed when no move has PP');
+function anyFainted(a: Combatant, b: Combatant): boolean {
+  return a.mon.hp <= 0 || b.mon.hp <= 0;
+}
+
+function validateAction(ctx: BattleContext, action: PlayerAction): void {
+  const mon = ctx.party[ctx.battle.activeIndex];
+  if (!mon) throw new Error('No active Pokémon');
+  if (action.kind === 'move') {
+    if (action.index === -1) {
+      if (hasUsableMove(mon)) throw new Error('Struggle is only allowed when no move has PP');
+      return;
+    }
+    const slot = mon.moves[action.index];
+    if (!slot) throw new Error(`Invalid move slot ${action.index}`);
+    if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
+  } else if (action.kind === 'switch') {
+    const problem = switchProblem(ctx, action.partyIndex);
+    if (problem) throw new Error(problem);
+  } else {
+    const problem = itemProblem(ctx, action.itemId, action.targetIndex);
+    if (problem) throw new Error(problem);
+  }
+}
+
+/** Why this item can't be used right now, or null if it can. */
+export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party' | 'inventory'>, itemId: string, targetIndex?: number): string | null {
+  const item = ctx.content.items.get(itemId);
+  if (!item) return `Unknown item "${itemId}".`;
+  if (itemCount(ctx.inventory, itemId) <= 0) return `You have no ${item.name} left.`;
+  if (!item.usableInBattle) return `${item.name} can't be used in battle.`;
+  if (item.effect.kind === 'catch') {
+    if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
+    return null;
+  }
+  const target = targetIndex === undefined ? undefined : ctx.party[targetIndex];
+  if (!target) return 'Choose a Pokémon to use it on.';
+  return itemUseProblem(ctx.content, item, target);
+}
+
+function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number | undefined, events: BattleEvent[]): void {
+  const { content, battle } = ctx;
+  const item = getItem(content, itemId);
+  consumeItem(ctx.inventory, itemId);
+  if (item.effect.kind === 'catch') {
+    const enemy = currentEnemy(battle);
+    const species = getSpecies(content, enemy.speciesId);
+    const probability = catchProbability({
+      maxHp: calcStats(content, enemy).hp,
+      hp: enemy.hp,
+      catchRate: species.catchRate,
+      ballMultiplier: item.effect.multiplier,
+      statusMultiplier: enemy.status ? content.ruleset.catchStatusMultipliers[enemy.status.id] ?? 1 : 1,
+      finalMultiplier: ctx.catchMultiplier,
+    });
+    const roll = resolveCatchRoll(probability, ctx.captureRng.float());
+    events.push({ type: 'ball', itemId, shakes: roll.shakes, caught: roll.caught });
+    if (roll.caught) battle.outcome = 'caught';
     return;
   }
-  const slot = mon.moves[index];
-  if (!slot) throw new Error(`Invalid move slot ${index}`);
-  if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
+  const target = ctx.party[targetIndex!]!;
+  const message = applyItemToPokemon(content, item, target);
+  events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
+}
+
+function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  const mon = ctx.party[partyIndex]!;
+  battle.activeIndex = partyIndex;
+  battle.playerStages = freshStages();
+  if (!battle.participants.includes(mon.uid)) battle.participants.push(mon.uid);
+  events.push({ type: 'switchIn', side: 'player', uid: mon.uid, speciesId: mon.speciesId, level: mon.level });
 }
 
 function resolveMove(content: Content, mon: PokemonInstance, index: number): Move {
@@ -178,6 +311,27 @@ function canAct(content: Content, rng: Rng, user: Combatant, events: BattleEvent
     return false;
   }
   return true;
+}
+
+/**
+ * Removes HP, applying the Last Stand Charm if this would knock out the
+ * player's last usable Pokémon. Returns the HP actually lost.
+ */
+function takeHp(ctx: BattleContext, c: Combatant, amount: number): { lost: number; lastStand: string | null } {
+  let lost = Math.min(Math.max(0, amount), c.mon.hp);
+  let lastStand: string | null = null;
+  if (c.side === 'player' && lost > 0 && lost >= c.mon.hp && !ctx.battle.lastStandUsed) {
+    const charm = lastStandItemId(ctx.content);
+    const othersHealthy = ctx.party.some((p) => p.uid !== c.mon.uid && p.hp > 0);
+    if (charm && !othersHealthy && itemCount(ctx.inventory, charm) > 0) {
+      consumeItem(ctx.inventory, charm);
+      ctx.battle.lastStandUsed = true;
+      lost = c.mon.hp - 1;
+      lastStand = charm;
+    }
+  }
+  c.mon.hp -= lost;
+  return { lost, lastStand };
 }
 
 function executeMove(
@@ -242,9 +396,9 @@ function executeMove(
     });
   }
 
-  const dealt = Math.min(damage, target.mon.hp);
-  target.mon.hp -= dealt;
+  const { lost: dealt, lastStand } = takeHp(ctx, target, damage);
   events.push({ type: 'damage', side: target.side, amount: dealt, hpAfter: target.mon.hp, effectiveness, crit });
+  if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
 
   // A damaging Fire move thaws a frozen target.
   if (move.type === 'fire' && target.mon.status?.id === 'frz' && target.mon.hp > 0) {
@@ -261,8 +415,8 @@ function executeMove(
       events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
     }
   }
-  if (fx.recoil && dealt > 0) applyRecoil(user, Math.max(1, Math.floor(dealt * fx.recoil)), events);
-  if (fx.recoilMaxHp) applyRecoil(user, Math.max(1, Math.floor(calcStats(content, user.mon).hp * fx.recoilMaxHp)), events);
+  if (fx.recoil && dealt > 0) applyRecoil(ctx, user, Math.max(1, Math.floor(dealt * fx.recoil)), events);
+  if (fx.recoilMaxHp) applyRecoil(ctx, user, Math.max(1, Math.floor(calcStats(content, user.mon).hp * fx.recoilMaxHp)), events);
 
   // Secondary effects only land if the target is still standing.
   if (target.mon.hp > 0) {
@@ -286,7 +440,7 @@ function applyStatusMove(content: Content, rng: Rng, user: Combatant, target: Co
     const recipient = change.target === 'self' ? user : target;
     didSomething = applyStageChange(recipient, change.stat, change.stages, events) || didSomething;
   }
-  if (!didSomething && !fx.statChanges?.length) events.push({ type: 'fail', side: user.side });
+  if (!didSomething && !fx.statChanges?.length && !fx.status) events.push({ type: 'fail', side: user.side });
 }
 
 /** Returns true if the status was applied. `announceFailure` is for status moves. */
@@ -326,31 +480,59 @@ function applyStageChange(c: Combatant, stat: BoostStat, stages: number, events:
   return true;
 }
 
-function applyRecoil(user: Combatant, amount: number, events: BattleEvent[]): void {
-  const taken = Math.min(amount, user.mon.hp);
-  if (taken <= 0) return;
-  user.mon.hp -= taken;
-  events.push({ type: 'recoil', side: user.side, amount: taken, hpAfter: user.mon.hp });
+function applyRecoil(ctx: BattleContext, user: Combatant, amount: number, events: BattleEvent[]): void {
+  const { lost, lastStand } = takeHp(ctx, user, amount);
+  if (lost <= 0) return;
+  events.push({ type: 'recoil', side: user.side, amount: lost, hpAfter: user.mon.hp });
+  if (lastStand) events.push({ type: 'lastStand', side: user.side, itemId: lastStand });
 }
 
-function applyResidual(content: Content, c: Combatant, events: BattleEvent[]): void {
+function applyResidual(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
+  const { content } = ctx;
   if (c.mon.hp <= 0 || !c.mon.status) return;
   const id = c.mon.status.id;
   const fraction =
     id === 'brn' ? content.ruleset.burnResidualFraction : id === 'psn' ? content.ruleset.poisonResidualFraction : 0;
   if (fraction === 0) return;
-  const amount = Math.min(c.mon.hp, Math.max(1, Math.floor(calcStats(content, c.mon).hp * fraction)));
-  c.mon.hp -= amount;
-  events.push({ type: 'residual', side: c.side, status: id, amount, hpAfter: c.mon.hp });
+  const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(calcStats(content, c.mon).hp * fraction)));
+  events.push({ type: 'residual', side: c.side, status: id, amount: lost, hpAfter: c.mon.hp });
+  if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
 }
 
-function checkFaints(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
-  const { battle } = ctx;
+/** Adds a faint event (once) for each fainted active Pokémon. */
+function recordFaints(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
   for (const c of [player, enemy]) {
-    if (c.mon.hp <= 0 && !events.some((e) => e.type === 'faint' && e.side === c.side)) {
-      events.push({ type: 'faint', side: c.side });
-    }
+    if (c.mon.hp > 0) continue;
+    if (events.some((e) => e.type === 'faint' && e.uid === c.mon.uid)) continue;
+    const participants = c.side === 'enemy' ? ctx.battle.participants.filter((uid) => ctx.party.some((p) => p.uid === uid && p.hp > 0)) : [];
+    events.push({ type: 'faint', side: c.side, uid: c.mon.uid, participants });
   }
-  if (enemy.mon.hp <= 0) battle.outcome = 'win';
-  else if (player.mon.hp <= 0) battle.outcome = 'lose';
+}
+
+/**
+ * After a turn: decides whether someone has won, sends out the trainer's next
+ * Pokémon, or asks the player to choose a replacement.
+ * If both sides run out in the same turn, the player wins.
+ */
+function settleFaints(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  const enemy = currentEnemy(battle);
+  if (enemy.hp <= 0) {
+    const next = battle.enemyTeam.findIndex((m, i) => i > battle.enemyIndex && m.hp > 0);
+    if (next < 0) {
+      battle.outcome = 'win';
+      return;
+    }
+    battle.enemyIndex = next;
+    battle.enemyStages = freshStages();
+    const active = ctx.party[battle.activeIndex]!;
+    battle.participants = active.hp > 0 ? [active.uid] : [];
+    const sent = battle.enemyTeam[next]!;
+    events.push({ type: 'switchIn', side: 'enemy', uid: sent.uid, speciesId: sent.speciesId, level: sent.level });
+  }
+  const active = ctx.party[battle.activeIndex]!;
+  if (active.hp <= 0) {
+    if (ctx.party.some((p) => p.hp > 0)) battle.needsSwitch = true;
+    else battle.outcome = 'lose';
+  }
 }

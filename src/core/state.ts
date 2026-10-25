@@ -41,20 +41,43 @@ export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).m
 export type Stages = z.infer<typeof StagesSchema>;
 
 export const BattleStateSchema = z.object({
-  kind: z.literal('wild'),
+  kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
   /** Index into run.party of the Pokémon currently fighting. */
   activeIndex: z.number().int().min(0),
-  enemy: PokemonInstanceSchema,
+  /** The opposing team (one Pokémon for wild battles). */
+  enemyTeam: z.array(PokemonInstanceSchema).min(1).max(6),
+  /** Which member of enemyTeam is out. */
+  enemyIndex: z.number().int().min(0),
+  trainer: z.object({ classId: z.string(), name: z.string() }).nullable(),
   playerStages: StagesSchema,
   enemyStages: StagesSchema,
-  /** uids of party Pokémon that fought (they share experience). */
+  /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
-  outcome: z.enum(['win', 'lose']).nullable(),
+  /** True when the active Pokémon fainted and the player must send out another. */
+  needsSwitch: z.boolean(),
+  /** The Last Stand Charm can only save the player once per battle. */
+  lastStandUsed: z.boolean(),
+  outcome: z.enum(['win', 'lose', 'caught']).nullable(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
-export const RunPhaseSchema = z.enum(['starter', 'battle', 'reward', 'over']);
+export function currentEnemy(battle: BattleState): PokemonInstance {
+  const enemy = battle.enemyTeam[battle.enemyIndex];
+  if (!enemy) throw new Error('No enemy Pokémon is out');
+  return enemy;
+}
+
+/** Choices the player must make before the run continues. */
+export const PendingDecisionSchema = z.discriminatedUnion('kind', [
+  /** A Pokémon that knows four moves wants to learn another. */
+  z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
+  /** A caught Pokémon waiting to join the party (or be released for candies). */
+  z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
+]);
+export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
+
+export const RunPhaseSchema = z.enum(['starter', 'battle', 'decision', 'reward', 'over']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
 export const RunStateSchema = z.object({
@@ -65,9 +88,17 @@ export const RunStateSchema = z.object({
   starterChoices: z.array(z.string()),
   party: z.array(PokemonInstanceSchema),
   money: z.number().int().min(0),
+  /** Bag contents: item id → count. */
+  inventory: z.record(z.string(), z.number().int().min(0)),
+  /** Candies earned this run; added to the profile when the run ends (D7). */
+  candies: z.number().int().min(0),
   /** Number of encounters completed so far. */
   encountersCompleted: z.number().int().min(0),
   battle: BattleStateSchema.nullable(),
+  /** Decisions to make after a battle, oldest first. */
+  pending: z.array(PendingDecisionSchema),
+  /** Where the run goes once all pending decisions are made. */
+  afterDecisions: z.enum(['reward', 'battle']),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
   /** Run-only additive modifiers for the ten attributes (no effects yet). */
@@ -92,6 +123,8 @@ export const ProfileSchema = z.object({
   unlockedArchetypes: z.array(z.string()),
   attributes: z.record(z.string(), z.number()),
   bankCurrency: z.number().int().min(0),
+  /** Permanent candies (director decision D7). */
+  candies: z.number().int().min(0),
   stats: z.object({
     runsStarted: z.number().int().min(0),
     runsEnded: z.number().int().min(0),

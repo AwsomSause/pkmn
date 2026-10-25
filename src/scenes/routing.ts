@@ -7,6 +7,8 @@ export function sceneForRun(run: RunState): string {
       return 'StarterSelect';
     case 'battle':
       return 'Battle';
+    case 'decision':
+      return 'Decision';
     case 'reward':
       return 'Reward';
     case 'over':
