@@ -27,8 +27,9 @@ describe('Pokémon stats and experience', () => {
   });
 
   it('starts with the last four moves learned by its level', () => {
-    const mon = createPokemon(content, 'bulbasaur', 15, 'p1');
-    expect(mon.moves.map((m) => m.id)).toEqual(['growth', 'razor-leaf', 'poison-powder', 'sleep-powder']);
+    // Bulbasaur learns tackle 1, growl 2, vine-whip 8, poison-powder 14, sleep-powder 16, take-down 17.
+    const mon = createPokemon(content, 'bulbasaur', 17, 'p1');
+    expect(mon.moves.map((m) => m.id)).toEqual(['vine-whip', 'poison-powder', 'sleep-powder', 'take-down']);
   });
 
   it('defeat XP uses the scaled formula and multiplier', () => {
@@ -38,19 +39,20 @@ describe('Pokémon stats and experience', () => {
   });
 
   it('level-ups add HP and learn new moves while slots are free', () => {
-    const mon = createPokemon(content, 'bulbasaur', 5, 'p1'); // tackle, growl, vine-whip
+    const mon = createPokemon(content, 'bulbasaur', 7, 'p1'); // tackle, growl
+    const hpBefore = calcStats(content, mon).hp;
     mon.hp = 10;
-    const result = gainXp(content, mon, xpForLevel('medium-slow', 6) - mon.xp);
-    expect(result.newLevel).toBe(6);
-    expect(result.learnedMoves).toEqual(['growth']);
-    expect(mon.hp).toBe(10 + (calcStats(content, mon).hp - 19));
+    const result = gainXp(content, mon, xpForLevel('medium-slow', 8) - mon.xp);
+    expect(result.newLevel).toBe(8);
+    expect(result.learnedMoves).toEqual(['vine-whip']);
+    expect(mon.hp).toBe(10 + (calcStats(content, mon).hp - hpBefore));
   });
 
   it('reports moves it could not learn when four are known', () => {
-    const mon = createPokemon(content, 'bulbasaur', 11, 'p1');
+    const mon = createPokemon(content, 'bulbasaur', 16, 'p1');
     expect(mon.moves).toHaveLength(4);
     const result = addLevels(content, mon, 1);
-    expect(result.skippedMoves).toEqual(['razor-leaf']);
+    expect(result.skippedMoves).toEqual(['take-down']);
   });
 
   it('a fainted Pokémon stays fainted after levelling', () => {

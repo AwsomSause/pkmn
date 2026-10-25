@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "assets:import": "node tools/import-assets.ts",
     "assets:manifest": "node tools/build-asset-manifest.ts",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "data:movesets": "node tools/import-movesets.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

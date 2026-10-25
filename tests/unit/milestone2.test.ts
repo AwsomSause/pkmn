@@ -51,7 +51,8 @@ function fightOut(run: RunState) {
     if (run.battle!.needsSwitch) {
       result = takeTurn(content, run, { kind: 'switch', partyIndex: run.party.findIndex((p) => p.hp > 0) });
     } else {
-      result = takeTurn(content, run, { kind: 'move', index: mon.moves.findIndex((m) => m.pp > 0) });
+      const damaging = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
+      result = takeTurn(content, run, { kind: 'move', index: damaging >= 0 ? damaging : mon.moves.findIndex((m) => m.pp > 0) });
     }
     run = result.run;
   }
@@ -357,7 +358,8 @@ describe('rewards, move learning and evolution', () => {
 
   it('a Pokémon that knows four moves asks before learning a new one (offered once)', () => {
     const run = inRewardPhase('learn');
-    run.party[0] = createPokemon(content, 'charmeleon', 16, run.party[0]!.uid);
+    // Charmeleon knows smokescreen, dragon-breath, metal-claw and leer at 24, and learns fire-fang at 25.
+    run.party[0] = createPokemon(content, 'charmeleon', 24, run.party[0]!.uid);
     expect(run.party[0]!.moves).toHaveLength(4);
     run.draft = ['rare-candy'];
     const asked = chooseReward(content, run, 0, 0).run;
@@ -365,19 +367,21 @@ describe('rewards, move learning and evolution', () => {
     expect(asked.pending).toEqual([{ kind: 'learnMove', uid: asked.party[0]!.uid, moveId: 'fire-fang' }]);
 
     const learned = resolveDecision(content, asked, { kind: 'forgetMove', moveIndex: 1 }).run;
-    expect(learned.party[0]!.moves.map((m) => m.id)).toEqual(['scratch', 'fire-fang', 'ember', 'smokescreen']);
+    expect(learned.party[0]!.moves.map((m) => m.id)).toEqual(['smokescreen', 'fire-fang', 'metal-claw', 'leer']);
     expect(learned.phase).toBe('map');
 
     const skipped = resolveDecision(content, asked, { kind: 'skipMove' }).run;
-    expect(skipped.party[0]!.moves.map((m) => m.id)).toEqual(['scratch', 'growl', 'ember', 'smokescreen']);
+    expect(skipped.party[0]!.moves.map((m) => m.id)).toEqual(['smokescreen', 'dragon-breath', 'metal-claw', 'leer']);
   });
 
   it('evolving and levelling up at once does not offer the same move twice', () => {
     const run = inRewardPhase('learn-twice');
-    run.party[0] = createPokemon(content, 'charmander', 16, run.party[0]!.uid);
+    // Ekans and Arbok both learn Acid at 23; Ekans evolves at 22, so a Rare Candy at 22 does both at once.
+    run.party[0] = createPokemon(content, 'ekans', 22, run.party[0]!.uid);
+    expect(run.party[0]!.moves).toHaveLength(4);
     run.draft = ['rare-candy'];
     const asked = chooseReward(content, run, 0, 0).run;
-    expect(asked.party[0]!.speciesId).toBe('charmeleon');
+    expect(asked.party[0]!.speciesId).toBe('arbok');
     expect(asked.pending.filter((d) => d.kind === 'learnMove')).toHaveLength(1);
   });
 });
