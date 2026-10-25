@@ -46,9 +46,11 @@ describe('starter pools and the Starter Laboratory', () => {
   });
 
   it('skips species that are not in the game yet; a pool with too few is "coming later"', () => {
-    expect(eligibleSpecies(content, pool('johto'))).not.toContain('chikorita');
-    expect(eligibleSpecies(content, pool('johto'))).toContain('mareep');
-    expect(poolStatus(content, fresh(), pool('grand'))).toBe('comingLater');
+    // Since Milestone 6 every listed species exists, so use a pool with made-up ids.
+    const future = { ...pool('johto'), species: ['not-yet-a-pokemon', 'mareep', 'another-future-one'] };
+    expect(eligibleSpecies(content, future)).toEqual(['mareep']);
+    expect(eligibleSpecies(content, pool('johto'))).toContain('chikorita');
+    expect(poolStatus(content, fresh(), future)).toBe('comingLater');
   });
 
   it('unlocks a pool with Research Points, once', () => {

@@ -1,15 +1,53 @@
-// Standard level-up evolution (director decision D15).
+// Evolution (director decision D15 and GAME_DESIGN.md §5c). Level evolutions
+// happen after battles and level-up rewards; every other method (stones,
+// trades, friendship, ...) is an item used from the Bag.
 
-import type { Content } from './contentSchema';
-import { getSpecies, maxHp } from './pokemon';
+import type { Content, Evolution } from './contentSchema';
+import { calcStats, getSpecies, isUsableMove, maxHp } from './pokemon';
 import type { PokemonInstance } from './state';
 
-/** The species this Pokémon would evolve into right now, if any. Fainted Pokémon don't evolve. */
-export function evolutionTarget(content: Content, mon: PokemonInstance): string | null {
+/** A stable number from a Pokémon's id, so a branching evolution always goes the same way for that Pokémon. */
+function uidHash(uid: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < uid.length; i++) h = Math.imul(h ^ uid.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Narrows the branches that apply right now: a branch for the current region
+ * wins (Alolan Raichu in Alola); otherwise branches without a region; then
+ * Tyrogue's Attack/Defense condition.
+ */
+export function applicableBranches(content: Content, mon: PokemonInstance, branches: Evolution[], regionId?: string): Evolution[] {
+  const local = branches.filter((e) => e.region && e.region === regionId);
+  let list = local.length > 0 ? local : branches.filter((e) => !e.region);
+  if (list.some((e) => e.condition)) {
+    const { atk, def } = calcStats(content, mon);
+    const holds = (c: Evolution['condition']) => (c === 'atkGtDef' ? atk > def : c === 'atkLtDef' ? atk < def : c === 'atkEqDef' ? atk === def : true);
+    list = list.filter((e) => holds(e.condition));
+  }
+  return list;
+}
+
+/**
+ * The species this Pokémon would evolve into by level right now, if any.
+ * Fainted Pokémon don't evolve. When several branches apply (Wurmple, Burmy,
+ * Rockruff, ...) one is picked from the Pokémon's id, so it is always the same.
+ */
+export function evolutionTarget(content: Content, mon: PokemonInstance, regionId?: string): string | null {
   if (mon.hp <= 0) return null;
   const species = getSpecies(content, mon.speciesId);
-  const evo = species.evolutions.find((e) => mon.level >= e.level);
-  return evo ? evo.to : null;
+  const ready = species.evolutions.filter((e) => e.level !== undefined && mon.level >= e.level);
+  const branches = applicableBranches(content, mon, ready, regionId);
+  if (branches.length === 0) return null;
+  return branches[uidHash(mon.uid) % branches.length]!.to;
+}
+
+/** The species an evolution item would turn this Pokémon into (several when the player can choose, e.g. Eevee). */
+export function itemEvolutionTargets(content: Content, mon: PokemonInstance, itemId: string, regionId?: string): string[] {
+  const species = getSpecies(content, mon.speciesId);
+  const matching = species.evolutions.filter((e) => e.item === itemId);
+  return applicableBranches(content, mon, matching, regionId).map((e) => e.to);
 }
 
 export interface EvolutionResult {
@@ -34,7 +72,7 @@ export function evolve(content: Content, mon: PokemonInstance, to: string): Evol
   mon.hp = Math.min(maxHp(content, mon), mon.hp + (maxHp(content, mon) - oldMax));
   const learnedMoves: string[] = [];
   const wantsToLearn: string[] = [];
-  for (const entry of target.learnset.filter((e) => e.level === mon.level && content.moves.has(e.move))) {
+  for (const entry of target.learnset.filter((e) => e.level === mon.level && isUsableMove(content, e.move))) {
     if (mon.moves.some((m) => m.id === entry.move)) continue;
     if (mon.moves.length < 4) {
       mon.moves.push({ id: entry.move, pp: content.moves.get(entry.move)!.pp });
@@ -46,11 +84,11 @@ export function evolve(content: Content, mon: PokemonInstance, to: string): Evol
   return { from, to, learnedMoves, wantsToLearn };
 }
 
-/** Repeats evolution while possible (e.g. a Rare Candy past two thresholds). */
-export function evolveFully(content: Content, mon: PokemonInstance): EvolutionResult[] {
+/** Repeats level evolution while possible (e.g. a Rare Candy past two thresholds). */
+export function evolveFully(content: Content, mon: PokemonInstance, regionId?: string): EvolutionResult[] {
   const results: EvolutionResult[] = [];
   for (let guard = 0; guard < 3; guard++) {
-    const to = evolutionTarget(content, mon);
+    const to = evolutionTarget(content, mon, regionId);
     if (!to) break;
     results.push(evolve(content, mon, to));
   }

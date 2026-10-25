@@ -69,13 +69,22 @@ export function teamSize(cfg: TeamConfig, stageIndex: number, rng: Rng): number 
   return Math.max(1, Math.min(cfg.maxSize, cfg.baseSize + Math.floor(cfg.extraPerStage * stageIndex) + extra));
 }
 
-/** The species a Pokémon from `speciesId` would be by `level` (trainers' Pokémon arrive already evolved). */
-export function evolvedFormAt(content: Content, speciesId: string, level: number): string {
+/**
+ * The species a Pokémon from `speciesId` would be by `level` (trainers' Pokémon
+ * arrive already evolved). Trainers count item evolutions (stones, trades,
+ * friendship) as happening at balance.evolution levels. With several branches
+ * (Eevee) `rng` picks one; without it the first is used.
+ */
+export function evolvedFormAt(content: Content, speciesId: string, level: number, rng?: Rng): string {
+  const { trainerItemLevel, trainerBabyLevel } = content.balance.evolution;
   let id = speciesId;
   for (let guard = 0; guard < 3; guard++) {
-    const evo = getSpecies(content, id).evolutions.find((e) => level >= e.level);
-    if (!evo) break;
-    id = evo.to;
+    const species = getSpecies(content, id);
+    const itemLevel = species.tags.includes('baby') ? trainerBabyLevel : trainerItemLevel;
+    // Regional branches (Alolan Raichu, Hisuian Typhlosion) are left to their regions' own Pokémon.
+    const ready = species.evolutions.filter((e) => !e.region && level >= (e.level ?? itemLevel));
+    if (ready.length === 0) break;
+    id = (rng && ready.length > 1 ? rng.pick(ready) : ready[0]!).to;
   }
   return id;
 }
@@ -87,9 +96,9 @@ export interface WildPlan {
   shiny: boolean;
 }
 
-/** A wild Pokémon from the stage's theme. */
-export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng): WildPlan {
-  const speciesId = pickThemeSpecies(content, theme, rng);
+/** A wild Pokémon from the stage's theme (preferring the region's own Pokémon). */
+export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string): WildPlan {
+  const speciesId = pickThemeSpecies(content, theme, rng, undefined, regionId);
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng) };
 }
@@ -118,7 +127,7 @@ function buildTeam(
   const members = Array.from({ length: size }, (_, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === size - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
-    return { speciesId: evolvedFormAt(content, pick(i), info.level), level: info.level };
+    return { speciesId: evolvedFormAt(content, pick(i), info.level, rng), level: info.level };
   });
   return { members, levelInfo };
 }
@@ -127,11 +136,11 @@ function buildTeam(
  * A trainer whose class fits the theme, with a team drawn from the theme.
  * `stageNumber` counts stages from the start of the run (teams grow with it).
  */
-export function planTrainer(content: Content, archetype: Archetype, theme: Theme, stageNumber: number, scale: LevelScale, rng: Rng): TrainerPlan {
+export function planTrainer(content: Content, archetype: Archetype, theme: Theme, stageNumber: number, scale: LevelScale, rng: Rng, regionId?: string): TrainerPlan {
   const trainerClass = rng.pick(trainerClassesFor(content, theme));
   const name = rng.pick(trainerClass.names);
   const size = teamSize(content.balance.trainerTeam, stageNumber, rng);
-  const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types), rng);
+  const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types, regionId), rng);
   return { classId: trainerClass.id, name, leaderId: null, ...team };
 }
 

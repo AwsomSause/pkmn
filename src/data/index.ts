@@ -155,11 +155,15 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const entry of s.learnset) {
       if (!content.moves.has(entry.move)) problems.push(`species "${s.id}" learns unknown move "${entry.move}"`);
     }
-    if (!s.learnset.some((e) => e.level <= 1)) problems.push(`species "${s.id}" has no level-1 move`);
     for (const evo of s.evolutions) {
       if (!content.species.has(evo.to)) problems.push(`species "${s.id}" evolves into unknown species "${evo.to}"`);
+      if (evo.item && content.items.get(evo.item)?.effect.kind !== 'evolve') problems.push(`species "${s.id}" evolves with "${evo.item}", which is not an evolution item`);
+      if (evo.region && !content.regions.has(evo.region)) problems.push(`species "${s.id}" has an evolution for unknown region "${evo.region}"`);
     }
+    if (s.evolvesFrom && !content.species.has(s.evolvesFrom)) problems.push(`species "${s.id}" evolves from unknown species "${s.evolvesFrom}"`);
+    if (s.form && !content.species.has(s.form.base)) problems.push(`species "${s.id}" is a form of unknown species "${s.form.base}"`);
   }
+  const usable = (id: string) => content.moves.get(id)?.supported === true;
   for (const r of content.rewards.values()) {
     if (r.effect.kind === 'addItem' && !content.items.has(r.effect.item)) problems.push(`reward "${r.id}" gives unknown item "${r.effect.item}"`);
   }
@@ -202,10 +206,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
   for (const id of balance.wildPool) {
-    if (!content.species.has(id)) problems.push(`balance.json references unknown species "${id}"`);
+    const s = content.species.get(id);
+    if (!s) problems.push(`balance.json references unknown species "${id}"`);
+    else if (!s.learnset.some((e) => usable(e.move))) problems.push(`balance.json species "${id}" has no supported moves`);
   }
   for (const m of content.moves.values()) {
-    if (m.category !== 'status' && m.power === null && !m.effects.fixedDamage) {
+    if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage) {
       problems.push(`damaging move "${m.id}" has no power`);
     }
   }

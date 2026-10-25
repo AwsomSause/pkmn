@@ -53,23 +53,17 @@ npm run assets:import -- /path/to/folder/with/the/zips
 
 The folder should contain `images.zip`, `audio.zip` and `fonts.zip` as supplied. Only the files the game needs are copied.
 
-## Move data
+## Pokémon and move data
 
-Level-up moves come from the director's move dataset (a spreadsheet exported as HTML). To rebuild every Pokémon's learnset from it:
-
-```bash
-npm run data:movesets -- /path/to/SortedMoveset.html
-```
-
-Moves the game doesn't support yet are left out and listed, so you can see which ones to add next.
-
-To add moves from the director's move list (power, accuracy, PP and effect for every move), run this first, then rebuild the learnsets:
+Species, forms and evolutions come from PokeAPI's open data, and moves from the director's move dataset (spreadsheets exported as HTML, plus a saved move list). To rebuild them:
 
 ```bash
 npm run data:moves -- /path/to/pokemon_moves_list.html
+npm run data:species -- /path/to/move-dataset-folder /path/to/images.zip /path/to/audio.zip
+npm run assets:import -- /path/to/folder/with/the/zips
 ```
 
-Only moves whose effects the battle engine already handles are added; the rest are listed.
+`data:moves` adds every move; moves whose effects the battle engine can't run yet are flagged `supported: false` (they stay in learnsets but no Pokémon uses them). `data:species` downloads PokeAPI's CSV files into `.cache/pokeapi` the first time, then writes `species.json` and `learnables.json`; it reads the zips to find each form's sprite and cry names. `assets:import` then copies the art for every species.
 
 ## Project layout
 
@@ -82,6 +76,6 @@ src/scenes/    Phaser screens: menu, trainer select, starters, battle, decisions
 src/ui/        reusable widgets, sprites, audio, text
 src/debug/     developer panel
 src/assets/    asset catalog (all file names)
-tools/         asset import and manifest scripts
+tools/         data import (species, moves), asset import and manifest scripts
 tests/unit/    rule tests        tests/e2e/   browser tests
 ```

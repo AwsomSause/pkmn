@@ -8,6 +8,7 @@ import { onInputAction } from '../ui/input';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { badge, drawPanel } from '../ui/widgets';
+import { preloadPokemon } from '../ui/lazyAssets';
 
 export class StarterSelectScene extends Phaser.Scene {
   private index = 0;
@@ -15,6 +16,11 @@ export class StarterSelectScene extends Phaser.Scene {
 
   constructor() {
     super('StarterSelect');
+  }
+
+  preload(): void {
+    const { session } = services();
+    preloadPokemon(this, (session.run?.starterChoices ?? []).flatMap((id) => session.content.species.get(id) ?? []), { front: true });
   }
 
   create(): void {

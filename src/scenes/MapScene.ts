@@ -18,6 +18,7 @@ import { pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { badge, drawPanel } from '../ui/widgets';
 import { sceneForRun } from './routing';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 const COL_SPACING = 104;
 const ROW_SPACING = 92;
@@ -57,6 +58,10 @@ export class MapScene extends Phaser.Scene {
 
   constructor() {
     super('Map');
+  }
+
+  preload(): void {
+    preloadPokemon(this, partySpecies(), { icon: true });
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -287,7 +292,7 @@ export class MapScene extends Phaser.Scene {
       case 'party':
         return 'Choose which Pokémon leads the next battle.';
       case 'bag':
-        return 'Use medicine on your Pokémon.';
+        return 'Use medicine or evolution items on your Pokémon.';
     }
   }
 

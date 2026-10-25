@@ -183,7 +183,7 @@ describe('trainer unlocks', () => {
     expect(run.inventory.potion).toBe((content.balance.startingItems.potion ?? 0) + 3);
     const mon = createPokemon(content, 'onix', 30, 'x');
     mon.hp = 1;
-    applyItemToPokemon(content, getItem(content, 'potion'), mon, 1.5);
+    applyItemToPokemon(content, getItem(content, 'potion'), mon, { healMultiplier: 1.5 });
     expect(mon.hp).toBe(Math.min(maxHp(content, mon), 1 + 30));
     const ball = content.shop.find((e) => e.item === 'poke-ball')!;
     expect(shopPrice(content, run, ball)).toBe(Math.round(ball.price * 1.5));
