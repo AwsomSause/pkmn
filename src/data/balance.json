@@ -185,7 +185,7 @@
   "peaceHealing": 2.0,
   "peaceDamageTakenCut": 1.0,
   "goodCatch": 2.0,
-  "evilMoney": 0.1,
+  "evilMoney": 1.0,
   "loveEndureChance": 0.1
  },
  "attributeGrowth": [

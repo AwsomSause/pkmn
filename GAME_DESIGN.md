@@ -151,7 +151,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 | Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |
 | Peace | Healing +2%, damage taken −1% | +200% / 1 damage per hit (a hit always does at least 1) |
 | Good | Catching +2% easier | ×3 catch rate |
-| Evil | Prize money +0.1% | +10% |
+| Evil | Prize money +1% | +100% |
 
 **Permanent growth** (D10), from lifetime counters:
 - +1 Strength / Intelligence / Speed per Fighting / Psychic / Electric-type Pokémon defeated or caught (a dual-type Pokémon counts for both types).

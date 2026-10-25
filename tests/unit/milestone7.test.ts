@@ -107,7 +107,8 @@ describe('effects: each point is worth the full percentage', () => {
     expect(peace.damageTaken).toBeCloseTo(0.9);
     expect(peace.damageDealt).toBe(1);
     expect(fx({ goodEvil: 10 }).catchRate).toBeCloseTo(1.2);
-    expect(fx({ goodEvil: -100 }).money).toBeCloseTo(1.1);
+    expect(fx({ goodEvil: -100 }).money).toBeCloseTo(2);
+    expect(fx({ goodEvil: -10 }).money).toBeCloseTo(1.1);
   });
 
   it('zero attributes change nothing', () => {
