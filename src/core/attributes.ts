@@ -1,7 +1,9 @@
 // Attributes (GAME_DESIGN.md §9, Milestone 7): six plain attributes and two
 // meters (D9). The permanent value grows from lifetime counters (D10); a run
-// adds its own modifiers from rewards. Every effect is small, capped and scales
-// in a straight line from 0 to the maximum; the numbers live in balance.json.
+// adds its own modifiers from rewards. Every effect scales in a straight line
+// from 0 to the maximum (director decision: each point is worth the full
+// percentage, so 100 Strength doubles physical damage); the numbers live in
+// balance.json.
 
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type AttributeKey, type Content, type Rarity } from './contentSchema';
 import type { Profile, RunState } from './state';
@@ -55,6 +57,7 @@ export interface AttributeEffects {
   specialDamage: number;
   speed: number;
   price: number;
+  exp: number;
   damageDealt: number;
   damageTaken: number;
   healing: number;
@@ -64,7 +67,6 @@ export interface AttributeEffects {
   uncommonWeight: number;
   rareWeight: number;
   shinyChance: number;
-  damageBonusCap: number;
 }
 
 export function attributeEffects(content: Content, a: Attributes): AttributeEffects {
@@ -78,6 +80,7 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
     specialDamage: 1 + e.intelligenceSpecialDamage * share(a.intelligence),
     speed: 1 + e.speedStat * share(a.speed),
     price: 1 - e.charismaPriceCut * share(a.charisma),
+    exp: 1 + e.charismaExpGain * share(a.charisma),
     damageDealt: 1 + e.rageDamageDealt * rage,
     damageTaken: (1 + e.rageDamageTaken * rage) * (1 - e.peaceDamageTakenCut * peace),
     healing: 1 + e.peaceHealing * peace,
@@ -87,7 +90,6 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
     uncommonWeight: 1 + e.luckUncommonWeight * share(a.luck),
     rareWeight: 1 + e.luckRareWeight * share(a.luck),
     shinyChance: 1 + e.luckShinyChance * share(a.luck),
-    damageBonusCap: e.damageBonusCap,
   };
 }
 
@@ -140,7 +142,7 @@ export function attributeEffectText(content: Content, key: AttributeKey, value: 
     case 'speed':
       return `Your Pokémon +${pct(fx.speed)} Speed`;
     case 'charisma':
-      return `Shop prices −${pct(2 - fx.price)}`;
+      return `Shop prices −${pct(2 - fx.price)}, +${pct(fx.exp)} experience`;
     case 'luck':
       return `Rare rewards ×${fx.rareWeight.toFixed(2)}, shinies ×${fx.shinyChance.toFixed(2)}`;
     case 'love':
@@ -189,11 +191,14 @@ export function growthText(content: Content, key: AttributeKey): string {
     regionsClearedWithStarter: 'region cleared with your starter',
     speciesSeen: 'new species seen',
     speciesCaught: 'new species caught',
+    statsBoosted: 'stat your Pokémon raise with a move (Bulk Up, Nasty Plot...)',
   };
   return content.balance.attributeGrowth
     .filter((g) => g.attribute === key)
     .map((g) => {
-      const what = words[g.counter ?? g.set!] ?? g.counter ?? g.set!;
+      const source = g.counter ?? g.set!;
+      const type = source.startsWith('defeatedOrCaught.') ? source.slice('defeatedOrCaught.'.length) : null;
+      const what = type ? `${type.charAt(0).toUpperCase()}${type.slice(1)}-type Pokémon defeated or caught` : (words[source] ?? source);
       const amount = isMeter(key) ? `${Math.abs(g.amount)} toward ${key === 'ragePeace' ? (g.amount > 0 ? 'Rage' : 'Peace') : g.amount > 0 ? 'Good' : 'Evil'}` : `+${g.amount}`;
       return `${amount} per ${g.per === 1 ? '' : `${g.per.toLocaleString('en-US')} `}${what}`;
     })

@@ -18,7 +18,7 @@ import { createPokemon } from '../../src/core/pokemon';
 import { createProfile, finalizeRun } from '../../src/core/profile';
 import { applyReward } from '../../src/core/rewards';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { chooseStarter, createRun, shopPrice } from '../../src/core/run';
+import { buyItem, chooseStarter, createRun, shopPrice, takeTurn } from '../../src/core/run';
 import type { Profile, RunState } from '../../src/core/state';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
@@ -30,32 +30,45 @@ const newRun = (seed: string, attributes?: Partial<Attributes>): RunState =>
   chooseStarter(content, createRun(content, { runId: `r-${seed}`, seed, archetypeId: 'red', attributes: attributes && attrs(attributes) }), 0);
 
 describe('permanent attributes grow from lifetime counters', () => {
-  it('follows the growth rules in balance.json', () => {
+  it('follows the growth rules in balance.json (by type defeated or caught)', () => {
     const p: Profile = {
       ...createProfile(content, 'p'),
-      counters: { battlesWon: 45, pokemonCaught: 31, shiniesFound: 2, wildDefeated: 25, healStopsUsed: 4, caughtKept: 3, caughtToCandies: 5, evolutions: 2 },
-      speciesSeen: Array.from({ length: 12 }, (_, i) => `s${i}`),
+      counters: {
+        'defeatedOrCaught.fighting': 4,
+        'defeatedOrCaught.psychic': 3,
+        'defeatedOrCaught.electric': 2,
+        'defeatedOrCaught.fire': 5,
+        'defeatedOrCaught.grass': 7,
+        'defeatedOrCaught.fairy': 1,
+        'defeatedOrCaught.dark': 3,
+        statsBoosted: 6,
+        pokemonCaught: 31,
+        shiniesFound: 2,
+        evolutions: 2,
+      },
     };
     const a = permanentAttributes(content, p);
-    expect(a.strength).toBe(2); // 45 / 20
-    expect(a.intelligence).toBe(2); // 12 seen / 5
+    expect(a.strength).toBe(4);
+    expect(a.intelligence).toBe(3);
+    expect(a.speed).toBe(2);
+    expect(a.charisma).toBe(6);
     expect(a.luck).toBe(3 + 10); // 31 caught / 10, plus 5 per shiny
-    expect(a.ragePeace).toBe(2 - 10 - 4); // wild 25/10 toward Rage; 31/3 caught and 4 heal stops toward Peace
-    expect(a.goodEvil).toBe(3 - 5);
+    expect(a.ragePeace).toBe(5 - 7); // Fire toward Rage, Grass toward Peace
+    expect(a.goodEvil).toBe(1 - 3); // Fairy toward Good, Dark toward Evil
     expect(a.love).toBe(2);
   });
 
   it('clamps to the range: 0–100, and −100–100 for meters', () => {
-    const p: Profile = { ...createProfile(content, 'p'), counters: { battlesWon: 99999, caughtToCandies: 500 } };
+    const p: Profile = { ...createProfile(content, 'p'), counters: { 'defeatedOrCaught.fighting': 99999, 'defeatedOrCaught.dark': 500 } };
     const a = permanentAttributes(content, p);
     expect(a.strength).toBe(100);
     expect(a.goodEvil).toBe(-100);
   });
 
   it('is worked out when a run that counts ends, and shown on the run-end summary', () => {
-    let profile: Profile = { ...createProfile(content, 'p'), counters: { battlesWon: 19 } };
+    let profile: Profile = { ...createProfile(content, 'p'), counters: { 'defeatedOrCaught.fighting': 0 } };
     const run = { ...newRun('grow'), phase: 'over' as const };
-    run.log.counters.battlesWon = 1;
+    run.log.counters['defeatedOrCaught.fighting'] = 1;
     const result = finalizeRun(content, profile, run);
     profile = result.profile;
     expect(profile.attributes.strength).toBe(1);
@@ -73,31 +86,33 @@ describe('permanent attributes grow from lifetime counters', () => {
   });
 });
 
-describe('effects at the maximum match the proposal', () => {
+describe('effects: each point is worth the full percentage', () => {
   it('plain attributes', () => {
-    expect(fx({ strength: 100 }).physicalDamage).toBeCloseTo(1.1);
-    expect(fx({ intelligence: 50 }).specialDamage).toBeCloseTo(1.05);
-    expect(fx({ speed: 100 }).speed).toBeCloseTo(1.1);
-    expect(fx({ charisma: 100 }).price).toBeCloseTo(0.9);
+    expect(fx({ strength: 100 }).physicalDamage).toBeCloseTo(2);
+    expect(fx({ strength: 1 }).physicalDamage).toBeCloseTo(1.01);
+    expect(fx({ intelligence: 50 }).specialDamage).toBeCloseTo(1.5);
+    expect(fx({ speed: 100 }).speed).toBeCloseTo(2);
+    expect(fx({ charisma: 30 }).price).toBeCloseTo(0.7);
+    expect(fx({ charisma: 30 }).exp).toBeCloseTo(1.3);
     expect(fx({ love: 100 }).endureChance).toBeCloseTo(0.1);
   });
 
   it('meters: one end or the other, never both', () => {
-    const rage = fx({ ragePeace: 100 });
-    expect(rage.damageDealt).toBeCloseTo(1.1);
-    expect(rage.damageTaken).toBeCloseTo(1.05);
+    const rage = fx({ ragePeace: 10 });
+    expect(rage.damageDealt).toBeCloseTo(1.2);
+    expect(rage.damageTaken).toBeCloseTo(1.1);
     expect(rage.healing).toBe(1);
-    const peace = fx({ ragePeace: -100 });
+    const peace = fx({ ragePeace: -10 });
     expect(peace.healing).toBeCloseTo(1.2);
-    expect(peace.damageTaken).toBeCloseTo(0.95);
+    expect(peace.damageTaken).toBeCloseTo(0.9);
     expect(peace.damageDealt).toBe(1);
-    expect(fx({ goodEvil: 100 }).catchRate).toBeCloseTo(1.1);
+    expect(fx({ goodEvil: 10 }).catchRate).toBeCloseTo(1.2);
     expect(fx({ goodEvil: -100 }).money).toBeCloseTo(1.1);
   });
 
   it('zero attributes change nothing', () => {
     const none = fx({});
-    for (const key of ['physicalDamage', 'specialDamage', 'speed', 'price', 'damageDealt', 'damageTaken', 'healing', 'catchRate', 'money', 'uncommonWeight', 'rareWeight', 'shinyChance'] as const) {
+    for (const key of ['physicalDamage', 'specialDamage', 'speed', 'price', 'exp', 'damageDealt', 'damageTaken', 'healing', 'catchRate', 'money', 'uncommonWeight', 'rareWeight', 'shinyChance'] as const) {
       expect(none[key]).toBe(1);
     }
     expect(none.endureChance).toBe(0);
@@ -130,7 +145,7 @@ describe('effects in the game', () => {
   it('Charisma lowers shop prices', () => {
     const entry = content.shop.find((e) => e.item === 'poke-ball')!;
     expect(shopPrice(content, newRun('c0'), entry)).toBe(entry.price);
-    expect(shopPrice(content, newRun('c1', { charisma: 100 }), entry)).toBe(Math.round(entry.price * 0.9));
+    expect(shopPrice(content, newRun('c1', { charisma: 10 }), entry)).toBe(Math.round(entry.price * 0.9));
   });
 
   function battleDamage(attributes: Partial<Attributes>, seed: string) {
@@ -153,17 +168,32 @@ describe('effects in the game', () => {
     return { dealt: before.enemy - enemy.hp, taken: before.player - player.hp };
   }
 
-  it('Strength and Rage raise physical damage, capped at +25%', () => {
+  it('Strength and Rage raise physical damage, with no cap', () => {
     const plain = battleDamage({}, 'dmg');
     const strong = battleDamage({ strength: 100 }, 'dmg');
     const furious = battleDamage({ strength: 100, ragePeace: 100 }, 'dmg');
-    expect(strong.dealt).toBeGreaterThan(plain.dealt);
-    expect(furious.dealt).toBeGreaterThan(strong.dealt);
-    expect(furious.dealt).toBeLessThanOrEqual(Math.floor(plain.dealt * 1.25) + 1);
+    expect(strong.dealt).toBeGreaterThan(plain.dealt * 1.8);
+    expect(furious.dealt).toBeGreaterThan(strong.dealt * 2);
   });
 
-  it('Peace lowers damage taken', () => {
-    expect(battleDamage({ ragePeace: -100 }, 'dmg').taken).toBeLessThan(battleDamage({}, 'dmg').taken);
+  it('Peace lowers damage taken, to 1 per hit at Peace 100', () => {
+    expect(battleDamage({ ragePeace: -50 }, 'dmg').taken).toBeLessThan(battleDamage({}, 'dmg').taken);
+    expect(battleDamage({ ragePeace: -100 }, 'dmg').taken).toBe(1);
+  });
+
+  it('counts enemies defeated by type, and stats raised, for growth', () => {
+    const player = createPokemon(content, 'machamp', 60, 'p1');
+    player.moves = [{ id: 'bulk-up', pp: 20 }, { id: 'cross-chop', pp: 5 }];
+    let run = newRun('growth-count');
+    run = { ...run, party: [player] };
+    const enemy = createPokemon(content, 'pidgey', 3, 'e1');
+    run.phase = 'battle';
+    run.battle = createBattle('wild', [enemy], 0, player.uid);
+    run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
+    expect(run.log.counters.statsBoosted).toBe(2); // Attack and Defense
+    for (let i = 0; i < 5 && run.battle; i++) run = takeTurn(content, run, { kind: 'move', index: 1 }).run;
+    expect(run.log.counters['defeatedOrCaught.normal']).toBe(1);
+    expect(run.log.counters['defeatedOrCaught.flying']).toBe(1);
   });
 
   it('Love lets a Pokémon hang on at 1 HP once per battle', () => {
@@ -214,5 +244,18 @@ describe('save upgrades', () => {
       expect(result.data.baseAttributes.luck).toBe(0);
       expect(result.data.log.starterUid).toBe(run.party[0]!.uid);
     }
+  });
+});
+
+describe('shop attribute items', () => {
+  it('raise a run attribute as soon as they are bought, and never go in the Bag', () => {
+    let run = newRun('shop-attr');
+    run = { ...run, phase: 'shop', money: 5000, badges: ['b1'] };
+    const result = buyItem(content, run, 'fist-plate');
+    expect(effectiveAttributes(content, result.run).strength).toBe(5);
+    expect(result.run.inventory['fist-plate']).toBeUndefined();
+    expect(result.message).toContain(': Strength 5.');
+    const peace = buyItem(content, result.run, 'meadow-plate').run;
+    expect(effectiveAttributes(content, peace).ragePeace).toBe(-5);
   });
 });

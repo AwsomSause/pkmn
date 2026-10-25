@@ -390,8 +390,8 @@ function canAct(content: Content, rng: Rng, user: Combatant, events: BattleEvent
 /**
  * The player's damage bonuses and penalties: the trainer's type passives
  * (more damage from your Pokémon of a type, more super-effective damage taken
- * by them) and the attributes (Strength, Intelligence, Rage, Peace). The bonus
- * to damage dealt is capped (balance.attributeEffects.damageBonusCap).
+ * by them) and the attributes (Strength, Intelligence, Rage, Peace). A hit
+ * always does at least 1 damage.
  */
 function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean): number {
   const mods = ctx.typeModifiers;
@@ -400,10 +400,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   let multiplier = 1;
   if (user.side === 'player') {
     if (mods) for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
-    if (attrs) {
-      multiplier *= (physical ? attrs.physicalDamage : attrs.specialDamage) * attrs.damageDealt;
-      multiplier = Math.min(multiplier, attrs.damageBonusCap);
-    }
+    if (attrs) multiplier *= (physical ? attrs.physicalDamage : attrs.specialDamage) * attrs.damageDealt;
   }
   if (target.side === 'player') {
     if (mods && effectiveness > 1) for (const t of getSpecies(ctx.content, target.mon.speciesId).types) multiplier *= mods.weaknessTaken[t] ?? 1;

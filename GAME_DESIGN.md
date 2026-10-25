@@ -131,15 +131,36 @@ After every completed encounter, show five *different* rewards; pick exactly one
 - Each reward entry has: id, category, rarity tier, effect, stacking rule, duration, scope, restrictions.
 - Rarity tiers **[PROPOSED]**: Common, Uncommon, Rare, Epic, Legendary, each with a base weight.
 - Bosses improve the weights (gym < Elite Four < champion < final boss).
-- Luck shifts weight from lower to higher tiers by a capped formula (exact formula is an open item; luck never guarantees rare).
+- Luck multiplies the uncommon and rare weights (§9); common is unchanged, so luck never guarantees rare.
 - Too few valid rewards → configuration error, never duplicates.
 
-## 9. Ten attributes
+## 9. Attributes (built in Milestone 7)
 
-Strength, Intelligence, Speed, Charisma, Luck, Rage, Peace, Good, Evil, Love.
-Each has permanent value + run modifier → effective value, clamped to 0–100 (provisional).
+Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luck, Love) and two meters from −100 to 100 (Rage ↔ Peace, Good ↔ Evil; D9). Each has a **permanent value** (grown on the profile) plus the **run's modifiers** → the effective value, clamped. All numbers live in `balance.json` (`attributeEffects`, `attributeGrowth`).
 
-**[PROPOSED] for the prototype:** attributes are stored and displayed, but have **no gameplay effect** until you approve exact formulas for each. This follows the spec's rule against invented effects. Luck is the first one to define, because rewards depend on it.
+**Effects** (director decision 2026-10-25: each point is worth the full percentage, no cap):
+
+| Attribute | Per point | At 100 |
+|---|---|---|
+| Strength | Physical moves +1% damage | +100% |
+| Intelligence | Special moves +1% damage | +100% |
+| Speed | Your Pokémon +1% Speed | +100% |
+| Charisma | Shop prices −1%, experience +1% | free shop, double experience |
+| Luck | Uncommon reward weight +0.5%, rare +1%, shiny chance +1% | rare ×2, shinies ×2 |
+| Love | +0.1% chance to hang on at 1 HP after a lethal hit, once per Pokémon per battle | 10% |
+| Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |
+| Peace | Healing +2%, damage taken −1% | +200% / 1 damage per hit (a hit always does at least 1) |
+| Good | Catching +2% easier | ×3 catch rate |
+| Evil | Prize money +0.1% | +10% |
+
+**Permanent growth** (D10), from lifetime counters:
+- +1 Strength / Intelligence / Speed per Fighting / Psychic / Electric-type Pokémon defeated or caught (a dual-type Pokémon counts for both types).
+- +1 toward Rage per Fire type, toward Peace per Grass type, toward Good per Fairy type, toward Evil per Dark type defeated or caught.
+- +1 Charisma per stat your Pokémon raise on themselves with a move (Bulk Up raises two, so +2).
+- +1 Luck per 10 Pokémon caught, +5 per shiny found.
+- +1 Love per evolution and per region cleared with your starter still in the party.
+
+**Run modifiers:** after-battle rewards (Power Band, Shiny Charm, …: +15 to +30) and shop items bought from 1 badge (the Plates, Lucky Egg, Love Sweet: +5 each, used as soon as they're bought). Special encounters and "Between-Level" interactions with your Pokémon will also change attributes once those events exist (planned for a later milestone).
 
 ## 10. Items, shops, economy
 
@@ -182,9 +203,9 @@ Each has permanent value + run modifier → effective value, clamped to 0–100 
 - **D1 Campaign length.** Decided (2026-10-25): keep the full length (9 regions × 8 stages × 20 levels, plus the Grand Region).
 - **D6 Regions.** Decided (2026-10-25): the regions are a mix of the original regions and custom regions. Every gym leader, Elite Four member and champion is chosen at random, and none repeats within one run. *(Still open: the list of custom regions, and what the Grand Region contains.)*
 - **D7 Candies.** Decided (2026-10-25): candies are a permanent currency spent outside a run (unlocking trainers, starting buffs, etc.). Candies earned in a run are added to the profile when the run ends. *(Confirmed 2026-10-25 with the Out-of-Run design: candies stay as a fourth currency beside Poké Dollars, Bank Credits and Research Points, see D16.)*
-- **D8 Shiny odds.** Decided (2026-10-25): 1/2000 per wild Pokémon. *(Still open: the luck formula and how much a shiny adds to Luck.)*
-- **D9 Attribute meters.** Decided (2026-10-25): Rage/Peace and Good/Evil are each one meter with two ends. *(Still open: exact formulas for each attribute's effects.)*
-- **D10 Permanent attributes.** Decided (2026-10-25): earned through actions such as catching Pokémon of certain types, battling, healing and Pokémon interactions. *(Exact action → attribute amounts to be proposed in Milestone 7.)*
+- **D8 Shiny odds.** Decided (2026-10-25): 1/2000 per wild Pokémon; Luck raises it (×2 at Luck 100) and each shiny found adds 5 Luck (§9).
+- **D9 Attribute meters.** Decided (2026-10-25): Rage/Peace and Good/Evil are each one meter with two ends. Effect formulas decided the same day: each point is worth the full percentage (§9).
+- **D10 Permanent attributes.** Decided (2026-10-25): earned by defeating or catching Pokémon of certain types, raising stats with moves, catching, shinies, evolutions and keeping your starter (§9).
 - **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Superseded in detail by the Out-of-Run design, §14: the Bank's currency is Bank Credits.)*
 - **D12 Trainer unlocks.** Decided (2026-10-25): future trainers include Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker and more. *(Unlock conditions and pros/cons to be proposed in Milestone 5.)*
 - **D13 Elite Four rewards.** Decided (2026-10-25): a reward draft after each Elite Four member.

@@ -172,45 +172,45 @@
  "runHistorySize": 20,
  "presetSlots": 3,
  "attributeEffects": {
-  "strengthPhysicalDamage": 0.1,
-  "intelligenceSpecialDamage": 0.1,
-  "speedStat": 0.1,
-  "charismaPriceCut": 0.1,
+  "strengthPhysicalDamage": 1.0,
+  "intelligenceSpecialDamage": 1.0,
+  "speedStat": 1.0,
+  "charismaPriceCut": 1.0,
+  "charismaExpGain": 1.0,
   "luckUncommonWeight": 0.5,
   "luckRareWeight": 1.0,
   "luckShinyChance": 1.0,
-  "rageDamageDealt": 0.1,
-  "rageDamageTaken": 0.05,
-  "peaceHealing": 0.2,
-  "peaceDamageTakenCut": 0.05,
-  "goodCatch": 0.1,
+  "rageDamageDealt": 2.0,
+  "rageDamageTaken": 1.0,
+  "peaceHealing": 2.0,
+  "peaceDamageTakenCut": 1.0,
+  "goodCatch": 2.0,
   "evilMoney": 0.1,
-  "loveEndureChance": 0.1,
-  "damageBonusCap": 1.25
+  "loveEndureChance": 0.1
  },
  "attributeGrowth": [
   {
    "attribute": "strength",
-   "counter": "battlesWon",
-   "per": 20,
+   "counter": "defeatedOrCaught.fighting",
+   "per": 1,
    "amount": 1
   },
   {
    "attribute": "intelligence",
-   "set": "speciesSeen",
-   "per": 5,
+   "counter": "defeatedOrCaught.psychic",
+   "per": 1,
    "amount": 1
   },
   {
    "attribute": "speed",
-   "counter": "encountersCompleted",
-   "per": 25,
+   "counter": "defeatedOrCaught.electric",
+   "per": 1,
    "amount": 1
   },
   {
    "attribute": "charisma",
-   "counter": "moneySpent",
-   "per": 5000,
+   "counter": "statsBoosted",
+   "per": 1,
    "amount": 1
   },
   {
@@ -227,31 +227,25 @@
   },
   {
    "attribute": "ragePeace",
-   "counter": "wildDefeated",
-   "per": 10,
+   "counter": "defeatedOrCaught.fire",
+   "per": 1,
    "amount": 1
   },
   {
    "attribute": "ragePeace",
-   "counter": "pokemonCaught",
-   "per": 3,
-   "amount": -1
-  },
-  {
-   "attribute": "ragePeace",
-   "counter": "healStopsUsed",
+   "counter": "defeatedOrCaught.grass",
    "per": 1,
    "amount": -1
   },
   {
    "attribute": "goodEvil",
-   "counter": "caughtKept",
+   "counter": "defeatedOrCaught.fairy",
    "per": 1,
    "amount": 1
   },
   {
    "attribute": "goodEvil",
-   "counter": "caughtToCandies",
+   "counter": "defeatedOrCaught.dark",
    "per": 1,
    "amount": -1
   },

@@ -189,9 +189,18 @@ export const BASE_COUNTER_NAMES = [
   'caughtToCandies',
   /** Regions cleared with the starter still in the party. */
   'regionsClearedWithStarter',
+  /** Stats your Pokémon raised on themselves with moves (Bulk Up, Nasty Plot...): one per stat raised. */
+  'statsBoosted',
 ] as const;
-/** Also counted: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>". */
-export const COUNTER_NAMES: readonly string[] = [...BASE_COUNTER_NAMES, ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`)];
+/**
+ * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
+ * and enemy Pokémon defeated or caught, by each of their types, as "defeatedOrCaught.<type>".
+ */
+export const COUNTER_NAMES: readonly string[] = [
+  ...BASE_COUNTER_NAMES,
+  ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`),
+  ...TYPE_NAMES.map((t) => `defeatedOrCaught.${t}`),
+];
 export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes(s), { message: 'unknown counter' });
 
 /**
@@ -358,6 +367,8 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('lastStand') }),
   /** Evolves a Pokémon that has an evolution using this item (stones, Linking Cord, Soothe Bell, ...). */
   z.object({ kind: z.literal('evolve') }),
+  /** Raises a run attribute as soon as it's bought (shop attribute items; never goes in the Bag). */
+  z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -365,7 +376,7 @@ export const ItemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution']),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution', 'attribute']),
   iconAssetId: z.string(),
   usableInBattle: z.boolean(),
   usableOutside: z.boolean(),
@@ -631,8 +642,8 @@ export const BalanceSchema = z.object({
     goodCatch: z.number().min(0),
     evilMoney: z.number().min(0),
     loveEndureChance: z.number().min(0).max(1),
-    /** No player-side damage bonus (attributes and trainer passives together) goes past this multiplier. */
-    damageBonusCap: z.number().min(1),
+    /** Charisma: more experience for your Pokémon. */
+    charismaExpGain: z.number().min(0),
   }),
   /**
    * How permanent attributes grow (D10): every `per` of a lifetime counter (or of

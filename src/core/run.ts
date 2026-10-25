@@ -35,7 +35,7 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
-import { luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
+import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
@@ -323,6 +323,11 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   const run = structuredClone(current);
   run.money -= price;
   count(run, 'moneySpent', price);
+  if (item.effect.kind === 'attribute') {
+    // Attribute items work as soon as they're bought.
+    const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
+    return { run, message: `You bought a ${item.name} for ₽${price}: ${attributeText(item.effect.attribute, value)}.` };
+  }
   addItem(run.inventory, itemId, 1);
   return { run, message: `You bought a ${item.name} for ₽${price}.` };
 }
@@ -389,6 +394,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
+  countAttributeGrowth(content, run, engineEvents);
 
   const events = awardExperience(content, run, engineEvents);
 
@@ -405,6 +411,17 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   return { run, events, end: null, defeated: false };
 }
 
+/** Counts what grows attributes: stats your Pokémon raise on themselves, and enemies defeated or caught by type. */
+function countAttributeGrowth(content: Content, run: RunState, events: BattleEvent[]): void {
+  const battle = run.battle!;
+  for (const e of events) {
+    if (e.type === 'stat' && e.side === 'player' && e.change > 0) count(run, 'statsBoosted');
+    const defeated =
+      e.type === 'faint' && e.side === 'enemy' ? battle.enemyTeam.find((m) => m.uid === e.uid) : e.type === 'ball' && e.caught ? currentEnemy(battle) : undefined;
+    if (defeated) for (const type of getSpecies(content, defeated.speciesId).types) count(run, `defeatedOrCaught.${type}`);
+  }
+}
+
 /**
  * Gives experience to every participant still standing when an enemy faints
  * or is caught (full experience each, as in Gen 6+). Inserts xp/level-up
@@ -412,7 +429,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
  */
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
-  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId));
+  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * runAttributeEffects(content, run).exp;
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);

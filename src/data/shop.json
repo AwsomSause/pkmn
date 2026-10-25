@@ -103,5 +103,50 @@
   "item": "linking-cord",
   "price": 3000,
   "minBadges": 3
+ },
+ {
+  "item": "fist-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "mind-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "zap-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "lucky-egg",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "love-sweet",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "flame-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "meadow-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "pixie-plate",
+  "price": 1500,
+  "minBadges": 1
+ },
+ {
+  "item": "dread-plate",
+  "price": 1500,
+  "minBadges": 1
  }
 ]

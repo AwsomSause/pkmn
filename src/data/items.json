@@ -721,5 +721,140 @@
   "effect": {
    "kind": "evolve"
   }
+ },
+ {
+  "id": "fist-plate",
+  "name": "Fist Plate",
+  "description": "Strength +5 for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.fist_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "strength",
+   "amount": 5
+  }
+ },
+ {
+  "id": "mind-plate",
+  "name": "Mind Plate",
+  "description": "Intelligence +5 for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.mind_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "intelligence",
+   "amount": 5
+  }
+ },
+ {
+  "id": "zap-plate",
+  "name": "Zap Plate",
+  "description": "Speed +5 for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.zap_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "speed",
+   "amount": 5
+  }
+ },
+ {
+  "id": "lucky-egg",
+  "name": "Lucky Egg",
+  "description": "Charisma +5 for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.lucky_egg",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "charisma",
+   "amount": 5
+  }
+ },
+ {
+  "id": "love-sweet",
+  "name": "Love Sweet",
+  "description": "Love +5 for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.love_sweet",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "love",
+   "amount": 5
+  }
+ },
+ {
+  "id": "flame-plate",
+  "name": "Flame Plate",
+  "description": "5 toward Rage for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.flame_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "ragePeace",
+   "amount": 5
+  }
+ },
+ {
+  "id": "meadow-plate",
+  "name": "Meadow Plate",
+  "description": "5 toward Peace for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.meadow_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "ragePeace",
+   "amount": -5
+  }
+ },
+ {
+  "id": "pixie-plate",
+  "name": "Pixie Plate",
+  "description": "5 toward Good for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.pixie_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "goodEvil",
+   "amount": 5
+  }
+ },
+ {
+  "id": "dread-plate",
+  "name": "Dread Plate",
+  "description": "5 toward Evil for the rest of this run. Used as soon as you buy it.",
+  "category": "attribute",
+  "iconAssetId": "item.dread_plate",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "goodEvil",
+   "amount": -5
+  }
  }
 ]

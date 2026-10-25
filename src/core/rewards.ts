@@ -8,7 +8,7 @@
 //      pick a random unused reward from that tier.
 //   3. Fewer than five eligible rewards is a configuration error: we never
 //      show duplicates.
-// Luck does not change the weights yet; its formula is an open design decision.
+// Luck tilts the weights toward uncommon and rare (attributes.ts luckWeights).
 
 import { moneyMultiplier } from './archetypes';
 import { addRunAttribute, attributeText } from './attributes';
