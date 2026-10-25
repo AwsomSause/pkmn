@@ -23,7 +23,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, 50, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 50, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
     // Left: the run. Right: what it earned for the permanent profile.
     drawPanel(this, 24, 96, 440, 330);
-    drawPanel(this, 480, 96, GAME_WIDTH - 504, 330, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 480, 96, GAME_WIDTH - 504, 330, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];

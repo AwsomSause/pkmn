@@ -11,7 +11,7 @@ import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus
 import { partyRows, Picker } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel } from '../ui/widgets';
+import { drawPanel, focusFrame } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
@@ -43,7 +43,7 @@ export class RewardScene extends Phaser.Scene {
 
     this.add.text(GAME_WIDTH / 2, 30, 'Choose one reward', textStyle(44, COLORS.textLight)).setOrigin(0.5);
     this.add
-      .text(GAME_WIDTH / 2, 66, `Encounter ${run.encountersCompleted} cleared  ·  ₽${run.money}  ·  Candies ${run.candies}`, textStyle(20, '#8090a8'))
+      .text(GAME_WIDTH / 2, 66, `Encounter ${run.encountersCompleted} cleared  ·  ₽${run.money}  ·  Candies ${run.candies}`, textStyle(20, '#a69cb4'))
       .setOrigin(0.5);
 
     const cardW = 172;
@@ -66,7 +66,7 @@ export class RewardScene extends Phaser.Scene {
     });
 
     // Party strip, with buttons to manage the party and use items.
-    drawPanel(this, 40, 380, GAME_WIDTH - 80, 112, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 40, 380, GAME_WIDTH - 80, 112, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     run.party.forEach((mon, i) => {
       const species = content.species.get(mon.speciesId)!;
       const x = 80 + i * 92;
@@ -87,7 +87,7 @@ export class RewardScene extends Phaser.Scene {
     });
 
     this.notice = this.add.text(GAME_WIDTH / 2, 508, data.notice ?? '', textStyle(18, '#f0e0a0')).setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 528, '←/→ ↑/↓ move  ·  Enter choose', textStyle(14, '#8090a8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 528, '←/→ ↑/↓ move  ·  Enter choose', textStyle(14, '#a69cb4')).setOrigin(0.5);
     this.focus(data.focus ?? 0, false);
 
     onInputAction(this, (action) => {
@@ -107,10 +107,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private highlight(x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics();
-    g.lineStyle(6, COLORS.accent, 1);
-    g.strokeRoundedRect(x - 5, y - 5, w + 10, h + 10, 12);
-    return g;
+    return focusFrame(this, x, y, w, h);
   }
 
   private clickZone(x: number, y: number, w: number, h: number, index: number): void {

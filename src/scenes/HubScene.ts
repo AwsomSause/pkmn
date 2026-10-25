@@ -76,19 +76,19 @@ export class HubScene extends Phaser.Scene {
     playMusic(this, 'bgm.menu');
 
     const p = session.profile;
-    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     this.add.text(24, 12, 'The Hub', textStyle(30, COLORS.textLight));
-    this.add.text(26, 46, p.activeTitle ? `Title: ${p.activeTitle}` : 'Prepare for your next run', textStyle(16, '#c8d0e0'));
+    this.add.text(26, 46, p.activeTitle ? `Title: ${p.activeTitle}` : 'Prepare for your next run', textStyle(16, '#d8d0e0'));
     this.add
       .text(GAME_WIDTH - 24, 16, `Bank Credits ${p.bankCredits}  ·  Research ${p.researchPoints}  ·  Candies ${p.candies}`, textStyle(20, COLORS.textLight))
       .setOrigin(1, 0);
     const earned = Object.keys(p.achievements).length;
     this.add
-      .text(GAME_WIDTH - 24, 46, `Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, '#c8d0e0'))
+      .text(GAME_WIDTH - 24, 46, `Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
 
     drawPanel(this, 16, 82, 300, 400);
-    drawPanel(this, 330, 82, GAME_WIDTH - 346, 400, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 330, 82, GAME_WIDTH - 346, 400, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     this.detail = this.add.container(0, 0);
 
     const ready = [...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'claimable').length;
@@ -105,7 +105,7 @@ export class HubScene extends Phaser.Scene {
 
     const notice = this.add.text(GAME_WIDTH / 2, 500, data.notice ?? '', textStyle(18, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
     void notice;
-    this.add.text(16, GAME_HEIGHT - 22, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(14, '#5a6680'));
+    this.add.text(16, GAME_HEIGHT - 22, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(14, '#8a7f96'));
 
     const focus = Math.min(data.focus ?? 0, ROOMS.length - 1);
     this.menu.focus(focus, false);
@@ -139,7 +139,7 @@ export class HubScene extends Phaser.Scene {
     const p = session.profile;
     const info = ROOMS.find((r) => r.room === room)!;
     let y = this.line(96, info.label, 26);
-    if (info.blurb) y = this.line(y, info.blurb, 17, '#c8d0e0') + 8;
+    if (info.blurb) y = this.line(y, info.blurb, 17, '#d8d0e0') + 8;
     switch (room) {
       case 'bank': {
         y = this.line(y, `Bank Credits: ${p.bankCredits}   (earned in total: ${p.lifetimeBankCredits})`);
@@ -154,7 +154,7 @@ export class HubScene extends Phaser.Scene {
           y = this.line(y, `  Achievements: ${last.achievements}`, 17);
           y = this.line(y, `  Total: ${last.total} Bank Credits`, 17);
         } else {
-          y = this.line(y, 'No runs paid out yet.', 17, '#c8d0e0');
+          y = this.line(y, 'No runs paid out yet.', 17, '#d8d0e0');
         }
         const bank = session.content.balance.bank;
         y += 8;
@@ -162,7 +162,7 @@ export class HubScene extends Phaser.Scene {
           y,
           `At the end of every run, ${Math.round(bank.moneyConversionRate * 100)}% of your leftover Poké Dollars becomes Bank Credits, plus a stipend for encounters, badges, Elite Four, champions and regions, even if the run is lost. Spend credits on trainers in the Trainer Archive and on licenses here. Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned.`,
           15,
-          '#a0aac0',
+          '#b8aec6',
         );
         break;
       }
@@ -189,7 +189,7 @@ export class HubScene extends Phaser.Scene {
       }
       case 'history': {
         const runs = p.runHistory.slice(0, 5);
-        if (runs.length === 0) y = this.line(y, 'No finished runs yet.', 17, '#c8d0e0');
+        if (runs.length === 0) y = this.line(y, 'No finished runs yet.', 17, '#d8d0e0');
         for (const r of runs) y = this.line(y, historyLine(r), 16);
         break;
       }
@@ -261,7 +261,7 @@ export class HubScene extends Phaser.Scene {
         draw: (scene, box, w, h) => {
           box.add(trainerVisual(scene, a.spriteAssetId, a.name, 34, h / 2 + 4, 0.7));
           box.add(scene.add.text(76, 8, `${a.name}  ${a.title}`, textStyle(20)));
-          const color = status === 'unlocked' ? COLORS.good : status === 'claimable' ? '#c07010' : COLORS.textMuted;
+          const color = status === 'unlocked' ? COLORS.good : status === 'claimable' ? '#f8b048' : COLORS.textMuted;
           box.add(scene.add.text(76, 34, STATUS_LABEL[status] + (status === 'claimable' && a.unlockCost ? `  ·  ${a.unlockCost} credits` : ''), textStyle(16, color)));
           if (a.unlock && status !== 'unlocked') {
             const prog = requirementProgress(p, a.unlock);
@@ -379,13 +379,13 @@ export class HubScene extends Phaser.Scene {
           const bx = w - 190;
           const bw = 120;
           const g = scene.add.graphics();
-          g.fillStyle(0xd8dce6, 1).fillRect(bx, h / 2 - 5, bw, 10);
-          g.fillStyle(0x4a78c8, 1);
+          g.fillStyle(0x1d1a24, 1).fillRect(bx, h / 2 - 5, bw, 10);
+          g.fillStyle(0x00baf3, 1);
           if (isMeter(k)) {
             const mid = bx + bw / 2;
             const len = (Math.abs(a[k]) / hi) * (bw / 2);
             g.fillRect(a[k] >= 0 ? mid : mid - len, h / 2 - 5, len, 10);
-            g.fillStyle(0x303848, 1).fillRect(mid - 1, h / 2 - 8, 2, 16);
+            g.fillStyle(0xf8f8f8, 1).fillRect(mid - 1, h / 2 - 8, 2, 16);
           } else {
             g.fillRect(bx, h / 2 - 5, ((a[k] - lo) / (hi - lo)) * bw, 10);
           }

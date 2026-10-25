@@ -4,7 +4,7 @@ import Phaser from 'phaser';
 import { services } from '../game/services';
 import { playMusic, stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
-import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
 import { sceneForRun } from './routing';
 
@@ -20,8 +20,22 @@ export class MainMenuScene extends Phaser.Scene {
     session.closeRun();
     playMusic(this, 'bgm.menu');
 
-    this.add.text(GAME_WIDTH / 2, 90, 'Pokémon Roguelike', textStyle(64, COLORS.textLight, { stroke: '#e05038', strokeThickness: 6 })).setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 150, 'Milestone 5 prototype', textStyle(24, '#aab4c8')).setOrigin(0.5);
+    // A dimmed battle field behind the title, as on PokeRogue's title screen.
+    if (this.textures.exists('bg.battle')) {
+      this.add.image(0, 0, 'bg.battle').setOrigin(0).setScale(PIXEL_SCALE);
+      for (const side of ['bg.battle.enemy', 'bg.battle.player']) {
+        if (this.textures.exists(side)) this.add.image(0, 0, side).setOrigin(0).setScale(PIXEL_SCALE);
+      }
+      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, COLORS.background, 0.62).setOrigin(0);
+    }
+    this.add
+      .text(GAME_WIDTH / 2, 92, 'Pokémon Roguelike', textStyle(72, COLORS.gold, {
+        stroke: '#c73625',
+        strokeThickness: 10,
+        shadow: { offsetX: 0, offsetY: 6, color: '#181818', fill: true, stroke: true, blur: 0 },
+      }))
+      .setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 152, 'Milestone 5 prototype', textStyle(24, COLORS.textMuted)).setOrigin(0.5);
 
     drawPanel(this, GAME_WIDTH / 2 - 180, 190, 360, 220);
 
@@ -58,15 +72,15 @@ export class MainMenuScene extends Phaser.Scene {
     if (session.lastSaveError) notes.push(`Last save failed: ${session.lastSaveError}`);
     if (notes.length > 0) {
       this.add
-        .text(GAME_WIDTH / 2, 430, notes.join('\n'), textStyle(18, '#ffb4a8', { align: 'center', wordWrap: { width: 860 } }))
+        .text(GAME_WIDTH / 2, 430, notes.join('\n'), textStyle(18, COLORS.bad, { align: 'center', wordWrap: { width: 860 } }))
         .setOrigin(0.5, 0);
     }
 
     const s = session.profile.stats;
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs ${s.runsEnded}  ·  Battles won ${s.battlesWon}  ·  Bank Credits ${session.profile.bankCredits}  ·  Research ${session.profile.researchPoints}  ·  Candies ${session.profile.candies}`, textStyle(18, '#8090a8'))
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs ${s.runsEnded}  ·  Battles won ${s.battlesWon}  ·  Bank Credits ${session.profile.bankCredits}  ·  Research ${session.profile.researchPoints}  ·  Candies ${session.profile.candies}`, textStyle(18, COLORS.textMuted))
       .setOrigin(0.5);
-    this.add.text(16, GAME_HEIGHT - 28, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(16, '#5a6680'));
+    this.add.text(16, GAME_HEIGHT - 28, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(16, COLORS.textMuted));
   }
 
   private continueRun(): void {
