@@ -11,6 +11,7 @@
 // Luck does not change the weights yet; its formula is an open design decision.
 
 import { moneyMultiplier } from './archetypes';
+import { addRunAttribute, attributeText } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
@@ -122,6 +123,11 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
         for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);
         for (const m of evo.wantsToLearn) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
       }
+      break;
+    }
+    case 'attribute': {
+      const value = addRunAttribute(content, run, effect.attribute, effect.amount);
+      messages.push(`${attributeText(effect.attribute, value)} for the rest of this run.`);
       break;
     }
     case 'vitamin': {

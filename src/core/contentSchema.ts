@@ -148,6 +148,19 @@ export type Move = z.infer<typeof MoveSchema>;
 export const TypeChartSchema = z.partialRecord(TypeNameSchema, z.partialRecord(TypeNameSchema, z.number().min(0).max(2)));
 export type TypeChart = z.infer<typeof TypeChartSchema>;
 
+// ---------- attributes (GAME_DESIGN.md §9, Milestone 7) ----------
+
+/** Attributes that run from 0 to the maximum. */
+export const PLAIN_ATTRIBUTES = ['strength', 'intelligence', 'speed', 'charisma', 'luck', 'love'] as const;
+/**
+ * Two-ended meters (D9) that run from −max to +max: Rage (+) / Peace (−) and
+ * Good (+) / Evil (−). Moving toward one end moves away from the other.
+ */
+export const METER_ATTRIBUTES = ['ragePeace', 'goodEvil'] as const;
+export const ATTRIBUTE_KEYS = [...PLAIN_ATTRIBUTES, ...METER_ATTRIBUTES] as const;
+export const AttributeKeySchema = z.enum(ATTRIBUTE_KEYS);
+export type AttributeKey = z.infer<typeof AttributeKeySchema>;
+
 // ---------- permanent progression (GAME_DESIGN.md §14) ----------
 
 /** Things the game counts during a run; each run's counts are added to the profile when it ends. */
@@ -168,6 +181,14 @@ export const BASE_COUNTER_NAMES = [
   'evolutions',
   'moneyEarned',
   'candiesEarned',
+  'encountersCompleted',
+  'moneySpent',
+  'healStopsUsed',
+  /** Caught Pokémon added to the party (or swapped in), and caught Pokémon turned into candies. */
+  'caughtKept',
+  'caughtToCandies',
+  /** Regions cleared with the starter still in the party. */
+  'regionsClearedWithStarter',
 ] as const;
 /** Also counted: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>". */
 export const COUNTER_NAMES: readonly string[] = [...BASE_COUNTER_NAMES, ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`)];
@@ -493,6 +514,8 @@ export const RewardEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('money'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('levelUp'), levels: z.number().int().positive() }),
   z.object({ kind: z.literal('vitamin'), stat: StatNameSchema }),
+  /** Adds to an attribute for the rest of the run (negative moves a meter toward its other end). */
+  z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
 ]);
 export type RewardEffect = z.infer<typeof RewardEffectSchema>;
 
@@ -500,7 +523,7 @@ export const RewardSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable']),
+  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute']),
   rarity: RaritySchema,
   effect: RewardEffectSchema,
   /** How repeated picks combine: applied once now, or stacks up to a limit. */
@@ -592,6 +615,38 @@ export const BalanceSchema = z.object({
   campaigns: z.array(CampaignSchema).min(1),
   attributeMin: z.number(),
   attributeMax: z.number(),
+  /** What attributes do (GAME_DESIGN.md §9). Each value is the effect at the maximum; it scales in a straight line. */
+  attributeEffects: z.object({
+    strengthPhysicalDamage: z.number().min(0),
+    intelligenceSpecialDamage: z.number().min(0),
+    speedStat: z.number().min(0),
+    charismaPriceCut: z.number().min(0).max(1),
+    luckUncommonWeight: z.number().min(0),
+    luckRareWeight: z.number().min(0),
+    luckShinyChance: z.number().min(0),
+    rageDamageDealt: z.number().min(0),
+    rageDamageTaken: z.number().min(0),
+    peaceHealing: z.number().min(0),
+    peaceDamageTakenCut: z.number().min(0).max(1),
+    goodCatch: z.number().min(0),
+    evilMoney: z.number().min(0),
+    loveEndureChance: z.number().min(0).max(1),
+    /** No player-side damage bonus (attributes and trainer passives together) goes past this multiplier. */
+    damageBonusCap: z.number().min(1),
+  }),
+  /**
+   * How permanent attributes grow (D10): every `per` of a lifetime counter (or of
+   * distinct species) adds `amount`. Negative amounts move a meter toward its other end.
+   */
+  attributeGrowth: z.array(
+    z.object({
+      attribute: AttributeKeySchema,
+      counter: CounterNameSchema.optional(),
+      set: z.enum(['speciesSeen', 'speciesCaught']).optional(),
+      per: z.number().int().positive(),
+      amount: z.number().int(),
+    }).refine((g) => (g.counter === undefined) !== (g.set === undefined), { message: 'needs exactly one of counter or set' }),
+  ),
   startingItems: z.record(z.string(), z.number().int().positive()),
   /** Chance that a wild Pokémon is shiny (director decision D8: 1/2000). */
   shinyChance: z.number().min(0).max(1),

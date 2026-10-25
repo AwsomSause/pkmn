@@ -82,6 +82,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} fainted!`;
     case 'lastStand':
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
+    case 'endure':
+      return `${who(e.side)} hung on for you, out of love!`;
     case 'switchOut':
       return e.side === 'player' ? `Come back, ${names.player}!` : null;
     case 'switchIn':

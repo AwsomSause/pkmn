@@ -8,6 +8,7 @@
 // fainted Pokémon are replaced.
 
 import type { TypeModifiers } from '../archetypes';
+import type { AttributeEffects } from '../attributes';
 import type { BoostStat, Content, Move, StatusId } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
@@ -44,6 +45,8 @@ export type BattleEvent =
   | { type: 'drain'; side: Side; amount: number; hpAfter: number }
   | { type: 'recoil'; side: Side; amount: number; hpAfter: number }
   | { type: 'lastStand'; side: Side; itemId: string }
+  /** Love: the Pokémon hung on at 1 HP. */
+  | { type: 'endure'; side: Side }
   /** `uid` and `participants` let the run award experience for this faint. */
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
@@ -79,6 +82,8 @@ export interface BattleContext {
   healMultiplier?: number;
   /** The trainer's type-based damage multipliers for the player's side. */
   typeModifiers?: TypeModifiers;
+  /** The player's attributes (damage, Speed, damage taken, Love's chance to hang on). */
+  attributes?: AttributeEffects;
 }
 
 export function createBattle(
@@ -100,6 +105,7 @@ export function createBattle(
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
+    enduredUids: [],
     outcome: null,
     levelInfo: [],
     ai: 0,
@@ -223,7 +229,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // 2. Moves.
   if (action.kind === 'move') {
     const playerMove = resolveMove(content, playerC.mon, action.index);
-    const order = decideOrder(content, rng, playerC, playerMove, enemy, enemyMove);
+    const order = decideOrder(ctx, rng, playerC, playerMove, enemy, enemyMove);
     const actions =
       order === 'player'
         ? [{ user: playerC, target: enemy, move: playerMove, slot: action.index }, { user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }]
@@ -331,9 +337,11 @@ function resolveMove(content: Content, mon: PokemonInstance, index: number): Mov
   return move;
 }
 
-function decideOrder(content: Content, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
+function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
+  const { content } = ctx;
   const speedOf = (c: Combatant) =>
-    effectiveSpeed(content.ruleset, calcStats(content, c.mon).spe, c.stages.spe, c.mon.status?.id === 'par');
+    effectiveSpeed(content.ruleset, calcStats(content, c.mon).spe, c.stages.spe, c.mon.status?.id === 'par') *
+    (c.side === 'player' ? (ctx.attributes?.speed ?? 1) : 1);
   const result = compareTurnOrder(
     { priority: pMove.priority, speed: speedOf(player) },
     { priority: eMove.priority, speed: speedOf(enemy) },
@@ -379,19 +387,44 @@ function canAct(content: Content, rng: Rng, user: Combatant, events: BattleEvent
  * Removes HP, applying the Last Stand Charm if this would knock out the
  * player's last usable Pokémon. Returns the HP actually lost.
  */
-/** The trainer's type passives: more damage from your Pokémon of a type, more super-effective damage taken by them. */
-function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number): number {
+/**
+ * The player's damage bonuses and penalties: the trainer's type passives
+ * (more damage from your Pokémon of a type, more super-effective damage taken
+ * by them) and the attributes (Strength, Intelligence, Rage, Peace). The bonus
+ * to damage dealt is capped (balance.attributeEffects.damageBonusCap).
+ */
+function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean): number {
   const mods = ctx.typeModifiers;
-  if (!mods) return damage;
+  const attrs = ctx.attributes;
+  if (!mods && !attrs) return damage;
   let multiplier = 1;
-  if (user.side === 'player') for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
-  if (target.side === 'player' && effectiveness > 1) for (const t of getSpecies(ctx.content, target.mon.speciesId).types) multiplier *= mods.weaknessTaken[t] ?? 1;
+  if (user.side === 'player') {
+    if (mods) for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
+    if (attrs) {
+      multiplier *= (physical ? attrs.physicalDamage : attrs.specialDamage) * attrs.damageDealt;
+      multiplier = Math.min(multiplier, attrs.damageBonusCap);
+    }
+  }
+  if (target.side === 'player') {
+    if (mods && effectiveness > 1) for (const t of getSpecies(ctx.content, target.mon.speciesId).types) multiplier *= mods.weaknessTaken[t] ?? 1;
+    if (attrs) multiplier *= attrs.damageTaken;
+  }
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
 }
 
-function takeHp(ctx: BattleContext, c: Combatant, amount: number): { lost: number; lastStand: string | null } {
+function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = false): { lost: number; lastStand: string | null; endured: boolean } {
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
+  // Love: once per battle, each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
+  const endureChance = ctx.attributes?.endureChance ?? 0;
+  if (fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && endureChance > 0 && !ctx.battle.enduredUids.includes(c.mon.uid)) {
+    if (ctx.rng.chance(endureChance)) {
+      ctx.battle.enduredUids.push(c.mon.uid);
+      lost = c.mon.hp - 1;
+      c.mon.hp -= lost;
+      return { lost, lastStand: null, endured: true };
+    }
+  }
   if (c.side === 'player' && lost > 0 && lost >= c.mon.hp && !ctx.battle.lastStandUsed) {
     const charm = lastStandItemId(ctx.content);
     const othersHealthy = ctx.party.some((p) => p.uid !== c.mon.uid && p.hp > 0);
@@ -403,7 +436,7 @@ function takeHp(ctx: BattleContext, c: Combatant, amount: number): { lost: numbe
     }
   }
   c.mon.hp -= lost;
-  return { lost, lastStand };
+  return { lost, lastStand, endured: false };
 }
 
 function executeMove(
@@ -466,12 +499,13 @@ function executeMove(
       burned: user.mon.status?.id === 'brn',
       physical,
     });
-    damage = applyTypeModifiers(ctx, user, target, effectiveness, damage);
+    damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
   }
 
-  const { lost: dealt, lastStand } = takeHp(ctx, target, damage);
+  const { lost: dealt, lastStand, endured } = takeHp(ctx, target, damage, true);
   events.push({ type: 'damage', side: target.side, amount: dealt, hpAfter: target.mon.hp, effectiveness, crit });
   if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
+  if (endured) events.push({ type: 'endure', side: target.side });
 
   // A damaging Fire move thaws a frozen target.
   if (move.type === 'fire' && target.mon.status?.id === 'frz' && target.mon.hp > 0) {

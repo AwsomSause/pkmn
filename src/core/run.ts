@@ -35,11 +35,12 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
+import { luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
-import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
 
 export interface NewRunOptions {
@@ -50,6 +51,8 @@ export interface NewRunOptions {
   campaignId?: string;
   /** The Preparation Desk's choices (default: the classic pool, the standard draft, no token). */
   prep?: RunPrep;
+  /** The profile's permanent attributes (default: none). */
+  attributes?: Record<string, number>;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -88,10 +91,11 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     regionsCleared: [],
     victory: false,
     draft: null,
-    attributeModifiers: Object.fromEntries(ATTRIBUTE_NAMES.map((a) => [a, 0])),
+    baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
+    attributeModifiers: zeroAttributes(),
     rng,
     nextUid: 1,
-    log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null },
+    log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
   };
 }
 
@@ -115,6 +119,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
   run.party = [createPokemon(content, speciesId, content.balance.starterLevel, nextUid(run, 'p'))];
+  run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
   return run;
 }
@@ -230,7 +235,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
       const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex]);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
     });
     const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
@@ -275,6 +280,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal') {
     healParty(content, run);
     runSide.used = true;
+    count(run, 'healStopsUsed');
     return { run, message: 'Your Pokémon were fully healed!' };
   }
   run.phase = 'shop';
@@ -299,9 +305,9 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
   return Math.max(0, entry.minBadges - shopUnlockOffset(getArchetype(content, run.archetypeId)));
 }
 
-/** An entry's price for this run's trainer (some trainers pay more for some items). */
-export function shopPrice(content: Content, run: Pick<RunState, 'archetypeId'>, entry: Content['shop'][number]): number {
-  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item));
+/** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
+export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price);
 }
 
 /** Buys one of an item at the shop. */
@@ -316,6 +322,7 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
   const run = structuredClone(current);
   run.money -= price;
+  count(run, 'moneySpent', price);
   addItem(run.inventory, itemId, 1);
   return { run, message: `You bought a ${item.name} for ₽${price}.` };
 }
@@ -361,6 +368,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const run = structuredClone(current);
   const battle = run.battle!;
   const archetype = getArchetype(content, run.archetypeId);
+  const attributes = runAttributeEffects(content, run);
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
   const engineEvents = resolveTurn(
@@ -371,9 +379,10 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       inventory: run.inventory,
       rng,
       captureRng,
-      catchMultiplier: captureMultiplier(archetype),
-      healMultiplier: healingMultiplier(archetype),
+      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate,
+      healMultiplier: healingMultiplier(archetype) * attributes.healing,
       typeModifiers: typeModifiers(archetype),
+      attributes,
     },
     action,
   );
@@ -455,7 +464,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   } else {
     base = content.balance.money.wildPerEnemyLevel * currentEnemy(battle).level;
   }
-  const moneyGained = Math.floor(base * moneyMultiplier(archetype));
+  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money);
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -504,10 +513,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     run.regionsCleared.push(regionCleared);
     count(run, 'regionsCleared');
     if (!run.log.charmUsedInRegion) count(run, 'regionsClearedNoCharm');
+    if (run.log.starterUid && run.party.some((m) => m.uid === run.log.starterUid)) count(run, 'regionsClearedWithStarter');
     if (run.regionIndex + 1 >= run.regionOrder.length) run.victory = true;
   }
   run.battle = null;
   run.encountersCompleted += 1;
+  count(run, 'encountersCompleted');
   run.log.battlesWon += 1;
   run.afterDecisions = 'reward';
   continueAfterDecisions(content, run);
@@ -545,7 +556,7 @@ function continueAfterDecisions(content: Content, run: RunState): void {
     return;
   }
   if (run.afterDecisions === 'reward') {
-    const weights = rewardWeights(content, run);
+    const weights = luckWeights(rewardWeights(content, run), runAttributeEffects(content, run));
     run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
     run.phase = 'reward';
     return;
@@ -618,16 +629,19 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     if (choice.kind === 'addToParty') {
       if (run.party.length >= content.balance.partyMax) throw new Error('Your party is full');
       run.party.push(caught);
+      count(run, 'caughtKept');
       message = `${name} joined your party!`;
     } else if (choice.kind === 'replace') {
       const old = run.party[choice.partyIndex];
       if (!old) throw new Error('Choose a party member to replace');
       run.party[choice.partyIndex] = caught;
+      count(run, 'caughtKept');
       message = `${speciesName(content, old.speciesId)} left the party. ${name} joined!`;
     } else if (choice.kind === 'release') {
       const candies = candiesForRelease(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);
+      count(run, 'caughtToCandies');
       message = `${name} was released. You got ${candies} cand${candies === 1 ? 'y' : 'ies'}.`;
     } else {
       throw new Error('Choose what to do with the caught Pokémon');
@@ -679,7 +693,7 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
   const message = applyItemToPokemon(content, item, run.party[partyIndex]!, {
     regionId,
     evolveTo,
-    healMultiplier: healingMultiplier(getArchetype(content, run.archetypeId)),
+    healMultiplier: healingMultiplier(getArchetype(content, run.archetypeId)) * runAttributeEffects(content, run).healing,
   });
   if (item.effect.kind === 'evolve') count(run, 'evolutions');
   consumeItem(run.inventory, itemId);

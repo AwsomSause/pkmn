@@ -97,10 +97,10 @@ export interface WildPlan {
 }
 
 /** A wild Pokémon from the stage's theme (preferring the region's own Pokémon). */
-export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string): WildPlan {
+export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
   const speciesId = pickThemeSpecies(content, theme, rng, undefined, regionId);
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
-  return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng) };
+  return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }
 
 export interface PlannedMember {
@@ -222,9 +222,9 @@ export function planChampion(content: Content, archetype: Archetype, championId:
   return planBoss(content, archetype, 'champion', championId, regionIndex, scale, content.balance.difficulty.championBonus, CHAMPION_CLASS, rng);
 }
 
-/** Rolls whether a wild Pokémon is shiny (D8: 1/2000). */
-export function rollShiny(content: Content, rng: Rng): boolean {
-  return rng.chance(content.balance.shinyChance);
+/** Rolls whether a wild Pokémon is shiny (D8: 1/2000, raised by Luck through `multiplier`). */
+export function rollShiny(content: Content, rng: Rng, multiplier = 1): boolean {
+  return rng.chance(Math.min(1, content.balance.shinyChance * multiplier));
 }
 
 /** Candies for releasing a Pokémon: perRelease + floor(level / perLevels). */

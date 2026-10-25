@@ -2,6 +2,7 @@
 // The run's results were already applied to the permanent profile (once)
 // before this screen appears; the right side shows what they paid out.
 
+import { attributeChanges } from '../core/attributes';
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
@@ -54,6 +55,8 @@ export class GameOverScene extends Phaser.Scene {
       const research = summary.researchPoints + summary.achievements.reduce((n, a) => n + a.reward.researchPoints, 0);
       if (research > 0) lines.push(`+${research} Research Points`);
       if (summary.newSpeciesCaught.length || summary.newSpeciesSeen.length) lines.push(`New species: ${summary.newSpeciesSeen.length} met, ${summary.newSpeciesCaught.length} caught`);
+      const grew = attributeChanges(summary.attributesBefore, summary.attributesAfter);
+      if (grew) lines.push(`Attributes: ${grew}`);
       if (summary.achievements.length) lines.push('', 'Achievements earned:', ...summary.achievements.slice(0, 5).map((a) => `  ★ ${a.name}`));
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);

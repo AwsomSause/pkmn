@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T17:55:02.862Z",
+  "generatedAt": "2026-10-25T18:08:40.860Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -60444,6 +60444,54 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/whipped_dream.png"
+    },
+    {
+      "id": "item.muscle_band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/muscle_band.png"
+    },
+    {
+      "id": "item.wise_glasses",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/wise_glasses.png"
+    },
+    {
+      "id": "item.quick_claw",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/quick_claw.png"
+    },
+    {
+      "id": "item.amulet_coin",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/amulet_coin.png"
+    },
+    {
+      "id": "item.lucky_punch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/lucky_punch.png"
+    },
+    {
+      "id": "item.shiny_charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/shiny_charm.png"
+    },
+    {
+      "id": "item.shell_bell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/shell_bell.png"
+    },
+    {
+      "id": "item.black_glasses",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/black_glasses.png"
     },
     {
       "id": "bg.arena.plains",
