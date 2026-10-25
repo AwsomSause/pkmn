@@ -57,8 +57,12 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter'); // Red
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter'); // Roll starters
   await waitForScene(page, 'StarterSelect');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter'); // Begin the run
   await waitForScene(page, 'Map');
 
   // Win one battle and lose the next, through the session.
@@ -115,6 +119,8 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m5-trainer-select.png' });
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter'); // Roll starters
   await waitForScene(page, 'StarterSelect');
   const r = await page.evaluate(() => (window as any).__pkr.session.run);
   expect(r.archetypeId).toBe('brock');

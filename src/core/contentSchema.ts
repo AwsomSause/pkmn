@@ -208,6 +208,71 @@ export const ArchetypeSchema = z.object({
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
+// ---------- Run-Prep (GAME_DESIGN.md §14.5, §14.7) ----------
+
+/**
+ * A pool of starters for the Starter Laboratory. Species that aren't in the
+ * game yet are skipped, so a pool can list species ahead of the full Pokédex;
+ * a pool with too few known first-stage species shows as "coming later".
+ */
+export const StarterPoolSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  species: z.array(z.string()).min(1),
+  unlockedByDefault: z.boolean().default(false),
+  /** What must happen before the pool can be bought (null: nothing). */
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+  /** A Bank license that must be owned before the pool can be bought. */
+  license: z.string().nullable().default(null),
+  /** Research Points to unlock the pool. */
+  researchCost: z.number().int().min(0).default(0),
+});
+export type StarterPool = z.infer<typeof StarterPoolSchema>;
+
+/** How the three starters are drawn from the pool. Rules change the choice, not the power. */
+export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind'] as const;
+export const DraftRuleSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  kind: z.enum(DRAFT_RULE_KINDS),
+  license: z.string().nullable().default(null),
+});
+export type DraftRule = z.infer<typeof DraftRuleSchema>;
+
+/** A preparation choice: one per run, chosen on the Preparation Desk. */
+export const PrepTokenSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+  license: z.string().nullable().default(null),
+  money: z.number().int().min(0).default(0),
+  items: z.record(z.string(), z.number().int().positive()).default({}),
+});
+export type PrepToken = z.infer<typeof PrepTokenSchema>;
+
+/** Investment licenses: bought once with Bank Credits; they open up options rather than add power. */
+export const LicenseSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string(),
+  cost: z.number().int().min(0),
+  unlock: RequirementSchema.nullable().default(null),
+  unlockText: z.string().default(''),
+});
+export type License = z.infer<typeof LicenseSchema>;
+
+export const RunPrepFileSchema = z.object({
+  starterPools: z.array(StarterPoolSchema).min(1),
+  draftRules: z.array(DraftRuleSchema).min(1),
+  tokens: z.array(PrepTokenSchema),
+  licenses: z.array(LicenseSchema),
+});
+
 export const RARITIES = ['common', 'uncommon', 'rare'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
@@ -374,7 +439,6 @@ export const BalanceSchema = z.object({
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
-  starterPool: z.array(z.string()).min(1),
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
@@ -483,6 +547,8 @@ export const BalanceSchema = z.object({
   }),
   /** How many finished runs the Run History keeps. */
   runHistorySize: z.number().int().min(1),
+  /** How many loadout presets the Preparation Desk can store. */
+  presetSlots: z.number().int().min(1),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
@@ -492,6 +558,10 @@ export interface Content {
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   achievements: Map<string, Achievement>;
+  starterPools: Map<string, StarterPool>;
+  draftRules: Map<string, DraftRule>;
+  prepTokens: Map<string, PrepToken>;
+  licenses: Map<string, License>;
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;

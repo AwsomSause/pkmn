@@ -1,0 +1,209 @@
+{
+ "starterPools": [
+  {
+   "id": "classic",
+   "name": "Classic",
+   "description": "The original line-up: Kanto's starters and friends.",
+   "species": [
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "vulpix",
+    "psyduck",
+    "mankey",
+    "growlithe",
+    "poliwag",
+    "machop",
+    "geodude",
+    "gastly",
+    "magnemite"
+   ],
+   "unlockedByDefault": true
+  },
+  {
+   "id": "johto",
+   "name": "Johto",
+   "description": "Starters and first-stage Pokémon from Johto.",
+   "species": [
+    "chikorita",
+    "cyndaquil",
+    "totodile",
+    "mareep",
+    "natu",
+    "swinub",
+    "smoochum",
+    "sneasel",
+    "houndour",
+    "snubbull",
+    "misdreavus",
+    "murkrow"
+   ],
+   "researchCost": 150
+  },
+  {
+   "id": "hoenn",
+   "name": "Hoenn",
+   "description": "Starters and first-stage Pokémon from Hoenn.",
+   "species": [
+    "treecko",
+    "torchic",
+    "mudkip",
+    "ralts",
+    "aron",
+    "poochyena",
+    "shuppet",
+    "wingull",
+    "lotad",
+    "seedot",
+    "makuhita",
+    "electrike"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-badge"
+   },
+   "unlockText": "Earn your first badge",
+   "researchCost": 150
+  },
+  {
+   "id": "research",
+   "name": "Research",
+   "description": "Unusual first-stage Pokémon you wouldn't normally start with.",
+   "species": [
+    "drowzee",
+    "seel",
+    "voltorb",
+    "paras",
+    "venonat",
+    "onix",
+    "weedle",
+    "caterpie",
+    "ekans",
+    "sandshrew",
+    "diglett",
+    "meowth"
+   ],
+   "license": "research",
+   "researchCost": 100
+  },
+  {
+   "id": "rare",
+   "name": "Rare",
+   "description": "Rare first-stage Pokémon that grow into powerhouses.",
+   "species": [
+    "dratini",
+    "larvitar",
+    "bagon",
+    "skarmory"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 400
+  },
+  {
+   "id": "grand",
+   "name": "Grand",
+   "description": "The rarest specimens, for those who conquered the Grand Region.",
+   "species": [
+    "beldum",
+    "gible",
+    "deino",
+    "jangmo-o",
+    "goomy",
+    "dreepy"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "grand-victor"
+   },
+   "unlockText": "Win a full campaign",
+   "researchCost": 800
+  }
+ ],
+ "draftRules": [
+  {
+   "id": "standard",
+   "name": "Standard",
+   "description": "Three random starters from the pool.",
+   "kind": "standard"
+  },
+  {
+   "id": "balanced",
+   "name": "Balanced Draft",
+   "description": "Three starters that share no types, when the pool allows it.",
+   "kind": "balanced"
+  },
+  {
+   "id": "blind",
+   "name": "Blind Draft",
+   "description": "The three starters stay hidden until you pick one.",
+   "kind": "blind"
+  },
+  {
+   "id": "type-focus",
+   "name": "Type Focus",
+   "description": "Three starters of the type you choose, when the pool has enough.",
+   "kind": "typeFocus",
+   "license": "type-specialist"
+  }
+ ],
+ "tokens": [
+  {
+   "id": "pocket-money",
+   "name": "Pocket Money",
+   "description": "Start the run with ₽1,000.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-steps"
+   },
+   "unlockText": "Win your first battle",
+   "money": 1000
+  },
+  {
+   "id": "ball-bundle",
+   "name": "Ball Bundle",
+   "description": "Start the run with 5 Great Balls.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-catch"
+   },
+   "unlockText": "Catch your first Pokémon",
+   "items": {
+    "great-ball": 5
+   }
+  },
+  {
+   "id": "field-kit",
+   "name": "Field Kit",
+   "description": "Start the run with 3 Super Potions and a Revive.",
+   "license": "field-medic",
+   "items": {
+    "super-potion": 3,
+    "revive": 1
+   }
+  }
+ ],
+ "licenses": [
+  {
+   "id": "type-specialist",
+   "name": "Type Specialist License",
+   "description": "Adds the Type Focus draft rule: choose a type for your three starters.",
+   "cost": 300
+  },
+  {
+   "id": "field-medic",
+   "name": "Field Medic License",
+   "description": "Adds the Field Kit (healing items) to your preparation choices.",
+   "cost": 400
+  },
+  {
+   "id": "research",
+   "name": "Research License",
+   "description": "Opens the Research starter pool in the Starter Laboratory.",
+   "cost": 600
+  }
+ ]
+}

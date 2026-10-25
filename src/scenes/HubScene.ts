@@ -1,10 +1,12 @@
-// The Out-of-Run hub (GAME_DESIGN.md §14.1): start a run, or visit the Bank,
-// Trainer Archive, Achievement Hall, Run History and save data. Everything
+// The Out-of-Run hub (GAME_DESIGN.md §14.1): start a run, or visit the Bank
+// (and its licenses), Trainer Archive, Achievement Hall, Starter Laboratory,
+// Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
 import Phaser from 'phaser';
 import { ACHIEVEMENT_CATEGORIES, type Achievement, type Archetype } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
+import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
@@ -14,13 +16,14 @@ import { pokemonIcon, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'history' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'history' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
   { room: 'archive', label: 'Trainer Archive', blurb: 'Every trainer, what they change, and how to unlock them.' },
   { room: 'achievements', label: 'Achievement Hall', blurb: 'Milestones and their rewards. Progress counts automatically.' },
-  { room: 'bank', label: 'Bank', blurb: 'Your permanent currencies and what your last run paid.' },
+  { room: 'bank', label: 'Bank', blurb: 'Your permanent currencies, what your last run paid, and licenses to buy (Enter).' },
+  { room: 'lab', label: 'Starter Laboratory', blurb: 'Starter pools to unlock with Research Points (Enter).' },
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
@@ -32,6 +35,16 @@ const STATUS_LABEL: Record<TrainerStatus, string> = {
   locked: 'Locked',
   comingLater: 'Coming later',
 };
+
+const POOL_LABEL: Record<PoolStatus, string> = {
+  unlocked: 'Unlocked',
+  buyable: 'Ready to unlock',
+  needsLicense: 'Needs a license',
+  locked: 'Locked',
+  comingLater: 'Arrives with the full Pokédex',
+};
+
+const LICENSE_LABEL: Record<LicenseStatus, string> = { owned: 'Owned', buyable: 'For sale', locked: 'Locked' };
 
 const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = {
   campaign: 'Campaign',
@@ -81,8 +94,8 @@ export class HubScene extends Phaser.Scene {
       x: 52,
       y: 104,
       options: ROOMS.map((r) => ({ label: r.room === 'archive' && ready > 0 ? `${r.label} (${ready}!)` : r.label })),
-      itemHeight: 52,
-      fontSize: 26,
+      itemHeight: 46,
+      fontSize: 24,
       onFocus: (i) => this.showDetail(ROOMS[i]!.room),
       onSelect: (i) => this.enter(ROOMS[i]!.room),
       onBack: () => this.scene.start('MainMenu'),
@@ -145,7 +158,7 @@ export class HubScene extends Phaser.Scene {
         y += 8;
         this.line(
           y,
-          `At the end of every run, ${Math.round(bank.moneyConversionRate * 100)}% of your leftover Poké Dollars becomes Bank Credits, plus a stipend for encounters, badges, Elite Four, champions and regions, even if the run is lost. Spend credits to claim trainers in the Trainer Archive.`,
+          `At the end of every run, ${Math.round(bank.moneyConversionRate * 100)}% of your leftover Poké Dollars becomes Bank Credits, plus a stipend for encounters, badges, Elite Four, champions and regions, even if the run is lost. Spend credits on trainers in the Trainer Archive and on licenses here. Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned.`,
           15,
           '#a0aac0',
         );
@@ -154,6 +167,11 @@ export class HubScene extends Phaser.Scene {
       case 'archive': {
         const all = [...session.content.archetypes.values()];
         for (const a of all) y = this.line(y, `${a.name}  ·  ${STATUS_LABEL[trainerStatus(p, a)]}`, 18);
+        break;
+      }
+      case 'lab': {
+        y = this.line(y, `Research Points: ${p.researchPoints}`);
+        for (const pool of session.content.starterPools.values()) y = this.line(y, `${pool.name}  ·  ${POOL_LABEL[poolStatus(session.content, p, pool)]}`, 18);
         break;
       }
       case 'achievements': {
@@ -192,7 +210,10 @@ export class HubScene extends Phaser.Scene {
         this.openAchievements();
         break;
       case 'bank':
-        playSfx(this, 'ui.error', 0.4); // the Bank's details are already on screen
+        this.openLicenses();
+        break;
+      case 'lab':
+        this.openLab();
         break;
       case 'history':
         this.openHistory();
@@ -253,6 +274,80 @@ export class HubScene extends Phaser.Scene {
         session.claimTrainer(a.id);
         playSfx(this, 'se.level_up', 0.6);
         this.restart(`${a.name} joined your Trainer Archive! Choose them when you start a run.`, 'archive');
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openLicenses(): void {
+    const { session } = services();
+    const p = session.profile;
+    const licenses = [...session.content.licenses.values()];
+    const rows: PickerRow[] = licenses.map((l) => {
+      const status = licenseStatus(p, l);
+      return {
+        problem: null,
+        hint: status === 'owned' ? l.description : `${l.description}  ·  ${licenseProblem(p, l) ?? `Enter: buy for ${l.cost} Bank Credits.`}`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, 6, l.name, textStyle(20)));
+          const color = status === 'owned' ? COLORS.good : COLORS.textMuted;
+          box.add(scene.add.text(12, 32, LICENSE_LABEL[status], textStyle(15, color)));
+          if (status !== 'owned') box.add(scene.add.text(w - 12, h / 2, `${l.cost} credits`, textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({
+      title: `Bank licenses  ·  ${p.bankCredits} Bank Credits`,
+      rows,
+      columns: 1,
+      rowHeight: 60,
+      onSelect: (i) => {
+        const l = licenses[i]!;
+        if (licenseProblem(session.profile, l)) {
+          playSfx(this, 'ui.error', 0.5);
+          return;
+        }
+        session.buyLicense(l.id);
+        playSfx(this, 'se.exp', 0.6);
+        this.restart(`You bought the ${l.name}. ${l.description}`, 'bank');
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openLab(): void {
+    const { session } = services();
+    const p = session.profile;
+    const content = session.content;
+    const pools = [...content.starterPools.values()];
+    const rows: PickerRow[] = pools.map((pool) => {
+      const status = poolStatus(content, p, pool);
+      const species = eligibleSpecies(content, pool);
+      const problem = status === 'unlocked' ? null : poolProblem(content, p, pool);
+      return {
+        problem: null,
+        hint: `${pool.description}  ·  ${status === 'buyable' && !problem ? `Enter: unlock for ${pool.researchCost} Research Points.` : (problem ?? `${species.length} species.`)}`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, 6, `${pool.name}  ·  ${POOL_LABEL[status]}`, textStyle(19, status === 'unlocked' ? COLORS.good : COLORS.text)));
+          species.slice(0, 10).forEach((id, i) => box.add(pokemonIcon(scene, content.species.get(id)!, 24 + i * 40, h - 16, 0.75)));
+          if (status !== 'unlocked' && pool.researchCost) box.add(scene.add.text(w - 12, 16, `${pool.researchCost} RP`, textStyle(17, COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({
+      title: `Starter Laboratory  ·  ${p.researchPoints} Research Points`,
+      rows,
+      columns: 1,
+      rowHeight: 64,
+      onSelect: (i) => {
+        const pool = pools[i]!;
+        if (poolProblem(content, session.profile, pool)) {
+          playSfx(this, 'ui.error', 0.5);
+          return;
+        }
+        session.unlockPool(pool.id);
+        playSfx(this, 'se.level_up', 0.6);
+        this.restart(`The ${pool.name} pool is unlocked. Choose it on the Preparation Desk.`, 'lab');
       },
       onBack: () => this.closePicker(),
     });
