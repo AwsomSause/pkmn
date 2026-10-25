@@ -149,18 +149,18 @@ After every completed encounter, show five *different* rewards; pick exactly one
 
 Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luck, Love) and two meters from −100 to 100 (Rage ↔ Peace, Good ↔ Evil; D9). Each has a **permanent value** (grown on the profile) plus the **run's modifiers** → the effective value, clamped. All numbers live in `balance.json` (`attributeEffects`, `attributeGrowth`).
 
-**Effects** (director decision 2026-10-25: each point is worth the full percentage, no cap):
+**Effects** (director decision 2026-10-25: each point is worth the full percentage, no cap. Balance pass the same day, left to me by the director: Charisma's price cut and Peace's damage cut are half a percent per point, so Charisma 100 is half price instead of a free shop and Peace 100 halves damage instead of 1 damage per hit):
 
 | Attribute | Per point | At 100 |
 |---|---|---|
 | Strength | Physical moves +1% damage | +100% |
 | Intelligence | Special moves +1% damage | +100% |
 | Speed | Your Pokémon +1% Speed | +100% |
-| Charisma | Shop prices −1%, experience +1% | free shop, double experience |
+| Charisma | Shop prices −0.5%, experience +1% | half price, double experience |
 | Luck | Uncommon reward weight +0.5%, rare +1%, shiny chance +1% | rare ×2, shinies ×2 |
 | Love | +0.1% chance to hang on at 1 HP after a lethal hit, once per Pokémon per battle | 10% |
 | Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |
-| Peace | Healing +2%, damage taken −1% | +200% / 1 damage per hit (a hit always does at least 1) |
+| Peace | Healing +2%, damage taken −0.5% | +200% / half damage taken |
 | Good | Catching +2% easier | ×3 catch rate |
 | Evil | Prize money +1% | +100% |
 
@@ -212,7 +212,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 
 **Needed before later milestones**
 - **D1 Campaign length.** Decided (2026-10-25): keep the full length (9 regions × 8 stages × 20 levels, plus the Grand Region).
-- **D6 Regions.** Decided (2026-10-25): the regions are a mix of the original regions and custom regions. Every gym leader, Elite Four member and champion is chosen at random, and none repeats within one run. *(Still open: the list of custom regions, and what the Grand Region contains.)*
+- **D6 Regions.** Decided (2026-10-25): the regions are a mix of the original regions and custom regions. Every gym leader, Elite Four member and champion is chosen at random, and none repeats within one run. *(The custom regions are left to me by the director, 2026-10-25; designed in Milestone 8.75 part G. What the Grand Region contains is M9.)*
 - **D7 Candies.** Decided (2026-10-25): candies are a permanent currency spent outside a run (unlocking trainers, starting buffs, etc.). Candies earned in a run are added to the profile when the run ends. *(Confirmed 2026-10-25 with the Out-of-Run design: candies stay as a fourth currency beside Poké Dollars, Bank Credits and Research Points, see D16.)*
 - **D8 Shiny odds.** Decided (2026-10-25): 1/2000 per wild Pokémon; Luck raises it (×2 at Luck 100) and each shiny found adds 5 Luck (§9).
 - **D9 Attribute meters.** Decided (2026-10-25): Rage/Peace and Good/Evil are each one meter with two ends. Effect formulas decided the same day: each point is worth the full percentage (§9).
@@ -220,7 +220,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 - **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Superseded in detail by the Out-of-Run design, §14: the Bank's currency is Bank Credits.)*
 - **D12 Trainer unlocks.** Decided (2026-10-25): future trainers include Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker and more. *(Unlock conditions and pros/cons to be proposed in Milestone 5.)*
 - **D13 Elite Four rewards.** Decided (2026-10-25): a reward draft after each Elite Four member.
-- **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. *(Question for the director: that passes level 100 in region 3. Should levels go above 100, as in PokeRogue? To confirm before Milestone 4.)*
+- **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. **Levels go above 100, up to a maximum of 500** (director, 2026-10-25). Built in Milestone 8.75 part G; until then levels stop at 100.
 - **D15 Evolution.** Decided (2026-10-25): standard level-up evolution.
 - **D16 Currencies.** Decided (2026-10-25): four currencies. Poké Dollars (spent during a run), Bank Credits (permanent upgrades and unlocks), Research Points (Pokédex, starters, research) and candies (kept as a separate fourth currency, D7).
 
@@ -298,7 +298,7 @@ The director's priorities: 1 profile, banks, trainer unlocks; 2 achievements and
 | C9 | D7/D11 made candies the out-of-run currency; this design adds Bank Credits and Research Points. | **Resolved** by the director: candies stay as a fourth currency (D16). |
 | C10 | D12 listed future trainers Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker; this design proposes Oak, Brock, Misty, Cynthia, Giovanni, N. | Proposed: both lists are wanted; this design's six come first because their passives are specified. |
 | C11 | Brock, Misty, Cynthia and Giovanni are also gym leaders and a champion in the boss roster, so a run could pit player-trainer Brock against Gym Leader Brock. | Proposed: allow it for now (they are separate entries); revisit if it reads oddly. |
-| C12 | The asset pack has no sprites for Professor Oak or N (and none for Green, as before). | Oak and N wait until art is supplied or a stand-in is chosen. |
+| C12 | The asset pack has no sprites for Professor Oak or N (and none for Green, as before). | **Resolved** 2026-10-25: the director supplied Oak's and N's sprites (N's matches the boss pack's), and Green uses the boss pack's portrait. Both are in the Trainer Archive as "coming later" until their passives' systems exist (Milestone 8.75). |
 | C13 | Several trainer passives need systems that don't exist yet: friendship (N), events and merchants (Giovanni's black market, Oak's preview), boss intel (Cynthia), Research Points from forms. | Each trainer ships when the systems behind its passive exist; the Archive shows them as "coming later". |
 | C14 | "Discover 100 species" (Oak) is more than the game's current 89 species. | Kept as written; reachable once Milestone 6 adds the full Pokédex. |
 

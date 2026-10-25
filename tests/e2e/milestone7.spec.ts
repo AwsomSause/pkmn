@@ -91,7 +91,7 @@ test('the Briefing shows the run’s attributes, and a shop Plate raises one whe
   if (index % 2 === 1) await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m7-shop.png' });
-  const price = Math.round(1500 * 0.8); // Charisma 20
+  const price = Math.round(1500 * 0.9); // Charisma 20, half a percent per point
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await run(page)).attributeModifiers.strength, { timeout: 5000 }).toBe(5);
   const r = await run(page);
