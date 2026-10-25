@@ -52,6 +52,7 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
       return itemEvolutionTargets(content, mon, item.id, regionId).length > 0 ? null : `It won't have any effect on ${name}.`;
     case 'catch':
     case 'lastStand':
+    case 'attribute':
       return `${item.name} can't be used on your Pokémon.`;
   }
 }

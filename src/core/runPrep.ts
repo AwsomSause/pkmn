@@ -4,6 +4,7 @@
 // makes the player's Pokémon stronger.
 
 import { getArchetype } from './archetypes';
+import { attributesLine, readAttributes } from './attributes';
 import type { Archetype, Content, DraftRule, License, PrepToken, StarterPool, TypeName } from './contentSchema';
 import { requirementProgress } from './progress';
 import type { Rng } from './rng';
@@ -254,7 +255,7 @@ export function itemsText(content: Content, items: Record<string, number>): stri
 }
 
 /** The Run Build Summary: what this trainer and these choices add up to, in plain lines. */
-export function buildSummary(content: Content, archetypeId: string, prep: RunPrep): string[] {
+export function buildSummary(content: Content, archetypeId: string, prep: RunPrep, attributes?: Record<string, number>): string[] {
   const archetype = getArchetype(content, archetypeId);
   const pool = content.starterPools.get(prep.poolId)!;
   const rule = content.draftRules.get(prep.draftRuleId)!;
@@ -270,6 +271,7 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
     `Preparation: ${token ? `${token.name}, ${token.description.charAt(0).toLowerCase()}${token.description.slice(1)}` : 'none'}`,
     `Start with: ₽${res.money}; ${itemsText(content, res.items) || 'an empty Bag'}`,
   ];
+  if (attributes) lines.push(`Attributes: ${attributesLine(readAttributes(content, attributes))}`);
   return lines;
 }
 

@@ -3,7 +3,7 @@
 // checked against its schema on load, and migrated if it is older.
 
 import type { z } from 'zod';
-import type { Content } from '../core/contentSchema';
+import { ATTRIBUTE_KEYS, type Content } from '../core/contentSchema';
 import { validateLeagueMap, validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
 import {
@@ -22,11 +22,15 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 4, run: 6, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 5, run: 7, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
 type Json = Record<string, unknown>;
+
+function zeroAttributes(): Record<string, number> {
+  return Object.fromEntries(ATTRIBUTE_KEYS.map((k) => [k, 0]));
+}
 
 export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
   profile: {
@@ -54,6 +58,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v4 (Milestone 5.5): Starter Laboratory pools, Bank licenses and loadout presets.
     3: (data) => ({ ...(data as Json), unlockedPools: [], licenses: [], presets: [], lastPrep: null }),
+    // v5 (Milestone 7): attributes become six plain values and two meters
+    // (D9). Nothing could raise them before, so they start from zero and are
+    // worked out again from the counters when the next run ends.
+    4: (data) => ({ ...(data as Json), attributes: zeroAttributes() }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -97,6 +105,21 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const run = data as Json;
       const campaignId = typeof run.campaignId === 'string' ? run.campaignId : 'full';
       return { ...run, prep: { campaignId, poolId: 'classic', draftRuleId: 'standard', typeFocus: null, tokenId: null, note: null } };
+    },
+    // v7 (Milestone 7): attributes. An older run starts with no attributes;
+    // its starter is the first Pokémon it was given (uid "p1"), if still there.
+    6: (data) => {
+      const run = data as Json;
+      const battle = run.battle as Json | null;
+      const party = (run.party as Json[]) ?? [];
+      const log = run.log as Json;
+      return {
+        ...run,
+        baseAttributes: zeroAttributes(),
+        attributeModifiers: zeroAttributes(),
+        battle: battle ? { ...battle, enduredUids: [] } : null,
+        log: { ...log, starterUid: party.some((m) => m.uid === 'p1') ? 'p1' : null },
+      };
     },
   },
   settings: {},

@@ -170,5 +170,96 @@
   "perShiny": 50
  },
  "runHistorySize": 20,
- "presetSlots": 3
+ "presetSlots": 3,
+ "attributeEffects": {
+  "strengthPhysicalDamage": 1.0,
+  "intelligenceSpecialDamage": 1.0,
+  "speedStat": 1.0,
+  "charismaPriceCut": 1.0,
+  "charismaExpGain": 1.0,
+  "luckUncommonWeight": 0.5,
+  "luckRareWeight": 1.0,
+  "luckShinyChance": 1.0,
+  "rageDamageDealt": 2.0,
+  "rageDamageTaken": 1.0,
+  "peaceHealing": 2.0,
+  "peaceDamageTakenCut": 1.0,
+  "goodCatch": 2.0,
+  "evilMoney": 1.0,
+  "loveEndureChance": 0.1
+ },
+ "attributeGrowth": [
+  {
+   "attribute": "strength",
+   "counter": "defeatedOrCaught.fighting",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "intelligence",
+   "counter": "defeatedOrCaught.psychic",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "speed",
+   "counter": "defeatedOrCaught.electric",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "charisma",
+   "counter": "statsBoosted",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "luck",
+   "counter": "pokemonCaught",
+   "per": 10,
+   "amount": 1
+  },
+  {
+   "attribute": "luck",
+   "counter": "shiniesFound",
+   "per": 1,
+   "amount": 5
+  },
+  {
+   "attribute": "ragePeace",
+   "counter": "defeatedOrCaught.fire",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "ragePeace",
+   "counter": "defeatedOrCaught.grass",
+   "per": 1,
+   "amount": -1
+  },
+  {
+   "attribute": "goodEvil",
+   "counter": "defeatedOrCaught.fairy",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "goodEvil",
+   "counter": "defeatedOrCaught.dark",
+   "per": 1,
+   "amount": -1
+  },
+  {
+   "attribute": "love",
+   "counter": "evolutions",
+   "per": 1,
+   "amount": 1
+  },
+  {
+   "attribute": "love",
+   "counter": "regionsClearedWithStarter",
+   "per": 1,
+   "amount": 1
+  }
+ ]
 }

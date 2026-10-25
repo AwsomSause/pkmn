@@ -4,7 +4,8 @@
 // here reads and changes the permanent profile only.
 
 import Phaser from 'phaser';
-import { ACHIEVEMENT_CATEGORIES, type Achievement, type Archetype } from '../core/contentSchema';
+import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
+import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, type Achievement, type Archetype } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
@@ -16,7 +17,7 @@ import { pokemonIcon, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'history' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -24,6 +25,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'achievements', label: 'Achievement Hall', blurb: 'Milestones and their rewards. Progress counts automatically.' },
   { room: 'bank', label: 'Bank', blurb: 'Your permanent currencies, what your last run paid, and licenses to buy (Enter).' },
   { room: 'lab', label: 'Starter Laboratory', blurb: 'Starter pools to unlock with Research Points (Enter).' },
+  { room: 'attributes', label: 'Attributes', blurb: 'Your permanent attributes, what they do, and how they grow (Enter for details).' },
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
@@ -94,8 +96,8 @@ export class HubScene extends Phaser.Scene {
       x: 52,
       y: 104,
       options: ROOMS.map((r) => ({ label: r.room === 'archive' && ready > 0 ? `${r.label} (${ready}!)` : r.label })),
-      itemHeight: 46,
-      fontSize: 24,
+      itemHeight: 42,
+      fontSize: 22,
       onFocus: (i) => this.showDetail(ROOMS[i]!.room),
       onSelect: (i) => this.enter(ROOMS[i]!.room),
       onBack: () => this.scene.start('MainMenu'),
@@ -174,6 +176,11 @@ export class HubScene extends Phaser.Scene {
         for (const pool of session.content.starterPools.values()) y = this.line(y, `${pool.name}  ·  ${POOL_LABEL[poolStatus(session.content, p, pool)]}`, 18);
         break;
       }
+      case 'attributes': {
+        const a = readAttributes(session.content, p.attributes);
+        for (const k of ATTRIBUTE_KEYS) y = this.line(y, `${attributeText(k, a[k])}  ·  ${a[k] === 0 ? 'no effect yet' : attributeEffectText(session.content, k, a[k])}`, 17);
+        break;
+      }
       case 'achievements': {
         const earned = Object.keys(p.achievements).length;
         y = this.line(y, `${earned} of ${session.content.achievements.size} earned`);
@@ -214,6 +221,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'lab':
         this.openLab();
+        break;
+      case 'attributes':
+        this.openAttributes();
         break;
       case 'history':
         this.openHistory();
@@ -351,6 +361,40 @@ export class HubScene extends Phaser.Scene {
       },
       onBack: () => this.closePicker(),
     });
+  }
+
+  private openAttributes(): void {
+    const { session } = services();
+    const content = session.content;
+    const a = readAttributes(content, session.profile.attributes);
+    const rows: PickerRow[] = ATTRIBUTE_KEYS.map((k) => {
+      const [lo, hi] = attributeRange(content, k);
+      return {
+        problem: null,
+        hint: `Grows: ${growthText(content, k)}.  At the maximum: ${attributeEffectText(content, k, isMeter(k) && a[k] < 0 ? lo : hi)}.`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, 6, ATTRIBUTE_LABELS[k], textStyle(19)));
+          box.add(scene.add.text(12, 30, a[k] === 0 ? 'No effect yet' : attributeEffectText(content, k, a[k]), textStyle(14, COLORS.textMuted)));
+          // A bar: plain attributes fill from the left; meters fill from the middle toward their end.
+          const bx = w - 190;
+          const bw = 120;
+          const g = scene.add.graphics();
+          g.fillStyle(0xd8dce6, 1).fillRect(bx, h / 2 - 5, bw, 10);
+          g.fillStyle(0x4a78c8, 1);
+          if (isMeter(k)) {
+            const mid = bx + bw / 2;
+            const len = (Math.abs(a[k]) / hi) * (bw / 2);
+            g.fillRect(a[k] >= 0 ? mid : mid - len, h / 2 - 5, len, 10);
+            g.fillStyle(0x303848, 1).fillRect(mid - 1, h / 2 - 8, 2, 16);
+          } else {
+            g.fillRect(bx, h / 2 - 5, ((a[k] - lo) / (hi - lo)) * bw, 10);
+          }
+          box.add(g);
+          box.add(scene.add.text(w - 12, h / 2, attributeText(k, a[k]).replace(/^.* /, ''), textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({ title: 'Attributes', rows, columns: 2, rowHeight: 58, onSelect: () => undefined, onBack: () => this.closePicker() });
   }
 
   private openAchievements(): void {

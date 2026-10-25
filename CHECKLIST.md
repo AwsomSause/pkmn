@@ -187,7 +187,21 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - A few forms have no art of their own in the pack and use their species' art (White-Striped Basculin, Mega Floette, Mega Meowstic).
 - Battle animations from the pack are still not played (M9).
 
-## Milestone 7+ — not started
+## Milestone 7 — Attributes and luck
+
+- [x] Six attributes (0–100) and two meters (Rage/Peace, Good/Evil, −100–100), permanent value + run modifiers
+- [x] Effect formulas approved by the director: each point is worth the full percentage, no cap
+- [x] Permanent growth by type defeated or caught, stats boosted, catches, shinies, evolutions and keeping your starter
+- [x] Luck tilts the reward draft toward uncommon and rare, and raises the shiny chance
+- [x] Love: a chance to hang on at 1 HP, once per Pokémon per battle
+- [x] Charisma: cheaper shop and more experience
+- [x] 11 attribute rewards in the after-battle draft, 9 attribute items in the shop
+- [x] Hub Attributes room, attributes on the Run Build Summary, Briefing and run-end screen
+- [x] Saves upgrade (profile v5, run v7)
+- [ ] Special encounters and "Between-Level" interactions that change attributes (needs an event system; later milestone)
+- [ ] Friendship from Charisma (no friendship system yet)
+
+## Milestone 8+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.
 
@@ -201,3 +215,6 @@ See IMPLEMENTATION_PLAN.md §5.
 - [x] Green's archetype uses the boss pack's Green portrait
 - [x] Teams rebuilt on the full species data (M6): every signature Pokémon is in the game
 
+## Milestone 10 — Visuals and presentation (planned)
+
+A milestone purely for looks: a shared visual style, redesigned screens, transitions and animations, and a final layout pass. No gameplay changes. See IMPLEMENTATION_PLAN.md §5.

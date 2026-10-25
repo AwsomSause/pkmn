@@ -8,6 +8,7 @@
 //   claim       — achievements are claimed automatically when a run ends;
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
+import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
 import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
@@ -105,6 +106,9 @@ export interface RunEndSummary {
   achievements: Achievement[];
   /** Trainers whose requirement became met with this run (they can now be claimed). */
   trainersReady: Archetype[];
+  /** Permanent attributes before and after this run (they grow from lifetime counters). */
+  attributesBefore: Attributes;
+  attributesAfter: Attributes;
 }
 
 /**
@@ -116,6 +120,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   const counts = getCampaign(content, run.campaignId).countsForProgress;
   const readyBefore = new Set(trainersReadyToClaim(content, profile).map((a) => a.id));
   const research = content.balance.research;
+  const attributesBefore = readAttributes(content, profile.attributes);
   let researchPoints = 0;
   let newSpeciesSeen: string[] = [];
   let newSpeciesCaught: string[] = [];
@@ -136,6 +141,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       research.perSpeciesCaught * newSpeciesCaught.length +
       research.perShiny * (run.log.counters.shiniesFound ?? 0);
     profile.researchPoints += researchPoints;
+    profile.attributes = permanentAttributes(content, profile);
   }
 
   const base = runPayout(content, run);
@@ -169,7 +175,8 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   ].slice(0, content.balance.runHistorySize);
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady };
+  const attributesAfter = readAttributes(content, profile.attributes);
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

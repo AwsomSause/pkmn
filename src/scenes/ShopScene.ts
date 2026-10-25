@@ -43,7 +43,8 @@ export class ShopScene extends Phaser.Scene {
           box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
           box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
           box.add(scene.add.text(w - 90, h / 2, `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
-          box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#707888')).setOrigin(1, 0.5));
+          // Attribute items are used when bought, so there's no count in the Bag to show.
+          if (item.effect.kind !== 'attribute') box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#707888')).setOrigin(1, 0.5));
         },
       };
     });

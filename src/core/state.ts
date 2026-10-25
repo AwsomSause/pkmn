@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { BoostStatSchema, StatNameSchema, StatusIdSchema, TypeNameSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BoostStatSchema, StatNameSchema, StatusIdSchema, TypeNameSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -70,6 +70,8 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
+  /** Your Pokémon that already hung on at 1 HP this battle (Love). */
+  enduredUids: z.array(z.string()),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
@@ -204,7 +206,9 @@ export const RunStateSchema = z.object({
   victory: z.boolean(),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
-  /** Run-only additive modifiers for the ten attributes (no effects yet). */
+  /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
+  baseAttributes: z.record(z.string(), z.number()),
+  /** Run-only additions to the attributes (from rewards). */
   attributeModifiers: z.record(z.string(), z.number()),
   rng: RngStreamsSchema,
   nextUid: z.number().int().min(1),
@@ -220,15 +224,14 @@ export const RunStateSchema = z.object({
     charmUsedInRegion: z.boolean(),
     /** What ended the run, when it was lost. */
     defeatedBy: z.object({ speciesId: z.string(), level: z.number().int(), trainer: z.string().nullable() }).nullable(),
+    /** The starter's uid (for Love: regions cleared with the starter still in the party). */
+    starterUid: z.string().nullable(),
   }),
 });
 export type RunState = z.infer<typeof RunStateSchema>;
 
-export const ATTRIBUTE_NAMES = [
-  'strength', 'intelligence', 'speed', 'charisma', 'luck',
-  'rage', 'peace', 'good', 'evil', 'love',
-] as const;
-export type AttributeName = (typeof ATTRIBUTE_NAMES)[number];
+/** The attribute keys (six plain attributes and the Rage/Peace and Good/Evil meters). */
+export const ATTRIBUTE_NAMES = ATTRIBUTE_KEYS;
 
 /** The Bank's payout for one finished run (GAME_DESIGN.md §14.2). */
 export const PayoutSchema = z.object({

@@ -105,7 +105,7 @@ export class RunPrepScene extends Phaser.Scene {
       y += t.height + 5;
     };
     line('Run Build Summary', 24);
-    for (const l of buildSummary(content, this.archetypeId, this.prep)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
+    for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
     y += 6;
     line(`${rule.description}`, 15, '#c8d0e0');
     const locked = [

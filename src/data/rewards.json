@@ -1013,5 +1013,181 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.whipped_dream"
+ },
+ {
+  "id": "power-band",
+  "name": "Power Band",
+  "description": "+15 Strength for this run (physical moves hit harder).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "strength",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.muscle_band"
+ },
+ {
+  "id": "wise-glasses",
+  "name": "Wise Glasses",
+  "description": "+15 Intelligence for this run (special moves hit harder).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "intelligence",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.wise_glasses"
+ },
+ {
+  "id": "quick-claw",
+  "name": "Quick Claw",
+  "description": "+15 Speed for this run (your Pokémon move first more often).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "speed",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.quick_claw"
+ },
+ {
+  "id": "charm-coin",
+  "name": "Charm Coin",
+  "description": "+15 Charisma for this run (lower shop prices).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "charisma",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.amulet_coin"
+ },
+ {
+  "id": "lucky-charm",
+  "name": "Lucky Charm",
+  "description": "+15 Luck for this run (better rewards, more shinies).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "luck",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.lucky_punch"
+ },
+ {
+  "id": "shiny-charm",
+  "name": "Shiny Charm",
+  "description": "+30 Luck for this run.",
+  "category": "attribute",
+  "rarity": "rare",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "luck",
+   "amount": 30
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.shiny_charm"
+ },
+ {
+  "id": "soothe-bell",
+  "name": "Soothe Bell",
+  "description": "+15 Love for this run (your Pokémon may hang on at 1 HP).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "love",
+   "amount": 15
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.soothe_bell"
+ },
+ {
+  "id": "razor-claw",
+  "name": "Razor Claw",
+  "description": "Moves you 20 toward Rage for this run (hit harder, take a little more).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "ragePeace",
+   "amount": 20
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.razor_claw"
+ },
+ {
+  "id": "shell-bell",
+  "name": "Shell Bell",
+  "description": "Moves you 20 toward Peace for this run (better healing, take a little less).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "ragePeace",
+   "amount": -20
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.shell_bell"
+ },
+ {
+  "id": "kings-rock",
+  "name": "King's Rock",
+  "description": "Moves you 20 toward Good for this run (easier catching).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "goodEvil",
+   "amount": 20
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.kings_rock"
+ },
+ {
+  "id": "black-glasses",
+  "name": "Black Glasses",
+  "description": "Moves you 20 toward Evil for this run (more prize money).",
+  "category": "attribute",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "attribute",
+   "attribute": "goodEvil",
+   "amount": -20
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.black_glasses"
  }
 ]

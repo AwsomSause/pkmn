@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { getArchetype } from '../core/archetypes';
+import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
 import { itemsText } from '../core/runPrep';
 import { getTheme } from '../core/themes';
@@ -51,6 +52,7 @@ export class BriefingScene extends Phaser.Scene {
     }
     line('Starting with', `₽${run.money}; ${itemsText(content, run.inventory) || 'an empty Bag'}`);
     line('Rules', `${pool?.name ?? run.prep.poolId} pool, ${rule?.name ?? run.prep.draftRuleId}${run.prep.typeFocus ? ` (${capitalise(run.prep.typeFocus)})` : ''}; preparation: ${token?.name ?? 'none'}`);
+    line('Attributes', attributesLine(effectiveAttributes(content, run)));
     line('Seed', `${run.seed}   (the same seed replays the same run)`);
 
     this.status = this.add.text(GAME_WIDTH / 2, 444, '', textStyle(16, '#f0e0a0')).setOrigin(0.5, 0);
