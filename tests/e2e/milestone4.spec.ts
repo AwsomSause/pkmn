@@ -101,7 +101,7 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
       }
       const mon = session.run.party[battle.activeIndex];
       battle.enemyTeam[battle.enemyIndex].hp = 1;
-      mon.hp = 999; // keeps the lead standing; only the ending matters here
+      mon.hp = 1_000_000; // keeps the lead standing against a champion; only the ending matters here
       const index = mon.moves.findIndex((m: any) => (session.content.moves.get(m.id).power ?? 0) > 0);
       session.takeTurn({ kind: 'move', index: Math.max(0, index) });
     }

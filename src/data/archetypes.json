@@ -50,7 +50,7 @@
       "Catching is 15% harder"
     ],
     "unlockedByDefault": true,
-    "spriteAssetId": "trainer.green",
+    "spriteAssetId": "boss.green",
     "modifiers": [
       {
         "kind": "moneyMultiplier",
@@ -87,7 +87,7 @@
     },
     "unlockText": "Clear a region without the Last Stand Charm saving you",
     "unlockCost": 300,
-    "spriteAssetId": "trainer.brock",
+    "spriteAssetId": "boss.brock",
     "modifiers": [
       {
         "kind": "healingMultiplier",
@@ -126,7 +126,7 @@
     },
     "unlockText": "Beat 13 bosses in one run (a whole region's worth) with a Water-type leading",
     "unlockCost": 300,
-    "spriteAssetId": "trainer.misty",
+    "spriteAssetId": "boss.misty",
     "modifiers": [
       {
         "kind": "typeDamageMultiplier",
@@ -199,7 +199,7 @@
     "unlockText": "Defeat champions in 3 regions",
     "unlockCost": 500,
     "available": false,
-    "spriteAssetId": "trainer.cynthia",
+    "spriteAssetId": "boss.cynthia-gen7",
     "modifiers": []
   }
 ]

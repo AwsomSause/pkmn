@@ -366,25 +366,74 @@ export const TrainerClassSchema = z.object({
 });
 export type TrainerClass = z.infer<typeof TrainerClassSchema>;
 
-export const GymLeaderSchema = z.object({
+/** Where a boss can stand: at the end of a stage, in an Elite Four, or as champion. */
+export const BOSS_ROLES = ['gym', 'elite', 'champion'] as const;
+export type BossRole = (typeof BOSS_ROLES)[number];
+
+/**
+ * A gym leader, Elite Four member or champion (bosses.json). Any boss can take
+ * any of the three roles. Stages prefer a gym leader whose speciality matches
+ * the theme; bosses with no types use mixed teams.
+ */
+export const BossProfileSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  spriteAssetId: z.string(),
-  /** The leader's usual speciality. Stages prefer a leader whose speciality matches the theme. */
-  types: z.array(TypeNameSchema).min(1),
+  types: z.array(TypeNameSchema).max(2),
+  /** Portrait asset ids: the default one, and optional ones for a role (e.g. a champion outfit). */
+  sprites: z.object({ default: z.string(), gym: z.string().optional(), elite: z.string().optional(), champion: z.string().optional() }),
+  /** The boss's signature Pokémon, ace first. tools/build-boss-teams.ts builds their teams from these. */
+  signature: z.array(z.string()).min(1),
 });
-export type GymLeader = z.infer<typeof GymLeaderSchema>;
+export type BossProfile = z.infer<typeof BossProfileSchema>;
 
-/** An Elite Four member or a champion. Champions with no types use a mixed team. */
-export const LeagueTrainerSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  spriteAssetId: z.string(),
-  types: z.array(TypeNameSchema),
+export const TRAINING_STATS = STAT_NAMES;
+
+/**
+ * One boss Pokémon as written in bossTeams.json:
+ * "garchomp / earthquake dragon-claw stone-edge swords-dance / atk+4 spe+4 hp+3".
+ * The last part (training: extra vitamin-style stacks) is optional.
+ */
+export const BossMemberSchema = z.string().transform((text, ctx) => {
+  const [speciesId = '', movesText = '', trainingText = ''] = text.split('/').map((p) => p.trim());
+  const moves = movesText.split(/\s+/).filter(Boolean);
+  const training: Partial<Record<StatName, number>> = {};
+  for (const part of trainingText.split(/\s+/).filter(Boolean)) {
+    const match = /^(hp|atk|def|spa|spd|spe)\+(\d+)$/.exec(part);
+    if (!match) {
+      ctx.addIssue({ code: 'custom', message: `"${part}" is not a training entry like "atk+2" in "${text}"` });
+      return z.NEVER;
+    }
+    training[match[1] as StatName] = Number(match[2]);
+  }
+  if (!speciesId || moves.length < 1 || moves.length > 4) {
+    ctx.addIssue({ code: 'custom', message: `"${text}" needs a species and 1–4 moves` });
+    return z.NEVER;
+  }
+  return { speciesId, moves, training };
 });
-export type LeagueTrainer = z.infer<typeof LeagueTrainerSchema>;
+export type BossMember = z.infer<typeof BossMemberSchema>;
 
-/** A region: its own gym leaders, Elite Four and champions are preferred there (empty lists mean "anyone"). */
+export const BossTeamSchema = z.object({
+  /** The level the team was built for (the game's difficulty curve sets the real levels). */
+  level: z.number().int().min(1).max(100),
+  /** 0–1: the chance each turn that the boss picks its best move instead of a random one. */
+  ai: z.number().min(0).max(1),
+  members: z.array(BossMemberSchema).min(1).max(6),
+});
+export type BossTeam = z.infer<typeof BossTeamSchema>;
+
+/** bossTeams.json: 16 gym teams, 10 Elite Four teams and 10 champion teams per boss. */
+export const BossTeamsFileSchema = z.record(
+  z.string(),
+  z.object({ gym: z.array(BossTeamSchema).length(16), elite: z.array(BossTeamSchema).length(10), champion: z.array(BossTeamSchema).length(10) }),
+);
+export type BossTeams = z.infer<typeof BossTeamsFileSchema>[string];
+
+export interface Boss extends BossProfile {
+  teams: BossTeams;
+}
+
+/** A region: these bosses are preferred there in each role (empty lists mean "anyone"). All ids are bosses.json ids. */
 export const RegionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -397,11 +446,6 @@ export const RegionSchema = z.object({
   generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
 export type Region = z.infer<typeof RegionSchema>;
-
-export const LeagueFileSchema = z.object({
-  eliteFour: z.array(LeagueTrainerSchema).min(1),
-  champions: z.array(LeagueTrainerSchema).min(1),
-});
 
 /** The shape of a campaign: how many regions, stages and levels. "dev" is a tiny one for testing. */
 export const CampaignSchema = z.object({
@@ -631,9 +675,8 @@ export interface Content {
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;
-  gymLeaders: Map<string, GymLeader>;
-  eliteFour: Map<string, LeagueTrainer>;
-  champions: Map<string, LeagueTrainer>;
+  /** Every gym leader, Elite Four member and champion, with their teams. */
+  bosses: Map<string, Boss>;
   regions: Map<string, Region>;
   campaigns: Map<string, Campaign>;
   themes: Map<string, Theme>;

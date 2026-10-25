@@ -13,12 +13,11 @@ export function readCatalogInputs(): CatalogInputs {
   const rewards = readJson('rewards.json') as { iconAssetId: string }[];
   const items = readJson('items.json') as { iconAssetId: string }[];
   const trainers = readJson('trainers.json') as { spriteAssetId: string }[];
-  const gymLeaders = readJson('gymLeaders.json') as { spriteAssetId: string }[];
-  const league = readJson('league.json') as Record<'eliteFour' | 'champions', { spriteAssetId: string }[]>;
+  const bosses = readJson('bosses.json') as { sprites: Record<string, string> }[];
   const themes = readJson('themes.json') as { arenas: Record<string, string> };
   return {
     pokemon: species.map((s) => s.assets),
-    trainerAssetIds: [...archetypes, ...trainers, ...gymLeaders, ...league.eliteFour, ...league.champions].map((a) => a.spriteAssetId),
+    trainerAssetIds: [...archetypes, ...trainers].map((a) => a.spriteAssetId).concat(bosses.flatMap((b) => Object.values(b.sprites))),
     itemAssetIds: [...rewards, ...items].map((r) => r.iconAssetId),
     backgroundAssetIds: Object.values(themes.arenas),
   };

@@ -185,7 +185,7 @@ describe('difficulty', () => {
     const theme = content.themes.get('water-normal') ?? content.themes.get('normal-water')!;
     const leader = pickGymLeader(content, theme, [], new Rng(hashSeed('ace')));
     for (let i = 0; i < 20; i++) {
-      const plan = planGymLeader(content, RED, theme, leader.id, 0, scaleAt(0, 20), new Rng(hashSeed(`ace-${i}`)));
+      const plan = planGymLeader(content, RED, leader.id, 0, scaleAt(0, 20), new Rng(hashSeed(`ace-${i}`)));
       const top = Math.max(...plan.members.map((m) => m.level));
       expect(top).toBeGreaterThanOrEqual(18);
       expect(top).toBeLessThanOrEqual(23);

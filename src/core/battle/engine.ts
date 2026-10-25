@@ -102,6 +102,7 @@ export function createBattle(
     lastStandUsed: false,
     outcome: null,
     levelInfo: [],
+    ai: 0,
   };
 }
 
@@ -109,11 +110,66 @@ export function hasUsableMove(mon: PokemonInstance): boolean {
   return mon.moves.some((m) => m.pp > 0);
 }
 
-/** Enemy move choice: a random move that still has PP (Struggle if none). */
-export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng): number {
+/** What a clever enemy needs to know to pick its best move. */
+export interface EnemyBrain {
+  content: Content;
+  /** 0–1: the chance this turn's move is the best one rather than a random one. */
+  ai: number;
+  /** The player's Pokémon it is facing. */
+  target: PokemonInstance;
+  /** The enemy's own stat stages (it won't keep using a set-up move once boosted). */
+  stages: Stages;
+}
+
+/**
+ * Enemy move choice: a random move that still has PP (Struggle if none).
+ * Bosses (ai > 0) instead pick their best move that often: the strongest
+ * attack against the target's types, or a status or set-up move when it
+ * would help more.
+ */
+export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng, brain?: EnemyBrain): number {
   const usable = enemy.moves.map((m, i) => ({ m, i })).filter((x) => x.m.pp > 0);
   if (usable.length === 0) return -1;
+  if (brain && brain.ai > 0 && rng.chance(brain.ai)) {
+    const scored = usable.map((x) => ({ i: x.i, score: moveValue(brain, enemy, x.m.id) }));
+    return scored.reduce((best, x) => (x.score > best.score ? x : best)).i;
+  }
   return rng.pick(usable).i;
+}
+
+/** Rough value of a move for a clever enemy (higher is better). */
+function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
+  const { content, target, stages } = brain;
+  const move = content.moves.get(moveId);
+  if (!move) return 0;
+  const userSpecies = getSpecies(content, user.speciesId);
+  const targetSpecies = getSpecies(content, target.speciesId);
+  const userStats = calcStats(content, user);
+  const targetStats = calcStats(content, target);
+  const attackPower = (m: Move) => {
+    if (m.category === 'status') return 0;
+    const effectiveness = m.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, m.type, targetSpecies.types);
+    const power = m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0);
+    const ratio = m.category === 'physical' ? userStats.atk / targetStats.def : userStats.spa / targetStats.spd;
+    const stab = userSpecies.types.includes(m.type) ? 1.5 : 1;
+    return power * ((m.accuracy ?? 100) / 100) * effectiveness * stab * ratio;
+  };
+  if (move.category !== 'status') return attackPower(move);
+  // A status or set-up move is worth about as much as the best attack it makes possible.
+  const best = Math.max(1, ...user.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m)).map(attackPower));
+  const status = move.effects.status;
+  if (status) {
+    if (target.status || isStatusImmune(status.id, targetSpecies.types, move)) return 0;
+    const weight = status.id === 'slp' ? 1.1 : status.id === 'par' || status.id === 'brn' ? 0.8 : 0.5;
+    return best * weight * ((move.accuracy ?? 100) / 100);
+  }
+  const boosts = (move.effects.statChanges ?? []).filter((c) => c.target === 'self' && c.stages > 0);
+  if (boosts.length > 0) {
+    const healthy = user.hp / calcStats(content, user).hp > 0.6;
+    const room = boosts.some((c) => (stages[c.stat] ?? 0) < 2);
+    return healthy && room ? best * 0.9 : 0;
+  }
+  return best * 0.2;
 }
 
 /** Why the player can't switch to this party slot, or null if they can. */
@@ -146,7 +202,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
 
   validateAction(ctx, action);
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, flinched: false };
-  const enemyMoveIndex = chooseEnemyMove(enemy.mon, rng);
+  const enemyMoveIndex = chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
   const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.

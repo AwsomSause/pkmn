@@ -3,7 +3,7 @@
 // wild Pokémon appear, which trainer classes show up, and which gym leader
 // waits at the end. Themes and gym leaders never repeat within a run (D6).
 
-import type { Content, GymLeader, Species, Theme, TrainerClass, TypeName } from './contentSchema';
+import type { Boss, Content, Species, Theme, TrainerClass, TypeName } from './contentSchema';
 import { isUsableMove } from './pokemon';
 import type { Rng } from './rng';
 
@@ -110,16 +110,17 @@ export function trainerClassesFor(content: Content, theme: Theme): TrainerClass[
 }
 
 /**
- * A gym leader not met yet this run. In order of preference: one from this
- * region whose speciality matches the theme, any from this region, any whose
- * speciality matches, anyone unused, then anyone. Their team is always drawn
- * from the theme. `regionPool` empty means the region has no leaders of its own.
+ * A gym leader not met yet this run (any boss can be one). In order of
+ * preference: one from this region whose speciality matches the theme, any
+ * from this region, any whose speciality matches, anyone unused, then anyone.
+ * They bring their own team for this stage (bossTeams.json). `regionPool`
+ * empty means the region has no leaders of its own.
  */
-export function pickGymLeader(content: Content, theme: Theme, used: readonly string[], rng: Rng, regionPool: readonly string[] = []): GymLeader {
-  const all = [...content.gymLeaders.values()];
+export function pickGymLeader(content: Content, theme: Theme, used: readonly string[], rng: Rng, regionPool: readonly string[] = []): Boss {
+  const all = [...content.bosses.values()];
   const fresh = all.filter((l) => !used.includes(l.id));
   const local = fresh.filter((l) => regionPool.includes(l.id));
-  const matches = (list: GymLeader[]) => list.filter((l) => sharesType(l.types, theme.types));
+  const matches = (list: Boss[]) => list.filter((l) => sharesType(l.types, theme.types));
   for (const list of [matches(local), local, matches(fresh), fresh, all]) if (list.length > 0) return rng.pick(list);
   throw new Error('There are no gym leaders');
 }

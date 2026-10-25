@@ -44,7 +44,19 @@ Green's "weaker enemies" and "harder catching" are separate rule entries. Archet
 
 **Built in Milestone 4 (2026-10-25):**
 - Each region (Kanto to Paldea, plus Alola) lists its own gym leaders, Elite Four and champions in `regions.json`. A region's stages prefer its own leaders whose speciality fits the stage theme; its league prefers its own Elite Four and champion. Nobody appears twice in a run (D6), across all three roles.
-- The league is its own map: one straight line of Elite Four members, then the champion. The party is fully healed on arrival and after every Elite Four win, and each win gives a reward draft (D13). Elite Four teams use the member's speciality type; champions with a speciality use it, the others bring one Pokémon from each of the region's stage themes.
+- The league is its own map: one straight line of Elite Four members, then the champion. The party is fully healed on arrival and after every Elite Four win, and each win gives a reward draft (D13).
+
+### 4b. Bosses and their teams (director, 2026-10-25)
+- 229 bosses (`bosses.json`): every trainer from the director's boss pack plus the earlier gym leaders, Elite Four and champions. **Any boss can be a gym leader, an Elite Four member or a champion.** Each has a speciality (one or two types, or none for mixed teams), portraits (with optional champion or Elite Four outfits) and a list of signature Pokémon.
+- Every boss has **36 teams** (`bossTeams.json`, built by `npm run data:bosses`):
+  - **16 gym teams.** Gym team 1–8 are used for the run's first eight stages, 9–16 for the next eight, and team 16 (the hardest) again for every later gym.
+  - **10 Elite Four teams**, one per region (the Grand Region is the tenth), harder every region.
+  - **10 champion teams**, one per region, always six Pokémon and far harder than the Elite Four.
+- Early teams use their Pokémon's latest level-up moves and lower evolutions (Cynthia's first gym has a Gible). Later teams use fully evolved signature Pokémon with strong same-type attacks, coverage moves, TM moves and set-up or status moves.
+- Bosses get **training**: extra vitamin-style stat stacks (gym teams 9–16 a few, Elite Four one more per region, champions 4 in region 1 up to 22 in the Grand Region, spread over attack stat, Speed, HP and defences).
+- Bosses **choose moves cleverly**: each turn, with chance `ai` (gym 0.15 → 0.7, Elite Four 0.6 → 0.9, champion 0.85 → 1.0) they pick their best move against your Pokémon instead of a random one.
+- Legendary and mythical Pokémon only appear in a boss's team if they're in its signature list, and then only for champions from region 5 and Elite Four from region 9.
+- Levels still come from the difficulty curve (§4); a team only decides who is in it, their moves and their training. The stage theme picks the gym leader (one whose speciality fits), who brings their own team.
 - **Level cap (D14):** 50 in the first region, +50 per region, stopped at 100 for now because levels above 100 aren't decided. Enemy levels climb from the previous cap to just under the new one across the region's 8 stages; the league sits at the top.
 - After the champion the next region starts at stage 1. Beating the last champion wins the run.
 - The developer campaign is 2 regions × 2 stages × 5 levels with an Elite Four of 2 (`?campaign=dev`, or pick it in the debug panel).
@@ -67,7 +79,7 @@ Green's "weaker enemies" and "harder catching" are separate rule entries. Archet
 Every stage has a **theme**: a named pair of two types. Examples from the director: **"Stormy Nightmares"** (Electric/Ghost), **"Firey Promises"** (Fire/Psychic), **"Lazy Rivers"** (Water/Normal).
 
 - **Every two-type combination is used:** all 153 pairs of the 18 types (director confirmed "all 153", not only the pairs real Pokémon have). Each has a unique name in `src/data/themes.json`.
-- The theme decides **which wild Pokémon appear** (species with either type; species with both types are more common), **which trainers appear** (trainer classes whose speciality matches a theme type, with teams drawn from the theme), and **the gym leader** (a leader whose speciality matches a theme type when one is unused; their team is always drawn from the theme).
+- The theme decides **which wild Pokémon appear** (species with either type; species with both types are more common), **which trainers appear** (trainer classes whose speciality matches a theme type, with teams drawn from the theme), and **the gym leader** (a leader whose speciality matches a theme type when one is unused; they bring their own team, §4b).
 - The battle background is the arena for the theme's first type.
 - Themes and gym leaders don't repeat within a run (D6).
 

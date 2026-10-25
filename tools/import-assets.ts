@@ -4,11 +4,14 @@
 //
 //   npm run assets:import -- <folder containing the zips>
 //
-// Expected zips (names as supplied): images.zip, audio.zip, fonts.zip.
-// Inside them, files live under images/, audio/ and fonts/.
+// Expected zips (names as supplied): images.zip, audio.zip, fonts.zip, and
+// boss-TRAINERS.zip (boss portraits). Inside them, files live under images/,
+// audio/ and fonts/; the boss portraits live under boss-TRAINERS/ and are
+// copied to images/bosses/.
 
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildCatalog, filesOf } from '../src/assets/catalog.ts';
 import { readCatalogInputs } from './catalogInputs.ts';
@@ -36,6 +39,18 @@ const found = new Set<string>();
 for (const zipName of zips) {
   const zip = join(zipDir, zipName);
   const entries = listZip(zip);
+  // Boss portraits: "boss-TRAINERS/cynthia-gen7.png" -> images/bosses/cynthia-gen7.png
+  const portraits = wanted.filter((f) => f.startsWith('images/bosses/') && !found.has(f) && entries.has(`boss-TRAINERS/${f.slice('images/bosses/'.length)}`));
+  if (portraits.length > 0) {
+    const tmp = mkdtempSync(join(tmpdir(), 'bosses-'));
+    execFileSync('unzip', ['-o', '-q', zip, 'boss-TRAINERS/*.png', '-d', tmp]);
+    mkdirSync(join(assetsDir, 'images', 'bosses'), { recursive: true });
+    for (const f of portraits) copyFileSync(join(tmp, 'boss-TRAINERS', f.slice('images/bosses/'.length)), join(assetsDir, f));
+    rmSync(tmp, { recursive: true, force: true });
+    portraits.forEach((f) => found.add(f));
+    copied += portraits.length;
+    console.log(`${zipName}: copied ${portraits.length} boss portrait(s)`);
+  }
   const toExtract = wanted.filter((f) => entries.has(f) && !found.has(f));
   if (toExtract.length === 0) continue;
   // Extract in batches to keep the command line short.

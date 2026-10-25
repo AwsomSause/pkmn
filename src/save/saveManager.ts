@@ -242,8 +242,8 @@ export class SaveManager {
     if (run.stage) {
       if (!c.themes.has(run.stage.themeId)) return `Unknown stage theme "${run.stage.themeId}" in save.`;
       const league = run.stage.kind === 'league';
-      if (!(league ? c.champions : c.gymLeaders).has(run.stage.leaderId)) return `Unknown ${league ? 'champion' : 'gym leader'} "${run.stage.leaderId}" in save.`;
-      for (const id of run.stage.eliteFour) if (!c.eliteFour.has(id)) return `Unknown Elite Four member "${id}" in save.`;
+      if (!c.bosses.has(run.stage.leaderId)) return `Unknown ${league ? 'champion' : 'gym leader'} "${run.stage.leaderId}" in save.`;
+      for (const id of run.stage.eliteFour) if (!c.bosses.has(id)) return `Unknown Elite Four member "${id}" in save.`;
       const mapProblems = league ? validateLeagueMap(run.stage.map) : validateStageMap(run.stage.map);
       if (mapProblems.length > 0) return `The stage map in the save is damaged (${mapProblems[0]}).`;
       if (run.stage.current !== null && !run.stage.map.nodes.some((n) => n.id === run.stage!.current)) return 'The save points to a map node that does not exist.';
@@ -371,5 +371,5 @@ export class SaveManager {
 }
 
 function isBoss(c: Content, id: string): boolean {
-  return c.gymLeaders.has(id) || c.eliteFour.has(id) || c.champions.has(id);
+  return c.bosses.has(id);
 }

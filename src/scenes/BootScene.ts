@@ -5,6 +5,7 @@
 
 import Phaser from 'phaser';
 import { buildCatalog, type AssetManifest } from '../assets/catalog';
+import { bossSpriteIds } from '../core/regions';
 import { AssetRegistry, setServices } from '../game/services';
 import type { GameSession } from '../game/GameSession';
 import { queueAsset } from '../ui/lazyAssets';
@@ -26,7 +27,7 @@ export class BootScene extends Phaser.Scene {
     const manifest = (this.cache.json.get('manifest') as AssetManifest | undefined) ?? null;
     const catalog = buildCatalog({
       pokemon: [...content.species.values()].map((s) => s.assets),
-      trainerAssetIds: [...content.archetypes.values(), ...content.trainers.values(), ...content.gymLeaders.values(), ...content.eliteFour.values(), ...content.champions.values()].map((a) => a.spriteAssetId),
+      trainerAssetIds: [...content.archetypes.values(), ...content.trainers.values()].map((a) => a.spriteAssetId).concat(bossSpriteIds(content)),
       itemAssetIds: [...content.rewards.values(), ...content.items.values()].map((r) => r.iconAssetId),
       backgroundAssetIds: Object.values(content.arenas).filter((id): id is string => Boolean(id)),
     });

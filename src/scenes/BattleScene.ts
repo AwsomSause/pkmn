@@ -503,7 +503,7 @@ export class BattleScene extends Phaser.Scene {
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');
-      const leaderName = content.gymLeaders.get(end.badge)?.name ?? end.badge;
+      const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
       const campaign = content.campaigns.get(result.run.campaignId);
       const leagueNext = result.run.stage?.kind === 'stage' && campaign && result.run.stage.index + 1 >= campaign.stagesPerRegion;

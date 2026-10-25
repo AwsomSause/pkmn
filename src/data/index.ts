@@ -8,9 +8,9 @@ import {
   RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
-  GymLeaderSchema,
+  BossProfileSchema,
+  BossTeamsFileSchema,
   ItemSchema,
-  LeagueFileSchema,
   MoveSchema,
   RegionSchema,
   RewardSchema,
@@ -27,9 +27,9 @@ import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
-import gymLeadersJson from './gymLeaders.json';
+import bossesJson from './bosses.json';
+import bossTeamsJson from './bossTeams.json';
 import itemsJson from './items.json';
-import leagueJson from './league.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
@@ -57,8 +57,8 @@ export interface RawContent {
   rewards: unknown;
   items: unknown;
   trainers: unknown;
-  gymLeaders: unknown;
-  league: unknown;
+  bosses: unknown;
+  bossTeams: unknown;
   regions: unknown;
   themes: unknown;
   shop: unknown;
@@ -76,8 +76,8 @@ export const RAW_CONTENT: RawContent = {
   rewards: rewardsJson,
   items: itemsJson,
   trainers: trainersJson,
-  gymLeaders: gymLeadersJson,
-  league: leagueJson,
+  bosses: bossesJson,
+  bossTeams: bossTeamsJson,
   regions: regionsJson,
   themes: themesJson,
   shop: shopJson,
@@ -114,14 +114,14 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
   const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
-  const gymLeaders = parse(z.array(GymLeaderSchema), raw.gymLeaders, 'gymLeaders.json', problems);
-  const league = parse(LeagueFileSchema, raw.league, 'league.json', problems);
+  const bossProfiles = parse(z.array(BossProfileSchema), raw.bosses, 'bosses.json', problems);
+  const bossTeams = parse(BossTeamsFileSchema, raw.bossTeams, 'bossTeams.json', problems);
   const regions = parse(z.array(RegionSchema), raw.regions, 'regions.json', problems);
   const themes = parse(ThemesFileSchema, raw.themes, 'themes.json', problems);
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !trainers || !gymLeaders || !league || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -138,9 +138,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     rewards: toMap(rewards, 'rewards.json', problems),
     items: toMap(items, 'items.json', problems),
     trainers: toMap(trainers, 'trainers.json', problems),
-    gymLeaders: toMap(gymLeaders, 'gymLeaders.json', problems),
-    eliteFour: toMap(league.eliteFour, 'league.json eliteFour', problems),
-    champions: toMap(league.champions, 'league.json champions', problems),
+    bosses: new Map(),
     regions: toMap(regions, 'regions.json', problems),
     campaigns: toMap(balance.campaigns, 'balance.json campaigns', problems),
     themes: toMap(themes.themes, 'themes.json', problems),
@@ -149,6 +147,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
   };
+
+  for (const [id, profile] of toMap(bossProfiles, 'bosses.json', problems)) {
+    const teams = bossTeams[id];
+    if (!teams) problems.push(`boss "${id}" has no teams in bossTeams.json (run npm run data:bosses)`);
+    else content.bosses.set(id, { ...profile, teams });
+  }
+  for (const id of Object.keys(bossTeams)) if (!content.bosses.has(id)) problems.push(`bossTeams.json has teams for unknown boss "${id}"`);
 
   // Cross-reference checks.
   for (const s of content.species.values()) {
@@ -181,7 +186,18 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (themeNames.has(t.name)) problems.push(`theme name "${t.name}" is used twice`);
     themeNames.add(t.name);
   }
-  if (content.gymLeaders.size === 0) problems.push('gymLeaders.json has no gym leaders');
+  if (content.bosses.size === 0) problems.push('bosses.json has no bosses');
+  for (const boss of content.bosses.values()) {
+    for (const role of ['gym', 'elite', 'champion'] as const) {
+      boss.teams[role].forEach((team, i) => {
+        for (const m of team.members) {
+          const where = `boss "${boss.id}" ${role} team ${i + 1}`;
+          if (!content.species.has(m.speciesId)) problems.push(`${where} uses unknown species "${m.speciesId}"`);
+          for (const move of m.moves) if (!content.moves.has(move)) problems.push(`${where} uses unknown move "${move}"`);
+        }
+      });
+    }
+  }
   for (const entry of shop) {
     if (!content.items.has(entry.item)) problems.push(`shop.json sells unknown item "${entry.item}"`);
   }
@@ -200,9 +216,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   if (!content.campaigns.has('full')) problems.push('balance.json has no "full" campaign');
   for (const r of content.regions.values()) {
-    for (const id of r.gymLeaders) if (!content.gymLeaders.has(id)) problems.push(`region "${r.id}" lists unknown gym leader "${id}"`);
-    for (const id of r.eliteFour) if (!content.eliteFour.has(id)) problems.push(`region "${r.id}" lists unknown Elite Four member "${id}"`);
-    for (const id of r.champions) if (!content.champions.has(id)) problems.push(`region "${r.id}" lists unknown champion "${id}"`);
+    for (const id of [...r.gymLeaders, ...r.eliteFour, ...r.champions]) if (!content.bosses.has(id)) problems.push(`region "${r.id}" lists unknown boss "${id}"`);
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
   for (const id of balance.wildPool) {
