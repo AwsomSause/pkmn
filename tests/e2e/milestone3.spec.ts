@@ -20,6 +20,8 @@ async function startRun(page: Page, seed: string) {
   await page.goto(`/?seed=${seed}&debug=1`);
   await waitForScene(page, 'MainMenu');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'Hub');
+  await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'StarterSelect');

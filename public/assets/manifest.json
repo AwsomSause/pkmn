@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T16:22:02.653Z",
+  "generatedAt": "2026-10-25T17:18:24.584Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -3684,6 +3684,34 @@
       "atlasPath": "images/trainer/blue.json"
     },
     {
+      "id": "trainer.brock",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/brock.png",
+      "atlasPath": "images/trainer/brock.json"
+    },
+    {
+      "id": "trainer.misty",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/misty.png",
+      "atlasPath": "images/trainer/misty.json"
+    },
+    {
+      "id": "trainer.giovanni",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/giovanni.png",
+      "atlasPath": "images/trainer/giovanni.json"
+    },
+    {
+      "id": "trainer.cynthia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/cynthia.png",
+      "atlasPath": "images/trainer/cynthia.json"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -3803,20 +3831,6 @@
       "atlasPath": "images/trainer/fairy_tale_girl.json"
     },
     {
-      "id": "trainer.brock",
-      "kind": "atlas",
-      "category": "trainer",
-      "path": "images/trainer/brock.png",
-      "atlasPath": "images/trainer/brock.json"
-    },
-    {
-      "id": "trainer.misty",
-      "kind": "atlas",
-      "category": "trainer",
-      "path": "images/trainer/misty.png",
-      "atlasPath": "images/trainer/misty.json"
-    },
-    {
       "id": "trainer.lt_surge",
       "kind": "atlas",
       "category": "trainer",
@@ -3850,13 +3864,6 @@
       "category": "trainer",
       "path": "images/trainer/blaine.png",
       "atlasPath": "images/trainer/blaine.json"
-    },
-    {
-      "id": "trainer.giovanni",
-      "kind": "atlas",
-      "category": "trainer",
-      "path": "images/trainer/giovanni.png",
-      "atlasPath": "images/trainer/giovanni.json"
     },
     {
       "id": "trainer.falkner",
@@ -4564,13 +4571,6 @@
       "category": "trainer",
       "path": "images/trainer/wallace.png",
       "atlasPath": "images/trainer/wallace.json"
-    },
-    {
-      "id": "trainer.cynthia",
-      "kind": "atlas",
-      "category": "trainer",
-      "path": "images/trainer/cynthia.png",
-      "atlasPath": "images/trainer/cynthia.json"
     },
     {
       "id": "trainer.alder",

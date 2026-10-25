@@ -1,4 +1,4 @@
-// Title screen: Continue, New Run, sound toggle, and any save warnings.
+// Title screen: Continue, the Hub (start a run, Bank, trainers, achievements), sound toggle, and any save warnings.
 
 import Phaser from 'phaser';
 import { services } from '../game/services';
@@ -21,7 +21,7 @@ export class MainMenuScene extends Phaser.Scene {
     playMusic(this, 'bgm.menu');
 
     this.add.text(GAME_WIDTH / 2, 90, 'Pokémon Roguelike', textStyle(64, COLORS.textLight, { stroke: '#e05038', strokeThickness: 6 })).setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 150, 'Milestone 3 prototype', textStyle(24, '#aab4c8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 150, 'Milestone 5 prototype', textStyle(24, '#aab4c8')).setOrigin(0.5);
 
     drawPanel(this, GAME_WIDTH / 2 - 180, 190, 360, 220);
 
@@ -35,7 +35,7 @@ export class MainMenuScene extends Phaser.Scene {
     } else {
       options.push({ option: { label: 'Continue', disabled: true }, action: () => undefined });
     }
-    options.push({ option: { label: 'New Run', disabled: damaged }, action: () => this.scene.start('TrainerSelect') });
+    options.push({ option: { label: 'Enter the Hub', disabled: damaged }, action: () => this.scene.start('Hub') });
     options.push({
       option: { label: session.settings.muted ? 'Sound: Off' : 'Sound: On' },
       action: () => this.toggleSound(),
@@ -64,7 +64,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     const s = session.profile.stats;
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs started ${s.runsStarted}  ·  Battles won ${s.battlesWon}  ·  Best run ${s.bestEncounters} encounters  ·  Candies ${session.profile.candies}`, textStyle(18, '#8090a8'))
+      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs ${s.runsEnded}  ·  Battles won ${s.battlesWon}  ·  Bank Credits ${session.profile.bankCredits}  ·  Research ${session.profile.researchPoints}  ·  Candies ${session.profile.candies}`, textStyle(18, '#8090a8'))
       .setOrigin(0.5);
     this.add.text(16, GAME_HEIGHT - 28, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(16, '#5a6680'));
   }

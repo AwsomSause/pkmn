@@ -164,6 +164,21 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **The league gives no badges.** Elite Four and champions pay more prize money (`eliteFourPerLevel`, `championPerLevel`) and use the boss reward odds.
 - Save format is now version 4 for the run. A version 3 run becomes region 1 of a full campaign and gets its shuffled region order when it is next loaded.
 
+## 6e. Milestone 5 — Out-of-Run progression
+
+**Built 2026-10-25.** Scope is the director's first package, priorities 1–2 (GAME_DESIGN.md §14). Run-Prep (priorities 3–4) is M5.5. What changed, and the interpretations I made:
+- **The main menu leads to the Hub** instead of straight into a new run. Starting a run is now a Hub room. Continue still works from the main menu.
+- **One unlock shape for everything:** requirement → progress → reward → claim (`src/core/progress.ts`). Requirements are data (`total`, `best`, `distinct`, `achievement`) over counters the run keeps in `run.log.counters`; the profile adds them up when the run ends.
+- **Achievements are checked when a run ends,** not live during the run. 31 achievements in `achievements.json`, 2 of them hidden.
+- **Four currencies (D16):** Poké Dollars (run only), Bank Credits (savings + stipend at run end, achievements, spent on trainers), Research Points (new species seen or caught, shinies; spent in M5.5's Starter Laboratory), candies (unchanged).
+- **The developer campaign pays Bank Credits but doesn't count** toward achievements, unlocks, Research Points or species (`countsForProgress: false`), so testing can't unlock things.
+- **"Clear a region without a party wipe" (Brock)** is read as "without the Last Stand Charm saving you", because a wipe already ends the run here.
+- **Misty's unlock** is read as 13 boss wins in one run with a Water-type leading.
+- **Cynthia** is listed as "coming later": her passive needs systems that don't exist yet. **Oak and N** are left out until they have sprites (conflict C12).
+- **Run History** keeps the last 20 runs (`runHistorySize`).
+- **Save export/import** writes the profile and settings to a file; import checks the file and keeps a backup of the old profile in local storage.
+- Save format is now profile version 3 (Bank currency renamed to Bank Credits, new fields) and run version 5 (new log fields). Older saves upgrade automatically.
+
 ## 7. Risks
 
 | # | Risk | Impact | Mitigation |

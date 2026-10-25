@@ -35,10 +35,16 @@ export interface PickerConfig {
   backLabel?: string;
 }
 
+const LIST_TOP = 76;
+const LIST_BOTTOM = GAME_HEIGHT - 72;
+
 /** A modal list of rows. Keyboard: arrows to move, confirm to pick, back to cancel. Mouse: hover and click. */
 export class Picker {
   private readonly root: Phaser.GameObjects.Container;
   private readonly highlights: Phaser.GameObjects.Graphics[] = [];
+  private readonly zones: Phaser.GameObjects.Zone[] = [];
+  /** Rows sit in a scrolling list when there are more than fit on screen. */
+  private readonly list: Phaser.GameObjects.Container;
   private readonly footer: Phaser.GameObjects.Text;
   private index = 0;
   private closed = false;
@@ -53,9 +59,13 @@ export class Picker {
     this.root.add(scene.add.text(GAME_WIDTH - 48, 34, `Enter choose${backHint}`, textStyle(18, '#8090a8')).setOrigin(1, 0));
 
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
+    this.list = scene.add.container(0, 0);
+    this.root.add(this.list);
+    const maskShape = scene.make.graphics({}, false).fillRect(0, LIST_TOP - 6, GAME_WIDTH, LIST_BOTTOM - LIST_TOP + 12);
+    this.list.setMask(maskShape.createGeometryMask());
     config.rows.forEach((row, i) => {
       const x = 48 + (i % config.columns) * (colW + 16);
-      const y = 76 + Math.floor(i / config.columns) * (config.rowHeight + 10);
+      const y = LIST_TOP + Math.floor(i / config.columns) * (config.rowHeight + 10);
       const box = scene.add.container(x, y);
       const bg = scene.add.graphics();
       bg.fillStyle(row.problem ? 0x343c4c : COLORS.panel, 1);
@@ -74,7 +84,8 @@ export class Picker {
         this.confirm();
       });
       box.add(zone);
-      this.root.add(box);
+      this.zones.push(zone);
+      this.list.add(box);
     });
 
     this.footer = scene.add.text(48, GAME_HEIGHT - 60, '', textStyle(22, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 96 } }));
@@ -89,9 +100,24 @@ export class Picker {
     if (sound && i !== this.index) playSfx(this.scene, 'ui.select', 0.5);
     this.index = i;
     this.highlights.forEach((h, n) => h.setVisible(n === i));
+    this.scrollTo(i);
     const row = this.config.rows[i]!;
     this.footer.setText(row.problem ?? row.hint ?? '');
     this.footer.setColor(row.problem ? '#f0a0a0' : COLORS.textLight);
+  }
+
+  /** Scrolls the list so row i is on screen; rows out of view can't be clicked. */
+  private scrollTo(i: number): void {
+    const step = this.config.rowHeight + 10;
+    const rowTop = (n: number) => LIST_TOP + Math.floor(n / this.config.columns) * step;
+    const top = rowTop(i) + this.list.y;
+    if (top < LIST_TOP) this.list.y += LIST_TOP - top;
+    else if (top + this.config.rowHeight > LIST_BOTTOM) this.list.y -= top + this.config.rowHeight - LIST_BOTTOM;
+    this.zones.forEach((zone, n) => {
+      const y = rowTop(n) + this.list.y;
+      const visible = y >= LIST_TOP - 1 && y + this.config.rowHeight <= LIST_BOTTOM + 1;
+      if (zone.input) zone.input.enabled = visible;
+    });
   }
 
   private confirm(): void {

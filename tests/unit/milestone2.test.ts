@@ -170,9 +170,9 @@ describe('catching in a run', () => {
 
   it('candies from a run are added to the profile once', () => {
     const run = { ...newRun('candy'), candies: 7, phase: 'over' as const };
-    const once = finalizeRun(createProfile(content, 'p'), run).profile;
+    const once = finalizeRun(content, createProfile(content, 'p'), run).profile;
     expect(once.candies).toBe(7);
-    expect(finalizeRun(once, run).profile.candies).toBe(7);
+    expect(finalizeRun(content, once, run).profile.candies).toBe(7);
   });
 
   it('shinies roll at the configured odds', () => {

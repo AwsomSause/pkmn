@@ -105,8 +105,8 @@ describe('profile and run end', () => {
     const saves = new SaveManager(new MemoryStorageProvider(), content);
     const { profile } = saves.loadOrCreateProfile(() => 'p');
     const run = makeRun();
-    const first = finalizeRun(profile, run);
-    const second = finalizeRun(first.profile, run);
+    const first = finalizeRun(content, profile, run);
+    const second = finalizeRun(content, first.profile, run);
     expect(first.applied).toBe(true);
     expect(second.applied).toBe(false);
     expect(second.profile.stats.runsEnded).toBe(1);

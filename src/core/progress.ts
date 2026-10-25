@@ -1,0 +1,215 @@
+// Permanent progression (GAME_DESIGN.md §14): counters, discoveries,
+// achievements, trainer unlocks and the Bank's run-end payout.
+//
+// Every unlock uses the same four parts:
+//   requirement — data (contentSchema RequirementSchema), checked against the profile
+//   progress    — requirementProgress() says how far along the player is
+//   reward      — data (UnlockRewardSchema) paid out once
+//   claim       — achievements are claimed automatically when a run ends;
+//                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
+
+import { getCampaign } from './regions';
+import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
+import type { Payout, Profile, RunState } from './state';
+
+/** Adds to one of this run's counters (mutates `run`). */
+export function count(run: RunState, counter: string, amount = 1): void {
+  if (amount <= 0) return;
+  run.log.counters[counter] = (run.log.counters[counter] ?? 0) + amount;
+}
+
+/** Remembers species met or caught this run (mutates `run`). */
+export function discover(run: RunState, speciesId: string, caught: boolean): void {
+  if (!run.log.speciesSeen.includes(speciesId)) run.log.speciesSeen.push(speciesId);
+  if (caught && !run.log.speciesCaught.includes(speciesId)) run.log.speciesCaught.push(speciesId);
+}
+
+export interface RequirementProgress {
+  current: number;
+  target: number;
+  met: boolean;
+}
+
+export function requirementProgress(profile: Profile, req: Requirement): RequirementProgress {
+  let current: number;
+  let target: number;
+  switch (req.kind) {
+    case 'total':
+      current = profile.counters[req.counter] ?? 0;
+      target = req.atLeast;
+      break;
+    case 'best':
+      current = profile.best[req.counter] ?? 0;
+      target = req.atLeast;
+      break;
+    case 'distinct':
+      current = profile[req.set].length;
+      target = req.atLeast;
+      break;
+    case 'achievement':
+      current = profile.achievements[req.id] ? 1 : 0;
+      target = 1;
+      break;
+  }
+  return { current: Math.min(current, target), target, met: current >= target };
+}
+
+function applyReward(profile: Profile, reward: UnlockReward): void {
+  profile.bankCredits += reward.bankCredits;
+  profile.lifetimeBankCredits += reward.bankCredits;
+  profile.researchPoints += reward.researchPoints;
+  profile.candies += reward.candies;
+  if (reward.title && !profile.titles.includes(reward.title)) profile.titles.push(reward.title);
+}
+
+/**
+ * Awards every achievement whose requirement is now met and pays its reward
+ * (mutates `profile`). An achievement is only ever awarded once.
+ */
+export function awardAchievements(content: Content, profile: Profile, now: string): Achievement[] {
+  const earned: Achievement[] = [];
+  // Repeat, because one achievement can be another's requirement.
+  for (let changed = true; changed; ) {
+    changed = false;
+    for (const a of content.achievements.values()) {
+      if (profile.achievements[a.id] || !requirementProgress(profile, a.requirement).met) continue;
+      profile.achievements[a.id] = { earnedAt: now };
+      applyReward(profile, a.reward);
+      earned.push(a);
+      changed = true;
+    }
+  }
+  return earned;
+}
+
+/** The Bank's payout for a finished run: savings from leftover money plus a stipend for progress. */
+export function runPayout(content: Content, run: RunState): Omit<Payout, 'achievements' | 'total'> {
+  const { moneyConversionRate, stipend } = content.balance.bank;
+  const c = run.log.counters;
+  const savings = Math.floor(run.money * moneyConversionRate);
+  const earned =
+    stipend.perRun +
+    stipend.perEncounter * run.encountersCompleted +
+    stipend.perBadge * run.badges.length +
+    stipend.perEliteFour * (c.eliteFourDefeated ?? 0) +
+    stipend.perChampion * (c.championsDefeated ?? 0) +
+    stipend.perRegion * run.regionsCleared.length;
+  return { savings, stipend: Math.floor(earned) };
+}
+
+export interface RunEndSummary {
+  payout: Payout;
+  researchPoints: number;
+  newSpeciesSeen: string[];
+  newSpeciesCaught: string[];
+  achievements: Achievement[];
+  /** Trainers whose requirement became met with this run (they can now be claimed). */
+  trainersReady: Archetype[];
+}
+
+/**
+ * Adds a finished run to the profile (mutates `profile`): counters, bests,
+ * discoveries and Research Points (only for campaigns that count for
+ * progress), the Bank payout, achievements and the Run History entry.
+ */
+export function applyRunToProfile(content: Content, profile: Profile, run: RunState, now: string): RunEndSummary {
+  const counts = getCampaign(content, run.campaignId).countsForProgress;
+  const readyBefore = new Set(trainersReadyToClaim(content, profile).map((a) => a.id));
+  const research = content.balance.research;
+  let researchPoints = 0;
+  let newSpeciesSeen: string[] = [];
+  let newSpeciesCaught: string[] = [];
+
+  if (counts) {
+    const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 };
+    for (const [name, value] of Object.entries(runCounters)) {
+      if (value <= 0) continue;
+      profile.counters[name] = (profile.counters[name] ?? 0) + value;
+      profile.best[name] = Math.max(profile.best[name] ?? 0, value);
+    }
+    newSpeciesSeen = run.log.speciesSeen.filter((id) => !profile.speciesSeen.includes(id));
+    newSpeciesCaught = run.log.speciesCaught.filter((id) => !profile.speciesCaught.includes(id));
+    profile.speciesSeen.push(...newSpeciesSeen);
+    profile.speciesCaught.push(...newSpeciesCaught);
+    researchPoints =
+      research.perSpeciesSeen * newSpeciesSeen.length +
+      research.perSpeciesCaught * newSpeciesCaught.length +
+      research.perShiny * (run.log.counters.shiniesFound ?? 0);
+    profile.researchPoints += researchPoints;
+  }
+
+  const base = runPayout(content, run);
+  const creditsBefore = profile.bankCredits;
+  profile.bankCredits += base.savings + base.stipend;
+  profile.lifetimeBankCredits += base.savings + base.stipend;
+  const achievements = counts ? awardAchievements(content, profile, now) : [];
+  const achievementCredits = achievements.reduce((sum, a) => sum + a.reward.bankCredits, 0);
+  const payout: Payout = { ...base, achievements: achievementCredits, total: profile.bankCredits - creditsBefore };
+  profile.lastPayout = payout;
+
+  profile.runHistory = [
+    {
+      runId: run.runId,
+      endedAt: now,
+      seed: run.seed,
+      archetypeId: run.archetypeId,
+      campaignId: run.campaignId,
+      victory: run.victory,
+      regionsCleared: run.regionsCleared.length,
+      regions: run.regionOrder.length,
+      badges: run.badges.length,
+      encounters: run.encountersCompleted,
+      defeatedBy: run.log.defeatedBy,
+      party: run.party.map((m) => ({ speciesId: m.speciesId, level: m.level })),
+      bankCredits: payout.total,
+      researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
+      achievements: achievements.map((a) => a.id),
+    },
+    ...profile.runHistory,
+  ].slice(0, content.balance.runHistorySize);
+
+  const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady };
+}
+
+export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';
+
+/** Where a trainer stands in the Trainer Archive. */
+export function trainerStatus(profile: Profile, archetype: Archetype): TrainerStatus {
+  if (archetype.unlockedByDefault || profile.unlockedArchetypes.includes(archetype.id)) return 'unlocked';
+  if (!archetype.available) return 'comingLater';
+  if (archetype.unlock && requirementProgress(profile, archetype.unlock).met) return 'claimable';
+  return 'locked';
+}
+
+export function trainersReadyToClaim(content: Content, profile: Profile): Archetype[] {
+  return [...content.archetypes.values()].filter((a) => trainerStatus(profile, a) === 'claimable');
+}
+
+/** Why a trainer can't be claimed right now, or null if it can. */
+export function claimProblem(profile: Profile, archetype: Archetype): string | null {
+  const status = trainerStatus(profile, archetype);
+  if (status === 'unlocked') return `${archetype.name} is already on your team.`;
+  if (status === 'comingLater') return `${archetype.name} arrives in a later update.`;
+  if (status === 'locked') return `Not yet: ${archetype.unlockText}.`;
+  if (profile.bankCredits < archetype.unlockCost) return `You need ${archetype.unlockCost} Bank Credits (you have ${profile.bankCredits}).`;
+  return null;
+}
+
+/** Claims a trainer whose requirement is met, paying its Bank Credit cost. Returns a new profile. */
+export function claimTrainer(content: Content, current: Profile, archetypeId: string): Profile {
+  const archetype = content.archetypes.get(archetypeId);
+  if (!archetype) throw new Error(`Unknown trainer "${archetypeId}"`);
+  const problem = claimProblem(current, archetype);
+  if (problem) throw new Error(problem);
+  const profile = structuredClone(current);
+  profile.bankCredits -= archetype.unlockCost;
+  profile.unlockedArchetypes.push(archetype.id);
+  return profile;
+}
+
+/** Shows an earned title on the profile (or none). Returns a new profile. */
+export function setActiveTitle(current: Profile, title: string | null): Profile {
+  if (title !== null && !current.titles.includes(title)) throw new Error(`Title "${title}" isn't earned yet`);
+  return { ...current, activeTitle: title };
+}
