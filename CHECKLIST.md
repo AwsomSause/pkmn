@@ -201,3 +201,6 @@ See IMPLEMENTATION_PLAN.md §5.
 - [x] Green's archetype uses the boss pack's Green portrait
 - [x] Teams rebuilt on the full species data (M6): every signature Pokémon is in the game
 
+## Milestone 10 — Visuals and presentation (planned)
+
+A milestone purely for looks: a shared visual style, redesigned screens, transitions and animations, and a final layout pass. No gameplay changes. See IMPLEMENTATION_PLAN.md §5.
