@@ -7,12 +7,14 @@ import { GameSession } from './game/GameSession';
 import { LocalStorageProvider, MemoryStorageProvider, type StorageProvider } from './save/storage';
 import { BattleScene } from './scenes/BattleScene';
 import { BootScene } from './scenes/BootScene';
+import { BriefingScene } from './scenes/BriefingScene';
 import { DecisionScene } from './scenes/DecisionScene';
 import { GameOverScene } from './scenes/GameOverScene';
 import { HubScene } from './scenes/HubScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
 import { MapScene } from './scenes/MapScene';
 import { RewardScene } from './scenes/RewardScene';
+import { RunPrepScene } from './scenes/RunPrepScene';
 import { ShopScene } from './scenes/ShopScene';
 import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
@@ -62,7 +64,7 @@ function start(): void {
     backgroundColor: '#101828',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, StarterSelectScene, MapScene, ShopScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
+    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
     },

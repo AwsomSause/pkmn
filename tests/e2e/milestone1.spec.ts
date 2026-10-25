@@ -63,11 +63,15 @@ test('menu → trainer → starter → map → battle → reward → map → nex
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter'); // Red
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter'); // Roll starters
   await waitForScene(page, 'StarterSelect');
   const choices = await page.evaluate(() => (window as any).__pkr.session.run.starterChoices as string[]);
   expect(new Set(choices).size).toBe(3);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // second starter
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter'); // Begin the run
   await enterFromMap(page);
   expect((await run(page))!.party[0]!.speciesId).toBe(choices[1]);
   const startXp = (await run(page))!.party[0]!.xp;
@@ -122,8 +126,12 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter'); // Roll starters
   await waitForScene(page, 'StarterSelect');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter'); // Begin the run
   await enterFromMap(page);
   // Use the debug tools to face a much stronger opponent.
   await page.evaluate(() => (window as any).__pkr.session.debugReplaceEnemy('growlithe', 40));

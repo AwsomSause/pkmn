@@ -22,7 +22,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 3, run: 5, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 4, run: 6, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -52,6 +52,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         lastPayout: null,
       };
     },
+    // v4 (Milestone 5.5): Starter Laboratory pools, Bank licenses and loadout presets.
+    3: (data) => ({ ...(data as Json), unlockedPools: [], licenses: [], presets: [], lastPrep: null }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -88,6 +90,13 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const run = data as Json;
       const log = run.log as Json;
       return { ...run, log: { ...log, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null } };
+    },
+    // v6 (Milestone 5.5): how the run was prepared. An older run was a full or
+    // dev campaign with the classic pool, the standard draft and no preparation.
+    5: (data) => {
+      const run = data as Json;
+      const campaignId = typeof run.campaignId === 'string' ? run.campaignId : 'full';
+      return { ...run, prep: { campaignId, poolId: 'classic', draftRuleId: 'standard', typeFocus: null, tokenId: null, note: null } };
     },
   },
   settings: {},

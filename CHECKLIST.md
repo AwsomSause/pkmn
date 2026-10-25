@@ -150,6 +150,23 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Oak and N aren't in the Archive until they have sprites; Cynthia's passive comes later.
 - Research Points pile up but have nothing to buy until the Starter Laboratory (M5.5).
 
-## Milestone 5.5+ — not started
+## Milestone 5.5 — Run-Prep ✅
+
+- [x] Preparation Desk after choosing a trainer: campaign, starter pool, draft rule, focus type, preparation, seed, with a Run Build Summary
+- [x] Starter pools in data (Classic, Johto, Hoenn, Research, Rare, Grand), unlocked with Research Points in the Starter Laboratory
+- [x] Pools list future species safely; they appear once the full Pokédex arrives
+- [x] Draft rules: Standard, Balanced, Blind, Type Focus, with a clear fallback note instead of endless rerolls
+- [x] Preparation tokens: Pocket Money, Ball Bundle, Field Kit (one per run)
+- [x] Bank licenses: Type Specialist, Field Medic, Research
+- [x] Loadout presets (3 slots), with unavailable choices resolved before the run starts; the last run's choices are remembered
+- [x] Campaign briefing: region order, first stage, starting resources, rules, seed with Copy seed
+- [x] Save format: profile v4 and run v6, with automatic upgrades
+
+### Known limits in Milestone 5.5 (by design, documented)
+
+- Johto and Hoenn have only some of their species until Milestone 6; Grand has none yet.
+- Only three licenses and three tokens so far; Bank tiers, challenge modifiers and starter mastery come later.
+
+## Milestone 6+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.
