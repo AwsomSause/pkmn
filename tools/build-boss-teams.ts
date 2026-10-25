@@ -256,7 +256,7 @@ function pickMoves(s: SpeciesRow, level: number, strength: number): string[] {
       const attack = [...unique].reverse().find((id) => moves.get(id)!.category !== 'status');
       if (attack) picked[0] = attack;
     }
-    return picked.length > 0 ? picked : ['tackle'];
+    return picked;
   }
   const pool = strength >= 0.45 ? learnable(s, level, true) : levelUp;
   const attacks = pool.filter((m) => m.category !== 'status').map((m) => ({ m, score: damageScore(m, s, level) }));
@@ -335,6 +335,8 @@ function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>): BossTeam 
     const at = id ? formAt(id, level) : undefined;
     const s = at && spec.strength >= 0.5 ? evolveUp(at, level) : at;
     if (!s || families.has(family(s)) || members.length >= spec.size) return false;
+    // Skip Pokémon that know no move the game supports yet at this level (e.g. Smeargle, whose only move is Sketch).
+    if (pickMoves(s, level, spec.strength).length === 0) return false;
     families.add(family(s));
     members.push(s);
     return true;

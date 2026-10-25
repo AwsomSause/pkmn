@@ -45,7 +45,8 @@ function powerUp(run: RunState): RunState {
 
 /**
  * Fights the current battle with the first damaging move, then skips move-learning.
- * `topUp` restores the lead's HP every turn (region 2 teams are level 100 too).
+ * `topUp` keeps the lead standing every turn (late bosses are trained, clever and can knock out
+ * even a level 100 Pokémon in one hit; this test is about the campaign flow, not difficulty).
  */
 function win(run: RunState, topUp = false): RunState {
   let guard = 0;
@@ -55,7 +56,7 @@ function win(run: RunState, topUp = false): RunState {
       continue;
     }
     const mon = run.party[run.battle!.activeIndex]!;
-    if (topUp) mon.hp = maxHp(content, mon);
+    if (topUp) mon.hp = 1_000_000;
     const idx = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
     run = takeTurn(content, run, { kind: 'move', index: idx >= 0 ? idx : 0 }).run;
   }
