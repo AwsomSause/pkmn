@@ -9,7 +9,7 @@
 // This file must stay free of runtime imports so the Node tools can use it.
 
 export type AssetKind = 'image' | 'atlas' | 'audio' | 'font';
-export type AssetCategory = 'pokemon' | 'trainer' | 'item' | 'background' | 'music' | 'sound' | 'font';
+export type AssetCategory = 'pokemon' | 'trainer' | 'item' | 'background' | 'ui' | 'music' | 'sound' | 'font';
 
 export interface AssetEntry {
   id: string;
@@ -56,6 +56,13 @@ const atlas = (id: string, category: AssetCategory, base: string): AssetEntry =>
 /** Fixed UI/audio assets used by the screens. */
 export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bg.battle', kind: 'image', category: 'background', path: 'images/arenas/grass_bg.png' },
+  { id: 'bg.battle.player', kind: 'image', category: 'background', path: 'images/arenas/grass_a.png' },
+  { id: 'bg.battle.enemy', kind: 'image', category: 'background', path: 'images/arenas/grass_b.png' },
+  // PokeRogue's interface art: the menu pointer, battle info boxes and message bar.
+  { id: 'ui.cursor', kind: 'image', category: 'ui', path: 'images/ui/cursor.png' },
+  { id: 'ui.pbinfo_player', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_player.png' },
+  { id: 'ui.pbinfo_enemy', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_enemy_mini.png' },
+  { id: 'ui.message_bg', kind: 'image', category: 'ui', path: 'images/ui/bg.png' },
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
@@ -98,6 +105,19 @@ export function backgroundEntry(assetId: string): AssetEntry {
   return { id: assetId, kind: 'image', category: 'background', path: `images/arenas/${assetId.replace(/^bg\.arena\./, '')}_bg.png` };
 }
 
+/**
+ * The ground patches the Pokémon stand on in an arena, drawn over its
+ * background: "bg.arena.volcano.player" -> images/arenas/volcano_a.png and
+ * "bg.arena.volcano.enemy" -> images/arenas/volcano_b.png.
+ */
+export function arenaBaseEntries(assetId: string): AssetEntry[] {
+  const name = assetId.replace(/^bg\.arena\./, '');
+  return [
+    { id: `${assetId}.player`, kind: 'image', category: 'background', path: `images/arenas/${name}_a.png` },
+    { id: `${assetId}.enemy`, kind: 'image', category: 'background', path: `images/arenas/${name}_b.png` },
+  ];
+}
+
 /** Asset IDs for one Pokémon's art. */
 export const pokemonAssetIds = (art: PokemonArt) => ({
   front: `pokemon.front.${art.sprite}`,
@@ -130,6 +150,7 @@ export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
     ...inputs.trainerAssetIds.map(trainerEntry),
     ...inputs.itemAssetIds.map(itemEntry),
     ...inputs.backgroundAssetIds.map(backgroundEntry),
+    ...inputs.backgroundAssetIds.flatMap(arenaBaseEntries),
   ];
   const seen = new Set<string>();
   return entries.filter((e) => (seen.has(e.id) ? false : (seen.add(e.id), true)));

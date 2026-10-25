@@ -34,7 +34,7 @@ export class BriefingScene extends Phaser.Scene {
     const lead = run.party[0]!;
 
     this.add.text(GAME_WIDTH / 2, 30, 'Campaign briefing', textStyle(40, COLORS.textLight)).setOrigin(0.5);
-    drawPanel(this, 24, 64, GAME_WIDTH - 48, 370, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 24, 64, GAME_WIDTH - 48, 370, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
 
     let y = 80;
     const line = (label: string, text: string) => {
@@ -66,7 +66,7 @@ export class BriefingScene extends Phaser.Scene {
       color: COLORS.textLight,
       onSelect: (i) => (i === 0 ? this.scene.start(sceneForRun(session.run!)) : this.copySeed(run.seed)),
     });
-    this.add.text(16, GAME_HEIGHT - 22, '←/→ choose  ·  Enter select', textStyle(14, '#5a6680'));
+    this.add.text(16, GAME_HEIGHT - 22, '←/→ choose  ·  Enter select', textStyle(14, '#8a7f96'));
     onInputAction(this, (a) => this.menu.handle(a));
   }
 

@@ -7,7 +7,7 @@ import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel } from '../ui/widgets';
+import { drawPanel, focusFrame } from '../ui/widgets';
 
 export class TrainerSelectScene extends Phaser.Scene {
   private index = 0;
@@ -44,9 +44,7 @@ export class TrainerSelectScene extends Phaser.Scene {
         return o;
       };
       add(drawPanel(this, x, y, cardW, 420));
-      const highlight = add(this.add.graphics());
-      highlight.lineStyle(6, COLORS.accent, 1);
-      highlight.strokeRoundedRect(x - 4, y - 4, cardW + 8, 428, 12);
+      const highlight = add(focusFrame(this, x, y, cardW, 420));
       this.cursors.push(highlight);
       add(trainerVisual(this, a.spriteAssetId, a.name, x + cardW / 2, y + 190, 2) as Phaser.GameObjects.GameObject);
       add(this.add.text(x + cardW / 2, y + 205, a.name, textStyle(36)).setOrigin(0.5, 0));
@@ -65,7 +63,7 @@ export class TrainerSelectScene extends Phaser.Scene {
     });
     this.focus(0);
 
-    this.add.text(GAME_WIDTH / 2, 516, '←/→ choose  ·  Enter confirm  ·  Esc back', textStyle(18, '#8090a8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 516, '←/→ choose  ·  Enter confirm  ·  Esc back', textStyle(18, '#a69cb4')).setOrigin(0.5);
 
     onInputAction(this, (action) => {
       if (action === 'left') this.focus((this.index + archetypes.length - 1) % archetypes.length);

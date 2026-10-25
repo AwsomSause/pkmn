@@ -7,7 +7,7 @@ import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
-import { badge, drawPanel } from '../ui/widgets';
+import { badge, drawPanel, focusFrame } from '../ui/widgets';
 import { preloadPokemon } from '../ui/lazyAssets';
 
 export class StarterSelectScene extends Phaser.Scene {
@@ -36,7 +36,7 @@ export class StarterSelectScene extends Phaser.Scene {
     const rule = content.draftRules.get(run.prep.draftRuleId);
     const blind = rule?.kind === 'blind';
     this.add
-      .text(GAME_WIDTH / 2, 74, run.prep.note ?? `Trainer: ${archetype.name}  ·  ${pool?.name ?? ''} pool  ·  ${rule?.name ?? ''}  ·  Seed: ${run.seed}`, textStyle(18, run.prep.note ? '#f0e0a0' : '#8090a8'))
+      .text(GAME_WIDTH / 2, 74, run.prep.note ?? `Trainer: ${archetype.name}  ·  ${pool?.name ?? ''} pool  ·  ${rule?.name ?? ''}  ·  Seed: ${run.seed}`, textStyle(18, run.prep.note ? '#f0e0a0' : '#a69cb4'))
       .setOrigin(0.5);
 
     const cardW = 280;
@@ -48,9 +48,7 @@ export class StarterSelectScene extends Phaser.Scene {
       const x = startX + i * (cardW + gap);
       const y = 100;
       drawPanel(this, x, y, cardW, 400);
-      const highlight = this.add.graphics();
-      highlight.lineStyle(6, COLORS.accent, 1);
-      highlight.strokeRoundedRect(x - 4, y - 4, cardW + 8, 408, 12);
+      const highlight = focusFrame(this, x, y, cardW, 400);
       this.cursors.push(highlight);
 
       if (blind) {
@@ -85,7 +83,7 @@ export class StarterSelectScene extends Phaser.Scene {
     });
     this.focus(0);
 
-    this.add.text(GAME_WIDTH / 2, 516, '←/→ choose  ·  Enter confirm  ·  Esc menu (run is saved)', textStyle(18, '#8090a8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 516, '←/→ choose  ·  Enter confirm  ·  Esc menu (run is saved)', textStyle(18, '#a69cb4')).setOrigin(0.5);
 
     onInputAction(this, (action) => {
       if (action === 'left') this.focus((this.index + 2) % 3);
