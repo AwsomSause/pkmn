@@ -2,28 +2,34 @@
 // current run state and returns a NEW run state (the old one is untouched),
 // plus whatever the screens need to show what happened.
 //
-// Phases:  starter → battle → (decision) → reward → (decision) → battle → ... → over
+// Phases:  starter → map → battle → (decision) → reward → (decision) → map → ... → over
+//   map      = choose the next node on the stage map (or visit a healing stop / shop beside the current one)
+//   shop     = buying items at a shop stop
 //   decision = choices the player must make: learning a move, or what to do
 //              with a caught Pokémon.
+// Beating the gym leader at the end of a stage moves the run to a new stage
+// with a new theme.
 
 import { captureMultiplier, getArchetype, moneyMultiplier, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
 import type { Content } from './contentSchema';
 import {
   candiesForRelease,
-  enemyLevel,
   generateStarterChoices,
-  isTrainerEncounter,
-  pickWildSpecies,
+  planGymLeader,
   planTrainer,
-  rollShiny,
+  planWild,
+  runProgress,
+  type TrainerPlan,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
+import { findNode, generateStageMap, nextChoices, validateStageMap } from './map';
 import { createStreams, Rng, withStream } from './rng';
-import { ATTRIBUTE_NAMES, currentEnemy, type PendingDecision, type PokemonInstance, type RunState } from './state';
+import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { getTheme, pickGymLeader, pickTheme } from './themes';
 
 export interface NewRunOptions {
   runId: string;
@@ -49,6 +55,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     battle: null,
     pending: [],
     afterDecisions: 'reward',
+    stage: null,
+    usedThemes: [],
+    usedLeaders: [],
+    badges: [],
     draft: null,
     attributeModifiers: Object.fromEntries(ATTRIBUTE_NAMES.map((a) => [a, 0])),
     rng,
@@ -77,32 +87,122 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
   run.party = [createPokemon(content, speciesId, content.balance.starterLevel, nextUid(run, 'p'))];
-  startNextEncounter(content, run);
+  enterStage(content, run, 0);
   return run;
 }
 
-/** Sets up the next battle (mutates `run`): a trainer every Nth encounter, otherwise a wild Pokémon. */
-function startNextEncounter(content: Content, run: RunState): void {
+/** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
+function enterStage(content: Content, run: RunState, index: number): void {
+  const { theme, leader, map } = withStream(run.rng, 'map', (r) => {
+    const theme = pickTheme(content, run.usedThemes, r);
+    const leader = pickGymLeader(content, theme, run.usedLeaders, r);
+    return { theme, leader, map: generateStageMap(content, r) };
+  });
+  const problems = validateStageMap(map);
+  if (problems.length > 0) throw new Error(`Generated an invalid stage map: ${problems.join('; ')}`);
+  run.usedThemes.push(theme.id);
+  run.usedLeaders.push(leader.id);
+  run.stage = { index, themeId: theme.id, leaderId: leader.id, map, current: null, visited: [] };
+  run.battle = null;
+  run.phase = 'map';
+}
+
+function requireStage(run: RunState): StageState {
+  if (!run.stage) throw new Error('The run has no stage');
+  return run.stage;
+}
+
+/** Moves to a node on the map and starts its encounter. */
+export function chooseNode(content: Content, current: RunState, nodeId: string): RunState {
+  assertPhase(current, 'map');
+  const choices = nextChoices(requireStage(current));
+  if (!choices.some((n) => n.id === nodeId)) throw new Error(`Node "${nodeId}" is not one of the next choices`);
+  const run = structuredClone(current);
+  const stage = run.stage!;
+  stage.current = nodeId;
+  stage.visited.push(nodeId);
+  startEncounter(content, run, findNode(stage.map, nodeId));
+  return run;
+}
+
+/** Sets up the battle for a map node (mutates `run`). */
+function startEncounter(content: Content, run: RunState, node: MapNode): void {
+  const stage = run.stage!;
   const archetype = getArchetype(content, run.archetypeId);
+  const theme = getTheme(content, stage.themeId);
+  const progress = runProgress(content, stage.index, node.column);
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
   const activeUid = run.party[activeIndex]!.uid;
 
-  if (isTrainerEncounter(content, run.encountersCompleted + 1)) {
-    const plan = withStream(run.rng, 'encounter', (r) => planTrainer(content, archetype, run.encountersCompleted, r));
-    const team = plan.members.map((m) => createPokemon(content, m.speciesId, m.level, nextUid(run, 'e')));
-    run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name });
-  } else {
-    const { speciesId, level, shiny } = withStream(run.rng, 'encounter', (r) => {
-      const speciesId = pickWildSpecies(content, r);
-      const level = enemyLevel(content, archetype, run.encountersCompleted, r).level;
-      return { speciesId, level, shiny: rollShiny(content, r) };
+  if (node.kind === 'wild') {
+    const plan = withStream(run.rng, 'encounter', (r) => {
+      const [lo, hi] = content.balance.difficulty.harderBonus;
+      const bonus = node.harder ? r.int(lo, hi) : 0;
+      return planWild(content, archetype, theme, progress, bonus, r);
     });
-    const enemy = createPokemon(content, speciesId, level, nextUid(run, 'e'));
-    enemy.shiny = shiny;
+    const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
+    enemy.shiny = plan.shiny;
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
+    run.battle.levelInfo = [plan.levelInfo];
+  } else {
+    const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) =>
+      node.kind === 'gym'
+        ? planGymLeader(content, archetype, theme, stage.leaderId, stage.index, progress, r)
+        : planTrainer(content, archetype, theme, stage.index, progress, r),
+    );
+    const team = plan.members.map((m) => createPokemon(content, m.speciesId, m.level, nextUid(run, 'e')));
+    run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
+    run.battle.levelInfo = plan.levelInfo;
   }
   run.phase = 'battle';
+}
+
+/** Uses a healing stop or enters a shop beside the current node. */
+export function visitSide(content: Content, current: RunState, sideId: string): { run: RunState; message: string } {
+  assertPhase(current, 'map');
+  const stage = requireStage(current);
+  if (stage.current === null) throw new Error('Choose a node first');
+  const side = findNode(stage.map, stage.current).sides.find((s) => s.id === sideId);
+  if (!side) throw new Error(`No side stop "${sideId}" here`);
+  if (side.kind === 'heal' && side.used) throw new Error('This healing stop has already been used');
+  const run = structuredClone(current);
+  const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
+  if (side.kind === 'heal') {
+    healParty(content, run);
+    runSide.used = true;
+    return { run, message: 'Your Pokémon were fully healed!' };
+  }
+  run.phase = 'shop';
+  return { run, message: 'Welcome to the shop!' };
+}
+
+function healParty(content: Content, run: RunState): void {
+  for (const mon of run.party) {
+    mon.hp = maxHp(content, mon);
+    mon.status = null;
+    for (const slot of mon.moves) slot.pp = content.moves.get(slot.id)!.pp;
+  }
+}
+
+/** Buys one of an item at the shop. */
+export function buyItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
+  assertPhase(current, 'shop');
+  const entry = content.shop.find((e) => e.item === itemId);
+  if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
+  const item = getItem(content, itemId);
+  if (current.money < entry.price) throw new Error(`You need ₽${entry.price} for a ${item.name}.`);
+  const run = structuredClone(current);
+  run.money -= entry.price;
+  addItem(run.inventory, itemId, 1);
+  return { run, message: `You bought a ${item.name} for ₽${entry.price}.` };
+}
+
+export function leaveShop(current: RunState): RunState {
+  assertPhase(current, 'shop');
+  const run = structuredClone(current);
+  run.phase = 'map';
+  return run;
 }
 
 /** Events the run adds to the battle engine's events (experience and level-ups). */
@@ -118,6 +218,8 @@ export interface BattleEndResult {
   moneyGained: number;
   caughtSpeciesId: string | null;
   evolutions: (EvolutionResult & { uid: string })[];
+  /** The gym leader's id when this win beat a gym leader. */
+  badge: string | null;
 }
 
 export interface TurnResult {
@@ -199,9 +301,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const battle = run.battle!;
   const archetype = getArchetype(content, run.archetypeId);
   let base: number;
-  if (battle.kind === 'trainer' && battle.trainer) {
+  const topLevel = Math.max(...battle.enemyTeam.map((m) => m.level));
+  if (battle.trainer?.leaderId) {
+    base = content.balance.money.gymLeaderPerLevel * topLevel;
+  } else if (battle.kind === 'trainer' && battle.trainer) {
     const trainerClass = content.trainers.get(battle.trainer.classId)!;
-    base = trainerClass.moneyPerLevel * Math.max(...battle.enemyTeam.map((m) => m.level));
+    base = trainerClass.moneyPerLevel * topLevel;
   } else {
     base = content.balance.money.wildPerEnemyLevel * currentEnemy(battle).level;
   }
@@ -228,12 +333,14 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.pending = [...caughtPending, ...run.pending];
 
   const outcome = battle.outcome as 'win' | 'caught';
+  const badge = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
+  if (badge) run.badges.push(badge);
   run.battle = null;
   run.encountersCompleted += 1;
   run.log.battlesWon += 1;
   run.afterDecisions = 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, caughtSpeciesId, evolutions };
+  return { outcome, moneyGained, caughtSpeciesId, evolutions, badge };
 }
 
 /**
@@ -261,11 +368,30 @@ function continueAfterDecisions(content: Content, run: RunState): void {
     return;
   }
   if (run.afterDecisions === 'reward') {
-    run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r));
+    const weights = rewardWeights(content, run);
+    run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
     run.phase = 'reward';
-  } else {
-    startNextEncounter(content, run);
+    return;
   }
+  // Back to the map. After the gym leader, the next stage begins.
+  const stage = run.stage;
+  if (!stage) {
+    enterStage(content, run, 0); // a save from before stage maps existed
+  } else if (stage.current !== null && findNode(stage.map, stage.current).kind === 'gym') {
+    enterStage(content, run, stage.index + 1);
+  } else {
+    run.phase = 'map';
+  }
+}
+
+/** Better rewards after harder routes and gym leaders. */
+function rewardWeights(content: Content, run: RunState) {
+  const stage = run.stage;
+  if (!stage || stage.current === null) return content.balance.rarityWeights;
+  const node = findNode(stage.map, stage.current);
+  if (node.kind === 'gym') return content.balance.bossRarityWeights;
+  if (node.harder) return content.balance.harderRarityWeights;
+  return content.balance.rarityWeights;
 }
 
 export type DecisionChoice =
@@ -348,14 +474,14 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
   const reward = applyReward(content, run, getArchetype(content, run.archetypeId), rewardId, targetIndex);
   run.draft = null;
   run.pending.push(...reward.pending);
-  run.afterDecisions = 'battle';
+  run.afterDecisions = 'map';
   continueAfterDecisions(content, run);
   return { run, reward };
 }
 
 /** Uses a Bag item on a party member between battles. */
 export function useItemOutsideBattle(content: Content, current: RunState, itemId: string, partyIndex: number): { run: RunState; message: string } {
-  assertPhase(current, 'reward', 'decision');
+  assertPhase(current, 'reward', 'decision', 'map', 'shop');
   const item = getItem(content, itemId);
   if (!item.usableOutside) throw new Error(`${item.name} can't be used outside battle`);
   if (itemCount(current.inventory, itemId) <= 0) throw new Error(`You have no ${item.name}`);
@@ -371,7 +497,7 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
 
 /** Moves a party member to the front, so it leads the next battle. */
 export function setLead(current: RunState, partyIndex: number): RunState {
-  assertPhase(current, 'reward', 'decision');
+  assertPhase(current, 'reward', 'decision', 'map', 'shop');
   if (!current.party[partyIndex]) throw new Error('No Pokémon in that slot');
   const run = structuredClone(current);
   const [mon] = run.party.splice(partyIndex, 1);
@@ -402,11 +528,22 @@ export function debugAddToParty(content: Content, current: RunState, speciesId: 
 /** Debug: fully heals the party and restores PP. */
 export function debugHealParty(content: Content, current: RunState): RunState {
   const run = structuredClone(current);
-  for (const mon of run.party) {
-    mon.hp = maxHp(content, mon);
-    mon.status = null;
-    for (const slot of mon.moves) slot.pp = content.moves.get(slot.id)!.pp;
+  healParty(content, run);
+  return run;
+}
+
+/** Debug: moves the player to a node in the column before `column`, so `column` is next. */
+export function debugJumpToColumn(current: RunState, column: number): RunState {
+  assertPhase(current, 'map');
+  const stage = requireStage(current);
+  const run = structuredClone(current);
+  if (column <= 1) {
+    run.stage!.current = null;
+    return run;
   }
+  const before = stage.map.nodes.find((n) => n.column === Math.min(column, stage.map.columns) - 1);
+  if (!before) throw new Error(`No column ${column - 1}`);
+  run.stage!.current = before.id;
   return run;
 }
 

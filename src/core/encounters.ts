@@ -1,9 +1,11 @@
-// Starter generation and wild encounter generation.
+// Starters, the difficulty model, and planning wild, trainer and gym leader encounters.
 
 import { enemyLevelOffset } from './archetypes';
-import type { Archetype, Content } from './contentSchema';
+import type { Archetype, Content, Theme } from './contentSchema';
 import { getSpecies } from './pokemon';
 import type { Rng } from './rng';
+import type { LevelBreakdown } from './state';
+import { pickThemeSpecies, trainerClassesFor } from './themes';
 
 /**
  * Picks `count` different species from the starter pool. Only first-stage
@@ -18,45 +20,39 @@ export function generateStarterChoices(content: Content, rng: Rng): string[] {
   return rng.shuffle(eligible).slice(0, starterChoices);
 }
 
-export interface EnemyLevelBreakdown {
-  base: number;
-  variance: number;
-  archetypeOffset: number;
-  unclamped: number;
-  level: number;
+export type EnemyLevelBreakdown = LevelBreakdown;
+
+/** How far into the run a stage column is: 0 for the first column of the first stage. */
+export function runProgress(content: Content, stageIndex: number, column: number): number {
+  return stageIndex * content.balance.stage.columns + (column - 1);
 }
 
 /**
- * Prototype enemy level curve (a stand-in until stage maps and the full
- * difficulty model arrive in Milestone 3). Order of operations:
- *   1. base     = round(baseLevel + levelsPerEncounter × encountersCompleted)
- *   2. variance = random whole number in [-variance, +variance]
- *   3. archetype offset (Blue +2, Green −1)
- *   4. clamp to [minLevel, maxLevel]
+ * The difficulty model. Order of operations:
+ *   1. base     = baseLevel
+ *   2. progress = levelsPerColumn × columns travelled so far in the run
+ *   3. variance = random whole number in [-variance, +variance]
+ *   4. archetype offset (Blue +2, Green −1)
+ *   5. bonus    = node bonus (trainer, gym leader, harder route)
+ *   6. level    = round(base + progress) + variance + offset + bonus, clamped to [minLevel, maxLevel]
  */
-export function enemyLevel(content: Content, archetype: Archetype, encountersCompleted: number, rng: Rng): EnemyLevelBreakdown {
-  const cfg = content.balance.prototypeEncounters;
-  const base = Math.round(cfg.baseLevel + cfg.levelsPerEncounter * encountersCompleted);
+export function enemyLevel(content: Content, archetype: Archetype, progress: number, bonus: number, rng: Rng): EnemyLevelBreakdown {
+  const cfg = content.balance.difficulty;
+  const base = cfg.baseLevel;
+  const progressLevels = cfg.levelsPerColumn * progress;
   const variance = cfg.variance > 0 ? rng.int(-cfg.variance, cfg.variance) : 0;
   const archetypeOffset = enemyLevelOffset(archetype);
-  const unclamped = base + variance + archetypeOffset;
+  const unclamped = Math.round(base + progressLevels) + variance + archetypeOffset + bonus;
   const level = Math.max(cfg.minLevel, Math.min(cfg.maxLevel, unclamped));
-  return { base, variance, archetypeOffset, unclamped, level };
+  return { base, progress: progressLevels, variance, archetypeOffset, bonus, unclamped, level };
 }
 
-export function pickWildSpecies(content: Content, rng: Rng): string {
-  return rng.pick(content.balance.wildPool);
-}
+type TeamConfig = Content['balance']['trainerTeam'];
 
-/** Whether the next encounter (1-based number `encounterNumber`) is a trainer battle. */
-export function isTrainerEncounter(content: Content, encounterNumber: number): boolean {
-  return encounterNumber % content.balance.trainerEvery === 0;
-}
-
-/** Team size grows with progress: min + one extra per N encounters, capped at max. */
-export function trainerTeamSize(content: Content, encountersCompleted: number): number {
-  const t = content.balance.trainerTeam;
-  return Math.min(t.maxSize, t.minSize + Math.floor(encountersCompleted / t.encountersPerExtraPokemon));
+/** Team size grows with each stage: baseSize + extraPerStage × stage + random extra, capped. */
+export function teamSize(cfg: TeamConfig, stageIndex: number, rng: Rng): number {
+  const extra = cfg.randomExtra > 0 ? rng.int(0, cfg.randomExtra) : 0;
+  return Math.max(1, Math.min(cfg.maxSize, cfg.baseSize + Math.floor(cfg.extraPerStage * stageIndex) + extra));
 }
 
 /** The species a Pokémon from `speciesId` would be by `level` (trainers' Pokémon arrive already evolved). */
@@ -70,22 +66,59 @@ export function evolvedFormAt(content: Content, speciesId: string, level: number
   return id;
 }
 
+export interface WildPlan {
+  speciesId: string;
+  level: number;
+  levelInfo: EnemyLevelBreakdown;
+  shiny: boolean;
+}
+
+/** A wild Pokémon from the stage's theme. */
+export function planWild(content: Content, archetype: Archetype, theme: Theme, progress: number, bonus: number, rng: Rng): WildPlan {
+  const speciesId = pickThemeSpecies(content, theme, rng);
+  const levelInfo = enemyLevel(content, archetype, progress, bonus, rng);
+  return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng) };
+}
+
 export interface TrainerPlan {
   classId: string;
   name: string;
+  /** Set for gym leaders. */
+  leaderId: string | null;
   members: { speciesId: string; level: number }[];
+  levelInfo: EnemyLevelBreakdown[];
 }
 
-/** Picks a trainer class, a name, and a team using the prototype level curve. */
-export function planTrainer(content: Content, archetype: Archetype, encountersCompleted: number, rng: Rng): TrainerPlan {
-  const trainerClass = rng.pick([...content.trainers.values()]);
+/** A trainer whose class fits the theme, with a team drawn from the theme. */
+export function planTrainer(content: Content, archetype: Archetype, theme: Theme, stageIndex: number, progress: number, rng: Rng): TrainerPlan {
+  const trainerClass = rng.pick(trainerClassesFor(content, theme));
   const name = rng.pick(trainerClass.names);
-  const size = trainerTeamSize(content, encountersCompleted);
+  const size = teamSize(content.balance.trainerTeam, stageIndex, rng);
+  const levelInfo: EnemyLevelBreakdown[] = [];
   const members = Array.from({ length: size }, () => {
-    const level = enemyLevel(content, archetype, encountersCompleted, rng).level;
-    return { speciesId: evolvedFormAt(content, rng.pick(trainerClass.pool), level), level };
+    const info = enemyLevel(content, archetype, progress, content.balance.difficulty.trainerBonus, rng);
+    levelInfo.push(info);
+    return { speciesId: evolvedFormAt(content, pickThemeSpecies(content, theme, rng, trainerClass.types), info.level), level: info.level };
   });
-  return { classId: trainerClass.id, name, members };
+  return { classId: trainerClass.id, name, leaderId: null, members, levelInfo };
+}
+
+/** The class id used for gym leader battles (gym leaders aren't a trainer class in trainers.json). */
+export const GYM_LEADER_CLASS = 'gym-leader';
+
+/** The gym leader's team: drawn from the theme, a little stronger, with a stronger last Pokémon (their ace). */
+export function planGymLeader(content: Content, archetype: Archetype, theme: Theme, leaderId: string, stageIndex: number, progress: number, rng: Rng): TrainerPlan {
+  const leader = content.gymLeaders.get(leaderId);
+  if (!leader) throw new Error(`Unknown gym leader "${leaderId}"`);
+  const { gymBonus, aceBonus } = content.balance.difficulty;
+  const size = teamSize(content.balance.gymTeam, stageIndex, rng);
+  const levelInfo: EnemyLevelBreakdown[] = [];
+  const members = Array.from({ length: size }, (_, i) => {
+    const info = enemyLevel(content, archetype, progress, gymBonus + (i === size - 1 ? aceBonus : 0), rng);
+    levelInfo.push(info);
+    return { speciesId: evolvedFormAt(content, pickThemeSpecies(content, theme, rng), info.level), level: info.level };
+  });
+  return { classId: GYM_LEADER_CLASS, name: leader.name, leaderId, members, levelInfo };
 }
 
 /** Rolls whether a wild Pokémon is shiny (D8: 1/2000). */

@@ -3,12 +3,12 @@
 // Before choosing, the player can also use Bag items or change the lead.
 
 import Phaser from 'phaser';
-import { itemUseProblem } from '../core/items';
 import { rewardTargetProblem } from '../core/rewards';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
-import { bagRow, partyRows, Picker } from '../ui/partyPanel';
+import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { partyRows, Picker } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel } from '../ui/widgets';
@@ -168,68 +168,16 @@ export class RewardScene extends Phaser.Scene {
     });
   }
 
+  private fieldHost(): FieldMenuHost {
+    return { scene: this, setPicker: (p) => (this.picker = p), changed: (notice) => this.restart(notice) };
+  }
+
   private openParty(): void {
-    const { session } = services();
-    const run = session.run!;
-    this.picker = new Picker(this, {
-      title: 'Choose a Pokémon to lead the next battle',
-      columns: 2,
-      rowHeight: 78,
-      rows: partyRows(session.content, run.party, (i) => (i === 0 ? 'Already leading.' : null), (i) => (i === 0 ? 'LEAD' : undefined), () => 'Move this Pokémon to the front.'),
-      onSelect: (i) => {
-        const name = session.content.species.get(run.party[i]!.speciesId)!.name;
-        session.setLead(i);
-        this.restart(`${name} will lead the next battle.`);
-      },
-      onBack: () => this.closePicker(),
-    });
+    openPartyMenu(this.fieldHost());
   }
 
   private openBag(): void {
-    const { session } = services();
-    const run = session.run!;
-    const content = session.content;
-    const ids = Object.keys(run.inventory).filter((id) => content.items.get(id)?.usableOutside && run.inventory[id]! > 0);
-    const allIds = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0);
-    this.picker = new Picker(this, {
-      title: 'Bag',
-      columns: 2,
-      rowHeight: 48,
-      rows: allIds.map((id) => {
-        const item = content.items.get(id)!;
-        const usable = ids.includes(id);
-        const anyTarget = usable && run.party.some((mon) => itemUseProblem(content, item, mon) === null);
-        const problem = !usable ? `${item.name}: ${item.description}` : anyTarget ? null : `No Pokémon needs the ${item.name} right now.`;
-        return bagRow(content, run.inventory, id, problem);
-      }),
-      onSelect: (i) => {
-        const id = allIds[i]!;
-        this.closePicker();
-        this.openItemTarget(id);
-      },
-      onBack: () => this.closePicker(),
-    });
-  }
-
-  private openItemTarget(itemId: string): void {
-    const { session } = services();
-    const run = session.run!;
-    const content = session.content;
-    const item = content.items.get(itemId)!;
-    this.picker = new Picker(this, {
-      title: `Use the ${item.name} on which Pokémon?`,
-      columns: 2,
-      rowHeight: 78,
-      rows: partyRows(content, run.party, (i) => itemUseProblem(content, item, run.party[i]!)),
-      onSelect: (i) => {
-        const message = session.useItem(itemId, i);
-        this.restart(message);
-      },
-      onBack: () => {
-        this.closePicker();
-        this.openBag();
-      },
-    });
+    openBagMenu(this.fieldHost());
   }
 
   private choose(draftIndex: number, targetIndex: number): void {
@@ -238,7 +186,7 @@ export class RewardScene extends Phaser.Scene {
     const result = services().session.chooseReward(draftIndex, targetIndex);
     playSfx(this, 'se.level_up', 0.6);
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.75).setOrigin(0).setDepth(50);
-    const next = result.run.phase === 'battle' ? `On to encounter ${result.run.encountersCompleted + 1}…` : '';
+    const next = result.run.phase === 'map' ? 'Choose your next path…' : '';
     this.add
       .text(GAME_WIDTH / 2, 250, [...result.reward.messages, '', next].join('\n'), textStyle(28, COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
       .setOrigin(0.5)

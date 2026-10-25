@@ -4,19 +4,15 @@
   "name": "Youngster",
   "spriteAssetId": "trainer.youngster_m",
   "moneyPerLevel": 16,
+  "types": [
+   "normal"
+  ],
   "names": [
    "Joey",
    "Ben",
    "Calvin",
    "Timmy",
    "Dan"
-  ],
-  "pool": [
-   "rattata",
-   "spearow",
-   "meowth",
-   "sandshrew",
-   "ekans"
   ]
  },
  {
@@ -24,16 +20,15 @@
   "name": "Bug Catcher",
   "spriteAssetId": "trainer.bug_catcher",
   "moneyPerLevel": 16,
+  "types": [
+   "bug"
+  ],
   "names": [
    "Rick",
    "Doug",
    "Sammy",
    "Kent",
    "Greg"
-  ],
-  "pool": [
-   "caterpie",
-   "metapod"
   ]
  },
  {
@@ -41,18 +36,16 @@
   "name": "Hiker",
   "spriteAssetId": "trainer.hiker",
   "moneyPerLevel": 36,
+  "types": [
+   "rock",
+   "ground"
+  ],
   "names": [
    "Marcos",
    "Russell",
    "Lenny",
    "Alan",
    "Clark"
-  ],
-  "pool": [
-   "geodude",
-   "sandshrew",
-   "diglett",
-   "machop"
   ]
  },
  {
@@ -60,16 +53,15 @@
   "name": "Fisherman",
   "spriteAssetId": "trainer.fisherman",
   "moneyPerLevel": 32,
+  "types": [
+   "water"
+  ],
   "names": [
    "Ned",
    "Wade",
    "Elliot",
    "Barny",
    "Ralph"
-  ],
-  "pool": [
-   "poliwag",
-   "psyduck"
   ]
  },
  {
@@ -77,16 +69,15 @@
   "name": "Bird Keeper",
   "spriteAssetId": "trainer.bird_keeper_m",
   "moneyPerLevel": 32,
+  "types": [
+   "flying"
+  ],
   "names": [
    "Abe",
    "Rod",
    "Toby",
    "Perry",
    "Bret"
-  ],
-  "pool": [
-   "pidgey",
-   "spearow"
   ]
  },
  {
@@ -94,16 +85,191 @@
   "name": "Black Belt",
   "spriteAssetId": "trainer.black_belt_m",
   "moneyPerLevel": 32,
+  "types": [
+   "fighting"
+  ],
   "names": [
    "Kiyo",
    "Koichi",
    "Hitoshi",
    "Lao",
    "Ricky"
+  ]
+ },
+ {
+  "id": "firebreather",
+  "name": "Firebreather",
+  "spriteAssetId": "trainer.firebreather",
+  "moneyPerLevel": 32,
+  "types": [
+   "fire"
   ],
-  "pool": [
-   "mankey",
-   "machop"
+  "names": [
+   "Bill",
+   "Walt",
+   "Ned",
+   "Ray",
+   "Lyle"
+  ]
+ },
+ {
+  "id": "guitarist",
+  "name": "Guitarist",
+  "spriteAssetId": "trainer.guitarist",
+  "moneyPerLevel": 24,
+  "types": [
+   "electric"
+  ],
+  "names": [
+   "Vincent",
+   "Kirk",
+   "Shawn",
+   "Dalton",
+   "Fabian"
+  ]
+ },
+ {
+  "id": "aroma-lady",
+  "name": "Aroma Lady",
+  "spriteAssetId": "trainer.aroma_lady",
+  "moneyPerLevel": 32,
+  "types": [
+   "grass"
+  ],
+  "names": [
+   "Rose",
+   "Violet",
+   "Daisy",
+   "Celina",
+   "Elaine"
+  ]
+ },
+ {
+  "id": "snow-worker",
+  "name": "Snow Worker",
+  "spriteAssetId": "trainer.snow_worker_m",
+  "moneyPerLevel": 32,
+  "types": [
+   "ice"
+  ],
+  "names": [
+   "Bjorn",
+   "Sven",
+   "Olaf",
+   "Pierce",
+   "Kurt"
+  ]
+ },
+ {
+  "id": "biker",
+  "name": "Biker",
+  "spriteAssetId": "trainer.biker",
+  "moneyPerLevel": 32,
+  "types": [
+   "poison"
+  ],
+  "names": [
+   "Jared",
+   "Malik",
+   "Ernest",
+   "Hideo",
+   "Charles"
+  ]
+ },
+ {
+  "id": "psychic",
+  "name": "Psychic",
+  "spriteAssetId": "trainer.psychic_m",
+  "moneyPerLevel": 32,
+  "types": [
+   "psychic"
+  ],
+  "names": [
+   "Mark",
+   "Jared",
+   "Fidel",
+   "Nathan",
+   "Cameron"
+  ]
+ },
+ {
+  "id": "hex-maniac",
+  "name": "Hex Maniac",
+  "spriteAssetId": "trainer.hex_maniac",
+  "moneyPerLevel": 24,
+  "types": [
+   "ghost"
+  ],
+  "names": [
+   "Tammy",
+   "Luna",
+   "Patricia",
+   "Kindra",
+   "Darcy"
+  ]
+ },
+ {
+  "id": "dragon-tamer",
+  "name": "Dragon Tamer",
+  "spriteAssetId": "trainer.dragon_tamer",
+  "moneyPerLevel": 48,
+  "types": [
+   "dragon"
+  ],
+  "names": [
+   "Aaron",
+   "Paul",
+   "Keegan",
+   "Darren",
+   "Lance"
+  ]
+ },
+ {
+  "id": "roughneck",
+  "name": "Roughneck",
+  "spriteAssetId": "trainer.roughneck",
+  "moneyPerLevel": 24,
+  "types": [
+   "dark"
+  ],
+  "names": [
+   "Jerome",
+   "Thug",
+   "Rocco",
+   "Brett",
+   "Duke"
+  ]
+ },
+ {
+  "id": "worker",
+  "name": "Worker",
+  "spriteAssetId": "trainer.worker_m",
+  "moneyPerLevel": 32,
+  "types": [
+   "steel"
+  ],
+  "names": [
+   "Hank",
+   "Ivan",
+   "Zack",
+   "Moe",
+   "Brendan"
+  ]
+ },
+ {
+  "id": "fairy-tale-girl",
+  "name": "Fairy Tale Girl",
+  "spriteAssetId": "trainer.fairy_tale_girl",
+  "moneyPerLevel": 24,
+  "types": [
+   "fairy"
+  ],
+  "names": [
+   "Ella",
+   "Briar",
+   "Rapunzel",
+   "Belle",
+   "Gretel"
   ]
  }
 ]

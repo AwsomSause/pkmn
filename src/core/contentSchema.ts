@@ -155,9 +155,36 @@ export const TrainerClassSchema = z.object({
   /** Prize money = moneyPerLevel × the level of their highest-level Pokémon. */
   moneyPerLevel: z.number().int().positive(),
   names: z.array(z.string()).min(1),
-  pool: z.array(z.string()).min(1),
+  /** The types this class specialises in. A stage only uses classes that share a type with its theme. */
+  types: z.array(TypeNameSchema).min(1),
 });
 export type TrainerClass = z.infer<typeof TrainerClassSchema>;
+
+export const GymLeaderSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  spriteAssetId: z.string(),
+  /** The leader's usual speciality. Stages prefer a leader whose speciality matches the theme. */
+  types: z.array(TypeNameSchema).min(1),
+});
+export type GymLeader = z.infer<typeof GymLeaderSchema>;
+
+/** A stage theme: a named pair of types that decides which Pokémon, trainers and gym leader appear. */
+export const ThemeSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  types: z.tuple([TypeNameSchema, TypeNameSchema]),
+});
+export type Theme = z.infer<typeof ThemeSchema>;
+
+export const ThemesFileSchema = z.object({
+  /** Battle background for each type (a theme uses its first type's arena). */
+  arenas: z.record(TypeNameSchema, z.string()),
+  themes: z.array(ThemeSchema).min(1),
+});
+
+export const ShopEntrySchema = z.object({ item: z.string(), price: z.number().int().positive() });
+export type ShopEntry = z.infer<typeof ShopEntrySchema>;
 
 export const RewardEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('addItem'), item: z.string(), quantity: z.number().int().positive() }),
@@ -214,25 +241,58 @@ export const BalanceSchema = z.object({
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
-  prototypeEncounters: z.object({
+  /** Enemy level = baseLevel + levelsPerColumn × columns travelled + variance + archetype + node bonus. */
+  difficulty: z.object({
     baseLevel: z.number(),
-    levelsPerEncounter: z.number(),
+    levelsPerColumn: z.number().min(0),
     variance: z.number().int().min(0),
     minLevel: z.number().int().min(1),
     maxLevel: z.number().int().max(100),
+    trainerBonus: z.number().int().min(0),
+    gymBonus: z.number().int().min(0),
+    /** Extra levels on the gym leader's last Pokémon. */
+    aceBonus: z.number().int().min(0),
+    /** Extra levels on a "harder" route node: [min, max]. */
+    harderBonus: z.tuple([z.number().int().min(0), z.number().int().min(0)]),
   }),
-  money: z.object({ startingMoney: z.number().int().min(0), wildPerEnemyLevel: z.number().min(0) }),
+  /** Stage map shape. */
+  stage: z.object({
+    columns: z.number().int().min(3),
+    minWidth: z.number().int().min(1),
+    maxWidth: z.number().int().min(1).max(5),
+    /** Each range is [first, last] column; one trainer column is picked from each. */
+    trainerColumns: z.array(z.tuple([z.number().int().min(1), z.number().int().min(1)])),
+    harderChance: z.number().min(0).max(1),
+    extraEdgeChance: z.number().min(0).max(1),
+    sideChance: z.number().min(0).max(1),
+    sideWeights: z.object({ heal: z.number().min(0), shop: z.number().min(0) }),
+    /** Every node in the column just before the gym gets a healing side stop. */
+    healBeforeGym: z.boolean(),
+  }),
+  /** A theme's wild pool is topped up from wildPool when it has fewer species than this. */
+  minThemePool: z.number().int().min(1),
+  /** Weight multiplier for species that have both of the theme's types. */
+  dualTypeWeight: z.number().min(1),
+  harderRarityWeights: z.record(RaritySchema, z.number().min(0)),
+  bossRarityWeights: z.record(RaritySchema, z.number().min(0)),
+  money: z.object({ startingMoney: z.number().int().min(0), wildPerEnemyLevel: z.number().min(0), gymLeaderPerLevel: z.number().min(0) }),
   attributeMin: z.number(),
   attributeMax: z.number(),
   startingItems: z.record(z.string(), z.number().int().positive()),
   /** Chance that a wild Pokémon is shiny (director decision D8: 1/2000). */
   shinyChance: z.number().min(0).max(1),
-  /** Prototype schedule: every Nth encounter is a trainer battle. */
-  trainerEvery: z.number().int().min(2),
+  /** Team size = baseSize + extraPerStage × stage number (from 0) + a random 0..randomExtra, capped at maxSize. */
   trainerTeam: z.object({
-    minSize: z.number().int().min(1),
+    baseSize: z.number().int().min(1),
+    extraPerStage: z.number().min(0),
+    randomExtra: z.number().int().min(0),
     maxSize: z.number().int().min(1).max(6),
-    encountersPerExtraPokemon: z.number().int().min(1),
+  }),
+  gymTeam: z.object({
+    baseSize: z.number().int().min(1),
+    extraPerStage: z.number().min(0),
+    randomExtra: z.number().int().min(0),
+    maxSize: z.number().int().min(1).max(6),
   }),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
@@ -247,6 +307,10 @@ export interface Content {
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;
+  gymLeaders: Map<string, GymLeader>;
+  themes: Map<string, Theme>;
+  arenas: Partial<Record<TypeName, string>>;
+  shop: ShopEntry[];
   ruleset: Ruleset;
   balance: Balance;
 }

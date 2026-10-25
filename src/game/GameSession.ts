@@ -3,6 +3,7 @@
 //   - after the starter is chosen
 //   - after every completed battle turn
 //   - after a reward is chosen, a decision is answered, or an item is used
+//   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
 import type { Content } from '../core/contentSchema';
@@ -103,6 +104,31 @@ export class GameSession {
     return this.run;
   }
 
+  chooseNode(nodeId: string): RunState {
+    this.run = Run.chooseNode(this.content, this.requireRun(), nodeId);
+    this.persistRun();
+    return this.run;
+  }
+
+  visitSide(sideId: string): string {
+    const result = Run.visitSide(this.content, this.requireRun(), sideId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  buyItem(itemId: string): string {
+    const result = Run.buyItem(this.content, this.requireRun(), itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  leaveShop(): void {
+    this.run = Run.leaveShop(this.requireRun());
+    this.persistRun();
+  }
+
   takeTurn(action: PlayerAction): Run.TurnResult {
     const result = Run.takeTurn(this.content, this.requireRun(), action);
     this.run = result.run;
@@ -179,6 +205,11 @@ export class GameSession {
 
   debugGiveItem(itemId: string, quantity: number): void {
     this.run = Run.debugGiveItem(this.content, this.requireRun(), itemId, quantity);
+    this.persistRun();
+  }
+
+  debugJumpToColumn(column: number): void {
+    this.run = Run.debugJumpToColumn(this.requireRun(), column);
     this.persistRun();
   }
 

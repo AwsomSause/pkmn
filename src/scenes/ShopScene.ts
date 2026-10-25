@@ -1,0 +1,58 @@
+// The shop beside a map node: buy items with run money, then leave.
+
+import Phaser from 'phaser';
+import { itemCount } from '../core/items';
+import { services } from '../game/services';
+import { playMusic, playSfx } from '../ui/audio';
+import { onInputAction } from '../ui/input';
+import { Picker, type PickerRow } from '../ui/partyPanel';
+import { itemVisual } from '../ui/sprites';
+import { textStyle } from '../ui/theme';
+import { sceneForRun } from './routing';
+
+export class ShopScene extends Phaser.Scene {
+  private picker: Picker | null = null;
+
+  constructor() {
+    super('Shop');
+  }
+
+  create(data: { notice?: string; focus?: number } = {}): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    playMusic(this, 'bgm.menu');
+
+    const rows: PickerRow[] = content.shop.map((entry) => {
+      const item = content.items.get(entry.item)!;
+      return {
+        problem: run.money < entry.price ? `Not enough money for the ${item.name} (₽${entry.price}, you have ₽${run.money}).` : null,
+        hint: `${item.description}  ·  You have ₽${run.money}.`,
+        draw: (scene, box, w, h) => {
+          box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
+          box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
+          box.add(scene.add.text(w - 90, h / 2, `₽${entry.price}`, textStyle(22)).setOrigin(1, 0.5));
+          box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#707888')).setOrigin(1, 0.5));
+        },
+      };
+    });
+
+    this.picker = new Picker(this, {
+      title: data.notice ? `Shop  ·  ₽${run.money}  ·  ${data.notice}` : `Shop  ·  ₽${run.money}`,
+      columns: 2,
+      rowHeight: 52,
+      rows,
+      backLabel: 'leave',
+      onSelect: (i) => {
+        const message = session.buyItem(content.shop[i]!.item);
+        playSfx(this, 'se.exp', 0.6);
+        this.scene.restart({ notice: message.replace(/^You bought /, 'Bought '), focus: i });
+      },
+      onBack: () => {
+        session.leaveShop();
+        this.scene.start(sceneForRun(session.run!), { notice: 'Thanks for shopping!' });
+      },
+    });
+    onInputAction(this, (action) => this.picker?.handle(action));
+  }
+}

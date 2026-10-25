@@ -5,6 +5,10 @@ export function sceneForRun(run: RunState): string {
   switch (run.phase) {
     case 'starter':
       return 'StarterSelect';
+    case 'map':
+      return 'Map';
+    case 'shop':
+      return 'Shop';
     case 'battle':
       return 'Battle';
     case 'decision':

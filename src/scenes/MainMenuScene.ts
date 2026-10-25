@@ -21,7 +21,7 @@ export class MainMenuScene extends Phaser.Scene {
     playMusic(this, 'bgm.menu');
 
     this.add.text(GAME_WIDTH / 2, 90, 'Pokémon Roguelike', textStyle(64, COLORS.textLight, { stroke: '#e05038', strokeThickness: 6 })).setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 150, 'Milestone 1 prototype', textStyle(24, '#aab4c8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 150, 'Milestone 3 prototype', textStyle(24, '#aab4c8')).setOrigin(0.5);
 
     drawPanel(this, GAME_WIDTH / 2 - 180, 190, 360, 220);
 

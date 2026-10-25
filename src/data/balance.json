@@ -1,66 +1,115 @@
 {
-  "partyMax": 6,
-  "starterLevel": 5,
-  "starterChoices": 3,
-  "starterPool": [
-    "bulbasaur",
-    "charmander",
-    "squirtle",
-    "vulpix",
-    "psyduck",
-    "mankey",
-    "growlithe",
-    "poliwag",
-    "machop",
-    "geodude",
-    "gastly",
-    "magnemite"
+ "partyMax": 6,
+ "starterLevel": 5,
+ "starterChoices": 3,
+ "starterPool": [
+  "bulbasaur",
+  "charmander",
+  "squirtle",
+  "vulpix",
+  "psyduck",
+  "mankey",
+  "growlithe",
+  "poliwag",
+  "machop",
+  "geodude",
+  "gastly",
+  "magnemite"
+ ],
+ "wildPool": [
+  "caterpie",
+  "pidgey",
+  "rattata",
+  "spearow",
+  "ekans",
+  "sandshrew",
+  "oddish",
+  "diglett",
+  "meowth"
+ ],
+ "draftSize": 5,
+ "rarityWeights": {
+  "common": 60,
+  "uncommon": 30,
+  "rare": 10
+ },
+ "vitaminMultiplierPerStack": 0.1,
+ "vitaminMaxStacks": 3,
+ "money": {
+  "startingMoney": 0,
+  "wildPerEnemyLevel": 8,
+  "gymLeaderPerLevel": 80
+ },
+ "attributeMin": 0,
+ "attributeMax": 100,
+ "startingItems": {
+  "poke-ball": 5,
+  "potion": 2
+ },
+ "shinyChance": 0.0005,
+ "trainerTeam": {
+  "baseSize": 1,
+  "extraPerStage": 1,
+  "randomExtra": 1,
+  "maxSize": 6
+ },
+ "candies": {
+  "perRelease": 1,
+  "perLevels": 10
+ },
+ "gymTeam": {
+  "baseSize": 2,
+  "extraPerStage": 1,
+  "randomExtra": 0,
+  "maxSize": 6
+ },
+ "difficulty": {
+  "baseLevel": 4,
+  "levelsPerColumn": 0.65,
+  "variance": 1,
+  "minLevel": 2,
+  "maxLevel": 100,
+  "trainerBonus": 1,
+  "gymBonus": 3,
+  "aceBonus": 1,
+  "harderBonus": [
+   1,
+   2
+  ]
+ },
+ "stage": {
+  "columns": 20,
+  "minWidth": 1,
+  "maxWidth": 3,
+  "trainerColumns": [
+   [
+    4,
+    9
+   ],
+   [
+    11,
+    17
+   ]
   ],
-  "wildPool": [
-    "caterpie",
-    "pidgey",
-    "rattata",
-    "spearow",
-    "ekans",
-    "sandshrew",
-    "oddish",
-    "diglett",
-    "meowth"
-  ],
-  "draftSize": 5,
-  "rarityWeights": {
-    "common": 60,
-    "uncommon": 30,
-    "rare": 10
+  "harderChance": 0.3,
+  "extraEdgeChance": 0.35,
+  "sideChance": 0.12,
+  "sideWeights": {
+   "heal": 2,
+   "shop": 1
   },
-  "vitaminMultiplierPerStack": 0.1,
-  "vitaminMaxStacks": 3,
-  "prototypeEncounters": {
-    "baseLevel": 3,
-    "levelsPerEncounter": 0.5,
-    "variance": 1,
-    "minLevel": 2,
-    "maxLevel": 30
-  },
-  "money": {
-    "startingMoney": 0,
-    "wildPerEnemyLevel": 8
-  },
-  "attributeMin": 0,
-  "attributeMax": 100,
-  "startingItems": {
-    "poke-ball": 5,
-    "potion": 2
-  },
-  "shinyChance": 0.0005,
-  "trainerEvery": 4,
-  "trainerTeam": {
-    "minSize": 1,
-    "maxSize": 3,
-    "encountersPerExtraPokemon": 6
-  },
-  "candies": {
-    "perRelease": 1,
-    "perLevels": 10
-  }
+  "healBeforeGym": true
+ },
+ "minThemePool": 3,
+ "dualTypeWeight": 3,
+ "harderRarityWeights": {
+  "common": 40,
+  "uncommon": 40,
+  "rare": 20
+ },
+ "bossRarityWeights": {
+  "common": 20,
+  "uncommon": 45,
+  "rare": 35
+ }
 }

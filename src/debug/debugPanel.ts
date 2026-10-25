@@ -3,7 +3,9 @@
 
 import type Phaser from 'phaser';
 import { calcStats } from '../core/pokemon';
+import { currentColumn, findNode } from '../core/map';
 import { currentEnemy } from '../core/state';
+import { getTheme, themePool } from '../core/themes';
 import type { GameSession } from '../game/GameSession';
 import { services } from '../game/services';
 
@@ -47,9 +49,39 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
         const who = run.battle.trainer ? `${run.battle.trainer.name}'s ` : 'wild ';
         lines.push(`enemy: ${who}${enemy.speciesId}${enemy.shiny ? ' (shiny)' : ''} Lv${enemy.level} HP ${enemy.hp} (${run.battle.enemyIndex + 1}/${run.battle.enemyTeam.length}, turn ${run.battle.turn})`);
       }
+      if (run.battle?.levelInfo.length) {
+        lines.push('enemy levels (base + progress + variance + archetype + bonus = level):');
+        run.battle.levelInfo.forEach((b, i) => {
+          const f = (n: number) => (Math.round(n * 100) / 100).toString();
+          const clamp = b.unclamped !== b.level ? ` (clamped from ${f(b.unclamped)})` : '';
+          lines.push(`  #${i + 1}: ${f(b.base)} + ${f(b.progress)} + ${f(b.variance)} + ${f(b.archetypeOffset)} + ${f(b.bonus)} = Lv${b.level}${clamp}`);
+        });
+      }
       if (run.pending.length) lines.push(`pending: ${run.pending.map((d) => d.kind).join(', ')}`);
       if (run.draft) lines.push(`draft: ${run.draft.join(', ')}`);
       panel.append(el('pre', { textContent: lines.join('\n') }));
+
+      if (run.stage) {
+        const stage = run.stage;
+        const theme = getTheme(content, stage.themeId);
+        const node = stage.current ? findNode(stage.map, stage.current) : null;
+        const pool = themePool(content, theme).map((p) => `${p.speciesId}${p.weight > 1 ? `×${p.weight}` : ''}`).join(', ');
+        const stageLines = [
+          `stage ${stage.index + 1}: ${theme.name} (${theme.types.join('/')})`,
+          `gym leader: ${stage.leaderId}  ·  badges: ${run.badges.join(', ') || '-'}`,
+          `level ${currentColumn(stage)}/${stage.map.columns}  ·  trainer columns: ${stage.map.trainerColumns.join(', ')}`,
+          `node: ${node ? `${node.id} — ${node.note}` : '(start)'}`,
+          `wild pool: ${pool}`,
+          `used themes: ${run.usedThemes.length}  ·  used leaders: ${run.usedLeaders.join(', ')}`,
+        ];
+        panel.append(el('h3', { textContent: 'Stage' }), el('pre', { textContent: stageLines.join('\n') }));
+        if (run.phase === 'map') {
+          const colInput = el('input', { type: 'number', value: String(stage.map.columns), min: '1', max: String(stage.map.columns) });
+          colInput.style.width = '50px';
+          panel.append(el('span', { textContent: 'Jump so the next column is ' }), colInput,
+            el('button', { textContent: 'Jump', onclick: () => { try { session.debugJumpToColumn(Number(colInput.value) || 0); goTo('Map'); } catch (err) { alert(String(err)); } render(); } }));
+        }
+      }
 
       const heal = el('button', { textContent: 'Heal party', onclick: () => { session.debugHeal(); if (run.phase === 'battle') goTo('Battle'); render(); } });
       panel.append(heal);

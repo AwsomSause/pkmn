@@ -48,7 +48,7 @@ export function rewardTargetProblem(content: Content, run: RunState, reward: Rew
   return null;
 }
 
-export function generateDraft(content: Content, run: RunState, rng: Rng): string[] {
+export function generateDraft(content: Content, run: RunState, rng: Rng, weights: Partial<Record<Rarity, number>> = content.balance.rarityWeights): string[] {
   const size = content.balance.draftSize;
   const eligible = [...content.rewards.values()].filter((r) => isRewardEligible(content, run, r));
   if (eligible.length < size) {
@@ -58,7 +58,7 @@ export function generateDraft(content: Content, run: RunState, rng: Rng): string
   const chosen: string[] = [];
   while (chosen.length < size) {
     const tier = rng.weighted(
-      RARITIES.map((t) => ({ item: t, weight: byTier.get(t)!.length > 0 ? content.balance.rarityWeights[t] ?? 0 : 0 })),
+      RARITIES.map((t) => ({ item: t, weight: byTier.get(t)!.length > 0 ? weights[t] ?? 0 : 0 })),
     );
     const pool = byTier.get(tier)!;
     const index = rng.int(0, pool.length - 1);

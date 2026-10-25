@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T10:02:30.750Z",
+  "generatedAt": "2026-10-25T15:23:24.558Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -1750,6 +1750,1926 @@
       "path": "audio/cry/82.m4a"
     },
     {
+      "id": "pokemon.front.96",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/96.png",
+      "atlasPath": "images/pokemon/96.json"
+    },
+    {
+      "id": "pokemon.back.96",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/96.png",
+      "atlasPath": "images/pokemon/back/96.json"
+    },
+    {
+      "id": "pokemon.shiny.front.96",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/96.png",
+      "atlasPath": "images/pokemon/shiny/96.json"
+    },
+    {
+      "id": "pokemon.shiny.back.96",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/96.png",
+      "atlasPath": "images/pokemon/back/shiny/96.json"
+    },
+    {
+      "id": "pokemon.icon.96",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/96.png"
+    },
+    {
+      "id": "cry.96",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/96.m4a"
+    },
+    {
+      "id": "pokemon.front.97",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/97.png",
+      "atlasPath": "images/pokemon/97.json"
+    },
+    {
+      "id": "pokemon.back.97",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/97.png",
+      "atlasPath": "images/pokemon/back/97.json"
+    },
+    {
+      "id": "pokemon.shiny.front.97",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/97.png",
+      "atlasPath": "images/pokemon/shiny/97.json"
+    },
+    {
+      "id": "pokemon.shiny.back.97",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/97.png",
+      "atlasPath": "images/pokemon/back/shiny/97.json"
+    },
+    {
+      "id": "pokemon.icon.97",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/97.png"
+    },
+    {
+      "id": "cry.97",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/97.m4a"
+    },
+    {
+      "id": "pokemon.front.177",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/177.png",
+      "atlasPath": "images/pokemon/177.json"
+    },
+    {
+      "id": "pokemon.back.177",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/177.png",
+      "atlasPath": "images/pokemon/back/177.json"
+    },
+    {
+      "id": "pokemon.shiny.front.177",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/177.png",
+      "atlasPath": "images/pokemon/shiny/177.json"
+    },
+    {
+      "id": "pokemon.shiny.back.177",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/177.png",
+      "atlasPath": "images/pokemon/back/shiny/177.json"
+    },
+    {
+      "id": "pokemon.icon.177",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/177.png"
+    },
+    {
+      "id": "cry.177",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/177.m4a"
+    },
+    {
+      "id": "pokemon.front.178",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/178.png",
+      "atlasPath": "images/pokemon/178.json"
+    },
+    {
+      "id": "pokemon.back.178",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/178.png",
+      "atlasPath": "images/pokemon/back/178.json"
+    },
+    {
+      "id": "pokemon.shiny.front.178",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/178.png",
+      "atlasPath": "images/pokemon/shiny/178.json"
+    },
+    {
+      "id": "pokemon.shiny.back.178",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/178.png",
+      "atlasPath": "images/pokemon/back/shiny/178.json"
+    },
+    {
+      "id": "pokemon.icon.178",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/178.png"
+    },
+    {
+      "id": "cry.178",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/178.m4a"
+    },
+    {
+      "id": "pokemon.front.220",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/220.png",
+      "atlasPath": "images/pokemon/220.json"
+    },
+    {
+      "id": "pokemon.back.220",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/220.png",
+      "atlasPath": "images/pokemon/back/220.json"
+    },
+    {
+      "id": "pokemon.shiny.front.220",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/220.png",
+      "atlasPath": "images/pokemon/shiny/220.json"
+    },
+    {
+      "id": "pokemon.shiny.back.220",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/220.png",
+      "atlasPath": "images/pokemon/back/shiny/220.json"
+    },
+    {
+      "id": "pokemon.icon.220",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/220.png"
+    },
+    {
+      "id": "cry.220",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/220.m4a"
+    },
+    {
+      "id": "pokemon.front.221",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/221.png",
+      "atlasPath": "images/pokemon/221.json"
+    },
+    {
+      "id": "pokemon.back.221",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/221.png",
+      "atlasPath": "images/pokemon/back/221.json"
+    },
+    {
+      "id": "pokemon.shiny.front.221",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/221.png",
+      "atlasPath": "images/pokemon/shiny/221.json"
+    },
+    {
+      "id": "pokemon.shiny.back.221",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/221.png",
+      "atlasPath": "images/pokemon/back/shiny/221.json"
+    },
+    {
+      "id": "pokemon.icon.221",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/221.png"
+    },
+    {
+      "id": "cry.221",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/221.m4a"
+    },
+    {
+      "id": "pokemon.front.86",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/86.png",
+      "atlasPath": "images/pokemon/86.json"
+    },
+    {
+      "id": "pokemon.back.86",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/86.png",
+      "atlasPath": "images/pokemon/back/86.json"
+    },
+    {
+      "id": "pokemon.shiny.front.86",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/86.png",
+      "atlasPath": "images/pokemon/shiny/86.json"
+    },
+    {
+      "id": "pokemon.shiny.back.86",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/86.png",
+      "atlasPath": "images/pokemon/back/shiny/86.json"
+    },
+    {
+      "id": "pokemon.icon.86",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/86.png"
+    },
+    {
+      "id": "cry.86",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/86.m4a"
+    },
+    {
+      "id": "pokemon.front.87",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/87.png",
+      "atlasPath": "images/pokemon/87.json"
+    },
+    {
+      "id": "pokemon.back.87",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/87.png",
+      "atlasPath": "images/pokemon/back/87.json"
+    },
+    {
+      "id": "pokemon.shiny.front.87",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/87.png",
+      "atlasPath": "images/pokemon/shiny/87.json"
+    },
+    {
+      "id": "pokemon.shiny.back.87",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/87.png",
+      "atlasPath": "images/pokemon/back/shiny/87.json"
+    },
+    {
+      "id": "pokemon.icon.87",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/87.png"
+    },
+    {
+      "id": "cry.87",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/87.m4a"
+    },
+    {
+      "id": "pokemon.front.238",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/238.png",
+      "atlasPath": "images/pokemon/238.json"
+    },
+    {
+      "id": "pokemon.back.238",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/238.png",
+      "atlasPath": "images/pokemon/back/238.json"
+    },
+    {
+      "id": "pokemon.shiny.front.238",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/238.png",
+      "atlasPath": "images/pokemon/shiny/238.json"
+    },
+    {
+      "id": "pokemon.shiny.back.238",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/238.png",
+      "atlasPath": "images/pokemon/back/shiny/238.json"
+    },
+    {
+      "id": "pokemon.icon.238",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/238.png"
+    },
+    {
+      "id": "cry.238",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/238.m4a"
+    },
+    {
+      "id": "pokemon.front.124",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/124.png",
+      "atlasPath": "images/pokemon/124.json"
+    },
+    {
+      "id": "pokemon.back.124",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/124.png",
+      "atlasPath": "images/pokemon/back/124.json"
+    },
+    {
+      "id": "pokemon.shiny.front.124",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/124.png",
+      "atlasPath": "images/pokemon/shiny/124.json"
+    },
+    {
+      "id": "pokemon.shiny.back.124",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/124.png",
+      "atlasPath": "images/pokemon/back/shiny/124.json"
+    },
+    {
+      "id": "pokemon.icon.124",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/124.png"
+    },
+    {
+      "id": "cry.124",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/124.m4a"
+    },
+    {
+      "id": "pokemon.front.215",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/215.png",
+      "atlasPath": "images/pokemon/215.json"
+    },
+    {
+      "id": "pokemon.back.215",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/215.png",
+      "atlasPath": "images/pokemon/back/215.json"
+    },
+    {
+      "id": "pokemon.shiny.front.215",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/215.png",
+      "atlasPath": "images/pokemon/shiny/215.json"
+    },
+    {
+      "id": "pokemon.shiny.back.215",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/215.png",
+      "atlasPath": "images/pokemon/back/shiny/215.json"
+    },
+    {
+      "id": "pokemon.icon.215",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/215.png"
+    },
+    {
+      "id": "cry.215",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/215.m4a"
+    },
+    {
+      "id": "pokemon.front.147",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/147.png",
+      "atlasPath": "images/pokemon/147.json"
+    },
+    {
+      "id": "pokemon.back.147",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/147.png",
+      "atlasPath": "images/pokemon/back/147.json"
+    },
+    {
+      "id": "pokemon.shiny.front.147",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/147.png",
+      "atlasPath": "images/pokemon/shiny/147.json"
+    },
+    {
+      "id": "pokemon.shiny.back.147",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/147.png",
+      "atlasPath": "images/pokemon/back/shiny/147.json"
+    },
+    {
+      "id": "pokemon.icon.147",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/147.png"
+    },
+    {
+      "id": "cry.147",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/147.m4a"
+    },
+    {
+      "id": "pokemon.front.148",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/148.png",
+      "atlasPath": "images/pokemon/148.json"
+    },
+    {
+      "id": "pokemon.back.148",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/148.png",
+      "atlasPath": "images/pokemon/back/148.json"
+    },
+    {
+      "id": "pokemon.shiny.front.148",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/148.png",
+      "atlasPath": "images/pokemon/shiny/148.json"
+    },
+    {
+      "id": "pokemon.shiny.back.148",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/148.png",
+      "atlasPath": "images/pokemon/back/shiny/148.json"
+    },
+    {
+      "id": "pokemon.icon.148",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/148.png"
+    },
+    {
+      "id": "cry.148",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/148.m4a"
+    },
+    {
+      "id": "pokemon.front.371",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/371.png",
+      "atlasPath": "images/pokemon/371.json"
+    },
+    {
+      "id": "pokemon.back.371",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/371.png",
+      "atlasPath": "images/pokemon/back/371.json"
+    },
+    {
+      "id": "pokemon.shiny.front.371",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/371.png",
+      "atlasPath": "images/pokemon/shiny/371.json"
+    },
+    {
+      "id": "pokemon.shiny.back.371",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/371.png",
+      "atlasPath": "images/pokemon/back/shiny/371.json"
+    },
+    {
+      "id": "pokemon.icon.371",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/371.png"
+    },
+    {
+      "id": "cry.371",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/371.m4a"
+    },
+    {
+      "id": "pokemon.front.372",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/372.png",
+      "atlasPath": "images/pokemon/372.json"
+    },
+    {
+      "id": "pokemon.back.372",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/372.png",
+      "atlasPath": "images/pokemon/back/372.json"
+    },
+    {
+      "id": "pokemon.shiny.front.372",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/372.png",
+      "atlasPath": "images/pokemon/shiny/372.json"
+    },
+    {
+      "id": "pokemon.shiny.back.372",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/372.png",
+      "atlasPath": "images/pokemon/back/shiny/372.json"
+    },
+    {
+      "id": "pokemon.icon.372",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/372.png"
+    },
+    {
+      "id": "cry.372",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/372.m4a"
+    },
+    {
+      "id": "pokemon.front.228",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/228.png",
+      "atlasPath": "images/pokemon/228.json"
+    },
+    {
+      "id": "pokemon.back.228",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/228.png",
+      "atlasPath": "images/pokemon/back/228.json"
+    },
+    {
+      "id": "pokemon.shiny.front.228",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/228.png",
+      "atlasPath": "images/pokemon/shiny/228.json"
+    },
+    {
+      "id": "pokemon.shiny.back.228",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/228.png",
+      "atlasPath": "images/pokemon/back/shiny/228.json"
+    },
+    {
+      "id": "pokemon.icon.228",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/228.png"
+    },
+    {
+      "id": "cry.228",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/228.m4a"
+    },
+    {
+      "id": "pokemon.front.229",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/229.png",
+      "atlasPath": "images/pokemon/229.json"
+    },
+    {
+      "id": "pokemon.back.229",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/229.png",
+      "atlasPath": "images/pokemon/back/229.json"
+    },
+    {
+      "id": "pokemon.shiny.front.229",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/229.png",
+      "atlasPath": "images/pokemon/shiny/229.json"
+    },
+    {
+      "id": "pokemon.shiny.back.229",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/229.png",
+      "atlasPath": "images/pokemon/back/shiny/229.json"
+    },
+    {
+      "id": "pokemon.icon.229",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/229.png"
+    },
+    {
+      "id": "cry.229",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/229.m4a"
+    },
+    {
+      "id": "pokemon.front.261",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/261.png",
+      "atlasPath": "images/pokemon/261.json"
+    },
+    {
+      "id": "pokemon.back.261",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/261.png",
+      "atlasPath": "images/pokemon/back/261.json"
+    },
+    {
+      "id": "pokemon.shiny.front.261",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/261.png",
+      "atlasPath": "images/pokemon/shiny/261.json"
+    },
+    {
+      "id": "pokemon.shiny.back.261",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/261.png",
+      "atlasPath": "images/pokemon/back/shiny/261.json"
+    },
+    {
+      "id": "pokemon.icon.261",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/261.png"
+    },
+    {
+      "id": "cry.261",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/261.m4a"
+    },
+    {
+      "id": "pokemon.front.262",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/262.png",
+      "atlasPath": "images/pokemon/262.json"
+    },
+    {
+      "id": "pokemon.back.262",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/262.png",
+      "atlasPath": "images/pokemon/back/262.json"
+    },
+    {
+      "id": "pokemon.shiny.front.262",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/262.png",
+      "atlasPath": "images/pokemon/shiny/262.json"
+    },
+    {
+      "id": "pokemon.shiny.back.262",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/262.png",
+      "atlasPath": "images/pokemon/back/shiny/262.json"
+    },
+    {
+      "id": "pokemon.icon.262",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/262.png"
+    },
+    {
+      "id": "cry.262",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/262.m4a"
+    },
+    {
+      "id": "pokemon.front.198",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/198.png",
+      "atlasPath": "images/pokemon/198.json"
+    },
+    {
+      "id": "pokemon.back.198",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/198.png",
+      "atlasPath": "images/pokemon/back/198.json"
+    },
+    {
+      "id": "pokemon.shiny.front.198",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/198.png",
+      "atlasPath": "images/pokemon/shiny/198.json"
+    },
+    {
+      "id": "pokemon.shiny.back.198",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/198.png",
+      "atlasPath": "images/pokemon/back/shiny/198.json"
+    },
+    {
+      "id": "pokemon.icon.198",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/198.png"
+    },
+    {
+      "id": "cry.198",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/198.m4a"
+    },
+    {
+      "id": "pokemon.front.209",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/209.png",
+      "atlasPath": "images/pokemon/209.json"
+    },
+    {
+      "id": "pokemon.back.209",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/209.png",
+      "atlasPath": "images/pokemon/back/209.json"
+    },
+    {
+      "id": "pokemon.shiny.front.209",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/209.png",
+      "atlasPath": "images/pokemon/shiny/209.json"
+    },
+    {
+      "id": "pokemon.shiny.back.209",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/209.png",
+      "atlasPath": "images/pokemon/back/shiny/209.json"
+    },
+    {
+      "id": "pokemon.icon.209",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/209.png"
+    },
+    {
+      "id": "cry.209",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/209.m4a"
+    },
+    {
+      "id": "pokemon.front.210",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/210.png",
+      "atlasPath": "images/pokemon/210.json"
+    },
+    {
+      "id": "pokemon.back.210",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/210.png",
+      "atlasPath": "images/pokemon/back/210.json"
+    },
+    {
+      "id": "pokemon.shiny.front.210",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/210.png",
+      "atlasPath": "images/pokemon/shiny/210.json"
+    },
+    {
+      "id": "pokemon.shiny.back.210",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/210.png",
+      "atlasPath": "images/pokemon/back/shiny/210.json"
+    },
+    {
+      "id": "pokemon.icon.210",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/210.png"
+    },
+    {
+      "id": "cry.210",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/210.m4a"
+    },
+    {
+      "id": "pokemon.front.183",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/183.png",
+      "atlasPath": "images/pokemon/183.json"
+    },
+    {
+      "id": "pokemon.back.183",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/183.png",
+      "atlasPath": "images/pokemon/back/183.json"
+    },
+    {
+      "id": "pokemon.shiny.front.183",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/183.png",
+      "atlasPath": "images/pokemon/shiny/183.json"
+    },
+    {
+      "id": "pokemon.shiny.back.183",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/183.png",
+      "atlasPath": "images/pokemon/back/shiny/183.json"
+    },
+    {
+      "id": "pokemon.icon.183",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/183.png"
+    },
+    {
+      "id": "cry.183",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/183.m4a"
+    },
+    {
+      "id": "pokemon.front.184",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/184.png",
+      "atlasPath": "images/pokemon/184.json"
+    },
+    {
+      "id": "pokemon.back.184",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/184.png",
+      "atlasPath": "images/pokemon/back/184.json"
+    },
+    {
+      "id": "pokemon.shiny.front.184",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/184.png",
+      "atlasPath": "images/pokemon/shiny/184.json"
+    },
+    {
+      "id": "pokemon.shiny.back.184",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/184.png",
+      "atlasPath": "images/pokemon/back/shiny/184.json"
+    },
+    {
+      "id": "pokemon.icon.184",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/184.png"
+    },
+    {
+      "id": "cry.184",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/184.m4a"
+    },
+    {
+      "id": "pokemon.front.280",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/280.png",
+      "atlasPath": "images/pokemon/280.json"
+    },
+    {
+      "id": "pokemon.back.280",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/280.png",
+      "atlasPath": "images/pokemon/back/280.json"
+    },
+    {
+      "id": "pokemon.shiny.front.280",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/280.png",
+      "atlasPath": "images/pokemon/shiny/280.json"
+    },
+    {
+      "id": "pokemon.shiny.back.280",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/280.png",
+      "atlasPath": "images/pokemon/back/shiny/280.json"
+    },
+    {
+      "id": "pokemon.icon.280",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/280.png"
+    },
+    {
+      "id": "cry.280",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/280.m4a"
+    },
+    {
+      "id": "pokemon.front.281",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/281.png",
+      "atlasPath": "images/pokemon/281.json"
+    },
+    {
+      "id": "pokemon.back.281",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/281.png",
+      "atlasPath": "images/pokemon/back/281.json"
+    },
+    {
+      "id": "pokemon.shiny.front.281",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/281.png",
+      "atlasPath": "images/pokemon/shiny/281.json"
+    },
+    {
+      "id": "pokemon.shiny.back.281",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/281.png",
+      "atlasPath": "images/pokemon/back/shiny/281.json"
+    },
+    {
+      "id": "pokemon.icon.281",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/281.png"
+    },
+    {
+      "id": "cry.281",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/281.m4a"
+    },
+    {
+      "id": "pokemon.front.35",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/35.png",
+      "atlasPath": "images/pokemon/35.json"
+    },
+    {
+      "id": "pokemon.back.35",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/35.png",
+      "atlasPath": "images/pokemon/back/35.json"
+    },
+    {
+      "id": "pokemon.shiny.front.35",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/35.png",
+      "atlasPath": "images/pokemon/shiny/35.json"
+    },
+    {
+      "id": "pokemon.shiny.back.35",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/35.png",
+      "atlasPath": "images/pokemon/back/shiny/35.json"
+    },
+    {
+      "id": "pokemon.icon.35",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/35.png"
+    },
+    {
+      "id": "cry.35",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/35.m4a"
+    },
+    {
+      "id": "pokemon.front.227",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/227.png",
+      "atlasPath": "images/pokemon/227.json"
+    },
+    {
+      "id": "pokemon.back.227",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/227.png",
+      "atlasPath": "images/pokemon/back/227.json"
+    },
+    {
+      "id": "pokemon.shiny.front.227",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/227.png",
+      "atlasPath": "images/pokemon/shiny/227.json"
+    },
+    {
+      "id": "pokemon.shiny.back.227",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/227.png",
+      "atlasPath": "images/pokemon/back/shiny/227.json"
+    },
+    {
+      "id": "pokemon.icon.227",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/227.png"
+    },
+    {
+      "id": "cry.227",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/227.m4a"
+    },
+    {
+      "id": "pokemon.front.304",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/304.png",
+      "atlasPath": "images/pokemon/304.json"
+    },
+    {
+      "id": "pokemon.back.304",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/304.png",
+      "atlasPath": "images/pokemon/back/304.json"
+    },
+    {
+      "id": "pokemon.shiny.front.304",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/304.png",
+      "atlasPath": "images/pokemon/shiny/304.json"
+    },
+    {
+      "id": "pokemon.shiny.back.304",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/304.png",
+      "atlasPath": "images/pokemon/back/shiny/304.json"
+    },
+    {
+      "id": "pokemon.icon.304",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/304.png"
+    },
+    {
+      "id": "cry.304",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/304.m4a"
+    },
+    {
+      "id": "pokemon.front.305",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/305.png",
+      "atlasPath": "images/pokemon/305.json"
+    },
+    {
+      "id": "pokemon.back.305",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/305.png",
+      "atlasPath": "images/pokemon/back/305.json"
+    },
+    {
+      "id": "pokemon.shiny.front.305",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/305.png",
+      "atlasPath": "images/pokemon/shiny/305.json"
+    },
+    {
+      "id": "pokemon.shiny.back.305",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/305.png",
+      "atlasPath": "images/pokemon/back/shiny/305.json"
+    },
+    {
+      "id": "pokemon.icon.305",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/305.png"
+    },
+    {
+      "id": "cry.305",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/305.m4a"
+    },
+    {
+      "id": "pokemon.front.13",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/13.png",
+      "atlasPath": "images/pokemon/13.json"
+    },
+    {
+      "id": "pokemon.back.13",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/13.png",
+      "atlasPath": "images/pokemon/back/13.json"
+    },
+    {
+      "id": "pokemon.shiny.front.13",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/13.png",
+      "atlasPath": "images/pokemon/shiny/13.json"
+    },
+    {
+      "id": "pokemon.shiny.back.13",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/13.png",
+      "atlasPath": "images/pokemon/back/shiny/13.json"
+    },
+    {
+      "id": "pokemon.icon.13",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/13.png"
+    },
+    {
+      "id": "cry.13",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/13.m4a"
+    },
+    {
+      "id": "pokemon.front.14",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/14.png",
+      "atlasPath": "images/pokemon/14.json"
+    },
+    {
+      "id": "pokemon.back.14",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/14.png",
+      "atlasPath": "images/pokemon/back/14.json"
+    },
+    {
+      "id": "pokemon.shiny.front.14",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/14.png",
+      "atlasPath": "images/pokemon/shiny/14.json"
+    },
+    {
+      "id": "pokemon.shiny.back.14",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/14.png",
+      "atlasPath": "images/pokemon/back/shiny/14.json"
+    },
+    {
+      "id": "pokemon.icon.14",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/14.png"
+    },
+    {
+      "id": "cry.14",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/14.m4a"
+    },
+    {
+      "id": "pokemon.front.15",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/15.png",
+      "atlasPath": "images/pokemon/15.json"
+    },
+    {
+      "id": "pokemon.back.15",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/15.png",
+      "atlasPath": "images/pokemon/back/15.json"
+    },
+    {
+      "id": "pokemon.shiny.front.15",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/15.png",
+      "atlasPath": "images/pokemon/shiny/15.json"
+    },
+    {
+      "id": "pokemon.shiny.back.15",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/15.png",
+      "atlasPath": "images/pokemon/back/shiny/15.json"
+    },
+    {
+      "id": "pokemon.icon.15",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/15.png"
+    },
+    {
+      "id": "cry.15",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/15.m4a"
+    },
+    {
+      "id": "pokemon.front.46",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/46.png",
+      "atlasPath": "images/pokemon/46.json"
+    },
+    {
+      "id": "pokemon.back.46",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/46.png",
+      "atlasPath": "images/pokemon/back/46.json"
+    },
+    {
+      "id": "pokemon.shiny.front.46",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/46.png",
+      "atlasPath": "images/pokemon/shiny/46.json"
+    },
+    {
+      "id": "pokemon.shiny.back.46",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/46.png",
+      "atlasPath": "images/pokemon/back/shiny/46.json"
+    },
+    {
+      "id": "pokemon.icon.46",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/46.png"
+    },
+    {
+      "id": "cry.46",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/46.m4a"
+    },
+    {
+      "id": "pokemon.front.47",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/47.png",
+      "atlasPath": "images/pokemon/47.json"
+    },
+    {
+      "id": "pokemon.back.47",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/47.png",
+      "atlasPath": "images/pokemon/back/47.json"
+    },
+    {
+      "id": "pokemon.shiny.front.47",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/47.png",
+      "atlasPath": "images/pokemon/shiny/47.json"
+    },
+    {
+      "id": "pokemon.shiny.back.47",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/47.png",
+      "atlasPath": "images/pokemon/back/shiny/47.json"
+    },
+    {
+      "id": "pokemon.icon.47",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/47.png"
+    },
+    {
+      "id": "cry.47",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/47.m4a"
+    },
+    {
+      "id": "pokemon.front.48",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/48.png",
+      "atlasPath": "images/pokemon/48.json"
+    },
+    {
+      "id": "pokemon.back.48",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/48.png",
+      "atlasPath": "images/pokemon/back/48.json"
+    },
+    {
+      "id": "pokemon.shiny.front.48",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/48.png",
+      "atlasPath": "images/pokemon/shiny/48.json"
+    },
+    {
+      "id": "pokemon.shiny.back.48",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/48.png",
+      "atlasPath": "images/pokemon/back/shiny/48.json"
+    },
+    {
+      "id": "pokemon.icon.48",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/48.png"
+    },
+    {
+      "id": "cry.48",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/48.m4a"
+    },
+    {
+      "id": "pokemon.front.49",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/49.png",
+      "atlasPath": "images/pokemon/49.json"
+    },
+    {
+      "id": "pokemon.back.49",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/49.png",
+      "atlasPath": "images/pokemon/back/49.json"
+    },
+    {
+      "id": "pokemon.shiny.front.49",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/49.png",
+      "atlasPath": "images/pokemon/shiny/49.json"
+    },
+    {
+      "id": "pokemon.shiny.back.49",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/49.png",
+      "atlasPath": "images/pokemon/back/shiny/49.json"
+    },
+    {
+      "id": "pokemon.icon.49",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/49.png"
+    },
+    {
+      "id": "cry.49",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/49.m4a"
+    },
+    {
+      "id": "pokemon.front.95",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/95.png",
+      "atlasPath": "images/pokemon/95.json"
+    },
+    {
+      "id": "pokemon.back.95",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/95.png",
+      "atlasPath": "images/pokemon/back/95.json"
+    },
+    {
+      "id": "pokemon.shiny.front.95",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/95.png",
+      "atlasPath": "images/pokemon/shiny/95.json"
+    },
+    {
+      "id": "pokemon.shiny.back.95",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/95.png",
+      "atlasPath": "images/pokemon/back/shiny/95.json"
+    },
+    {
+      "id": "pokemon.icon.95",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/95.png"
+    },
+    {
+      "id": "cry.95",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/95.m4a"
+    },
+    {
+      "id": "pokemon.front.246",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/246.png",
+      "atlasPath": "images/pokemon/246.json"
+    },
+    {
+      "id": "pokemon.back.246",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/246.png",
+      "atlasPath": "images/pokemon/back/246.json"
+    },
+    {
+      "id": "pokemon.shiny.front.246",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/246.png",
+      "atlasPath": "images/pokemon/shiny/246.json"
+    },
+    {
+      "id": "pokemon.shiny.back.246",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/246.png",
+      "atlasPath": "images/pokemon/back/shiny/246.json"
+    },
+    {
+      "id": "pokemon.icon.246",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/246.png"
+    },
+    {
+      "id": "cry.246",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/246.m4a"
+    },
+    {
+      "id": "pokemon.front.247",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/247.png",
+      "atlasPath": "images/pokemon/247.json"
+    },
+    {
+      "id": "pokemon.back.247",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/247.png",
+      "atlasPath": "images/pokemon/back/247.json"
+    },
+    {
+      "id": "pokemon.shiny.front.247",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/247.png",
+      "atlasPath": "images/pokemon/shiny/247.json"
+    },
+    {
+      "id": "pokemon.shiny.back.247",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/247.png",
+      "atlasPath": "images/pokemon/back/shiny/247.json"
+    },
+    {
+      "id": "pokemon.icon.247",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/247.png"
+    },
+    {
+      "id": "cry.247",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/247.m4a"
+    },
+    {
+      "id": "pokemon.front.200",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/200.png",
+      "atlasPath": "images/pokemon/200.json"
+    },
+    {
+      "id": "pokemon.back.200",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/200.png",
+      "atlasPath": "images/pokemon/back/200.json"
+    },
+    {
+      "id": "pokemon.shiny.front.200",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/200.png",
+      "atlasPath": "images/pokemon/shiny/200.json"
+    },
+    {
+      "id": "pokemon.shiny.back.200",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/200.png",
+      "atlasPath": "images/pokemon/back/shiny/200.json"
+    },
+    {
+      "id": "pokemon.icon.200",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/200.png"
+    },
+    {
+      "id": "cry.200",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/200.m4a"
+    },
+    {
+      "id": "pokemon.front.353",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/353.png",
+      "atlasPath": "images/pokemon/353.json"
+    },
+    {
+      "id": "pokemon.back.353",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/353.png",
+      "atlasPath": "images/pokemon/back/353.json"
+    },
+    {
+      "id": "pokemon.shiny.front.353",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/353.png",
+      "atlasPath": "images/pokemon/shiny/353.json"
+    },
+    {
+      "id": "pokemon.shiny.back.353",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/353.png",
+      "atlasPath": "images/pokemon/back/shiny/353.json"
+    },
+    {
+      "id": "pokemon.icon.353",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/353.png"
+    },
+    {
+      "id": "cry.353",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/353.m4a"
+    },
+    {
+      "id": "pokemon.front.354",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/354.png",
+      "atlasPath": "images/pokemon/354.json"
+    },
+    {
+      "id": "pokemon.back.354",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/354.png",
+      "atlasPath": "images/pokemon/back/354.json"
+    },
+    {
+      "id": "pokemon.shiny.front.354",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/354.png",
+      "atlasPath": "images/pokemon/shiny/354.json"
+    },
+    {
+      "id": "pokemon.shiny.back.354",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/354.png",
+      "atlasPath": "images/pokemon/back/shiny/354.json"
+    },
+    {
+      "id": "pokemon.icon.354",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/3/354.png"
+    },
+    {
+      "id": "cry.354",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/354.m4a"
+    },
+    {
+      "id": "pokemon.front.179",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/179.png",
+      "atlasPath": "images/pokemon/179.json"
+    },
+    {
+      "id": "pokemon.back.179",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/179.png",
+      "atlasPath": "images/pokemon/back/179.json"
+    },
+    {
+      "id": "pokemon.shiny.front.179",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/179.png",
+      "atlasPath": "images/pokemon/shiny/179.json"
+    },
+    {
+      "id": "pokemon.shiny.back.179",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/179.png",
+      "atlasPath": "images/pokemon/back/shiny/179.json"
+    },
+    {
+      "id": "pokemon.icon.179",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/179.png"
+    },
+    {
+      "id": "cry.179",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/179.m4a"
+    },
+    {
+      "id": "pokemon.front.180",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/180.png",
+      "atlasPath": "images/pokemon/180.json"
+    },
+    {
+      "id": "pokemon.back.180",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/180.png",
+      "atlasPath": "images/pokemon/back/180.json"
+    },
+    {
+      "id": "pokemon.shiny.front.180",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/180.png",
+      "atlasPath": "images/pokemon/shiny/180.json"
+    },
+    {
+      "id": "pokemon.shiny.back.180",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/180.png",
+      "atlasPath": "images/pokemon/back/shiny/180.json"
+    },
+    {
+      "id": "pokemon.icon.180",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/2/180.png"
+    },
+    {
+      "id": "cry.180",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/180.m4a"
+    },
+    {
+      "id": "pokemon.front.100",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/100.png",
+      "atlasPath": "images/pokemon/100.json"
+    },
+    {
+      "id": "pokemon.back.100",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/100.png",
+      "atlasPath": "images/pokemon/back/100.json"
+    },
+    {
+      "id": "pokemon.shiny.front.100",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/100.png",
+      "atlasPath": "images/pokemon/shiny/100.json"
+    },
+    {
+      "id": "pokemon.shiny.back.100",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/100.png",
+      "atlasPath": "images/pokemon/back/shiny/100.json"
+    },
+    {
+      "id": "pokemon.icon.100",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/100.png"
+    },
+    {
+      "id": "cry.100",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/100.m4a"
+    },
+    {
+      "id": "pokemon.front.101",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/101.png",
+      "atlasPath": "images/pokemon/101.json"
+    },
+    {
+      "id": "pokemon.back.101",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/101.png",
+      "atlasPath": "images/pokemon/back/101.json"
+    },
+    {
+      "id": "pokemon.shiny.front.101",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/101.png",
+      "atlasPath": "images/pokemon/shiny/101.json"
+    },
+    {
+      "id": "pokemon.shiny.back.101",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/101.png",
+      "atlasPath": "images/pokemon/back/shiny/101.json"
+    },
+    {
+      "id": "pokemon.icon.101",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/101.png"
+    },
+    {
+      "id": "cry.101",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/101.m4a"
+    },
+    {
+      "id": "pokemon.front.25",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/25.png",
+      "atlasPath": "images/pokemon/25.json"
+    },
+    {
+      "id": "pokemon.back.25",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/25.png",
+      "atlasPath": "images/pokemon/back/25.json"
+    },
+    {
+      "id": "pokemon.shiny.front.25",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/25.png",
+      "atlasPath": "images/pokemon/shiny/25.json"
+    },
+    {
+      "id": "pokemon.shiny.back.25",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/25.png",
+      "atlasPath": "images/pokemon/back/shiny/25.json"
+    },
+    {
+      "id": "pokemon.icon.25",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/1/25.png"
+    },
+    {
+      "id": "cry.25",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/cry/25.m4a"
+    },
+    {
       "id": "trainer.red",
       "kind": "atlas",
       "category": "trainer",
@@ -1804,6 +3724,573 @@
       "category": "trainer",
       "path": "images/trainer/black_belt_m.png",
       "atlasPath": "images/trainer/black_belt_m.json"
+    },
+    {
+      "id": "trainer.firebreather",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/firebreather.png",
+      "atlasPath": "images/trainer/firebreather.json"
+    },
+    {
+      "id": "trainer.guitarist",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/guitarist.png",
+      "atlasPath": "images/trainer/guitarist.json"
+    },
+    {
+      "id": "trainer.aroma_lady",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/aroma_lady.png",
+      "atlasPath": "images/trainer/aroma_lady.json"
+    },
+    {
+      "id": "trainer.snow_worker_m",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/snow_worker_m.png",
+      "atlasPath": "images/trainer/snow_worker_m.json"
+    },
+    {
+      "id": "trainer.biker",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/biker.png",
+      "atlasPath": "images/trainer/biker.json"
+    },
+    {
+      "id": "trainer.psychic_m",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/psychic_m.png",
+      "atlasPath": "images/trainer/psychic_m.json"
+    },
+    {
+      "id": "trainer.hex_maniac",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/hex_maniac.png",
+      "atlasPath": "images/trainer/hex_maniac.json"
+    },
+    {
+      "id": "trainer.dragon_tamer",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/dragon_tamer.png",
+      "atlasPath": "images/trainer/dragon_tamer.json"
+    },
+    {
+      "id": "trainer.roughneck",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/roughneck.png",
+      "atlasPath": "images/trainer/roughneck.json"
+    },
+    {
+      "id": "trainer.worker_m",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/worker_m.png",
+      "atlasPath": "images/trainer/worker_m.json"
+    },
+    {
+      "id": "trainer.fairy_tale_girl",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/fairy_tale_girl.png",
+      "atlasPath": "images/trainer/fairy_tale_girl.json"
+    },
+    {
+      "id": "trainer.brock",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/brock.png",
+      "atlasPath": "images/trainer/brock.json"
+    },
+    {
+      "id": "trainer.misty",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/misty.png",
+      "atlasPath": "images/trainer/misty.json"
+    },
+    {
+      "id": "trainer.lt_surge",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lt_surge.png",
+      "atlasPath": "images/trainer/lt_surge.json"
+    },
+    {
+      "id": "trainer.erika",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/erika.png",
+      "atlasPath": "images/trainer/erika.json"
+    },
+    {
+      "id": "trainer.koga",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/koga.png",
+      "atlasPath": "images/trainer/koga.json"
+    },
+    {
+      "id": "trainer.sabrina",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/sabrina.png",
+      "atlasPath": "images/trainer/sabrina.json"
+    },
+    {
+      "id": "trainer.blaine",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/blaine.png",
+      "atlasPath": "images/trainer/blaine.json"
+    },
+    {
+      "id": "trainer.giovanni",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/giovanni.png",
+      "atlasPath": "images/trainer/giovanni.json"
+    },
+    {
+      "id": "trainer.falkner",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/falkner.png",
+      "atlasPath": "images/trainer/falkner.json"
+    },
+    {
+      "id": "trainer.bugsy",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/bugsy.png",
+      "atlasPath": "images/trainer/bugsy.json"
+    },
+    {
+      "id": "trainer.whitney",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/whitney.png",
+      "atlasPath": "images/trainer/whitney.json"
+    },
+    {
+      "id": "trainer.morty",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/morty.png",
+      "atlasPath": "images/trainer/morty.json"
+    },
+    {
+      "id": "trainer.chuck",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/chuck.png",
+      "atlasPath": "images/trainer/chuck.json"
+    },
+    {
+      "id": "trainer.jasmine",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/jasmine.png",
+      "atlasPath": "images/trainer/jasmine.json"
+    },
+    {
+      "id": "trainer.pryce",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/pryce.png",
+      "atlasPath": "images/trainer/pryce.json"
+    },
+    {
+      "id": "trainer.clair",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/clair.png",
+      "atlasPath": "images/trainer/clair.json"
+    },
+    {
+      "id": "trainer.roxanne",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/roxanne.png",
+      "atlasPath": "images/trainer/roxanne.json"
+    },
+    {
+      "id": "trainer.brawly",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/brawly.png",
+      "atlasPath": "images/trainer/brawly.json"
+    },
+    {
+      "id": "trainer.wattson",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/wattson.png",
+      "atlasPath": "images/trainer/wattson.json"
+    },
+    {
+      "id": "trainer.flannery",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/flannery.png",
+      "atlasPath": "images/trainer/flannery.json"
+    },
+    {
+      "id": "trainer.norman",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/norman.png",
+      "atlasPath": "images/trainer/norman.json"
+    },
+    {
+      "id": "trainer.winona",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/winona.png",
+      "atlasPath": "images/trainer/winona.json"
+    },
+    {
+      "id": "trainer.tate",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/tate.png",
+      "atlasPath": "images/trainer/tate.json"
+    },
+    {
+      "id": "trainer.juan",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/juan.png",
+      "atlasPath": "images/trainer/juan.json"
+    },
+    {
+      "id": "trainer.roark",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/roark.png",
+      "atlasPath": "images/trainer/roark.json"
+    },
+    {
+      "id": "trainer.gardenia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/gardenia.png",
+      "atlasPath": "images/trainer/gardenia.json"
+    },
+    {
+      "id": "trainer.maylene",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/maylene.png",
+      "atlasPath": "images/trainer/maylene.json"
+    },
+    {
+      "id": "trainer.crasher_wake",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/crasher_wake.png",
+      "atlasPath": "images/trainer/crasher_wake.json"
+    },
+    {
+      "id": "trainer.fantina",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/fantina.png",
+      "atlasPath": "images/trainer/fantina.json"
+    },
+    {
+      "id": "trainer.byron",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/byron.png",
+      "atlasPath": "images/trainer/byron.json"
+    },
+    {
+      "id": "trainer.candice",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/candice.png",
+      "atlasPath": "images/trainer/candice.json"
+    },
+    {
+      "id": "trainer.volkner",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/volkner.png",
+      "atlasPath": "images/trainer/volkner.json"
+    },
+    {
+      "id": "trainer.cilan",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/cilan.png",
+      "atlasPath": "images/trainer/cilan.json"
+    },
+    {
+      "id": "trainer.chili",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/chili.png",
+      "atlasPath": "images/trainer/chili.json"
+    },
+    {
+      "id": "trainer.cress",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/cress.png",
+      "atlasPath": "images/trainer/cress.json"
+    },
+    {
+      "id": "trainer.lenora",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lenora.png",
+      "atlasPath": "images/trainer/lenora.json"
+    },
+    {
+      "id": "trainer.burgh",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/burgh.png",
+      "atlasPath": "images/trainer/burgh.json"
+    },
+    {
+      "id": "trainer.elesa",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/elesa.png",
+      "atlasPath": "images/trainer/elesa.json"
+    },
+    {
+      "id": "trainer.clay",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/clay.png",
+      "atlasPath": "images/trainer/clay.json"
+    },
+    {
+      "id": "trainer.skyla",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/skyla.png",
+      "atlasPath": "images/trainer/skyla.json"
+    },
+    {
+      "id": "trainer.brycen",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/brycen.png",
+      "atlasPath": "images/trainer/brycen.json"
+    },
+    {
+      "id": "trainer.drayden",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/drayden.png",
+      "atlasPath": "images/trainer/drayden.json"
+    },
+    {
+      "id": "trainer.roxie",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/roxie.png",
+      "atlasPath": "images/trainer/roxie.json"
+    },
+    {
+      "id": "trainer.marlon",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/marlon.png",
+      "atlasPath": "images/trainer/marlon.json"
+    },
+    {
+      "id": "trainer.viola",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/viola.png",
+      "atlasPath": "images/trainer/viola.json"
+    },
+    {
+      "id": "trainer.grant",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/grant.png",
+      "atlasPath": "images/trainer/grant.json"
+    },
+    {
+      "id": "trainer.korrina",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/korrina.png",
+      "atlasPath": "images/trainer/korrina.json"
+    },
+    {
+      "id": "trainer.ramos",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/ramos.png",
+      "atlasPath": "images/trainer/ramos.json"
+    },
+    {
+      "id": "trainer.clemont",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/clemont.png",
+      "atlasPath": "images/trainer/clemont.json"
+    },
+    {
+      "id": "trainer.valerie",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/valerie.png",
+      "atlasPath": "images/trainer/valerie.json"
+    },
+    {
+      "id": "trainer.olympia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/olympia.png",
+      "atlasPath": "images/trainer/olympia.json"
+    },
+    {
+      "id": "trainer.wulfric",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/wulfric.png",
+      "atlasPath": "images/trainer/wulfric.json"
+    },
+    {
+      "id": "trainer.milo",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/milo.png",
+      "atlasPath": "images/trainer/milo.json"
+    },
+    {
+      "id": "trainer.nessa",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/nessa.png",
+      "atlasPath": "images/trainer/nessa.json"
+    },
+    {
+      "id": "trainer.kabu",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/kabu.png",
+      "atlasPath": "images/trainer/kabu.json"
+    },
+    {
+      "id": "trainer.bea",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/bea.png",
+      "atlasPath": "images/trainer/bea.json"
+    },
+    {
+      "id": "trainer.allister",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/allister.png",
+      "atlasPath": "images/trainer/allister.json"
+    },
+    {
+      "id": "trainer.opal",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/opal.png",
+      "atlasPath": "images/trainer/opal.json"
+    },
+    {
+      "id": "trainer.gordie",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/gordie.png",
+      "atlasPath": "images/trainer/gordie.json"
+    },
+    {
+      "id": "trainer.melony",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/melony.png",
+      "atlasPath": "images/trainer/melony.json"
+    },
+    {
+      "id": "trainer.piers",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/piers.png",
+      "atlasPath": "images/trainer/piers.json"
+    },
+    {
+      "id": "trainer.raihan",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/raihan.png",
+      "atlasPath": "images/trainer/raihan.json"
+    },
+    {
+      "id": "trainer.katy",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/katy.png",
+      "atlasPath": "images/trainer/katy.json"
+    },
+    {
+      "id": "trainer.brassius",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/brassius.png",
+      "atlasPath": "images/trainer/brassius.json"
+    },
+    {
+      "id": "trainer.iono",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/iono.png",
+      "atlasPath": "images/trainer/iono.json"
+    },
+    {
+      "id": "trainer.kofu",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/kofu.png",
+      "atlasPath": "images/trainer/kofu.json"
+    },
+    {
+      "id": "trainer.larry",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/larry.png",
+      "atlasPath": "images/trainer/larry.json"
+    },
+    {
+      "id": "trainer.ryme",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/ryme.png",
+      "atlasPath": "images/trainer/ryme.json"
+    },
+    {
+      "id": "trainer.tulip",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/tulip.png",
+      "atlasPath": "images/trainer/tulip.json"
+    },
+    {
+      "id": "trainer.grusha",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/grusha.png",
+      "atlasPath": "images/trainer/grusha.json"
     },
     {
       "id": "item.potion",
@@ -1924,6 +4411,114 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/carbos.png"
+    },
+    {
+      "id": "bg.arena.plains",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/plains_bg.png"
+    },
+    {
+      "id": "bg.arena.volcano",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/volcano_bg.png"
+    },
+    {
+      "id": "bg.arena.sea",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/sea_bg.png"
+    },
+    {
+      "id": "bg.arena.power_plant",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/power_plant_bg.png"
+    },
+    {
+      "id": "bg.arena.tall_grass",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/tall_grass_bg.png"
+    },
+    {
+      "id": "bg.arena.ice_cave",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ice_cave_bg.png"
+    },
+    {
+      "id": "bg.arena.dojo",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/dojo_bg.png"
+    },
+    {
+      "id": "bg.arena.swamp",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/swamp_bg.png"
+    },
+    {
+      "id": "bg.arena.desert",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/desert_bg.png"
+    },
+    {
+      "id": "bg.arena.mountain",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/mountain_bg.png"
+    },
+    {
+      "id": "bg.arena.ruins",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ruins_bg.png"
+    },
+    {
+      "id": "bg.arena.forest",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/forest_bg.png"
+    },
+    {
+      "id": "bg.arena.cave",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/cave_bg.png"
+    },
+    {
+      "id": "bg.arena.graveyard",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/graveyard_bg.png"
+    },
+    {
+      "id": "bg.arena.wasteland",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/wasteland_bg.png"
+    },
+    {
+      "id": "bg.arena.abyss",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/abyss_bg.png"
+    },
+    {
+      "id": "bg.arena.factory",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/factory_bg.png"
+    },
+    {
+      "id": "bg.arena.fairy_cave",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/fairy_cave_bg.png"
     }
   ],
   "missing": [

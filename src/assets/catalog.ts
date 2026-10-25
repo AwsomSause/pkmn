@@ -26,6 +26,8 @@ export interface CatalogInputs {
   speciesDex: number[];
   trainerAssetIds: string[];
   itemAssetIds: string[];
+  /** Battle backgrounds ("bg.arena.<name>"), e.g. the arena for each stage theme's type. */
+  backgroundAssetIds: string[];
 }
 
 const atlas = (id: string, category: AssetCategory, base: string): AssetEntry => ({
@@ -72,6 +74,11 @@ export function itemEntry(assetId: string): AssetEntry {
   return { id: assetId, kind: 'image', category: 'item', path: `images/items/${assetId.replace(/^item\./, '')}.png` };
 }
 
+export function backgroundEntry(assetId: string): AssetEntry {
+  // "bg.arena.volcano" -> images/arenas/volcano_bg.png
+  return { id: assetId, kind: 'image', category: 'background', path: `images/arenas/${assetId.replace(/^bg\.arena\./, '')}_bg.png` };
+}
+
 /** Last National Dex number of each generation (the icon pack is split into folders by generation). */
 const GENERATION_ENDS = [151, 251, 386, 493, 649, 721, 809, 905, 1025];
 
@@ -109,6 +116,7 @@ export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
     ...inputs.speciesDex.flatMap(pokemonEntries),
     ...inputs.trainerAssetIds.map(trainerEntry),
     ...inputs.itemAssetIds.map(itemEntry),
+    ...inputs.backgroundAssetIds.map(backgroundEntry),
   ];
   const seen = new Set<string>();
   return entries.filter((e) => (seen.has(e.id) ? false : (seen.add(e.id), true)));

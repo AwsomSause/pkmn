@@ -54,6 +54,15 @@ Green's "weaker enemies" and "harder catching" are separate rule entries. Archet
 - Optional nodes hang off a numbered node as side branches that return to the same column.
 - Generator validation: connected, no dead ends, no duplicate IDs, each node records how it was generated (for debugging).
 
+### 5b. Stage themes (director rule, 2026-10-25)
+
+Every stage has a **theme**: a named pair of two types. Examples from the director: **"Stormy Nightmares"** (Electric/Ghost), **"Firey Promises"** (Fire/Psychic), **"Lazy Rivers"** (Water/Normal).
+
+- **Every two-type combination is used:** all 153 pairs of the 18 types (director confirmed "all 153", not only the pairs real Pokémon have). Each has a unique name in `src/data/themes.json`.
+- The theme decides **which wild Pokémon appear** (species with either type; species with both types are more common), **which trainers appear** (trainer classes whose speciality matches a theme type, with teams drawn from the theme), and **the gym leader** (a leader whose speciality matches a theme type when one is unused; their team is always drawn from the theme).
+- The battle background is the arena for the theme's first type.
+- Themes and gym leaders don't repeat within a run (D6).
+
 ## 6. Battles
 
 Traditional single battles (1v1 active Pokémon), turn-based.

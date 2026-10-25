@@ -7,7 +7,7 @@ import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseReward, chooseStarter, createRun, resolveDecision, takeTurn as takeAction } from '../../src/core/run';
 import { currentEnemy, type RunState } from '../../src/core/state';
 import { buildContent, RAW_CONTENT } from '../../src/data';
-import { content } from './helpers';
+import { content, toBattle } from './helpers';
 
 function newRun(seed = 'run-seed', archetypeId = 'red'): RunState {
   return createRun(content, { runId: 'run1', seed, archetypeId });
@@ -20,7 +20,8 @@ function playBattle(run: RunState): RunState {
   let guard = 0;
   while (run.phase === 'battle' && guard++ < 300) {
     const mon = run.party[run.battle!.activeIndex]!;
-    const idx = mon.moves.findIndex((m) => m.pp > 0);
+    const damaging = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
+    const idx = damaging >= 0 ? damaging : mon.moves.findIndex((m) => m.pp > 0);
     run = takeTurn(content, run, idx).run;
   }
   return skipDecisions(run);
@@ -73,11 +74,11 @@ describe('trainer archetypes', () => {
   });
 
   it('enemy levels shift by the archetype offset and respect the minimum', () => {
-    const levels = (id: string) => enemyLevel(content, getArchetype(content, id), 0, new Rng(hashSeed('lvl')));
+    const levels = (id: string) => enemyLevel(content, getArchetype(content, id), 0, 0, new Rng(hashSeed('lvl')));
     const red = levels('red');
     expect(levels('blue').level).toBe(red.level + 2);
     expect(levels('green').unclamped).toBe(red.unclamped - 1);
-    expect(levels('green').level).toBeGreaterThanOrEqual(content.balance.prototypeEncounters.minLevel);
+    expect(levels('green').level).toBeGreaterThanOrEqual(content.balance.difficulty.minLevel);
   });
 });
 
@@ -121,11 +122,15 @@ describe('reward draft', () => {
 });
 
 describe('run flow', () => {
-  it('starter → battle → reward → next battle', () => {
+  it('starter → map → battle → reward → map', () => {
     let run = newRun('flow');
     expect(run.phase).toBe('starter');
     run = chooseStarter(content, run, 1);
+    expect(run.phase).toBe('map');
+    expect(run.stage!.current).toBeNull();
+    run = toBattle(run);
     expect(run.phase).toBe('battle');
+    expect(run.stage!.current).toMatch(/^c1r/);
     expect(run.party).toHaveLength(1);
     expect(run.party[0]!.speciesId).toBe(run.starterChoices[1]);
     // Give the starter a big advantage so this test is about flow, not luck.
@@ -136,14 +141,14 @@ describe('run flow', () => {
     expect(run.encountersCompleted).toBe(1);
     const moneyBefore = run.money;
     const { run: after } = chooseReward(content, run, 0);
-    expect(after.phase).toBe('battle');
+    expect(after.phase).toBe('map');
     expect(after.draft).toBeNull();
     expect(after.log.rewardsTaken).toHaveLength(1);
     expect(after.money).toBeGreaterThanOrEqual(moneyBefore);
   });
 
   it('choosing a reward grants exactly one reward and cannot be repeated', () => {
-    let run = chooseStarter(content, newRun('once'), 0);
+    let run = toBattle(chooseStarter(content, newRun('once'), 0));
     run.party[0] = createPokemon(content, run.party[0]!.speciesId, 40, run.party[0]!.uid);
     run = playBattle(run);
     const { run: after } = chooseReward(content, run, 2);
@@ -153,7 +158,7 @@ describe('run flow', () => {
 
   it('winning awards XP and money with archetype multipliers', () => {
     for (const archetypeId of ['red', 'blue', 'green']) {
-      let run = chooseStarter(content, newRun('xp', archetypeId), 0);
+      let run = toBattle(chooseStarter(content, newRun('xp', archetypeId), 0));
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 40, run.party[0]!.uid);
       const enemy = currentEnemy(run.battle!);
       const archetype = getArchetype(content, archetypeId);
@@ -172,7 +177,7 @@ describe('run flow', () => {
   });
 
   it('losing with no healthy Pokémon ends the run', () => {
-    let run = chooseStarter(content, newRun('lose'), 0);
+    let run = toBattle(chooseStarter(content, newRun('lose'), 0));
     run.party[0]!.hp = 1;
     run.battle!.enemyTeam = [createPokemon(content, 'growlithe', 40, 'e99')];
     run = playBattle(run);
@@ -181,7 +186,7 @@ describe('run flow', () => {
 
   it('the same seed and the same choices reproduce the whole run', () => {
     const play = () => {
-      let run = chooseStarter(content, newRun('replay', 'blue'), 2);
+      let run = toBattle(chooseStarter(content, newRun('replay', 'blue'), 2));
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 30, run.party[0]!.uid);
       for (let i = 0; i < 3; i++) {
         run = playBattle(run);

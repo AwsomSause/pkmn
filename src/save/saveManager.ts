@@ -4,6 +4,7 @@
 
 import type { z } from 'zod';
 import type { Content } from '../core/contentSchema';
+import { validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
 import {
   ProfileSchema,
@@ -21,7 +22,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 2, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 3, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -43,6 +44,19 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         battle = { ...rest, kind: 'wild', enemyTeam: [enemy], enemyIndex: 0, trainer: null, needsSwitch: false, lastStandUsed: false };
       }
       return { ...run, battle, inventory: {}, candies: 0, pending: [], afterDecisions: 'reward' };
+    },
+    // v3 (Milestone 3): stage maps and themes. An older run gets its first
+    // stage map the next time it returns to the map.
+    2: (data) => {
+      const run = data as Json;
+      return {
+        ...run,
+        afterDecisions: run.afterDecisions === 'battle' ? 'map' : run.afterDecisions,
+        stage: null,
+        usedThemes: [],
+        usedLeaders: [],
+        badges: [],
+      };
     },
   },
   settings: {},
@@ -180,9 +194,20 @@ export class SaveManager {
     for (const d of run.pending) if (d.kind === 'learnMove' && !c.moves.has(d.moveId)) return `Unknown move "${d.moveId}" in save.`;
     if (run.battle) {
       if (!run.battle.enemyTeam[run.battle.enemyIndex]) return 'Battle data is damaged in the save.';
-      if (run.battle.trainer && !c.trainers.has(run.battle.trainer.classId)) return `Unknown trainer class "${run.battle.trainer.classId}" in save.`;
+      const t = run.battle.trainer;
+      if (t?.leaderId && !c.gymLeaders.has(t.leaderId)) return `Unknown gym leader "${t.leaderId}" in save.`;
+      if (t && !t.leaderId && !c.trainers.has(t.classId)) return `Unknown trainer class "${t.classId}" in save.`;
     }
     if (run.phase === 'decision' && run.pending.length === 0) return 'The save is waiting on a decision that is missing.';
+    if (run.stage) {
+      if (!c.themes.has(run.stage.themeId)) return `Unknown stage theme "${run.stage.themeId}" in save.`;
+      if (!c.gymLeaders.has(run.stage.leaderId)) return `Unknown gym leader "${run.stage.leaderId}" in save.`;
+      const mapProblems = validateStageMap(run.stage.map);
+      if (mapProblems.length > 0) return `The stage map in the save is damaged (${mapProblems[0]}).`;
+      if (run.stage.current !== null && !run.stage.map.nodes.some((n) => n.id === run.stage!.current)) return 'The save points to a map node that does not exist.';
+    } else if (run.phase === 'map' || run.phase === 'shop') {
+      return 'The stage map is missing from the save.';
+    }
     if (run.phase === 'battle' && (!run.battle || !run.party[run.battle.activeIndex])) return 'Battle data is missing from the save.';
     if (run.phase === 'reward' && !run.draft) return 'Reward choices are missing from the save.';
     if (run.phase !== 'starter' && run.party.length === 0) return 'The save has no party.';
