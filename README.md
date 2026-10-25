@@ -50,6 +50,16 @@ npm run assets:import -- /path/to/folder/with/the/zips
 
 The folder should contain `images.zip`, `audio.zip` and `fonts.zip` as supplied. Only the files the game needs are copied.
 
+## Move data
+
+Level-up moves come from the director's move dataset (a spreadsheet exported as HTML). To rebuild every Pokémon's learnset from it:
+
+```bash
+npm run data:movesets -- /path/to/SortedMoveset.html
+```
+
+Moves the game doesn't support yet are left out and listed, so you can see which ones to add next.
+
 ## Project layout
 
 ```
