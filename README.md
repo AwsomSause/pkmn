@@ -66,6 +66,15 @@ npm run assets:import -- /path/to/folder/with/the/zips
 
 `data:moves` adds every move; moves whose effects the battle engine can't run yet are flagged `supported: false` (they stay in learnsets but no Pokémon uses them). `data:species` downloads PokeAPI's CSV files into `.cache/pokeapi` the first time, then writes `species.json` and `learnables.json`; it reads the zips to find each form's sprite and cry names. `assets:import` then copies the art for every species.
 
+The director's extra Pokémon and forms (Insurgence Deltas, Z-Forms, Spooky forms, new Megas) are built separately, so re-running `data:species` keeps them:
+
+```bash
+npm run data:custom -- /path/to/new_sprites.zip
+npm run assets:manifest
+```
+
+`data:custom` (needs Python with Pillow) downloads Insurgence's Delta data into `.cache/insurgence` the first time, reads the designs in `tools/custom-forms.json`, writes `src/data/customSpecies.json` and `customEvolutions.json`, and converts the zip's sprites into `public/assets/images/pokemon/**/custom/`. To change a designed form's types, stats or evolution, edit `tools/custom-forms.json` and run it again.
+
 ## Project layout
 
 ```

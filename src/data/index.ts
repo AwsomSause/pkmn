@@ -36,6 +36,8 @@ import rewardsJson from './rewards.json';
 import rulesetJson from './ruleset.json';
 import shopJson from './shop.json';
 import speciesJson from './species.json';
+import customSpeciesJson from './customSpecies.json';
+import customEvolutionsJson from './customEvolutions.json';
 import themesJson from './themes.json';
 import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
@@ -66,8 +68,25 @@ export interface RawContent {
   balance: unknown;
 }
 
+/**
+ * Every species: PokeAPI's (species.json, npm run data:species) plus the
+ * director's custom forms (customSpecies.json, npm run data:custom). New
+ * evolutions of existing species (Raticate -> Bruticate) live in
+ * customEvolutions.json so re-running either tool keeps them.
+ */
+export function mergeSpecies(base: unknown[], custom: unknown[], evolutions: { from: string; to: string }[]): unknown[] {
+  const extra = new Map<string, object[]>();
+  for (const { from, ...evo } of evolutions) extra.set(from, [...(extra.get(from) ?? []), evo]);
+  const merged = base.map((s) => {
+    const entry = s as { id: string; evolutions?: object[] };
+    const add = extra.get(entry.id);
+    return add ? { ...entry, evolutions: [...(entry.evolutions ?? []), ...add] } : entry;
+  });
+  return [...merged, ...custom];
+}
+
 export const RAW_CONTENT: RawContent = {
-  species: speciesJson,
+  species: mergeSpecies(speciesJson, customSpeciesJson, customEvolutionsJson),
   moves: movesJson,
   typeChart: typeChartJson,
   archetypes: archetypesJson,

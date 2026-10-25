@@ -1,0 +1,1 @@
+{"textures": [{"image": "sliggoo-delta.png", "format": "RGBA8888", "size": {"w": 54, "h": 86}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 54, "h": 86}, "spriteSourceSize": {"x": 0, "y": 0, "w": 54, "h": 86}, "frame": {"x": 0, "y": 0, "w": 54, "h": 86}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

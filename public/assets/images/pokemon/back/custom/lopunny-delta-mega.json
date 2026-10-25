@@ -1,0 +1,1 @@
+{"textures": [{"image": "lopunny-delta-mega.png", "format": "RGBA8888", "size": {"w": 85, "h": 72}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 85, "h": 72}, "spriteSourceSize": {"x": 0, "y": 0, "w": 85, "h": 72}, "frame": {"x": 0, "y": 0, "w": 85, "h": 72}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

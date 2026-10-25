@@ -1,0 +1,1 @@
+{"textures": [{"image": "ditto-delta-ground.png", "format": "RGBA8888", "size": {"w": 66, "h": 41}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 66, "h": 41}, "spriteSourceSize": {"x": 0, "y": 0, "w": 66, "h": 41}, "frame": {"x": 0, "y": 0, "w": 66, "h": 41}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

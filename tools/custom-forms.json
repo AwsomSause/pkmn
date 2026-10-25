@@ -1,0 +1,970 @@
+{
+  "_about": "Input for npm run data:custom (tools/import-custom-forms.ts). Insurgence Delta data comes from the Insurgence Showdown files; everything under 'insurgenceExtras', 'designs' and 'megas' was designed for this game. Edit freely and re-run the tool.",
+  "insurgenceForms": {
+    "_about": "Sprite suffixes that are forms. 'key' = Showdown key, or 'design' for a form designed here. Suffix '_1' on a species with a Mega is its Mega unless listed.",
+    "781_2": {
+      "key": "typhlosiondeltamegaactive",
+      "kind": "battle",
+      "name": "Mega Delta Typhlosion (Active)"
+    },
+    "870_2": {
+      "key": "metagrossdeltarcrystal",
+      "kind": "battle",
+      "name": "Delta Metagross (Ruin, Crystal)",
+      "types": [
+        "rock",
+        "ice"
+      ]
+    },
+    "896_1": {
+      "key": "emolgadeltafired",
+      "kind": "battle",
+      "name": "Delta Emolga (Fired Up)"
+    },
+    "914_1": {
+      "key": "volcaronadeltaarmor",
+      "kind": "battle",
+      "name": "Armored Delta Volcarona"
+    },
+    "923_1": {
+      "key": "meloettadeltamagician",
+      "kind": "battle",
+      "name": "Delta Meloetta (Magician)"
+    },
+    "924_1": {
+      "key": "hoopadeltaunleashed",
+      "kind": "alternate",
+      "name": "Delta Hoopa (Unleashed)"
+    }
+  },
+  "insurgenceExtras": [
+    {
+      "sprite": "755_1",
+      "id": "liepard-delta-shadow",
+      "name": "Delta Liepard (Shadow)",
+      "base": "liepard-delta",
+      "kind": "alternate",
+      "types": [
+        "ghost",
+        "dark"
+      ],
+      "stats": {
+        "hp": 64,
+        "atk": 98,
+        "def": 45,
+        "spa": 98,
+        "spd": 45,
+        "spe": 116
+      }
+    },
+    {
+      "sprite": "772_1",
+      "id": "muk-delta-water",
+      "name": "Delta Muk (Water Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "water"
+      ]
+    },
+    {
+      "sprite": "772_2",
+      "id": "muk-delta-grass",
+      "name": "Delta Muk (Grass Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "grass"
+      ]
+    },
+    {
+      "sprite": "772_3",
+      "id": "muk-delta-fire",
+      "name": "Delta Muk (Fire Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "fire"
+      ]
+    },
+    {
+      "sprite": "772_4",
+      "id": "muk-delta-dark",
+      "name": "Delta Muk (Dark Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "dark"
+      ]
+    },
+    {
+      "sprite": "772_5",
+      "id": "muk-delta-fairy",
+      "name": "Delta Muk (Fairy Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "fairy"
+      ]
+    },
+    {
+      "sprite": "772_6",
+      "id": "muk-delta-bug",
+      "name": "Delta Muk (Bug Cage)",
+      "base": "muk-delta",
+      "kind": "alternate",
+      "types": [
+        "ground",
+        "bug"
+      ]
+    },
+    {
+      "sprite": "776_1",
+      "id": "snorlax-delta-summer",
+      "name": "Delta Snorlax (Summer)",
+      "base": "snorlax-delta",
+      "kind": "alternate",
+      "types": [
+        "grass",
+        "ground"
+      ]
+    },
+    {
+      "sprite": "776_2",
+      "id": "snorlax-delta-autumn",
+      "name": "Delta Snorlax (Autumn)",
+      "base": "snorlax-delta",
+      "kind": "alternate",
+      "types": [
+        "grass",
+        "fire"
+      ]
+    },
+    {
+      "sprite": "776_3",
+      "id": "snorlax-delta-winter",
+      "name": "Delta Snorlax (Winter)",
+      "base": "snorlax-delta",
+      "kind": "alternate",
+      "types": [
+        "grass",
+        "ice"
+      ]
+    },
+    {
+      "sprite": "776_4",
+      "id": "snorlax-delta-blossom",
+      "name": "Delta Snorlax (Blossom)",
+      "base": "snorlax-delta",
+      "kind": "alternate",
+      "types": [
+        "grass",
+        "fairy"
+      ]
+    },
+    {
+      "sprite": "925",
+      "id": "elgyem-delta",
+      "name": "Delta Elgyem",
+      "base": "elgyem",
+      "kind": "alternate",
+      "types": [
+        "steel",
+        "electric"
+      ],
+      "stats": {
+        "hp": 55,
+        "atk": 45,
+        "def": 65,
+        "spa": 85,
+        "spd": 55,
+        "spe": 40
+      }
+    }
+  ],
+  "dittoTypes": {
+    "_about": "Delta Ditto's 18 type sprites (813_1 .. 813_18) become one form per type, in this order (null = the ??? sprite, left out because the game has no ??? type).",
+    "order": [
+      "fighting",
+      "flying",
+      "poison",
+      "ground",
+      "rock",
+      "bug",
+      "ghost",
+      "steel",
+      null,
+      "fire",
+      "water",
+      "grass",
+      "electric",
+      "psychic",
+      "ice",
+      "dragon",
+      "dark",
+      "fairy"
+    ]
+  },
+  "designs": [
+    {
+      "id": "abra-z",
+      "name": "Z-Abra",
+      "base": "abra",
+      "types": [
+        "psychic",
+        "ghost"
+      ],
+      "front": "Z-Forms/063s.png",
+      "back": "Z-From BackSprites/063sb.png"
+    },
+    {
+      "id": "kadabra-z",
+      "name": "Z-Kadabra",
+      "base": "kadabra",
+      "types": [
+        "psychic",
+        "ghost"
+      ],
+      "from": "abra-z",
+      "front": "Z-Forms/064s.png",
+      "back": "Z-From BackSprites/064fsb.png"
+    },
+    {
+      "id": "alakazam-z",
+      "name": "Z-Alakazam",
+      "base": "alakazam",
+      "types": [
+        "psychic",
+        "ghost"
+      ],
+      "from": "kadabra-z",
+      "front": "Z-Forms/065s.png",
+      "back": "Z-From BackSprites/065sb.png"
+    },
+    {
+      "id": "alakazam-z-mega",
+      "name": "Z-Mega Alakazam",
+      "base": "alakazam-mega",
+      "types": [
+        "psychic",
+        "ghost"
+      ],
+      "kind": "mega",
+      "megaOf": "alakazam-z",
+      "front": "Z-Forms/065s_1.png",
+      "back": "Z-From BackSprites/065sb_1.png"
+    },
+    {
+      "id": "gastly-z",
+      "name": "Z-Gastly",
+      "base": "gastly",
+      "types": [
+        "ghost",
+        "ice"
+      ],
+      "front": "Z-Forms/831.png",
+      "back": "Z-From BackSprites/831b.png"
+    },
+    {
+      "id": "haunter-z",
+      "name": "Z-Haunter",
+      "base": "haunter",
+      "types": [
+        "ghost",
+        "ice"
+      ],
+      "from": "gastly-z",
+      "front": "Z-Forms/832.png",
+      "back": "Z-From BackSprites/832b.png"
+    },
+    {
+      "id": "gengar-z",
+      "name": "Z-Gengar",
+      "base": "gengar",
+      "types": [
+        "ghost",
+        "ice"
+      ],
+      "from": "haunter-z",
+      "front": "Z-Forms/833.png",
+      "back": "Z-From BackSprites/833b.png"
+    },
+    {
+      "id": "gengar-z-mega",
+      "name": "Z-Mega Gengar",
+      "base": "gengar-mega",
+      "types": [
+        "ghost",
+        "ice"
+      ],
+      "kind": "mega",
+      "megaOf": "gengar-z",
+      "front": "Z-Forms/833_1.png",
+      "back": "Z-From BackSprites/833b_1.png"
+    },
+    {
+      "id": "onix-z",
+      "name": "Z-Onix",
+      "base": "onix",
+      "types": [
+        "ice",
+        "rock"
+      ],
+      "front": "Z-Forms/840s.png",
+      "back": "Z-From BackSprites/840sb.png"
+    },
+    {
+      "id": "steelix-z",
+      "name": "Z-Steelix",
+      "base": "steelix",
+      "types": [
+        "ice",
+        "steel"
+      ],
+      "from": "onix-z",
+      "front": "Z-Forms/841s.png",
+      "back": "Z-From BackSprites/841sb.png"
+    },
+    {
+      "id": "steelix-z-mega",
+      "name": "Z-Mega Steelix",
+      "base": "steelix-mega",
+      "types": [
+        "ice",
+        "steel"
+      ],
+      "kind": "mega",
+      "megaOf": "steelix-z",
+      "front": "Z-Forms/841s_1.png",
+      "back": "Z-From BackSprites/841sb_1.png"
+    },
+    {
+      "id": "tangela-z",
+      "name": "Z-Tangela",
+      "base": "tangela",
+      "types": [
+        "grass",
+        "ground"
+      ],
+      "front": "Z-Forms/858.png",
+      "back": "Z-From BackSprites/858b.png"
+    },
+    {
+      "id": "tangrowth-z",
+      "name": "Z-Tangrowth",
+      "base": "tangrowth",
+      "types": [
+        "grass",
+        "ground"
+      ],
+      "from": "tangela-z",
+      "front": "Z-Forms/859.png",
+      "back": "Z-From BackSprites/859b.png"
+    },
+    {
+      "id": "voltorb-z",
+      "name": "Z-Voltorb",
+      "base": "voltorb",
+      "types": [
+        "ice",
+        "electric"
+      ],
+      "front": "Z-Forms/933.png",
+      "back": "Z-From BackSprites/933b.png"
+    },
+    {
+      "id": "electrode-z",
+      "name": "Z-Electrode",
+      "base": "electrode",
+      "types": [
+        "ice",
+        "electric"
+      ],
+      "from": "voltorb-z",
+      "front": "Z-Forms/934_1.png",
+      "back": "Z-From BackSprites/934b.png"
+    },
+    {
+      "id": "diglett-z",
+      "name": "Z-Diglett",
+      "base": "diglett",
+      "types": [
+        "ice",
+        "ground"
+      ],
+      "front": "Z-Forms/935.png",
+      "back": "Z-From BackSprites/935b.png"
+    },
+    {
+      "id": "dugtrio-z",
+      "name": "Z-Dugtrio",
+      "base": "dugtrio",
+      "types": [
+        "ice",
+        "ground"
+      ],
+      "from": "diglett-z",
+      "front": "Z-Forms/936.png",
+      "back": "Z-From BackSprites/936b.png"
+    },
+    {
+      "id": "piplup-z",
+      "name": "Z-Piplup",
+      "base": "piplup",
+      "types": [
+        "ice"
+      ],
+      "front": "Z-Forms/967.png",
+      "back": "Z-From BackSprites/967b.png"
+    },
+    {
+      "id": "prinplup-z",
+      "name": "Z-Prinplup",
+      "base": "prinplup",
+      "types": [
+        "ice"
+      ],
+      "from": "piplup-z",
+      "front": "Z-Forms/968.png",
+      "back": "Z-From BackSprites/968b.png"
+    },
+    {
+      "id": "empoleon-z",
+      "name": "Z-Empoleon",
+      "base": "empoleon",
+      "types": [
+        "ice",
+        "steel"
+      ],
+      "from": "prinplup-z",
+      "front": "Z-Forms/969.png",
+      "back": "Z-From BackSprites/969b.png"
+    },
+    {
+      "id": "bruticate",
+      "name": "Bruticate",
+      "base": "raticate",
+      "newSpecies": true,
+      "types": [
+        "normal",
+        "dark"
+      ],
+      "from": "raticate",
+      "evolveLevel": 38,
+      "stats": {
+        "hp": 85,
+        "atk": 116,
+        "def": 80,
+        "spa": 50,
+        "spd": 80,
+        "spe": 104
+      },
+      "front": "Z-Forms/BRUTICATE.png",
+      "shiny": "Z-Forms/BRUTICATE S.png",
+      "back": "Z-From BackSprites/BRUTICATE.png",
+      "shinyBack": "Z-From BackSprites/BRUTICATE S.png",
+      "icon": "Z-Form Icons/RATICATE.png"
+    },
+    {
+      "id": "alphayena",
+      "name": "Alphayena",
+      "base": "mightyena",
+      "newSpecies": true,
+      "types": [
+        "dark",
+        "fighting"
+      ],
+      "from": "mightyena",
+      "evolveLevel": 40,
+      "stats": {
+        "hp": 90,
+        "atk": 125,
+        "def": 85,
+        "spa": 60,
+        "spd": 80,
+        "spe": 100
+      },
+      "front": "Z-Forms/MIGHTY.png",
+      "shiny": "Z-Forms/MIGHTY S.png",
+      "back": "Z-From BackSprites/ALPHAYENA.png",
+      "shinyBack": "Z-From BackSprites/ALPHAYENA S.png",
+      "icon": "Z-Form Icons/MIGHTYENA.png"
+    },
+    {
+      "id": "electivire-z",
+      "name": "Z-Electivire",
+      "base": "electivire",
+      "types": [
+        "electric",
+        "steel"
+      ],
+      "front": "Z-Forms/ELECTIVIRE.png",
+      "shiny": "Z-Forms/ELECTIVIRE S.png",
+      "back": "Z-From BackSprites/ELECTIVIRE.png",
+      "shinyBack": "Z-From BackSprites/ELECTIVIRE S.png",
+      "icon": "Z-Form Icons/ELECTIVIRE.png"
+    },
+    {
+      "id": "granbull-z",
+      "name": "Z-Granbull",
+      "base": "granbull",
+      "types": [
+        "fairy",
+        "fighting"
+      ],
+      "front": "Z-Forms/GRANBULL.png",
+      "shiny": "Z-Forms/GRANBULL S.png",
+      "back": "Z-From BackSprites/GRANBULL.png",
+      "shinyBack": "Z-From BackSprites/GRANBULL S.png",
+      "icon": "Z-Form Icons/GRANBULL.png"
+    },
+    {
+      "id": "linoone-z",
+      "name": "Z-Linoone",
+      "base": "linoone",
+      "types": [
+        "normal",
+        "ground"
+      ],
+      "front": "Z-Forms/LINOONE.png",
+      "shiny": "Z-Forms/LINOONE S.png",
+      "back": "Z-From BackSprites/LINOONE.png",
+      "shinyBack": "Z-From BackSprites/LINOONE S.png",
+      "icon": "Z-Form Icons/LINOONE.png"
+    },
+    {
+      "id": "marowak-z",
+      "name": "Z-Marowak",
+      "base": "marowak",
+      "types": [
+        "ground",
+        "fighting"
+      ],
+      "front": "Z-Forms/MAROWAK.png",
+      "shiny": "Z-Forms/MAROWAK S.png",
+      "back": "Z-From BackSprites/MAROWAK.png",
+      "shinyBack": "Z-From BackSprites/MAROWAK S.png",
+      "icon": "Z-Form Icons/MAROWAK.png"
+    },
+    {
+      "id": "noctowl-z",
+      "name": "Z-Noctowl",
+      "base": "noctowl",
+      "types": [
+        "dark",
+        "flying"
+      ],
+      "front": "Z-Forms/NOCTOWL.png",
+      "shiny": "Z-Forms/NOCTOWL S.png",
+      "back": "Z-From BackSprites/NOCTOWL.png",
+      "shinyBack": "Z-From BackSprites/NOCTOWL S.png",
+      "icon": "Z-Form Icons/NOCTOWL.png"
+    },
+    {
+      "id": "parasect-z",
+      "name": "Z-Parasect",
+      "base": "parasect",
+      "types": [
+        "bug",
+        "ghost"
+      ],
+      "front": "Z-Forms/PARASECT.png",
+      "shiny": "Z-Forms/PARASECT S.png",
+      "back": "Z-From BackSprites/PARASECT.png",
+      "shinyBack": "Z-From BackSprites/PARASECT S.png",
+      "icon": "Z-Form Icons/PARASECT.png"
+    },
+    {
+      "id": "rhyperior-z",
+      "name": "Z-Rhyperior",
+      "base": "rhyperior",
+      "types": [
+        "rock",
+        "steel"
+      ],
+      "front": "Z-Forms/RHYPERIOR.png",
+      "shiny": "Z-Forms/RHYPERIOR S.png",
+      "back": "Z-From BackSprites/RHYPERIOR.png",
+      "shinyBack": "Z-From BackSprites/RHYPERIOR S.png",
+      "icon": "Z-Form Icons/RHYPERIOR.png"
+    },
+    {
+      "id": "sandslash-z",
+      "name": "Z-Sandslash",
+      "base": "sandslash",
+      "types": [
+        "ground",
+        "dragon"
+      ],
+      "front": "Z-Forms/SANDSLASH.png",
+      "shiny": "Z-Forms/SANDSLASH S.png",
+      "back": "Z-From BackSprites/SANDSLASH.png",
+      "shinyBack": "Z-From BackSprites/SANDSLASH S.png",
+      "icon": "Z-Form Icons/SANDSLASH.png"
+    },
+    {
+      "id": "sharpedo-z",
+      "name": "Z-Sharpedo",
+      "base": "sharpedo",
+      "types": [
+        "water",
+        "steel"
+      ],
+      "front": "Z-Forms/SHARPEDO.png",
+      "shiny": "Z-Forms/SHARPEDO S.png",
+      "back": "Z-From BackSprites/SHARPEDO.png",
+      "shinyBack": "Z-From BackSprites/SHARPEDO S.png",
+      "icon": "Z-Form Icons/SHARPEDO.png"
+    },
+    {
+      "id": "skarmory-z",
+      "name": "Z-Skarmory",
+      "base": "skarmory",
+      "types": [
+        "steel",
+        "ghost"
+      ],
+      "front": "Z-Forms/SKARMORY.png",
+      "shiny": "Z-Forms/SKARMORY S.png",
+      "back": "Z-From BackSprites/SKARMORY.png",
+      "shinyBack": "Z-From BackSprites/SKARMORY S.png",
+      "icon": "Z-Form Icons/SKARMORY.png"
+    },
+    {
+      "id": "sudowoodo-z",
+      "name": "Z-Sudowoodo",
+      "base": "sudowoodo",
+      "types": [
+        "grass",
+        "rock"
+      ],
+      "front": "Z-Forms/SUDOWOODO.png",
+      "shiny": "Z-Forms/SUDOWOODO S.png",
+      "back": "Z-From BackSprites/SUDOWOODO.png",
+      "shinyBack": "Z-From BackSprites/SUDOWOODO S.png",
+      "icon": "Z-Form Icons/SUDOWOODO.png"
+    },
+    {
+      "id": "tentacruel-z",
+      "name": "Z-Tentacruel",
+      "base": "tentacruel",
+      "types": [
+        "poison",
+        "rock"
+      ],
+      "front": "Z-Forms/TENTACRUEL.png",
+      "shiny": "Z-Forms/TENTACRUEL S.png",
+      "back": "Z-From BackSprites/TENTACRUEL.png",
+      "shinyBack": "Z-From BackSprites/TENTACRUEL S.png",
+      "icon": "Z-Form Icons/TENTACRUEL.png"
+    },
+    {
+      "id": "dragonite-z-mega",
+      "name": "Z-Mega Dragonite",
+      "base": "dragonite",
+      "types": [
+        "dragon",
+        "flying"
+      ],
+      "kind": "mega",
+      "megaOf": "dragonite",
+      "front": "Z-Forms/MEGA DRAGONITE.png",
+      "shiny": "Z-Forms/MEGA DRAGONITE S.png",
+      "back": "Z-From BackSprites/DRAGONITE MEGA.png",
+      "shinyBack": "Z-From BackSprites/DRAGONITE MEGA S.png",
+      "icon": "Z-Form Icons/DRAGONITE.png"
+    },
+    {
+      "id": "litwick-spooky",
+      "name": "Spooky Litwick",
+      "base": "litwick",
+      "types": [
+        "ghost",
+        "grass"
+      ],
+      "front": "Spooky Varients/LITWICK.png",
+      "back": "Spooky Varients/LITWICK BACK.png",
+      "icon": "Spooky Varients/LITWICK MENU.png"
+    },
+    {
+      "id": "lampent-spooky",
+      "name": "Spooky Lampent",
+      "base": "lampent",
+      "types": [
+        "ghost",
+        "grass"
+      ],
+      "from": "litwick-spooky",
+      "front": "Spooky Varients/LAMPENT.png",
+      "back": "Spooky Varients/LAMPENT BACK.png",
+      "icon": "Spooky Varients/LAMPENT MENU.png"
+    },
+    {
+      "id": "chandelure-spooky",
+      "name": "Spooky Chandelure",
+      "base": "chandelure",
+      "types": [
+        "ghost",
+        "grass"
+      ],
+      "from": "lampent-spooky",
+      "front": "Spooky Varients/CHANDELURE.png",
+      "back": "Spooky Varients/CHANDELURE BACK.png",
+      "icon": "Spooky Varients/CHANDELURE MENU.png"
+    },
+    {
+      "id": "timburr-spooky",
+      "name": "Spooky Timburr",
+      "base": "timburr",
+      "types": [
+        "fighting",
+        "ghost"
+      ],
+      "front": "Spooky Varients/TIMBURR.png",
+      "back": "Spooky Varients/TIMBURR BACK.png",
+      "icon": "Spooky Varients/TIMBURR MENU.png"
+    },
+    {
+      "id": "gurdurr-spooky",
+      "name": "Spooky Gurdurr",
+      "base": "gurdurr",
+      "types": [
+        "fighting",
+        "ghost"
+      ],
+      "from": "timburr-spooky",
+      "front": "Spooky Varients/GURDURR.png",
+      "back": "Spooky Varients/GURDURR BACK.png",
+      "icon": "Spooky Varients/GURDURR MENU.png"
+    },
+    {
+      "id": "conkeldurr-spooky",
+      "name": "Spooky Conkeldurr",
+      "base": "conkeldurr",
+      "types": [
+        "fighting",
+        "ghost"
+      ],
+      "from": "gurdurr-spooky",
+      "front": "Spooky Varients/CONKELDUR.png",
+      "back": "Spooky Varients/CONKELDUR BACK.png",
+      "icon": "Spooky Varients/CONKELDUR MENU.png"
+    },
+    {
+      "id": "emolga-spooky",
+      "name": "Spooky Emolga",
+      "base": "emolga",
+      "types": [
+        "electric",
+        "dark"
+      ],
+      "front": "Spooky Varients/EMOLGA.png",
+      "back": "Spooky Varients/EMOLGA BACK.png",
+      "icon": "Spooky Varients/EMOLGA MENU.png"
+    },
+    {
+      "id": "snorunt-spooky",
+      "name": "Spooky Snorunt",
+      "base": "snorunt",
+      "types": [
+        "ice",
+        "ghost"
+      ],
+      "front": "Spooky Varients/SNORUNT.png",
+      "back": "Spooky Varients/SNORUNT BACK.png",
+      "icon": "Spooky Varients/SNORUNT MENU.png"
+    },
+    {
+      "id": "glalie-spooky",
+      "name": "Spooky Glalie",
+      "base": "glalie",
+      "types": [
+        "ice",
+        "ghost"
+      ],
+      "from": "snorunt-spooky",
+      "front": "Spooky Varients/GLALIE.png",
+      "back": "Spooky Varients/GLALIE BACK.png",
+      "icon": "Spooky Varients/GLALIE MENU.png"
+    },
+    {
+      "id": "ponyta-spooky",
+      "name": "Spooky Ponyta",
+      "base": "ponyta",
+      "types": [
+        "fire",
+        "ghost"
+      ],
+      "front": "Spooky Varients/PONYTA.png",
+      "back": "Spooky Varients/PONYTA BACK.png",
+      "icon": "Spooky Varients/PONYTA MENU.png"
+    },
+    {
+      "id": "rapidash-spooky",
+      "name": "Spooky Rapidash",
+      "base": "rapidash",
+      "types": [
+        "fire",
+        "ghost"
+      ],
+      "from": "ponyta-spooky",
+      "front": "Spooky Varients/RAPIDASH.png",
+      "back": "Spooky Varients/RAPIDASH BACK.png",
+      "icon": "Spooky Varients/RAPIDASH 2.png"
+    },
+    {
+      "id": "sinistea-spooky",
+      "name": "Spooky Sinistea",
+      "base": "sinistea",
+      "types": [
+        "ghost",
+        "poison"
+      ],
+      "front": "Spooky Varients/SINESTEA.png",
+      "back": "Spooky Varients/SINESTEA BACK.png",
+      "icon": "Spooky Varients/SINISTEA.png"
+    },
+    {
+      "id": "polteageist-spooky",
+      "name": "Spooky Polteageist",
+      "base": "polteageist",
+      "types": [
+        "ghost",
+        "poison"
+      ],
+      "from": "sinistea-spooky",
+      "front": "Spooky Varients/POLTEGIEST.png",
+      "back": "Spooky Varients/POLTEGIEST BACK.png",
+      "icon": "Spooky Varients/POLTEAGEIST.png"
+    },
+    {
+      "id": "tangela-spooky",
+      "name": "Spooky Tangela",
+      "base": "tangela",
+      "types": [
+        "grass",
+        "ghost"
+      ],
+      "front": "Spooky Varients/TANGELA.png",
+      "back": "Spooky Varients/TANGELA BACK.png",
+      "icon": "Spooky Varients/TANGELA MENU.png"
+    },
+    {
+      "id": "tangrowth-spooky",
+      "name": "Spooky Tangrowth",
+      "base": "tangrowth",
+      "types": [
+        "grass",
+        "ghost"
+      ],
+      "from": "tangela-spooky",
+      "front": "Spooky Varients/TANGROWTH.png",
+      "back": "Spooky Varients/TANGROWTH BACK.png",
+      "icon": "Spooky Varients/TANGROWTH MENU.png"
+    }
+  ],
+  "megas": {
+    "_about": "The M- sprites in Z-Forms: new Megas of species that had none (or a second, Z-Mega design). Types as listed; stats are the base species' plus 100 (see the tool).",
+    "amoonguss": [
+      "grass",
+      "poison"
+    ],
+    "azumarill": [
+      "water",
+      "fairy"
+    ],
+    "butterfree": [
+      "bug",
+      "flying"
+    ],
+    "conkeldurr": [
+      "fighting",
+      "rock"
+    ],
+    "darkrai": [
+      "dark",
+      "ghost"
+    ],
+    "dugtrio": [
+      "ground",
+      "steel"
+    ],
+    "electivire": [
+      "electric",
+      "fighting"
+    ],
+    "excadrill": [
+      "ground",
+      "steel"
+    ],
+    "feraligatr": [
+      "water",
+      "dark"
+    ],
+    "flygon": [
+      "ground",
+      "dragon"
+    ],
+    "golem": [
+      "rock",
+      "ground"
+    ],
+    "jumpluff": [
+      "grass",
+      "flying"
+    ],
+    "kabutops": [
+      "rock",
+      "water"
+    ],
+    "magmortar": [
+      "fire",
+      "steel"
+    ],
+    "meganium": [
+      "grass",
+      "fairy"
+    ],
+    "milotic": [
+      "water",
+      "fairy"
+    ],
+    "omastar": [
+      "rock",
+      "water"
+    ],
+    "poliwrath": [
+      "water",
+      "fighting"
+    ],
+    "pyroar": [
+      "fire",
+      "dark"
+    ],
+    "shiftry": [
+      "grass",
+      "flying"
+    ],
+    "snorlax": [
+      "normal",
+      "fighting"
+    ],
+    "torkoal": [
+      "fire",
+      "steel"
+    ],
+    "typhlosion": [
+      "fire",
+      "ground"
+    ],
+    "whimsicott": [
+      "grass",
+      "fairy"
+    ]
+  }
+}

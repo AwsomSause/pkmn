@@ -38,7 +38,8 @@ export const GROWTH_RATES = ['fast', 'medium-fast', 'medium-slow', 'slow', 'erra
 export const GrowthRateSchema = z.enum(GROWTH_RATES);
 export type GrowthRate = z.infer<typeof GrowthRateSchema>;
 
-export const SPECIES_TAGS = ['baby', 'legendary', 'mythical'] as const;
+/** delta / zform / spooky: the director's custom forms (Milestone 8, tools/import-custom-forms.ts). */
+export const SPECIES_TAGS = ['baby', 'legendary', 'mythical', 'delta', 'zform', 'spooky'] as const;
 export type SpeciesTag = (typeof SPECIES_TAGS)[number];
 
 /**
