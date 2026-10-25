@@ -130,6 +130,26 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.
 - The profile doesn't count wins yet (M5).
 
-## Milestone 5+ — not started
+## Milestone 5 — Out-of-Run progression ✅
+
+- [x] The Hub: start a run, Trainer Archive, Achievement Hall, Bank, Run History, save data
+- [x] Counters for wins, bosses, regions, catches, shinies, evolutions and money, merged into the profile when a run ends
+- [x] 31 achievements in data (9 categories, chains with tiers, 2 hidden) paying Bank Credits, Research Points, candies or titles
+- [x] Bank Credits: savings from leftover money plus a stipend for progress, shown on the run-end screen
+- [x] Research Points for new species seen and caught, and for shinies
+- [x] Trainer unlocks: Brock, Misty and Giovanni with their passives, claimed in the Trainer Archive for Bank Credits; Cynthia shown as coming later
+- [x] Titles from achievements, shown on the profile
+- [x] Run History with the last 20 runs, including what defeated you
+- [x] Save export and import
+- [x] Developer campaign runs don't count toward progress
+- [x] Save format: profile v3 and run v5, with automatic upgrades
+
+### Known limits in Milestone 5 (by design, documented)
+
+- Achievements are checked at the end of a run, not the moment they happen.
+- Oak and N aren't in the Archive until they have sprites; Cynthia's passive comes later.
+- Research Points pile up but have nothing to buy until the Starter Laboratory (M5.5).
+
+## Milestone 5.5+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.

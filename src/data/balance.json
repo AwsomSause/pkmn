@@ -125,7 +125,8 @@
      17
     ]
    ],
-   "eliteFourSize": 4
+   "eliteFourSize": 4,
+   "countsForProgress": true
   },
   {
    "id": "dev",
@@ -144,7 +145,8 @@
      3
     ]
    ],
-   "eliteFourSize": 2
+   "eliteFourSize": 2,
+   "countsForProgress": false
   }
  ],
  "eliteFourTeam": {
@@ -158,5 +160,22 @@
   "extraPerStage": 1,
   "randomExtra": 0,
   "maxSize": 6
- }
+ },
+ "bank": {
+  "moneyConversionRate": 0.1,
+  "stipend": {
+   "perRun": 20,
+   "perEncounter": 1,
+   "perBadge": 25,
+   "perEliteFour": 40,
+   "perChampion": 150,
+   "perRegion": 100
+  }
+ },
+ "research": {
+  "perSpeciesSeen": 5,
+  "perSpeciesCaught": 10,
+  "perShiny": 50
+ },
+ "runHistorySize": 20
 }

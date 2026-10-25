@@ -2,7 +2,7 @@
 
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
-import { shopStock } from '../core/run';
+import { shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -26,16 +26,18 @@ export class ShopScene extends Phaser.Scene {
 
     // More stock unlocks with badges (shop.json minBadges).
     const stock = shopStock(content, run);
-    const next = content.shop.filter((e) => !stock.includes(e)).sort((a, b) => a.minBadges - b.minBadges)[0];
+    const badgesFor = (e: (typeof content.shop)[number]) => shopBadgesNeeded(content, run, e);
+    const next = content.shop.filter((e) => !stock.includes(e)).sort((a, b) => badgesFor(a) - badgesFor(b))[0];
     const rows: PickerRow[] = stock.map((entry) => {
       const item = content.items.get(entry.item)!;
+      const price = shopPrice(content, run, entry);
       return {
-        problem: run.money < entry.price ? `Not enough money for the ${item.name} (₽${entry.price}, you have ₽${run.money}).` : null,
-        hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${next.minBadges} badges.` : ''}`,
+        problem: run.money < price ? `Not enough money for the ${item.name} (₽${price}, you have ₽${run.money}).` : null,
+        hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${badgesFor(next)} badges.` : ''}`,
         draw: (scene, box, w, h) => {
           box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
           box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
-          box.add(scene.add.text(w - 90, h / 2, `₽${entry.price}`, textStyle(22)).setOrigin(1, 0.5));
+          box.add(scene.add.text(w - 90, h / 2, `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
           box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#707888')).setOrigin(1, 0.5));
         },
       };

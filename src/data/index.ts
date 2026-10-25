@@ -4,6 +4,7 @@
 
 import { z } from 'zod';
 import {
+  AchievementSchema,
   ArchetypeSchema,
   BalanceSchema,
   GymLeaderSchema,
@@ -19,7 +20,9 @@ import {
   TrainerClassSchema,
   TypeChartSchema,
   type Content,
+  type Requirement,
 } from '../core/contentSchema';
+import achievementsJson from './achievements.json';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
 import gymLeadersJson from './gymLeaders.json';
@@ -47,6 +50,7 @@ export interface RawContent {
   moves: unknown;
   typeChart: unknown;
   archetypes: unknown;
+  achievements: unknown;
   rewards: unknown;
   items: unknown;
   trainers: unknown;
@@ -64,6 +68,7 @@ export const RAW_CONTENT: RawContent = {
   moves: movesJson,
   typeChart: typeChartJson,
   archetypes: archetypesJson,
+  achievements: achievementsJson,
   rewards: rewardsJson,
   items: itemsJson,
   trainers: trainersJson,
@@ -100,6 +105,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const moves = parse(z.array(MoveSchema), raw.moves, 'moves.json', problems);
   const typeChart = parse(TypeChartSchema, raw.typeChart, 'typeChart.json', problems);
   const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
+  const achievements = parse(z.array(AchievementSchema), raw.achievements, 'achievements.json', problems);
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
   const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
@@ -110,7 +116,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !rewards || !items || !trainers || !gymLeaders || !league || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !achievements || !rewards || !items || !trainers || !gymLeaders || !league || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -119,6 +125,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     moves: toMap(moves, 'moves.json', problems),
     typeChart,
     archetypes: toMap(archetypes, 'archetypes.json', problems),
+    achievements: toMap(achievements, 'achievements.json', problems),
     rewards: toMap(rewards, 'rewards.json', problems),
     items: toMap(items, 'items.json', problems),
     trainers: toMap(trainers, 'trainers.json', problems),
@@ -197,6 +204,30 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       problems.push(`damaging move "${m.id}" has no power`);
     }
   }
+  // Permanent progression (achievements and trainer unlocks).
+  const checkRequirement = (req: Requirement | null, where: string) => {
+    if (req?.kind === 'achievement' && !content.achievements.has(req.id)) problems.push(`${where} requires unknown achievement "${req.id}"`);
+  };
+  for (const a of content.achievements.values()) {
+    checkRequirement(a.requirement, `achievement "${a.id}"`);
+    if ((a.chain === undefined) !== (a.tier === undefined)) problems.push(`achievement "${a.id}" needs both chain and tier, or neither`);
+  }
+  const chainTiers = new Set<string>();
+  for (const a of content.achievements.values()) {
+    if (!a.chain) continue;
+    const key = `${a.chain}#${a.tier}`;
+    if (chainTiers.has(key)) problems.push(`achievement chain "${a.chain}" has tier ${a.tier} twice`);
+    chainTiers.add(key);
+  }
+  for (const a of content.archetypes.values()) {
+    checkRequirement(a.unlock, `trainer "${a.id}"`);
+    if (!a.unlockedByDefault && !a.unlock) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
+    for (const id of Object.keys(a.startingItems)) if (!content.items.has(id)) problems.push(`trainer "${a.id}" starts with unknown item "${id}"`);
+    for (const m of a.modifiers) {
+      if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
+    }
+  }
+  if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
   if (problems.length > 0) throw new ContentError(problems);
   return content;
 }

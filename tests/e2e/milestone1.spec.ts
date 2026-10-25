@@ -58,7 +58,9 @@ test('menu → trainer → starter → map → battle → reward → map → nex
 
   await page.goto('/?seed=e2e-seed-1');
   await waitForScene(page, 'MainMenu');
-  await page.keyboard.press('Enter'); // New Run (Continue is disabled)
+  await page.keyboard.press('Enter'); // Enter the Hub (Continue is disabled)
+  await waitForScene(page, 'Hub');
+  await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter'); // Red
   await waitForScene(page, 'StarterSelect');
@@ -116,6 +118,8 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   await page.goto('/?seed=e2e-lose&debug=1');
   await waitForScene(page, 'MainMenu');
   await page.keyboard.press('Enter');
+  await waitForScene(page, 'Hub');
+  await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'StarterSelect');
@@ -131,5 +135,5 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   const stats = await page.evaluate(() => (window as any).__pkr.session.profile.stats);
   expect(stats.runsEnded).toBe(1);
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'MainMenu');
+  await waitForScene(page, 'Hub');
 });

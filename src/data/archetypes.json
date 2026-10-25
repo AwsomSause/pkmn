@@ -2,38 +2,204 @@
   {
     "id": "red",
     "name": "Red",
-    "description": "The classic trainer. A balanced run with no surprises.",
-    "pros": ["No penalties"],
-    "cons": ["No bonuses"],
+    "description": "The classic trainer and the baseline: standard rules, no surprises.",
+    "pros": [
+      "No penalties"
+    ],
+    "cons": [
+      "No bonuses"
+    ],
     "unlockedByDefault": true,
     "spriteAssetId": "trainer.red",
-    "modifiers": []
+    "modifiers": [],
+    "title": "The Balanced Trainer"
   },
   {
     "id": "blue",
     "name": "Blue",
     "description": "Pushes hard and levels fast, but draws tougher opponents.",
-    "pros": ["Pokémon gain 25% more experience"],
-    "cons": ["Enemy Pokémon are 2 levels higher"],
+    "pros": [
+      "Pokémon gain 25% more experience"
+    ],
+    "cons": [
+      "Enemy Pokémon are 2 levels higher"
+    ],
     "unlockedByDefault": true,
     "spriteAssetId": "trainer.blue",
     "modifiers": [
-      { "kind": "xpMultiplier", "value": 1.25 },
-      { "kind": "enemyLevelOffset", "value": 2 }
-    ]
+      {
+        "kind": "xpMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 2
+      }
+    ],
+    "title": "The Prodigy"
   },
   {
     "id": "green",
     "name": "Green",
     "description": "Earns more and meets gentler Pokémon, but they are harder to catch.",
-    "pros": ["Earn 25% more money", "Enemy Pokémon are 1 level lower"],
-    "cons": ["Catching is 15% harder (from Milestone 2, when catching arrives)"],
+    "pros": [
+      "Earn 25% more money",
+      "Enemy Pokémon are 1 level lower"
+    ],
+    "cons": [
+      "Catching is 15% harder"
+    ],
     "unlockedByDefault": true,
     "spriteAssetId": "trainer.green",
     "modifiers": [
-      { "kind": "moneyMultiplier", "value": 1.25 },
-      { "kind": "enemyLevelOffset", "value": -1 },
-      { "kind": "captureMultiplier", "value": 0.85 }
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": -1
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 0.85
+      }
+    ],
+    "title": "The Opportunist"
+  },
+  {
+    "id": "brock",
+    "name": "Brock",
+    "title": "The Survivalist",
+    "description": "Keeps a team going with good medicine, but pays extra for Poké Balls.",
+    "pros": [
+      "Healing items restore 50% more HP",
+      "Starts each run with 3 Potions"
+    ],
+    "cons": [
+      "Poké Balls cost 50% more"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "best",
+      "counter": "regionsClearedNoCharm",
+      "atLeast": 1
+    },
+    "unlockText": "Clear a region without the Last Stand Charm saving you",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.brock",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "priceMultiplier",
+        "items": [
+          "poke-ball",
+          "great-ball",
+          "ultra-ball"
+        ],
+        "value": 1.5
+      }
+    ],
+    "startingItems": {
+      "potion": 3
+    }
+  },
+  {
+    "id": "misty",
+    "name": "Misty",
+    "title": "The Specialist",
+    "description": "Water-type Pokémon hit harder for her, but suffer more from their weaknesses.",
+    "pros": [
+      "Your Water-type Pokémon deal 20% more damage"
+    ],
+    "cons": [
+      "Your Water-type Pokémon take 25% more super-effective damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "best",
+      "counter": "bossWinsLead.water",
+      "atLeast": 13
+    },
+    "unlockText": "Beat 13 bosses in one run (a whole region's worth) with a Water-type leading",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.misty",
+    "modifiers": [
+      {
+        "kind": "typeDamageMultiplier",
+        "type": "water",
+        "value": 1.2
+      },
+      {
+        "kind": "weaknessDamageTakenMultiplier",
+        "type": "water",
+        "value": 1.25
+      }
     ]
+  },
+  {
+    "id": "giovanni",
+    "name": "Giovanni",
+    "title": "The Collector",
+    "description": "Gets the better shop stock early, but healing costs him more.",
+    "pros": [
+      "Shop stock unlocks 2 badges sooner"
+    ],
+    "cons": [
+      "Healing items cost 25% more"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 50000
+    },
+    "unlockText": "Earn ₽50,000 in total across your runs",
+    "unlockCost": 500,
+    "spriteAssetId": "trainer.giovanni",
+    "modifiers": [
+      {
+        "kind": "shopUnlockOffset",
+        "value": 2
+      },
+      {
+        "kind": "priceMultiplier",
+        "items": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-restore",
+          "full-heal",
+          "revive"
+        ],
+        "value": 1.25
+      }
+    ]
+  },
+  {
+    "id": "cynthia",
+    "name": "Cynthia",
+    "title": "The Champion",
+    "description": "Learns more about boss teams before battle.",
+    "pros": [
+      "More information about boss teams before battle"
+    ],
+    "cons": [
+      "No economy or experience bonus"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 3
+    },
+    "unlockText": "Defeat champions in 3 regions",
+    "unlockCost": 500,
+    "available": false,
+    "spriteAssetId": "trainer.cynthia",
+    "modifiers": []
   }
 ]

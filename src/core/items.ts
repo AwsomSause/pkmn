@@ -53,7 +53,8 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
 }
 
 /** Applies a healing/revive/PP item to a Pokémon (mutates it). Returns a message. Does not consume the item. */
-export function applyItemToPokemon(content: Content, item: Item, mon: PokemonInstance): string {
+/** Uses an item on a Pokémon. `healMultiplier` scales HP restored by healing items (a trainer passive). */
+export function applyItemToPokemon(content: Content, item: Item, mon: PokemonInstance, healMultiplier = 1): string {
   const problem = itemUseProblem(content, item, mon);
   if (problem) throw new Error(problem);
   const name = getSpecies(content, mon.speciesId).name;
@@ -61,7 +62,7 @@ export function applyItemToPokemon(content: Content, item: Item, mon: PokemonIns
   switch (item.effect.kind) {
     case 'healHp': {
       const before = mon.hp;
-      mon.hp = Math.min(max, mon.hp + item.effect.amount);
+      mon.hp = Math.min(max, mon.hp + Math.floor(item.effect.amount * healMultiplier));
       return `${name} recovered ${mon.hp - before} HP.`;
     }
     case 'cureStatus':

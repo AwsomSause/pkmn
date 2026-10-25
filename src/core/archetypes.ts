@@ -5,7 +5,7 @@
 //   *Multiplier kinds multiply together (start at 1).
 //   *Offset kinds add together (start at 0).
 
-import type { Archetype, ArchetypeModifierKind, Content } from './contentSchema';
+import type { Archetype, ArchetypeModifierKind, Content, TypeName } from './contentSchema';
 
 export function getArchetype(content: Content, id: string): Archetype {
   const archetype = content.archetypes.get(id);
@@ -42,4 +42,38 @@ export function captureMultiplier(archetype: Archetype): number {
 
 export function isArchetypeUnlocked(archetype: Archetype, unlockedIds: readonly string[]): boolean {
   return archetype.unlockedByDefault || unlockedIds.includes(archetype.id);
+}
+
+/** HP restored by healing items is multiplied by this (e.g. Brock's 1.5). */
+export function healingMultiplier(archetype: Archetype): number {
+  return modifierValue(archetype, 'healingMultiplier');
+}
+
+/** How many badges sooner (positive) the shop's stock unlocks. */
+export function shopUnlockOffset(archetype: Archetype): number {
+  return modifierValue(archetype, 'shopUnlockOffset');
+}
+
+/** The trainer's multiplier on one shop item's price (several entries multiply together). */
+export function priceMultiplier(archetype: Archetype, itemId: string): number {
+  let value = 1;
+  for (const mod of archetype.modifiers) if (mod.kind === 'priceMultiplier' && mod.items.includes(itemId)) value *= mod.value;
+  return value;
+}
+
+/** Damage multipliers by type for the player's side of a battle (see battle/engine.ts). */
+export interface TypeModifiers {
+  /** Damage dealt by your Pokémon of a type. */
+  damageDealt: Partial<Record<TypeName, number>>;
+  /** Super-effective damage taken by your Pokémon of a type. */
+  weaknessTaken: Partial<Record<TypeName, number>>;
+}
+
+export function typeModifiers(archetype: Archetype): TypeModifiers {
+  const out: TypeModifiers = { damageDealt: {}, weaknessTaken: {} };
+  for (const mod of archetype.modifiers) {
+    if (mod.kind === 'typeDamageMultiplier') out.damageDealt[mod.type] = (out.damageDealt[mod.type] ?? 1) * mod.value;
+    if (mod.kind === 'weaknessDamageTakenMultiplier') out.weaknessTaken[mod.type] = (out.weaknessTaken[mod.type] ?? 1) * mod.value;
+  }
+  return out;
 }

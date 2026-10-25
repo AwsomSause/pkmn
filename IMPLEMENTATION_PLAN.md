@@ -93,7 +93,8 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | M2 | **Battle completeness.** Switching, battle items, capture + full party flow (replace/candies), trainer battles with teams, move learning, Last Stand Charm, defeat → run end. | M1, D7 | Catch Pokémon, build a party, lose a run properly. |
 | M3 | **One full stage.** Layered map generator + validator, map screen with forks and risk labels, difficulty model with debug readout, optional nodes (heal, shop stub), 2 trainers, gym leader at level 20. | M2 | Play a complete 20-level stage. |
 | M4 | **One full region + dev campaign.** 8 stages, Elite Four with healing, champion, region transition, shuffled region order, short developer campaign, shops with real stock. | M3, D6, D13, D14 | Beat a region; test whole-campaign flow in minutes. |
-| M5 | **Permanent progression.** Profile, bank, run-end payout (duplicate-proof), trainer unlocks, achievements, statistics, save export/import, save migrations, corrupt-save recovery. | M4, D10–D12 | Runs feed a permanent profile that survives refreshes. |
+| M5 | **Out-of-Run** (GAME_DESIGN §14, director priorities 1–2). Hub, Bank with Bank Credits and duplicate-proof run-end payout, bank tiers, Trainer Archive with data-defined unlocks, Achievement Hall with event tracking and tiered/hidden achievements, Run History, Research Points from discoveries, save export/import. One unlock architecture: requirement → progress → reward → claim. | M4, D10–D12, D16 | Runs feed a permanent profile; earn credits, achievements and new trainers. |
+| M5.5 | **Run-Prep** (GAME_DESIGN §14, director priorities 3–4). Starter pools in data and the Starter Laboratory, draft modifiers, the Run-Prep flow (mode → trainer → preparation → build summary → starters → briefing), loadout presets, preparation tokens, seed copy. | M5 | Prepare each run deliberately before it starts. |
 | M6 | **Content scale-up.** Data import for all species/moves, region eligibility, sprite/cry manifest at scale, lazy-loading audio, evolution rules. | M2 (can run alongside M3–M5) | Full Pokédex available. |
 | M7 | **Attributes & luck.** Implement each attribute only after you approve its formula; luck-weighted rewards; shiny rules. | M5, D8, D9 | Attributes visibly matter. |
 | M8 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. | M6, M7 | Key items unlock real mechanics. |
@@ -162,6 +163,21 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Repeats:** a full run has 80 gyms and 40 Elite Four slots, but the data has 70 gym leaders and 38 Elite Four members (D6 says never repeat). When everyone has been used, the last regions reuse people. More trainers in the data fixes this.
 - **The league gives no badges.** Elite Four and champions pay more prize money (`eliteFourPerLevel`, `championPerLevel`) and use the boss reward odds.
 - Save format is now version 4 for the run. A version 3 run becomes region 1 of a full campaign and gets its shuffled region order when it is next loaded.
+
+## 6e. Milestone 5 — Out-of-Run progression
+
+**Built 2026-10-25.** Scope is the director's first package, priorities 1–2 (GAME_DESIGN.md §14). Run-Prep (priorities 3–4) is M5.5. What changed, and the interpretations I made:
+- **The main menu leads to the Hub** instead of straight into a new run. Starting a run is now a Hub room. Continue still works from the main menu.
+- **One unlock shape for everything:** requirement → progress → reward → claim (`src/core/progress.ts`). Requirements are data (`total`, `best`, `distinct`, `achievement`) over counters the run keeps in `run.log.counters`; the profile adds them up when the run ends.
+- **Achievements are checked when a run ends,** not live during the run. 31 achievements in `achievements.json`, 2 of them hidden.
+- **Four currencies (D16):** Poké Dollars (run only), Bank Credits (savings + stipend at run end, achievements, spent on trainers), Research Points (new species seen or caught, shinies; spent in M5.5's Starter Laboratory), candies (unchanged).
+- **The developer campaign pays Bank Credits but doesn't count** toward achievements, unlocks, Research Points or species (`countsForProgress: false`), so testing can't unlock things.
+- **"Clear a region without a party wipe" (Brock)** is read as "without the Last Stand Charm saving you", because a wipe already ends the run here.
+- **Misty's unlock** is read as 13 boss wins in one run with a Water-type leading.
+- **Cynthia** is listed as "coming later": her passive needs systems that don't exist yet. **Oak and N** are left out until they have sprites (conflict C12).
+- **Run History** keeps the last 20 runs (`runHistorySize`).
+- **Save export/import** writes the profile and settings to a file; import checks the file and keeps a backup of the old profile in local storage.
+- Save format is now profile version 3 (Bank currency renamed to Bank Credits, new fields) and run version 5 (new log fields). Older saves upgrade automatically.
 
 ## 7. Risks
 

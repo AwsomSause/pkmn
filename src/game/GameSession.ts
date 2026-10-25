@@ -8,6 +8,7 @@
 
 import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
+import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { makeRandomSeed } from '../core/rng';
 import type { PlayerAction } from '../core/battle/engine';
 import * as Run from '../core/run';
@@ -30,6 +31,8 @@ export class GameSession {
   /** Most recent save failure, shown to the player. Null when saving works. */
   lastSaveError: string | null = null;
   readonly warnings: string[] = [];
+  /** What the run that just ended paid out and unlocked (for the run-end screen). */
+  lastRunSummary: RunEndSummary | null = null;
   private listeners = new Set<() => void>();
 
   constructor(readonly content: Content, storage: StorageProvider) {
@@ -173,8 +176,9 @@ export class GameSession {
    */
   finishRun(): void {
     const run = this.requireRun();
-    const { profile } = finalizeRun(this.profile, run);
+    const { profile, summary } = finalizeRun(this.content, this.profile, run);
     this.profile = profile;
+    if (summary) this.lastRunSummary = summary;
     const profileSave = this.saves.saveProfile(profile);
     this.checkSave(profileSave);
     if (profileSave.ok) this.checkSave(this.saves.clearRun());
@@ -187,6 +191,33 @@ export class GameSession {
     this.run = null;
     this.refreshSavedRun();
     this.changed();
+  }
+
+  /** Claims a trainer in the Trainer Archive (its requirement must be met; may cost Bank Credits). */
+  claimTrainer(archetypeId: string): void {
+    this.profile = claimTrainer(this.content, this.profile, archetypeId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  setActiveTitle(title: string | null): void {
+    this.profile = setActiveTitle(this.profile, title);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  exportSave(): string {
+    return this.saves.exportSave();
+  }
+
+  /** Replaces the profile and settings with an exported save. Returns a message for the player. */
+  importSave(text: string): string {
+    const result = this.saves.importSave(text);
+    if (!result.ok) return `Import failed: ${result.reason}`;
+    this.profile = result.profile;
+    if (result.settings) this.settings = result.settings;
+    this.changed();
+    return `Save imported.${result.backup ? ' Your previous profile was kept as a backup.' : ''}`;
   }
 
   saveSettings(settings: Settings): void {
