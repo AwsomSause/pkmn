@@ -21,6 +21,18 @@
  },
  "vitaminMultiplierPerStack": 0.1,
  "vitaminMaxStacks": 3,
+ "friendship": {
+  "max": 255,
+  "base": 70,
+  "starter": 120,
+  "evolveAt": 220,
+  "evolutionItem": "soothe-bell",
+  "perLevel": 5,
+  "perBattleWon": 1,
+  "perBossWon": 3,
+  "perVitamin": 5,
+  "perFaint": -1
+ },
  "money": {
   "startingMoney": 0,
   "wildPerEnemyLevel": 8,
@@ -177,6 +189,7 @@
   "speedStat": 1.0,
   "charismaPriceCut": 0.5,
   "charismaExpGain": 1.0,
+  "charismaFriendshipGain": 1.0,
   "luckUncommonWeight": 0.5,
   "luckRareWeight": 1.0,
   "luckShinyChance": 1.0,

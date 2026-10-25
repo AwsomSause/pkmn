@@ -232,7 +232,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 
 **Planned 2026-10-25** (director request: "pull everything that has been planned but not put into a Milestone and create a new milestone to use before M9"). Collected from the director's Master Development Brief and Design Decisions, the Out-of-Run/Run-Prep design (GAME_DESIGN §14), every milestone's "known limits", and every project thread. Work that already has a milestone stays there: Mega/Tera/Z-Moves/Dynamax in **M8.5**; the Grand Region roster, final boss, ending, battle animations, music and deploy in **M9**; looks in **M10**. The parts below can ship as separate pull requests, in this order: B to H first, then A last.
 
-**B. Friendship and "Between-Level" interactions** (M7, brief §11 Love)
+**B. Friendship and "Between-Level" interactions** (M7, brief §11 Love). *Friendship, Charisma's bonus and friendship evolutions built 2026-10-25 (GAME_DESIGN.md §5e); the interactions and N wait for part A.*
 - A **friendship** value on each Pokémon, raised by battling, healing, items and interactions.
 - **Charisma raises friendship gain** (director's M7 doc). Love and friendship work together.
 - **"Between-Level" interactions:** between levels on the map you can spend time with a Pokémon (feed, train, play, talk). These can change attributes and friendship. Like events, they are designed with the director in the plan sheet and built last, with part A.

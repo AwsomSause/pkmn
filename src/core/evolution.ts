@@ -1,8 +1,10 @@
 // Evolution (director decision D15 and GAME_DESIGN.md §5c). Level evolutions
 // happen after battles and level-up rewards; every other method (stones,
-// trades, friendship, ...) is an item used from the Bag.
+// trades, friendship, ...) is an item used from the Bag. Friendship
+// evolutions also happen on their own once friendship is high enough.
 
 import type { Content, Evolution } from './contentSchema';
+import { friendshipReady } from './friendship';
 import { calcStats, getSpecies, isUsableMove, maxHp } from './pokemon';
 import type { PokemonInstance } from './state';
 
@@ -30,14 +32,17 @@ export function applicableBranches(content: Content, mon: PokemonInstance, branc
 }
 
 /**
- * The species this Pokémon would evolve into by level right now, if any.
+ * The species this Pokémon would evolve into on its own right now (by level,
+ * or by friendship once it is high enough), if any.
  * Fainted Pokémon don't evolve. When several branches apply (Wurmple, Burmy,
  * Rockruff, ...) one is picked from the Pokémon's id, so it is always the same.
  */
 export function evolutionTarget(content: Content, mon: PokemonInstance, regionId?: string): string | null {
   if (mon.hp <= 0) return null;
   const species = getSpecies(content, mon.speciesId);
-  const ready = species.evolutions.filter((e) => e.level !== undefined && mon.level >= e.level);
+  const byFriendship = friendshipReady(content, mon);
+  const friendshipItem = content.balance.friendship.evolutionItem;
+  const ready = species.evolutions.filter((e) => (e.level !== undefined && mon.level >= e.level) || (byFriendship && e.item === friendshipItem));
   const branches = applicableBranches(content, mon, ready, regionId);
   if (branches.length === 0) return null;
   return branches[uidHash(mon.uid) % branches.length]!.to;
@@ -84,7 +89,7 @@ export function evolve(content: Content, mon: PokemonInstance, to: string): Evol
   return { from, to, learnedMoves, wantsToLearn };
 }
 
-/** Repeats level evolution while possible (e.g. a Rare Candy past two thresholds). */
+/** Repeats level and friendship evolution while possible (e.g. a Rare Candy past two thresholds). */
 export function evolveFully(content: Content, mon: PokemonInstance, regionId?: string): EvolutionResult[] {
   const results: EvolutionResult[] = [];
   for (let guard = 0; guard < 3; guard++) {

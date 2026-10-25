@@ -34,6 +34,8 @@ export const PokemonInstanceSchema = z.object({
   /** Vitamin stacks per stat; each stack multiplies that stat. */
   vitamins: z.record(StatNameSchema, z.number().int().min(0)),
   shiny: z.boolean(),
+  /** How much it likes you (0–255, see core/friendship.ts). */
+  friendship: z.number().int().min(0).max(255),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 

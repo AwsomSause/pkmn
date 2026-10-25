@@ -92,7 +92,7 @@ Every stage has a **theme**: a named pair of two types. Examples from the direct
 - **Evolution rules.** Level evolutions happen by level (D15). Every other method becomes an **evolution item** used from the Bag:
   - stones and other "use an item" evolutions use that item (Fire Stone, Galarica Cuff, Tart Apple, …);
   - trade evolutions use their held item (Metal Coat, King's Rock, …) or a **Linking Cord**;
-  - friendship and affection evolutions use a **Soothe Bell**;
+  - friendship and affection evolutions use a **Soothe Bell**, and since M8.75 part B also happen on their own once the Pokémon's friendship is high enough (§5e);
   - location evolutions use their modern stone (Magnezone and Probopass: Thunder Stone; Leafeon: Leaf Stone; Glaceon: Ice Stone);
   - "knows a move" evolutions happen at the level the Pokémon learns that move;
   - methods the game has no equivalent for (steps walked, critical hits, Gimmighoul coins, …) become a fixed level, listed in `tools/import-species.ts`. Shedinja can't be obtained by evolution.
@@ -112,6 +112,15 @@ The director supplied sprites for Pokémon that aren't in the main games; the da
 - **Evolutions** follow the base species' method (Z-Kadabra → Z-Alakazam by Linking Cord, Spooky Lampent → Spooky Chandelure by Dusk Stone); two new final forms evolve by level: Raticate → **Bruticate** at 38, Mightyena → **Alphayena** at 40. A form whose pre-evolution has no matching sprite is another branch of the normal pre-evolution, with the same method (Electabuzz → Electivire or Z-Electivire with an Electirizer; Delta Grimer → Delta Muk or any of its six cages); which branch a Pokémon takes is fixed per Pokémon, as with other level branches.
 - **Female sprites** in the pack (Delta Bulbasaur's line, Delta Deino's line) aren't used, because the game has no gender. Delta Ditto's "???"-type sprite isn't used, because there is no ??? type.
 - **Icons:** forms without one use Minior's icon.
+
+### 5e. Friendship (Milestone 8.75 part B)
+
+Every Pokémon has a **friendship** value from 0 to 255, shown as five hearts on the party screen (all five filled means it is friendly enough to evolve by friendship). All numbers live in `balance.json` (`friendship`).
+- **Starting values:** 70 for every new Pokémon (wild, caught or a trainer's); the starter starts at 120.
+- **Gains:** +5 per level gained (battles and Rare Candy), +1 for each Pokémon that took part in a won battle and is still standing (+3 against a gym leader, the Elite Four or a champion), +5 per vitamin. **Charisma** scales every gain: +1% per point, so Charisma 100 doubles them.
+- **Losses:** −1 when it faints.
+- **Friendship evolutions** (Pichu, Golbat, Chansey, Eevee, Togepi, ...) happen on their own after a battle once friendship is **220** or more, like level evolutions. A branching one (Eevee) is picked from the Pokémon, as with level branches. The Soothe Bell still evolves them at any friendship, and lets the player choose the branch.
+- Still to come with events (part A): "Between-Level" interactions that change friendship, friendship-based event outcomes, and N's passive.
 
 ## 6. Battles
 
@@ -156,7 +165,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 | Strength | Physical moves +1% damage | +100% |
 | Intelligence | Special moves +1% damage | +100% |
 | Speed | Your Pokémon +1% Speed | +100% |
-| Charisma | Shop prices −0.5%, experience +1% | half price, double experience |
+| Charisma | Shop prices −0.5%, experience +1%, friendship gains +1% | half price, double experience, double friendship gains |
 | Luck | Uncommon reward weight +0.5%, rare +1%, shiny chance +1% | rare ×2, shinies ×2 |
 | Love | +0.1% chance to hang on at 1 HP after a lethal hit, once per Pokémon per battle | 10% |
 | Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |

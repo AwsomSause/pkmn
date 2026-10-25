@@ -112,6 +112,7 @@ export function createPokemon(
     status: null,
     vitamins,
     shiny: false,
+    friendship: content.balance.friendship.base,
   };
   mon.hp = maxHp(content, mon);
   return mon;

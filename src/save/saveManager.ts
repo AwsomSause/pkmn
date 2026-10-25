@@ -22,7 +22,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 5, run: 7, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 5, run: 8, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -119,6 +119,23 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         attributeModifiers: zeroAttributes(),
         battle: battle ? { ...battle, enduredUids: [] } : null,
         log: { ...log, starterUid: party.some((m) => m.uid === 'p1') ? 'p1' : null },
+      };
+    },
+    // v8 (Milestone 8.75 part B): friendship. Every Pokémon in an older run
+    // starts at 70 (the base value when this was added); its starter at 120.
+    7: (data) => {
+      const run = data as Json;
+      const base = 70;
+      const starter = 120;
+      const log = run.log as Json;
+      const withFriendship = (m: Json) => ({ ...m, friendship: typeof m.friendship === 'number' ? m.friendship : m.uid === log?.starterUid ? starter : base });
+      const battle = run.battle as Json | null;
+      const pending = (run.pending as Json[]) ?? [];
+      return {
+        ...run,
+        party: ((run.party as Json[]) ?? []).map(withFriendship),
+        battle: battle ? { ...battle, enemyTeam: (battle.enemyTeam as Json[]).map(withFriendship) } : null,
+        pending: pending.map((p) => (p.kind === 'caught' ? { ...p, mon: withFriendship(p.mon as Json) } : p)),
       };
     },
   },
