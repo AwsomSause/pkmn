@@ -1,0 +1,1 @@
+{"textures": [{"image": "emolga-delta-fired.png", "format": "RGBA8888", "size": {"w": 56, "h": 61}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 56, "h": 61}, "spriteSourceSize": {"x": 0, "y": 0, "w": 56, "h": 61}, "frame": {"x": 0, "y": 0, "w": 56, "h": 61}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

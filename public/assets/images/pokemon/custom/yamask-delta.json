@@ -1,0 +1,1 @@
+{"textures": [{"image": "yamask-delta.png", "format": "RGBA8888", "size": {"w": 53, "h": 43}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 53, "h": 43}, "spriteSourceSize": {"x": 0, "y": 0, "w": 53, "h": 43}, "frame": {"x": 0, "y": 0, "w": 53, "h": 43}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

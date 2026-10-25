@@ -85,7 +85,7 @@ Every stage has a **theme**: a named pair of two types. Examples from the direct
 
 ### 5c. Pokémon, forms, evolution and region eligibility (Milestone 6)
 
-- **The whole Pokédex is in the game data:** all 1,025 species plus 264 forms (regional, alternate, Mega, Gigantamax, Primal and battle-only forms). Base data comes from PokeAPI's open data; level-up moves come from the director's move dataset. Megas, Gigantamax, Primal and battle-only forms wait for their mechanics (M8) and never appear in the wild, on teams or as starters.
+- **The whole Pokédex is in the game data:** all 1,025 species plus 264 forms (regional, alternate, Mega, Gigantamax, Primal and battle-only forms). Base data comes from PokeAPI's open data; level-up moves come from the director's move dataset. Megas, Gigantamax, Primal and battle-only forms wait for their mechanics (M8.5) and never appear in the wild, on teams or as starters.
 - **Moves the battle engine can't run yet** are in the data, flagged "not supported", and skipped: no Pokémon learns or uses them until they are built (they then switch on by re-running the move import). A Pokémon whose moves are all unsupported (Ditto, Smeargle, Unown, Cosmog, Abra) never appears until its moves work.
 - **Wild Pokémon** are first-stage species (babies don't count as a stage, so Pikachu is first-stage) that are not legendary or mythical, with a base stat total of at most 560 (keeps Ultra Beasts and Paradox Pokémon out). Regional forms appear like any other species.
 - **Region eligibility:** within a stage's theme, Pokémon native to the current region (its generation, or its regional forms, e.g. Alolan Vulpix in Alola, Hisuian forms in Sinnoh) are 3× as likely as others (`nativeWeight`). The Grand Region treats everyone as native.
@@ -101,6 +101,17 @@ Every stage has a **theme**: a named pair of two types. Examples from the direct
   - When an item has several possible results (Eevee and a Soothe Bell: Espeon, Umbreon or Sylveon), the player chooses.
   - Trainers' Pokémon evolve by item at level 30 (level 15 for baby Pokémon).
 - **Evolution items** appear in the reward draft only when someone in the party can use them (stones, Linking Cord and Soothe Bell are uncommon, the rest rare), and shops sell the Soothe Bell (1 badge), the ten stones (2 badges) and the Linking Cord (3 badges).
+
+### 5d. Custom Pokémon and forms (Milestone 8, director request 2026-10-25)
+
+The director supplied sprites for Pokémon that aren't in the main games; the data was filled in as follows (all of it editable in `tools/custom-forms.json`, then `npm run data:custom`).
+- **Delta Pokémon** (from Pokémon Insurgence) keep Insurgence's types, base stats, evolutions and level-up moves. Delta forms that only exist through a mechanic (Megas, Mega Delta Typhlosion's active form, Fired-up Delta Emolga, Armored Delta Volcarona, Crystal Delta Metagross, Magician Delta Meloetta) wait for M8.5.
+- **Designed forms** (Z-Forms, Spooky forms, new Megas, Delta Muk's cages, Delta Snorlax's seasons, Delta Ditto's type forms): types chosen from the art; base stats are the base species' unless a design lists its own; catch rate, experience, growth rate and generation come from the base species.
+- **New Megas** get the base species' stats + 100: +30 to its better attacking stat, +10 to the other, +20 each to Defense, Sp. Def and Speed (capped at 255).
+- **Learnsets of designed forms** start from the base species' level-up moves, drop attacks of the types they lost, and learn a ladder of attacks for each new type (an early, middle and late attack, physical or special to match their better attacking stat). Any custom Pokémon with no usable attack of one of its types, or fewer than four usable attacks, gets those ladders too.
+- **Evolutions** follow the base species' method (Z-Kadabra → Z-Alakazam by Linking Cord, Spooky Lampent → Spooky Chandelure by Dusk Stone); two new final forms evolve by level: Raticate → **Bruticate** at 38, Mightyena → **Alphayena** at 40. A form whose pre-evolution has no matching sprite is another branch of the normal pre-evolution, with the same method (Electabuzz → Electivire or Z-Electivire with an Electirizer; Delta Grimer → Delta Muk or any of its six cages); which branch a Pokémon takes is fixed per Pokémon, as with other level branches.
+- **Female sprites** in the pack (Delta Bulbasaur's line, Delta Deino's line) aren't used, because the game has no gender. Delta Ditto's "???"-type sprite isn't used, because there is no ??? type.
+- **Icons:** forms without one use Minior's icon.
 
 ## 6. Battles
 

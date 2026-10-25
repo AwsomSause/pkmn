@@ -1,0 +1,1 @@
+{"textures": [{"image": "fraxure-delta.png", "format": "RGBA8888", "size": {"w": 58, "h": 71}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 58, "h": 71}, "spriteSourceSize": {"x": 0, "y": 0, "w": 58, "h": 71}, "frame": {"x": 0, "y": 0, "w": 58, "h": 71}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

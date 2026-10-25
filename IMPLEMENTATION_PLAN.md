@@ -97,7 +97,8 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | M5.5 ✅ | **Run-Prep** (GAME_DESIGN §14, director priorities 3–4). Starter pools in data and the Starter Laboratory, draft modifiers, the Run-Prep flow (mode → trainer → preparation → build summary → starters → briefing), loadout presets, preparation tokens, seed copy. | M5 | Prepare each run deliberately before it starts. |
 | M6 ✅ | **Content scale-up.** Data import for all species/moves, region eligibility, sprite/cry manifest at scale, lazy-loading audio, evolution rules. | M2 (can run alongside M3–M5) | Full Pokédex available. |
 | M7 ✅ | **Attributes & luck.** Implement each attribute only after you approve its formula; luck-weighted rewards; shiny rules. | M5, D8, D9 | Attributes visibly matter. |
-| M8 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. | M6, M7 | Key items unlock real mechanics. |
+| M8 ✅ | **Custom Pokémon and forms** (director request, 2026-10-25): the director's sprite pack of Pokémon Insurgence Delta species, Z-Forms, Spooky forms and new Megas, with types, stats, evolutions and learnsets (§6i). | M6 | Over 300 new Pokémon and forms to meet, catch and evolve. |
+| M8.5 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. (Was M8; renumbered by the director, 2026-10-25.) | M6, M7, M8 | Key items unlock real mechanics, including the new Megas. |
 | M9 | **Grand Region, ending, polish, deploy.** Battle animation player for the supplied anim JSON, music, final boss, ending, static deploy. | All, D1, D4 | Complete game from start to credits. |
 | M10 | **Visuals and presentation** (director request, 2026-10-25). Purely about looks: make every screen stunning and consistent. A shared visual style (palette, fonts, window frames from the asset pack's `ui/` art, spacing); redesigned menus, Hub, Preparation Desk, map, battle and reward screens; scene transitions and small animations (cursor, cards, HP and EXP bars, level-up and catch effects); battle backgrounds per theme; readable layouts at every screen size; a final pass for clipped or overlapping text. No gameplay changes. | M9 (can start earlier, screen by screen, once a screen's features are stable) | The whole game looks finished and well put together. |
 
@@ -215,6 +216,16 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Attribute sources:** 11 draft rewards and 9 shop items (effect `attribute`, used when bought). Special encounters and "Between-Level" interactions need an event system, planned later.
 - **Screens:** an Attributes room in the Hub (values, effects, how each grows), an Attributes line on the Run Build Summary and the Briefing, and attribute changes on the run-end screen.
 - **Save format:** profile version 5 and run version 7; older saves upgrade automatically (attributes start at 0 and are recomputed at the next run end).
+
+## 6i. Milestone 8 — custom Pokémon and forms
+
+**Built 2026-10-25.** The director supplied sprites only (`new_sprites.zip`, a copy is in the project files under `sprites/`); this milestone gives them data. The original M8 (Advanced mechanics) is now M8.5, by the director's choice.
+- **Generator:** `npm run data:custom -- <new_sprites.zip>` (`tools/import-custom-forms.ts`, with `tools/convert-custom-sprites.py` for the art). Output is kept apart from PokeAPI's data: `src/data/customSpecies.json`, plus `customEvolutions.json` for new evolutions of existing species (Raticate → Bruticate, Mightyena → Alphayena, and Z-Form branches such as Electabuzz → Z-Electivire). The game merges them when it loads (`mergeSpecies`).
+- **Insurgence Deltas (255 entries):** the zip's Insurgence sprites are numbered like Insurgence's Pokédex (727 Delta Bulbasaur … 924 Delta Hoopa, `tools/insurgence-order.json`). Types, stats, evolutions and level-up moves come from Insurgence's own data (the Insurgence Showdown project, MIT). Insurgence-only moves the game doesn't have are dropped (10). Includes 22 Delta Megas, five battle-only forms, 17 Delta Ditto type forms and 12 designed extras (Delta Muk's cages, Delta Snorlax's seasons, Shadow Delta Liepard, Delta Elgyem).
+- **Designed here (74 entries):** 31 Z-Forms (including two new species, Bruticate and Alphayena), 28 Z-Megas (24 "M-" sprites, Z-Mega Dragonite, and Z-Mega Alakazam, Gengar and Steelix), and 15 Spooky forms. Designs are in `tools/custom-forms.json`; rules in GAME_DESIGN.md §5d.
+- **Art:** every sprite becomes a one-frame atlas in `images/pokemon/**/custom/`; Insurgence's double-size sprites are halved; a missing shiny uses the normal sprite and a missing back sprite the mirrored front. Pokémon without an icon use Minior's (director rule).
+- **Tags:** `delta`, `zform`, `spooky`. First-stage forms (120) can be met in the wild like regional forms; Megas and battle-only forms wait for M8.5.
+- **No save format change.**
 
 ## 7. Risks
 

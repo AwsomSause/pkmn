@@ -1,0 +1,1 @@
+{"textures": [{"image": "geodude-delta.png", "format": "RGBA8888", "size": {"w": 55, "h": 32}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 55, "h": 32}, "spriteSourceSize": {"x": 0, "y": 0, "w": 55, "h": 32}, "frame": {"x": 0, "y": 0, "w": 55, "h": 32}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

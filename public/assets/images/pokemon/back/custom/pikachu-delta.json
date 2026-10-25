@@ -1,0 +1,1 @@
+{"textures": [{"image": "pikachu-delta.png", "format": "RGBA8888", "size": {"w": 62, "h": 44}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 62, "h": 44}, "spriteSourceSize": {"x": 0, "y": 0, "w": 62, "h": 44}, "frame": {"x": 0, "y": 0, "w": 62, "h": 44}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

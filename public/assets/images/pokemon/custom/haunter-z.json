@@ -1,0 +1,1 @@
+{"textures": [{"image": "haunter-z.png", "format": "RGBA8888", "size": {"w": 63, "h": 52}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 63, "h": 52}, "spriteSourceSize": {"x": 0, "y": 0, "w": 63, "h": 52}, "frame": {"x": 0, "y": 0, "w": 63, "h": 52}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

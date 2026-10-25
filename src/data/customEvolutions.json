@@ -1,0 +1,67 @@
+[
+  {
+    "from": "raticate",
+    "to": "bruticate",
+    "level": 38
+  },
+  {
+    "from": "mightyena",
+    "to": "alphayena",
+    "level": 40
+  },
+  {
+    "from": "electabuzz",
+    "to": "electivire-z",
+    "item": "electirizer"
+  },
+  {
+    "from": "snubbull",
+    "to": "granbull-z",
+    "level": 23
+  },
+  {
+    "from": "zigzagoon",
+    "to": "linoone-z",
+    "level": 20
+  },
+  {
+    "from": "cubone",
+    "to": "marowak-z",
+    "level": 28
+  },
+  {
+    "from": "hoothoot",
+    "to": "noctowl-z",
+    "level": 20
+  },
+  {
+    "from": "paras",
+    "to": "parasect-z",
+    "level": 24
+  },
+  {
+    "from": "rhydon",
+    "to": "rhyperior-z",
+    "item": "protector"
+  },
+  {
+    "from": "sandshrew",
+    "to": "sandslash-z",
+    "level": 22
+  },
+  {
+    "from": "carvanha",
+    "to": "sharpedo-z",
+    "level": 30
+  },
+  {
+    "from": "bonsly",
+    "to": "sudowoodo-z",
+    "level": 19
+  },
+  {
+    "from": "tentacool",
+    "to": "tentacruel-z",
+    "level": 30
+  }
+]

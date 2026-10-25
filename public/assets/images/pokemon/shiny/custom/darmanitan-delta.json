@@ -1,0 +1,1 @@
+{"textures": [{"image": "darmanitan-delta.png", "format": "RGBA8888", "size": {"w": 103, "h": 88}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 103, "h": 88}, "spriteSourceSize": {"x": 0, "y": 0, "w": 103, "h": 88}, "frame": {"x": 0, "y": 0, "w": 103, "h": 88}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}

@@ -1,0 +1,1 @@
+{"textures": [{"image": "scraggy-delta.png", "format": "RGBA8888", "size": {"w": 30, "h": 50}, "scale": 1, "frames": [{"filename": "0001.png", "rotated": false, "trimmed": false, "sourceSize": {"w": 30, "h": 50}, "spriteSourceSize": {"x": 0, "y": 0, "w": 30, "h": 50}, "frame": {"x": 0, "y": 0, "w": 30, "h": 50}}]}], "meta": {"app": "tools/convert-custom-sprites.py"}}
