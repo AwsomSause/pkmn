@@ -11,10 +11,11 @@
 // Luck tilts the weights toward uncommon and rare (attributes.ts luckWeights).
 
 import { moneyMultiplier } from './archetypes';
-import { addRunAttribute, attributeText } from './attributes';
+import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
+import { changeFriendship } from './friendship';
 import { addItem, itemUseProblem } from './items';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
@@ -114,6 +115,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
     case 'levelUp': {
       const mon = target!;
       const result = addLevels(content, mon, effect.levels, runLevelCap(content, run));
+      changeFriendship(content, mon, content.balance.friendship.perLevel * result.levelsGained, runAttributeEffects(content, run).friendship);
       messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
@@ -134,6 +136,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       const mon = target!;
       const before = maxHp(content, mon);
       mon.vitamins[effect.stat] = Math.min(content.balance.vitaminMaxStacks, (mon.vitamins[effect.stat] ?? 0) + 1);
+      changeFriendship(content, mon, content.balance.friendship.perVitamin, runAttributeEffects(content, run).friendship);
       if (effect.stat === 'hp' && mon.hp > 0) mon.hp += maxHp(content, mon) - before;
       messages.push(`${nameOf(content, mon.speciesId)}'s ${STAT_LABELS[effect.stat]} rose!`);
       break;

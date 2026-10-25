@@ -31,6 +31,7 @@ import {
   type TrainerPlan,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
+import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
@@ -119,6 +120,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
   run.party = [createPokemon(content, speciesId, content.balance.starterLevel, nextUid(run, 'p'))];
+  run.party[0]!.friendship = content.balance.friendship.starter;
   run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
   return run;
@@ -395,6 +397,10 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   run.rng.capture = captureRng.state;
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
   countAttributeGrowth(content, run, engineEvents);
+  for (const e of engineEvents) {
+    const fainted = e.type === 'faint' && e.side === 'player' ? run.party.find((p) => p.uid === e.uid) : undefined;
+    if (fainted) changeFriendship(content, fainted, content.balance.friendship.perFaint);
+  }
 
   const events = awardExperience(content, run, engineEvents);
 
@@ -429,7 +435,8 @@ function countAttributeGrowth(content: Content, run: RunState, events: BattleEve
  */
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
-  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * runAttributeEffects(content, run).exp;
+  const effects = runAttributeEffects(content, run);
+  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp;
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -450,7 +457,10 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const amount = xpForDefeat(baseExp, defeated.level, mon.level, multiplier);
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
       out.push({ type: 'xp', uid, amount });
-      if (result.levelsGained > 0) out.push({ type: 'levelUp', uid, level: result.newLevel });
+      if (result.levelsGained > 0) {
+        out.push({ type: 'levelUp', uid, level: result.newLevel });
+        changeFriendship(content, mon, content.balance.friendship.perLevel * result.levelsGained, effects.friendship);
+      }
       for (const moveId of result.learnedMoves) out.push({ type: 'learnedMove', uid, moveId });
       for (const moveId of result.skippedMoves) {
         out.push({ type: 'wantsMove', uid, moveId });
@@ -494,6 +504,15 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     count(run, 'pokemonCaught');
     discover(run, caught.speciesId, true);
     caughtPending.push({ kind: 'caught', mon: caught });
+  }
+
+  if (battle.outcome === 'win') {
+    const { perBattleWon, perBossWon } = content.balance.friendship;
+    const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
+    const gainMultiplier = runAttributeEffects(content, run).friendship;
+    for (const mon of run.party) {
+      if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
+    }
   }
 
   const evolutions: BattleEndResult['evolutions'] = [];

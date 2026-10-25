@@ -577,6 +577,26 @@ export const BalanceSchema = z.object({
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
+  /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
+  friendship: z.object({
+    max: z.number().int().positive().max(255),
+    /** Every new Pokémon (wild, caught, trainer) starts here. */
+    base: z.number().int().min(0),
+    /** The starter starts here instead. */
+    starter: z.number().int().min(0),
+    /** At this or more, friendship evolutions happen after a battle. */
+    evolveAt: z.number().int().positive(),
+    /** The item that stands for a friendship evolution in species data. */
+    evolutionItem: z.string(),
+    perLevel: z.number().min(0),
+    /** Each participant still standing when a battle is won. */
+    perBattleWon: z.number().min(0),
+    /** Instead of perBattleWon, for gym leaders, the Elite Four and champions. */
+    perBossWon: z.number().min(0),
+    perVitamin: z.number().min(0),
+    /** Lost when it faints (a negative number). */
+    perFaint: z.number().max(0),
+  }),
   /**
    * Enemy levels climb through each region from its start level to just under its level cap:
    * start + (cap − capMargin − start) × t^curve, where t goes 0 → 1 from the first level of the
@@ -645,6 +665,8 @@ export const BalanceSchema = z.object({
     loveEndureChance: z.number().min(0).max(1),
     /** Charisma: more experience for your Pokémon. */
     charismaExpGain: z.number().min(0),
+    /** Charisma: friendship grows faster. */
+    charismaFriendshipGain: z.number().min(0),
   }),
   /**
    * How permanent attributes grow (D10): every `per` of a lifetime counter (or of

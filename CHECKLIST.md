@@ -199,7 +199,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - [x] Hub Attributes room, attributes on the Run Build Summary, Briefing and run-end screen
 - [x] Saves upgrade (profile v5, run v7)
 - [ ] Special encounters and "Between-Level" interactions that change attributes (moved to Milestone 8.75, part A/B)
-- [ ] Friendship from Charisma (moved to Milestone 8.75, part B)
+- [x] Friendship from Charisma (done in Milestone 8.75, part B)
 
 ## Milestone 8 — Custom Pokémon and forms ✅
 
@@ -224,7 +224,8 @@ See IMPLEMENTATION_PLAN.md §5.
 
 Everything planned but not yet in a milestone, gathered on 2026-10-25. Details in IMPLEMENTATION_PLAN.md §6j.
 
-- [ ] B. Friendship on each Pokémon; Charisma raises friendship; real friendship evolutions; N's passive
+- [x] B. Friendship on each Pokémon (gains from levels, wins and vitamins; loss on fainting); Charisma raises friendship gains; real friendship evolutions at 220 (Soothe Bell kept); hearts on the party screen; run save v8
+- [ ] B. N's friendship passive and friendship event outcomes (with part A, the events)
 - [ ] C. Unsupported moves in tiers (611); abilities; held items; enemy trainers use items and switch; damage rounding and double-faint rule
 - [ ] D. Bank tiers 1–5; Scavenger, Fortune and Survival licenses; challenge modifiers and challenge campaigns; contracts; item catalog and the other Bank services; spending candies; more preparation tokens
 - [ ] E. Pokédex & Research room; starter mastery and trainer mastery tracks; remaining draft rules; starter events; Special Specimen starters; achievements checked as they happen

@@ -4,6 +4,7 @@
 import Phaser from 'phaser';
 import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
+import { friendshipHearts } from '../core/friendship';
 import { calcStats, getSpecies } from '../core/pokemon';
 import type { PokemonInstance } from '../core/state';
 import { playSfx } from './audio';
@@ -166,7 +167,7 @@ export class Picker {
   }
 }
 
-/** One party row: icon, name, level, HP bar and status. */
+/** One party row: icon, name, level, HP bar, status and friendship hearts. */
 export function partyRow(content: Content, mon: PokemonInstance, problem: string | null, opts: { tag?: string; hint?: string } = {}): PickerRow {
   return {
     problem,
@@ -185,6 +186,8 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       const status = mon.hp <= 0 ? { label: 'FNT', color: 0x806060 } : mon.status ? STATUS_LABELS[mon.status.id] : null;
       const tags = [status?.label, opts.tag].filter(Boolean).join('  ');
       if (tags) box.add(scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020')));
+      const hearts = friendshipHearts(content, mon);
+      box.add(scene.add.text(w - 12, 60, '♥'.repeat(hearts) + '♡'.repeat(5 - hearts), textStyle(14, hearts === 5 ? '#e04870' : '#c07890')).setOrigin(1, 0));
     },
   };
 }

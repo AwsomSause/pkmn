@@ -58,6 +58,8 @@ export interface AttributeEffects {
   speed: number;
   price: number;
   exp: number;
+  /** Multiplies friendship gains. */
+  friendship: number;
   damageDealt: number;
   damageTaken: number;
   healing: number;
@@ -81,6 +83,7 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
     speed: 1 + e.speedStat * share(a.speed),
     price: 1 - e.charismaPriceCut * share(a.charisma),
     exp: 1 + e.charismaExpGain * share(a.charisma),
+    friendship: 1 + e.charismaFriendshipGain * share(a.charisma),
     damageDealt: 1 + e.rageDamageDealt * rage,
     damageTaken: (1 + e.rageDamageTaken * rage) * (1 - e.peaceDamageTakenCut * peace),
     healing: 1 + e.peaceHealing * peace,
@@ -142,7 +145,7 @@ export function attributeEffectText(content: Content, key: AttributeKey, value: 
     case 'speed':
       return `Your Pokémon +${pct(fx.speed)} Speed`;
     case 'charisma':
-      return `Shop prices −${pct(2 - fx.price)}, +${pct(fx.exp)} experience`;
+      return `Shop prices −${pct(2 - fx.price)}, +${pct(fx.exp)} experience, +${pct(fx.friendship)} friendship`;
     case 'luck':
       return `Rare rewards ×${fx.rareWeight.toFixed(2)}, shinies ×${fx.shinyChance.toFixed(2)}`;
     case 'love':
