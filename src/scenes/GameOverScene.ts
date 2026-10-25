@@ -1,5 +1,6 @@
-// Shown when a run ends in defeat. The run's results were already applied to
-// the permanent profile (once) before this screen appears.
+// Shown when a run ends, in defeat or in victory (the last champion beaten).
+// The run's results were already applied to the permanent profile (once)
+// before this screen appears.
 
 import Phaser from 'phaser';
 import { services } from '../game/services';
@@ -17,7 +18,8 @@ export class GameOverScene extends Phaser.Scene {
     stopMusic();
     const { session } = services();
     const run = session.run;
-    this.add.text(GAME_WIDTH / 2, 80, 'Your run has ended', textStyle(52, COLORS.textLight)).setOrigin(0.5);
+    const won = run?.victory ?? false;
+    this.add.text(GAME_WIDTH / 2, 80, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 52, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, GAME_WIDTH / 2 - 260, 130, 520, 256);
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
@@ -29,13 +31,14 @@ export class GameOverScene extends Phaser.Scene {
         [
           `Trainer: ${archetype}`,
           `Starter: ${leadName}`,
+          `Regions cleared: ${run.regionsCleared.length} of ${run.regionOrder.length}`,
           `Encounters cleared: ${run.encountersCompleted}`,
           `Rewards taken: ${run.log.rewardsTaken.length}`,
           `Money earned: ₽${run.money}`,
           `Candies earned: ${run.candies} (kept)`,
           `Seed: ${run.seed}`,
         ].join('\n'),
-        textStyle(26, COLORS.text, { lineSpacing: 6 }),
+        textStyle(24, COLORS.text, { lineSpacing: 5 }),
       );
     }
     this.add

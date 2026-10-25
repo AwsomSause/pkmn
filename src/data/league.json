@@ -1,0 +1,396 @@
+{
+ "eliteFour": [
+  {
+   "id": "lorelei",
+   "name": "Lorelei",
+   "spriteAssetId": "trainer.lorelei",
+   "types": [
+    "ice"
+   ]
+  },
+  {
+   "id": "bruno",
+   "name": "Bruno",
+   "spriteAssetId": "trainer.bruno",
+   "types": [
+    "fighting"
+   ]
+  },
+  {
+   "id": "agatha",
+   "name": "Agatha",
+   "spriteAssetId": "trainer.agatha",
+   "types": [
+    "ghost"
+   ]
+  },
+  {
+   "id": "will",
+   "name": "Will",
+   "spriteAssetId": "trainer.will",
+   "types": [
+    "psychic"
+   ]
+  },
+  {
+   "id": "koga",
+   "name": "Koga",
+   "spriteAssetId": "trainer.koga",
+   "types": [
+    "poison"
+   ]
+  },
+  {
+   "id": "karen",
+   "name": "Karen",
+   "spriteAssetId": "trainer.karen",
+   "types": [
+    "dark"
+   ]
+  },
+  {
+   "id": "sidney",
+   "name": "Sidney",
+   "spriteAssetId": "trainer.sidney",
+   "types": [
+    "dark"
+   ]
+  },
+  {
+   "id": "phoebe",
+   "name": "Phoebe",
+   "spriteAssetId": "trainer.phoebe",
+   "types": [
+    "ghost"
+   ]
+  },
+  {
+   "id": "glacia",
+   "name": "Glacia",
+   "spriteAssetId": "trainer.glacia",
+   "types": [
+    "ice"
+   ]
+  },
+  {
+   "id": "drake",
+   "name": "Drake",
+   "spriteAssetId": "trainer.drake",
+   "types": [
+    "dragon"
+   ]
+  },
+  {
+   "id": "aaron",
+   "name": "Aaron",
+   "spriteAssetId": "trainer.aaron",
+   "types": [
+    "bug"
+   ]
+  },
+  {
+   "id": "bertha",
+   "name": "Bertha",
+   "spriteAssetId": "trainer.bertha",
+   "types": [
+    "ground"
+   ]
+  },
+  {
+   "id": "flint",
+   "name": "Flint",
+   "spriteAssetId": "trainer.flint",
+   "types": [
+    "fire"
+   ]
+  },
+  {
+   "id": "lucian",
+   "name": "Lucian",
+   "spriteAssetId": "trainer.lucian",
+   "types": [
+    "psychic"
+   ]
+  },
+  {
+   "id": "shauntal",
+   "name": "Shauntal",
+   "spriteAssetId": "trainer.shauntal",
+   "types": [
+    "ghost"
+   ]
+  },
+  {
+   "id": "grimsley",
+   "name": "Grimsley",
+   "spriteAssetId": "trainer.grimsley",
+   "types": [
+    "dark"
+   ]
+  },
+  {
+   "id": "caitlin",
+   "name": "Caitlin",
+   "spriteAssetId": "trainer.caitlin",
+   "types": [
+    "psychic"
+   ]
+  },
+  {
+   "id": "marshal",
+   "name": "Marshal",
+   "spriteAssetId": "trainer.marshal",
+   "types": [
+    "fighting"
+   ]
+  },
+  {
+   "id": "malva",
+   "name": "Malva",
+   "spriteAssetId": "trainer.malva",
+   "types": [
+    "fire"
+   ]
+  },
+  {
+   "id": "siebold",
+   "name": "Siebold",
+   "spriteAssetId": "trainer.siebold",
+   "types": [
+    "water"
+   ]
+  },
+  {
+   "id": "wikstrom",
+   "name": "Wikstrom",
+   "spriteAssetId": "trainer.wikstrom",
+   "types": [
+    "steel"
+   ]
+  },
+  {
+   "id": "drasna",
+   "name": "Drasna",
+   "spriteAssetId": "trainer.drasna",
+   "types": [
+    "dragon"
+   ]
+  },
+  {
+   "id": "hala",
+   "name": "Hala",
+   "spriteAssetId": "trainer.hala",
+   "types": [
+    "fighting"
+   ]
+  },
+  {
+   "id": "olivia",
+   "name": "Olivia",
+   "spriteAssetId": "trainer.olivia",
+   "types": [
+    "rock"
+   ]
+  },
+  {
+   "id": "acerola",
+   "name": "Acerola",
+   "spriteAssetId": "trainer.acerola",
+   "types": [
+    "ghost"
+   ]
+  },
+  {
+   "id": "kahili",
+   "name": "Kahili",
+   "spriteAssetId": "trainer.kahili",
+   "types": [
+    "flying"
+   ]
+  },
+  {
+   "id": "molayne",
+   "name": "Molayne",
+   "spriteAssetId": "trainer.molayne",
+   "types": [
+    "steel"
+   ]
+  },
+  {
+   "id": "marnie",
+   "name": "Marnie",
+   "spriteAssetId": "trainer.marnie",
+   "types": [
+    "dark"
+   ]
+  },
+  {
+   "id": "bede",
+   "name": "Bede",
+   "spriteAssetId": "trainer.bede",
+   "types": [
+    "fairy"
+   ]
+  },
+  {
+   "id": "mustard",
+   "name": "Mustard",
+   "spriteAssetId": "trainer.mustard",
+   "types": [
+    "fighting"
+   ]
+  },
+  {
+   "id": "rika",
+   "name": "Rika",
+   "spriteAssetId": "trainer.rika",
+   "types": [
+    "ground"
+   ]
+  },
+  {
+   "id": "poppy",
+   "name": "Poppy",
+   "spriteAssetId": "trainer.poppy",
+   "types": [
+    "steel"
+   ]
+  },
+  {
+   "id": "larry",
+   "name": "Larry",
+   "spriteAssetId": "trainer.larry",
+   "types": [
+    "flying"
+   ]
+  },
+  {
+   "id": "hassel",
+   "name": "Hassel",
+   "spriteAssetId": "trainer.hassel",
+   "types": [
+    "dragon"
+   ]
+  },
+  {
+   "id": "crispin",
+   "name": "Crispin",
+   "spriteAssetId": "trainer.crispin",
+   "types": [
+    "fire"
+   ]
+  },
+  {
+   "id": "amarys",
+   "name": "Amarys",
+   "spriteAssetId": "trainer.amarys",
+   "types": [
+    "steel"
+   ]
+  },
+  {
+   "id": "lacey",
+   "name": "Lacey",
+   "spriteAssetId": "trainer.lacey",
+   "types": [
+    "fairy"
+   ]
+  },
+  {
+   "id": "drayton",
+   "name": "Drayton",
+   "spriteAssetId": "trainer.drayton",
+   "types": [
+    "dragon"
+   ]
+  }
+ ],
+ "champions": [
+  {
+   "id": "lance",
+   "name": "Lance",
+   "spriteAssetId": "trainer.lance",
+   "types": [
+    "dragon"
+   ]
+  },
+  {
+   "id": "steven",
+   "name": "Steven",
+   "spriteAssetId": "trainer.steven",
+   "types": [
+    "steel"
+   ]
+  },
+  {
+   "id": "wallace",
+   "name": "Wallace",
+   "spriteAssetId": "trainer.wallace",
+   "types": [
+    "water"
+   ]
+  },
+  {
+   "id": "cynthia",
+   "name": "Cynthia",
+   "spriteAssetId": "trainer.cynthia",
+   "types": []
+  },
+  {
+   "id": "alder",
+   "name": "Alder",
+   "spriteAssetId": "trainer.alder",
+   "types": []
+  },
+  {
+   "id": "iris",
+   "name": "Iris",
+   "spriteAssetId": "trainer.iris",
+   "types": [
+    "dragon"
+   ]
+  },
+  {
+   "id": "diantha",
+   "name": "Diantha",
+   "spriteAssetId": "trainer.diantha",
+   "types": []
+  },
+  {
+   "id": "kukui",
+   "name": "Kukui",
+   "spriteAssetId": "trainer.kukui",
+   "types": []
+  },
+  {
+   "id": "hau",
+   "name": "Hau",
+   "spriteAssetId": "trainer.hau",
+   "types": []
+  },
+  {
+   "id": "leon",
+   "name": "Leon",
+   "spriteAssetId": "trainer.leon",
+   "types": []
+  },
+  {
+   "id": "geeta",
+   "name": "Geeta",
+   "spriteAssetId": "trainer.geeta",
+   "types": []
+  },
+  {
+   "id": "nemona",
+   "name": "Nemona",
+   "spriteAssetId": "trainer.nemona",
+   "types": []
+  },
+  {
+   "id": "kieran",
+   "name": "Kieran",
+   "spriteAssetId": "trainer.kieran",
+   "types": []
+  }
+ ]
+}

@@ -5,7 +5,9 @@
 import Phaser from 'phaser';
 import { itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { calcStats, getSpecies, xpForLevel } from '../core/pokemon';
+import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
+import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
@@ -68,8 +70,11 @@ export class BattleScene extends Phaser.Scene {
     this.playerSprite = null;
     this.enemySprite = null;
 
-    // The stage theme's arena (its first type), or the default field.
-    const arena = run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
+    // The stage theme's arena (its first type), or the default field. Elite Four
+    // members and champions with a speciality fight in their own type's arena.
+    const boss = this.boss();
+    const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
+    const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
     if (assets.has(bg)) this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE);
     else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0);
@@ -103,10 +108,18 @@ export class BattleScene extends Phaser.Scene {
     return getSpecies(services().session.content, mon.speciesId).name;
   }
 
+  /** The gym leader, Elite Four member or champion in this battle (null for anyone else). */
+  private boss(): BossInfo | null {
+    const trainer = this.run.battle?.trainer;
+    const role = trainer ? bossRoleForClass(trainer.classId) : null;
+    return trainer?.leaderId && role ? bossInfo(services().session.content, role, trainer.leaderId) : null;
+  }
+
   private trainerTitle(): string | null {
     const trainer = this.run.battle?.trainer;
     if (!trainer) return null;
-    if (trainer.leaderId) return `Gym Leader ${trainer.name}`;
+    const boss = this.boss();
+    if (boss) return boss.title;
     const cls = services().session.content.trainers.get(trainer.classId);
     return cls ? `${cls.name} ${trainer.name}` : trainer.name;
   }
@@ -116,8 +129,8 @@ export class BattleScene extends Phaser.Scene {
     const trainer = this.run.battle?.trainer;
     if (!trainer) return null;
     const content = services().session.content;
-    const leader = trainer.leaderId ? content.gymLeaders.get(trainer.leaderId) : undefined;
-    if (leader) return { assetId: leader.spriteAssetId, label: leader.name };
+    const boss = this.boss();
+    if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
     return cls ? { assetId: cls.spriteAssetId, label: cls.name } : null;
   }
@@ -215,7 +228,13 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     const column = stage.current ? findNode(stage.map, stage.current).column : 0;
-    const theme = getTheme(services().session.content, stage.themeId);
+    const content = services().session.content;
+    if (stage.kind === 'league') {
+      const region = run.regionOrder.length > 0 ? currentRegion(content, run).name : '';
+      this.header.setText(`${region} League · Battle ${column}/${stage.map.columns}  ·  ₽${run.money}`);
+      return;
+    }
+    const theme = getTheme(content, stage.themeId);
     this.header.setText(`Stage ${stage.index + 1} · ${theme.name} · Level ${column}/${stage.map.columns}  ·  ₽${run.money}`);
   }
 
@@ -476,7 +495,15 @@ export class BattleScene extends Phaser.Scene {
       playSfx(this, 'se.level_up');
       const leaderName = content.gymLeaders.get(end.badge)?.name ?? end.badge;
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
-      await this.say('The next stage awaits…');
+      const campaign = content.campaigns.get(result.run.campaignId);
+      const leagueNext = result.run.stage?.kind === 'stage' && campaign && result.run.stage.index + 1 >= campaign.stagesPerRegion;
+      await this.say(leagueNext ? 'The Pokémon League awaits…' : 'The next stage awaits…');
+    }
+    if (end.regionCleared) {
+      playSfx(this, 'se.level_up');
+      const region = content.regions.get(end.regionCleared)?.name ?? end.regionCleared;
+      await this.say(`You are the ${region} Champion!`);
+      await this.say(end.victory ? 'You have conquered every region!' : 'A new region awaits…');
     }
     this.updateHeader();
     for (const evo of end.evolutions) {

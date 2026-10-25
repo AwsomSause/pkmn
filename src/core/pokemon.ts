@@ -116,12 +116,14 @@ export interface LevelUpResult {
  * Adds experience (or levels) and handles level-ups. Max HP gains are added to
  * current HP. New moves are learned while there is a free slot; extras are
  * reported as skipped (the run then asks the player whether to forget a move).
+ * Experience stops at `levelCap` (the region's level cap, D14).
  */
-export function gainXp(content: Content, mon: PokemonInstance, amount: number): LevelUpResult {
+export function gainXp(content: Content, mon: PokemonInstance, amount: number, levelCap = 100): LevelUpResult {
   const species = getSpecies(content, mon.speciesId);
   const oldLevel = mon.level;
   const oldMax = maxHp(content, mon);
-  mon.xp = Math.min(mon.xp + Math.max(0, Math.floor(amount)), xpForLevel(species.growthRate, 100));
+  const maxXp = Math.max(mon.xp, xpForLevel(species.growthRate, Math.min(100, levelCap)));
+  mon.xp = Math.min(mon.xp + Math.max(0, Math.floor(amount)), maxXp);
   mon.level = levelFromXp(species.growthRate, mon.xp);
   const learnedMoves: string[] = [];
   const skippedMoves: string[] = [];
@@ -145,11 +147,11 @@ export function gainXp(content: Content, mon: PokemonInstance, amount: number): 
 }
 
 /** Raises the level directly (Rare Candy): sets XP to the start of the new level. */
-export function addLevels(content: Content, mon: PokemonInstance, levels: number): LevelUpResult {
+export function addLevels(content: Content, mon: PokemonInstance, levels: number, levelCap = 100): LevelUpResult {
   const species = getSpecies(content, mon.speciesId);
-  const target = Math.min(100, mon.level + levels);
+  const target = Math.min(100, levelCap, mon.level + levels);
   const needed = xpForLevel(species.growthRate, target) - mon.xp;
-  return gainXp(content, mon, Math.max(0, needed));
+  return gainXp(content, mon, Math.max(0, needed), levelCap);
 }
 
 export function isFainted(mon: PokemonInstance): boolean {

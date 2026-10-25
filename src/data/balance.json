@@ -38,7 +38,9 @@
  "money": {
   "startingMoney": 0,
   "wildPerEnemyLevel": 8,
-  "gymLeaderPerLevel": 80
+  "gymLeaderPerLevel": 80,
+  "eliteFourPerLevel": 100,
+  "championPerLevel": 150
  },
  "attributeMin": 0,
  "attributeMax": 100,
@@ -65,32 +67,25 @@
  },
  "difficulty": {
   "baseLevel": 4,
-  "levelsPerColumn": 0.65,
+  "curve": 0.6,
+  "capMargin": 5,
+  "levelCapStep": 50,
   "variance": 1,
   "minLevel": 2,
   "maxLevel": 100,
   "trainerBonus": 1,
   "gymBonus": 3,
   "aceBonus": 1,
+  "eliteFourBonus": 2,
+  "championBonus": 4,
   "harderBonus": [
    1,
    2
   ]
  },
  "stage": {
-  "columns": 20,
   "minWidth": 1,
   "maxWidth": 3,
-  "trainerColumns": [
-   [
-    4,
-    9
-   ],
-   [
-    11,
-    17
-   ]
-  ],
   "harderChance": 0.3,
   "extraEdgeChance": 0.35,
   "sideChance": 0.12,
@@ -111,5 +106,57 @@
   "common": 20,
   "uncommon": 45,
   "rare": 35
+ },
+ "campaigns": [
+  {
+   "id": "full",
+   "name": "Full campaign",
+   "regularRegions": 9,
+   "grandRegion": true,
+   "stagesPerRegion": 8,
+   "columns": 20,
+   "trainerColumns": [
+    [
+     4,
+     9
+    ],
+    [
+     11,
+     17
+    ]
+   ],
+   "eliteFourSize": 4
+  },
+  {
+   "id": "dev",
+   "name": "Developer campaign (short)",
+   "regularRegions": 2,
+   "grandRegion": false,
+   "stagesPerRegion": 2,
+   "columns": 5,
+   "trainerColumns": [
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "eliteFourSize": 2
+  }
+ ],
+ "eliteFourTeam": {
+  "baseSize": 4,
+  "extraPerStage": 1,
+  "randomExtra": 0,
+  "maxSize": 6
+ },
+ "championTeam": {
+  "baseSize": 5,
+  "extraPerStage": 1,
+  "randomExtra": 0,
+  "maxSize": 6
  }
 }

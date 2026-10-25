@@ -169,6 +169,49 @@ export const GymLeaderSchema = z.object({
 });
 export type GymLeader = z.infer<typeof GymLeaderSchema>;
 
+/** An Elite Four member or a champion. Champions with no types use a mixed team. */
+export const LeagueTrainerSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  spriteAssetId: z.string(),
+  types: z.array(TypeNameSchema),
+});
+export type LeagueTrainer = z.infer<typeof LeagueTrainerSchema>;
+
+/** A region: its own gym leaders, Elite Four and champions are preferred there (empty lists mean "anyone"). */
+export const RegionSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  gymLeaders: z.array(z.string()),
+  eliteFour: z.array(z.string()),
+  champions: z.array(z.string()),
+  /** The Grand Region always comes last. */
+  grand: z.boolean().default(false),
+});
+export type Region = z.infer<typeof RegionSchema>;
+
+export const LeagueFileSchema = z.object({
+  eliteFour: z.array(LeagueTrainerSchema).min(1),
+  champions: z.array(LeagueTrainerSchema).min(1),
+});
+
+/** The shape of a campaign: how many regions, stages and levels. "dev" is a tiny one for testing. */
+export const CampaignSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  /** Regular regions, in random order (each appears once). */
+  regularRegions: z.number().int().min(1),
+  /** Whether the Grand Region comes after them. */
+  grandRegion: z.boolean(),
+  stagesPerRegion: z.number().int().min(1),
+  /** Numbered levels per stage (the last is the gym leader). */
+  columns: z.number().int().min(3),
+  /** Each range is [first, last] column; one trainer column is picked from each. */
+  trainerColumns: z.array(z.tuple([z.number().int().min(1), z.number().int().min(1)])),
+  eliteFourSize: z.number().int().min(1),
+});
+export type Campaign = z.infer<typeof CampaignSchema>;
+
 /** A stage theme: a named pair of types that decides which Pokémon, trainers and gym leader appear. */
 export const ThemeSchema = z.object({
   id: z.string().min(1),
@@ -183,7 +226,12 @@ export const ThemesFileSchema = z.object({
   themes: z.array(ThemeSchema).min(1),
 });
 
-export const ShopEntrySchema = z.object({ item: z.string(), price: z.number().int().positive() });
+export const ShopEntrySchema = z.object({
+  item: z.string(),
+  price: z.number().int().positive(),
+  /** The item is in stock once the player has this many badges. */
+  minBadges: z.number().int().min(0).default(0),
+});
 export type ShopEntry = z.infer<typeof ShopEntrySchema>;
 
 export const RewardEffectSchema = z.discriminatedUnion('kind', [
@@ -241,10 +289,17 @@ export const BalanceSchema = z.object({
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
-  /** Enemy level = baseLevel + levelsPerColumn × columns travelled + variance + archetype + node bonus. */
+  /**
+   * Enemy levels climb through each region from its start level to just under its level cap:
+   * start + (cap − capMargin − start) × t^curve, where t goes 0 → 1 from the first level of the
+   * region to its last gym. Then variance, archetype offset and node bonus are added.
+   */
   difficulty: z.object({
     baseLevel: z.number(),
-    levelsPerColumn: z.number().min(0),
+    curve: z.number().positive(),
+    capMargin: z.number().int().min(0),
+    /** Each region raises the level cap by this much (director decision D14). */
+    levelCapStep: z.number().int().positive(),
     variance: z.number().int().min(0),
     minLevel: z.number().int().min(1),
     maxLevel: z.number().int().max(100),
@@ -252,16 +307,15 @@ export const BalanceSchema = z.object({
     gymBonus: z.number().int().min(0),
     /** Extra levels on the gym leader's last Pokémon. */
     aceBonus: z.number().int().min(0),
+    eliteFourBonus: z.number().int().min(0),
+    championBonus: z.number().int().min(0),
     /** Extra levels on a "harder" route node: [min, max]. */
     harderBonus: z.tuple([z.number().int().min(0), z.number().int().min(0)]),
   }),
-  /** Stage map shape. */
+  /** Stage map shape (the number of columns and trainer columns come from the campaign). */
   stage: z.object({
-    columns: z.number().int().min(3),
     minWidth: z.number().int().min(1),
     maxWidth: z.number().int().min(1).max(5),
-    /** Each range is [first, last] column; one trainer column is picked from each. */
-    trainerColumns: z.array(z.tuple([z.number().int().min(1), z.number().int().min(1)])),
     harderChance: z.number().min(0).max(1),
     extraEdgeChance: z.number().min(0).max(1),
     sideChance: z.number().min(0).max(1),
@@ -275,7 +329,14 @@ export const BalanceSchema = z.object({
   dualTypeWeight: z.number().min(1),
   harderRarityWeights: z.record(RaritySchema, z.number().min(0)),
   bossRarityWeights: z.record(RaritySchema, z.number().min(0)),
-  money: z.object({ startingMoney: z.number().int().min(0), wildPerEnemyLevel: z.number().min(0), gymLeaderPerLevel: z.number().min(0) }),
+  money: z.object({
+    startingMoney: z.number().int().min(0),
+    wildPerEnemyLevel: z.number().min(0),
+    gymLeaderPerLevel: z.number().min(0),
+    eliteFourPerLevel: z.number().min(0),
+    championPerLevel: z.number().min(0),
+  }),
+  campaigns: z.array(CampaignSchema).min(1),
   attributeMin: z.number(),
   attributeMax: z.number(),
   startingItems: z.record(z.string(), z.number().int().positive()),
@@ -283,6 +344,19 @@ export const BalanceSchema = z.object({
   shinyChance: z.number().min(0).max(1),
   /** Team size = baseSize + extraPerStage × stage number (from 0) + a random 0..randomExtra, capped at maxSize. */
   trainerTeam: z.object({
+    baseSize: z.number().int().min(1),
+    extraPerStage: z.number().min(0),
+    randomExtra: z.number().int().min(0),
+    maxSize: z.number().int().min(1).max(6),
+  }),
+  /** Elite Four and champion teams grow with each region (extraPerStage counts regions here). */
+  eliteFourTeam: z.object({
+    baseSize: z.number().int().min(1),
+    extraPerStage: z.number().min(0),
+    randomExtra: z.number().int().min(0),
+    maxSize: z.number().int().min(1).max(6),
+  }),
+  championTeam: z.object({
     baseSize: z.number().int().min(1),
     extraPerStage: z.number().min(0),
     randomExtra: z.number().int().min(0),
@@ -308,6 +382,10 @@ export interface Content {
   items: Map<string, Item>;
   trainers: Map<string, TrainerClass>;
   gymLeaders: Map<string, GymLeader>;
+  eliteFour: Map<string, LeagueTrainer>;
+  champions: Map<string, LeagueTrainer>;
+  regions: Map<string, Region>;
+  campaigns: Map<string, Campaign>;
   themes: Map<string, Theme>;
   arenas: Partial<Record<TypeName, string>>;
   shop: ShopEntry[];

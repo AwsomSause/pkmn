@@ -42,6 +42,14 @@ Green's "weaker enemies" and "harder catching" are separate rule entries. Archet
 - Grand Region **[PROPOSED in spec]**: 8 stages of 20, then a final boss and an ending.
 - A developer "short campaign" uses the same rules with tiny numbers (e.g. 2 regions × 2 stages × 4 levels) for testing.
 
+**Built in Milestone 4 (2026-10-25):**
+- Each region (Kanto to Paldea, plus Alola) lists its own gym leaders, Elite Four and champions in `regions.json`. A region's stages prefer its own leaders whose speciality fits the stage theme; its league prefers its own Elite Four and champion. Nobody appears twice in a run (D6), across all three roles.
+- The league is its own map: one straight line of Elite Four members, then the champion. The party is fully healed on arrival and after every Elite Four win, and each win gives a reward draft (D13). Elite Four teams use the member's speciality type; champions with a speciality use it, the others bring one Pokémon from each of the region's stage themes.
+- **Level cap (D14):** 50 in the first region, +50 per region, stopped at 100 for now because levels above 100 aren't decided. Enemy levels climb from the previous cap to just under the new one across the region's 8 stages; the league sits at the top.
+- After the champion the next region starts at stage 1. Beating the last champion wins the run.
+- The developer campaign is 2 regions × 2 stages × 5 levels with an Elite Four of 2 (`?campaign=dev`, or pick it in the debug panel).
+- Shops unlock more stock as you earn badges (`minBadges` in `shop.json`).
+
 **Scale warning:** a full run is 9×8×20 + 160 ≈ **1,600 numbered encounters plus ~100 bosses**. At about one minute each, that is 25–30+ hours per run. See section 12, item D1.
 
 ## 5. Stage maps (branching routes)
@@ -105,7 +113,7 @@ Each has permanent value + run modifier → effective value, clamped to 0–100 
 ## 10. Items, shops, economy
 
 - Run money (temporary) vs bank currency (permanent). Always shown separately.
-- Shops sell from data-defined stock with prices from data; Charisma/archetype price effects come later.
+- Shops sell from data-defined stock with prices from data; better items unlock with badges (Great Ball at 2, Ultra Ball at 5, Full Restore at 7). Charisma/archetype price effects come later.
 - **Last Stand Charm:** rare, single-use. When your last usable Pokémon would faint (run-ending loss), it's consumed, that Pokémon stays at 1 HP, a message is shown, and the battle continues. Once per battle.
 
 ## 11. Permanent progression and saving

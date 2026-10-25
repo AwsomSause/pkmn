@@ -2,6 +2,7 @@
 
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
+import { shopStock } from '../core/run';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -23,11 +24,14 @@ export class ShopScene extends Phaser.Scene {
     const content = session.content;
     playMusic(this, 'bgm.menu');
 
-    const rows: PickerRow[] = content.shop.map((entry) => {
+    // More stock unlocks with badges (shop.json minBadges).
+    const stock = shopStock(content, run);
+    const next = content.shop.filter((e) => !stock.includes(e)).sort((a, b) => a.minBadges - b.minBadges)[0];
+    const rows: PickerRow[] = stock.map((entry) => {
       const item = content.items.get(entry.item)!;
       return {
         problem: run.money < entry.price ? `Not enough money for the ${item.name} (₽${entry.price}, you have ₽${run.money}).` : null,
-        hint: `${item.description}  ·  You have ₽${run.money}.`,
+        hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${next.minBadges} badges.` : ''}`,
         draw: (scene, box, w, h) => {
           box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
           box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
@@ -44,7 +48,7 @@ export class ShopScene extends Phaser.Scene {
       rows,
       backLabel: 'leave',
       onSelect: (i) => {
-        const message = session.buyItem(content.shop[i]!.item);
+        const message = session.buyItem(stock[i]!.item);
         playSfx(this, 'se.exp', 0.6);
         this.scene.restart({ notice: message.replace(/^You bought /, 'Bought '), focus: i });
       },

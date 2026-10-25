@@ -68,8 +68,9 @@ export class GameSession {
     this.savedRun = this.saves.loadRun();
   }
 
-  newRun(archetypeId: string, seed: string = makeRandomSeed()): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId });
+  /** Starts a new run. `campaignId` picks a shorter campaign such as "dev" (default "full"). */
+  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string): RunState {
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId });
     this.profile = recordRunStarted(this.profile);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.persistRun();
@@ -79,7 +80,8 @@ export class GameSession {
   continueRun(): RunState {
     this.refreshSavedRun();
     if (this.savedRun.status !== 'ok') throw new Error('No saved run to continue');
-    this.run = this.savedRun.data;
+    this.run = Run.ensureRegionOrder(this.content, this.savedRun.data);
+    if (this.run !== this.savedRun.data) this.persistRun();
     if (this.run.phase === 'over') this.finishRun();
     this.changed();
     return this.run;
@@ -133,7 +135,7 @@ export class GameSession {
     const result = Run.takeTurn(this.content, this.requireRun(), action);
     this.run = result.run;
     this.persistRun();
-    if (result.defeated) this.finishRun();
+    if (result.run.phase === 'over') this.finishRun();
     return result;
   }
 
@@ -141,6 +143,7 @@ export class GameSession {
     const result = Run.chooseReward(this.content, this.requireRun(), index, targetIndex);
     this.run = result.run;
     this.persistRun();
+    if (result.run.phase === 'over') this.finishRun(); // the last champion was beaten
     return result;
   }
 
@@ -148,6 +151,7 @@ export class GameSession {
     const result = Run.resolveDecision(this.content, this.requireRun(), choice);
     this.run = result.run;
     this.persistRun();
+    if (result.run.phase === 'over') this.finishRun(); // the last champion was beaten
     return result;
   }
 
@@ -210,6 +214,11 @@ export class GameSession {
 
   debugJumpToColumn(column: number): void {
     this.run = Run.debugJumpToColumn(this.requireRun(), column);
+    this.persistRun();
+  }
+
+  debugJumpToLeague(): void {
+    this.run = Run.debugJumpToLeague(this.content, this.requireRun());
     this.persistRun();
   }
 

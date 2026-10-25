@@ -4,7 +4,7 @@
 
 import type { z } from 'zod';
 import type { Content } from '../core/contentSchema';
-import { validateStageMap } from '../core/map';
+import { validateLeagueMap, validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
 import {
   ProfileSchema,
@@ -22,7 +22,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 3, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 2, run: 4, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -58,6 +58,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         badges: [],
       };
     },
+    // v4 (Milestone 4): regions and the campaign. An older run is treated as
+    // the first region of a full campaign; it gets its shuffled region order
+    // when it is next loaded (that needs the game data and the run's RNG).
+    3: (data) => ({ ...(data as Json), campaignId: 'full', regionOrder: [], regionIndex: 0, regionsCleared: [], victory: false }),
   },
   settings: {},
   meta: {},
@@ -195,19 +199,24 @@ export class SaveManager {
     if (run.battle) {
       if (!run.battle.enemyTeam[run.battle.enemyIndex]) return 'Battle data is damaged in the save.';
       const t = run.battle.trainer;
-      if (t?.leaderId && !c.gymLeaders.has(t.leaderId)) return `Unknown gym leader "${t.leaderId}" in save.`;
+      if (t?.leaderId && !isBoss(c, t.leaderId)) return `Unknown gym leader, Elite Four member or champion "${t.leaderId}" in save.`;
       if (t && !t.leaderId && !c.trainers.has(t.classId)) return `Unknown trainer class "${t.classId}" in save.`;
     }
     if (run.phase === 'decision' && run.pending.length === 0) return 'The save is waiting on a decision that is missing.';
     if (run.stage) {
       if (!c.themes.has(run.stage.themeId)) return `Unknown stage theme "${run.stage.themeId}" in save.`;
-      if (!c.gymLeaders.has(run.stage.leaderId)) return `Unknown gym leader "${run.stage.leaderId}" in save.`;
-      const mapProblems = validateStageMap(run.stage.map);
+      const league = run.stage.kind === 'league';
+      if (!(league ? c.champions : c.gymLeaders).has(run.stage.leaderId)) return `Unknown ${league ? 'champion' : 'gym leader'} "${run.stage.leaderId}" in save.`;
+      for (const id of run.stage.eliteFour) if (!c.eliteFour.has(id)) return `Unknown Elite Four member "${id}" in save.`;
+      const mapProblems = league ? validateLeagueMap(run.stage.map) : validateStageMap(run.stage.map);
       if (mapProblems.length > 0) return `The stage map in the save is damaged (${mapProblems[0]}).`;
       if (run.stage.current !== null && !run.stage.map.nodes.some((n) => n.id === run.stage!.current)) return 'The save points to a map node that does not exist.';
     } else if (run.phase === 'map' || run.phase === 'shop') {
       return 'The stage map is missing from the save.';
     }
+    if (!c.campaigns.has(run.campaignId)) return `Unknown campaign "${run.campaignId}" in save.`;
+    for (const id of run.regionOrder) if (!c.regions.has(id)) return `Unknown region "${id}" in save.`;
+    if (run.regionOrder.length > 0 && run.regionIndex >= run.regionOrder.length) return 'The save points to a region that does not exist.';
     if (run.phase === 'battle' && (!run.battle || !run.party[run.battle.activeIndex])) return 'Battle data is missing from the save.';
     if (run.phase === 'reward' && !run.draft) return 'Reward choices are missing from the save.';
     if (run.phase !== 'starter' && run.party.length === 0) return 'The save has no party.';
@@ -280,4 +289,8 @@ export class SaveManager {
   saveSettings(settings: Settings): SaveResult {
     return this.write('settings', settings);
   }
+}
+
+function isBoss(c: Content, id: string): boolean {
+  return c.gymLeaders.has(id) || c.eliteFour.has(id) || c.champions.has(id);
 }

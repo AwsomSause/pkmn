@@ -92,7 +92,7 @@ export const MapNodeSchema = z.object({
   column: z.number().int().min(1),
   /** Position within the column, top to bottom. */
   row: z.number().int().min(0),
-  kind: z.enum(['wild', 'trainer', 'gym']),
+  kind: z.enum(['wild', 'trainer', 'gym', 'elite', 'champion']),
   /** A harder route: stronger enemies, better rewards. */
   harder: z.boolean(),
   /** ids of the nodes in the next column this node leads to. */
@@ -112,11 +112,16 @@ export const StageMapSchema = z.object({
 export type StageMap = z.infer<typeof StageMapSchema>;
 
 export const StageStateSchema = z.object({
-  /** 0 for the first stage of the run. */
+  /** "stage" is a themed stage ending at a gym; "league" is the Elite Four and champion. */
+  kind: z.enum(['stage', 'league']).default('stage'),
+  /** 0 for the first stage of the region (the league comes after the last stage). */
   index: z.number().int().min(0),
+  /** The theme (for the league: the region's last stage theme, used for the champion's team). */
   themeId: z.string(),
-  /** The gym leader waiting at the last column. */
+  /** The gym leader waiting at the last column (for the league: the champion). */
   leaderId: z.string(),
+  /** League only: the Elite Four members, in order. */
+  eliteFour: z.array(z.string()).default([]),
   map: StageMapSchema,
   /** The node the player is on (null before choosing the first one). */
   current: z.string().nullable(),
@@ -163,11 +168,20 @@ export const RunStateSchema = z.object({
   afterDecisions: z.enum(['reward', 'map']),
   /** The current stage and its map (null only for saves from before stage maps existed). */
   stage: StageStateSchema.nullable(),
-  /** Themes and gym leaders already used this run (they never repeat, D6). */
+  /** Themes and bosses (gym leaders, Elite Four, champions) already used this run (they never repeat, D6). */
   usedThemes: z.array(z.string()),
   usedLeaders: z.array(z.string()),
   /** Gym leaders beaten, in order. */
   badges: z.array(z.string()),
+  /** Which campaign shape this run uses ("full", or "dev" for quick testing). */
+  campaignId: z.string(),
+  /** Region ids in the order this run visits them (shuffled per run; the Grand Region is last). */
+  regionOrder: z.array(z.string()),
+  regionIndex: z.number().int().min(0),
+  /** Regions whose champion has been beaten. */
+  regionsCleared: z.array(z.string()),
+  /** True once the last region's champion is beaten. */
+  victory: z.boolean(),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
   /** Run-only additive modifiers for the ten attributes (no effects yet). */

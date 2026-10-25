@@ -16,6 +16,7 @@ import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
 import { addItem } from './items';
 import { addLevels, maxHp } from './pokemon';
+import { runLevelCap } from './regions';
 import type { Rng } from './rng';
 import type { PendingDecision, RunState } from './state';
 
@@ -32,7 +33,7 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
     const stat = reward.effect.stat;
     return run.party.some((p) => (p.vitamins[stat] ?? 0) < content.balance.vitaminMaxStacks);
   }
-  if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < 100);
+  if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < runLevelCap(content, run));
   return true;
 }
 
@@ -44,7 +45,8 @@ export function rewardTargetProblem(content: Content, run: RunState, reward: Rew
   if (reward.effect.kind === 'vitamin' && (mon.vitamins[reward.effect.stat] ?? 0) >= content.balance.vitaminMaxStacks) {
     return 'That Pokémon has already had the maximum.';
   }
-  if (reward.effect.kind === 'levelUp' && mon.level >= 100) return 'That Pokémon is already level 100.';
+  const cap = runLevelCap(content, run);
+  if (reward.effect.kind === 'levelUp' && mon.level >= cap) return `That Pokémon is already at the level cap (${cap}).`;
   return null;
 }
 
@@ -104,7 +106,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
     }
     case 'levelUp': {
       const mon = target!;
-      const result = addLevels(content, mon, effect.levels);
+      const result = addLevels(content, mon, effect.levels, runLevelCap(content, run));
       messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });

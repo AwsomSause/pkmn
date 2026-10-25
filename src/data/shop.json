@@ -1,34 +1,47 @@
 [
  {
   "item": "poke-ball",
-  "price": 100
- },
- {
-  "item": "great-ball",
-  "price": 300
- },
- {
-  "item": "ultra-ball",
-  "price": 600
+  "price": 200,
+  "minBadges": 0
  },
  {
   "item": "potion",
-  "price": 150
+  "price": 200,
+  "minBadges": 0
+ },
+ {
+  "item": "great-ball",
+  "price": 600,
+  "minBadges": 2
  },
  {
   "item": "super-potion",
-  "price": 350
+  "price": 700,
+  "minBadges": 1
  },
  {
   "item": "full-heal",
-  "price": 200
- },
- {
-  "item": "ether",
-  "price": 600
+  "price": 400,
+  "minBadges": 1
  },
  {
   "item": "revive",
-  "price": 1000
+  "price": 2000,
+  "minBadges": 3
+ },
+ {
+  "item": "hyper-potion",
+  "price": 1500,
+  "minBadges": 4
+ },
+ {
+  "item": "ultra-ball",
+  "price": 800,
+  "minBadges": 5
+ },
+ {
+  "item": "full-restore",
+  "price": 3000,
+  "minBadges": 7
  }
 ]

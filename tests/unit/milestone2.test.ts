@@ -15,6 +15,7 @@ import {
   chooseStarter,
   createRun,
   debugGiveItem,
+  debugReplaceEnemy,
   resolveDecision,
   setLead,
   takeTurn,
@@ -24,7 +25,7 @@ import {
 import { currentEnemy, type PokemonInstance, type RunState } from '../../src/core/state';
 import { MIGRATIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, toBattle } from './helpers';
+import { content, scaleAt, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 
@@ -253,7 +254,7 @@ describe('trainer battles', () => {
     expect(evolvedFormAt(content, 'charmander', 15)).toBe('charmander');
     expect(evolvedFormAt(content, 'charmander', 16)).toBe('charmeleon');
     const theme = content.themes.get('fire-psychic')!;
-    const plan = planTrainer(content, RED, theme, 3, 120, new Rng(hashSeed('plan')));
+    const plan = planTrainer(content, RED, theme, 3, scaleAt(7, 19), new Rng(hashSeed('plan')));
     expect(plan.members.length).toBeGreaterThanOrEqual(content.balance.trainerTeam.baseSize);
     expect(plan.members.length).toBeLessThanOrEqual(content.balance.trainerTeam.maxSize);
     for (const m of plan.members) expect(evolvedFormAt(content, m.speciesId, m.level)).toBe(m.speciesId);
@@ -291,7 +292,10 @@ describe('Last Stand Charm', () => {
 
 describe('items outside battle', () => {
   it('a Potion heals 20 HP but never past max, and is used up', () => {
-    let run = skipDecisions(fightOut(newRun('potion')).run);
+    // Only the healing matters here, so make sure this battle can be won.
+    const start = debugReplaceEnemy(content, newRun('potion'), 'rattata', 2);
+    currentEnemy(start.battle!).hp = 1;
+    let run = skipDecisions(fightOut(start).run);
     expect(run.phase).toBe('reward');
     const mon = run.party[0]!;
     const max = maxHp(content, mon);

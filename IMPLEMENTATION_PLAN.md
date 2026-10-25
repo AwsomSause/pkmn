@@ -152,6 +152,17 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Heal stops** fully heal the party and PP, once. One always sits in the column before the gym. **Shops** sell 8 items at placeholder prices (`shop.json`) and can be revisited.
 - Save format is now version 3 for the run. A version 2 run keeps going and gets its first stage map after its next reward.
 
+## 6d. Milestone 4 — one full region and the developer campaign
+
+**Built 2026-10-25.** What changed from the M4 row above, and why:
+- **Regions are data.** `regions.json` lists each region's gym leaders, Elite Four and champions; `league.json` holds the 38 Elite Four members and 13 champions with their speciality types and sprites from the asset pack. Alola has no gyms, so its stages borrow unused leaders from anywhere. The Grand Region has no roster yet and does the same; its final boss and ending stay in M9.
+- **Campaign shapes live in `balance.json`** (`campaigns`): the full campaign (9 shuffled regions + Grand, 8 stages of 20, Elite Four of 4) and the dev campaign (2 regions, 2 stages of 5, Elite Four of 2). The stage map's column count and trainer columns moved there from `stage`.
+- **Difficulty was replaced** (the M3 straight line passed level 100 around stage 8). Now each region climbs from the previous region's cap (level 4 in the first) to 5 under its own cap, fast at first then levelling off: `start + (end − start) × progress^0.6`, with the same variance, archetype offset and bonuses as before (Elite Four +2, champion +4). The first gym's ace is still about level 20; the first champion's ace is 50.
+- **Level cap (D14):** 50 × region number, stopped at 100. Experience and Rare Candy-style rewards stop at the cap. From the third region on everything is level 100 until D14 is answered.
+- **Repeats:** a full run has 80 gyms and 40 Elite Four slots, but the data has 70 gym leaders and 38 Elite Four members (D6 says never repeat). When everyone has been used, the last regions reuse people. More trainers in the data fixes this.
+- **The league gives no badges.** Elite Four and champions pay more prize money (`eliteFourPerLevel`, `championPerLevel`) and use the boss reward odds.
+- Save format is now version 4 for the run. A version 3 run becomes region 1 of a full campaign and gets its shuffled region order when it is next loaded.
+
 ## 7. Risks
 
 | # | Risk | Impact | Mitigation |

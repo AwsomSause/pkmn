@@ -38,10 +38,15 @@ export interface PoolEntry {
  * If the pool is very small it is topped up from balance.wildPool.
  */
 export function themePool(content: Content, theme: Theme): PoolEntry[] {
+  return typesPool(content, theme.types);
+}
+
+/** Like themePool, for any list of types (an Elite Four member's speciality, for example). */
+export function typesPool(content: Content, types: readonly TypeName[]): PoolEntry[] {
   const { dualTypeWeight, minThemePool, wildPool } = content.balance;
   const pool: PoolEntry[] = wildEligibleSpecies(content)
-    .filter((s) => sharesType(s.types, theme.types))
-    .map((s) => ({ speciesId: s.id, weight: theme.types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1 }));
+    .filter((s) => sharesType(s.types, types))
+    .map((s) => ({ speciesId: s.id, weight: types.length > 1 && types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1 }));
   if (pool.length < minThemePool) {
     for (const id of wildPool) if (!pool.some((p) => p.speciesId === id)) pool.push({ speciesId: id, weight: 1 });
   }
@@ -50,7 +55,14 @@ export function themePool(content: Content, theme: Theme): PoolEntry[] {
 
 /** Picks a species from the theme, preferring ones that share a type with `prefer` (e.g. a trainer's speciality). */
 export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[]): string {
-  const pool = themePool(content, theme);
+  return pickFromPool(content, themePool(content, theme), rng, prefer);
+}
+
+export function pickTypeSpecies(content: Content, types: readonly TypeName[], rng: Rng): string {
+  return pickFromPool(content, typesPool(content, types), rng);
+}
+
+function pickFromPool(content: Content, pool: PoolEntry[], rng: Rng, prefer?: readonly TypeName[]): string {
   const preferred = prefer ? pool.filter((p) => sharesType(content.species.get(p.speciesId)!.types, prefer)) : [];
   const from = preferred.length > 0 ? preferred : pool;
   return rng.weighted(from.map((p) => ({ item: p.speciesId, weight: p.weight })));
@@ -71,15 +83,18 @@ export function trainerClassesFor(content: Content, theme: Theme): TrainerClass[
 }
 
 /**
- * A gym leader not met yet this run, preferring one whose speciality matches
- * the theme. Their team is always drawn from the theme.
+ * A gym leader not met yet this run. In order of preference: one from this
+ * region whose speciality matches the theme, any from this region, any whose
+ * speciality matches, anyone unused, then anyone. Their team is always drawn
+ * from the theme. `regionPool` empty means the region has no leaders of its own.
  */
-export function pickGymLeader(content: Content, theme: Theme, used: readonly string[], rng: Rng): GymLeader {
+export function pickGymLeader(content: Content, theme: Theme, used: readonly string[], rng: Rng, regionPool: readonly string[] = []): GymLeader {
   const all = [...content.gymLeaders.values()];
   const fresh = all.filter((l) => !used.includes(l.id));
-  const candidates = fresh.length > 0 ? fresh : all;
-  const matching = candidates.filter((l) => sharesType(l.types, theme.types));
-  return rng.pick(matching.length > 0 ? matching : candidates);
+  const local = fresh.filter((l) => regionPool.includes(l.id));
+  const matches = (list: GymLeader[]) => list.filter((l) => sharesType(l.types, theme.types));
+  for (const list of [matches(local), local, matches(fresh), fresh, all]) if (list.length > 0) return rng.pick(list);
+  throw new Error('There are no gym leaders');
 }
 
 /** Battle background asset for a theme: its first type's arena. */

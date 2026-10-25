@@ -14,10 +14,11 @@ export function readCatalogInputs(): CatalogInputs {
   const items = readJson('items.json') as { iconAssetId: string }[];
   const trainers = readJson('trainers.json') as { spriteAssetId: string }[];
   const gymLeaders = readJson('gymLeaders.json') as { spriteAssetId: string }[];
+  const league = readJson('league.json') as Record<'eliteFour' | 'champions', { spriteAssetId: string }[]>;
   const themes = readJson('themes.json') as { arenas: Record<string, string> };
   return {
     speciesDex: species.map((s) => s.dex),
-    trainerAssetIds: [...archetypes, ...trainers, ...gymLeaders].map((a) => a.spriteAssetId),
+    trainerAssetIds: [...archetypes, ...trainers, ...gymLeaders, ...league.eliteFour, ...league.champions].map((a) => a.spriteAssetId),
     itemAssetIds: [...rewards, ...items].map((r) => r.iconAssetId),
     backgroundAssetIds: Object.values(themes.arenas),
   };

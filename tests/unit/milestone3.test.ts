@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { getArchetype } from '../../src/core/archetypes';
-import { enemyLevel, planGymLeader, planTrainer, runProgress } from '../../src/core/encounters';
+import { enemyLevel, planGymLeader, planTrainer } from '../../src/core/encounters';
 import { generateStageMap, nextChoices, validateStageMap } from '../../src/core/map';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
@@ -24,9 +24,10 @@ import { pickGymLeader, themePool, trainerClassesFor, wildEligibleSpecies } from
 import { TYPE_NAMES } from '../../src/core/contentSchema';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, toBattle } from './helpers';
+import { content, scaleAt, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
+const FULL = content.campaigns.get('full')!;
 
 function newRun(seed = 'm3'): RunState {
   return chooseStarter(content, createRun(content, { runId: 'run-m3', seed, archetypeId: 'red' }), 0);
@@ -103,7 +104,7 @@ describe('stage themes', () => {
   it('trainer teams come from the theme', () => {
     const theme = content.themes.get('electric-ghost')!;
     for (let i = 0; i < 50; i++) {
-      const plan = planTrainer(content, RED, theme, 0, 5, new Rng(hashSeed(`t-${i}`)));
+      const plan = planTrainer(content, RED, theme, 0, scaleAt(0, 5), new Rng(hashSeed(`t-${i}`)));
       for (const m of plan.members) {
         const base = themePool(content, theme).map((p) => p.speciesId);
         const species = content.species.get(m.speciesId)!;
@@ -129,11 +130,11 @@ describe('stage themes', () => {
 describe('stage map', () => {
   it('is always valid: 20 levels per route, exactly 2 trainers, one gym', () => {
     for (let i = 0; i < 300; i++) {
-      const map = generateStageMap(content, new Rng(hashSeed(`map-${i}`)));
+      const map = generateStageMap(content, FULL, new Rng(hashSeed(`map-${i}`)));
       expect(validateStageMap(map), `seed map-${i}`).toEqual([]);
       expect(map.nodes.filter((n) => n.kind === 'gym')).toHaveLength(1);
       for (const route of allRoutes(map).slice(0, 200)) {
-        expect(route).toHaveLength(content.balance.stage.columns);
+        expect(route).toHaveLength(FULL.columns);
         const kinds = route.map((id) => map.nodes.find((n) => n.id === id)!.kind);
         expect(kinds.filter((k) => k === 'trainer')).toHaveLength(2);
         expect(kinds.at(-1)).toBe('gym');
@@ -142,15 +143,15 @@ describe('stage map', () => {
   });
 
   it('the same seed builds the same map', () => {
-    const a = generateStageMap(content, new Rng(hashSeed('same')));
-    const b = generateStageMap(content, new Rng(hashSeed('same')));
+    const a = generateStageMap(content, FULL, new Rng(hashSeed('same')));
+    const b = generateStageMap(content, FULL, new Rng(hashSeed('same')));
     expect(a).toEqual(b);
   });
 
   it('has forks, and a healing spot right before the gym', () => {
     let forks = 0;
     for (let i = 0; i < 50; i++) {
-      const map = generateStageMap(content, new Rng(hashSeed(`fork-${i}`)));
+      const map = generateStageMap(content, FULL, new Rng(hashSeed(`fork-${i}`)));
       forks += map.nodes.filter((n) => n.next.length > 1).length;
       for (const n of map.nodes.filter((n) => n.column === map.columns - 1)) expect(n.sides.some((s) => s.kind === 'heal')).toBe(true);
     }
@@ -158,7 +159,7 @@ describe('stage map', () => {
   });
 
   it('the validator catches broken maps', () => {
-    const map = generateStageMap(content, new Rng(hashSeed('broken')));
+    const map = generateStageMap(content, FULL, new Rng(hashSeed('broken')));
     const deadEnd = structuredClone(map);
     deadEnd.nodes.find((n) => n.column === 3)!.next = [];
     expect(validateStageMap(deadEnd).join()).toMatch(/dead end/);
@@ -171,12 +172,12 @@ describe('stage map', () => {
 describe('difficulty', () => {
   it('levels rise with progress and the breakdown adds up', () => {
     const rng = () => new Rng(hashSeed('diff'));
-    const early = enemyLevel(content, RED, runProgress(content, 0, 1), 0, rng());
-    const late = enemyLevel(content, RED, runProgress(content, 0, 19), 0, rng());
+    const early = enemyLevel(content, RED, scaleAt(0, 1), 0, rng());
+    const late = enemyLevel(content, RED, scaleAt(0, 19), 0, rng());
     expect(late.level).toBeGreaterThan(early.level);
     for (const b of [early, late]) {
       expect(b.unclamped).toBe(Math.round(b.base + b.progress) + b.variance + b.archetypeOffset + b.bonus);
-      expect(b.level).toBe(Math.max(content.balance.difficulty.minLevel, Math.min(content.balance.difficulty.maxLevel, Math.round(b.unclamped))));
+      expect(b.level).toBe(Math.max(content.balance.difficulty.minLevel, Math.min(50, Math.round(b.unclamped))));
     }
   });
 
@@ -184,7 +185,7 @@ describe('difficulty', () => {
     const theme = content.themes.get('water-normal') ?? content.themes.get('normal-water')!;
     const leader = pickGymLeader(content, theme, [], new Rng(hashSeed('ace')));
     for (let i = 0; i < 20; i++) {
-      const plan = planGymLeader(content, RED, theme, leader.id, 0, runProgress(content, 0, 20), new Rng(hashSeed(`ace-${i}`)));
+      const plan = planGymLeader(content, RED, theme, leader.id, 0, scaleAt(0, 20), new Rng(hashSeed(`ace-${i}`)));
       const top = Math.max(...plan.members.map((m) => m.level));
       expect(top).toBeGreaterThanOrEqual(18);
       expect(top).toBeLessThanOrEqual(23);
@@ -223,7 +224,7 @@ describe('map flow', () => {
   });
 
   it('a healing spot heals the party once', () => {
-    let run = debugJumpToColumn(newRun('heal'), content.balance.stage.columns);
+    let run = debugJumpToColumn(newRun('heal'), FULL.columns);
     run.party[0]!.hp = 1;
     run.party[0]!.moves[0]!.pp = 0;
     const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
@@ -243,14 +244,14 @@ describe('map flow', () => {
     while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
     const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
     node.sides.push({ id: 'test-shop', kind: 'shop', used: false });
-    run.money = 250;
+    run.money = 300;
     run = visitSide(content, run, 'test-shop').run;
     expect(run.phase).toBe('shop');
     const before = run.inventory['poke-ball'] ?? 0;
     run = buyItem(content, run, 'poke-ball').run;
     expect(run.inventory['poke-ball']).toBe(before + 1);
-    expect(run.money).toBe(150);
-    expect(() => buyItem(content, run, 'ultra-ball')).toThrow(/need/);
+    expect(run.money).toBe(100);
+    expect(() => buyItem(content, run, 'potion')).toThrow(/need/);
     run = leaveShop(run);
     expect(run.phase).toBe('map');
     // A shop can be visited again.
