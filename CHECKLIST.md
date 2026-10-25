@@ -45,8 +45,8 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Luck and the other nine attributes are stored but have no effect until their formulas are approved.
 - Move animations from the supplied pack are not played yet (hit flashes only).
 - ~~Prototype learnsets are hand-written and simplified to supported moves~~ (full data import done in Milestone 6).
-- Damage uses whole-number rounding after each step; the main games use a slightly different rounding, so results can differ by about 1 HP.
-- If both Pokémon faint in the same turn (e.g. from recoil), the player wins.
+- ~~Damage uses whole-number rounding after each step~~ (main-game rounding since Milestone 8.75 part C).
+- ~~If both Pokémon faint in the same turn, the player wins~~ (since Milestone 8.75 part C: the user of Explosion loses, the user of a recoil move wins; otherwise the player wins).
 
 ## Milestone 2 — Battle completeness ✅
 
@@ -226,7 +226,9 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 
 - [x] B. Friendship on each Pokémon (gains from levels, wins and vitamins; loss on fainting); Charisma raises friendship gains; real friendship evolutions at 220 (Soothe Bell kept); hearts on the party screen; run save v8
 - [ ] B. N's friendship passive and friendship event outcomes (with part A, the events)
-- [ ] C. Unsupported moves in tiers (611); abilities; held items; enemy trainers use items and switch; damage rounding and double-faint rule
+- [x] C1. Moves tier 1 (85 moves): confusion, multi-hit, recharge, healing, Protect, one-hit KOs, Explosion, False Swipe, binding, Leech Seed, Flail, Brine, Psyshock, Chip Away, always-crit; main-game damage rounding; both-faint rule
+- [ ] C2. Two-turn and lock-in moves (Solar Beam, Fly, Thrash, Outrage), weather and terrain, the rare moves (530 still unsupported, 89 of them Z-Moves and Max Moves for M8.5)
+- [ ] C3. Abilities; enemy trainers use items and switch on purpose (held items are part of the item effects work)
 - [ ] D. Bank tiers 1–5; Scavenger, Fortune and Survival licenses; challenge modifiers and challenge campaigns; contracts; item catalog and the other Bank services; spending candies; more preparation tokens
 - [ ] E. Pokédex & Research room; starter mastery and trainer mastery tracks; remaining draft rules; starter events; Special Specimen starters; achievements checked as they happen
 - [x] F. Oak's and N's sprites in the game; both listed in the Trainer Archive as "coming later"

@@ -244,7 +244,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     else if (!s.learnset.some((e) => usable(e.move))) problems.push(`balance.json species "${id}" has no supported moves`);
   }
   for (const m of content.moves.values()) {
-    if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage) {
+    if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage && !m.effects.ohko && !m.effects.lowHpPower) {
       problems.push(`damaging move "${m.id}" has no power`);
     }
   }

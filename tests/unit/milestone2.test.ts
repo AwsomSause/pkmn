@@ -362,20 +362,21 @@ describe('rewards, move learning and evolution', () => {
 
   it('a Pokémon that knows four moves asks before learning a new one (offered once)', () => {
     const run = inRewardPhase('learn');
-    // Charmeleon knows smokescreen, dragon-breath, metal-claw and leer at 24, and learns fire-fang at 25.
+    // Charmeleon knows four moves at 24, and learns fire-fang at 25.
     run.party[0] = createPokemon(content, 'charmeleon', 24, run.party[0]!.uid);
     expect(run.party[0]!.moves).toHaveLength(4);
+    const known = run.party[0]!.moves.map((m) => m.id);
     run.draft = ['rare-candy'];
     const asked = chooseReward(content, run, 0, 0).run;
     expect(asked.phase).toBe('decision');
     expect(asked.pending).toEqual([{ kind: 'learnMove', uid: asked.party[0]!.uid, moveId: 'fire-fang' }]);
 
     const learned = resolveDecision(content, asked, { kind: 'forgetMove', moveIndex: 1 }).run;
-    expect(learned.party[0]!.moves.map((m) => m.id)).toEqual(['smokescreen', 'fire-fang', 'metal-claw', 'leer']);
+    expect(learned.party[0]!.moves.map((m) => m.id)).toEqual([known[0], 'fire-fang', known[2], known[3]]);
     expect(learned.phase).toBe('map');
 
     const skipped = resolveDecision(content, asked, { kind: 'skipMove' }).run;
-    expect(skipped.party[0]!.moves.map((m) => m.id)).toEqual(['smokescreen', 'dragon-breath', 'metal-claw', 'leer']);
+    expect(skipped.party[0]!.moves.map((m) => m.id)).toEqual(known);
   });
 
   it('evolving and levelling up at once does not offer the same move twice', () => {

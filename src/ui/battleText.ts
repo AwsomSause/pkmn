@@ -66,6 +66,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
           return `${who(e.side)} is paralyzed! It can't move!`;
         case 'flinch':
           return `${who(e.side)} flinched and couldn't move!`;
+        case 'recharge':
+          return `${who(e.side)} must recharge!`;
       }
       return null;
     case 'wake':
@@ -84,6 +86,36 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
     case 'endure':
       return `${who(e.side)} hung on for you, out of love!`;
+    case 'confused':
+      return `${who(e.side)} became confused!`;
+    case 'confusion':
+      return `${who(e.side)} is confused!`;
+    case 'confusionEnd':
+      return `${who(e.side)} snapped out of its confusion!`;
+    case 'confusionHit':
+      return 'It hurt itself in its confusion!';
+    case 'hits':
+      return `The Pokémon was hit ${e.count} time${e.count === 1 ? '' : 's'}!`;
+    case 'heal':
+      return `${who(e.side)} had its HP restored.`;
+    case 'protect':
+      return `${who(e.side)} protected itself!`;
+    case 'protected':
+      return `${who(e.side)} protected itself!`;
+    case 'ohko':
+      return "It's a one-hit KO!";
+    case 'selfKo':
+      return null;
+    case 'bound':
+      return `${who(e.side)} was trapped by ${content.moves.get(e.moveId)?.name ?? 'the move'}!`;
+    case 'bindDamage':
+      return `${who(e.side)} is hurt by the bind!`;
+    case 'bindEnd':
+      return `${who(e.side)} was freed!`;
+    case 'seeded':
+      return `${who(e.side)} was seeded!`;
+    case 'seedDamage':
+      return `${who(e.side)}'s health is sapped by Leech Seed!`;
     case 'switchOut':
       return e.side === 'player' ? `Come back, ${names.player}!` : null;
     case 'switchIn':
