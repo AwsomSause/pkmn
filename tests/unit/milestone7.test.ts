@@ -92,7 +92,8 @@ describe('effects: each point is worth the full percentage', () => {
     expect(fx({ strength: 1 }).physicalDamage).toBeCloseTo(1.01);
     expect(fx({ intelligence: 50 }).specialDamage).toBeCloseTo(1.5);
     expect(fx({ speed: 100 }).speed).toBeCloseTo(2);
-    expect(fx({ charisma: 30 }).price).toBeCloseTo(0.7);
+    expect(fx({ charisma: 30 }).price).toBeCloseTo(0.85); // half a percent per point (balance pass, 2026-10-25)
+    expect(fx({ charisma: 100 }).price).toBeCloseTo(0.5);
     expect(fx({ charisma: 30 }).exp).toBeCloseTo(1.3);
     expect(fx({ love: 100 }).endureChance).toBeCloseTo(0.1);
   });
@@ -104,7 +105,7 @@ describe('effects: each point is worth the full percentage', () => {
     expect(rage.healing).toBe(1);
     const peace = fx({ ragePeace: -10 });
     expect(peace.healing).toBeCloseTo(1.2);
-    expect(peace.damageTaken).toBeCloseTo(0.9);
+    expect(peace.damageTaken).toBeCloseTo(0.95); // half a percent per point (balance pass, 2026-10-25)
     expect(peace.damageDealt).toBe(1);
     expect(fx({ goodEvil: 10 }).catchRate).toBeCloseTo(1.2);
     expect(fx({ goodEvil: -100 }).money).toBeCloseTo(2);
@@ -146,7 +147,7 @@ describe('effects in the game', () => {
   it('Charisma lowers shop prices', () => {
     const entry = content.shop.find((e) => e.item === 'poke-ball')!;
     expect(shopPrice(content, newRun('c0'), entry)).toBe(entry.price);
-    expect(shopPrice(content, newRun('c1', { charisma: 10 }), entry)).toBe(Math.round(entry.price * 0.9));
+    expect(shopPrice(content, newRun('c1', { charisma: 10 }), entry)).toBe(Math.round(entry.price * 0.95));
   });
 
   function battleDamage(attributes: Partial<Attributes>, seed: string) {
@@ -177,9 +178,11 @@ describe('effects in the game', () => {
     expect(furious.dealt).toBeGreaterThan(strong.dealt * 2);
   });
 
-  it('Peace lowers damage taken, to 1 per hit at Peace 100', () => {
+  it('Peace lowers damage taken, to half at Peace 100', () => {
     expect(battleDamage({ ragePeace: -50 }, 'dmg').taken).toBeLessThan(battleDamage({}, 'dmg').taken);
-    expect(battleDamage({ ragePeace: -100 }, 'dmg').taken).toBe(1);
+    const full = battleDamage({}, 'dmg').taken;
+    expect(battleDamage({ ragePeace: -100 }, 'dmg').taken).toBeGreaterThanOrEqual(Math.floor(full * 0.5) - 1);
+    expect(battleDamage({ ragePeace: -100 }, 'dmg').taken).toBeLessThanOrEqual(Math.ceil(full * 0.5) + 1);
   });
 
   it('counts enemies defeated by type, and stats raised, for growth', () => {

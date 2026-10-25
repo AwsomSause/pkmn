@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T19:41:27.327Z",
+  "generatedAt": "2026-10-25T19:59:34.069Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -69168,6 +69168,18 @@
       "path": "images/bosses/cynthia-gen7.png"
     },
     {
+      "id": "boss.oak",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/oak.png"
+    },
+    {
+      "id": "boss.n",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/n.png"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -69997,12 +70009,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/alder.png"
-    },
-    {
-      "id": "boss.n",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/n.png"
     },
     {
       "id": "boss.ghetsis",

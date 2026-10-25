@@ -201,5 +201,53 @@
     "available": false,
     "spriteAssetId": "boss.cynthia-gen7",
     "modifiers": []
+  },
+  {
+    "id": "oak",
+    "name": "Professor Oak",
+    "title": "The Researcher",
+    "description": "Earns more research from new Pokémon, but less money from ordinary battles.",
+    "pros": [
+      "More Research Points from new species and forms",
+      "Once per stage, preview an unknown encounter"
+    ],
+    "cons": [
+      "Less money from ordinary battles"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 100
+    },
+    "unlockText": "Discover 100 species",
+    "unlockCost": 500,
+    "available": false,
+    "spriteAssetId": "boss.oak",
+    "modifiers": []
+  },
+  {
+    "id": "n",
+    "name": "N",
+    "title": "The Friend",
+    "description": "Gets stronger friendship effects and gentler event outcomes.",
+    "pros": [
+      "Stronger friendship effects",
+      "Friendship opens alternate event outcomes"
+    ],
+    "cons": [
+      "Some aggressive event choices are unavailable"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "caughtKept",
+      "atLeast": 50
+    },
+    "unlockText": "Keep 50 Pokémon you catch (a stand-in until the friendship challenge exists)",
+    "unlockCost": 500,
+    "available": false,
+    "spriteAssetId": "boss.n",
+    "modifiers": []
   }
 ]

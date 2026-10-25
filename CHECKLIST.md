@@ -124,7 +124,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 
 ### Known limits in Milestone 4 (by design, documented)
 
-- Levels stop at 100 until D14 (levels above 100) is decided, so regions 3 onward are all level 100.
+- Levels stop at 100 for now, so regions 3 onward are all level 100. D14 is decided (up to 500) and is built in Milestone 8.75.
 - ~~A full run needs more gym leaders (80) and Elite Four members (40) than the data has (70 and 38); the last regions reuse people.~~ Fixed by the boss teams below (229 bosses).
 - The Grand Region has no roster, final boss or ending yet (M9); it plays like a regular region with borrowed leaders.
 - ~~Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.~~ Fixed by the boss teams below.
@@ -147,7 +147,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 ### Known limits in Milestone 5 (by design, documented)
 
 - Achievements are checked at the end of a run, not the moment they happen.
-- Oak and N aren't in the Archive until they have sprites; Cynthia's passive comes later.
+- ~~Oak and N aren't in the Archive until they have sprites~~ (sprites supplied; both are in the Archive as "coming later"). Cynthia's, Oak's and N's passives come in Milestone 8.75.
 - Research Points pile up but have nothing to buy until the Starter Laboratory (M5.5).
 
 ## Milestone 5.5 — Run-Prep ✅
@@ -224,14 +224,16 @@ See IMPLEMENTATION_PLAN.md §5.
 
 Everything planned but not yet in a milestone, gathered on 2026-10-25. Details in IMPLEMENTATION_PLAN.md §6j.
 
-- [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes
-- [ ] B. Friendship on each Pokémon; Charisma raises friendship; "Between-Level" interactions; real friendship evolutions; N's passive
+- [ ] B. Friendship on each Pokémon; Charisma raises friendship; real friendship evolutions; N's passive
 - [ ] C. Unsupported moves in tiers (611); abilities; held items; enemy trainers use items and switch; damage rounding and double-faint rule
 - [ ] D. Bank tiers 1–5; Scavenger, Fortune and Survival licenses; challenge modifiers and challenge campaigns; contracts; item catalog and the other Bank services; spending candies; more preparation tokens
 - [ ] E. Pokédex & Research room; starter mastery and trainer mastery tracks; remaining draft rules; starter events; Special Specimen starters; achievements checked as they happen
-- [ ] F. Cynthia's passive; Oak and N (need sprites); Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker; Trainer Research
-- [ ] G. Party-strength correction in difficulty; D14 (levels above 100); Peace 100 and Charisma 100; D6 custom region list
+- [x] F. Oak's and N's sprites in the game; both listed in the Trainer Archive as "coming later"
+- [ ] F. Cynthia's, Oak's and N's passives; Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker; Trainer Research
+- [x] G. Peace and Charisma balance pass: half a percent per point (Peace 100 halves damage, Charisma 100 is half price)
+- [ ] G. Party-strength correction in difficulty; levels above 100 up to 500 (D14); custom regions (Torren and others, D6)
 - [ ] H. Later Out-of-Run systems (wardrobe, hub upgrades, Hall of Fame, Berry Garden, Training Center, Intelligence Board, Item Museum, Research Tree, Prestige, Legacy, Trainer Network, Rival Ghosts, shared seeds)
+- [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes; "Between-Level" interactions — built last, designed with the director first in the Events and map stops plan
 - [ ] Optional: IVs/EVs/natures; gender, time of day and weather
 
 ## Milestone 9 — Grand Region, ending, deploy (not started)
