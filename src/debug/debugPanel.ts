@@ -4,6 +4,7 @@
 import type Phaser from 'phaser';
 import { calcStats } from '../core/pokemon';
 import { currentColumn, findNode } from '../core/map';
+import { runLevelCap } from '../core/regions';
 import { currentEnemy } from '../core/state';
 import { getTheme, themePool } from '../core/themes';
 import type { GameSession } from '../game/GameSession';
@@ -61,14 +62,24 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
       if (run.draft) lines.push(`draft: ${run.draft.join(', ')}`);
       panel.append(el('pre', { textContent: lines.join('\n') }));
 
+      const regionLines = [
+        `campaign: ${run.campaignId}  ·  region ${run.regionIndex + 1}/${run.regionOrder.length}: ${run.regionOrder[run.regionIndex] ?? '-'}  ·  level cap ${runLevelCap(content, run)}`,
+        `region order: ${run.regionOrder.join(' → ') || '(not set yet)'}`,
+        `regions cleared: ${run.regionsCleared.join(', ') || '-'}${run.victory ? '  ·  VICTORY' : ''}`,
+      ];
+      panel.append(el('h3', { textContent: 'Region' }), el('pre', { textContent: regionLines.join('\n') }));
+      if (run.phase === 'map' && run.stage?.kind === 'stage') {
+        panel.append(el('button', { textContent: 'Jump to the Pokémon League', onclick: () => { try { session.debugJumpToLeague(); goTo('Map'); } catch (err) { alert(String(err)); } render(); } }));
+      }
+
       if (run.stage) {
         const stage = run.stage;
         const theme = getTheme(content, stage.themeId);
         const node = stage.current ? findNode(stage.map, stage.current) : null;
         const pool = themePool(content, theme).map((p) => `${p.speciesId}${p.weight > 1 ? `×${p.weight}` : ''}`).join(', ');
         const stageLines = [
-          `stage ${stage.index + 1}: ${theme.name} (${theme.types.join('/')})`,
-          `gym leader: ${stage.leaderId}  ·  badges: ${run.badges.join(', ') || '-'}`,
+          stage.kind === 'league' ? `Pokémon League (champion's last theme: ${theme.name})` : `stage ${stage.index + 1}: ${theme.name} (${theme.types.join('/')})`,
+          stage.kind === 'league' ? `elite four: ${stage.eliteFour.join(', ')}  ·  champion: ${stage.leaderId}` : `gym leader: ${stage.leaderId}  ·  badges: ${run.badges.join(', ') || '-'}`,
           `level ${currentColumn(stage)}/${stage.map.columns}  ·  trainer columns: ${stage.map.trainerColumns.join(', ')}`,
           `node: ${node ? `${node.id} — ${node.note}` : '(start)'}`,
           `wild pool: ${pool}`,
@@ -111,9 +122,10 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
     panel.append(el('h3', { textContent: 'New run with seed' }));
     const seedInput = el('input', { placeholder: 'seed (blank = random)' });
     const archetypeSelect = el('select', {}, [...content.archetypes.values()].map((a) => el('option', { value: a.id, textContent: a.name })));
-    panel.append(seedInput, archetypeSelect, el('button', {
+    const campaignSelect = el('select', {}, [...content.campaigns.values()].map((c) => el('option', { value: c.id, textContent: c.name })));
+    panel.append(seedInput, archetypeSelect, campaignSelect, el('button', {
       textContent: 'Start',
-      onclick: () => { session.newRun(archetypeSelect.value, seedInput.value.trim() || undefined); goTo('StarterSelect'); render(); },
+      onclick: () => { session.newRun(archetypeSelect.value, seedInput.value.trim() || undefined, campaignSelect.value); goTo('StarterSelect'); render(); },
     }));
 
     // --- assets

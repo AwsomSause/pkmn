@@ -25,7 +25,8 @@ Controls: **arrow keys** to move, **Enter / Space / Z** to confirm, **Esc / X** 
 Handy extras:
 
 - Add `?seed=anything` to the address to replay the exact same run (same starters, encounters and rewards).
-- Press **F2** (or **`**) in dev mode to open the debug panel: run state, the stage theme and map, how each enemy's level was worked out, jump to any column (e.g. straight to the gym), heal, swap the wild Pokémon, give items, add a Pokémon to the party, start a seeded run, and see missing assets. In a production build, add `?debug=1` to the address to enable it.
+- Add `?campaign=dev` to play the short developer campaign (2 regions of 2 short stages each), so you can see the Elite Four, the champion, the next region and the victory screen in a few minutes.
+- Press **F2** (or **`**) in dev mode to open the debug panel: run state, the stage theme and map, how each enemy's level was worked out, jump to any column (e.g. straight to the gym), jump to the Pokémon League, heal, swap the wild Pokémon, give items, add a Pokémon to the party, start a seeded run, and see missing assets. In a production build, add `?debug=1` to the address to enable it.
 
 ## Checking the code
 

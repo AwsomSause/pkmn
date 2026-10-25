@@ -105,6 +105,31 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Gym leaders use the theme's Pokémon rather than their famous teams.
 - After the first gym the run continues into more stages, but regions, the Elite Four and the champion come in M4.
 
-## Milestone 4+ — not started
+## Milestone 4 — One full region + dev campaign ✅
+
+- [x] Regions in data (Kanto to Paldea, Alola, Grand) with their own gym leaders, Elite Four and champions; 51 league sprites from the asset pack
+- [x] Shuffled region order per run, each region once, Grand Region last
+- [x] 8 stages per region, then the Pokémon League map: Elite Four in a line, then the champion
+- [x] Full heal on entering the league and after every Elite Four win; a reward draft after each win (D13)
+- [x] Elite Four teams from their speciality type; champions from their speciality or the region's stage themes
+- [x] Bosses never repeat in a run across gym leader, Elite Four and champion roles (D6), as long as the data has enough people
+- [x] Level cap per region (D14): 50, then 100; experience and level-up rewards stop at the cap
+- [x] Difficulty curve per region (first gym ace about 20, first champion 50)
+- [x] Region transition after the champion, and a victory screen after the last one
+- [x] Developer campaign (2 regions × 2 stages × 5 levels, Elite Four of 2): `?campaign=dev` or the debug panel
+- [x] Shop stock unlocks with badges; prices now follow the main games
+- [x] Map and battle screens show the region, level cap, league, Elite Four and champion titles and sprites
+- [x] Debug panel: region info, jump to the league, start a run in either campaign
+- [x] Save format v4 with automatic upgrade of v3 runs
+
+### Known limits in Milestone 4 (by design, documented)
+
+- Levels stop at 100 until D14 (levels above 100) is decided, so regions 3 onward are all level 100.
+- A full run needs more gym leaders (80) and Elite Four members (40) than the data has (70 and 38); the last regions reuse people.
+- The Grand Region has no roster, final boss or ending yet (M9); it plays like a regular region with borrowed leaders.
+- Gym leaders, Elite Four and champions use type- or theme-based teams rather than their famous teams.
+- The profile doesn't count wins yet (M5).
+
+## Milestone 5+ — not started
 
 See IMPLEMENTATION_PLAN.md §5.

@@ -1,0 +1,230 @@
+[
+ {
+  "id": "kanto",
+  "name": "Kanto",
+  "gymLeaders": [
+   "brock",
+   "misty",
+   "lt-surge",
+   "erika",
+   "koga",
+   "sabrina",
+   "blaine",
+   "giovanni"
+  ],
+  "eliteFour": [
+   "lorelei",
+   "bruno",
+   "agatha"
+  ],
+  "champions": [
+   "lance"
+  ],
+  "grand": false
+ },
+ {
+  "id": "johto",
+  "name": "Johto",
+  "gymLeaders": [
+   "falkner",
+   "bugsy",
+   "whitney",
+   "morty",
+   "chuck",
+   "jasmine",
+   "pryce",
+   "clair"
+  ],
+  "eliteFour": [
+   "will",
+   "koga",
+   "karen"
+  ],
+  "champions": [
+   "lance"
+  ],
+  "grand": false
+ },
+ {
+  "id": "hoenn",
+  "name": "Hoenn",
+  "gymLeaders": [
+   "roxanne",
+   "brawly",
+   "wattson",
+   "flannery",
+   "norman",
+   "winona",
+   "tate",
+   "juan"
+  ],
+  "eliteFour": [
+   "sidney",
+   "phoebe",
+   "glacia",
+   "drake"
+  ],
+  "champions": [
+   "steven",
+   "wallace"
+  ],
+  "grand": false
+ },
+ {
+  "id": "sinnoh",
+  "name": "Sinnoh",
+  "gymLeaders": [
+   "roark",
+   "gardenia",
+   "maylene",
+   "crasher-wake",
+   "fantina",
+   "byron",
+   "candice",
+   "volkner"
+  ],
+  "eliteFour": [
+   "aaron",
+   "bertha",
+   "flint",
+   "lucian"
+  ],
+  "champions": [
+   "cynthia"
+  ],
+  "grand": false
+ },
+ {
+  "id": "unova",
+  "name": "Unova",
+  "gymLeaders": [
+   "cilan",
+   "chili",
+   "cress",
+   "lenora",
+   "burgh",
+   "elesa",
+   "clay",
+   "skyla",
+   "brycen",
+   "drayden",
+   "roxie",
+   "marlon"
+  ],
+  "eliteFour": [
+   "shauntal",
+   "grimsley",
+   "caitlin",
+   "marshal"
+  ],
+  "champions": [
+   "alder",
+   "iris"
+  ],
+  "grand": false
+ },
+ {
+  "id": "kalos",
+  "name": "Kalos",
+  "gymLeaders": [
+   "viola",
+   "grant",
+   "korrina",
+   "ramos",
+   "clemont",
+   "valerie",
+   "olympia",
+   "wulfric"
+  ],
+  "eliteFour": [
+   "malva",
+   "siebold",
+   "wikstrom",
+   "drasna"
+  ],
+  "champions": [
+   "diantha"
+  ],
+  "grand": false
+ },
+ {
+  "id": "alola",
+  "name": "Alola",
+  "gymLeaders": [],
+  "eliteFour": [
+   "hala",
+   "olivia",
+   "acerola",
+   "kahili",
+   "molayne"
+  ],
+  "champions": [
+   "kukui",
+   "hau"
+  ],
+  "grand": false
+ },
+ {
+  "id": "galar",
+  "name": "Galar",
+  "gymLeaders": [
+   "milo",
+   "nessa",
+   "kabu",
+   "bea",
+   "allister",
+   "opal",
+   "gordie",
+   "melony",
+   "piers",
+   "raihan"
+  ],
+  "eliteFour": [
+   "marnie",
+   "bede",
+   "mustard"
+  ],
+  "champions": [
+   "leon"
+  ],
+  "grand": false
+ },
+ {
+  "id": "paldea",
+  "name": "Paldea",
+  "gymLeaders": [
+   "katy",
+   "brassius",
+   "iono",
+   "kofu",
+   "larry",
+   "ryme",
+   "tulip",
+   "grusha"
+  ],
+  "eliteFour": [
+   "rika",
+   "poppy",
+   "larry",
+   "hassel",
+   "crispin",
+   "amarys",
+   "lacey",
+   "drayton"
+  ],
+  "champions": [
+   "geeta",
+   "nemona",
+   "kieran"
+  ],
+  "grand": false
+ },
+ {
+  "id": "grand",
+  "name": "Grand Region",
+  "gymLeaders": [],
+  "eliteFour": [],
+  "champions": [],
+  "grand": true
+ }
+]

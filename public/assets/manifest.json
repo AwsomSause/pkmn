@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T15:23:24.558Z",
+  "generatedAt": "2026-10-25T16:22:02.653Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -4291,6 +4291,349 @@
       "category": "trainer",
       "path": "images/trainer/grusha.png",
       "atlasPath": "images/trainer/grusha.json"
+    },
+    {
+      "id": "trainer.lorelei",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lorelei.png",
+      "atlasPath": "images/trainer/lorelei.json"
+    },
+    {
+      "id": "trainer.bruno",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/bruno.png",
+      "atlasPath": "images/trainer/bruno.json"
+    },
+    {
+      "id": "trainer.agatha",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/agatha.png",
+      "atlasPath": "images/trainer/agatha.json"
+    },
+    {
+      "id": "trainer.will",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/will.png",
+      "atlasPath": "images/trainer/will.json"
+    },
+    {
+      "id": "trainer.karen",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/karen.png",
+      "atlasPath": "images/trainer/karen.json"
+    },
+    {
+      "id": "trainer.sidney",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/sidney.png",
+      "atlasPath": "images/trainer/sidney.json"
+    },
+    {
+      "id": "trainer.phoebe",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/phoebe.png",
+      "atlasPath": "images/trainer/phoebe.json"
+    },
+    {
+      "id": "trainer.glacia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/glacia.png",
+      "atlasPath": "images/trainer/glacia.json"
+    },
+    {
+      "id": "trainer.drake",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/drake.png",
+      "atlasPath": "images/trainer/drake.json"
+    },
+    {
+      "id": "trainer.aaron",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/aaron.png",
+      "atlasPath": "images/trainer/aaron.json"
+    },
+    {
+      "id": "trainer.bertha",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/bertha.png",
+      "atlasPath": "images/trainer/bertha.json"
+    },
+    {
+      "id": "trainer.flint",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/flint.png",
+      "atlasPath": "images/trainer/flint.json"
+    },
+    {
+      "id": "trainer.lucian",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lucian.png",
+      "atlasPath": "images/trainer/lucian.json"
+    },
+    {
+      "id": "trainer.shauntal",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/shauntal.png",
+      "atlasPath": "images/trainer/shauntal.json"
+    },
+    {
+      "id": "trainer.grimsley",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/grimsley.png",
+      "atlasPath": "images/trainer/grimsley.json"
+    },
+    {
+      "id": "trainer.caitlin",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/caitlin.png",
+      "atlasPath": "images/trainer/caitlin.json"
+    },
+    {
+      "id": "trainer.marshal",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/marshal.png",
+      "atlasPath": "images/trainer/marshal.json"
+    },
+    {
+      "id": "trainer.malva",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/malva.png",
+      "atlasPath": "images/trainer/malva.json"
+    },
+    {
+      "id": "trainer.siebold",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/siebold.png",
+      "atlasPath": "images/trainer/siebold.json"
+    },
+    {
+      "id": "trainer.wikstrom",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/wikstrom.png",
+      "atlasPath": "images/trainer/wikstrom.json"
+    },
+    {
+      "id": "trainer.drasna",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/drasna.png",
+      "atlasPath": "images/trainer/drasna.json"
+    },
+    {
+      "id": "trainer.hala",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/hala.png",
+      "atlasPath": "images/trainer/hala.json"
+    },
+    {
+      "id": "trainer.olivia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/olivia.png",
+      "atlasPath": "images/trainer/olivia.json"
+    },
+    {
+      "id": "trainer.acerola",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/acerola.png",
+      "atlasPath": "images/trainer/acerola.json"
+    },
+    {
+      "id": "trainer.kahili",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/kahili.png",
+      "atlasPath": "images/trainer/kahili.json"
+    },
+    {
+      "id": "trainer.molayne",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/molayne.png",
+      "atlasPath": "images/trainer/molayne.json"
+    },
+    {
+      "id": "trainer.marnie",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/marnie.png",
+      "atlasPath": "images/trainer/marnie.json"
+    },
+    {
+      "id": "trainer.bede",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/bede.png",
+      "atlasPath": "images/trainer/bede.json"
+    },
+    {
+      "id": "trainer.mustard",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/mustard.png",
+      "atlasPath": "images/trainer/mustard.json"
+    },
+    {
+      "id": "trainer.rika",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/rika.png",
+      "atlasPath": "images/trainer/rika.json"
+    },
+    {
+      "id": "trainer.poppy",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/poppy.png",
+      "atlasPath": "images/trainer/poppy.json"
+    },
+    {
+      "id": "trainer.hassel",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/hassel.png",
+      "atlasPath": "images/trainer/hassel.json"
+    },
+    {
+      "id": "trainer.crispin",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/crispin.png",
+      "atlasPath": "images/trainer/crispin.json"
+    },
+    {
+      "id": "trainer.amarys",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/amarys.png",
+      "atlasPath": "images/trainer/amarys.json"
+    },
+    {
+      "id": "trainer.lacey",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lacey.png",
+      "atlasPath": "images/trainer/lacey.json"
+    },
+    {
+      "id": "trainer.drayton",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/drayton.png",
+      "atlasPath": "images/trainer/drayton.json"
+    },
+    {
+      "id": "trainer.lance",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/lance.png",
+      "atlasPath": "images/trainer/lance.json"
+    },
+    {
+      "id": "trainer.steven",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/steven.png",
+      "atlasPath": "images/trainer/steven.json"
+    },
+    {
+      "id": "trainer.wallace",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/wallace.png",
+      "atlasPath": "images/trainer/wallace.json"
+    },
+    {
+      "id": "trainer.cynthia",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/cynthia.png",
+      "atlasPath": "images/trainer/cynthia.json"
+    },
+    {
+      "id": "trainer.alder",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/alder.png",
+      "atlasPath": "images/trainer/alder.json"
+    },
+    {
+      "id": "trainer.iris",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/iris.png",
+      "atlasPath": "images/trainer/iris.json"
+    },
+    {
+      "id": "trainer.diantha",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/diantha.png",
+      "atlasPath": "images/trainer/diantha.json"
+    },
+    {
+      "id": "trainer.kukui",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/kukui.png",
+      "atlasPath": "images/trainer/kukui.json"
+    },
+    {
+      "id": "trainer.hau",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/hau.png",
+      "atlasPath": "images/trainer/hau.json"
+    },
+    {
+      "id": "trainer.leon",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/leon.png",
+      "atlasPath": "images/trainer/leon.json"
+    },
+    {
+      "id": "trainer.geeta",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/geeta.png",
+      "atlasPath": "images/trainer/geeta.json"
+    },
+    {
+      "id": "trainer.nemona",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/nemona.png",
+      "atlasPath": "images/trainer/nemona.json"
+    },
+    {
+      "id": "trainer.kieran",
+      "kind": "atlas",
+      "category": "trainer",
+      "path": "images/trainer/kieran.png",
+      "atlasPath": "images/trainer/kieran.json"
     },
     {
       "id": "item.potion",

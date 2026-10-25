@@ -7,7 +7,7 @@
 // exactly two trainers. The last column is the gym leader. Healing stops and
 // shops sit beside nodes and don't count as levels.
 
-import type { Content } from './contentSchema';
+import type { Campaign, Content } from './contentSchema';
 import type { Rng } from './rng';
 import type { MapNode, SideStop, StageMap, StageState } from './state';
 
@@ -18,8 +18,8 @@ function crosses(a: [number, number], b: [number, number]): boolean {
   return (a[0] < b[0] && a[1] > b[1]) || (a[0] > b[0] && a[1] < b[1]);
 }
 
-export function generateStageMap(content: Content, rng: Rng): StageMap {
-  const cfg = content.balance.stage;
+export function generateStageMap(content: Content, campaign: Campaign, rng: Rng): StageMap {
+  const cfg = { ...content.balance.stage, columns: campaign.columns, trainerColumns: campaign.trainerColumns };
   const C = cfg.columns;
 
   // 1. Pick the trainer columns, one from each configured range.
@@ -101,6 +101,40 @@ export function generateStageMap(content: Content, rng: Rng): StageMap {
   }
 
   return { columns: C, nodes, trainerColumns: [...trainerColumns].sort((a, b) => a - b) };
+}
+
+/**
+ * The Pokémon League: one straight line of Elite Four members, then the champion.
+ * There are no forks or side stops; the party is fully healed between battles.
+ */
+export function generateLeagueMap(eliteFourSize: number): StageMap {
+  const columns = eliteFourSize + 1;
+  const nodes: MapNode[] = [];
+  for (let col = 1; col <= columns; col++) {
+    const kind = col === columns ? 'champion' : 'elite';
+    nodes.push({
+      id: nodeId(col, 0),
+      column: col,
+      row: 0,
+      kind,
+      harder: false,
+      next: col < columns ? [nodeId(col + 1, 0)] : [],
+      sides: [],
+      note: kind === 'champion' ? 'champion (last)' : `Elite Four member ${col} of ${eliteFourSize}`,
+    });
+  }
+  return { columns, nodes, trainerColumns: [] };
+}
+
+export function validateLeagueMap(map: StageMap): string[] {
+  const problems: string[] = [];
+  for (let col = 1; col <= map.columns; col++) {
+    const nodes = map.nodes.filter((n) => n.column === col);
+    const want = col === map.columns ? 'champion' : 'elite';
+    if (nodes.length !== 1 || nodes[0]!.kind !== want) problems.push(`league column ${col} must be one ${want} node`);
+    else if (col < map.columns && nodes[0]!.next.join() !== nodeId(col + 1, 0)) problems.push(`league node ${nodes[0]!.id} must lead to the next column`);
+  }
+  return problems;
 }
 
 /** Lists everything wrong with a map (empty when it's valid). */

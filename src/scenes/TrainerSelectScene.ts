@@ -71,7 +71,9 @@ export class TrainerSelectScene extends Phaser.Scene {
 
   private choose(archetypeId: string): void {
     const params = new URLSearchParams(window.location.search);
-    services().session.newRun(archetypeId, params.get('seed') ?? undefined);
+    // ?seed=... repeats a run; ?campaign=dev plays the short developer campaign.
+    const campaign = params.get('campaign') ?? undefined;
+    services().session.newRun(archetypeId, params.get('seed') ?? undefined, campaign && services().session.content.campaigns.has(campaign) ? campaign : undefined);
     this.scene.start('StarterSelect');
   }
 }

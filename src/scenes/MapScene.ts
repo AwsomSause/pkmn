@@ -1,9 +1,12 @@
 // The stage map: 20 numbered levels in columns, ending at the gym leader.
 // The player picks one of the next nodes to fight, can stop at a healing spot
 // or shop beside the node they're on, and can use the Party and Bag menus.
+// After a region's last stage the same screen shows its Pokémon League: one
+// straight line of Elite Four members, then the champion.
 
 import Phaser from 'phaser';
 import { currentColumn, findNode, nextChoices } from '../core/map';
+import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
@@ -26,7 +29,10 @@ const KIND_STYLE: Record<MapNode['kind'], { color: number; glyph: string; label:
   wild: { color: 0x48a860, glyph: 'W', label: 'Wild Pokémon' },
   trainer: { color: 0xd08030, glyph: 'T', label: 'Trainer battle' },
   gym: { color: 0xc03838, glyph: 'G', label: 'Gym Leader' },
+  elite: { color: 0x6848b0, glyph: 'E', label: 'Elite Four' },
+  champion: { color: 0xd8a020, glyph: 'C', label: 'Champion' },
 };
+const BOSS_KINDS: readonly MapNode['kind'][] = ['gym', 'elite', 'champion'];
 const HARDER_COLOR = 0x9048c8;
 const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   heal: { color: 0xe06890, glyph: '+' },
@@ -59,7 +65,10 @@ export class MapScene extends Phaser.Scene {
     const content = session.content;
     const stage = run.stage!;
     const theme = getTheme(content, stage.themeId);
-    const leader = content.gymLeaders.get(stage.leaderId)!;
+    const league = stage.kind === 'league';
+    const leader = bossInfo(content, league ? 'champion' : 'gym', stage.leaderId);
+    const region = currentRegion(content, run);
+    const cap = runLevelCap(content, run);
     this.options = [];
     this.cursors = [];
     this.index = 0;
@@ -69,19 +78,24 @@ export class MapScene extends Phaser.Scene {
 
     // ---------- header ----------
     drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: 0x101420 });
-    this.add.text(24, 12, `Stage ${stage.index + 1}: ${theme.name}`, textStyle(28, COLORS.textLight));
-    let bx = 26;
-    for (const type of theme.types) {
-      const b = badge(this, bx, 44, type, TYPE_COLORS[type] ?? 0x808080, 14);
-      bx += b.width + 6;
-    }
-    this.add.text(bx + 8, 44, `Gym Leader ${leader.name}`, textStyle(16, '#c8d0e0'));
     const column = currentColumn(stage);
+    if (league) {
+      this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
+      this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#c8d0e0'));
+    } else {
+      this.add.text(24, 12, `Stage ${stage.index + 1}: ${theme.name}`, textStyle(28, COLORS.textLight));
+      let bx = 26;
+      for (const type of theme.types) {
+        const b = badge(this, bx, 44, type, TYPE_COLORS[type] ?? 0x808080, 14);
+        bx += b.width + 6;
+      }
+      this.add.text(bx + 8, 44, leader.title, textStyle(16, '#c8d0e0'));
+    }
     this.add
-      .text(GAME_WIDTH - 24, 14, `Level ${column}/${stage.map.columns}`, textStyle(24, COLORS.textLight))
+      .text(GAME_WIDTH - 24, 14, `${region.name}  ·  ${league ? 'Battle' : 'Level'} ${column}/${stage.map.columns}`, textStyle(24, COLORS.textLight))
       .setOrigin(1, 0);
     this.add
-      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}`, textStyle(16, '#c8d0e0'))
+      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#c8d0e0'))
       .setOrigin(1, 0);
 
     // ---------- the map (scrolls sideways) ----------
@@ -129,7 +143,7 @@ export class MapScene extends Phaser.Scene {
       const dim = !visited && !reachable && n.column <= column;
       const g = this.add.graphics();
       g.fillStyle(style.color, dim ? 0.3 : visited && !isCurrent ? 0.55 : 1);
-      g.fillCircle(x, y, n.kind === 'gym' ? NODE_RADIUS + 6 : NODE_RADIUS);
+      g.fillCircle(x, y, BOSS_KINDS.includes(n.kind) ? NODE_RADIUS + 6 : NODE_RADIUS);
       if (n.harder) {
         g.lineStyle(5, HARDER_COLOR, dim ? 0.4 : 1);
         g.strokeCircle(x, y, NODE_RADIUS + 4);
@@ -141,6 +155,8 @@ export class MapScene extends Phaser.Scene {
       mapLayer.add(g);
       mapLayer.add(this.add.text(x, y, n.harder ? `${style.glyph}!` : style.glyph, textStyle(22, '#ffffff')).setOrigin(0.5));
       if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#8090a8')).setOrigin(0.5, 0));
+      const boss = this.bossFor(n);
+      if (league && boss) mapLayer.add(this.add.text(x, y + NODE_RADIUS + 14, boss.name, textStyle(15, COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
@@ -152,7 +168,7 @@ export class MapScene extends Phaser.Scene {
         mapLayer.add(this.add.text(sx, sy, s.glyph, textStyle(14, '#ffffff')).setOrigin(0.5));
       });
       if (reachable) {
-        this.addOption({ kind: 'node', node: n }, () => this.ringCursor(mapLayer, x, y, n.kind === 'gym' ? NODE_RADIUS + 14 : NODE_RADIUS + 10), {
+        this.addOption({ kind: 'node', node: n }, () => this.ringCursor(mapLayer, x, y, BOSS_KINDS.includes(n.kind) ? NODE_RADIUS + 14 : NODE_RADIUS + 10), {
           x: x - scroll - NODE_RADIUS,
           y: y - NODE_RADIUS,
           w: NODE_RADIUS * 2,
@@ -202,7 +218,27 @@ export class MapScene extends Phaser.Scene {
       if (action === 'confirm') this.activate(this.index);
     });
 
-    if (stage.current === null && !data.notice) this.showBanner(`Stage ${stage.index + 1}`, theme.name, `${theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  Gym Leader ${leader.name}`);
+    if (stage.current === null && !data.notice) {
+      const regions = run.regionOrder.length;
+      if (league) {
+        const size = getCampaign(content, run.campaignId).eliteFourSize;
+        this.showBanner(region.name, 'Pokémon League', `Elite Four ×${size}, then ${leader.title}  ·  Healed after every battle`);
+      } else if (stage.index === 0) {
+        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${theme.name}  ·  ${leader.title}`);
+      } else {
+        this.showBanner(`Stage ${stage.index + 1}`, theme.name, `${theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
+      }
+    }
+  }
+
+  /** The gym leader, Elite Four member or champion waiting at a node (null for other nodes). */
+  private bossFor(n: MapNode) {
+    const { session } = services();
+    const stage = session.run!.stage!;
+    if (n.kind === 'gym') return bossInfo(session.content, 'gym', stage.leaderId);
+    if (n.kind === 'champion') return bossInfo(session.content, 'champion', stage.leaderId);
+    const id = n.kind === 'elite' ? stage.eliteFour[n.column - 1] : undefined;
+    return id ? bossInfo(session.content, 'elite', id) : null;
   }
 
   private addOption(option: Option, makeCursor: () => Phaser.GameObjects.Graphics, hit: { x: number; y: number; w: number; h: number }): void {
@@ -239,10 +275,12 @@ export class MapScene extends Phaser.Scene {
       case 'node': {
         const n = option.node;
         const [lo, hi] = content.balance.difficulty.harderBonus;
-        const kind = KIND_STYLE[n.kind].label;
+        const boss = this.bossFor(n);
+        const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
+        const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : 'shop'));
-        return `Level ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}`;
+        return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}`;
       }
       case 'side':
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';

@@ -8,25 +8,34 @@
 //   decision = choices the player must make: learning a move, or what to do
 //              with a caught Pokémon.
 // Beating the gym leader at the end of a stage moves the run to a new stage
-// with a new theme.
+// with a new theme. After the region's last stage comes its Pokémon League
+// (Elite Four, then the champion); beating the champion moves the run to the
+// next region, or wins the run after the last one.
 
 import { captureMultiplier, getArchetype, moneyMultiplier, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
 import type { Content } from './contentSchema';
 import {
   candiesForRelease,
+  CHAMPION_CLASS,
+  ELITE_FOUR_CLASS,
   generateStarterChoices,
+  GYM_LEADER_CLASS,
+  leagueScale,
+  levelScale,
+  planChampion,
+  planEliteFour,
   planGymLeader,
   planTrainer,
   planWild,
-  runProgress,
   type TrainerPlan,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
-import { findNode, generateStageMap, nextChoices, validateStageMap } from './map';
+import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
+import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
 import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
@@ -35,12 +44,16 @@ export interface NewRunOptions {
   runId: string;
   seed: string;
   archetypeId: string;
+  /** "full" (default) or a shorter campaign such as "dev". */
+  campaignId?: string;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   getArchetype(content, opts.archetypeId); // throws if unknown
+  const campaign = getCampaign(content, opts.campaignId ?? 'full');
   const rng = createStreams(opts.seed);
   const starterChoices = withStream(rng, 'starter', (r) => generateStarterChoices(content, r));
+  const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   return {
     runId: opts.runId,
     seed: opts.seed,
@@ -59,6 +72,11 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedThemes: [],
     usedLeaders: [],
     badges: [],
+    campaignId: campaign.id,
+    regionOrder,
+    regionIndex: 0,
+    regionsCleared: [],
+    victory: false,
     draft: null,
     attributeModifiers: Object.fromEntries(ATTRIBUTE_NAMES.map((a) => [a, 0])),
     rng,
@@ -91,20 +109,79 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   return run;
 }
 
+/**
+ * Saves from before regions existed have no region order. Gives them one
+ * (mutates `run`; does nothing when the run already has one).
+ */
+export function fillRegionOrder(content: Content, run: RunState): void {
+  if (run.regionOrder.length > 0) return;
+  const campaign = getCampaign(content, run.campaignId);
+  run.regionOrder = withStream(run.rng, 'map', (r) => generateRegionOrder(content, campaign, r));
+  run.regionIndex = Math.min(run.regionIndex, run.regionOrder.length - 1);
+}
+
+/** Returns a copy of `run` with a region order (see fillRegionOrder), or `run` itself if it has one. */
+export function ensureRegionOrder(content: Content, run: RunState): RunState {
+  if (run.regionOrder.length > 0) return run;
+  const copy = structuredClone(run);
+  fillRegionOrder(content, copy);
+  return copy;
+}
+
 /** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
 function enterStage(content: Content, run: RunState, index: number): void {
+  fillRegionOrder(content, run);
+  const campaign = getCampaign(content, run.campaignId);
+  const region = currentRegion(content, run);
   const { theme, leader, map } = withStream(run.rng, 'map', (r) => {
     const theme = pickTheme(content, run.usedThemes, r);
-    const leader = pickGymLeader(content, theme, run.usedLeaders, r);
-    return { theme, leader, map: generateStageMap(content, r) };
+    const leader = pickGymLeader(content, theme, run.usedLeaders, r, region.gymLeaders);
+    return { theme, leader, map: generateStageMap(content, campaign, r) };
   });
   const problems = validateStageMap(map);
   if (problems.length > 0) throw new Error(`Generated an invalid stage map: ${problems.join('; ')}`);
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
-  run.stage = { index, themeId: theme.id, leaderId: leader.id, map, current: null, visited: [] };
+  run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   run.battle = null;
   run.phase = 'map';
+}
+
+/** Starts the region's Pokémon League (mutates `run`): picks the Elite Four and champion and heals the party. */
+function enterLeague(content: Content, run: RunState): void {
+  fillRegionOrder(content, run);
+  const campaign = getCampaign(content, run.campaignId);
+  const region = currentRegion(content, run);
+  const league = withStream(run.rng, 'map', (r) => pickLeague(content, region, campaign, run.usedLeaders, r));
+  const map = generateLeagueMap(campaign.eliteFourSize);
+  const problems = validateLeagueMap(map);
+  if (problems.length > 0) throw new Error(`Generated an invalid league map: ${problems.join('; ')}`);
+  run.usedLeaders.push(...league.eliteFour, league.champion);
+  const themeId = run.usedThemes[run.usedThemes.length - 1] ?? run.stage?.themeId ?? '';
+  run.stage = {
+    kind: 'league',
+    index: campaign.stagesPerRegion,
+    themeId,
+    leaderId: league.champion,
+    eliteFour: league.eliteFour,
+    map,
+    current: null,
+    visited: [],
+  };
+  healParty(content, run);
+  run.battle = null;
+  run.phase = 'map';
+}
+
+/** Starts the next region at its first stage, or ends the run in victory after the last one (mutates `run`). */
+function enterNextRegion(content: Content, run: RunState): void {
+  if (run.regionIndex + 1 >= run.regionOrder.length) {
+    run.victory = true;
+    run.phase = 'over';
+    return;
+  }
+  run.regionIndex += 1;
+  enterStage(content, run, 0);
 }
 
 function requireStage(run: RunState): StageState {
@@ -130,7 +207,10 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
   const stage = run.stage!;
   const archetype = getArchetype(content, run.archetypeId);
   const theme = getTheme(content, stage.themeId);
-  const progress = runProgress(content, stage.index, node.column);
+  const campaign = getCampaign(content, run.campaignId);
+  const scale = stage.kind === 'league' ? leagueScale(content, run.regionIndex) : levelScale(content, campaign, run.regionIndex, stage.index, node.column);
+  // Counts stages from the start of the run (trainer and gym teams grow with it).
+  const stageNumber = run.regionIndex * campaign.stagesPerRegion + stage.index;
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
   const activeUid = run.party[activeIndex]!.uid;
@@ -139,18 +219,30 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
       const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, progress, bonus, r);
+      return planWild(content, archetype, theme, scale, bonus, r);
     });
     const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
   } else {
-    const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) =>
-      node.kind === 'gym'
-        ? planGymLeader(content, archetype, theme, stage.leaderId, stage.index, progress, r)
-        : planTrainer(content, archetype, theme, stage.index, progress, r),
-    );
+    const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) => {
+      switch (node.kind) {
+        case 'gym':
+          return planGymLeader(content, archetype, theme, stage.leaderId, stageNumber, scale, r);
+        case 'elite': {
+          const memberId = stage.eliteFour[node.column - 1];
+          if (!memberId) throw new Error(`No Elite Four member for column ${node.column}`);
+          return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r);
+        }
+        case 'champion': {
+          const regionThemes = run.usedThemes.slice(-campaign.stagesPerRegion).map((id) => getTheme(content, id));
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, regionThemes, scale, r);
+        }
+        default:
+          return planTrainer(content, archetype, theme, stageNumber, scale, r);
+      }
+    });
     const team = plan.members.map((m) => createPokemon(content, m.speciesId, m.level, nextUid(run, 'e')));
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
     run.battle.levelInfo = plan.levelInfo;
@@ -185,12 +277,18 @@ function healParty(content: Content, run: RunState): void {
   }
 }
 
+/** What the shop sells right now: more stock unlocks as the player earns badges. */
+export function shopStock(content: Content, run: Pick<RunState, 'badges'>): Content['shop'] {
+  return content.shop.filter((e) => run.badges.length >= e.minBadges);
+}
+
 /** Buys one of an item at the shop. */
 export function buyItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
   assertPhase(current, 'shop');
   const entry = content.shop.find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
+  if (current.badges.length < entry.minBadges) throw new Error(`The shop sells ${item.name} once you have ${entry.minBadges} badges.`);
   if (current.money < entry.price) throw new Error(`You need ₽${entry.price} for a ${item.name}.`);
   const run = structuredClone(current);
   run.money -= entry.price;
@@ -220,6 +318,10 @@ export interface BattleEndResult {
   evolutions: (EvolutionResult & { uid: string })[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
+  /** The region's id when this win beat its champion. */
+  regionCleared: string | null;
+  /** True when this win beat the last champion and so won the run. */
+  victory: boolean;
 }
 
 export interface TurnResult {
@@ -283,7 +385,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const mon = run.party.find((p) => p.uid === uid);
       if (!mon || mon.hp <= 0) continue;
       const amount = xpForDefeat(baseExp, defeated.level, mon.level, multiplier);
-      const result = gainXp(content, mon, amount);
+      const result = gainXp(content, mon, amount, runLevelCap(content, run));
       out.push({ type: 'xp', uid, amount });
       if (result.levelsGained > 0) out.push({ type: 'levelUp', uid, level: result.newLevel });
       for (const moveId of result.learnedMoves) out.push({ type: 'learnedMove', uid, moveId });
@@ -302,8 +404,14 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const archetype = getArchetype(content, run.archetypeId);
   let base: number;
   const topLevel = Math.max(...battle.enemyTeam.map((m) => m.level));
-  if (battle.trainer?.leaderId) {
-    base = content.balance.money.gymLeaderPerLevel * topLevel;
+  const { money } = content.balance;
+  const classId = battle.trainer?.classId;
+  if (classId === GYM_LEADER_CLASS) {
+    base = money.gymLeaderPerLevel * topLevel;
+  } else if (classId === ELITE_FOUR_CLASS) {
+    base = money.eliteFourPerLevel * topLevel;
+  } else if (classId === CHAMPION_CLASS) {
+    base = money.championPerLevel * topLevel;
   } else if (battle.kind === 'trainer' && battle.trainer) {
     const trainerClass = content.trainers.get(battle.trainer.classId)!;
     base = trainerClass.moneyPerLevel * topLevel;
@@ -333,14 +441,23 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.pending = [...caughtPending, ...run.pending];
 
   const outcome = battle.outcome as 'win' | 'caught';
-  const badge = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
+  const won = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
+  const badge = won && classId === GYM_LEADER_CLASS ? won : null;
   if (badge) run.badges.push(badge);
+  // The Elite Four heal your party after each battle.
+  if (won && classId === ELITE_FOUR_CLASS) healParty(content, run);
+  let regionCleared: string | null = null;
+  if (won && classId === CHAMPION_CLASS) {
+    regionCleared = currentRegion(content, run).id;
+    run.regionsCleared.push(regionCleared);
+    if (run.regionIndex + 1 >= run.regionOrder.length) run.victory = true;
+  }
   run.battle = null;
   run.encountersCompleted += 1;
   run.log.battlesWon += 1;
   run.afterDecisions = 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, caughtSpeciesId, evolutions, badge };
+  return { outcome, moneyGained, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
 }
 
 /**
@@ -367,18 +484,30 @@ function continueAfterDecisions(content: Content, run: RunState): void {
     run.phase = 'decision';
     return;
   }
+  if (run.victory) {
+    // The last champion is beaten: the run is won.
+    run.draft = null;
+    run.phase = 'over';
+    return;
+  }
   if (run.afterDecisions === 'reward') {
     const weights = rewardWeights(content, run);
     run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
     run.phase = 'reward';
     return;
   }
-  // Back to the map. After the gym leader, the next stage begins.
+  // Back to the map. After the gym leader, the next stage (or the league) begins;
+  // after the champion, the next region.
   const stage = run.stage;
+  const kind = stage && stage.current !== null ? findNode(stage.map, stage.current).kind : null;
   if (!stage) {
     enterStage(content, run, 0); // a save from before stage maps existed
-  } else if (stage.current !== null && findNode(stage.map, stage.current).kind === 'gym') {
-    enterStage(content, run, stage.index + 1);
+  } else if (kind === 'gym') {
+    const campaign = getCampaign(content, run.campaignId);
+    if (stage.index + 1 >= campaign.stagesPerRegion) enterLeague(content, run);
+    else enterStage(content, run, stage.index + 1);
+  } else if (kind === 'champion') {
+    enterNextRegion(content, run);
   } else {
     run.phase = 'map';
   }
@@ -389,7 +518,7 @@ function rewardWeights(content: Content, run: RunState) {
   const stage = run.stage;
   if (!stage || stage.current === null) return content.balance.rarityWeights;
   const node = findNode(stage.map, stage.current);
-  if (node.kind === 'gym') return content.balance.bossRarityWeights;
+  if (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion') return content.balance.bossRarityWeights;
   if (node.harder) return content.balance.harderRarityWeights;
   return content.balance.rarityWeights;
 }
@@ -544,6 +673,14 @@ export function debugJumpToColumn(current: RunState, column: number): RunState {
   const before = stage.map.nodes.find((n) => n.column === Math.min(column, stage.map.columns) - 1);
   if (!before) throw new Error(`No column ${column - 1}`);
   run.stage!.current = before.id;
+  return run;
+}
+
+/** Debug: skips the rest of the region's stages and goes straight to its Pokémon League. */
+export function debugJumpToLeague(content: Content, current: RunState): RunState {
+  assertPhase(current, 'map');
+  const run = structuredClone(current);
+  enterLeague(content, run);
   return run;
 }
 

@@ -7,7 +7,7 @@ import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseReward, chooseStarter, createRun, resolveDecision, takeTurn as takeAction } from '../../src/core/run';
 import { currentEnemy, type RunState } from '../../src/core/state';
 import { buildContent, RAW_CONTENT } from '../../src/data';
-import { content, toBattle } from './helpers';
+import { content, scaleAt, toBattle } from './helpers';
 
 function newRun(seed = 'run-seed', archetypeId = 'red'): RunState {
   return createRun(content, { runId: 'run1', seed, archetypeId });
@@ -74,7 +74,7 @@ describe('trainer archetypes', () => {
   });
 
   it('enemy levels shift by the archetype offset and respect the minimum', () => {
-    const levels = (id: string) => enemyLevel(content, getArchetype(content, id), 0, 0, new Rng(hashSeed('lvl')));
+    const levels = (id: string) => enemyLevel(content, getArchetype(content, id), scaleAt(0, 1), 0, new Rng(hashSeed('lvl')));
     const red = levels('red');
     expect(levels('blue').level).toBe(red.level + 2);
     expect(levels('green').unclamped).toBe(red.unclamped - 1);
