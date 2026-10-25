@@ -60,6 +60,14 @@ npm run data:movesets -- /path/to/SortedMoveset.html
 
 Moves the game doesn't support yet are left out and listed, so you can see which ones to add next.
 
+To add moves from the director's move list (power, accuracy, PP and effect for every move), run this first, then rebuild the learnsets:
+
+```bash
+npm run data:moves -- /path/to/pokemon_moves_list.html
+```
+
+Only moves whose effects the battle engine already handles are added; the rest are listed.
+
 ## Project layout
 
 ```

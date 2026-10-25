@@ -86,6 +86,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - [x] Stage themes: all 153 type pairs, each with a name (director's examples kept); theme decides wild Pokémon, trainers and gym leader
 - [x] 89 species and 94 moves (every type has wild Pokémon and a trainer class); 70 gym leaders with sprites
 - [x] Level-up moves imported from the director's move dataset (`npm run data:movesets`)
+- [x] 323 moves imported from the director's move list (`npm run data:moves`); moves needing new battle features are listed for later
 - [x] Layered stage map: 20 columns of 1–3 nodes, forks, no crossing paths, exactly 2 trainer columns, gym in column 20
 - [x] Map validator (dead ends, unreachable nodes, skipped columns, trainer columns, single gym), checked over hundreds of seeds
 - [x] Map screen: theme name and types, level counter, money, badges, scrolling, risk labels on harder routes

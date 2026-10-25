@@ -320,3 +320,26 @@ describe('save upgrades (v2 → v3)', () => {
     expect(saves.loadRun()).toMatchObject({ status: 'corrupt' });
   });
 });
+
+describe('move data from the director\'s move list', () => {
+  it('every status move does something and every damaging move has power', () => {
+    for (const move of content.moves.values()) {
+      if (move.category === 'status') expect(Boolean(move.effects.status || move.effects.statChanges?.length), move.id).toBe(true);
+      else expect(move.power !== null || move.effects.fixedDamage === 'level', move.id).toBe(true);
+    }
+  });
+
+  it('imported effects come through correctly', () => {
+    const get = (id: string) => content.moves.get(id)!;
+    expect(get('close-combat').effects.statChanges).toEqual([
+      { stat: 'def', stages: -1, target: 'self', chance: 100 },
+      { stat: 'spd', stages: -1, target: 'self', chance: 100 },
+    ]);
+    expect(get('swords-dance')).toMatchObject({ target: 'self', effects: { statChanges: [{ stat: 'atk', stages: 2, target: 'self', chance: 100 }] } });
+    expect(get('double-edge').effects.recoil).toBeCloseTo(1 / 3);
+    expect(get('extreme-speed').priority).toBe(2);
+    expect(get('spore').flags).toContain('powder');
+    expect(get('ice-beam').effects.status).toEqual({ id: 'frz', chance: 10 });
+    expect(get('earthquake')).toMatchObject({ power: 100, accuracy: 100, pp: 10, effects: {} });
+  });
+});
