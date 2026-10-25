@@ -10,9 +10,10 @@ import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { makeRandomSeed } from '../core/rng';
+import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import * as Run from '../core/run';
-import type { Profile, RunState, Settings } from '../core/state';
+import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
 import type { StorageProvider } from '../save/storage';
 
@@ -71,10 +72,14 @@ export class GameSession {
     this.savedRun = this.saves.loadRun();
   }
 
-  /** Starts a new run. `campaignId` picks a shorter campaign such as "dev" (default "full"). */
-  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId });
+  /**
+   * Starts a new run. `campaignId` picks a shorter campaign such as "dev" (default "full");
+   * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
+   */
+  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep): RunState {
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep });
     this.profile = recordRunStarted(this.profile);
+    if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));
     this.persistRun();
     return this.run;
@@ -196,6 +201,24 @@ export class GameSession {
   /** Claims a trainer in the Trainer Archive (its requirement must be met; may cost Bank Credits). */
   claimTrainer(archetypeId: string): void {
     this.profile = claimTrainer(this.content, this.profile, archetypeId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  unlockPool(poolId: string): void {
+    this.profile = unlockPool(this.content, this.profile, poolId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  buyLicense(licenseId: string): void {
+    this.profile = buyLicense(this.content, this.profile, licenseId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  savePreset(slot: number, preset: LoadoutPreset): void {
+    this.profile = savePreset(this.content, this.profile, slot, preset);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }

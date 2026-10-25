@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import {
   AchievementSchema,
+  RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
   GymLeaderSchema,
@@ -23,6 +24,7 @@ import {
   type Requirement,
 } from '../core/contentSchema';
 import achievementsJson from './achievements.json';
+import runPrepJson from './runPrep.json';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
 import gymLeadersJson from './gymLeaders.json';
@@ -51,6 +53,7 @@ export interface RawContent {
   typeChart: unknown;
   archetypes: unknown;
   achievements: unknown;
+  runPrep: unknown;
   rewards: unknown;
   items: unknown;
   trainers: unknown;
@@ -69,6 +72,7 @@ export const RAW_CONTENT: RawContent = {
   typeChart: typeChartJson,
   archetypes: archetypesJson,
   achievements: achievementsJson,
+  runPrep: runPrepJson,
   rewards: rewardsJson,
   items: itemsJson,
   trainers: trainersJson,
@@ -106,6 +110,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const typeChart = parse(TypeChartSchema, raw.typeChart, 'typeChart.json', problems);
   const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
   const achievements = parse(z.array(AchievementSchema), raw.achievements, 'achievements.json', problems);
+  const runPrep = parse(RunPrepFileSchema, raw.runPrep, 'runPrep.json', problems);
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
   const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
@@ -116,7 +121,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !achievements || !rewards || !items || !trainers || !gymLeaders || !league || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !trainers || !gymLeaders || !league || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -126,6 +131,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     typeChart,
     archetypes: toMap(archetypes, 'archetypes.json', problems),
     achievements: toMap(achievements, 'achievements.json', problems),
+    starterPools: toMap(runPrep.starterPools, 'runPrep.json starterPools', problems),
+    draftRules: toMap(runPrep.draftRules, 'runPrep.json draftRules', problems),
+    prepTokens: toMap(runPrep.tokens, 'runPrep.json tokens', problems),
+    licenses: toMap(runPrep.licenses, 'runPrep.json licenses', problems),
     rewards: toMap(rewards, 'rewards.json', problems),
     items: toMap(items, 'items.json', problems),
     trainers: toMap(trainers, 'trainers.json', problems),
@@ -196,14 +205,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const id of r.champions) if (!content.champions.has(id)) problems.push(`region "${r.id}" lists unknown champion "${id}"`);
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
-  for (const id of [...balance.starterPool, ...balance.wildPool]) {
+  for (const id of balance.wildPool) {
     const s = content.species.get(id);
     if (!s) problems.push(`balance.json references unknown species "${id}"`);
     else if (!s.learnset.some((e) => usable(e.move))) problems.push(`balance.json species "${id}" has no supported moves`);
-  }
-  for (const id of balance.starterPool) {
-    const s = content.species.get(id);
-    if (s && s.evolutionStage !== 1) problems.push(`starter "${id}" is not a first-stage species`);
   }
   for (const m of content.moves.values()) {
     if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage) {
@@ -234,6 +239,35 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     }
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
+  // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
+  const checkLicense = (id: string | null, where: string) => {
+    if (id !== null && !content.licenses.has(id)) problems.push(`${where} needs unknown license "${id}"`);
+  };
+  for (const pool of content.starterPools.values()) {
+    checkRequirement(pool.unlock, `starter pool "${pool.id}"`);
+    checkLicense(pool.license, `starter pool "${pool.id}"`);
+    // Species that aren't in the game yet are allowed (they arrive with the full Pokédex); known ones must be first-stage.
+    for (const id of pool.species) {
+      const s = content.species.get(id);
+      if (s && s.evolutionStage !== 1) problems.push(`starter pool "${pool.id}" lists "${id}", which is not a first-stage species`);
+    }
+  }
+  const startingPools = [...content.starterPools.values()].filter((pool) => pool.unlockedByDefault);
+  if (startingPools.length === 0) problems.push('runPrep.json has no starter pool unlocked from the start');
+  for (const pool of startingPools) {
+    const known = new Set(pool.species.filter((id) => content.species.has(id)));
+    if (known.size < balance.starterChoices) problems.push(`starting starter pool "${pool.id}" has ${known.size} species but ${balance.starterChoices} are needed`);
+  }
+  if ([...content.draftRules.values()].filter((r) => r.kind === 'standard' && r.license === null).length !== 1) {
+    problems.push('runPrep.json needs exactly one standard draft rule that needs no license');
+  }
+  for (const r of content.draftRules.values()) checkLicense(r.license, `draft rule "${r.id}"`);
+  for (const t of content.prepTokens.values()) {
+    checkRequirement(t.unlock, `preparation "${t.id}"`);
+    checkLicense(t.license, `preparation "${t.id}"`);
+    for (const id of Object.keys(t.items)) if (!content.items.has(id)) problems.push(`preparation "${t.id}" gives unknown item "${id}"`);
+  }
+  for (const l of content.licenses.values()) checkRequirement(l.unlock, `license "${l.id}"`);
   if (problems.length > 0) throw new ContentError(problems);
   return content;
 }

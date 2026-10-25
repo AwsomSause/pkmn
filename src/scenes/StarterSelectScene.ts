@@ -1,4 +1,5 @@
-// Choose one of three random first-stage starters.
+// Choose one of three first-stage starters, drawn from the Preparation Desk's
+// pool and draft rule. Under the Blind Draft the three stay hidden until chosen.
 
 import Phaser from 'phaser';
 import { createPokemon, getSpecies } from '../core/pokemon';
@@ -7,7 +8,6 @@ import { onInputAction } from '../ui/input';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { badge, drawPanel } from '../ui/widgets';
-import { sceneForRun } from './routing';
 import { preloadPokemon } from '../ui/lazyAssets';
 
 export class StarterSelectScene extends Phaser.Scene {
@@ -32,7 +32,12 @@ export class StarterSelectScene extends Phaser.Scene {
     this.cursors = [];
 
     this.add.text(GAME_WIDTH / 2, 36, 'Choose your starter', textStyle(44, COLORS.textLight)).setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 74, `Trainer: ${archetype.name}  ·  Seed: ${run.seed}`, textStyle(20, '#8090a8')).setOrigin(0.5);
+    const pool = content.starterPools.get(run.prep.poolId);
+    const rule = content.draftRules.get(run.prep.draftRuleId);
+    const blind = rule?.kind === 'blind';
+    this.add
+      .text(GAME_WIDTH / 2, 74, run.prep.note ?? `Trainer: ${archetype.name}  ·  ${pool?.name ?? ''} pool  ·  ${rule?.name ?? ''}  ·  Seed: ${run.seed}`, textStyle(18, run.prep.note ? '#f0e0a0' : '#8090a8'))
+      .setOrigin(0.5);
 
     const cardW = 280;
     const gap = 24;
@@ -48,22 +53,28 @@ export class StarterSelectScene extends Phaser.Scene {
       highlight.strokeRoundedRect(x - 4, y - 4, cardW + 8, 408, 12);
       this.cursors.push(highlight);
 
-      pokemonVisual(this, species, 'front', x + cardW / 2, y + 160, 3.5);
-      this.add.text(x + cardW / 2, y + 170, species.name, textStyle(34)).setOrigin(0.5, 0);
-      let bx = x + cardW / 2 - (species.types.length * 68) / 2;
-      for (const t of species.types) {
-        badge(this, bx, y + 212, t, TYPE_COLORS[t] ?? 0x888888);
-        bx += 72;
+      if (blind) {
+        this.add.text(x + cardW / 2, y + 110, '?', textStyle(120, COLORS.textMuted)).setOrigin(0.5);
+        this.add.text(x + cardW / 2, y + 220, 'A hidden starter', textStyle(26)).setOrigin(0.5, 0);
+        this.add.text(x + cardW / 2, y + 270, 'Blind Draft: you find out\nwho it is once you choose.', textStyle(18, COLORS.textMuted, { align: 'center' })).setOrigin(0.5, 0);
+      } else {
+        pokemonVisual(this, species, 'front', x + cardW / 2, y + 160, 3.5);
+        this.add.text(x + cardW / 2, y + 170, species.name, textStyle(34)).setOrigin(0.5, 0);
+        let bx = x + cardW / 2 - (species.types.length * 68) / 2;
+        for (const t of species.types) {
+          badge(this, bx, y + 212, t, TYPE_COLORS[t] ?? 0x888888);
+          bx += 72;
+        }
+        const b = species.baseStats;
+        this.add.text(
+          x + 18,
+          y + 250,
+          `HP ${b.hp}  Atk ${b.atk}  Def ${b.def}\nSpA ${b.spa}  SpD ${b.spd}  Spe ${b.spe}`,
+          textStyle(18, COLORS.textMuted),
+        );
+        const moves = preview.moves.map((m) => content.moves.get(m.id)!.name).join(', ');
+        this.add.text(x + 18, y + 310, `Lv ${preview.level} moves:\n${moves}`, textStyle(18, COLORS.text, { wordWrap: { width: cardW - 36 } }));
       }
-      const b = species.baseStats;
-      this.add.text(
-        x + 18,
-        y + 250,
-        `HP ${b.hp}  Atk ${b.atk}  Def ${b.def}\nSpA ${b.spa}  SpD ${b.spd}  Spe ${b.spe}`,
-        textStyle(18, COLORS.textMuted),
-      );
-      const moves = preview.moves.map((m) => content.moves.get(m.id)!.name).join(', ');
-      this.add.text(x + 18, y + 310, `Lv ${preview.level} moves:\n${moves}`, textStyle(18, COLORS.text, { wordWrap: { width: cardW - 36 } }));
 
       const hit = this.add.zone(x, y, cardW, 400).setOrigin(0).setInteractive({ useHandCursor: true });
       hit.on('pointerover', () => this.focus(i));
@@ -90,7 +101,7 @@ export class StarterSelectScene extends Phaser.Scene {
   }
 
   private choose(i: number): void {
-    const run = services().session.chooseStarter(i);
-    this.scene.start(sceneForRun(run));
+    services().session.chooseStarter(i);
+    this.scene.start('Briefing');
   }
 }

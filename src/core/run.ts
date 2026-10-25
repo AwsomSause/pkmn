@@ -19,7 +19,6 @@ import {
   candiesForRelease,
   CHAMPION_CLASS,
   ELITE_FOUR_CLASS,
-  generateStarterChoices,
   GYM_LEADER_CLASS,
   leagueScale,
   levelScale,
@@ -36,26 +35,32 @@ import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { count, discover } from './progress';
+import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
-import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { ATTRIBUTE_NAMES, currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
 
 export interface NewRunOptions {
   runId: string;
   seed: string;
   archetypeId: string;
-  /** "full" (default) or a shorter campaign such as "dev". */
+  /** "full" (default) or a shorter campaign such as "dev". Ignored when `prep` is given. */
   campaignId?: string;
+  /** The Preparation Desk's choices (default: the classic pool, the standard draft, no token). */
+  prep?: RunPrep;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
-  const inventory = { ...content.balance.startingItems };
-  for (const [id, n] of Object.entries(archetype.startingItems)) addItem(inventory, id, n);
-  const campaign = getCampaign(content, opts.campaignId ?? 'full');
+  const prep: RunPrep = opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' };
+  const resources = startingResources(content, archetype, prep);
+  const inventory: Record<string, number> = {};
+  for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, n);
+  const campaign = getCampaign(content, prep.campaignId);
   const rng = createStreams(opts.seed);
-  const starterChoices = withStream(rng, 'starter', (r) => generateStarterChoices(content, r));
+  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
+  const starterChoices = draft.choices;
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   return {
     runId: opts.runId,
@@ -63,8 +68,9 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     archetypeId: opts.archetypeId,
     phase: 'starter',
     starterChoices,
+    prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
-    money: content.balance.money.startingMoney,
+    money: resources.money,
     inventory,
     candies: 0,
     encountersCompleted: 0,

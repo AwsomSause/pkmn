@@ -1,4 +1,4 @@
-// Starters, the difficulty model, and planning wild, trainer, gym leader,
+// The difficulty model, and planning wild, trainer, gym leader,
 // Elite Four and champion encounters.
 
 import { enemyLevelOffset } from './archetypes';
@@ -8,19 +8,6 @@ import type { Rng } from './rng';
 import type { LevelBreakdown } from './state';
 import { levelCap, type BossRole } from './regions';
 import { pickThemeSpecies, pickTypeSpecies, trainerClassesFor } from './themes';
-
-/**
- * Picks `count` different species from the starter pool. Only first-stage
- * species (no pre-evolution) are eligible.
- */
-export function generateStarterChoices(content: Content, rng: Rng): string[] {
-  const { starterPool, starterChoices } = content.balance;
-  const eligible = [...new Set(starterPool)].filter((id) => getSpecies(content, id).evolutionStage === 1);
-  if (eligible.length < starterChoices) {
-    throw new Error(`Starter pool has ${eligible.length} eligible species but ${starterChoices} are needed`);
-  }
-  return rng.shuffle(eligible).slice(0, starterChoices);
-}
 
 export type EnemyLevelBreakdown = LevelBreakdown;
 

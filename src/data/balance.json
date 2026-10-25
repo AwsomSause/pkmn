@@ -2,20 +2,6 @@
  "partyMax": 6,
  "starterLevel": 5,
  "starterChoices": 3,
- "starterPool": [
-  "bulbasaur",
-  "charmander",
-  "squirtle",
-  "vulpix",
-  "psyduck",
-  "mankey",
-  "growlithe",
-  "poliwag",
-  "machop",
-  "geodude",
-  "gastly",
-  "magnemite"
- ],
  "wildPool": [
   "caterpie",
   "pidgey",
@@ -183,5 +169,6 @@
   "perSpeciesCaught": 10,
   "perShiny": 50
  },
- "runHistorySize": 20
+ "runHistorySize": 20,
+ "presetSlots": 3
 }

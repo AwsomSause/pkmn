@@ -20,7 +20,7 @@ This repository is private. The art and audio come from the director's asset pac
 
 3. Open the address it prints (usually <http://localhost:5173>).
 
-The main menu opens the **Hub**: start a run, claim trainers in the Trainer Archive, see achievements, your Bank Credits and Research Points, past runs, and export or import your save.
+The main menu opens the **Hub**: start a run, claim trainers in the Trainer Archive, see achievements, your Bank Credits and Research Points, past runs, unlock starter pools in the Starter Laboratory, buy licenses at the Bank, and export or import your save. Starting a run goes through the **Preparation Desk** (starter pool, draft rule, one preparation, presets, seed) and ends with a campaign briefing.
 
 Controls: **arrow keys** to move, **Enter / Space / Z** to confirm, **Esc / X** to go back. The mouse works too.
 

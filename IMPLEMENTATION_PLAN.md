@@ -179,7 +179,20 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Save export/import** writes the profile and settings to a file; import checks the file and keeps a backup of the old profile in local storage.
 - Save format is now profile version 3 (Bank currency renamed to Bank Credits, new fields) and run version 5 (new log fields). Older saves upgrade automatically.
 
-## 6f. Milestone 6 — content scale-up
+## 6f. Milestone 5.5 — Run-Prep
+
+**Built 2026-10-25.** Scope is the director's priorities 3–4 (GAME_DESIGN.md §14.5, §14.7). What changed, and the interpretations I made:
+- **The run now starts in four steps:** trainer → **Preparation Desk** → starters → **campaign briefing**. The design lists the campaign mode as a separate first step; it is a row on the Preparation Desk instead (only the full campaign counts, and the dev campaign shows only in testing), so starting a run stays quick.
+- **Starter pools are data** (`runPrep.json`): Classic (the 12 starters from before, from the start), Johto, Hoenn, Research, Rare and Grand. Pools are bought with Research Points in the **Starter Laboratory**; some also need an achievement or a license. Pools may list species that aren't in the game yet: they're skipped, and a pool with fewer than three shows "arrives with the full Pokédex". That way the Johto, Hoenn and Grand starters appear by themselves when Milestone 6 imports them. `balance.starterPool` moved here as the Classic pool.
+- **Draft rules:** Standard, Balanced (no shared types), Blind (hidden until chosen) and Type Focus (needs a license). A rule the pool can't meet fills in at random and says so on the starter screen: it never rerolls forever. Standard draws exactly what the old game did for the same seed, so old seeds still replay.
+- **Preparation tokens:** one per run, chosen on the desk. They are unlocked once and can be chosen again on later runs, not used up. There are three: Pocket Money (first win), Ball Bundle (first catch) and Field Kit (Field Medic License).
+- **Bank licenses** (bought once with Bank Credits): Type Specialist (Type Focus rule), Field Medic (Field Kit) and Research (Research pool). Scavenger, Fortune, Survival and the Bank tiers wait for the systems they change (events, reward modifiers, defeat prevention, catalogs).
+- **Loadout presets:** 3 slots (`presetSlots`) storing the trainer and preparation. A preset that refers to something no longer unlocked is reset to the default and the change is shown before the run starts. The desk also remembers the last run's choices.
+- **Run Build Summary** on the desk; the **briefing** shows the region order, first stage, starting resources, rules and seed, with a Copy seed button. A custom seed can be typed on the desk (`?seed=` still works).
+- Left for later: Expanded Research / Regional / Evolution Specialist draft rules, starter mastery, starter events, challenge modifiers (priority 6) and Bank tiers.
+- Save format is now profile version 4 (pools, licenses, presets) and run version 6 (the run's preparation). Older saves upgrade automatically, and an older run counts as Classic + Standard with no preparation.
+
+## 6g. Milestone 6 — content scale-up
 
 **Built 2026-10-25** (alongside M5). What changed from the M6 row above, and why:
 - **All species and forms from PokeAPI's open data** (`npm run data:species -- <move dataset folder> <images.zip> <audio.zip>`; the CSVs are downloaded into `.cache/pokeapi`). 1,289 entries: 1,025 species, 57 regional, 52 alternate, 97 Mega, 34 Gigantamax, 2 Primal and 22 battle-only forms. Ids are PokeAPI's (`raichu-alola`, `rotom-wash`); old ids are unchanged. Cosmetic forms with identical stats (Unown letters, Vivillon patterns, Koraidon's builds, …) are left out. New species fields: `generation`, `evolvesFrom`, `tags`, `form`, and `assets` now holds file names (sprite, icon, cry) because forms don't follow the dex number.
