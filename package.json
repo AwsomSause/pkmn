@@ -13,12 +13,15 @@
     "test:e2e": "playwright test",
     "assets:import": "node tools/import-assets.ts",
     "assets:manifest": "node tools/build-asset-manifest.ts",
-    "check": "npm run typecheck && npm test && npm run build",
+    "check": "npm run typecheck && npm test && npm run build && npm run report:check",
     "data:movesets": "node tools/import-movesets.ts",
     "data:moves": "node tools/import-moves.ts",
     "data:species": "node tools/import-species.ts",
     "data:bosses": "node tools/build-boss-teams.ts",
-    "data:custom": "node tools/import-custom-forms.ts"
+    "data:custom": "node tools/import-custom-forms.ts",
+    "report:content": "node tools/report-content.ts",
+    "report:check": "node tools/report-content.ts --check",
+    "report:balance": "node tools/report-balance.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
