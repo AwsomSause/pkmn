@@ -234,6 +234,13 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Tags:** `delta`, `zform`, `spooky`. First-stage forms (120) can be met in the wild like regional forms; Megas and battle-only forms wait for M8.5.
 - **No save format change.**
 
+## 6h5. Milestone 8.5 — battle transformations
+
+**Mega Evolution built 2026-10-26** (first slice; Tera, Z-Moves and Dynamax follow as separate pull requests). Rules: GAME_DESIGN.md §5f.
+- **Data:** `npm run data:megas -- <images.zip>` (`tools/build-mega-stones.ts`) writes `src/data/megaStones.json` (items + draft rewards), merged into items and rewards when the game loads. Stone names and species come from Pokémon Showdown's `data/items.ts` (MIT, cached in `.cache/showdown`); designed stones for Delta and Z-Megas. 26 stones without art of their own use Meganiumite's icon. Mega Ring is hand-written in items/rewards/shop.
+- **Engine:** `core/battle/transform.ts` (rules, revert, boss mechanics); the engine calls it once per turn after switches and items and emits `transform` events (presentation cues; the battle screen flashes and swaps the sprite, cinematics are M9.5). A transformed Pokémon's `speciesId` is its new form during battle; `battle.transform.forms` remembers the old one.
+- **Save:** `battle.transform` and `run.disabledMechanics` have defaults, so older saves load without a version bump.
+
 ## 6j. Milestone 8.75 — planned features catch-up
 
 **Planned 2026-10-25** (director request: "pull everything that has been planned but not put into a Milestone and create a new milestone to use before M9"). Collected from the director's Master Development Brief and Design Decisions, the Out-of-Run/Run-Prep design (GAME_DESIGN §14), every milestone's "known limits", and every project thread. Work that already has a milestone stays there: Mega/Tera/Z-Moves/Dynamax in **M8.5**; the Grand Region roster, final boss, ending, battle animations, music and deploy in **M9**; looks in **M10**. The parts below can ship as separate pull requests, in this order: B to H first, then A last.
@@ -245,9 +252,10 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Friendship evolutions** by real friendship, with the Soothe Bell kept as a shortcut.
 - **N's** friendship passive and alternate event outcomes (needs N's sprite).
 
-**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits). *First batch built 2026-10-25: 85 moves (confusion, multi-hit, recharge, healing, Protect, binding, Leech Seed, OHKO, Explosion and more), main-game rounding and the both-faint rule. Held items and every item's effect moved to their own work (director, 2026-10-25).*
+**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits). *First batch built 2026-10-25: 85 moves (confusion, multi-hit, recharge, healing, Protect, binding, Leech Seed, OHKO, Explosion and more), main-game rounding and the both-faint rule. Second batch built 2026-10-26: two-turn and hiding moves, Thrash, weather, Fake Out (28 more moves). Held items and every item's effect moved to their own work (director, 2026-10-25).*
 - The **611 unsupported moves**, in tiers: confusion, multi-hit, recharge, healing and drain, Protect, weather and terrain, then the rare ones. Each tier makes more Pokémon learnable (Ditto, Smeargle, Unown, Cosmog and Abra come back).
 - **Abilities**, then **held items** (also as a reward category, brief §8).
+- **Item effects** (director, 2026-10-25): every item in the director's icon pack except Potions and Poké Balls gets a unique, PokeRogue-style effect that stacks on a Pokémon, the team, the player, or not at all. Design: the "Item effects plan" Claude Doc; data: `src/data/itemCatalog.json` (status per item: supported, existing, pending with what it needs). Director's answers: PokeRogue held model (a Pokémon holds many items, each up to its max); the existing attribute rewards keep their effects; bosses hold items (Gym 1, E4 2, Champion 3); five items a draft with variety from Luck; a duplicate of a maxed item is a free re-roll; items that open events get those events built. Slices: 1 non-battle effects, draft and re-roll (*built 2026-10-26*); 2 battle and boss held items (*built 2026-10-26*); 3 map items (3a wild encounters and catching *built 2026-10-26*; 3b-1 shops and money *built 2026-10-26*; 3b-2 getting around the map; 3b-3 extra stops and draft items; 3c berries, deliveries and gadgets); 4 event items and their events.
 - Smarter enemy trainers: they use items and switch on purpose.
 - Small rule fixes: main-game damage rounding; the "both faint in the same turn" rule.
 
@@ -315,7 +323,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | R5 | **Undefined rules** (attributes, candies, bank, luck, Grand Region). | Building on guesses means rework. | Each is a listed open decision; systems ship without those effects until you approve formulas. |
 | R6 | **Level cap vs. 10 regions.** Pokémon stop at 100, but difficulty should keep rising. | Late game flattens. | Needs a decision (D14): e.g. caps reached around region 7, then difficulty comes from team quality, held items, mechanics. |
 | R7 | **Save reliability.** Browser storage can be cleared or full. | Lost progress. | Validation, migrations, atomic checkpoint writes, export/import, clear error messages. |
-| R8 | **Battle animation format.** Supplied anim JSON is PokeRogue's own format. | Needs a custom player. | Deferred to M9; simple hit flashes/shakes until then. |
+| R8 | **Battle animation format.** Supplied anim JSON is PokeRogue's own format. | Needs a custom player. | Done in M9 (battle animations): the frame data comes from PokeRogue's asset repo (the packs only had the sheets); see `src/ui/battleFx/`. |
 
 ## 8. How I'll report each milestone
 

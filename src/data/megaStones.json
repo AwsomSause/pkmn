@@ -1,0 +1,4792 @@
+{
+ "items": [
+  {
+   "id": "abomasite",
+   "name": "Abomasite",
+   "description": "Lets Abomasnow Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.abomasite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "abomasnow": "abomasnow-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "absolite",
+   "name": "Absolite",
+   "description": "Lets Absol Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.absolite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "absol": "absol-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "absolite-z",
+   "name": "Absolite Z",
+   "description": "Lets Absol Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.absolite_z",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "absol": "absol-mega-z"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "aerodactylite",
+   "name": "Aerodactylite",
+   "description": "Lets Aerodactyl Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.aerodactylite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "aerodactyl": "aerodactyl-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "aggronite",
+   "name": "Aggronite",
+   "description": "Lets Aggron Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.aggronite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "aggron": "aggron-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "alakazite",
+   "name": "Alakazite",
+   "description": "Lets Alakazam Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.alakazite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "alakazam": "alakazam-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "altarianite",
+   "name": "Altarianite",
+   "description": "Lets Altaria Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.altarianite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "altaria": "altaria-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "ampharosite",
+   "name": "Ampharosite",
+   "description": "Lets Ampharos Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.ampharosite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "ampharos": "ampharos-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "audinite",
+   "name": "Audinite",
+   "description": "Lets Audino Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.audinite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "audino": "audino-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "banettite",
+   "name": "Banettite",
+   "description": "Lets Banette Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.banettite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "banette": "banette-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "barbaracite",
+   "name": "Barbaracite",
+   "description": "Lets Barbaracle Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.barbaracite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "barbaracle": "barbaracle-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "baxcalibrite",
+   "name": "Baxcalibrite",
+   "description": "Lets Baxcalibur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.baxcalibrite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "baxcalibur": "baxcalibur-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "beedrillite",
+   "name": "Beedrillite",
+   "description": "Lets Beedrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.beedrillite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "beedrill": "beedrill-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "blastoisinite",
+   "name": "Blastoisinite",
+   "description": "Lets Blastoise Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.blastoisinite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "blastoise": "blastoise-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "blazikenite",
+   "name": "Blazikenite",
+   "description": "Lets Blaziken Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.blazikenite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "blaziken": "blaziken-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "cameruptite",
+   "name": "Cameruptite",
+   "description": "Lets Camerupt Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.cameruptite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "camerupt": "camerupt-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "chandelurite",
+   "name": "Chandelurite",
+   "description": "Lets Chandelure Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.chandelurite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "chandelure": "chandelure-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "charizardite-x",
+   "name": "Charizardite X",
+   "description": "Lets Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.charizardite_x",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "charizard": "charizard-mega-x"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "charizardite-y",
+   "name": "Charizardite Y",
+   "description": "Lets Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.charizardite_y",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "charizard": "charizard-mega-y"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "chesnaughtite",
+   "name": "Chesnaughtite",
+   "description": "Lets Chesnaught Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.chesnaughtite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "chesnaught": "chesnaught-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "chimechite",
+   "name": "Chimechite",
+   "description": "Lets Chimecho Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.chimechite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "chimecho": "chimecho-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "clefablite",
+   "name": "Clefablite",
+   "description": "Lets Clefable Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.clefablite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "clefable": "clefable-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "crabominite",
+   "name": "Crabominite",
+   "description": "Lets Crabominable Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.crabominite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "crabominable": "crabominable-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "darkranite",
+   "name": "Darkranite",
+   "description": "Lets Darkrai Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.darkranite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "darkrai": "darkrai-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delphoxite",
+   "name": "Delphoxite",
+   "description": "Lets Delphox Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.delphoxite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "delphox": "delphox-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "diancite",
+   "name": "Diancite",
+   "description": "Lets Diancie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.diancite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "diancie": "diancie-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "dragalgite",
+   "name": "Dragalgite",
+   "description": "Lets Dragalge Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.dragalgite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "dragalge": "dragalge-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "dragoninite",
+   "name": "Dragoninite",
+   "description": "Lets Dragonite Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.dragoninite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "dragonite": "dragonite-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "drampanite",
+   "name": "Drampanite",
+   "description": "Lets Drampa Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.drampanite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "drampa": "drampa-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "eelektrossite",
+   "name": "Eelektrossite",
+   "description": "Lets Eelektross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.eelektrossite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "eelektross": "eelektross-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "emboarite",
+   "name": "Emboarite",
+   "description": "Lets Emboar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.emboarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "emboar": "emboar-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "excadrite",
+   "name": "Excadrite",
+   "description": "Lets Excadrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.excadrite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "excadrill": "excadrill-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "falinksite",
+   "name": "Falinksite",
+   "description": "Lets Falinks Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.falinksite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "falinks": "falinks-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "feraligite",
+   "name": "Feraligite",
+   "description": "Lets Feraligatr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.feraligite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "feraligatr": "feraligatr-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "floettite",
+   "name": "Floettite",
+   "description": "Lets Eternal Floette Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.floettite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "floette-eternal": "floette-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "froslassite",
+   "name": "Froslassite",
+   "description": "Lets Froslass Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.froslassite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "froslass": "froslass-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "galladite",
+   "name": "Galladite",
+   "description": "Lets Gallade Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.galladite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gallade": "gallade-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "garchompite",
+   "name": "Garchompite",
+   "description": "Lets Garchomp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.garchompite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "garchomp": "garchomp-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "garchompite-z",
+   "name": "Garchompite Z",
+   "description": "Lets Garchomp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.garchompite_z",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "garchomp": "garchomp-mega-z"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "gardevoirite",
+   "name": "Gardevoirite",
+   "description": "Lets Gardevoir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.gardevoirite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gardevoir": "gardevoir-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "gengarite",
+   "name": "Gengarite",
+   "description": "Lets Gengar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.gengarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gengar": "gengar-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "glalitite",
+   "name": "Glalitite",
+   "description": "Lets Glalie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.glalitite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "glalie": "glalie-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "glimmoranite",
+   "name": "Glimmoranite",
+   "description": "Lets Glimmora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.glimmoranite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "glimmora": "glimmora-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "golisopite",
+   "name": "Golisopite",
+   "description": "Lets Golisopod Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.golisopite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "golisopod": "golisopod-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "golurkite",
+   "name": "Golurkite",
+   "description": "Lets Golurk Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.golurkite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "golurk": "golurk-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "greninjite",
+   "name": "Greninjite",
+   "description": "Lets Greninja Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.greninjite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "greninja": "greninja-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "gyaradosite",
+   "name": "Gyaradosite",
+   "description": "Lets Gyarados Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.gyaradosite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gyarados": "gyarados-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "hawluchanite",
+   "name": "Hawluchanite",
+   "description": "Lets Hawlucha Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.hawluchanite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "hawlucha": "hawlucha-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "heatranite",
+   "name": "Heatranite",
+   "description": "Lets Heatran Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.heatranite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "heatran": "heatran-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "heracronite",
+   "name": "Heracronite",
+   "description": "Lets Heracross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.heracronite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "heracross": "heracross-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "houndoominite",
+   "name": "Houndoominite",
+   "description": "Lets Houndoom Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.houndoominite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "houndoom": "houndoom-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "kangaskhanite",
+   "name": "Kangaskhanite",
+   "description": "Lets Kangaskhan Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.kangaskhanite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "kangaskhan": "kangaskhan-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "latiasite",
+   "name": "Latiasite",
+   "description": "Lets Latias Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.latiasite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "latias": "latias-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "latiosite",
+   "name": "Latiosite",
+   "description": "Lets Latios Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.latiosite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "latios": "latios-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "lopunnite",
+   "name": "Lopunnite",
+   "description": "Lets Lopunny Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.lopunnite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "lopunny": "lopunny-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "lucarionite",
+   "name": "Lucarionite",
+   "description": "Lets Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.lucarionite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "lucario": "lucario-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "lucarionite-z",
+   "name": "Lucarionite Z",
+   "description": "Lets Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.lucarionite_z",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "lucario": "lucario-mega-z"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "magearnite",
+   "name": "Magearnite",
+   "description": "Lets Magearna Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.magearnite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "magearna": "magearna-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "malamarite",
+   "name": "Malamarite",
+   "description": "Lets Malamar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.malamarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "malamar": "malamar-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "manectite",
+   "name": "Manectite",
+   "description": "Lets Manectric Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.manectite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "manectric": "manectric-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "mawilite",
+   "name": "Mawilite",
+   "description": "Lets Mawile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.mawilite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "mawile": "mawile-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "medichamite",
+   "name": "Medichamite",
+   "description": "Lets Medicham Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.medichamite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "medicham": "medicham-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "meganiumite",
+   "name": "Meganiumite",
+   "description": "Lets Meganium Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "meganium": "meganium-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "meowsticite",
+   "name": "Meowsticite",
+   "description": "Lets Meowstic or Female Meowstic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meowsticite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "meowstic": "meowstic-male-mega",
+     "meowstic-female": "meowstic-female-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "metagrossite",
+   "name": "Metagrossite",
+   "description": "Lets Metagross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.metagrossite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "metagross": "metagross-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "mewtwonite-x",
+   "name": "Mewtwonite X",
+   "description": "Lets Mewtwo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.mewtwonite_x",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "mewtwo": "mewtwo-mega-x"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "mewtwonite-y",
+   "name": "Mewtwonite Y",
+   "description": "Lets Mewtwo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.mewtwonite_y",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "mewtwo": "mewtwo-mega-y"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "pidgeotite",
+   "name": "Pidgeotite",
+   "description": "Lets Pidgeot Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.pidgeotite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "pidgeot": "pidgeot-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "pinsirite",
+   "name": "Pinsirite",
+   "description": "Lets Pinsir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.pinsirite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "pinsir": "pinsir-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "pyroarite",
+   "name": "Pyroarite",
+   "description": "Lets Pyroar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.pyroarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "pyroar": "pyroar-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "raichunite-x",
+   "name": "Raichunite X",
+   "description": "Lets Raichu Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.raichunite_x",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "raichu": "raichu-mega-x"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "raichunite-y",
+   "name": "Raichunite Y",
+   "description": "Lets Raichu Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.raichunite_y",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "raichu": "raichu-mega-y"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "sablenite",
+   "name": "Sablenite",
+   "description": "Lets Sableye Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.sablenite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "sableye": "sableye-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "salamencite",
+   "name": "Salamencite",
+   "description": "Lets Salamence Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.salamencite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "salamence": "salamence-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "sceptilite",
+   "name": "Sceptilite",
+   "description": "Lets Sceptile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.sceptilite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "sceptile": "sceptile-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "scizorite",
+   "name": "Scizorite",
+   "description": "Lets Scizor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.scizorite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "scizor": "scizor-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "scolipite",
+   "name": "Scolipite",
+   "description": "Lets Scolipede Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.scolipite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "scolipede": "scolipede-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "scovillainite",
+   "name": "Scovillainite",
+   "description": "Lets Scovillain Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.scovillainite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "scovillain": "scovillain-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "scraftinite",
+   "name": "Scraftinite",
+   "description": "Lets Scrafty Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.scraftinite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "scrafty": "scrafty-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "sharpedonite",
+   "name": "Sharpedonite",
+   "description": "Lets Sharpedo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.sharpedonite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "sharpedo": "sharpedo-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "skarmorite",
+   "name": "Skarmorite",
+   "description": "Lets Skarmory Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.skarmorite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "skarmory": "skarmory-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "slowbronite",
+   "name": "Slowbronite",
+   "description": "Lets Slowbro Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.slowbronite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "slowbro": "slowbro-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "staraptite",
+   "name": "Staraptite",
+   "description": "Lets Staraptor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.staraptite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "staraptor": "staraptor-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "starminite",
+   "name": "Starminite",
+   "description": "Lets Starmie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.starminite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "starmie": "starmie-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "steelixite",
+   "name": "Steelixite",
+   "description": "Lets Steelix Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.steelixite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "steelix": "steelix-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "swampertite",
+   "name": "Swampertite",
+   "description": "Lets Swampert Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.swampertite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "swampert": "swampert-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "tatsugirinite",
+   "name": "Tatsugirinite",
+   "description": "Lets Tatsugiri Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.tatsugirinite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "tatsugiri": "tatsugiri-curly-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "tyranitarite",
+   "name": "Tyranitarite",
+   "description": "Lets Tyranitar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.tyranitarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "tyranitar": "tyranitar-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "venusaurite",
+   "name": "Venusaurite",
+   "description": "Lets Venusaur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.venusaurite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "venusaur": "venusaur-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "victreebelite",
+   "name": "Victreebelite",
+   "description": "Lets Victreebel Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.victreebelite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "victreebel": "victreebel-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "zeraorite",
+   "name": "Zeraorite",
+   "description": "Lets Zeraora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.zeraorite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "zeraora": "zeraora-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "zygardite",
+   "name": "Zygardite",
+   "description": "Lets Complete Zygarde Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.zygardite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "zygarde-complete": "zygarde-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "rayquazite",
+   "name": "Rayquazite",
+   "description": "Lets Rayquaza Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.rayquazite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "rayquaza": "rayquaza-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-venusaurite",
+   "name": "Delta Venusaurite",
+   "description": "Lets Delta Venusaur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.venusaurite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "venusaur-delta": "venusaur-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-charizardite",
+   "name": "Delta Charizardite",
+   "description": "Lets Delta Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.charizardite_x",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "charizard-delta": "charizard-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-blastoisinite",
+   "name": "Delta Blastoisinite",
+   "description": "Lets Delta Blastoise Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.blastoisinite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "blastoise-delta": "blastoise-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-bisharpite",
+   "name": "Delta Bisharpite",
+   "description": "Lets Delta Bisharp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "bisharp-delta": "bisharp-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-gardevoirite",
+   "name": "Delta Gardevoirite",
+   "description": "Lets Delta Gardevoir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.gardevoirite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gardevoir-delta": "gardevoir-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-galladite",
+   "name": "Delta Galladite",
+   "description": "Lets Delta Gallade Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.galladite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gallade-delta": "gallade-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-sunflorite",
+   "name": "Delta Sunflorite",
+   "description": "Lets Delta Sunflora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "sunflora-delta": "sunflora-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-scizorite",
+   "name": "Delta Scizorite",
+   "description": "Lets Delta Scizor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.scizorite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "scizor-delta": "scizor-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-glalitite",
+   "name": "Delta Glalitite",
+   "description": "Lets Delta Glalie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.glalitite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "glalie-delta": "glalie-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-froslassite",
+   "name": "Delta Froslassite",
+   "description": "Lets Delta Froslass Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.froslassite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "froslass-delta": "froslass-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-typhlosionite",
+   "name": "Delta Typhlosionite",
+   "description": "Lets Delta Typhlosion Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "typhlosion-delta": "typhlosion-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-pidgeotite",
+   "name": "Delta Pidgeotite",
+   "description": "Lets Delta Pidgeot Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.pidgeotite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "pidgeot-delta": "pidgeot-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-girafarigite",
+   "name": "Delta Girafarigite",
+   "description": "Lets Delta Girafarig Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "girafarig-delta": "girafarig-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-sablenite",
+   "name": "Delta Sablenite",
+   "description": "Lets Delta Sableye Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.sablenite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "sableye-delta": "sableye-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-mawilite",
+   "name": "Delta Mawilite",
+   "description": "Lets Delta Mawile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.mawilite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "mawile-delta": "mawile-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-medichamite",
+   "name": "Delta Medichamite",
+   "description": "Lets Delta Medicham Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.medichamite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "medicham-delta": "medicham-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-cameruptite",
+   "name": "Delta Cameruptite",
+   "description": "Lets Delta Camerupt Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.cameruptite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "camerupt-delta": "camerupt-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-miloticite",
+   "name": "Delta Miloticite",
+   "description": "Lets Delta Milotic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "milotic-delta": "milotic-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "spider-delta-metagrossite",
+   "name": "Spider Delta Metagrossite",
+   "description": "Lets Delta Metagross (Spider) Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.metagrossite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "metagross-delta-spider": "metagross-delta-spider-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "ruin-delta-metagrossite",
+   "name": "Ruin Delta Metagrossite",
+   "description": "Lets Delta Metagross (Ruin) Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.metagrossite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "metagross-delta-ruin": "metagross-delta-ruin-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-lopunnite",
+   "name": "Delta Lopunnite",
+   "description": "Lets Delta Lopunny Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.lopunnite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "lopunny-delta": "lopunny-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "delta-lucarionite",
+   "name": "Delta Lucarionite",
+   "description": "Lets Delta Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.lucarionite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "lucario-delta": "lucario-delta-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "alakazite-z",
+   "name": "Alakazite Z",
+   "description": "Lets Z-Alakazam Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.alakazite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "alakazam-z": "alakazam-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "gengarite-z",
+   "name": "Gengarite Z",
+   "description": "Lets Z-Gengar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.gengarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "gengar-z": "gengar-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "steelixite-z",
+   "name": "Steelixite Z",
+   "description": "Lets Z-Steelix Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.steelixite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "steelix-z": "steelix-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "dragoninite-z",
+   "name": "Dragoninite Z",
+   "description": "Lets Dragonite Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.dragoninite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "dragonite": "dragonite-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "amoongussite-z",
+   "name": "Amoongussite Z",
+   "description": "Lets Amoonguss Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "amoonguss": "amoonguss-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "azumarillite-z",
+   "name": "Azumarillite Z",
+   "description": "Lets Azumarill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "azumarill": "azumarill-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "butterfreite-z",
+   "name": "Butterfreite Z",
+   "description": "Lets Butterfree Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "butterfree": "butterfree-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "conkeldurrite-z",
+   "name": "Conkeldurrite Z",
+   "description": "Lets Conkeldurr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "conkeldurr": "conkeldurr-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "darkranite-z",
+   "name": "Darkranite Z",
+   "description": "Lets Darkrai Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.darkranite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "darkrai": "darkrai-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "dugtriite-z",
+   "name": "Dugtriite Z",
+   "description": "Lets Dugtrio Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "dugtrio": "dugtrio-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "electivirite-z",
+   "name": "Electivirite Z",
+   "description": "Lets Electivire Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "electivire": "electivire-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "excadrite-z",
+   "name": "Excadrite Z",
+   "description": "Lets Excadrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.excadrite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "excadrill": "excadrill-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "feraligite-z",
+   "name": "Feraligite Z",
+   "description": "Lets Feraligatr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.feraligite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "feraligatr": "feraligatr-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "flygonite-z",
+   "name": "Flygonite Z",
+   "description": "Lets Flygon Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "flygon": "flygon-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "golemite-z",
+   "name": "Golemite Z",
+   "description": "Lets Golem Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "golem": "golem-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "jumpluffite-z",
+   "name": "Jumpluffite Z",
+   "description": "Lets Jumpluff Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "jumpluff": "jumpluff-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "kabutopsite-z",
+   "name": "Kabutopsite Z",
+   "description": "Lets Kabutops Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "kabutops": "kabutops-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "magmortarite-z",
+   "name": "Magmortarite Z",
+   "description": "Lets Magmortar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "magmortar": "magmortar-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "meganiumite-z",
+   "name": "Meganiumite Z",
+   "description": "Lets Meganium Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "meganium": "meganium-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "miloticite-z",
+   "name": "Miloticite Z",
+   "description": "Lets Milotic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "milotic": "milotic-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "omastarite-z",
+   "name": "Omastarite Z",
+   "description": "Lets Omastar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "omastar": "omastar-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "poliwrathite-z",
+   "name": "Poliwrathite Z",
+   "description": "Lets Poliwrath Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "poliwrath": "poliwrath-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "pyroarite-z",
+   "name": "Pyroarite Z",
+   "description": "Lets Pyroar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.pyroarite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "pyroar": "pyroar-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "shiftryite-z",
+   "name": "Shiftryite Z",
+   "description": "Lets Shiftry Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "shiftry": "shiftry-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "snorlaxite-z",
+   "name": "Snorlaxite Z",
+   "description": "Lets Snorlax Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "snorlax": "snorlax-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "torkoalite-z",
+   "name": "Torkoalite Z",
+   "description": "Lets Torkoal Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "torkoal": "torkoal-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "typhlosionite-z",
+   "name": "Typhlosionite Z",
+   "description": "Lets Typhlosion Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "typhlosion": "typhlosion-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "whimsicottite-z",
+   "name": "Whimsicottite Z",
+   "description": "Lets Whimsicott Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "iconAssetId": "item.meganiumite",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "whimsicott": "whimsicott-z-mega"
+    },
+    "primal": false
+   }
+  },
+  {
+   "id": "red-orb",
+   "name": "Red Orb",
+   "description": "Lets Groudon undergo Primal Reversion as it enters battle.",
+   "category": "transformation",
+   "iconAssetId": "item.red_orb",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "groudon": "groudon-primal"
+    },
+    "primal": true
+   }
+  },
+  {
+   "id": "blue-orb",
+   "name": "Blue Orb",
+   "description": "Lets Kyogre undergo Primal Reversion as it enters battle.",
+   "category": "transformation",
+   "iconAssetId": "item.blue_orb",
+   "usableInBattle": false,
+   "usableOutside": false,
+   "target": "none",
+   "effect": {
+    "kind": "megaStone",
+    "forms": {
+     "kyogre": "kyogre-primal"
+    },
+    "primal": true
+   }
+  }
+ ],
+ "rewards": [
+  {
+   "id": "abomasite",
+   "name": "Abomasite",
+   "description": "Lets Abomasnow Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "abomasite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.abomasite"
+  },
+  {
+   "id": "absolite",
+   "name": "Absolite",
+   "description": "Lets Absol Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "absolite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.absolite"
+  },
+  {
+   "id": "absolite-z",
+   "name": "Absolite Z",
+   "description": "Lets Absol Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "absolite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.absolite_z"
+  },
+  {
+   "id": "aerodactylite",
+   "name": "Aerodactylite",
+   "description": "Lets Aerodactyl Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "aerodactylite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.aerodactylite"
+  },
+  {
+   "id": "aggronite",
+   "name": "Aggronite",
+   "description": "Lets Aggron Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "aggronite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.aggronite"
+  },
+  {
+   "id": "alakazite",
+   "name": "Alakazite",
+   "description": "Lets Alakazam Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "alakazite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.alakazite"
+  },
+  {
+   "id": "altarianite",
+   "name": "Altarianite",
+   "description": "Lets Altaria Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "altarianite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.altarianite"
+  },
+  {
+   "id": "ampharosite",
+   "name": "Ampharosite",
+   "description": "Lets Ampharos Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "ampharosite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.ampharosite"
+  },
+  {
+   "id": "audinite",
+   "name": "Audinite",
+   "description": "Lets Audino Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "audinite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.audinite"
+  },
+  {
+   "id": "banettite",
+   "name": "Banettite",
+   "description": "Lets Banette Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "banettite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.banettite"
+  },
+  {
+   "id": "barbaracite",
+   "name": "Barbaracite",
+   "description": "Lets Barbaracle Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "barbaracite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.barbaracite"
+  },
+  {
+   "id": "baxcalibrite",
+   "name": "Baxcalibrite",
+   "description": "Lets Baxcalibur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "baxcalibrite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.baxcalibrite"
+  },
+  {
+   "id": "beedrillite",
+   "name": "Beedrillite",
+   "description": "Lets Beedrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "beedrillite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.beedrillite"
+  },
+  {
+   "id": "blastoisinite",
+   "name": "Blastoisinite",
+   "description": "Lets Blastoise Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "blastoisinite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.blastoisinite"
+  },
+  {
+   "id": "blazikenite",
+   "name": "Blazikenite",
+   "description": "Lets Blaziken Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "blazikenite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.blazikenite"
+  },
+  {
+   "id": "cameruptite",
+   "name": "Cameruptite",
+   "description": "Lets Camerupt Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "cameruptite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.cameruptite"
+  },
+  {
+   "id": "chandelurite",
+   "name": "Chandelurite",
+   "description": "Lets Chandelure Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "chandelurite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.chandelurite"
+  },
+  {
+   "id": "charizardite-x",
+   "name": "Charizardite X",
+   "description": "Lets Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "charizardite-x",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.charizardite_x"
+  },
+  {
+   "id": "charizardite-y",
+   "name": "Charizardite Y",
+   "description": "Lets Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "charizardite-y",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.charizardite_y"
+  },
+  {
+   "id": "chesnaughtite",
+   "name": "Chesnaughtite",
+   "description": "Lets Chesnaught Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "chesnaughtite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.chesnaughtite"
+  },
+  {
+   "id": "chimechite",
+   "name": "Chimechite",
+   "description": "Lets Chimecho Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "chimechite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.chimechite"
+  },
+  {
+   "id": "clefablite",
+   "name": "Clefablite",
+   "description": "Lets Clefable Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "clefablite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.clefablite"
+  },
+  {
+   "id": "crabominite",
+   "name": "Crabominite",
+   "description": "Lets Crabominable Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "crabominite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.crabominite"
+  },
+  {
+   "id": "darkranite",
+   "name": "Darkranite",
+   "description": "Lets Darkrai Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "darkranite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.darkranite"
+  },
+  {
+   "id": "delphoxite",
+   "name": "Delphoxite",
+   "description": "Lets Delphox Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delphoxite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.delphoxite"
+  },
+  {
+   "id": "diancite",
+   "name": "Diancite",
+   "description": "Lets Diancie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "diancite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.diancite"
+  },
+  {
+   "id": "dragalgite",
+   "name": "Dragalgite",
+   "description": "Lets Dragalge Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "dragalgite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.dragalgite"
+  },
+  {
+   "id": "dragoninite",
+   "name": "Dragoninite",
+   "description": "Lets Dragonite Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "dragoninite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.dragoninite"
+  },
+  {
+   "id": "drampanite",
+   "name": "Drampanite",
+   "description": "Lets Drampa Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "drampanite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.drampanite"
+  },
+  {
+   "id": "eelektrossite",
+   "name": "Eelektrossite",
+   "description": "Lets Eelektross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "eelektrossite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.eelektrossite"
+  },
+  {
+   "id": "emboarite",
+   "name": "Emboarite",
+   "description": "Lets Emboar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "emboarite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.emboarite"
+  },
+  {
+   "id": "excadrite",
+   "name": "Excadrite",
+   "description": "Lets Excadrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "excadrite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.excadrite"
+  },
+  {
+   "id": "falinksite",
+   "name": "Falinksite",
+   "description": "Lets Falinks Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "falinksite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.falinksite"
+  },
+  {
+   "id": "feraligite",
+   "name": "Feraligite",
+   "description": "Lets Feraligatr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "feraligite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.feraligite"
+  },
+  {
+   "id": "floettite",
+   "name": "Floettite",
+   "description": "Lets Eternal Floette Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "floettite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.floettite"
+  },
+  {
+   "id": "froslassite",
+   "name": "Froslassite",
+   "description": "Lets Froslass Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "froslassite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.froslassite"
+  },
+  {
+   "id": "galladite",
+   "name": "Galladite",
+   "description": "Lets Gallade Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "galladite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.galladite"
+  },
+  {
+   "id": "garchompite",
+   "name": "Garchompite",
+   "description": "Lets Garchomp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "garchompite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.garchompite"
+  },
+  {
+   "id": "garchompite-z",
+   "name": "Garchompite Z",
+   "description": "Lets Garchomp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "garchompite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.garchompite_z"
+  },
+  {
+   "id": "gardevoirite",
+   "name": "Gardevoirite",
+   "description": "Lets Gardevoir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "gardevoirite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.gardevoirite"
+  },
+  {
+   "id": "gengarite",
+   "name": "Gengarite",
+   "description": "Lets Gengar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "gengarite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.gengarite"
+  },
+  {
+   "id": "glalitite",
+   "name": "Glalitite",
+   "description": "Lets Glalie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "glalitite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.glalitite"
+  },
+  {
+   "id": "glimmoranite",
+   "name": "Glimmoranite",
+   "description": "Lets Glimmora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "glimmoranite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.glimmoranite"
+  },
+  {
+   "id": "golisopite",
+   "name": "Golisopite",
+   "description": "Lets Golisopod Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "golisopite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.golisopite"
+  },
+  {
+   "id": "golurkite",
+   "name": "Golurkite",
+   "description": "Lets Golurk Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "golurkite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.golurkite"
+  },
+  {
+   "id": "greninjite",
+   "name": "Greninjite",
+   "description": "Lets Greninja Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "greninjite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.greninjite"
+  },
+  {
+   "id": "gyaradosite",
+   "name": "Gyaradosite",
+   "description": "Lets Gyarados Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "gyaradosite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.gyaradosite"
+  },
+  {
+   "id": "hawluchanite",
+   "name": "Hawluchanite",
+   "description": "Lets Hawlucha Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "hawluchanite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.hawluchanite"
+  },
+  {
+   "id": "heatranite",
+   "name": "Heatranite",
+   "description": "Lets Heatran Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "heatranite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.heatranite"
+  },
+  {
+   "id": "heracronite",
+   "name": "Heracronite",
+   "description": "Lets Heracross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "heracronite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.heracronite"
+  },
+  {
+   "id": "houndoominite",
+   "name": "Houndoominite",
+   "description": "Lets Houndoom Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "houndoominite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.houndoominite"
+  },
+  {
+   "id": "kangaskhanite",
+   "name": "Kangaskhanite",
+   "description": "Lets Kangaskhan Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "kangaskhanite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.kangaskhanite"
+  },
+  {
+   "id": "latiasite",
+   "name": "Latiasite",
+   "description": "Lets Latias Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "latiasite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.latiasite"
+  },
+  {
+   "id": "latiosite",
+   "name": "Latiosite",
+   "description": "Lets Latios Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "latiosite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.latiosite"
+  },
+  {
+   "id": "lopunnite",
+   "name": "Lopunnite",
+   "description": "Lets Lopunny Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "lopunnite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.lopunnite"
+  },
+  {
+   "id": "lucarionite",
+   "name": "Lucarionite",
+   "description": "Lets Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "lucarionite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.lucarionite"
+  },
+  {
+   "id": "lucarionite-z",
+   "name": "Lucarionite Z",
+   "description": "Lets Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "lucarionite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.lucarionite_z"
+  },
+  {
+   "id": "magearnite",
+   "name": "Magearnite",
+   "description": "Lets Magearna Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "magearnite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.magearnite"
+  },
+  {
+   "id": "malamarite",
+   "name": "Malamarite",
+   "description": "Lets Malamar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "malamarite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.malamarite"
+  },
+  {
+   "id": "manectite",
+   "name": "Manectite",
+   "description": "Lets Manectric Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "manectite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.manectite"
+  },
+  {
+   "id": "mawilite",
+   "name": "Mawilite",
+   "description": "Lets Mawile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "mawilite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.mawilite"
+  },
+  {
+   "id": "medichamite",
+   "name": "Medichamite",
+   "description": "Lets Medicham Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "medichamite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.medichamite"
+  },
+  {
+   "id": "meganiumite",
+   "name": "Meganiumite",
+   "description": "Lets Meganium Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "meganiumite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "meowsticite",
+   "name": "Meowsticite",
+   "description": "Lets Meowstic or Female Meowstic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "meowsticite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meowsticite"
+  },
+  {
+   "id": "metagrossite",
+   "name": "Metagrossite",
+   "description": "Lets Metagross Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "metagrossite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.metagrossite"
+  },
+  {
+   "id": "mewtwonite-x",
+   "name": "Mewtwonite X",
+   "description": "Lets Mewtwo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "mewtwonite-x",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.mewtwonite_x"
+  },
+  {
+   "id": "mewtwonite-y",
+   "name": "Mewtwonite Y",
+   "description": "Lets Mewtwo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "mewtwonite-y",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.mewtwonite_y"
+  },
+  {
+   "id": "pidgeotite",
+   "name": "Pidgeotite",
+   "description": "Lets Pidgeot Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "pidgeotite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.pidgeotite"
+  },
+  {
+   "id": "pinsirite",
+   "name": "Pinsirite",
+   "description": "Lets Pinsir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "pinsirite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.pinsirite"
+  },
+  {
+   "id": "pyroarite",
+   "name": "Pyroarite",
+   "description": "Lets Pyroar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "pyroarite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.pyroarite"
+  },
+  {
+   "id": "raichunite-x",
+   "name": "Raichunite X",
+   "description": "Lets Raichu Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "raichunite-x",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.raichunite_x"
+  },
+  {
+   "id": "raichunite-y",
+   "name": "Raichunite Y",
+   "description": "Lets Raichu Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "raichunite-y",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.raichunite_y"
+  },
+  {
+   "id": "sablenite",
+   "name": "Sablenite",
+   "description": "Lets Sableye Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "sablenite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.sablenite"
+  },
+  {
+   "id": "salamencite",
+   "name": "Salamencite",
+   "description": "Lets Salamence Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "salamencite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.salamencite"
+  },
+  {
+   "id": "sceptilite",
+   "name": "Sceptilite",
+   "description": "Lets Sceptile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "sceptilite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.sceptilite"
+  },
+  {
+   "id": "scizorite",
+   "name": "Scizorite",
+   "description": "Lets Scizor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "scizorite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.scizorite"
+  },
+  {
+   "id": "scolipite",
+   "name": "Scolipite",
+   "description": "Lets Scolipede Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "scolipite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.scolipite"
+  },
+  {
+   "id": "scovillainite",
+   "name": "Scovillainite",
+   "description": "Lets Scovillain Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "scovillainite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.scovillainite"
+  },
+  {
+   "id": "scraftinite",
+   "name": "Scraftinite",
+   "description": "Lets Scrafty Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "scraftinite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.scraftinite"
+  },
+  {
+   "id": "sharpedonite",
+   "name": "Sharpedonite",
+   "description": "Lets Sharpedo Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "sharpedonite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.sharpedonite"
+  },
+  {
+   "id": "skarmorite",
+   "name": "Skarmorite",
+   "description": "Lets Skarmory Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "skarmorite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.skarmorite"
+  },
+  {
+   "id": "slowbronite",
+   "name": "Slowbronite",
+   "description": "Lets Slowbro Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "slowbronite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.slowbronite"
+  },
+  {
+   "id": "staraptite",
+   "name": "Staraptite",
+   "description": "Lets Staraptor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "staraptite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.staraptite"
+  },
+  {
+   "id": "starminite",
+   "name": "Starminite",
+   "description": "Lets Starmie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "starminite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.starminite"
+  },
+  {
+   "id": "steelixite",
+   "name": "Steelixite",
+   "description": "Lets Steelix Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "steelixite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.steelixite"
+  },
+  {
+   "id": "swampertite",
+   "name": "Swampertite",
+   "description": "Lets Swampert Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "swampertite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.swampertite"
+  },
+  {
+   "id": "tatsugirinite",
+   "name": "Tatsugirinite",
+   "description": "Lets Tatsugiri Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "tatsugirinite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.tatsugirinite"
+  },
+  {
+   "id": "tyranitarite",
+   "name": "Tyranitarite",
+   "description": "Lets Tyranitar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "tyranitarite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.tyranitarite"
+  },
+  {
+   "id": "venusaurite",
+   "name": "Venusaurite",
+   "description": "Lets Venusaur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "venusaurite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.venusaurite"
+  },
+  {
+   "id": "victreebelite",
+   "name": "Victreebelite",
+   "description": "Lets Victreebel Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "victreebelite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.victreebelite"
+  },
+  {
+   "id": "zeraorite",
+   "name": "Zeraorite",
+   "description": "Lets Zeraora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "zeraorite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.zeraorite"
+  },
+  {
+   "id": "zygardite",
+   "name": "Zygardite",
+   "description": "Lets Complete Zygarde Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "zygardite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.zygardite"
+  },
+  {
+   "id": "rayquazite",
+   "name": "Rayquazite",
+   "description": "Lets Rayquaza Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "rayquazite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.rayquazite"
+  },
+  {
+   "id": "delta-venusaurite",
+   "name": "Delta Venusaurite",
+   "description": "Lets Delta Venusaur Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-venusaurite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.venusaurite"
+  },
+  {
+   "id": "delta-charizardite",
+   "name": "Delta Charizardite",
+   "description": "Lets Delta Charizard Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-charizardite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.charizardite_x"
+  },
+  {
+   "id": "delta-blastoisinite",
+   "name": "Delta Blastoisinite",
+   "description": "Lets Delta Blastoise Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-blastoisinite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.blastoisinite"
+  },
+  {
+   "id": "delta-bisharpite",
+   "name": "Delta Bisharpite",
+   "description": "Lets Delta Bisharp Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-bisharpite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "delta-gardevoirite",
+   "name": "Delta Gardevoirite",
+   "description": "Lets Delta Gardevoir Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-gardevoirite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.gardevoirite"
+  },
+  {
+   "id": "delta-galladite",
+   "name": "Delta Galladite",
+   "description": "Lets Delta Gallade Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-galladite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.galladite"
+  },
+  {
+   "id": "delta-sunflorite",
+   "name": "Delta Sunflorite",
+   "description": "Lets Delta Sunflora Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-sunflorite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "delta-scizorite",
+   "name": "Delta Scizorite",
+   "description": "Lets Delta Scizor Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-scizorite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.scizorite"
+  },
+  {
+   "id": "delta-glalitite",
+   "name": "Delta Glalitite",
+   "description": "Lets Delta Glalie Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-glalitite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.glalitite"
+  },
+  {
+   "id": "delta-froslassite",
+   "name": "Delta Froslassite",
+   "description": "Lets Delta Froslass Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-froslassite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.froslassite"
+  },
+  {
+   "id": "delta-typhlosionite",
+   "name": "Delta Typhlosionite",
+   "description": "Lets Delta Typhlosion Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-typhlosionite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "delta-pidgeotite",
+   "name": "Delta Pidgeotite",
+   "description": "Lets Delta Pidgeot Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-pidgeotite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.pidgeotite"
+  },
+  {
+   "id": "delta-girafarigite",
+   "name": "Delta Girafarigite",
+   "description": "Lets Delta Girafarig Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-girafarigite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "delta-sablenite",
+   "name": "Delta Sablenite",
+   "description": "Lets Delta Sableye Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-sablenite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.sablenite"
+  },
+  {
+   "id": "delta-mawilite",
+   "name": "Delta Mawilite",
+   "description": "Lets Delta Mawile Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-mawilite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.mawilite"
+  },
+  {
+   "id": "delta-medichamite",
+   "name": "Delta Medichamite",
+   "description": "Lets Delta Medicham Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-medichamite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.medichamite"
+  },
+  {
+   "id": "delta-cameruptite",
+   "name": "Delta Cameruptite",
+   "description": "Lets Delta Camerupt Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-cameruptite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.cameruptite"
+  },
+  {
+   "id": "delta-miloticite",
+   "name": "Delta Miloticite",
+   "description": "Lets Delta Milotic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-miloticite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "spider-delta-metagrossite",
+   "name": "Spider Delta Metagrossite",
+   "description": "Lets Delta Metagross (Spider) Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "spider-delta-metagrossite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.metagrossite"
+  },
+  {
+   "id": "ruin-delta-metagrossite",
+   "name": "Ruin Delta Metagrossite",
+   "description": "Lets Delta Metagross (Ruin) Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "ruin-delta-metagrossite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.metagrossite"
+  },
+  {
+   "id": "delta-lopunnite",
+   "name": "Delta Lopunnite",
+   "description": "Lets Delta Lopunny Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-lopunnite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.lopunnite"
+  },
+  {
+   "id": "delta-lucarionite",
+   "name": "Delta Lucarionite",
+   "description": "Lets Delta Lucario Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "delta-lucarionite",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.lucarionite"
+  },
+  {
+   "id": "alakazite-z",
+   "name": "Alakazite Z",
+   "description": "Lets Z-Alakazam Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "alakazite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.alakazite"
+  },
+  {
+   "id": "gengarite-z",
+   "name": "Gengarite Z",
+   "description": "Lets Z-Gengar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "gengarite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.gengarite"
+  },
+  {
+   "id": "steelixite-z",
+   "name": "Steelixite Z",
+   "description": "Lets Z-Steelix Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "steelixite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.steelixite"
+  },
+  {
+   "id": "dragoninite-z",
+   "name": "Dragoninite Z",
+   "description": "Lets Dragonite Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "dragoninite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.dragoninite"
+  },
+  {
+   "id": "amoongussite-z",
+   "name": "Amoongussite Z",
+   "description": "Lets Amoonguss Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "amoongussite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "azumarillite-z",
+   "name": "Azumarillite Z",
+   "description": "Lets Azumarill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "azumarillite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "butterfreite-z",
+   "name": "Butterfreite Z",
+   "description": "Lets Butterfree Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "butterfreite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "conkeldurrite-z",
+   "name": "Conkeldurrite Z",
+   "description": "Lets Conkeldurr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "conkeldurrite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "darkranite-z",
+   "name": "Darkranite Z",
+   "description": "Lets Darkrai Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "darkranite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.darkranite"
+  },
+  {
+   "id": "dugtriite-z",
+   "name": "Dugtriite Z",
+   "description": "Lets Dugtrio Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "dugtriite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "electivirite-z",
+   "name": "Electivirite Z",
+   "description": "Lets Electivire Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "electivirite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "excadrite-z",
+   "name": "Excadrite Z",
+   "description": "Lets Excadrill Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "excadrite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.excadrite"
+  },
+  {
+   "id": "feraligite-z",
+   "name": "Feraligite Z",
+   "description": "Lets Feraligatr Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "feraligite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.feraligite"
+  },
+  {
+   "id": "flygonite-z",
+   "name": "Flygonite Z",
+   "description": "Lets Flygon Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "flygonite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "golemite-z",
+   "name": "Golemite Z",
+   "description": "Lets Golem Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "golemite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "jumpluffite-z",
+   "name": "Jumpluffite Z",
+   "description": "Lets Jumpluff Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "jumpluffite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "kabutopsite-z",
+   "name": "Kabutopsite Z",
+   "description": "Lets Kabutops Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "kabutopsite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "magmortarite-z",
+   "name": "Magmortarite Z",
+   "description": "Lets Magmortar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "magmortarite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "meganiumite-z",
+   "name": "Meganiumite Z",
+   "description": "Lets Meganium Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "meganiumite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "miloticite-z",
+   "name": "Miloticite Z",
+   "description": "Lets Milotic Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "miloticite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "omastarite-z",
+   "name": "Omastarite Z",
+   "description": "Lets Omastar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "omastarite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "poliwrathite-z",
+   "name": "Poliwrathite Z",
+   "description": "Lets Poliwrath Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "poliwrathite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "pyroarite-z",
+   "name": "Pyroarite Z",
+   "description": "Lets Pyroar Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "pyroarite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.pyroarite"
+  },
+  {
+   "id": "shiftryite-z",
+   "name": "Shiftryite Z",
+   "description": "Lets Shiftry Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "shiftryite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "snorlaxite-z",
+   "name": "Snorlaxite Z",
+   "description": "Lets Snorlax Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "snorlaxite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "torkoalite-z",
+   "name": "Torkoalite Z",
+   "description": "Lets Torkoal Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "torkoalite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "typhlosionite-z",
+   "name": "Typhlosionite Z",
+   "description": "Lets Typhlosion Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "typhlosionite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "whimsicottite-z",
+   "name": "Whimsicottite Z",
+   "description": "Lets Whimsicott Mega Evolve in battle (needs the Mega Ring).",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "whimsicottite-z",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.meganiumite"
+  },
+  {
+   "id": "red-orb",
+   "name": "Red Orb",
+   "description": "Lets Groudon undergo Primal Reversion as it enters battle.",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "red-orb",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.red_orb"
+  },
+  {
+   "id": "blue-orb",
+   "name": "Blue Orb",
+   "description": "Lets Kyogre undergo Primal Reversion as it enters battle.",
+   "category": "transformation",
+   "rarity": "rare",
+   "effect": {
+    "kind": "addItem",
+    "item": "blue-orb",
+    "quantity": 1
+   },
+   "stacking": "instant",
+   "scope": "run",
+   "moneyMultiplierApplies": false,
+   "iconAssetId": "item.blue_orb"
+  }
+ ]
+}

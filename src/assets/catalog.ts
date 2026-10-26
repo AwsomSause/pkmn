@@ -8,8 +8,8 @@
 //
 // This file must stay free of runtime imports so the Node tools can use it.
 
-export type AssetKind = 'image' | 'atlas' | 'audio' | 'font';
-export type AssetCategory = 'pokemon' | 'trainer' | 'item' | 'background' | 'ui' | 'music' | 'sound' | 'font';
+export type AssetKind = 'image' | 'atlas' | 'audio' | 'font' | 'spritesheet' | 'json';
+export type AssetCategory = 'pokemon' | 'trainer' | 'item' | 'background' | 'ui' | 'music' | 'sound' | 'font' | 'animation';
 
 export interface AssetEntry {
   id: string;
@@ -19,6 +19,8 @@ export interface AssetEntry {
   path: string;
   /** Atlas JSON path (TexturePacker multi-atlas format, as in the supplied packs). */
   atlasPath?: string;
+  /** Spritesheet cell size in pixels (square cells). */
+  frameSize?: number;
   /**
    * Loaded when a screen first needs it instead of at start-up. Every Pokémon's
    * sprites, icon and cry are lazy: there are over a thousand of them.
@@ -43,6 +45,8 @@ export interface CatalogInputs {
   itemAssetIds: string[];
   /** Battle backgrounds ("bg.arena.<name>"), e.g. the arena for each stage theme's type. */
   backgroundAssetIds: string[];
+  /** Battle animations (src/data/moveAnims.json): animation names, sprite sheet and sound slugs. */
+  battleAnims?: { names: string[]; sheets: string[]; backgrounds: string[]; sounds: string[] };
 }
 
 const atlas = (id: string, category: AssetCategory, base: string): AssetEntry => ({
@@ -152,6 +156,23 @@ export function pokemonEntries(art: PokemonArt): AssetEntry[] {
   return entries.map(lazy);
 }
 
+/** Asset ids for the battle animation files (all loaded when a move first plays). */
+export const animAssetIds = {
+  data: (name: string) => `anim.data.${name}`,
+  sheet: (slug: string) => `anim.sheet.${slug}`,
+  background: (slug: string) => `anim.bg.${slug}`,
+  sound: (slug: string) => `anim.sound.${slug}`,
+};
+
+export function battleAnimEntries(anims: NonNullable<CatalogInputs['battleAnims']>): AssetEntry[] {
+  return [
+    ...anims.names.map((n): AssetEntry => ({ id: animAssetIds.data(n), kind: 'json', category: 'animation', path: `battle-anims/${n}.json`, lazy: true })),
+    ...anims.sheets.map((s): AssetEntry => ({ id: animAssetIds.sheet(s), kind: 'spritesheet', category: 'animation', path: `images/battle_anims/${s}.png`, frameSize: 96, lazy: true })),
+    ...anims.backgrounds.map((b): AssetEntry => ({ id: animAssetIds.background(b), kind: 'image', category: 'animation', path: `images/battle_anims/${b}.png`, lazy: true })),
+    ...anims.sounds.map((s): AssetEntry => ({ id: animAssetIds.sound(s), kind: 'audio', category: 'animation', path: `audio/battle_anims/${s}.m4a`, lazy: true })),
+  ];
+}
+
 /** Every asset the current game data could ask for. */
 export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
   const entries = [
@@ -161,6 +182,7 @@ export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
     ...inputs.itemAssetIds.map(itemEntry),
     ...inputs.backgroundAssetIds.map(backgroundEntry),
     ...inputs.backgroundAssetIds.flatMap(arenaBaseEntries),
+    ...(inputs.battleAnims ? battleAnimEntries(inputs.battleAnims) : []),
   ];
   const seen = new Set<string>();
   return entries.filter((e) => (seen.has(e.id) ? false : (seen.add(e.id), true)));

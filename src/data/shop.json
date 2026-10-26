@@ -148,5 +148,10 @@
   "item": "dread-plate",
   "price": 1500,
   "minBadges": 1
+ },
+ {
+  "item": "mega-ring",
+  "price": 10000,
+  "minBadges": 3
  }
 ]

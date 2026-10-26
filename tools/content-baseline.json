@@ -1,0 +1,22 @@
+{
+ "unsupported-moves": 498,
+ "unsupported-learnset-entries": 8693,
+ "species-no-usable-moves": 5,
+ "meetable-species-no-usable-moves": 0,
+ "missing-sprites": 0,
+ "missing-cries": 0,
+ "missing-other-assets": 0,
+ "unreachable-map-nodes": 0,
+ "duplicate-boss-teams": 6,
+ "near-duplicate-boss-teams": 983,
+ "boss-unsupported-moves": 0,
+ "broken-evolutions": 0,
+ "unused-balance-settings": 0,
+ "untested-save-migrations": 0,
+ "invalid-entries": 0,
+ "supported.species": 1011,
+ "supported.form": 105,
+ "supported.move": 424,
+ "supported.item": 62,
+ "supported.evolution": 611
+}

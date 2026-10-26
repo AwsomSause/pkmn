@@ -3,15 +3,21 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BoostStatSchema, StatNameSchema, StatusIdSchema, TypeNameSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
+import { StoryStateSchema } from './story/schema';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
   Object.fromEntries(STREAM_NAMES.map((n) => [n, RngStateSchema])) as Record<StreamName, typeof RngStateSchema>,
 );
 
-export const MoveSlotSchema = z.object({ id: z.string(), pp: z.number().int().min(0) });
+export const MoveSlotSchema = z.object({
+  id: z.string(),
+  pp: z.number().int().min(0),
+  /** PP Ups used on this move (each +20% max PP, at most 3; see pokemon.ts maxPp). */
+  ppUps: z.number().int().min(0).max(3).optional(),
+});
 export type MoveSlot = z.infer<typeof MoveSlotSchema>;
 
 export const StatusSchema = z.object({
@@ -36,8 +42,33 @@ export const PokemonInstanceSchema = z.object({
   shiny: z.boolean(),
   /** How much it likes you (0–255, see core/friendship.ts). */
   friendship: z.number().int().min(0).max(255),
+  /** Held items (catalog id → copies). A Pokémon can hold many items, each up to its catalog max (director, Q1). */
+  held: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
+  statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
+  /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
+  boosts: z.array(BattleBoostSchema).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
+
+/** What held items have done this battle (by Pokémon uid); see core/battle/held.ts. */
+export const HeldStateSchema = z.object({
+  /** Once-per-battle items used: uid → item id → times (Gems, Focus Sash, herbs, Absorb Bulb). */
+  used: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
+  /** Choice items: the move the holder is locked into. */
+  choice: z.record(z.string(), z.string()).default({}),
+  /** Metronome: the holder's last move and how many times in a row. */
+  streak: z.record(z.string(), z.object({ moveId: z.string(), count: z.number().int().min(0) })).default({}),
+  /** Air Balloons that have popped. */
+  popped: z.array(z.string()).default([]),
+  /** Micle Berry: the next move can't miss. Custap Berry: moves first next turn. */
+  sure: z.array(z.string()).default([]),
+  first: z.array(z.string()).default([]),
+  /** Critical-hit stages from berries and Dire Hit. */
+  crit: z.record(z.string(), z.number().int().min(0)).default({}),
+});
+export type HeldState = z.infer<typeof HeldStateSchema>;
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {} });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -51,9 +82,27 @@ export const VolatileSchema = z.object({
   bound: z.number().int().min(0).default(0),
   /** Seeded by Leech Seed. */
   seeded: z.boolean().default(false),
+  /** The two-turn move it is charging (it uses it next turn). */
+  charging: z.string().nullable().default(null),
+  /** Hidden in the air, underground, underwater or vanished (first turn of Fly, Dig, Dive, Phantom Force). */
+  semi: SemiSchema.nullable().default(null),
+  /** Locked into Thrash or Outrage for `turns` more turns. */
+  locked: z.object({ moveId: z.string(), turns: z.number().int().min(0) }).nullable().default(null),
+  /** Full turns it has been in battle (Fake Out works only on the first). */
+  turnsOut: z.number().int().min(0).default(0),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
-export const freshVolatile = (): Volatile => ({ confusion: 0, recharge: false, protectChain: 0, bound: 0, seeded: false });
+export const freshVolatile = (): Volatile => ({
+  confusion: 0,
+  recharge: false,
+  protectChain: 0,
+  bound: 0,
+  seeded: false,
+  charging: null,
+  semi: null,
+  locked: null,
+  turnsOut: 0,
+});
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
 export type Stages = z.infer<typeof StagesSchema>;
@@ -68,6 +117,23 @@ export const LevelBreakdownSchema = z.object({
   level: z.number(),
 });
 export type LevelBreakdown = z.infer<typeof LevelBreakdownSchema>;
+
+/**
+ * Battle transformations (Mega Evolution, ...; core/battle/transform.ts).
+ * A transformed Pokémon's speciesId is its new form during the battle; `forms`
+ * remembers what it was so it changes back when the battle ends.
+ */
+export const BattleTransformSchema = z.object({
+  /** The mechanics each side has already used this battle (each works once per battle). */
+  used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
+  /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'dynamax']), from: z.string() })),
+  /** The mechanics the opponent may use (bosses; see balance.transformations). */
+  enemyMechanics: z.array(TransformKindSchema),
+});
+export type BattleTransform = z.infer<typeof BattleTransformSchema>;
+
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [] });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
@@ -84,19 +150,25 @@ export const BattleStateSchema = z.object({
   enemyStages: StagesSchema,
   playerVolatile: VolatileSchema.default(freshVolatile),
   enemyVolatile: VolatileSchema.default(freshVolatile),
+  /** The weather and how many turns it has left. */
+  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
   /** True when the active Pokémon fainted and the player must send out another. */
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
-  /** Your Pokémon that already hung on at 1 HP this battle (Love). */
-  enduredUids: z.array(z.string()),
+  /** Battle-scope story effects already used this battle (e.g. "love-hung-on@p1"); see core/story/ledger.ts. */
+  storyEffects: z.array(z.string()),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
   /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */
   ai: z.number().min(0).max(1).default(0),
+  transform: BattleTransformSchema.default(freshTransform),
+  held: HeldStateSchema.default(freshHeldState),
+  /** Map items in this battle: turns the wild Pokémon loses (Poké Doll), and the catch-rate items for ball throws. */
+  mapItems: z.object({ freeTurns: z.number().int().min(0), thrown: z.number().int().min(0) }).optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -165,6 +237,10 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
   /** A caught Pokémon waiting to join the party (or be released for candies). */
   z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
+  /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
+  z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
+  /** A PP Up or PP Max: pick which move gets the extra PP. */
+  z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
 
@@ -199,6 +275,26 @@ export const RunStateSchema = z.object({
   money: z.number().int().min(0),
   /** Bag contents: item id → count. */
   inventory: z.record(z.string(), z.number().int().min(0)),
+  /** Team and player catalog items owned this run (catalog id → copies): passives like the Amulet Coin. */
+  passives: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
+  itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
+  /**
+   * Map, shop and money items still working (Repels, Flutes, Mail, Apricorns, Coupons...; see core/mapItems.ts):
+   * wild battles, ball throws or other uses left, or the stage it lasts for ("next" until the next stage starts).
+   */
+  mapEffects: z
+    .array(
+      z.object({
+        itemId: z.string(),
+        battles: z.number().int().min(0).optional(),
+        throws: z.number().int().min(0).optional(),
+        /** Shop purchases, shop visits or trainer wins left (the item's `lasts` says which). */
+        uses: z.number().int().min(0).optional(),
+        stage: z.string().optional(),
+      }),
+    )
+    .optional(),
   /** Candies earned this run; added to the profile when the run ends (D7). */
   candies: z.number().int().min(0),
   /** Number of encounters completed so far. */
@@ -226,6 +322,8 @@ export const RunStateSchema = z.object({
   victory: z.boolean(),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
+  /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
+  disabledMechanics: z.array(TransformKindSchema).default([]),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */
@@ -247,6 +345,8 @@ export const RunStateSchema = z.object({
     /** The starter's uid (for Love: regions cleared with the starter still in the party). */
     starterUid: z.string().nullable(),
   }),
+  /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
+  story: StoryStateSchema,
 });
 export type RunState = z.infer<typeof RunStateSchema>;
 
@@ -282,6 +382,8 @@ export const RunRecordSchema = z.object({
   bankCredits: z.number().int().min(0),
   researchPoints: z.number().int().min(0),
   achievements: z.array(z.string()),
+  /** The run's top chronicle moments, most memorable first. */
+  moments: z.array(z.string()),
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
@@ -333,6 +435,10 @@ export const SettingsSchema = z.object({
   musicVolume: z.number().min(0).max(1),
   sfxVolume: z.number().min(0).max(1),
   muted: z.boolean(),
+  /** Battle animations: full, reduced (no flashing, shaking or big motion), or off (skipped). */
+  battleAnimations: z.enum(['full', 'reduced', 'off']),
+  /** 0–1: how strong screen shake and flashes are. */
+  effectIntensity: z.number().min(0).max(1),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

@@ -43,7 +43,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - ~~No Bag/battle items~~ (done in Milestone 2).
 - Encounters are a straight sequence, not a stage map (Milestone 3).
 - Luck and the other nine attributes are stored but have no effect until their formulas are approved.
-- Move animations from the supplied pack are not played yet (hit flashes only).
+- ~~Move animations from the supplied pack are not played yet~~ (done in Milestone 9, battle animations).
 - ~~Prototype learnsets are hand-written and simplified to supported moves~~ (full data import done in Milestone 6).
 - ~~Damage uses whole-number rounding after each step~~ (main-game rounding since Milestone 8.75 part C).
 - ~~If both Pokémon faint in the same turn, the player wins~~ (since Milestone 8.75 part C: the user of Explosion loses, the user of a recoil move wins; otherwise the player wins).
@@ -185,7 +185,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - 611 moves (Protect, multi-hit moves, weather, healing, …) are not supported by the battle engine yet, so many Pokémon know fewer moves than in the main games. Ditto, Smeargle, Unown, Cosmog and Abra have no supported moves and don't appear.
 - Gender, time of day and weather don't exist, so evolutions that depend on them use the rules in GAME_DESIGN.md §5c.
 - A few forms have no art of their own in the pack and use their species' art (White-Striped Basculin, Mega Floette, Mega Meowstic).
-- Battle animations from the pack are still not played (M9).
+- ~~Battle animations from the pack are still not played~~ (done in Milestone 9, battle animations).
 
 ## Milestone 7 — Attributes and luck
 
@@ -216,9 +216,33 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Sprites are single frames (the pack has no animations); a missing shiny reuses the normal sprite, a missing back sprite the mirrored front.
 - Cries are the base species' cries.
 
-## Milestone 8.5 — Advanced mechanics (not started)
+## Milestone 8.5 — Advanced mechanics (in progress)
 
-See IMPLEMENTATION_PLAN.md §5.
+Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
+
+- [x] Mega Evolution: Mega Ring key item (draft + shop), 145 Mega Stones (`npm run data:megas`), once per battle, one transformation per Pokémon, changes back after battle, boss aces from gym 5 and in the league, challenge switch, battle menu option with a flash and the new sprite
+- [x] Primal Reversion with the Red and Blue Orbs
+- [x] Tests: unit (rules, data, save/load mid-battle, rewards and shop) and a browser test
+- [ ] Terastallization
+- [ ] Z-Moves
+- [ ] Dynamax / Gigantamax
+- [ ] Regional forms as a mechanic (if still wanted)
+
+## Milestone 8.6 — Systems audit and quality gates ✅
+
+- [x] SYSTEMS_AUDIT.md: real status of every planned system, with the code and tests behind it
+- [x] FEATURE_INTERACTION_MATRIX.md: where each pair of systems meets and which meeting points are tested
+- [x] QUALITY_GATES.md: the gates, what runs automatically, the content gate and the balance report
+- [x] `npm run report:content`: counts and offending ids for unsupported moves, species with no usable moves, missing sprites and cries, map problems, duplicate boss teams, broken evolutions, unused balance settings, untested save upgrades
+- [x] A support status (supported / limited / disabled / invalid) on every species, form, move, item and evolution, with reasons
+- [x] `npm run report:balance`: seeded battle simulations (species strength, difficulty curve), written to docs/quality/BALANCE_REPORT.md
+- [x] `npm run report:check` in `npm run check` and CI: fails when a content number gets worse than tools/content-baseline.json
+
+### Known limits in Milestone 8.6
+
+- GitHub Actions has never run on the repository, so CI (including the new gate) only runs when switched on in the repository settings.
+- The balance simulations use a fresh party with no items; they show the curve's shape, not real win rates.
+- Abilities, held items and battle mechanics have no entries to give a status to until they exist.
 
 ## Milestone 8.75 — Planned features catch-up (planned)
 
@@ -227,8 +251,14 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 - [x] B. Friendship on each Pokémon (gains from levels, wins and vitamins; loss on fainting); Charisma raises friendship gains; real friendship evolutions at 220 (Soothe Bell kept); hearts on the party screen; run save v8
 - [ ] B. N's friendship passive and friendship event outcomes (with part A, the events)
 - [x] C1. Moves tier 1 (85 moves): confusion, multi-hit, recharge, healing, Protect, one-hit KOs, Explosion, False Swipe, binding, Leech Seed, Flail, Brine, Psyshock, Chip Away, always-crit; main-game damage rounding; both-faint rule
-- [ ] C2. Two-turn and lock-in moves (Solar Beam, Fly, Thrash, Outrage), weather and terrain, the rare moves (530 still unsupported, 89 of them Z-Moves and Max Moves for M8.5)
+- [x] C2. Two-turn moves (Solar Beam, Sky Attack, Skull Bash; Fly, Bounce, Dig, Dive, Phantom Force hide the user) and the moves that reach them (Earthquake, Gust, Surf, Thunder, Sky Uppercut); Thrash, Outrage, Petal Dance; weather (rain, sun, sandstorm, snow, hail) with Weather Ball, Synthesis/Moonlight/Shore Up healing and Thunder/Hurricane/Blizzard accuracy; Fake Out and First Impression (28 more moves)
+- [ ] C2b. Terrain and the rare moves (498 still unsupported, 89 of them Z-Moves and Max Moves for M8.5)
 - [ ] C3. Abilities; enemy trainers use items and switch on purpose (held items are part of the item effects work)
+- [x] Item effects, slice 1 (director, 2026-10-25: every item except Potions and Poké Balls gets its own effect): item catalog of 574 items (itemCatalog.json, each with a status); 127 work now as draft rewards: attribute items (Heart Scale +2 Love, shards, berries, mail), valuables sold for money, Wings, friendship berries, healing and care items, PP Up/PP Max, TMs (1 of 3 random moves) and HMs (any move) of 17 types, the 9 fossils, and run-long perks (Amulet Coin, Luck Incense, Exp. Share, Coin Case, Teachy TV, Photo Album, Fashion Case); a new Epic rarity; drafts of five with variety from Luck; a team or player item at its max is a free re-roll; evolution items nobody can use can be cashed in from the Bag for attributes; icons from the director's pack
+- [x] Item effects, slice 2: 198 more items work (325 of 574 in all). 164 held items (a Pokémon can hold many, each up to its max): type boosters and Plates, Gems (once a battle), Choice Band/Specs/Scarf, Life Orb, Expert Belt, Leftovers, Black Sludge, Focus Sash and Focus Band, Rocky Helmet, King's Rock, Toxic and Flame Orbs, Air Balloon, Power Herb, White Herb, Shed Shell, Macho Brace, Everstone, Power items, Prism Scale, the Scarves and 40 berries (healing, curing, PP, stat, resist and pinch berries). 34 battle boosts (X items, Dire Hit, Guard Spec.) last the first 5 turns of the next battle. Bosses hold items (Gym Leaders 1, Elite Four 2, Champions 3, rarer each region) from their own random generator, so no other roll changes. Held items show on the party screen. 14 battle items stay disabled with the reason written down (screens, forced switching, Taunt-type moves, form items, a few berries)
+- [x] Item effects, slice 3a: 45 wild-encounter and catching items (370 of 574 work now). Repels skip wild battles (the level still counts); Black and White Flutes change wild levels for the rest of the stage (White also +25% EXP); Incense and type Mail make a type more common; Mosaic, Glitter, Dream and Retro Mail change the next stage's wild Pokémon; Honey and Dream Mail bring the strongest of three; Unown Report brings Unown; Bluk Berry, Poké Doll (the wild Pokémon loses its first turn), Poké Toy (its Speed -1); Apricorns and the Fluffy Tail raise the catch rate; Poké Radar doubles the shiny chance; Cleanse Tag, Full, Lax and Pure Incense are held items; Blue Flute is a battle boost. The map screen lists the items that are working. Their random rolls use a generator of their own. Red Flute and Poké Flute wait for infatuation and wake-up rules
+- [x] Item effects, slice 3b-1: 12 shop and money items (382 of 574 work now): Coupons (-10/25/50% on the next purchase), Point Card (every 10th purchase free), Member Card and Wepear Berry (shops sell the next locked item early), Bead and Reply Mail (trainers pay more), Soot Sack (wild money on Fire stages), Loot Sack and Blue Card (Bag items after trainer wins), Pass Orb (money each new region). The shop marks early items and free prices. Seal Bag and Pass wait for selling and region shops
+- [ ] Item effects, slice 3b-2: getting around the map (Bikes, Escape Rope, Town Map, Devon Scope, VS Seeker…); 3b-3: extra map stops (Rods, Wave/Tropic/Harbor and Bridge Mail) and draft items (Dowsing Machine, Bloom Mail, Cornn Berry…); slice 3c: berry, delivery and gadget items; slice 4: items that open events, with their events built too
 - [ ] D. Bank tiers 1–5; Scavenger, Fortune and Survival licenses; challenge modifiers and challenge campaigns; contracts; item catalog and the other Bank services; spending candies; more preparation tokens
 - [ ] E. Pokédex & Research room; starter mastery and trainer mastery tracks; remaining draft rules; starter events; Special Specimen starters; achievements checked as they happen
 - [x] F. Oak's and N's sprites in the game; both listed in the Trainer Archive as "coming later"
@@ -239,9 +269,44 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 - [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes; "Between-Level" interactions — built last, designed with the director first in the Events and map stops plan
 - [ ] Optional: IVs/EVs/natures; gender, time of day and weather
 
-## Milestone 9 — Grand Region, ending, deploy (not started)
+## Milestone 8.9-0 — Story foundation ✅
+
+The shared layer every story system reads (design: docs/plans/hyper-overdrive-techno.md §7–9 and the Electric plan; how it works: docs/story-foundation.md).
+
+- [x] 28 domain event types with deterministic ids (seed + sequence number), recorded from the run's actions and each battle turn
+- [x] Story effects with ids; the save keeps the applied ids, so an effect never applies twice (battle-scope ids live in the battle and go when it ends)
+- [x] Presentation cues (banner, colour, sound, shake) that the rules never read; the battle screen shows them
+- [x] PokemonHistory per uid (survives evolution), RelationshipRecord, EnemyProfile, RunChronicle, with the plan's limits (20 memories, 12 open relationships, 6 enemies per run and 3 per region, 300 chronicle entries)
+- [x] Event queue: the plan's priority order, one combat effect per turn, merged banners, 3 cinematic moments per battle
+- [x] New "story" and "hyper" random streams; old seeds play exactly as before (pinned by fingerprints taken on main)
+- [x] Love's "hung on at 1 HP" runs through the story layer as its first user (story.json "love-hung-on")
+- [x] Run save v9 and profile save v6 upgrades
+- [x] Debug Story Log (F2); the run-end screen and the Run History show the run's top five moments
+
+### Known limits in Milestone 8.9-0 (by design, documented)
+
+- Trades, escapes, Mega/Tera/Z/Dynamax and map events don't exist yet, so their event types (`traded`, `trainerEscaped`, `transformed`, `eventChoice`) are defined but not emitted.
+- Knockouts don't record overkill yet (the engine caps damage at the HP left; adding the raw number needs an engine change, left for the Hyper slices).
+- Relationships and recurring enemies have their records, limits and functions, but nothing creates them yet: that is M8.9 (rivals, nemesis).
+- Only the newest 250 domain events are kept in the save; histories and the chronicle keep what matters from older ones.
+
+## Milestone 9 — Grand Region, ending, deploy
 
 See IMPLEMENTATION_PLAN.md §5.
+
+### Battle animations (done)
+
+- [x] PokeRogue's animation frame data (from its asset repo; the packs only had the sprite sheets) converted to a compact format by `npm run data:anims`: 887 animation files, 492 sprite sheets, 1,111 sounds (WAV turned into small .m4a)
+- [x] Every move has a presentation definition in `src/data/moveAnims.json` (animation, shake, flash colour, hit-stop, telegraph), kept apart from its rules: 851 moves use their own animation, 83 borrow one of their type; two-turn moves have a wind-up animation
+- [x] A presentation-cue layer (`src/core/presentation/cues.ts`) plans what the screen shows from the finished turn; it never changes battle state or draws random numbers (unit tests check both)
+- [x] The animation player (`src/ui/battleFx/`) draws sheet pieces, moves the Pokémon, plays sounds and background fades; status, healing, confusion, binding, Leech Seed, Protect and weather animations too
+- [x] Feedback: hit-stop, field-only screen shake, type-coloured flashes, floating damage and heal numbers, Super effective / Not very effective / No effect / Critical hit badges, an HP bar that drains smoothly with a trailing "damage ghost", telegraph rings (speed lines for priority moves), stat arrows
+- [x] Settings on the title screen: Animations Full / Reduced motion / Off, Effects 100% / 50% / 25%; Enter or a click skips a playing animation; new players whose browser asks for reduced motion start on Reduced motion (settings save v2)
+- [x] Animation files load the first time a move is used (and the moves on the field load while you read); a file that is missing, damaged or slow (1.5 s) plays a short fallback (lunge and flash)
+
+Known limits: a frame that shows two copies of the same Pokémon shows one; colour tones can only darken; animation backgrounds fill the field rather than PokeRogue's exact scroll; Fly/Dig don't hide the user's sprite yet; boss cinematics are M9.5.
+
+- [ ] Grand Region roster, final boss, ending, music, static deploy
 
 ## Boss teams (director request, 2026-10-25)
 

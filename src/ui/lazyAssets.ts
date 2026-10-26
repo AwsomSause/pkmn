@@ -11,7 +11,9 @@ import { services } from '../game/services';
 
 /** Whether an asset is already in Phaser's caches. */
 export function isLoaded(scene: Phaser.Scene, entry: AssetEntry): boolean {
-  return entry.kind === 'audio' ? scene.cache.audio.exists(entry.id) : scene.textures.exists(entry.id);
+  if (entry.kind === 'audio') return scene.cache.audio.exists(entry.id);
+  if (entry.kind === 'json') return scene.cache.json.exists(entry.id);
+  return scene.textures.exists(entry.id);
 }
 
 /** Adds one asset to the scene's loader (does not start it). */
@@ -37,6 +39,12 @@ export function queueAsset(scene: Phaser.Scene, entry: AssetEntry): void {
       break;
     case 'audio':
       scene.load.audio(entry.id, `assets/${entry.path}`);
+      break;
+    case 'spritesheet':
+      scene.load.spritesheet(entry.id, `assets/${entry.path}`, { frameWidth: entry.frameSize ?? 96, frameHeight: entry.frameSize ?? 96 });
+      break;
+    case 'json':
+      scene.load.json(entry.id, `assets/${entry.path}`);
       break;
     case 'font':
       break;

@@ -3,12 +3,14 @@
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
 import Phaser from 'phaser';
-import { itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
-import { calcStats, getSpecies, xpForLevel } from '../core/pokemon';
+import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
+import { megaOptions, ownedMegaForms, stoneForms } from '../core/battle/transform';
+import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
+import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -21,6 +23,10 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLOR
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { planCues } from '../core/presentation/cues';
+import { presentationFor } from '../core/presentation/moveAnims';
+import { moveAnims } from '../data/presentation';
+import { BattleFx } from '../ui/battleFx/battleFx';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -58,8 +64,15 @@ export class BattleScene extends Phaser.Scene {
   private playerSprite: Visual | null = null;
   private enemySprite: Visual | null = null;
   private header!: Phaser.GameObjects.Text;
+  /** The arena and both Pokémon: what move animations draw among and screen shake moves (the menus stay still). */
+  private field!: Phaser.GameObjects.Container;
+  /** Index in `field` just above the arena art. */
+  private fieldBase = 0;
+  private fx!: BattleFx;
   private advance: (() => void) | null = null;
   private busy = false;
+  /** The Mega form the player chose to Mega Evolve into with their next move (null = off). */
+  private megaChoice: string | null = null;
   /** What the screen currently shows for each side (may lag the real state during playback). */
   private shown!: { player: PokemonInstance; enemy: PokemonInstance };
 
@@ -70,9 +83,17 @@ export class BattleScene extends Phaser.Scene {
   preload(): void {
     // Every party member (switching), the whole enemy team, and the cries.
     const { session } = services();
-    const enemies = (session.run?.battle?.enemyTeam ?? []).flatMap((m) => session.content.species.get(m.speciesId) ?? []);
+    const { content } = session;
+    const run = session.run;
+    const enemies = (run?.battle?.enemyTeam ?? []).flatMap((m) => content.species.get(m.speciesId) ?? []);
     preloadPokemon(this, partySpecies(), { back: true, shiny: true, icon: true, cry: true });
     preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
+    // Forms they might transform into this battle (Megas for stones you own; any Mega or Primal for the enemy).
+    const formsOf = (ids: string[]) => ids.flatMap((id) => content.species.get(id) ?? []);
+    const partyForms = (run?.party ?? []).flatMap((m) => [...ownedMegaForms(content, run!.inventory, m), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
+    const enemyForms = (run?.battle?.enemyTeam ?? []).flatMap((m) => [...stoneForms(content, m.speciesId, false), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
+    preloadPokemon(this, formsOf(partyForms), { back: true, shiny: true, cry: true });
+    preloadPokemon(this, formsOf(enemyForms), { front: true, shiny: true, cry: true });
   }
 
   create(): void {
@@ -93,13 +114,20 @@ export class BattleScene extends Phaser.Scene {
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
     const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
-    if (assets.has(bg)) this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE);
-    else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0);
+    this.field = this.add.container(0, 0);
+    if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
+    else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
     // The ground patches each side stands on.
     for (const side of ['enemy', 'player']) {
       const key = `${bg}.${side}`;
-      if (assets.has(key) && this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE);
+      if (assets.has(key) && this.textures.exists(key)) this.field.add(this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE));
     }
+    this.fieldBase = this.field.length;
+    this.fx = new BattleFx(this, {
+      field: this.field,
+      backgroundIndex: () => this.fieldBase,
+      sprite: (side) => (side === 'player' ? this.playerSprite : this.enemySprite),
+    });
 
     this.shown = { player: structuredClone(this.activeMon()), enemy: structuredClone(currentEnemy(battle)) };
     this.enemyBox = this.makeInfoBox(0, 30, false);
@@ -184,11 +212,22 @@ export class BattleScene extends Phaser.Scene {
     if (side === 'player') {
       this.playerSprite?.destroy();
       this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, PIXEL_SCALE + 1, mon.shiny);
+      this.field.add(this.playerSprite);
+      this.prefetchMoves(mon);
       return this.playerSprite;
     }
     this.enemySprite?.destroy();
     this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE, mon.shiny);
+    // The foe stands behind the player's Pokémon.
+    this.field.addAt(this.enemySprite, this.fieldBase);
+    this.prefetchMoves(mon);
     return this.enemySprite;
+  }
+
+  /** Starts loading the animations of a Pokémon's moves while the player reads. */
+  private prefetchMoves(mon: PokemonInstance): void {
+    const data = moveAnims();
+    this.fx.prefetch(mon.moves.map((m) => presentationFor(data, m.id).anim));
   }
 
   private makeInfoBox(x: number, y: number, isPlayer: boolean): InfoBox {
@@ -274,6 +313,10 @@ export class BattleScene extends Phaser.Scene {
   // ---------- input and messages ----------
 
   private handleInput(action: InputAction): void {
+    if (this.fx.busy && (action === 'confirm' || action === 'back')) {
+      this.fx.skip();
+      return;
+    }
     if (this.picker) {
       this.picker.handle(action);
       return;
@@ -359,7 +402,13 @@ export class BattleScene extends Phaser.Scene {
 
   /** Shows the right prompt for the current state: forced switch or the action menu. */
   private nextPrompt(): void {
-    if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
+    if (this.run.battle?.needsSwitch) {
+      this.openPartyPicker(true);
+      return;
+    }
+    // In the middle of a two-turn move or Thrash, the Pokémon carries on by itself.
+    const forced = this.run.battle ? forcedMoveIndex(this.run.battle, this.run.party) : null;
+    if (forced !== null) void this.act({ kind: 'move', index: forced });
     else this.showRootMenu();
   }
 
@@ -367,8 +416,14 @@ export class BattleScene extends Phaser.Scene {
 
   private showRootMenu(): void {
     this.clearMenus();
-    this.message.setText(`What will ${this.speciesName(this.activeMon())} do?`);
+    const content = services().session.content;
+    // Mega Evolution: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> off.
+    const megas = megaOptions(this.battleCtx());
+    if (!megas.some((o) => o.formId === this.megaChoice)) this.megaChoice = null;
+    const ready = this.megaChoice ? ` It will Mega Evolve into ${content.species.get(this.megaChoice)?.name}!` : '';
+    this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
+    if (megas.length > 0) options.push({ label: this.megaChoice ? 'Mega: ON' : 'Mega: OFF' });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -382,7 +437,12 @@ export class BattleScene extends Phaser.Scene {
       onSelect: (i) => {
         if (i === 0) this.showMoveMenu();
         else if (i === 1) this.openBag();
-        else this.openPartyPicker(false);
+        else if (i === 2) this.openPartyPicker(false);
+        else {
+          const at = megas.findIndex((o) => o.formId === this.megaChoice);
+          this.megaChoice = megas[at + 1]?.formId ?? null;
+          this.showRootMenu();
+        }
       },
     });
   }
@@ -416,10 +476,14 @@ export class BattleScene extends Phaser.Scene {
         }
         const move = content.moves.get(slot.id)!;
         const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
-        this.moveInfo.setText(`PP  ${slot.pp}/${move.pp}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
+        this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
       },
-      onSelect: (i) => void this.act({ kind: 'move', index: anyPp ? i : -1 }),
+      onSelect: (i) => {
+        const mega = this.megaChoice;
+        this.megaChoice = null;
+        void this.act({ kind: 'move', index: anyPp ? i : -1, ...(mega ? { transform: { kind: 'mega' as const, formId: mega } } : {}) });
+      },
       onBack: () => this.showRootMenu(),
     });
     this.moveInfo.setVisible(true);
@@ -510,7 +574,7 @@ export class BattleScene extends Phaser.Scene {
       this.nextPrompt();
       return;
     }
-    await this.playEvents(result.events, before, trainer);
+    await this.playEvents(result.events, before, trainer, result.cues);
 
     if (result.end) {
       await this.finish(result, trainer);
@@ -530,6 +594,7 @@ export class BattleScene extends Phaser.Scene {
     const end = result.end!;
     if (end.outcome === 'win' && trainer) await this.say(`You defeated ${trainer}!`);
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
+    for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
@@ -559,15 +624,27 @@ export class BattleScene extends Phaser.Scene {
     this.scene.start(sceneForRun(result.run));
   }
 
+  /** The Pokémon as the run has it now (after the turn), for statuses an item gave. */
+  private findLive(side: 'player' | 'enemy', uid: string): PokemonInstance | undefined {
+    const run = services().session.run;
+    return side === 'player' ? run?.party.find((m) => m.uid === uid) : run?.battle?.enemyTeam.find((m) => m.uid === uid);
+  }
+
   private findMon(before: RunState, uid: string): PokemonInstance | undefined {
     return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid);
   }
 
-  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null): Promise<void> {
+  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, storyCues: PresentationCue[] = []): Promise<void> {
     const { session } = services();
     const content = session.content;
+    const { battleAnimations, effectIntensity } = session.settings;
+    // What the screen shows for each event; worked out from the finished turn, so it can't change it.
+    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity });
 
-    for (const e of events) {
+    for (const [index, e] of events.entries()) {
+      // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
+      if (e.type === 'move') this.message.setText(eventText(content, this.names(trainer), e) ?? '');
+      await this.fx.play(cues[index] ?? []);
       const side = 'side' in e ? e.side : null;
       const box = side === 'enemy' ? this.enemyBox : this.playerBox;
       const sprite = side === 'enemy' ? this.enemySprite : this.playerSprite;
@@ -582,10 +659,12 @@ export class BattleScene extends Phaser.Scene {
         case 'confusionHit':
         case 'bindDamage':
         case 'seedDamage':
+        case 'weatherDamage':
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');
-            if (sprite) this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
+            // Damage from moves blinks in its impact cue; residual damage blinks here.
+            if (sprite && e.type !== 'damage' && battleAnimations !== 'off') this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
           }
           await this.refreshInfoBox(box, mon!, true);
           break;
@@ -628,6 +707,27 @@ export class BattleScene extends Phaser.Scene {
           preText = `You used the ${content.items.get(e.itemId)?.name ?? 'item'}!`;
           break;
         }
+        case 'held': {
+          // A held item did something: show its HP, status and held items as they are now.
+          if (mon) {
+            if (e.hpAfter !== undefined) mon.hp = e.hpAfter;
+            if (e.what === 'cure') mon.status = null;
+            if (e.what === 'orb') mon.status = this.findLive(side!, mon.uid)?.status ?? mon.status;
+            await this.refreshInfoBox(box, mon, e.hpAfter !== undefined);
+          }
+          break;
+        }
+        case 'transform': {
+          // Presentation cue only: a flash and the new form's sprite (full cinematics are M9.5).
+          if (e.kind === 'mega' && e.itemId) await this.say(`${this.speciesName(mon!)}'s ${content.items.get(e.itemId)?.name ?? 'Mega Stone'} is reacting to your Mega Ring!`);
+          const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0);
+          await tween(this, { targets: flash, alpha: 0.9, duration: 250, yoyo: true, hold: 150 });
+          flash.destroy();
+          mon!.speciesId = e.to;
+          this.showSprite(e.side, mon!);
+          await this.refreshInfoBox(box, mon!, false);
+          break;
+        }
         case 'ball':
           await this.say(`You threw a ${content.items.get(e.itemId)?.name ?? 'ball'}!`);
           await this.animateBall(e.itemId, e.shakes, e.caught);
@@ -658,6 +758,13 @@ export class BattleScene extends Phaser.Scene {
         if (real) this.shown.player.status = real.status;
         await this.refreshInfoBox(this.playerBox, this.shown.player, true);
       }
+      // A story moment replaces the event's own line with its own (and a banner when it is a major one).
+      const cue = storyCues.find((c) => c.at === index);
+      if (cue) {
+        this.showMoment(cue, battleAnimations === 'full' && effectIntensity > 0);
+        for (const line of cue.messages) await this.say(line);
+        continue;
+      }
       const text = eventText(content, this.names(trainer), e);
       if (text) await this.say(text);
     }
@@ -676,6 +783,29 @@ export class BattleScene extends Phaser.Scene {
       if (active) await this.refreshInfoBox(this.playerBox, active, false);
     }
     this.updateHeader();
+  }
+
+  /**
+   * A story moment's banner and aura. Presentation only: it never touches the
+   * run, and if it fails the battle carries on with just the text.
+   */
+  /** `motion` is false under reduced motion or no animations: the banner still shows, without shake or aura. */
+  private showMoment(cue: PresentationCue, motion: boolean): void {
+    if (!cue.major) return;
+    try {
+      const color = Phaser.Display.Color.HexStringToColor(cue.color).color;
+      if (cue.sound) playSfx(this, cue.sound);
+      if (cue.shake && motion) this.cameras.main.shake(220, 0.006);
+      const band = this.add.rectangle(GAME_WIDTH / 2, 132, GAME_WIDTH, 54, color, 0.85).setDepth(50).setAlpha(0);
+      const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
+      this.tweens.add({ targets: [band, title], alpha: 1, duration: 180, hold: 1300, yoyo: true, onComplete: () => { band.destroy(); title.destroy(); } });
+      if (motion) {
+        const aura = this.add.circle(PLAYER_POS.x, PLAYER_POS.y - 40, 90, color, 0.35).setDepth(1).setScale(0.6);
+        this.tweens.add({ targets: aura, scale: 1.3, alpha: 0, duration: 900, onComplete: () => aura.destroy() });
+      }
+    } catch (err) {
+      console.warn('Story moment could not be shown', err);
+    }
   }
 
   /** Throw, wobble, and either click shut or burst open. */

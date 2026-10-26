@@ -856,5 +856,19 @@
    "attribute": "goodEvil",
    "amount": -5
   }
+ },
+ {
+  "id": "mega-ring",
+  "name": "Mega Ring",
+  "description": "A key item. Lets one of your Pokémon Mega Evolve once per battle, if you also have its Mega Stone.",
+  "category": "key",
+  "iconAssetId": "item.mega_bracelet",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "keyItem",
+   "mechanic": "mega"
+  }
  }
 ]

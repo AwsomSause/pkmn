@@ -35,8 +35,8 @@ export const COLORS = {
   hpYellow: 0xf3b200,
   hpRed: 0xfb3041,
   xp: 0x00baf3,
-  // PokeRogue reward tiers: common, great, ultra.
-  rarity: { common: 0xd8d8d8, uncommon: 0x4c9cf8, rare: 0xf8c030 } as Record<string, number>,
+  // PokeRogue reward tiers: common, great, ultra, and the item catalog's epic tier.
+  rarity: { common: 0xd8d8d8, uncommon: 0x4c9cf8, rare: 0xf8c030, epic: 0xc060f0 } as Record<string, number>,
 };
 
 /** Two-tone bar colours (top highlight, bottom shade), from PokeRogue's HP and EXP bars. */

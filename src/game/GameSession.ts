@@ -88,7 +88,7 @@ export class GameSession {
   continueRun(): RunState {
     this.refreshSavedRun();
     if (this.savedRun.status !== 'ok') throw new Error('No saved run to continue');
-    this.run = Run.ensureRegionOrder(this.content, this.savedRun.data);
+    this.run = Run.prepareLoadedRun(this.content, this.savedRun.data);
     if (this.run !== this.savedRun.data) this.persistRun();
     if (this.run.phase === 'over') this.finishRun();
     this.changed();
@@ -135,7 +135,7 @@ export class GameSession {
   }
 
   leaveShop(): void {
-    this.run = Run.leaveShop(this.requireRun());
+    this.run = Run.leaveShop(this.content, this.requireRun());
     this.persistRun();
   }
 
@@ -165,6 +165,13 @@ export class GameSession {
 
   useItem(itemId: string, partyIndex: number, evolveTo?: string): string {
     const result = Run.useItemOutsideBattle(this.content, this.requireRun(), itemId, partyIndex, evolveTo);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  cashIn(itemId: string): string {
+    const result = Run.cashInItem(this.content, this.requireRun(), itemId);
     this.run = result.run;
     this.persistRun();
     return result.message;
