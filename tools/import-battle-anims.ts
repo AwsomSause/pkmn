@@ -77,6 +77,10 @@ const COMMON_ANIMS: Record<string, string> = {
   'status.frz': 'common-frozen',
   heal: 'common-health-up',
   item: 'common-use-item',
+  confusion: 'common-confusion',
+  protect: 'common-protect',
+  bind: 'common-bind',
+  seed: 'common-leech-seed',
 };
 
 const TYPE_HEX: Record<string, string> = {
@@ -117,7 +121,7 @@ function convertFrame(s: any): CompactFrame {
     s.focus ?? 1,
   ];
   const tone: number[] | undefined = s.tone;
-  if (tone && tone.some((v) => v)) frame.push(tone.map(round) as [number, number, number, number]);
+  if (tone && tone.some((v) => v)) (frame as unknown[]).push(tone.map(round));
   return frame;
 }
 

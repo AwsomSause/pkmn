@@ -48,7 +48,7 @@ const TYPE_HEX: Record<string, string> = {
 };
 
 /** Events that mean the move didn't connect, so its animation is skipped. */
-const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp']);
+const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected']);
 
 /**
  * Plans the cues for one turn's events. The result has one list per event,
@@ -114,12 +114,32 @@ export function planCues(
         break;
       case 'residual':
       case 'recoil':
-        if (full && e.type === 'residual') cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[`status.${e.status}`] ?? '' });
+      case 'confusionHit':
+      case 'bindDamage':
+      case 'seedDamage': {
+        const common = e.type === 'residual' ? `status.${e.status}` : e.type === 'confusionHit' ? 'confusion' : e.type === 'bindDamage' ? 'bind' : e.type === 'seedDamage' ? 'seed' : '';
+        if (full && common) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[common] ?? '' });
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'damage', motion: full });
         break;
+      }
       case 'drain':
+      case 'heal':
+        if (e.amount <= 0) break;
         if (full && anims.common.heal) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.heal });
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'heal', motion: full });
+        break;
+      case 'confused':
+      case 'confusion':
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.confusion ?? '' });
+        break;
+      case 'protect':
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.protect ?? '' });
+        break;
+      case 'bound':
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.bind ?? '' });
+        break;
+      case 'seeded':
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.seed ?? '' });
         break;
       case 'status':
         if (full && anims.common[`status.${e.status}`]) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[`status.${e.status}`]! });

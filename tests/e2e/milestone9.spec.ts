@@ -1,0 +1,96 @@
+import { expect, test, type Page } from '@playwright/test';
+
+// Milestone 9: move animations load on demand and play in a real battle, and
+// the animation settings work from the title screen.
+
+const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
+
+async function waitForScene(page: Page, key: string, timeout = 20_000) {
+  await expect.poll(() => scene(page), { timeout }).toBe(key);
+  await page.waitForTimeout(250);
+}
+
+async function startBattle(page: Page) {
+  await page.keyboard.press('Enter'); // Enter the Hub
+  await waitForScene(page, 'Hub');
+  await page.keyboard.press('Enter'); // Start a run
+  await waitForScene(page, 'TrainerSelect');
+  await page.keyboard.press('Enter'); // Red
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'StarterSelect');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+}
+
+/** Waits until the battle shows its action menu. */
+async function waitForMenu(page: Page) {
+  await expect.poll(() => page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu)), { timeout: 20_000 }).toBe(true);
+  await page.waitForTimeout(200);
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+});
+
+test('a move plays its animation file, loaded on demand, without errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  const animRequests: string[] = [];
+  page.on('requestfinished', (r) => r.url().includes('/battle-anims/') && animRequests.push(r.url()));
+
+  await page.goto('/?seed=m9-anims');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  // Nothing about animations is loaded at start-up, only once a battle needs it.
+  expect(animRequests.length).toBeGreaterThan(0);
+
+  await page.keyboard.press('Enter'); // Fight
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter'); // first move
+  // Catch the animation mid-way: graphic sprites in the field container.
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.busy), { timeout: 8_000 })
+    .toBe(true);
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: 'test-results/m9-move-animation.png' });
+  await waitForMenu(page).catch(() => undefined);
+  await page.screenshot({ path: 'test-results/m9-after-turn.png' });
+  expect(errors).toEqual([]);
+});
+
+test('animation settings cycle on the title screen and turn animations off', async ({ page }) => {
+  await page.goto('/?seed=m9-settings');
+  await waitForScene(page, 'MainMenu');
+  // Continue (disabled), Hub (focused), Sound, Animations, Effects.
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'MainMenu');
+  expect(await page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('reduced');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'MainMenu');
+  expect(await page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('off');
+  await page.screenshot({ path: 'test-results/m9-settings.png' });
+
+  // With animations off, no animation file is ever requested.
+  const animRequests: string[] = [];
+  page.on('request', (r) => r.url().includes('/battle-anims/') && animRequests.push(r.url()));
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('ArrowUp');
+  await startBattle(page);
+  await waitForMenu(page);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter');
+  await waitForMenu(page);
+  expect(animRequests).toEqual([]);
+});

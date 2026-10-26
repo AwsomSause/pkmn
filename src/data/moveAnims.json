@@ -8,7 +8,11 @@
   "status.slp": "common-sleep",
   "status.frz": "common-frozen",
   "heal": "common-health-up",
-  "item": "common-use-item"
+  "item": "common-use-item",
+  "confusion": "common-confusion",
+  "protect": "common-protect",
+  "bind": "common-bind",
+  "seed": "common-leech-seed"
  },
  "anims": {
   "absorb": {
@@ -1235,6 +1239,15 @@
     "prsfx-whirlpool"
    ]
   },
+  "common-bind": {
+   "graphics": [
+    "pras-wrapping"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-wrap"
+   ]
+  },
   "common-burn": {
    "graphics": [
     "pras-status"
@@ -1242,6 +1255,15 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-burn"
+   ]
+  },
+  "common-confusion": {
+   "graphics": [
+    "pras-status"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-confused"
    ]
   },
   "common-frozen": {
@@ -1262,6 +1284,15 @@
     "prsfx-health-up"
    ]
   },
+  "common-leech-seed": {
+   "graphics": [
+    "pras-absorption2"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-leech-seed3"
+   ]
+  },
   "common-paralysis": {
    "graphics": [
     "pras-status"
@@ -1278,6 +1309,15 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-poison"
+   ]
+  },
+  "common-protect": {
+   "graphics": [
+    "pras-protect"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-protect"
    ]
   },
   "common-sleep": {
@@ -11120,6 +11160,654 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
+  "arm-thrust": {
+   "anim": "arm-thrust",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "baby-doll-eyes": {
+   "anim": "baby-doll-eyes",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "quick"
+  },
+  "barrage": {
+   "anim": "barrage",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "bind": {
+   "anim": "bind",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "blast-burn": {
+   "anim": "blast-burn",
+   "source": "own",
+   "shake": 3,
+   "flash": "#f08030",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "bone-rush": {
+   "anim": "bone-rush",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "bonemerang": {
+   "anim": "bonemerang",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 57,
+   "telegraph": "normal"
+  },
+  "brine": {
+   "anim": "brine",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 62,
+   "telegraph": "normal"
+  },
+  "bullet-seed": {
+   "anim": "bullet-seed",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "chip-away": {
+   "anim": "chip-away",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 63,
+   "telegraph": "normal"
+  },
+  "clamp": {
+   "anim": "clamp",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "comet-punch": {
+   "anim": "comet-punch",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "confuse-ray": {
+   "anim": "confuse-ray",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "darkest-lariat": {
+   "anim": "darkest-lariat",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 68,
+   "telegraph": "normal"
+  },
+  "detect": {
+   "anim": "detect",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "quick"
+  },
+  "dizzy-punch": {
+   "anim": "dizzy-punch",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 63,
+   "telegraph": "normal"
+  },
+  "double-hit": {
+   "anim": "double-hit",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "double-kick": {
+   "anim": "double-kick",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "double-slap": {
+   "anim": "double-slap",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "dual-chop": {
+   "anim": "dual-chop",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 53,
+   "telegraph": "normal"
+  },
+  "explosion": {
+   "anim": "explosion",
+   "source": "own",
+   "shake": 3,
+   "flash": "#a8a878",
+   "hitStopMs": 110,
+   "telegraph": "strong"
+  },
+  "false-swipe": {
+   "anim": "false-swipe",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 53,
+   "telegraph": "normal"
+  },
+  "fire-spin": {
+   "anim": "fire-spin",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "fissure": {
+   "anim": "fissure",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "flail": {
+   "anim": "flail",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "frenzy-plant": {
+   "anim": "frenzy-plant",
+   "source": "own",
+   "shake": 3,
+   "flash": "#78c850",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "frost-breath": {
+   "anim": "frost-breath",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 60,
+   "telegraph": "normal"
+  },
+  "fury-attack": {
+   "anim": "fury-attack",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "fury-swipes": {
+   "anim": "fury-swipes",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "gear-grind": {
+   "anim": "gear-grind",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 57,
+   "telegraph": "normal"
+  },
+  "giga-impact": {
+   "anim": "giga-impact",
+   "source": "own",
+   "shake": 3,
+   "flash": "#a8a878",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "guillotine": {
+   "anim": "guillotine",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "heal-order": {
+   "anim": "heal-order",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "hold-back": {
+   "anim": "hold-back",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 53,
+   "telegraph": "normal"
+  },
+  "horn-drill": {
+   "anim": "horn-drill",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "hurricane": {
+   "anim": "hurricane",
+   "source": "own",
+   "shake": 3,
+   "flash": "#a890f0",
+   "hitStopMs": 77,
+   "telegraph": "strong"
+  },
+  "hydro-cannon": {
+   "anim": "hydro-cannon",
+   "source": "own",
+   "shake": 3,
+   "flash": "#6890f0",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "hyper-beam": {
+   "anim": "hyper-beam",
+   "source": "own",
+   "shake": 3,
+   "flash": "#a8a878",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "icicle-spear": {
+   "anim": "icicle-spear",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "infestation": {
+   "anim": "infestation",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "jet-punch": {
+   "anim": "jet-punch",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 60,
+   "telegraph": "quick"
+  },
+  "kowtow-cleave": {
+   "anim": "kowtow-cleave",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 68,
+   "telegraph": "normal"
+  },
+  "leech-seed": {
+   "anim": "leech-seed",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "magma-storm": {
+   "anim": "magma-storm",
+   "source": "own",
+   "shake": 3,
+   "flash": "#f08030",
+   "hitStopMs": 73,
+   "telegraph": "strong"
+  },
+  "meteor-assault": {
+   "anim": "meteor-assault",
+   "source": "own",
+   "shake": 3,
+   "flash": "#c03028",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "milk-drink": {
+   "anim": "milk-drink",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "moonlight": {
+   "anim": "moonlight",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "morning-sun": {
+   "anim": "morning-sun",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "pin-missile": {
+   "anim": "pin-missile",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "play-nice": {
+   "anim": "play-nice",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "protect": {
+   "anim": "protect",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "quick"
+  },
+  "psyshock": {
+   "anim": "psyshock",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 67,
+   "telegraph": "normal"
+  },
+  "psystrike": {
+   "anim": "psystrike",
+   "source": "own",
+   "shake": 3,
+   "flash": "#f85888",
+   "hitStopMs": 73,
+   "telegraph": "strong"
+  },
+  "recover": {
+   "anim": "recover",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "reversal": {
+   "anim": "reversal",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "roar-of-time": {
+   "anim": "roar-of-time",
+   "source": "own",
+   "shake": 3,
+   "flash": "#7038f8",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "rock-blast": {
+   "anim": "rock-blast",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "rock-climb": {
+   "anim": "rock-climb",
+   "source": "own",
+   "shake": 2,
+   "flash": "#a8a878",
+   "hitStopMs": 70,
+   "telegraph": "normal"
+  },
+  "rock-wrecker": {
+   "anim": "rock-wrecker",
+   "source": "own",
+   "shake": 3,
+   "flash": "#b8a038",
+   "hitStopMs": 90,
+   "telegraph": "strong"
+  },
+  "sacred-sword": {
+   "anim": "sacred-sword",
+   "source": "own",
+   "shake": 2,
+   "flash": "#c03028",
+   "hitStopMs": 70,
+   "telegraph": "normal"
+  },
+  "sand-tomb": {
+   "anim": "sand-tomb",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "secret-sword": {
+   "anim": "secret-sword",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 68,
+   "telegraph": "normal"
+  },
+  "self-destruct": {
+   "anim": "self-destruct",
+   "source": "own",
+   "shake": 3,
+   "flash": "#a8a878",
+   "hitStopMs": 107,
+   "telegraph": "strong"
+  },
+  "sheer-cold": {
+   "anim": "sheer-cold",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "signal-beam": {
+   "anim": "signal-beam",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 65,
+   "telegraph": "normal"
+  },
+  "slack-off": {
+   "anim": "slack-off",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "snap-trap": {
+   "anim": "snap-trap",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "soft-boiled": {
+   "anim": "soft-boiled",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "spike-cannon": {
+   "anim": "spike-cannon",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "storm-throw": {
+   "anim": "storm-throw",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 60,
+   "telegraph": "normal"
+  },
+  "strange-steam": {
+   "anim": "strange-steam",
+   "source": "own",
+   "shake": 2,
+   "flash": "#ee99ac",
+   "hitStopMs": 70,
+   "telegraph": "normal"
+  },
+  "supersonic": {
+   "anim": "supersonic",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "sweet-kiss": {
+   "anim": "sweet-kiss",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "synthesis": {
+   "anim": "synthesis",
+   "source": "own",
+   "shake": 0,
+   "flash": null,
+   "hitStopMs": 0,
+   "telegraph": "normal"
+  },
+  "tail-slap": {
+   "anim": "tail-slap",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "twin-beam": {
+   "anim": "twin-beam",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 53,
+   "telegraph": "normal"
+  },
+  "twineedle": {
+   "anim": "twineedle",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "water-shuriken": {
+   "anim": "water-shuriken",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "quick"
+  },
+  "whirlpool": {
+   "anim": "whirlpool",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 52,
+   "telegraph": "normal"
+  },
+  "wrap": {
+   "anim": "wrap",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 50,
+   "telegraph": "normal"
+  },
+  "zippy-zap": {
+   "anim": "zippy-zap",
+   "source": "own",
+   "shake": 1,
+   "flash": null,
+   "hitStopMs": 57,
+   "telegraph": "quick"
+  },
   "10-000-000-volt-thunderbolt": {
    "anim": "thunder-shock",
    "source": "type",
@@ -11198,14 +11886,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "arm-thrust": {
-   "anim": "arm-thrust",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "aromatherapy": {
@@ -11296,14 +11976,6 @@
    "hitStopMs": 80,
    "telegraph": "strong"
   },
-  "baby-doll-eyes": {
-   "anim": "baby-doll-eyes",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "quick"
-  },
   "baddy-bad": {
    "anim": "baddy-bad",
    "source": "own",
@@ -11326,14 +11998,6 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 60,
-   "telegraph": "normal"
-  },
-  "barrage": {
-   "anim": "barrage",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "baton-pass": {
@@ -11408,14 +12072,6 @@
    "hitStopMs": 50,
    "telegraph": "quick"
   },
-  "bind": {
-   "anim": "bind",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "black-hole-eclipse": {
    "anim": "nasty-plot",
    "source": "type",
@@ -11423,14 +12079,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "blast-burn": {
-   "anim": "blast-burn",
-   "source": "own",
-   "shake": 3,
-   "flash": "#f08030",
-   "hitStopMs": 90,
-   "telegraph": "strong"
   },
   "blazing-torque": {
    "anim": "blazing-torque",
@@ -11488,22 +12136,6 @@
    "hitStopMs": 68,
    "telegraph": "normal"
   },
-  "bone-rush": {
-   "anim": "bone-rush",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "bonemerang": {
-   "anim": "bonemerang",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 57,
-   "telegraph": "normal"
-  },
   "bounce": {
    "anim": "bounce",
    "source": "own",
@@ -11528,28 +12160,12 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "brine": {
-   "anim": "brine",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 62,
-   "telegraph": "normal"
-  },
   "brutal-swing": {
    "anim": "brutal-swing",
    "source": "own",
    "shake": 2,
    "flash": null,
    "hitStopMs": 60,
-   "telegraph": "normal"
-  },
-  "bullet-seed": {
-   "anim": "bullet-seed",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "burn-up": {
@@ -11640,28 +12256,12 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "chip-away": {
-   "anim": "chip-away",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 63,
-   "telegraph": "normal"
-  },
   "circle-throw": {
    "anim": "circle-throw",
    "source": "own",
    "shake": 2,
    "flash": null,
    "hitStopMs": 60,
-   "telegraph": "normal"
-  },
-  "clamp": {
-   "anim": "clamp",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
    "telegraph": "normal"
   },
   "clangorous-soul": {
@@ -11712,28 +12312,12 @@
    "hitStopMs": 73,
    "telegraph": "strong"
   },
-  "comet-punch": {
-   "anim": "comet-punch",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "comeuppance": {
    "anim": "comeuppance",
    "source": "own",
    "shake": 1,
    "flash": null,
    "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "confuse-ray": {
-   "anim": "confuse-ray",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
    "telegraph": "normal"
   },
   "constrict": {
@@ -11856,14 +12440,6 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "darkest-lariat": {
-   "anim": "darkest-lariat",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 68,
-   "telegraph": "normal"
-  },
   "defog": {
    "anim": "defog",
    "source": "own",
@@ -11879,14 +12455,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "detect": {
-   "anim": "detect",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "quick"
   },
   "devastating-drake": {
    "anim": "dragon-dance",
@@ -11928,14 +12496,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "dizzy-punch": {
-   "anim": "dizzy-punch",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 63,
-   "telegraph": "normal"
-  },
   "doodle": {
    "anim": "doodle",
    "source": "own",
@@ -11952,28 +12512,12 @@
    "hitStopMs": 87,
    "telegraph": "strong"
   },
-  "double-hit": {
-   "anim": "double-hit",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
-   "telegraph": "normal"
-  },
   "double-iron-bash": {
    "anim": "double-iron-bash",
    "source": "own",
    "shake": 2,
    "flash": null,
    "hitStopMs": 60,
-   "telegraph": "normal"
-  },
-  "double-kick": {
-   "anim": "double-kick",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "double-shock": {
@@ -11983,14 +12527,6 @@
    "flash": "#f8d030",
    "hitStopMs": 80,
    "telegraph": "strong"
-  },
-  "double-slap": {
-   "anim": "double-slap",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
   },
   "dragon-cheer": {
    "anim": "dragon-cheer",
@@ -12047,14 +12583,6 @@
    "flash": "#f85888",
    "hitStopMs": 73,
    "telegraph": "strong"
-  },
-  "dual-chop": {
-   "anim": "dual-chop",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 53,
-   "telegraph": "normal"
   },
   "dual-wingbeat": {
    "anim": "dual-wingbeat",
@@ -12200,14 +12728,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "explosion": {
-   "anim": "explosion",
-   "source": "own",
-   "shake": 3,
-   "flash": "#a8a878",
-   "hitStopMs": 110,
-   "telegraph": "strong"
-  },
   "extreme-evoboost": {
    "anim": "extreme-evoboost",
    "source": "own",
@@ -12239,14 +12759,6 @@
    "flash": null,
    "hitStopMs": 53,
    "telegraph": "quick"
-  },
-  "false-swipe": {
-   "anim": "false-swipe",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 53,
-   "telegraph": "normal"
   },
   "feint": {
    "anim": "feint",
@@ -12304,14 +12816,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "fire-spin": {
-   "anim": "fire-spin",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
-   "telegraph": "normal"
-  },
   "first-impression": {
    "anim": "first-impression",
    "source": "own",
@@ -12326,22 +12830,6 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 68,
-   "telegraph": "normal"
-  },
-  "fissure": {
-   "anim": "fissure",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "flail": {
-   "anim": "flail",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "flame-burst": {
@@ -12488,40 +12976,8 @@
    "hitStopMs": 70,
    "telegraph": "normal"
   },
-  "frenzy-plant": {
-   "anim": "frenzy-plant",
-   "source": "own",
-   "shake": 3,
-   "flash": "#78c850",
-   "hitStopMs": 90,
-   "telegraph": "strong"
-  },
-  "frost-breath": {
-   "anim": "frost-breath",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 60,
-   "telegraph": "normal"
-  },
   "frustration": {
    "anim": "frustration",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "fury-attack": {
-   "anim": "fury-attack",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "fury-swipes": {
-   "anim": "fury-swipes",
    "source": "own",
    "shake": 1,
    "flash": null,
@@ -12824,14 +13280,6 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "gear-grind": {
-   "anim": "gear-grind",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 57,
-   "telegraph": "normal"
-  },
   "gear-up": {
    "anim": "gear-up",
    "source": "own",
@@ -12855,14 +13303,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "giga-impact": {
-   "anim": "giga-impact",
-   "source": "own",
-   "shake": 3,
-   "flash": "#a8a878",
-   "hitStopMs": 90,
-   "telegraph": "strong"
   },
   "gigaton-hammer": {
    "anim": "gigaton-hammer",
@@ -12984,14 +13424,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "guillotine": {
-   "anim": "guillotine",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "gyro-ball": {
    "anim": "gyro-ball",
    "source": "own",
@@ -13042,14 +13474,6 @@
   },
   "heal-block": {
    "anim": "heal-block",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "heal-order": {
-   "anim": "heal-order",
    "source": "own",
    "shake": 0,
    "flash": null,
@@ -13136,28 +13560,12 @@
    "hitStopMs": 83,
    "telegraph": "strong"
   },
-  "hold-back": {
-   "anim": "hold-back",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 53,
-   "telegraph": "normal"
-  },
   "hold-hands": {
    "anim": "hold-hands",
    "source": "own",
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "horn-drill": {
-   "anim": "horn-drill",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "howl": {
@@ -13167,22 +13575,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "hurricane": {
-   "anim": "hurricane",
-   "source": "own",
-   "shake": 3,
-   "flash": "#a890f0",
-   "hitStopMs": 77,
-   "telegraph": "strong"
-  },
-  "hydro-cannon": {
-   "anim": "hydro-cannon",
-   "source": "own",
-   "shake": 3,
-   "flash": "#6890f0",
-   "hitStopMs": 90,
-   "telegraph": "strong"
   },
   "hydro-steam": {
    "anim": "hydro-steam",
@@ -13199,14 +13591,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "hyper-beam": {
-   "anim": "hyper-beam",
-   "source": "own",
-   "shake": 3,
-   "flash": "#a8a878",
-   "hitStopMs": 90,
-   "telegraph": "strong"
   },
   "ice-ball": {
    "anim": "ice-ball",
@@ -13240,14 +13624,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "icicle-spear": {
-   "anim": "icicle-spear",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "imprison": {
    "anim": "imprison",
    "source": "own",
@@ -13278,14 +13654,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "infestation": {
-   "anim": "infestation",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "ingrain": {
@@ -13328,14 +13696,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "jet-punch": {
-   "anim": "jet-punch",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 60,
-   "telegraph": "quick"
-  },
   "judgment": {
    "anim": "judgment",
    "source": "own",
@@ -13376,14 +13736,6 @@
    "hitStopMs": 62,
    "telegraph": "normal"
   },
-  "kowtow-cleave": {
-   "anim": "kowtow-cleave",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 68,
-   "telegraph": "normal"
-  },
   "laser-focus": {
    "anim": "laser-focus",
    "source": "own",
@@ -13422,14 +13774,6 @@
    "shake": 1,
    "flash": null,
    "hitStopMs": 53,
-   "telegraph": "normal"
-  },
-  "leech-seed": {
-   "anim": "leech-seed",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
    "telegraph": "normal"
   },
   "lets-snuggle-forever": {
@@ -13549,14 +13893,6 @@
    "source": "own",
    "shake": 3,
    "flash": "#ee99ac",
-   "hitStopMs": 73,
-   "telegraph": "strong"
-  },
-  "magma-storm": {
-   "anim": "magma-storm",
-   "source": "own",
-   "shake": 3,
-   "flash": "#f08030",
    "hitStopMs": 73,
    "telegraph": "strong"
   },
@@ -13816,14 +14152,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "meteor-assault": {
-   "anim": "meteor-assault",
-   "source": "own",
-   "shake": 3,
-   "flash": "#c03028",
-   "hitStopMs": 90,
-   "telegraph": "strong"
-  },
   "meteor-beam": {
    "anim": "meteor-beam",
    "source": "own",
@@ -13834,14 +14162,6 @@
   },
   "metronome": {
    "anim": "metronome",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "milk-drink": {
-   "anim": "milk-drink",
    "source": "own",
    "shake": 0,
    "flash": null,
@@ -13927,22 +14247,6 @@
    "flash": "#705898",
    "hitStopMs": 73,
    "telegraph": "strong"
-  },
-  "moonlight": {
-   "anim": "moonlight",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "morning-sun": {
-   "anim": "morning-sun",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
   },
   "mortal-spin": {
    "anim": "mortal-spin",
@@ -14160,14 +14464,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "pin-missile": {
-   "anim": "pin-missile",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "plasma-fists": {
    "anim": "plasma-fists",
    "source": "own",
@@ -14175,14 +14471,6 @@
    "flash": "#f8d030",
    "hitStopMs": 73,
    "telegraph": "strong"
-  },
-  "play-nice": {
-   "anim": "play-nice",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
   },
   "pluck": {
    "anim": "pluck",
@@ -14296,14 +14584,6 @@
    "hitStopMs": 93,
    "telegraph": "strong"
   },
-  "protect": {
-   "anim": "protect",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "quick"
-  },
   "psyblade": {
    "anim": "psyblade",
    "source": "own",
@@ -14351,22 +14631,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "psyshock": {
-   "anim": "psyshock",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 67,
-   "telegraph": "normal"
-  },
-  "psystrike": {
-   "anim": "psystrike",
-   "source": "own",
-   "shake": 3,
-   "flash": "#f85888",
-   "hitStopMs": 73,
-   "telegraph": "strong"
   },
   "psywave": {
    "anim": "psywave",
@@ -14480,14 +14744,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "recover": {
-   "anim": "recover",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
   "recycle": {
    "anim": "recycle",
    "source": "own",
@@ -14568,14 +14824,6 @@
    "hitStopMs": 60,
    "telegraph": "normal"
   },
-  "reversal": {
-   "anim": "reversal",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "revival-blessing": {
    "anim": "revival-blessing",
    "source": "own",
@@ -14599,38 +14847,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "roar-of-time": {
-   "anim": "roar-of-time",
-   "source": "own",
-   "shake": 3,
-   "flash": "#7038f8",
-   "hitStopMs": 90,
-   "telegraph": "strong"
-  },
-  "rock-blast": {
-   "anim": "rock-blast",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
-  "rock-climb": {
-   "anim": "rock-climb",
-   "source": "own",
-   "shake": 2,
-   "flash": "#a8a878",
-   "hitStopMs": 70,
-   "telegraph": "normal"
-  },
-  "rock-wrecker": {
-   "anim": "rock-wrecker",
-   "source": "own",
-   "shake": 3,
-   "flash": "#b8a038",
-   "hitStopMs": 90,
-   "telegraph": "strong"
   },
   "role-play": {
    "anim": "role-play",
@@ -14680,14 +14896,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "sacred-sword": {
-   "anim": "sacred-sword",
-   "source": "own",
-   "shake": 2,
-   "flash": "#c03028",
-   "hitStopMs": 70,
-   "telegraph": "normal"
-  },
   "safeguard": {
    "anim": "safeguard",
    "source": "own",
@@ -14702,14 +14910,6 @@
    "shake": 1,
    "flash": null,
    "hitStopMs": 53,
-   "telegraph": "normal"
-  },
-  "sand-tomb": {
-   "anim": "sand-tomb",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
    "telegraph": "normal"
   },
   "sandsear-storm": {
@@ -14776,22 +14976,6 @@
    "hitStopMs": 63,
    "telegraph": "normal"
   },
-  "secret-sword": {
-   "anim": "secret-sword",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 68,
-   "telegraph": "normal"
-  },
-  "self-destruct": {
-   "anim": "self-destruct",
-   "source": "own",
-   "shake": 3,
-   "flash": "#a8a878",
-   "hitStopMs": 107,
-   "telegraph": "strong"
-  },
   "shadow-force": {
    "anim": "shadow-force",
    "source": "own",
@@ -14814,14 +14998,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "sheer-cold": {
-   "anim": "sheer-cold",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "shell-side-arm": {
@@ -14862,14 +15038,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "signal-beam": {
-   "anim": "signal-beam",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 65,
    "telegraph": "normal"
   },
   "silk-trap": {
@@ -14960,14 +15128,6 @@
    "hitStopMs": 68,
    "telegraph": "normal"
   },
-  "slack-off": {
-   "anim": "slack-off",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
   "sleep-talk": {
    "anim": "sleep-talk",
    "source": "own",
@@ -14998,14 +15158,6 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 63,
-   "telegraph": "normal"
-  },
-  "snap-trap": {
-   "anim": "snap-trap",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
    "telegraph": "normal"
   },
   "snatch": {
@@ -15042,14 +15194,6 @@
   },
   "soak": {
    "anim": "soak",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "soft-boiled": {
-   "anim": "soft-boiled",
    "source": "own",
    "shake": 0,
    "flash": null,
@@ -15134,14 +15278,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "spike-cannon": {
-   "anim": "spike-cannon",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "spikes": {
@@ -15296,22 +15432,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "storm-throw": {
-   "anim": "storm-throw",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 60,
-   "telegraph": "normal"
-  },
-  "strange-steam": {
-   "anim": "strange-steam",
-   "source": "own",
-   "shake": 2,
-   "flash": "#ee99ac",
-   "hitStopMs": 70,
-   "telegraph": "normal"
-  },
   "strength-sap": {
    "anim": "strength-sap",
    "source": "own",
@@ -15376,14 +15496,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "supersonic": {
-   "anim": "supersonic",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
   "supersonic-skystrike": {
    "anim": "feather-dance",
    "source": "type",
@@ -15416,14 +15528,6 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "sweet-kiss": {
-   "anim": "sweet-kiss",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
   "switcheroo": {
    "anim": "switcheroo",
    "source": "own",
@@ -15440,14 +15544,6 @@
    "hitStopMs": 80,
    "telegraph": "strong"
   },
-  "synthesis": {
-   "anim": "synthesis",
-   "source": "own",
-   "shake": 0,
-   "flash": null,
-   "hitStopMs": 0,
-   "telegraph": "normal"
-  },
   "syrup-bomb": {
    "anim": "syrup-bomb",
    "source": "own",
@@ -15462,14 +15558,6 @@
    "shake": 1,
    "flash": null,
    "hitStopMs": 57,
-   "telegraph": "normal"
-  },
-  "tail-slap": {
-   "anim": "tail-slap",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
    "telegraph": "normal"
   },
   "tailwind": {
@@ -15760,22 +15848,6 @@
    "hitStopMs": 50,
    "telegraph": "normal"
   },
-  "twin-beam": {
-   "anim": "twin-beam",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 53,
-   "telegraph": "normal"
-  },
-  "twineedle": {
-   "anim": "twineedle",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "twinkle-tackle": {
    "anim": "sweet-kiss",
    "source": "type",
@@ -15872,14 +15944,6 @@
    "hitStopMs": 67,
    "telegraph": "normal"
   },
-  "water-shuriken": {
-   "anim": "water-shuriken",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "quick"
-  },
   "water-sport": {
    "anim": "water-sport",
    "source": "own",
@@ -15902,14 +15966,6 @@
    "shake": 1,
    "flash": null,
    "hitStopMs": 57,
-   "telegraph": "normal"
-  },
-  "whirlpool": {
-   "anim": "whirlpool",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 52,
    "telegraph": "normal"
   },
   "whirlwind": {
@@ -15976,14 +16032,6 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "wrap": {
-   "anim": "wrap",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 50,
-   "telegraph": "normal"
-  },
   "wring-out": {
    "anim": "wring-out",
    "source": "own",
@@ -15999,14 +16047,6 @@
    "flash": null,
    "hitStopMs": 0,
    "telegraph": "normal"
-  },
-  "zippy-zap": {
-   "anim": "zippy-zap",
-   "source": "own",
-   "shake": 1,
-   "flash": null,
-   "hitStopMs": 57,
-   "telegraph": "quick"
   }
  }
 }

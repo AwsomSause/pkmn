@@ -21,6 +21,10 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLOR
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { planCues } from '../core/presentation/cues';
+import { presentationFor } from '../core/presentation/moveAnims';
+import { moveAnims } from '../data/presentation';
+import { BattleFx } from '../ui/battleFx/battleFx';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -58,6 +62,11 @@ export class BattleScene extends Phaser.Scene {
   private playerSprite: Visual | null = null;
   private enemySprite: Visual | null = null;
   private header!: Phaser.GameObjects.Text;
+  /** The arena and both Pokémon: what move animations draw among and screen shake moves (the menus stay still). */
+  private field!: Phaser.GameObjects.Container;
+  /** Index in `field` just above the arena art. */
+  private fieldBase = 0;
+  private fx!: BattleFx;
   private advance: (() => void) | null = null;
   private busy = false;
   /** What the screen currently shows for each side (may lag the real state during playback). */
@@ -93,13 +102,20 @@ export class BattleScene extends Phaser.Scene {
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
     const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
-    if (assets.has(bg)) this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE);
-    else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0);
+    this.field = this.add.container(0, 0);
+    if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
+    else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
     // The ground patches each side stands on.
     for (const side of ['enemy', 'player']) {
       const key = `${bg}.${side}`;
-      if (assets.has(key) && this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE);
+      if (assets.has(key) && this.textures.exists(key)) this.field.add(this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE));
     }
+    this.fieldBase = this.field.length;
+    this.fx = new BattleFx(this, {
+      field: this.field,
+      backgroundIndex: () => this.fieldBase,
+      sprite: (side) => (side === 'player' ? this.playerSprite : this.enemySprite),
+    });
 
     this.shown = { player: structuredClone(this.activeMon()), enemy: structuredClone(currentEnemy(battle)) };
     this.enemyBox = this.makeInfoBox(0, 30, false);
@@ -184,11 +200,22 @@ export class BattleScene extends Phaser.Scene {
     if (side === 'player') {
       this.playerSprite?.destroy();
       this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, PIXEL_SCALE + 1, mon.shiny);
+      this.field.add(this.playerSprite);
+      this.prefetchMoves(mon);
       return this.playerSprite;
     }
     this.enemySprite?.destroy();
     this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE, mon.shiny);
+    // The foe stands behind the player's Pokémon.
+    this.field.addAt(this.enemySprite, this.fieldBase);
+    this.prefetchMoves(mon);
     return this.enemySprite;
+  }
+
+  /** Starts loading the animations of a Pokémon's moves while the player reads. */
+  private prefetchMoves(mon: PokemonInstance): void {
+    const data = moveAnims();
+    this.fx.prefetch(mon.moves.map((m) => presentationFor(data, m.id).anim));
   }
 
   private makeInfoBox(x: number, y: number, isPlayer: boolean): InfoBox {
@@ -274,6 +301,10 @@ export class BattleScene extends Phaser.Scene {
   // ---------- input and messages ----------
 
   private handleInput(action: InputAction): void {
+    if (this.fx.busy && (action === 'confirm' || action === 'back')) {
+      this.fx.skip();
+      return;
+    }
     if (this.picker) {
       this.picker.handle(action);
       return;
@@ -566,8 +597,14 @@ export class BattleScene extends Phaser.Scene {
   private async playEvents(events: RunEvent[], before: RunState, trainer: string | null): Promise<void> {
     const { session } = services();
     const content = session.content;
+    const { battleAnimations, effectIntensity } = session.settings;
+    // What the screen shows for each event; worked out from the finished turn, so it can't change it.
+    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity });
 
-    for (const e of events) {
+    for (const [i, e] of events.entries()) {
+      // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
+      if (e.type === 'move') this.message.setText(eventText(content, this.names(trainer), e) ?? '');
+      await this.fx.play(cues[i] ?? []);
       const side = 'side' in e ? e.side : null;
       const box = side === 'enemy' ? this.enemyBox : this.playerBox;
       const sprite = side === 'enemy' ? this.enemySprite : this.playerSprite;
@@ -585,7 +622,8 @@ export class BattleScene extends Phaser.Scene {
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');
-            if (sprite) this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
+            // Damage from moves blinks in its impact cue; residual damage blinks here.
+            if (sprite && e.type !== 'damage' && battleAnimations !== 'off') this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
           }
           await this.refreshInfoBox(box, mon!, true);
           break;

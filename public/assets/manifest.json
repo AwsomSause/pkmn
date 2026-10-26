@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T23:08:01.548Z",
+  "generatedAt": "2026-10-26T03:44:59.014Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -72506,10 +72506,24 @@
       "lazy": true
     },
     {
+      "id": "anim.data.common-bind",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-bind.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.common-burn",
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/common-burn.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.common-confusion",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-confusion.json",
       "lazy": true
     },
     {
@@ -72527,6 +72541,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.common-leech-seed",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-leech-seed.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.common-paralysis",
       "kind": "json",
       "category": "animation",
@@ -72538,6 +72559,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/common-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.common-protect",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-protect.json",
       "lazy": true
     },
     {
@@ -82772,6 +82800,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-confused",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-confused.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-confusion",
       "kind": "audio",
       "category": "animation",
@@ -85044,6 +85079,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-leech-seed2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-leech-seed3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-leech-seed3.m4a",
       "lazy": true
     },
     {

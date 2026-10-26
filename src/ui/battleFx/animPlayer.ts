@@ -114,17 +114,22 @@ export function playAnim(stage: Stage, anim: CompactAnim, speed = 1): PlayHandle
     background = null;
     restore(savedUser);
     if (!sameMon) restore(savedTarget);
+    scene.events.off(Phaser.Scenes.Events.SHUTDOWN, cleanUp);
     resolveDone();
   };
 
   /** Places a graphic sprite in the field's draw order (PokeRogue's priorities 0–3). */
   const order = (sprite: Phaser.GameObjects.Sprite, priority: number, focusVisual: Visual | null) => {
-    if (priority === 0) field.moveBelow(sprite, stage.userIsPlayer ? stage.target : stage.user);
-    else if (priority === 2 && background) field.moveAbove(sprite, background);
-    else if ((priority === 2 || priority === 3) && focusVisual) {
-      if (priority === 2) field.moveBelow(sprite, focusVisual);
-      else field.moveAbove(sprite, focusVisual);
-    } else field.bringToTop(sprite);
+    type Obj = Phaser.GameObjects.GameObject;
+    const inField = (o: Obj | null): o is Obj => o !== null && field.exists(o);
+    const me = sprite as Obj;
+    const enemy = stage.userIsPlayer ? stage.target : stage.user;
+    if (priority === 0 && inField(enemy)) field.moveBelow<Obj>(me, enemy);
+    else if (priority === 2 && inField(background)) field.moveAbove<Obj>(me, background);
+    else if ((priority === 2 || priority === 3) && inField(focusVisual)) {
+      if (priority === 2) field.moveBelow<Obj>(me, focusVisual);
+      else field.moveAbove<Obj>(me, focusVisual);
+    } else field.bringToTop(me);
   };
 
   const showFrame = (sprites: CompactFrame[]) => {
@@ -236,7 +241,6 @@ export function playAnim(stage: Stage, anim: CompactAnim, speed = 1): PlayHandle
     timer = scene.time.delayedCall(FRAME_MS / speed, step);
   };
 
-  // Hide the Pokémon during the animation only where the file draws them; otherwise they stay put.
   scene.events.once(Phaser.Scenes.Events.SHUTDOWN, cleanUp);
   step();
   return { done, stop: cleanUp };
