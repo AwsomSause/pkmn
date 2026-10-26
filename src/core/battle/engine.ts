@@ -4,12 +4,15 @@
 // battle screen plays back in order.
 //
 // Turn order: switching and items happen first, then moves (priority, then
-// Speed, then a seeded coin flip), then end-of-turn damage (burn, poison,
-// binding, Leech Seed), then fainted Pokémon are replaced.
+// Speed, then a seeded coin flip), then end-of-turn damage (weather, burn,
+// poison, binding, Leech Seed), then fainted Pokémon are replaced.
+//
+// A Pokémon charging a two-turn move (Solar Beam, Fly) or locked into Thrash
+// must use that move next turn: the player's move choice is replaced by it.
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
-import type { BoostStat, Content, Move, StatusId } from '../contentSchema';
+import type { BoostStat, Content, Move, Semi, StatusId, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
@@ -63,6 +66,15 @@ export type BattleEvent =
   | { type: 'bindEnd'; side: Side }
   | { type: 'seeded'; side: Side }
   | { type: 'seedDamage'; side: Side; amount: number; hpAfter: number }
+  /** First turn of a two-turn move; `semi` says where it hid, if anywhere. */
+  | { type: 'charge'; side: Side; moveId: string; semi: Semi | null }
+  /** A move missed because the target was hidden (in the air, underground, ...). */
+  | { type: 'avoided'; side: Side }
+  /** Thrash and Outrage ended and the user became confused from fatigue. */
+  | { type: 'fatigue'; side: Side }
+  | { type: 'weather'; weather: Weather }
+  | { type: 'weatherEnd'; weather: Weather }
+  | { type: 'weatherDamage'; side: Side; weather: Weather; amount: number; hpAfter: number }
   | { type: 'wake'; side: Side }
   | { type: 'thaw'; side: Side }
   | { type: 'residual'; side: Side; status: StatusId; amount: number; hpAfter: number }
@@ -137,6 +149,7 @@ export function createBattle(
     enemyStages: freshStages(),
     playerVolatile: freshVolatile(),
     enemyVolatile: freshVolatile(),
+    weather: null,
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
@@ -190,7 +203,8 @@ function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): nu
   const attackPower = (m: Move) => {
     if (m.category === 'status') return 0;
     const effectiveness = m.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, m.type, targetSpecies.types);
-    const power = m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0);
+    // A two-turn move is worth about half as much per turn.
+    const power = (m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0)) * (m.effects.charge ? 0.5 : 1);
     const ratio = m.category === 'physical' ? userStats.atk / targetStats.def : userStats.spa / targetStats.spd;
     const stab = userSpecies.types.includes(m.type) ? 1.5 : 1;
     return power * ((m.accuracy ?? 100) / 100) * effectiveness * stab * ratio;
@@ -200,6 +214,7 @@ function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): nu
   const best = Math.max(1, ...user.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m)).map(attackPower));
   const fx = move.effects;
   if (fx.heal) return user.hp / calcStats(content, user).hp < 0.5 ? best : 0;
+  if (fx.weather) return best * 0.3;
   if (fx.protect) return best * 0.1;
   if (fx.confuse) return best * 0.4 * ((move.accuracy ?? 100) / 100);
   if (fx.seed) return getSpecies(content, target.speciesId).types.includes('grass') ? 0 : best * 0.5;
@@ -218,6 +233,19 @@ function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): nu
   return best * 0.2;
 }
 
+/** The move a Pokémon must use this turn (the second turn of Solar Beam, more Thrash), or null. */
+export function forcedMoveId(vol: Volatile | undefined): string | null {
+  return vol?.charging ?? vol?.locked?.moveId ?? null;
+}
+
+/** The move slot the player's Pokémon must use this turn, or null if it can choose. */
+export function forcedMoveIndex(battle: BattleState, party: PokemonInstance[]): number | null {
+  const id = forcedMoveId(battle.playerVolatile);
+  if (!id) return null;
+  const index = party[battle.activeIndex]?.moves.findIndex((m) => m.id === id) ?? -1;
+  return index >= 0 ? index : null;
+}
+
 /** Why the player can't switch to this party slot, or null if they can. */
 export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'>, partyIndex: number): string | null {
   const mon = ctx.party[partyIndex];
@@ -225,6 +253,7 @@ export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'>, part
   if (partyIndex === ctx.battle.activeIndex && !ctx.battle.needsSwitch) return 'That Pokémon is already in battle.';
   if (mon.hp <= 0) return 'That Pokémon has fainted.';
   if (!ctx.battle.needsSwitch && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
+  if (!ctx.battle.needsSwitch && forcedMoveId(ctx.battle.playerVolatile)) return 'Your Pokémon is in the middle of a move!';
   return null;
 }
 
@@ -247,12 +276,24 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     return events;
   }
 
-  validateAction(ctx, action);
   battle.playerVolatile ??= freshVolatile();
   battle.enemyVolatile ??= freshVolatile();
+  battle.weather ??= null;
+  // A Pokémon in the middle of a two-turn or lock-in move must carry on with it.
+  const forced = forcedMoveIndex(battle, ctx.party);
+  if (forced !== null) {
+    if (action.kind !== 'move') throw new Error('Your Pokémon is in the middle of a move!');
+    action = { kind: 'move', index: forced };
+  } else {
+    if (forcedMoveId(battle.playerVolatile)) battle.playerVolatile = freshVolatileKeeping(battle.playerVolatile);
+    validateAction(ctx, action);
+  }
   ctx.doubleKoLoser = undefined;
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
-  const enemyMoveIndex = chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
+  const enemyForced = forcedMoveId(enemy.vol);
+  const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
+  const enemyMoveIndex =
+    enemyForcedIndex >= 0 ? enemyForcedIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
   const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -287,17 +328,30 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
   recordFaints(ctx, playerC, enemy, events);
 
-  // 3. End of turn: burn, poison, binding and Leech Seed.
+  // 3. End of turn: weather, then burn, poison, binding and Leech Seed.
+  if (!anyFainted(playerC, enemy)) {
+    applyWeather(ctx, [playerC, enemy], events);
+    recordFaints(ctx, playerC, enemy, events);
+  }
   if (!anyFainted(playerC, enemy)) {
     applyResidual(ctx, playerC, enemy, events);
     applyResidual(ctx, enemy, playerC, events);
     recordFaints(ctx, playerC, enemy, events);
   }
 
+  // A Pokémon that switched in this turn still gets its "first turn" next turn (Fake Out).
+  if (action.kind !== 'switch') playerC.vol.turnsOut += 1;
+  enemy.vol.turnsOut += 1;
+
   // 4. Decide the outcome or replace fainted Pokémon.
   settleFaints(ctx, events);
   battle.turn += 1;
   return events;
+}
+
+/** Clears a stuck two-turn or lock-in move (its move slot is gone), keeping the other conditions. */
+function freshVolatileKeeping(vol: Volatile): Volatile {
+  return { ...vol, charging: null, semi: null, locked: null };
 }
 
 function anyFainted(a: Combatant, b: Combatant): boolean {
@@ -529,14 +583,38 @@ function executeMove(
   movedFirst: boolean,
   events: BattleEvent[],
 ): void {
-  if (!canAct(ctx, user, events)) return;
+  const continuing = forcedMoveId(user.vol) === move.id;
+  if (!canAct(ctx, user, events)) {
+    // Being unable to move cancels a two-turn or lock-in move.
+    user.vol.charging = null;
+    user.vol.semi = null;
+    user.vol.locked = null;
+    return;
+  }
 
+  // The second turn of a two-turn move and more Thrash use no PP.
   if (slot === -1) events.push({ type: 'noPp', side: user.side });
-  else user.mon.moves[slot]!.pp -= 1;
+  else if (!continuing) user.mon.moves[slot]!.pp -= 1;
   events.push({ type: 'move', side: user.side, moveId: move.id });
   if (!move.effects.protect) user.vol.protectChain = 0;
 
   runMove(ctx, user, target, move, movedFirst, events);
+
+  // Thrash: 2–3 turns in a row, then confusion from fatigue.
+  if (move.effects.lockIn) {
+    if (!user.vol.locked) {
+      user.vol.locked = { moveId: move.id, turns: ctx.rng.int(1, 2) };
+    } else {
+      user.vol.locked.turns -= 1;
+      if (user.vol.locked.turns <= 0) {
+        user.vol.locked = null;
+        if (user.mon.hp > 0 && user.vol.confusion === 0) {
+          user.vol.confusion = ctx.rng.int(2, 5);
+          events.push({ type: 'fatigue', side: user.side });
+        }
+      }
+    }
+  }
 
   // Explosion: the user faints whether or not the move worked.
   if (move.effects.selfFaint && user.mon.hp > 0) {
@@ -550,6 +628,36 @@ function executeMove(
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   const { content, rng } = ctx;
   const fx = move.effects;
+  const weather = ctx.battle.weather?.id ?? null;
+
+  if (fx.firstTurnOnly && user.vol.turnsOut > 0) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
+
+  // Two-turn moves: charge (and maybe hide) this turn, attack next turn.
+  if (fx.charge) {
+    if (user.vol.charging === move.id) {
+      user.vol.charging = null;
+      user.vol.semi = null;
+    } else if (!(fx.charge.sunSkips && weather === 'sun')) {
+      user.vol.charging = move.id;
+      user.vol.semi = fx.charge.semi ?? null;
+      events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
+      for (const change of fx.charge.boosts ?? []) applyStageChange(user, change.stat, change.stages, events);
+      return;
+    }
+  }
+
+  if (fx.weather) {
+    if (weather === fx.weather) {
+      events.push({ type: 'fail', side: user.side });
+    } else {
+      ctx.battle.weather = { id: fx.weather, turns: 5 };
+      events.push({ type: 'weather', weather: fx.weather });
+    }
+    return;
+  }
 
   if (fx.protect) {
     // Works only when the user moves first; each use in a row is a third as likely to work.
@@ -565,7 +673,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   const targetsEnemy = move.target === 'enemy';
-  if (targetsEnemy && target.protected) {
+  // A hidden target can only be hit by the moves that reach it (Earthquake hits Dig).
+  if (targetsEnemy && target.vol.semi && fx.hitsSemi?.semi !== target.vol.semi) {
+    events.push({ type: 'avoided', side: target.side });
+    return;
+  }
+  if (targetsEnemy && target.protected && !fx.breaksProtect) {
     events.push({ type: 'protected', side: target.side });
     return;
   }
@@ -573,7 +686,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     events.push({ type: 'fail', side: user.side });
     return;
   }
-  const accuracy = fx.ohko ? ohkoAccuracy(user.mon.level, target.mon.level) : hitChance(move.accuracy, user.stages.acc, fx.ignoreStages ? 0 : target.stages.eva);
+  // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
+  const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
+  const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
+  const accuracy = fx.ohko ? ohkoAccuracy(user.mon.level, target.mon.level) : hitChance(baseAccuracy, user.stages.acc, fx.ignoreStages ? 0 : target.stages.eva);
   if (targetsEnemy && rng.float() >= accuracy) {
     events.push({ type: 'miss', side: user.side });
     return;
@@ -586,7 +702,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
 
   // Damaging move.
   const targetTypes = getSpecies(content, target.mon.speciesId).types;
-  const effectiveness = move.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, move.type, targetTypes);
+  const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : move.type;
+  const effectiveness = move.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, moveType, targetTypes);
   if (effectiveness === 0) {
     events.push({ type: 'noEffect', side: target.side });
     return;
@@ -612,20 +729,28 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const userTypes = getSpecies(content, user.mon.speciesId).types;
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
       if (fx.doubleBelowHalf && target.mon.hp * 2 <= targetStats.hp) power *= 2;
+      if (fx.hitsSemi?.double && target.vol.semi === fx.hitsSemi.semi) power *= 2;
+      if (fx.weatherBall && weather) power *= 2;
+      if (fx.charge?.sunSkips && weather && weather !== 'sun') power = Math.floor(power / 2);
       const defenseStage = hitsDefense ? target.stages.def : target.stages.spd;
+      // Sandstorm raises Rock types' Sp. Def and snow raises Ice types' Defense by half.
+      let defense = hitsDefense ? targetStats.def : targetStats.spd;
+      if (weather === 'sand' && !hitsDefense && targetTypes.includes('rock')) defense = Math.floor(defense * 1.5);
+      if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
       damage = calcDamage(content.ruleset, {
         level: user.mon.level,
         power,
         attack: physical ? userStats.atk : userStats.spa,
-        defense: hitsDefense ? targetStats.def : targetStats.spd,
+        defense,
         attackStage: physical ? user.stages.atk : user.stages.spa,
         defenseStage: fx.ignoreStages ? 0 : defenseStage,
-        stab: !move.flags.includes('typeless') && userTypes.includes(move.type),
+        stab: !move.flags.includes('typeless') && userTypes.includes(moveType),
         effectiveness,
         crit,
         randomFactor,
         burned: user.mon.status?.id === 'brn',
         physical,
+        weather: weatherMultiplier(weather, moveType),
       });
       damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
     }
@@ -689,7 +814,11 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   let didSomething = false;
   if (fx.heal) {
     const max = calcStats(content, user.mon).hp;
-    const amount = Math.min(max - user.mon.hp, Math.max(1, Math.floor(max * fx.heal)));
+    const weather = ctx.battle.weather?.id ?? null;
+    let fraction = fx.heal;
+    if (fx.healWeather && weather) fraction = weather === 'sun' ? 2 / 3 : 1 / 4;
+    if (fx.healSand && weather === 'sand') fraction = 2 / 3;
+    const amount = Math.min(max - user.mon.hp, Math.max(1, Math.floor(max * fraction)));
     if (amount > 0) {
       user.mon.hp += amount;
       events.push({ type: 'heal', side: user.side, amount, hpAfter: user.mon.hp });
@@ -769,6 +898,39 @@ function applyRecoil(ctx: BattleContext, user: Combatant, amount: number, events
   if (lost <= 0) return;
   events.push({ type: 'recoil', side: user.side, amount: lost, hpAfter: user.mon.hp });
   if (lastStand) events.push({ type: 'lastStand', side: user.side, itemId: lastStand });
+}
+
+/** Weather Ball's type in each weather. */
+const WEATHER_BALL_TYPE: Record<Weather, TypeName> = { rain: 'water', sun: 'fire', sand: 'rock', snow: 'ice', hail: 'ice' };
+/** Types that sandstorm and hail don't hurt. */
+const WEATHER_IMMUNE: Partial<Record<Weather, TypeName[]>> = { sand: ['rock', 'ground', 'steel'], hail: ['ice'] };
+
+/** Rain powers up Water moves and weakens Fire moves; sun does the opposite. */
+export function weatherMultiplier(weather: Weather | null, type: TypeName): number {
+  if (weather === 'rain') return type === 'water' ? 1.5 : type === 'fire' ? 0.5 : 1;
+  if (weather === 'sun') return type === 'fire' ? 1.5 : type === 'water' ? 0.5 : 1;
+  return 1;
+}
+
+/** End of turn: sandstorm and hail hurt (1/16 HP) the types they don't spare; then the weather counts down. */
+function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
+  const weather = ctx.battle.weather;
+  if (!weather) return;
+  const immune = WEATHER_IMMUNE[weather.id];
+  if (immune) {
+    for (const c of sides) {
+      if (c.mon.hp <= 0 || c.vol.semi === 'underground' || c.vol.semi === 'underwater') continue;
+      if (getSpecies(ctx.content, c.mon.speciesId).types.some((t) => immune.includes(t))) continue;
+      const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(calcStats(ctx.content, c.mon).hp / 16)));
+      events.push({ type: 'weatherDamage', side: c.side, weather: weather.id, amount: lost, hpAfter: c.mon.hp });
+      if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+    }
+  }
+  weather.turns -= 1;
+  if (weather.turns <= 0) {
+    ctx.battle.weather = null;
+    events.push({ type: 'weatherEnd', weather: weather.id });
+  }
 }
 
 /** End-of-turn damage for one side: burn or poison, then binding, then Leech Seed (which heals the other side). */

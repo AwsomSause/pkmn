@@ -100,6 +100,13 @@ export const SpeciesSchema = z.object({
 });
 export type Species = z.infer<typeof SpeciesSchema>;
 
+export const WEATHERS = ['rain', 'sun', 'sand', 'snow', 'hail'] as const;
+export const WeatherSchema = z.enum(WEATHERS);
+export type Weather = z.infer<typeof WeatherSchema>;
+/** Where a Pokémon is during the first turn of Fly, Dig, Dive or Phantom Force. */
+export const SemiSchema = z.enum(['air', 'underground', 'underwater', 'vanished']);
+export type Semi = z.infer<typeof SemiSchema>;
+
 const StatChangeSchema = z.object({
   stat: BoostStatSchema,
   stages: z.number().int().min(-6).max(6),
@@ -170,6 +177,30 @@ export const MoveSchema = z.object({
       targetsDefense: z.literal(true).optional(),
       /** Ignores the target's stat stages (Chip Away). */
       ignoreStages: z.literal(true).optional(),
+      /**
+       * Two-turn move: the first turn charges (and maybe hides the user, or
+       * raises its stats); the second attacks. `sunSkips`: no charging in sun,
+       * half power in other weather (Solar Beam).
+       */
+      charge: z.object({ semi: SemiSchema.optional(), sunSkips: z.literal(true).optional(), boosts: z.array(StatChangeSchema).optional() }).optional(),
+      /** Can hit a target hiding this way (Earthquake on Dig), doubling its power if `double`. */
+      hitsSemi: z.object({ semi: SemiSchema, double: z.boolean() }).optional(),
+      /** Attacks for 2–3 turns in a row, then the user becomes confused (Thrash). */
+      lockIn: z.literal(true).optional(),
+      /** Status move: sets the weather for 5 turns. */
+      weather: WeatherSchema.optional(),
+      /** Weather Ball: its type and power follow the weather. */
+      weatherBall: z.literal(true).optional(),
+      /** Healing follows the weather: 2/3 in sun, 1/4 in other weather (Synthesis). */
+      healWeather: z.literal(true).optional(),
+      /** Heals 2/3 in a sandstorm (Shore Up). */
+      healSand: z.literal(true).optional(),
+      /** Never misses in this weather (Thunder in rain, Blizzard in snow); a rain move hits half the time in sun. */
+      sureIn: WeatherSchema.optional(),
+      /** Only works on the user's first turn in battle (Fake Out). */
+      firstTurnOnly: z.literal(true).optional(),
+      /** Goes through Protect (Feint, Phantom Force). */
+      breaksProtect: z.literal(true).optional(),
     })
     .default({}),
 });
