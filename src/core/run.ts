@@ -56,6 +56,7 @@ import {
   recordRouteChosen,
   recordRunStarted,
 } from './story/hooks';
+import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
 
@@ -425,6 +426,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const attributes = runAttributeEffects(content, run);
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
+  const hyperRng = new Rng(run.rng.hyper);
   const engineEvents = resolveTurn(
     {
       content,
@@ -438,11 +440,13 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       typeModifiers: typeModifiers(archetype),
       attributes,
       disabledMechanics: run.disabledMechanics,
+      hyper: buildHyperContext(content, run, hyperRng),
     },
     action,
   );
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
+  run.rng.hyper = hyperRng.state;
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
   countAttributeGrowth(content, run, engineEvents);
   for (const e of engineEvents) {

@@ -91,8 +91,9 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} fainted!`;
     case 'lastStand':
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
-    case 'endure':
-      return `${who(e.side)} hung on for you, out of love!`;
+    case 'hyper':
+      // The story layer normally shows the moment's own lines instead.
+      return e.cured ? `${who(e.side)} shook off its status!` : `${who(e.side)} won't give up!`;
     case 'confused':
       return `${who(e.side)} became confused!`;
     case 'confusion':

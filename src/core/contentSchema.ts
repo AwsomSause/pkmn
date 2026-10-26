@@ -846,7 +846,6 @@ export const BalanceSchema = z.object({
     peaceDamageTakenCut: z.number().min(0).max(1),
     goodCatch: z.number().min(0),
     evilMoney: z.number().min(0),
-    loveEndureChance: z.number().min(0).max(1),
     /** Charisma: more experience for your Pokémon. */
     charismaExpGain: z.number().min(0),
     /** Charisma: friendship grows faster. */
