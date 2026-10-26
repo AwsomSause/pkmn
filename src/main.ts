@@ -20,6 +20,7 @@ import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
 import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
 import { drawBackdrop } from './ui/widgets';
+import { ArenaBackdrop } from './ui/showcase';
 import './style.css';
 
 function showFatalError(message: string): void {
@@ -69,11 +70,17 @@ function start(): void {
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
-        // Menu screens share one PokeRogue-style backdrop, drawn behind
-        // everything else (the battle draws its arena instead).
+        // Every screen fades in. Screens without their own scenery get a dimmed,
+        // slowly changing battlefield behind them (the battle and map draw their own).
+        const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
         for (const scene of g.scene.getScenes(false)) {
-          if (scene.scene.key === 'Battle' || scene.scene.key === 'Boot') continue;
-          scene.events.on(Phaser.Scenes.Events.CREATE, () => drawBackdrop(scene));
+          scene.events.on(Phaser.Scenes.Events.CREATE, () => {
+            if (scene.scene.key !== 'Boot') scene.cameras.main.fadeIn(220, 14, 11, 18);
+            if (!ownScenery.has(scene.scene.key)) {
+              drawBackdrop(scene);
+              new ArenaBackdrop(scene, { dim: 0.68 });
+            }
+          });
         }
       },
     },

@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { createPokemon, getSpecies } from '../core/pokemon';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
+import { fitHeight } from '../ui/showcase';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { badge, drawPanel, focusFrame } from '../ui/widgets';
@@ -56,7 +57,7 @@ export class StarterSelectScene extends Phaser.Scene {
         this.add.text(x + cardW / 2, y + 220, 'A hidden starter', textStyle(26)).setOrigin(0.5, 0);
         this.add.text(x + cardW / 2, y + 270, 'Blind Draft: you find out\nwho it is once you choose.', textStyle(18, COLORS.textMuted, { align: 'center' })).setOrigin(0.5, 0);
       } else {
-        pokemonVisual(this, species, 'front', x + cardW / 2, y + 160, 3.5);
+        fitHeight(this, pokemonVisual(this, species, 'front', x + cardW / 2, y + 160, 3.5), 150);
         this.add.text(x + cardW / 2, y + 170, species.name, textStyle(34)).setOrigin(0.5, 0);
         let bx = x + cardW / 2 - (species.types.length * 68) / 2;
         for (const t of species.types) {

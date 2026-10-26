@@ -57,6 +57,12 @@ const atlas = (id: string, category: AssetCategory, base: string): AssetEntry =>
   atlasPath: `${base}.json`,
 });
 
+/** Items whose pictures double as menu icons. */
+export const MENU_ICON_ITEMS = [
+  'scanner', 'leaders_crest', 'calendar', 'golden_mystic_ticket', 'master_ribbon', 'coin_case',
+  'mystery_egg', 'exp_charm', 'map', 'pair_of_tickets', 'dna_splicers', 'candy',
+];
+
 /** Fixed UI/audio assets used by the screens. */
 export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bg.battle', kind: 'image', category: 'background', path: 'images/arenas/grass_bg.png' },
@@ -67,6 +73,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.pbinfo_player', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_player.png' },
   { id: 'ui.pbinfo_enemy', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_enemy_mini.png' },
   { id: 'ui.message_bg', kind: 'image', category: 'ui', path: 'images/ui/bg.png' },
+  // Item pictures used as menu icons (the Hub's tiles and currency counters).
+  ...MENU_ICON_ITEMS.map((name) => itemEntry(`item.${name}`)),
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
@@ -84,6 +92,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.select', kind: 'audio', category: 'sound', path: 'audio/ui/select.wav' },
   { id: 'ui.error', kind: 'audio', category: 'sound', path: 'audio/ui/error.wav' },
   { id: 'font.main', kind: 'font', category: 'font', path: 'fonts/pokemon-emerald-pro.ttf' },
+  // The Gen 3 battle font: chunky pixel text for everything but fine print.
+  { id: 'font.bold', kind: 'font', category: 'font', path: 'fonts/pkmnems.ttf' },
 ];
 
 export function trainerEntry(assetId: string): AssetEntry {

@@ -13,6 +13,7 @@ import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { partyRows, Picker } from '../ui/partyPanel';
+import { fitHeight } from '../ui/showcase';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
@@ -230,7 +231,11 @@ export class DecisionScene extends Phaser.Scene {
     const candies = candiesForRelease(content, caught.level);
     const full = run.party.length >= content.balance.partyMax;
 
-    pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny);
+    // A soft spotlight for the new Pokémon to stand on.
+    const spot = this.add.graphics();
+    spot.fillStyle(0x0e0b12, 0.55).fillEllipse(200, 300, 240, 44);
+    spot.fillStyle(0x4a3f5c, 0.9).fillEllipse(200, 298, 200, 32);
+    fitHeight(this, pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny), 240);
     this.add.text(400, 40, `You caught ${species.name}!`, textStyle(40, COLORS.textLight));
     const stats = calcStats(content, caught);
     const lines = [

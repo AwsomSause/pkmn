@@ -6,6 +6,9 @@ import { playMusic, stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
+import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
+import { loadAssets } from '../ui/lazyAssets';
+import { pokemonAssetIds } from '../assets/catalog';
 import { sceneForRun } from './routing';
 
 export class MainMenuScene extends Phaser.Scene {
@@ -20,24 +23,26 @@ export class MainMenuScene extends Phaser.Scene {
     session.closeRun();
     playMusic(this, 'bgm.menu');
 
-    // A dimmed battle field behind the title, as on PokeRogue's title screen.
-    if (this.textures.exists('bg.battle')) {
-      this.add.image(0, 0, 'bg.battle').setOrigin(0).setScale(PIXEL_SCALE);
-      for (const side of ['bg.battle.enemy', 'bg.battle.player']) {
-        if (this.textures.exists(side)) this.add.image(0, 0, side).setOrigin(0).setScale(PIXEL_SCALE);
-      }
-      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, COLORS.background, 0.62).setOrigin(0);
+    // A battlefield that cycles through the arenas, with a Pokémon on show.
+    new ArenaBackdrop(this, { platformAt: { x: 740, y: 330 } });
+    const shade = this.add.graphics().setDepth(-20);
+    for (let i = 0; i < 20; i++) {
+      shade.fillStyle(0x0e0b12, 0.6 * (1 - i / 20));
+      shade.fillRect(i * 24, 0, 24, GAME_HEIGHT);
     }
-    this.add
-      .text(GAME_WIDTH / 2, 92, 'Pokémon Roguelike', textStyle(72, COLORS.gold, {
-        stroke: '#c73625',
-        strokeThickness: 10,
-        shadow: { offsetX: 0, offsetY: 6, color: '#181818', fill: true, stroke: true, blur: 0 },
-      }))
-      .setOrigin(0.5);
-    this.add.text(GAME_WIDTH / 2, 152, 'Milestone 5 prototype', textStyle(24, COLORS.textMuted)).setOrigin(0.5);
+    const species = [...session.content.species.values()].filter((sp) => !sp.id.includes('-'));
+    const mon = new ShowcaseMon(this, 740, 336, PIXEL_SCALE, 230);
+    const pick = () => {
+      const sp = Phaser.Utils.Array.GetRandom(species);
+      if (sp) void loadAssets(this, [pokemonAssetIds(sp.assets).front]).then(() => this.scene.isActive() && mon.show(sp));
+    };
+    pick();
+    this.time.addEvent({ delay: 6500, loop: true, callback: pick });
 
-    drawPanel(this, GAME_WIDTH / 2 - 200, 186, 400, 290);
+    drawLogo(this, 60, 24, 64);
+    this.add.text(64, 158, 'Milestone 5 prototype', textStyle(16, COLORS.textMuted));
+
+    drawPanel(this, 48, 186, 400, 290, { alpha: 0.95 });
 
     const saved = session.savedRun;
     const damaged = saved.status === 'corrupt' || saved.status === 'incompatible';
@@ -65,7 +70,7 @@ export class MainMenuScene extends Phaser.Scene {
     });
 
     this.menu = new Menu(this, {
-      x: GAME_WIDTH / 2 - 170,
+      x: 78,
       y: 206,
       options: options.map((o) => o.option),
       itemHeight: 52,
@@ -82,15 +87,14 @@ export class MainMenuScene extends Phaser.Scene {
     if (session.lastSaveError) notes.push(`Last save failed: ${session.lastSaveError}`);
     if (notes.length > 0) {
       this.add
-        .text(GAME_WIDTH / 2, 484, notes.join('\n'), textStyle(18, COLORS.bad, { align: 'center', wordWrap: { width: 860 } }))
-        .setOrigin(0.5, 0);
+        .text(48, 482, notes.join('\n'), textStyle(16, COLORS.bad, { wordWrap: { width: 560 } }));
     }
 
     const s = session.profile.stats;
     this.add
-      .text(GAME_WIDTH / 2, GAME_HEIGHT - 28, `Runs ${s.runsEnded}  ·  Battles won ${s.battlesWon}  ·  Bank Credits ${session.profile.bankCredits}  ·  Research ${session.profile.researchPoints}  ·  Candies ${session.profile.candies}`, textStyle(18, COLORS.textMuted))
-      .setOrigin(0.5);
-    this.add.text(16, GAME_HEIGHT - 28, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(16, COLORS.textMuted));
+      .text(GAME_WIDTH - 16, GAME_HEIGHT - 16, `Runs ${s.runsEnded}  ·  Battles won ${s.battlesWon}  ·  Bank Credits ${session.profile.bankCredits}  ·  Research ${session.profile.researchPoints}  ·  Candies ${session.profile.candies}`, textStyle(16, COLORS.textMuted))
+      .setOrigin(1, 1);
+    this.add.text(16, GAME_HEIGHT - 16, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(14, COLORS.textMuted)).setOrigin(0, 1);
   }
 
   private continueRun(): void {
