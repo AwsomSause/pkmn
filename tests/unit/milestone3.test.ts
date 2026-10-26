@@ -54,7 +54,7 @@ function win(run: RunState): RunState {
     const idx = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
     run = takeTurn(content, run, { kind: 'move', index: idx >= 0 ? idx : 0 }).run;
   }
-  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
+  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   return run;
 }
 
@@ -242,7 +242,7 @@ describe('map flow', () => {
     run = powerUp(run);
     run = win(run);
     run = chooseReward(content, run, 0).run;
-    while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+    while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
     const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
     node.sides.push({ id: 'test-shop', kind: 'shop', used: false });
     run.money = 300;
@@ -276,7 +276,7 @@ describe('map flow', () => {
       run = win(run);
       expect(run.phase).toBe('reward');
       run = chooseReward(content, run, 0).run;
-      while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+      while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
       run.party[0]!.hp = maxHp(content, run.party[0]!);
     }
     expect(kinds).toHaveLength(20);
@@ -308,7 +308,7 @@ describe('save upgrades (v2 → v3)', () => {
     expect(loaded.data.battle!.levelInfo).toEqual([]);
     run = win(loaded.data);
     run = chooseReward(content, run, 0).run;
-    while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+    while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
     expect(run.phase).toBe('map');
     expect(run.stage!.index).toBe(0);
   });

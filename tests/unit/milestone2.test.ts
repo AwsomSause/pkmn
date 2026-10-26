@@ -62,7 +62,7 @@ function fightOut(run: RunState) {
 
 function skipDecisions(run: RunState): RunState {
   while (run.phase === 'decision') {
-    const choice: DecisionChoice = run.pending[0]!.kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' };
+    const choice: DecisionChoice = run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' };
     run = resolveDecision(content, run, choice).run;
   }
   return run;

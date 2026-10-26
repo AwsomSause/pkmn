@@ -12,7 +12,12 @@ export const RngStreamsSchema = z.object(
   Object.fromEntries(STREAM_NAMES.map((n) => [n, RngStateSchema])) as Record<StreamName, typeof RngStateSchema>,
 );
 
-export const MoveSlotSchema = z.object({ id: z.string(), pp: z.number().int().min(0) });
+export const MoveSlotSchema = z.object({
+  id: z.string(),
+  pp: z.number().int().min(0),
+  /** PP Ups used on this move (each +20% max PP, at most 3; see pokemon.ts maxPp). */
+  ppUps: z.number().int().min(0).max(3).optional(),
+});
 export type MoveSlot = z.infer<typeof MoveSlotSchema>;
 
 export const StatusSchema = z.object({
@@ -37,6 +42,10 @@ export const PokemonInstanceSchema = z.object({
   shiny: z.boolean(),
   /** How much it likes you (0–255, see core/friendship.ts). */
   friendship: z.number().int().min(0).max(255),
+  /** Held items (catalog id → copies). A Pokémon can hold many items, each up to its catalog max (director, Q1). */
+  held: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
+  statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -204,6 +213,10 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
   /** A caught Pokémon waiting to join the party (or be released for candies). */
   z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
+  /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
+  z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
+  /** A PP Up or PP Max: pick which move gets the extra PP. */
+  z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
 
@@ -238,6 +251,8 @@ export const RunStateSchema = z.object({
   money: z.number().int().min(0),
   /** Bag contents: item id → count. */
   inventory: z.record(z.string(), z.number().int().min(0)),
+  /** Team and player catalog items owned this run (catalog id → copies): passives like the Amulet Coin. */
+  passives: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Candies earned this run; added to the profile when the run ends (D7). */
   candies: z.number().int().min(0),
   /** Number of encounters completed so far. */
