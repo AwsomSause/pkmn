@@ -327,7 +327,7 @@ describe('move data from the director\'s move list', () => {
     for (const move of content.moves.values()) {
       if (!move.supported) continue;
       const fx = move.effects;
-      if (move.category === 'status') expect(Boolean(fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed), move.id).toBe(true);
+      if (move.category === 'status') expect(Boolean(fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather), move.id).toBe(true);
       else expect(move.power !== null || fx.fixedDamage === 'level' || fx.ohko || fx.lowHpPower, move.id).toBe(true);
     }
   });

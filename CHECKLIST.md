@@ -220,6 +220,22 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 
 See IMPLEMENTATION_PLAN.md §5.
 
+## Milestone 8.6 — Systems audit and quality gates ✅
+
+- [x] SYSTEMS_AUDIT.md: real status of every planned system, with the code and tests behind it
+- [x] FEATURE_INTERACTION_MATRIX.md: where each pair of systems meets and which meeting points are tested
+- [x] QUALITY_GATES.md: the gates, what runs automatically, the content gate and the balance report
+- [x] `npm run report:content`: counts and offending ids for unsupported moves, species with no usable moves, missing sprites and cries, map problems, duplicate boss teams, broken evolutions, unused balance settings, untested save upgrades
+- [x] A support status (supported / limited / disabled / invalid) on every species, form, move, item and evolution, with reasons
+- [x] `npm run report:balance`: seeded battle simulations (species strength, difficulty curve), written to docs/quality/BALANCE_REPORT.md
+- [x] `npm run report:check` in `npm run check` and CI: fails when a content number gets worse than tools/content-baseline.json
+
+### Known limits in Milestone 8.6
+
+- GitHub Actions has never run on the repository, so CI (including the new gate) only runs when switched on in the repository settings.
+- The balance simulations use a fresh party with no items; they show the curve's shape, not real win rates.
+- Abilities, held items and battle mechanics have no entries to give a status to until they exist.
+
 ## Milestone 8.75 — Planned features catch-up (planned)
 
 Everything planned but not yet in a milestone, gathered on 2026-10-25. Details in IMPLEMENTATION_PLAN.md §6j.
@@ -227,7 +243,8 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 - [x] B. Friendship on each Pokémon (gains from levels, wins and vitamins; loss on fainting); Charisma raises friendship gains; real friendship evolutions at 220 (Soothe Bell kept); hearts on the party screen; run save v8
 - [ ] B. N's friendship passive and friendship event outcomes (with part A, the events)
 - [x] C1. Moves tier 1 (85 moves): confusion, multi-hit, recharge, healing, Protect, one-hit KOs, Explosion, False Swipe, binding, Leech Seed, Flail, Brine, Psyshock, Chip Away, always-crit; main-game damage rounding; both-faint rule
-- [ ] C2. Two-turn and lock-in moves (Solar Beam, Fly, Thrash, Outrage), weather and terrain, the rare moves (530 still unsupported, 89 of them Z-Moves and Max Moves for M8.5)
+- [x] C2. Two-turn moves (Solar Beam, Sky Attack, Skull Bash; Fly, Bounce, Dig, Dive, Phantom Force hide the user) and the moves that reach them (Earthquake, Gust, Surf, Thunder, Sky Uppercut); Thrash, Outrage, Petal Dance; weather (rain, sun, sandstorm, snow, hail) with Weather Ball, Synthesis/Moonlight/Shore Up healing and Thunder/Hurricane/Blizzard accuracy; Fake Out and First Impression (28 more moves)
+- [ ] C2b. Terrain and the rare moves (498 still unsupported, 89 of them Z-Moves and Max Moves for M8.5)
 - [ ] C3. Abilities; enemy trainers use items and switch on purpose (held items are part of the item effects work)
 - [x] Item effects, slice 1 (director, 2026-10-25: every item except Potions and Poké Balls gets its own effect): item catalog of 574 items (itemCatalog.json, each with a status); 127 work now as draft rewards: attribute items (Heart Scale +2 Love, shards, berries, mail), valuables sold for money, Wings, friendship berries, healing and care items, PP Up/PP Max, TMs (1 of 3 random moves) and HMs (any move) of 17 types, the 9 fossils, and run-long perks (Amulet Coin, Luck Incense, Exp. Share, Coin Case, Teachy TV, Photo Album, Fashion Case); a new Epic rarity; drafts of five with variety from Luck; a team or player item at its max is a free re-roll; evolution items nobody can use can be cashed in from the Bag for attributes; icons from the director's pack
 - [ ] Item effects, slice 2: battle items (held items on Pokémon, X items for 5 turns, berries, gems, type boosters) and boss held items (Gym Leaders 1, Elite Four 2, Champions 3); 310 catalog items wait on it

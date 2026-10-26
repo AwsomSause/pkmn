@@ -55,7 +55,18 @@ type Effects = {
   lowHpPower?: true;
   targetsDefense?: true;
   ignoreStages?: true;
+  charge?: { semi?: Semi; sunSkips?: true; boosts?: StatChange[] };
+  hitsSemi?: { semi: Semi; double: boolean };
+  lockIn?: true;
+  weather?: 'rain' | 'sun' | 'sand' | 'snow' | 'hail';
+  weatherBall?: true;
+  healWeather?: true;
+  healSand?: true;
+  sureIn?: 'rain' | 'snow';
+  firstTurnOnly?: true;
+  breaksProtect?: true;
 };
+type Semi = 'air' | 'underground' | 'underwater' | 'vanished';
 type MoveRow = {
   id: string;
   name: string;
@@ -82,10 +93,33 @@ const RECOIL: Record<string, number> = {
 /** "User attacks first." doesn't say how strongly; these moves go before other priority moves. */
 const PRIORITY: Record<string, number> = { 'extreme-speed': 2, 'feint': 2, 'first-impression': 2 };
 
+/**
+ * Effects the list's text doesn't spell out (or that came after the move was
+ * first added): applied to these moves on every run, supported ones included.
+ */
+const EXTRA_EFFECTS: Record<string, Effects> = {
+  gust: { hitsSemi: { semi: 'air', double: true } },
+  twister: { hitsSemi: { semi: 'air', double: true } },
+  thunder: { hitsSemi: { semi: 'air', double: false }, sureIn: 'rain' },
+  hurricane: { hitsSemi: { semi: 'air', double: false }, sureIn: 'rain' },
+  earthquake: { hitsSemi: { semi: 'underground', double: true } },
+  magnitude: { hitsSemi: { semi: 'underground', double: true } },
+  surf: { hitsSemi: { semi: 'underwater', double: true } },
+  whirlpool: { hitsSemi: { semi: 'underwater', double: true } },
+  blizzard: { sureIn: 'snow' },
+  moonlight: { healWeather: true },
+  'morning-sun': { healWeather: true },
+  synthesis: { healWeather: true },
+  'hyper-drill': { breaksProtect: true },
+  'hyperspace-hole': { breaksProtect: true },
+  'hyperspace-fury': { breaksProtect: true },
+};
+/** Solar Beam and Solar Blade skip charging in sun. */
+const SUN_SKIPS = new Set(['solar-beam', 'solar-blade']);
+
 const NO_EFFECT_IN_SINGLES = new Set([
   'Hits all adjacent Pokémon',
   'Hits all adjacent opponents',
-  'Can strike through Protect/Detect',
   "Ignores target's ability",
   'Breaks through Reflect and Light Screen barriers',
 ]);
@@ -131,7 +165,7 @@ function applySentence(move: MoveRow, sentence: string, chance: number | null): 
   if (s === 'Ignores Accuracy and Evasiveness') return move.accuracy === null;
   // Battles are one-on-one and there are no abilities, Protect or screens yet, so these change nothing.
   if (NO_EFFECT_IN_SINGLES.has(s)) return true;
-  // Dig, Dive and Fly (two-turn moves) aren't in the game yet, so this bonus never applies.
+  // Earthquake on Dig and friends (EXTRA_EFFECTS sets which hidden Pokémon each one reaches).
   if (/^Power is doubled if (?:the )?opponent is (?:underground|underwater|in the air)/.test(s)) return true;
   if (s === 'User attacks first') return (move.priority = PRIORITY[move.id] ?? 1), true;
   if (s === 'User receives recoil damage') {
@@ -167,6 +201,33 @@ function applySentence(move: MoveRow, sentence: string, chance: number | null): 
   if (s === "The lower the user's HP, the higher the power") return (move.effects.lowHpPower = true), true;
   if (s === "Inflicts damage based on the target's Defense, not Special Defense") return (move.effects.targetsDefense = true), true;
   if (s === "Ignores opponent's stat changes") return (move.effects.ignoreStages = true), true;
+  // M8.75 part C, second batch.
+  if (s === 'Can strike through Protect/Detect') return (move.effects.breaksProtect = true), true;
+  if (s === 'Charges on first turn, attacks on second') return (move.effects.charge = SUN_SKIPS.has(move.id) ? { sunSkips: true } : {}), true;
+  if (s === 'Flies up on first turn, attacks on second turn' || s === 'Springs up on first turn, attacks on second') return (move.effects.charge = { semi: 'air' }), true;
+  if (s === 'Digs underground on first turn, attacks on second') return (move.effects.charge = { semi: 'underground' }), true;
+  if (s === 'Can also escape from caves') return true;
+  if (s === 'Dives underwater on first turn, attacks on second turn') return (move.effects.charge = { semi: 'underwater' }), true;
+  if (s === 'Disappears on first turn, attacks on second') return (move.effects.charge = { semi: 'vanished' }), true;
+  if (s === 'Raises Defense on first turn, attacks on second') return (move.effects.charge = { boosts: [{ stat: 'def', stages: 1, target: 'self', chance: 100 }] }), true;
+  if (s === 'User gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn') return (move.effects.charge = { boosts: [{ stat: 'spa', stages: 1, target: 'self', chance: 100 }] }), true;
+  if (s === "Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second") {
+    move.effects.charge = {};
+    move.effects.statChanges = (['spa', 'spd', 'spe'] as Stat[]).map((stat) => ({ stat, stages: 2, target: 'self', chance: 100 }));
+    return true;
+  }
+  if (s === 'Hits the opponent, even during Fly') return (move.effects.hitsSemi = { semi: 'air', double: false }), true;
+  if (s === 'User attacks for 2-3 turns but then becomes confused') return (move.effects.lockIn = true), true;
+  if (s === 'Makes it rain for 5 turns') return (move.effects.weather = 'rain'), true;
+  if (s === 'Makes it sunny for 5 turns') return (move.effects.weather = 'sun'), true;
+  if (s === 'Creates a sandstorm for 5 turns') return (move.effects.weather = 'sand'), true;
+  if (s === 'Non-Ice types are damaged for 5 turns') return (move.effects.weather = 'hail'), true;
+  if (s === 'Raises Defense of Ice types for 5 turns') return (move.effects.weather = 'snow'), true;
+  if (s === "Move's power and type changes with the weather") return (move.effects.weatherBall = true), true;
+  if (s === 'The user regains up to half of its max HP') return move.category === 'status' && ((move.effects.heal = 0.5), true);
+  if (s === 'It restores more HP in a sandstorm') return (move.effects.healSand = true), true;
+  if (s === 'User attacks first, foe flinches') return move.priority > 0 && ((move.effects.flinchChance = 100), true);
+  if (s === 'Only usable on first turn' || s === 'Although this move has great power, it only works the first turn the user is in battle') return (move.effects.firstTurnOnly = true), true;
 
   let m = /^May (burn|paralyze|poison|freeze) (?:the )?opponent$/.exec(s);
   if (m) return chance ? ((move.effects.status = { id: STATUS_VERBS[m[1]!]!, chance }), true) : false;
@@ -316,7 +377,7 @@ for (const row of list) {
   const ok = sentences.every((s) => applySentence(move, s, row.chance));
   // A status move has to do something the engine understands.
   const fx = move.effects;
-  const doesSomething = move.category !== 'status' || fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed;
+  const doesSomething = move.category !== 'status' || fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather;
   if (!ok || !doesSomething) {
     addUnsupported(row, id, row.effect || '(no effect text)');
     continue;
@@ -327,6 +388,11 @@ for (const row of list) {
   moves.push(move);
   known.set(id, move);
   added.push(move.name);
+}
+
+for (const move of moves) {
+  const extra = EXTRA_EFFECTS[move.id];
+  if (extra && move.supported !== false) Object.assign(move.effects, extra);
 }
 
 writeFileSync(movesPath, JSON.stringify(moves, null, 1) + '\n');
