@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { StoryStateSchema } from './story/schema';
 
@@ -88,6 +88,23 @@ export const LevelBreakdownSchema = z.object({
 });
 export type LevelBreakdown = z.infer<typeof LevelBreakdownSchema>;
 
+/**
+ * Battle transformations (Mega Evolution, ...; core/battle/transform.ts).
+ * A transformed Pokémon's speciesId is its new form during the battle; `forms`
+ * remembers what it was so it changes back when the battle ends.
+ */
+export const BattleTransformSchema = z.object({
+  /** The mechanics each side has already used this battle (each works once per battle). */
+  used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
+  /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'dynamax']), from: z.string() })),
+  /** The mechanics the opponent may use (bosses; see balance.transformations). */
+  enemyMechanics: z.array(TransformKindSchema),
+});
+export type BattleTransform = z.infer<typeof BattleTransformSchema>;
+
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [] });
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -118,6 +135,7 @@ export const BattleStateSchema = z.object({
   levelInfo: z.array(LevelBreakdownSchema).default([]),
   /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */
   ai: z.number().min(0).max(1).default(0),
+  transform: BattleTransformSchema.default(freshTransform),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -247,6 +265,8 @@ export const RunStateSchema = z.object({
   victory: z.boolean(),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
+  /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
+  disabledMechanics: z.array(TransformKindSchema).default([]),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */

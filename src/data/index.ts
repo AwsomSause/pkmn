@@ -31,6 +31,7 @@ import balanceJson from './balance.json';
 import bossesJson from './bosses.json';
 import bossTeamsJson from './bossTeams.json';
 import itemsJson from './items.json';
+import megaStonesJson from './megaStones.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
@@ -95,8 +96,9 @@ export const RAW_CONTENT: RawContent = {
   archetypes: archetypesJson,
   achievements: achievementsJson,
   runPrep: runPrepJson,
-  rewards: rewardsJson,
-  items: itemsJson,
+  // Mega Stones are generated (npm run data:megas) and kept in their own file.
+  rewards: [...rewardsJson, ...megaStonesJson.rewards],
+  items: [...itemsJson, ...megaStonesJson.items],
   trainers: trainersJson,
   bosses: bossesJson,
   bossTeams: bossTeamsJson,
@@ -233,6 +235,15 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
           for (const move of m.moves) if (!content.moves.has(move)) problems.push(`${where} uses unknown move "${move}"`);
         }
       });
+    }
+  }
+  // Mega Stones: every species and form they name must exist, and the result must be a Mega or Primal form.
+  for (const item of content.items.values()) {
+    if (item.effect.kind !== 'megaStone') continue;
+    for (const [from, to] of Object.entries(item.effect.forms)) {
+      if (!content.species.has(from)) problems.push(`item "${item.id}" works on unknown species "${from}"`);
+      const kind = content.species.get(to)?.form?.kind;
+      if (kind !== (item.effect.primal ? 'primal' : 'mega')) problems.push(`item "${item.id}" turns "${from}" into "${to}", which is not a ${item.effect.primal ? 'Primal' : 'Mega'} form`);
     }
   }
   for (const entry of shop) {

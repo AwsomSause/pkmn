@@ -51,18 +51,18 @@ describe('story foundation: random streams', () => {
     }
   });
 
-  // Fingerprints of what the rules decided for these seeds, recorded on main (after M8.75 C1)
+  // Fingerprints of what the rules decided for these seeds, recorded on main (after M8.75 C2 and M8.5 Mega)
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '86ebc74cc79d268f',
-    'STORY1/100': 'c322455b05cb8b5a',
+    'STORY1/0': '6a75c580eb51e39b',
+    'STORY1/100': '50d7a563813aa37a',
     'STORY2/0': '289336f1e73c4f84',
     'STORY2/100': '65d8fc32c8e70661',
     'STORY3/0': 'ffdee161144ebb19',
     'STORY3/100': 'ffdee161144ebb19',
-    'STORY4/0': '63f14c8ea958a553',
-    'STORY4/100': '9fd9a5f7be5be6b6',
+    'STORY4/0': '8b2b6c382688ce1b',
+    'STORY4/100': '45904393ec14cb20',
     'STORY5/0': 'bb7ad33f0ab70189',
     'STORY5/100': '8667dd637379a8d4',
     'STORY6/0': 'fb12816df446bfee',
@@ -343,6 +343,31 @@ describe('story foundation: saves', () => {
     const loaded = new SaveManager(storage, content).loadOrCreateProfile(() => 'new');
     expect(loaded.warning).toBeUndefined();
     expect(loaded.profile.runHistory[0]!.moments).toEqual([]);
+  });
+});
+
+describe('story foundation: transformations', () => {
+  it('a Mega Evolution is told as a transformation, never as an evolution, and its reversion is silent', () => {
+    let run = structuredClone(toBattle(freshRun('mega')));
+    const uid = run.party[0]!.uid;
+    run.party[0] = { ...createPokemon(content, 'venusaur', 60, uid), friendship: 70 };
+    run.party[0].moves = [{ id: 'tackle', pp: 35 }];
+    run.inventory['mega-ring'] = 1;
+    run.inventory.venusaurite = 1;
+    const enemy = createPokemon(content, 'snorlax', 60, 'e900');
+    enemy.moves = [{ id: 'splash', pp: 40 }];
+    run.battle = createBattle('wild', [enemy], 0, uid);
+    run = takeTurn(content, run, { kind: 'move', index: 0, transform: { kind: 'mega' } }).run;
+    expect(run.party[0]!.speciesId).toBe('venusaur-mega');
+    let guard = 0;
+    while (run.phase === 'battle' && guard++ < 60) run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
+    expect(run.phase).not.toBe('battle');
+    expect(run.party[0]!.speciesId).toBe('venusaur');
+    const events = run.story.events;
+    expect(events.filter((e) => e.type === 'transformed')).toHaveLength(1);
+    expect(events.find((e) => e.type === 'transformed')!.data).toMatchObject({ kind: 'mega', from: 'venusaur', to: 'venusaur-mega' });
+    expect(events.some((e) => e.type === 'evolved')).toBe(false);
+    expect(run.story.histories[uid]!.memories.some((m) => m.text === 'Mega Evolved into Mega Venusaur')).toBe(true);
   });
 });
 

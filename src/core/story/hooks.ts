@@ -144,6 +144,16 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
       case 'levelUp':
         emit(content, run, 'levelUp', { where, actors: [e.uid], data: { level: e.level } });
         break;
+      case 'transform':
+        if (e.side === 'player') active.player = e.uid;
+        emit(content, run, 'transformed', {
+          where,
+          actors: [e.uid],
+          data: { side: e.side, kind: e.kind, from: e.from, to: e.to },
+          // Only your own Pokémon's transformations become memories.
+          text: e.side === 'player' ? `${e.kind === 'primal' ? 'Underwent Primal Reversion into' : 'Mega Evolved into'} ${name(content, e.to)}` : undefined,
+        });
+        break;
       default:
         break;
     }
@@ -265,7 +275,9 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       else emit(content, run, 'joinedParty', { actors: [mon.uid], data: { speciesId: mon.speciesId, how: caught ? 'caught' : 'gift' }, text: `Joined your team as a ${name(content, mon.speciesId)}` });
       continue;
     }
-    if (prev.speciesId !== mon.speciesId) {
+    // A battle transformation (Mega, Primal...) and its reversion are not evolutions; the battle turn tells those.
+    const transformed = Boolean(before.battle?.transform.forms[mon.uid] ?? run.battle?.transform.forms[mon.uid]);
+    if (prev.speciesId !== mon.speciesId && !transformed) {
       emit(content, run, 'evolved', {
         actors: [mon.uid],
         data: { from: prev.speciesId, to: mon.speciesId, trigger: evolutionTrigger },
