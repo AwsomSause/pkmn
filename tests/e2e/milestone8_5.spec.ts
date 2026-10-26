@@ -62,9 +62,7 @@ test('Mega Evolution from the battle menu', async ({ page }) => {
   await page.keyboard.press('Enter');
   await expect.poll(() => menuLabels(page)).toEqual(['Fight', 'Bag', 'Pokémon', 'Mega: ON']);
   await page.screenshot({ path: 'test-results/m8_5-mega-armed.png' });
-  // Fight -> first move.
-  await page.keyboard.press('ArrowLeft');
-  await page.keyboard.press('ArrowUp');
+  // The menu reopens on Fight: Fight -> first move.
   await page.keyboard.press('Enter');
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
