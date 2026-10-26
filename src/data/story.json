@@ -1,0 +1,71 @@
+{
+  "limits": {
+    "recentEvents": 250,
+    "memoriesPerPokemon": 20,
+    "histories": 60,
+    "openRelationships": 12,
+    "relationshipHistory": 20,
+    "enemyProfilesPerRun": 6,
+    "enemyProfilesPerRegion": 3,
+    "enemyProfileBattles": 10,
+    "chronicleEntries": 300,
+    "appliedEffects": 2000
+  },
+  "majorCuesPerBattle": 3,
+  "closeCallHpShare": 0.1,
+  "lowHpShare": 0.25,
+  "friendshipMilestones": [100, 150, 200, 255],
+  "chronicleMinImportance": 40,
+  "importance": {
+    "runStarted": 30,
+    "starterChosen": 60,
+    "routeChosen": 0,
+    "battleStarted": 0,
+    "battleEnded": 0,
+    "moveUsed": 0,
+    "knockout": 20,
+    "closeCall": 45,
+    "survivedFatal": 70,
+    "statusInflicted": 0,
+    "switchIn": 0,
+    "switchOut": 0,
+    "caught": 40,
+    "joinedParty": 35,
+    "leftParty": 30,
+    "released": 10,
+    "traded": 40,
+    "evolved": 65,
+    "transformed": 60,
+    "levelUp": 0,
+    "friendshipMilestone": 40,
+    "bossBeaten": 75,
+    "lostToBoss": 80,
+    "trainerEscaped": 50,
+    "eventChoice": 30,
+    "rewardTaken": 0,
+    "storyMoment": 60,
+    "runEnded": 90
+  },
+  "definitions": [
+    {
+      "id": "love-hung-on",
+      "displayName": "Hung on for you!",
+      "messagePool": [
+        "{name} hung on for you, out of love!",
+        "{name} refused to fall. It hung on for you!",
+        "{name} took the hit and stayed standing, for you!"
+      ],
+      "category": "bond",
+      "triggerConditions": { "trigger": "loveEndure" },
+      "chance": null,
+      "effect": { "kind": "endure" },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": { "importance": 70, "text": "Hung on at 1 HP out of love against {enemy}" },
+      "followUpEvents": [],
+      "visualCue": { "major": true, "color": "#ff7fb0", "sound": "se.shiny", "music": null, "cutIn": false, "shake": true },
+      "priority": "knockoutPrevention",
+      "eligibilityTags": []
+    }
+  ]
+}

@@ -26,6 +26,7 @@ import {
   type Requirement,
   type Reward,
 } from '../core/contentSchema';
+import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
 import archetypesJson from './archetypes.json';
@@ -47,6 +48,7 @@ import customEvolutionsJson from './customEvolutions.json';
 import themesJson from './themes.json';
 import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
+import storyJson from './story.json';
 
 export class ContentError extends Error {
   constructor(public readonly problems: string[]) {
@@ -74,6 +76,7 @@ export interface RawContent {
   shop: unknown;
   ruleset: unknown;
   balance: unknown;
+  story: unknown;
 }
 
 /**
@@ -113,6 +116,7 @@ export const RAW_CONTENT: RawContent = {
   shop: shopJson,
   ruleset: rulesetJson,
   balance: balanceJson,
+  story: storyJson,
 };
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string, problems: string[]): T | null {
@@ -153,7 +157,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
+  if (!story || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -180,6 +185,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     shop,
     ruleset,
     balance,
+    story,
   };
 
   addCatalog(content, problems);
@@ -207,6 +213,18 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const usable = (id: string) => content.moves.get(id)?.supported === true;
   for (const r of content.rewards.values()) {
     if (r.effect.kind === 'addItem' && !content.items.has(r.effect.item)) problems.push(`reward "${r.id}" gives unknown item "${r.effect.item}"`);
+  }
+  const storyIds = toMap(story.definitions, 'story.json definitions', problems);
+  for (const def of story.definitions) {
+    for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);
+    if (def.effect?.kind === 'item' && !content.items.has(def.effect.itemId)) problems.push(`story.json "${def.id}" gives unknown item "${def.effect.itemId}"`);
+    // The battle engine decides Love's endure on the battle stream, so the definition can't add its own chance or another effect.
+    if (def.triggerConditions.trigger === 'loveEndure' && (def.chance !== null || def.effect?.kind !== 'endure' || def.duration !== 'battle')) {
+      problems.push(`story.json "${def.id}": a loveEndure event needs chance null, an endure effect and battle duration`);
+    }
+  }
+  for (const trigger of STORY_TRIGGERS) {
+    if (story.definitions.filter((d) => d.triggerConditions.trigger === trigger).length > 1) problems.push(`story.json has more than one "${trigger}" event`);
   }
   for (const id of Object.keys(balance.startingItems)) {
     if (!content.items.has(id)) problems.push(`balance.startingItems has unknown item "${id}"`);

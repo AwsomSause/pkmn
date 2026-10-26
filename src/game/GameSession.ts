@@ -88,7 +88,7 @@ export class GameSession {
   continueRun(): RunState {
     this.refreshSavedRun();
     if (this.savedRun.status !== 'ok') throw new Error('No saved run to continue');
-    this.run = Run.ensureRegionOrder(this.content, this.savedRun.data);
+    this.run = Run.prepareLoadedRun(this.content, this.savedRun.data);
     if (this.run !== this.savedRun.data) this.persistRun();
     if (this.run.phase === 'over') this.finishRun();
     this.changed();

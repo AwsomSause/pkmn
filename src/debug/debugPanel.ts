@@ -5,7 +5,8 @@ import type Phaser from 'phaser';
 import { calcStats } from '../core/pokemon';
 import { currentColumn, findNode } from '../core/map';
 import { runLevelCap } from '../core/regions';
-import { currentEnemy } from '../core/state';
+import { currentEnemy, type RunState } from '../core/state';
+import { topMoments } from '../core/story/record';
 import { getTheme, themePool } from '../core/themes';
 import type { GameSession } from '../game/GameSession';
 import { services } from '../game/services';
@@ -14,6 +15,25 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLEl
   const node = Object.assign(document.createElement(tag), props);
   for (const c of children) node.append(c);
   return node;
+}
+
+/** The story layer, live: newest events first, then the chronicle's top moments and each Pokémon's history. */
+function storyLog(run: RunState): string {
+  const story = run.story;
+  const where = (w: RunState['story']['events'][number]['where']) =>
+    `R${w.region + 1}${w.stage !== null ? ` S${w.stage + 1}` : ''}${w.level !== null ? ` L${w.level}` : ''}${w.battle !== null ? ` B${w.battle}` : ''}${w.turn !== null ? ` T${w.turn}` : ''}`;
+  const lines = story.events
+    .slice(-40)
+    .reverse()
+    .map((e) => `#${e.seq} ${e.type} [${e.actors.join(',')}] ${where(e.where)} ${Object.entries(e.data).map(([k, v]) => `${k}=${v}`).join(' ')}`);
+  lines.push('', 'top moments:', ...topMoments(story).map((m) => `  (${m.importance}) ${m.text}`));
+  lines.push('', 'histories:');
+  for (const h of Object.values(story.histories)) {
+    lines.push(`  ${h.uid} ${h.speciesId}: ${h.battles} battles, KOs ${h.knockoutsDealt}/${h.knockoutsTaken}, close calls ${h.closeCalls}, survived ${h.survivedFatal}, bosses ${h.bossesBeaten}, low-HP stand ${h.longestLowHpStand}, ${h.memories.length} memories`);
+  }
+  if (run.battle?.storyEffects.length) lines.push('', `battle ledger: ${run.battle.storyEffects.join(', ')}`);
+  lines.push(`run ledger: ${story.appliedEffects.length} effect ids  ·  major moments this battle: ${story.majorCuesThisBattle}`);
+  return lines.join('\n');
 }
 
 export function installDebugPanel(game: Phaser.Game, session: GameSession): void {
@@ -93,6 +113,8 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
             el('button', { textContent: 'Jump', onclick: () => { try { session.debugJumpToColumn(Number(colInput.value) || 0); goTo('Map'); } catch (err) { alert(String(err)); } render(); } }));
         }
       }
+
+      panel.append(el('h3', { textContent: `Story Log (${run.story.seq} events, ${run.story.chronicle.length} in the chronicle)` }), el('pre', { textContent: storyLog(run) }));
 
       const heal = el('button', { textContent: 'Heal party', onclick: () => { session.debugHeal(); if (run.phase === 'battle') goTo('Battle'); render(); } });
       panel.append(heal);
