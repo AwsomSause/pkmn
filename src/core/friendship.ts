@@ -5,12 +5,14 @@
 // on their own after a battle; the Soothe Bell still evolves them right away.
 
 import type { Content } from './contentSchema';
+import { friendshipMultiplier } from './battle/held';
 import type { PokemonInstance } from './state';
 
 /** Changes a Pokémon's friendship, kept within 0 and the maximum. Gains are scaled by `gainMultiplier` (Charisma). */
 export function changeFriendship(content: Content, mon: PokemonInstance, amount: number, gainMultiplier = 1): number {
   const { max } = content.balance.friendship;
-  const delta = amount > 0 ? Math.round(amount * gainMultiplier) : amount;
+  // A Prism Scale makes its holder warm up faster.
+  const delta = amount > 0 ? Math.round(amount * gainMultiplier * friendshipMultiplier(content, mon)) : amount;
   mon.friendship = Math.max(0, Math.min(max, mon.friendship + delta));
   return mon.friendship;
 }

@@ -77,3 +77,48 @@ test('catalog items: icons, the free re-roll, and a PP Up', async ({ page }) => 
   await expect.poll(async () => (await run(page)).party[0].moves[0].ppUps ?? 0, { timeout: 10_000 }).toBe(1);
   expect(errors).toEqual([]);
 });
+
+const menuLabels = (page: Page) =>
+  page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').menu?.config?.options?.map((o: any) => o.label) ?? null);
+
+test('held items: Leftovers from the draft heal in battle, and an X Attack raises Attack', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
+  await startRun(page, 'e2e-held');
+
+  // Leftovers go to the only Pokémon.
+  await showDraft(page, ['item:leftovers', 'item:x-attack', 'item:charcoal', 'item:heart-scale', 'item:big-pearl']);
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await run(page)).party[0].held?.leftovers ?? 0, { timeout: 10_000 }).toBe(1);
+
+  // Back on the map: the starter is hurt and carries an X Attack boost.
+  await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.waitForTimeout(250);
+  await page.evaluate(() => {
+    const mon = (window as any).__pkr.session.run.party[0];
+    mon.hp = Math.max(1, Math.floor(mon.hp / 2));
+    mon.boosts = [{ kind: 'stage', stat: 'atk', stages: 1, turns: 5 }];
+  });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.debugReplaceEnemy('snorlax', 60);
+    session.run.battle.enemyTeam[0].moves = [{ id: 'splash', pp: 40 }];
+    game.scene.getScene('Battle').scene.restart();
+  });
+  await waitForScene(page, 'Battle');
+  const hpBefore = (await run(page)).party[0].hp;
+  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toContain('Fight');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await run(page)).party[0].hp, { timeout: 20_000 }).toBeGreaterThan(hpBefore);
+  const after = await run(page);
+  expect(after.battle.playerStages.atk).toBe(1);
+  expect(after.party[0].boosts).toEqual([{ kind: 'stage', stat: 'atk', stages: 1, turns: 4 }]);
+  await page.screenshot({ path: 'test-results/m875-held.png' });
+  expect(errors).toEqual([]);
+});

@@ -86,6 +86,17 @@ export function catalogTargetProblem(content: Content, run: RunState, entry: Cat
       return null;
     case 'teachMove':
       return teachableMoves(content, mon, effect.type).length > 0 ? null : `That Pokémon can't learn a new ${capitalize(effect.type)} move.`;
+    case 'held': {
+      const copies = mon.held?.[entry.id] ?? 0;
+      return entry.max !== null && copies >= entry.max ? `That Pokémon already holds ${copies === 1 ? 'one' : 'the most'}.` : null;
+    }
+    case 'battleBoost': {
+      const stats = effect.boosts.map((b) => (b.kind === 'stage' ? b.stat : b.kind));
+      const pending = (mon.boosts ?? []).filter((b) => stats.includes(b.kind === 'stage' ? b.stat : b.kind)).length;
+      if (entry.max !== null && pending >= entry.max * effect.boosts.length) return 'That Pokémon already has the most of this boost.';
+      if (effect.cure && fainted) return 'That Pokémon has fainted.';
+      return null;
+    }
     case 'feed':
       return null;
     default:
@@ -155,7 +166,8 @@ export function applyCatalog(
     messages.push(amount >= 0 ? `${name(mon)} likes you a little more.` : `${name(mon)} didn't like that…`);
   };
 
-  if (entry.stacksOn !== 'pokemon') run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
+  // Team and player items are counted on the run (one-time battle boosts aren't kept).
+  if (entry.stacksOn !== 'pokemon' && effect.kind !== 'battleBoost') run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
 
   switch (effect.kind) {
     case 'attributes': {
@@ -234,6 +246,28 @@ export function applyCatalog(
     case 'passive':
       messages.push(`${entry.name}: ${entry.description}.`);
       break;
+    case 'held': {
+      if (entry.stacksOn === 'pokemon') {
+        const mon = target!;
+        mon.held = { ...mon.held, [entry.id]: (mon.held?.[entry.id] ?? 0) + 1 };
+        messages.push(`${name(mon)} is now holding ${mon.held[entry.id]! > 1 ? `${mon.held[entry.id]} ` : 'the '}${entry.name}${mon.held[entry.id]! > 1 ? 's' : ''}.`);
+      } else {
+        messages.push(`${entry.name}: ${entry.description}.`);
+      }
+      break;
+    }
+    case 'battleBoost': {
+      const mons = entry.stacksOn === 'pokemon' ? [target!] : run.party.filter((m) => m.hp > 0);
+      for (const mon of mons) {
+        if (effect.cure && mon.status?.id === effect.cure) {
+          mon.status = null;
+          messages.push(`${name(mon)} was cured.`);
+        }
+        mon.boosts = [...(mon.boosts ?? []), ...effect.boosts];
+      }
+      messages.push(`${entry.description}: it takes effect in the next battle.`);
+      break;
+    }
     case 'fossil': {
       const levels = run.party.map((m) => m.level);
       const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length))));

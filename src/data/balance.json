@@ -21,6 +21,18 @@
   "epic": 1
  },
  "repeatFamilyWeight": 0.5,
+ "bossHeldItems": {
+  "gym": 1,
+  "elite": 2,
+  "champion": 3,
+  "rarityWeights": {
+   "common": 40,
+   "uncommon": 35,
+   "rare": 20,
+   "epic": 5
+  },
+  "betterPerRegion": 0.5
+ },
  "vitaminMultiplierPerStack": 0.1,
  "vitaminMaxStacks": 3,
  "transformations": {

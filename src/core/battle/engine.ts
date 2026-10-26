@@ -18,7 +18,7 @@ import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, la
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
-import { currentEnemy, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
+import { currentEnemy, freshHeldState, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
   clampStage,
@@ -33,6 +33,7 @@ import {
   isStatusImmune,
   typeEffectiveness,
 } from './damage';
+import * as Held from './held';
 import { applyTransformations, transformProblem, type TransformEvent, type TransformRequest } from './transform';
 
 export type Side = 'player' | 'enemy';
@@ -90,6 +91,7 @@ export type BattleEvent =
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
   | { type: 'ball'; itemId: string; shakes: number; caught: boolean }
+  | Held.HeldEvent
   /** Mega Evolution / Primal Reversion (battle/transform.ts). */
   | TransformEvent;
 
@@ -128,6 +130,8 @@ export interface BattleContext {
   typeModifiers?: TypeModifiers;
   /** The player's attributes (damage, Speed, damage taken, Love's chance to hang on). */
   attributes?: AttributeEffects;
+  /** The player's team items (run.passives): the Plates help every team member. */
+  teamItems?: Record<string, number>;
   /** Transformations switched off for this run (a challenge). */
   disabledMechanics?: readonly TransformKind[];
   /**
@@ -164,6 +168,7 @@ export function createBattle(
     levelInfo: [],
     ai: 0,
     transform: freshTransform(),
+    held: freshHeldState(),
   };
 }
 
@@ -245,21 +250,30 @@ export function forcedMoveId(vol: Volatile | undefined): string | null {
   return vol?.charging ?? vol?.locked?.moveId ?? null;
 }
 
-/** The move slot the player's Pokémon must use this turn, or null if it can choose. */
+/** The move slot the player's Pokémon must use this turn (a two-turn move, Thrash, or a Choice item's lock), or null if it can choose. */
 export function forcedMoveIndex(battle: BattleState, party: PokemonInstance[]): number | null {
-  const id = forcedMoveId(battle.playerVolatile);
+  const mon = party[battle.activeIndex];
+  const id = forcedMoveId(battle.playerVolatile) ?? choiceLock(battle, mon);
   if (!id) return null;
-  const index = party[battle.activeIndex]?.moves.findIndex((m) => m.id === id) ?? -1;
+  const index = mon?.moves.findIndex((m) => m.id === id) ?? -1;
   return index >= 0 ? index : null;
 }
 
+/** A Choice item's locked move, while it still has PP. */
+function choiceLock(battle: BattleState, mon: PokemonInstance | undefined): string | null {
+  const id = mon ? Held.choiceLockedMove({ battle }, mon) : null;
+  return id && mon!.moves.some((m) => m.id === id && m.pp > 0) ? id : null;
+}
+
 /** Why the player can't switch to this party slot, or null if they can. */
-export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'>, partyIndex: number): string | null {
+export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Partial<Pick<BattleContext, 'content' | 'teamItems'>>, partyIndex: number): string | null {
   const mon = ctx.party[partyIndex];
   if (!mon) return 'There is no Pokémon in that slot.';
   if (partyIndex === ctx.battle.activeIndex && !ctx.battle.needsSwitch) return 'That Pokémon is already in battle.';
   if (mon.hp <= 0) return 'That Pokémon has fainted.';
-  if (!ctx.battle.needsSwitch && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
+  const active = ctx.party[ctx.battle.activeIndex];
+  const shedShell = active && 'content' in ctx ? Held.canAlwaysSwitch(ctx as Pick<BattleContext, 'content' | 'teamItems'>, active, 'player') : false;
+  if (!ctx.battle.needsSwitch && !shedShell && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
   if (!ctx.battle.needsSwitch && forcedMoveId(ctx.battle.playerVolatile)) return 'Your Pokémon is in the middle of a move!';
   return null;
 }
@@ -286,6 +300,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   battle.playerVolatile ??= freshVolatile();
   battle.enemyVolatile ??= freshVolatile();
   battle.weather ??= null;
+  battle.held ??= freshHeldState();
+  // X items and Dire Hit take effect when a Pokémon is first in battle.
+  enterField(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
+  enterField(ctx, { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false });
   // A Pokémon in the middle of a two-turn or lock-in move must carry on with it.
   const forced = forcedMoveIndex(battle, ctx.party);
   if (forced !== null) {
@@ -299,8 +317,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
+  const enemyChoice = choiceLock(battle, enemy.mon);
+  const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   const enemyMoveIndex =
-    enemyForcedIndex >= 0 ? enemyForcedIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
+    enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
   const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -346,6 +366,12 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!anyFainted(playerC, enemy)) {
     applyResidual(ctx, playerC, enemy, events);
     applyResidual(ctx, enemy, playerC, events);
+    recordFaints(ctx, playerC, enemy, events);
+  }
+  // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
+  if (!anyFainted(playerC, enemy)) {
+    Held.endOfTurn(ctx, playerC, events as Held.HeldEvent[]);
+    Held.endOfTurn(ctx, enemy, events as Held.HeldEvent[]);
     recordFaints(ctx, playerC, enemy, events);
   }
 
@@ -434,12 +460,29 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
 
 function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[]): void {
   const { battle } = ctx;
+  const outgoing = ctx.party[battle.activeIndex];
+  if (outgoing) leaveField(ctx, outgoing);
   const mon = ctx.party[partyIndex]!;
   battle.activeIndex = partyIndex;
   battle.playerStages = freshStages();
   battle.playerVolatile = freshVolatile();
   if (!battle.participants.includes(mon.uid)) battle.participants.push(mon.uid);
   events.push({ type: 'switchIn', side: 'player', uid: mon.uid, speciesId: mon.speciesId, level: mon.level });
+  enterField(ctx, { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
+}
+
+/** A Pokémon comes onto the field: its battle boosts (X items, Dire Hit) apply once per stay. */
+function enterField(ctx: BattleContext, holder: Held.Holder): void {
+  const state = ctx.battle.held!;
+  const key = `entered:${holder.mon.uid}`;
+  if (state.used[key]) return;
+  state.used[key] = { on: 1 };
+  Held.onSwitchIn(ctx, holder);
+}
+
+function leaveField(ctx: BattleContext, mon: PokemonInstance): void {
+  delete ctx.battle.held?.used[`entered:${mon.uid}`];
+  Held.onSwitchOut(ctx, mon);
 }
 
 function resolveMove(content: Content, mon: PokemonInstance, index: number): Move {
@@ -452,11 +495,12 @@ function resolveMove(content: Content, mon: PokemonInstance, index: number): Mov
 function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
   const { content } = ctx;
   const speedOf = (c: Combatant) =>
-    effectiveSpeed(content.ruleset, calcStats(content, c.mon).spe, c.stages.spe, c.mon.status?.id === 'par') *
+    effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par') *
     (c.side === 'player' ? (ctx.attributes?.speed ?? 1) : 1);
+  // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: pMove.priority, speed: speedOf(player) },
-    { priority: eMove.priority, speed: speedOf(enemy) },
+    { priority: pMove.priority + Held.orderBracket(ctx, player) / 10, speed: speedOf(player) },
+    { priority: eMove.priority + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(enemy) },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
   return result === 'a' ? 'player' : 'enemy';
@@ -562,8 +606,8 @@ function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = fal
   let lastStand: string | null = null;
   // Love: each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
   // It is the "loveEndure" story event (story.json): its cooldown key in the
-  // battle's story ledger makes it once per battle per Pokémon.
-  const endureChance = ctx.attributes?.endureChance ?? 0;
+  // battle's story ledger makes it once per battle per Pokémon. Destiny Knot raises the chance.
+  const endureChance = (ctx.attributes?.endureChance ?? 0) * Held.endureMultiplier(ctx, c.mon, c.side);
   const endure = endureChance > 0 ? ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'loveEndure') : undefined;
   const endureKey = endure ? cooldownKey(endure, c.mon.uid) : '';
   if (endure && fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && !hasBattleEffect(ctx.battle, endureKey)) {
@@ -611,6 +655,7 @@ function executeMove(
   else if (!continuing) user.mon.moves[slot]!.pp -= 1;
   events.push({ type: 'move', side: user.side, moveId: move.id });
   if (!move.effects.protect) user.vol.protectChain = 0;
+  if (slot !== -1) Held.noteMoveUsed(ctx, user, move.id);
 
   runMove(ctx, user, target, move, movedFirst, events);
 
@@ -654,7 +699,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (user.vol.charging === move.id) {
       user.vol.charging = null;
       user.vol.semi = null;
-    } else if (!(fx.charge.sunSkips && weather === 'sun')) {
+    } else if (!(fx.charge.sunSkips && weather === 'sun') && !Held.usePowerHerb(ctx, user, events as Held.HeldEvent[])) {
       user.vol.charging = move.id;
       user.vol.semi = fx.charge.semi ?? null;
       events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
@@ -667,7 +712,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (weather === fx.weather) {
       events.push({ type: 'fail', side: user.side });
     } else {
-      ctx.battle.weather = { id: fx.weather, turns: 5 };
+      ctx.battle.weather = { id: fx.weather, turns: Held.weatherTurns(ctx, user, fx.weather, 5) };
       events.push({ type: 'weather', weather: fx.weather });
     }
     return;
@@ -703,7 +748,13 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
   const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
-  const accuracy = fx.ohko ? ohkoAccuracy(user.mon.level, target.mon.level) : hitChance(baseAccuracy, user.stages.acc, fx.ignoreStages ? 0 : target.stages.eva);
+  const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst) : 1;
+  const accuracy =
+    itemAccuracy === null
+      ? 1
+      : fx.ohko
+        ? ohkoAccuracy(user.mon.level, target.mon.level)
+        : Math.min(1, hitChance(baseAccuracy, user.stages.acc, fx.ignoreStages ? 0 : target.stages.eva) * itemAccuracy);
   if (targetsEnemy && rng.float() >= accuracy) {
     events.push({ type: 'miss', side: user.side });
     return;
@@ -716,8 +767,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
 
   // Damaging move.
   const targetTypes = getSpecies(content, target.mon.speciesId).types;
-  const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : move.type;
-  const effectiveness = move.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, moveType, targetTypes);
+  const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
+  const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, targetTypes));
   if (effectiveness === 0) {
     events.push({ type: 'noEffect', side: target.side });
     return;
@@ -738,7 +789,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const targetStats = calcStats(content, target.mon);
       const physical = move.category === 'physical';
       const hitsDefense = physical || fx.targetsDefense;
-      crit = rng.chance(critChance(content.ruleset, move.critStage));
+      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user)));
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       const userTypes = getSpecies(content, user.mon.speciesId).types;
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
@@ -748,13 +799,14 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (fx.charge?.sunSkips && weather && weather !== 'sun') power = Math.floor(power / 2);
       const defenseStage = hitsDefense ? target.stages.def : target.stages.spd;
       // Sandstorm raises Rock types' Sp. Def and snow raises Ice types' Defense by half.
-      let defense = hitsDefense ? targetStats.def : targetStats.spd;
+      let defense = Math.floor((hitsDefense ? targetStats.def : targetStats.spd) * Held.heldStatMultiplier(ctx, target.mon, target.side, hitsDefense ? 'def' : 'spd'));
       if (weather === 'sand' && !hitsDefense && targetTypes.includes('rock')) defense = Math.floor(defense * 1.5);
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
-      damage = calcDamage(content.ruleset, {
+      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) } : content.ruleset;
+      damage = calcDamage(ruleset, {
         level: user.mon.level,
         power,
-        attack: physical ? userStats.atk : userStats.spa,
+        attack: Math.floor((physical ? userStats.atk : userStats.spa) * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa')),
         defense,
         attackStage: physical ? user.stages.atk : user.stages.spa,
         defenseStage: fx.ignoreStages ? 0 : defenseStage,
@@ -767,7 +819,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         weather: weatherMultiplier(weather, moveType),
       });
       damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
+      const itemMultiplier =
+        Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
+        Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
+      if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
     }
+    damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
 
     const { lost, lastStand, endured } = takeHp(ctx, target, damage, true);
@@ -778,6 +835,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (endured) events.push({ type: 'endure', side: target.side });
   }
   if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
+  Held.afterHit(ctx, user, target, move, moveType, effectiveness, dealt, movedFirst, events as Held.HeldEvent[]);
+  if (target.mon.hp <= 0) Held.onKnockout(ctx, user, events as Held.HeldEvent[]);
   if (fx.ohko && target.mon.hp <= 0) events.push({ type: 'ohko', side: target.side });
   if (fx.recharge) user.vol.recharge = true;
 
@@ -789,7 +848,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
 
   if (fx.drain && dealt > 0) {
     const userMax = calcStats(content, user.mon).hp;
-    const heal = Math.min(userMax - user.mon.hp, Math.max(1, Math.floor(dealt * fx.drain)));
+    const heal = Math.min(userMax - user.mon.hp, Math.max(1, Math.floor(dealt * fx.drain * Held.drainMultiplier(ctx, user.mon, user.side))));
     if (heal > 0) {
       user.mon.hp += heal;
       events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
@@ -818,7 +877,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     const recipient = change.target === 'self' ? user : target;
     if (recipient.mon.hp <= 0) continue;
     if (!rolls.has(change.chance)) rolls.set(change.chance, rng.chance(change.chance / 100));
-    if (rolls.get(change.chance)) applyStageChange(recipient, change.stat, change.stages, events);
+    if (rolls.get(change.chance)) changeStage(ctx, user, recipient, change.stat, change.stages, events);
   }
 }
 
@@ -854,14 +913,14 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   }
   for (const change of fx.statChanges ?? []) {
     const recipient = change.target === 'self' ? user : target;
-    didSomething = applyStageChange(recipient, change.stat, change.stages, events) || didSomething;
+    didSomething = changeStage(ctx, user, recipient, change.stat, change.stages, events) || didSomething;
   }
   if (!didSomething && !fx.statChanges?.length && !fx.status && !fx.confuse) events.push({ type: 'fail', side: user.side });
 }
 
 /** Confuses for 2–5 turns of moves (1–4 of them are checks). Returns true if it worked. */
 function tryConfuse(ctx: BattleContext, target: Combatant, events: BattleEvent[], announceFailure: boolean): boolean {
-  if (target.vol.confusion > 0) {
+  if (target.vol.confusion > 0 || Held.statusBlocked(ctx, target, 'confusion')) {
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
   }
@@ -881,7 +940,7 @@ function tryInflictStatus(
   announceFailure: boolean,
 ): boolean {
   const types = getSpecies(content, target.mon.speciesId).types;
-  if (target.mon.status || isStatusImmune(status, types, move)) {
+  if (target.mon.status || isStatusImmune(status, types, move) || Held.statusBlocked({ content }, target, status)) {
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
   }
@@ -892,6 +951,20 @@ function tryInflictStatus(
   }
   events.push({ type: 'status', side: target.side, status });
   return true;
+}
+
+/**
+ * A move changes a stat stage. The opponent can't lower stats guarded by
+ * Guard Spec.; a White Herb undoes a drop once per battle.
+ */
+function changeStage(ctx: BattleContext, user: Combatant, recipient: Combatant, stat: BoostStat, stages: number, events: BattleEvent[]): boolean {
+  if (stages < 0 && recipient !== user && Held.statsGuarded(recipient)) {
+    events.push({ type: 'held', side: recipient.side, itemId: 'guard-spec', what: 'guard' });
+    return false;
+  }
+  const changed = applyStageChange(recipient, stat, stages, events);
+  if (changed && stages < 0) Held.whiteHerb(ctx, recipient, events as Held.HeldEvent[]);
+  return changed;
 }
 
 /** Returns true if the stage actually changed. */
@@ -967,7 +1040,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     if (c.vol.bound === 0) {
       events.push({ type: 'bindEnd', side: c.side });
     } else {
-      const { lost, lastStand } = hurt(1 / 8);
+      const { lost, lastStand } = hurt((1 / 8) * Held.bindMultiplier(ctx, other.mon, other.side));
       events.push({ type: 'bindDamage', side: c.side, amount: lost, hpAfter: c.mon.hp });
       if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
     }

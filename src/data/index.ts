@@ -384,6 +384,12 @@ function addCatalog(content: Content, problems: string[]): void {
     if (entry.status !== 'supported') continue;
     const effect = entry.effect!;
     if (effect.kind === 'fossil' && !content.species.has(effect.species)) problems.push(`${where} revives unknown species "${effect.species}"`);
+    if (effect.kind === 'held') {
+      for (const hook of effect.hooks) {
+        for (const id of ('species' in hook ? hook.species : undefined) ?? []) if (!content.species.has(id)) problems.push(`${where} works for unknown species "${id}"`);
+      }
+      if (entry.stacksOn === 'player') problems.push(`${where} is a held item, so it must stack on a Pokémon or the team`);
+    }
     const reward = catalogReward(entry);
     if (content.rewards.has(reward.id)) problems.push(`${where} clashes with reward "${reward.id}"`);
     content.rewards.set(reward.id, reward);

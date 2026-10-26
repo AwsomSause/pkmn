@@ -25,7 +25,7 @@ import {
 import type { RunState } from '../../src/core/state';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, toBattle } from './helpers';
+import { content, takeAnyReward, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 const FULL = content.campaigns.get('full')!;
@@ -218,7 +218,7 @@ describe('the dev campaign, start to finish', () => {
       run = win(run, true);
       if (run.phase === 'over') break;
       expect(run.phase).toBe('reward');
-      run = skipDecisions(chooseReward(content, run, 0).run);
+      run = skipDecisions(takeAnyReward(run));
       if (run.regionIndex === 1 && !sawSecondRegion) {
         sawSecondRegion = true;
         expect(run.regionsCleared).toEqual([firstRegion]);
