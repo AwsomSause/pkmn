@@ -64,10 +64,10 @@ describe('the full Pokédex', () => {
 describe('moves the battle engine does not support yet', () => {
   it('are in the data, flagged, with what they still need', () => {
     expect(content.moves.size).toBeGreaterThan(900);
-    const protect = content.moves.get('protect')!;
-    expect(protect.supported).toBe(false);
-    expect(protect.needs).toBeTruthy();
-    expect(protect.priority).toBe(4);
+    const solarBeam = content.moves.get('solar-beam')!;
+    expect(solarBeam.supported).toBe(false);
+    expect(solarBeam.needs).toBeTruthy();
+    expect(content.moves.get('protect')!.priority).toBe(4);
     expect(content.moves.get('tackle')!.supported).toBe(true);
   });
 

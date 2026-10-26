@@ -578,8 +578,12 @@ export class BattleScene extends Phaser.Scene {
         case 'residual':
         case 'recoil':
         case 'drain':
+        case 'heal':
+        case 'confusionHit':
+        case 'bindDamage':
+        case 'seedDamage':
           mon!.hp = e.hpAfter;
-          if (e.type !== 'drain') {
+          if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
           }
@@ -597,6 +601,10 @@ export class BattleScene extends Phaser.Scene {
         case 'lastStand':
           mon!.hp = 1;
           if (sprite) this.tweens.add({ targets: sprite, x: sprite.x + 8, yoyo: true, repeat: 3, duration: 50 });
+          await this.refreshInfoBox(box, mon!, true);
+          break;
+        case 'selfKo':
+          mon!.hp = 0;
           await this.refreshInfoBox(box, mon!, true);
           break;
         case 'faint':
