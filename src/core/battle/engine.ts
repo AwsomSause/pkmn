@@ -14,6 +14,7 @@ import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
+import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import { currentEnemy, freshStages, type BattleState, type PokemonInstance, type Stages } from '../state';
 import {
   calcDamage,
@@ -105,7 +106,7 @@ export function createBattle(
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
-    enduredUids: [],
+    storyEffects: [],
     outcome: null,
     levelInfo: [],
     ai: 0,
@@ -412,11 +413,15 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
 function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = false): { lost: number; lastStand: string | null; endured: boolean } {
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
-  // Love: once per battle, each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
+  // Love: each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
+  // It is the "loveEndure" story event (story.json): its cooldown key in the
+  // battle's story ledger makes it once per battle per Pokémon.
   const endureChance = ctx.attributes?.endureChance ?? 0;
-  if (fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && endureChance > 0 && !ctx.battle.enduredUids.includes(c.mon.uid)) {
+  const endure = endureChance > 0 ? ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'loveEndure') : undefined;
+  const endureKey = endure ? cooldownKey(endure, c.mon.uid) : '';
+  if (endure && fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && !hasBattleEffect(ctx.battle, endureKey)) {
     if (ctx.rng.chance(endureChance)) {
-      ctx.battle.enduredUids.push(c.mon.uid);
+      markBattleEffect(ctx.battle, endureKey);
       lost = c.mon.hp - 1;
       c.mon.hp -= lost;
       return { lost, lastStand: null, endured: true };

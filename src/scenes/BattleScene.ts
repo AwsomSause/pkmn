@@ -9,6 +9,7 @@ import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
+import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -481,7 +482,7 @@ export class BattleScene extends Phaser.Scene {
       this.nextPrompt();
       return;
     }
-    await this.playEvents(result.events, before, trainer);
+    await this.playEvents(result.events, before, trainer, result.cues);
 
     if (result.end) {
       await this.finish(result, trainer);
@@ -534,11 +535,11 @@ export class BattleScene extends Phaser.Scene {
     return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid);
   }
 
-  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null): Promise<void> {
+  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, cues: PresentationCue[] = []): Promise<void> {
     const { session } = services();
     const content = session.content;
 
-    for (const e of events) {
+    for (const [index, e] of events.entries()) {
       const side = 'side' in e ? e.side : null;
       const box = side === 'enemy' ? this.enemyBox : this.playerBox;
       const sprite = side === 'enemy' ? this.enemySprite : this.playerSprite;
@@ -621,6 +622,13 @@ export class BattleScene extends Phaser.Scene {
         if (real) this.shown.player.status = real.status;
         await this.refreshInfoBox(this.playerBox, this.shown.player, true);
       }
+      // A story moment replaces the event's own line with its own (and a banner when it is a major one).
+      const cue = cues.find((c) => c.at === index);
+      if (cue) {
+        this.showMoment(cue);
+        for (const line of cue.messages) await this.say(line);
+        continue;
+      }
       const text = eventText(content, this.names(trainer), e);
       if (text) await this.say(text);
     }
@@ -639,6 +647,26 @@ export class BattleScene extends Phaser.Scene {
       if (active) await this.refreshInfoBox(this.playerBox, active, false);
     }
     this.updateHeader();
+  }
+
+  /**
+   * A story moment's banner and aura. Presentation only: it never touches the
+   * run, and if it fails the battle carries on with just the text.
+   */
+  private showMoment(cue: PresentationCue): void {
+    if (!cue.major) return;
+    try {
+      const color = Phaser.Display.Color.HexStringToColor(cue.color).color;
+      if (cue.sound) playSfx(this, cue.sound);
+      if (cue.shake) this.cameras.main.shake(220, 0.006);
+      const band = this.add.rectangle(GAME_WIDTH / 2, 132, GAME_WIDTH, 54, color, 0.85).setDepth(50).setAlpha(0);
+      const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
+      const aura = this.add.circle(PLAYER_POS.x, PLAYER_POS.y - 40, 90, color, 0.35).setDepth(1).setScale(0.6);
+      this.tweens.add({ targets: [band, title], alpha: 1, duration: 180, hold: 1300, yoyo: true, onComplete: () => { band.destroy(); title.destroy(); } });
+      this.tweens.add({ targets: aura, scale: 1.3, alpha: 0, duration: 900, onComplete: () => aura.destroy() });
+    } catch (err) {
+      console.warn('Story moment could not be shown', err);
+    }
   }
 
   /** Throw, wobble, and either click shut or burst open. */

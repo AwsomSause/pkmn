@@ -43,6 +43,19 @@ import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCa
 import { createStreams, Rng, withStream } from './rng';
 import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
+import {
+  ensureHistories,
+  recordBattleStarted,
+  recordBattleTurn,
+  recordCaught,
+  recordChanges,
+  recordReleased,
+  recordRewardTaken,
+  recordRouteChosen,
+  recordRunStarted,
+} from './story/hooks';
+import type { PresentationCue } from './story/queue';
+import { createStoryState } from './story/record';
 
 export interface NewRunOptions {
   runId: string;
@@ -67,7 +80,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
   const starterChoices = draft.choices;
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
-  return {
+  const run: RunState = {
     runId: opts.runId,
     seed: opts.seed,
     archetypeId: opts.archetypeId,
@@ -97,7 +110,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
+    story: createStoryState(),
   };
+  recordRunStarted(content, run);
+  return run;
 }
 
 function assertPhase(run: RunState, ...phases: RunState['phase'][]): void {
@@ -123,6 +139,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   run.party[0]!.friendship = content.balance.friendship.starter;
   run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
+  recordChanges(content, current, run, 'level');
   return run;
 }
 
@@ -142,6 +159,18 @@ export function ensureRegionOrder(content: Content, run: RunState): RunState {
   if (run.regionOrder.length > 0) return run;
   const copy = structuredClone(run);
   fillRegionOrder(content, copy);
+  return copy;
+}
+
+/**
+ * Fills in what an older save could not have: the region order and a story
+ * history for every party Pokémon. Returns `run` itself when nothing was missing.
+ */
+export function prepareLoadedRun(content: Content, run: RunState): RunState {
+  const ordered = ensureRegionOrder(content, run);
+  if (run.party.every((m) => ordered.story.histories[m.uid])) return ordered;
+  const copy = ordered === run ? structuredClone(run) : ordered;
+  ensureHistories(content, copy);
   return copy;
 }
 
@@ -216,7 +245,9 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   const stage = run.stage!;
   stage.current = nodeId;
   stage.visited.push(nodeId);
-  startEncounter(content, run, findNode(stage.map, nodeId));
+  const node = findNode(stage.map, nodeId);
+  recordRouteChosen(content, run, nodeId, node.harder, node.kind);
+  startEncounter(content, run, node);
   return run;
 }
 
@@ -267,6 +298,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
   }
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
+  recordBattleStarted(content, run);
 }
 
 /** Uses a healing stop or enters a shop beside the current node. */
@@ -368,6 +400,8 @@ export interface TurnResult {
   /** Set when the battle was won or the Pokémon caught. */
   end: BattleEndResult | null;
   defeated: boolean;
+  /** Story moments to show while playing `events` (presentation only: never saved, never read by the rules). */
+  cues: PresentationCue[];
 }
 
 export function takeTurn(content: Content, current: RunState, action: PlayerAction): TurnResult {
@@ -403,18 +437,24 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   }
 
   const events = awardExperience(content, run, engineEvents);
+  const cues = recordBattleTurn(content, current, run, events);
 
   if (battle.outcome === 'win' || battle.outcome === 'caught') {
     const end = finishBattle(content, run);
-    return { run, events, end, defeated: false };
+    const caught = run.pending.find((d) => d.kind === 'caught');
+    if (end.outcome === 'caught' && caught?.kind === 'caught') recordCaught(content, run, caught.mon);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end, defeated: false, cues };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
     run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
     run.phase = 'over';
-    return { run, events, end: null, defeated: true };
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: true, cues };
   }
-  return { run, events, end: null, defeated: false };
+  recordChanges(content, current, run, 'battle');
+  return { run, events, end: null, defeated: false, cues };
 }
 
 /** Counts what grows attributes: stats your Pokémon raise on themselves, and enemies defeated or caught by type. */
@@ -679,6 +719,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       count(run, 'candiesEarned', candies);
       count(run, 'caughtToCandies');
       message = `${name} was released. You got ${candies} cand${candies === 1 ? 'y' : 'ies'}.`;
+      recordReleased(content, run, caught);
     } else {
       throw new Error('Choose what to do with the caught Pokémon');
     }
@@ -686,6 +727,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
 
   run.pending.shift();
   continueAfterDecisions(content, run);
+  recordChanges(content, current, run, 'level');
   return { run, message };
 }
 
@@ -710,7 +752,9 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
   run.draft = null;
   run.pending.push(...reward.pending);
   run.afterDecisions = 'map';
+  recordRewardTaken(content, run, rewardId);
   continueAfterDecisions(content, run);
+  recordChanges(content, current, run, 'reward');
   return { run, reward };
 }
 
@@ -733,6 +777,7 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
   });
   if (item.effect.kind === 'evolve') count(run, 'evolutions');
   consumeItem(run.inventory, itemId);
+  recordChanges(content, current, run, 'item');
   return { run, message };
 }
 
@@ -755,6 +800,7 @@ export function debugReplaceEnemy(content: Content, current: RunState, speciesId
   const enemy = createPokemon(content, speciesId, level, nextUid(run, 'e'));
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
+  recordBattleStarted(content, run);
   return run;
 }
 
@@ -763,6 +809,7 @@ export function debugAddToParty(content: Content, current: RunState, speciesId: 
   if (current.party.length >= content.balance.partyMax) throw new Error('Your party is full');
   const run = structuredClone(current);
   run.party.push(createPokemon(content, speciesId, level, nextUid(run, 'p')));
+  recordChanges(content, current, run, 'debug');
   return run;
 }
 

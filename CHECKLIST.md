@@ -237,6 +237,27 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 - [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes; "Between-Level" interactions — built last, designed with the director first in the Events and map stops plan
 - [ ] Optional: IVs/EVs/natures; gender, time of day and weather
 
+## Milestone 8.9-0 — Story foundation ✅
+
+The shared layer every story system reads (design: docs/plans/hyper-overdrive-techno.md §7–9 and the Electric plan; how it works: docs/story-foundation.md).
+
+- [x] 28 domain event types with deterministic ids (seed + sequence number), recorded from the run's actions and each battle turn
+- [x] Story effects with ids; the save keeps the applied ids, so an effect never applies twice (battle-scope ids live in the battle and go when it ends)
+- [x] Presentation cues (banner, colour, sound, shake) that the rules never read; the battle screen shows them
+- [x] PokemonHistory per uid (survives evolution), RelationshipRecord, EnemyProfile, RunChronicle, with the plan's limits (20 memories, 12 open relationships, 6 enemies per run and 3 per region, 300 chronicle entries)
+- [x] Event queue: the plan's priority order, one combat effect per turn, merged banners, 3 cinematic moments per battle
+- [x] New "story" and "hyper" random streams; old seeds play exactly as before (pinned by fingerprints taken on main)
+- [x] Love's "hung on at 1 HP" runs through the story layer as its first user (story.json "love-hung-on")
+- [x] Run save v9 and profile save v6 upgrades
+- [x] Debug Story Log (F2); the run-end screen and the Run History show the run's top five moments
+
+### Known limits in Milestone 8.9-0 (by design, documented)
+
+- Trades, escapes, Mega/Tera/Z/Dynamax and map events don't exist yet, so their event types (`traded`, `trainerEscaped`, `transformed`, `eventChoice`) are defined but not emitted.
+- Knockouts don't record overkill yet (the engine caps damage at the HP left; adding the raw number needs an engine change, left for the Hyper slices).
+- Relationships and recurring enemies have their records, limits and functions, but nothing creates them yet: that is M8.9 (rivals, nemesis).
+- Only the newest 250 domain events are kept in the save; histories and the chronicle keep what matters from older ones.
+
 ## Milestone 9 — Grand Region, ending, deploy (not started)
 
 See IMPLEMENTATION_PLAN.md §5.

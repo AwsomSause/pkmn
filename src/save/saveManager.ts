@@ -6,6 +6,8 @@ import type { z } from 'zod';
 import { ATTRIBUTE_KEYS, type Content } from '../core/contentSchema';
 import { validateLeagueMap, validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
+import { hashSeed } from '../core/rng';
+import { createStoryState } from '../core/story/record';
 import {
   ProfileSchema,
   RunStateSchema,
@@ -22,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 5, run: 8, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 9, settings: 1, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -62,6 +64,12 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     // (D9). Nothing could raise them before, so they start from zero and are
     // worked out again from the counters when the next run ends.
     4: (data) => ({ ...(data as Json), attributes: zeroAttributes() }),
+    // v6 (Milestone 8.9-0): each Run History entry keeps its top story
+    // moments. Runs before the story layer have none.
+    5: (data) => {
+      const profile = data as Json;
+      return { ...profile, runHistory: ((profile.runHistory as Json[]) ?? []).map((r) => ({ ...r, moments: [] })) };
+    },
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -136,6 +144,28 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         party: ((run.party as Json[]) ?? []).map(withFriendship),
         battle: battle ? { ...battle, enemyTeam: (battle.enemyTeam as Json[]).map(withFriendship) } : null,
         pending: pending.map((p) => (p.kind === 'caught' ? { ...p, mon: withFriendship(p.mon as Json) } : p)),
+      };
+    },
+    // v9 (Milestone 8.9-0): the story layer. An older run starts its story
+    // now (histories are filled in for the party on load); it gets the new
+    // "story" and "hyper" random streams from its seed, which leaves every
+    // other stream as it was; and Love's "already hung on" list becomes the
+    // battle's story ledger.
+    8: (data) => {
+      const run = data as Json;
+      const seed = String(run.seed);
+      const battle = run.battle as Json | null;
+      const endured = (battle?.enduredUids as string[] | undefined) ?? [];
+      let upgradedBattle: Json | null = null;
+      if (battle) {
+        const { enduredUids: _old, ...rest } = battle;
+        upgradedBattle = { ...rest, storyEffects: endured.map((uid) => `love-hung-on@${uid}`) };
+      }
+      return {
+        ...run,
+        rng: { ...(run.rng as Json), story: hashSeed(`${seed}::story`), hyper: hashSeed(`${seed}::hyper`) },
+        battle: upgradedBattle,
+        story: createStoryState(),
       };
     },
   },

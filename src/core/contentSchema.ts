@@ -3,6 +3,7 @@
 // so a typo in a data file shows a clear error instead of a strange bug.
 
 import { z } from 'zod';
+import type { StoryConfig } from './story/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -773,4 +774,6 @@ export interface Content {
   shop: ShopEntry[];
   ruleset: Ruleset;
   balance: Balance;
+  /** Story layer settings and story event definitions (story.json, core/story). */
+  story: StoryConfig;
 }

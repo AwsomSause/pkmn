@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import { ATTRIBUTE_KEYS, BoostStatSchema, StatNameSchema, StatusIdSchema, TypeNameSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
+import { StoryStateSchema } from './story/schema';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
@@ -72,8 +73,8 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
-  /** Your Pokémon that already hung on at 1 HP this battle (Love). */
-  enduredUids: z.array(z.string()),
+  /** Battle-scope story effects already used this battle (e.g. "love-hung-on@p1"); see core/story/ledger.ts. */
+  storyEffects: z.array(z.string()),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
@@ -229,6 +230,8 @@ export const RunStateSchema = z.object({
     /** The starter's uid (for Love: regions cleared with the starter still in the party). */
     starterUid: z.string().nullable(),
   }),
+  /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
+  story: StoryStateSchema,
 });
 export type RunState = z.infer<typeof RunStateSchema>;
 
@@ -264,6 +267,8 @@ export const RunRecordSchema = z.object({
   bankCredits: z.number().int().min(0),
   researchPoints: z.number().int().min(0),
   achievements: z.array(z.string()),
+  /** The run's top chronicle moments, most memorable first. */
+  moments: z.array(z.string()),
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
