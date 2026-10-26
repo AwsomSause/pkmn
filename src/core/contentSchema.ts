@@ -417,6 +417,11 @@ export const RARITIES = ['common', 'uncommon', 'rare'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
+/** Battle transformations (Milestone 8.5): each is unlocked by its key item. */
+export const TRANSFORM_KINDS = ['mega', 'tera', 'zmove', 'dynamax'] as const;
+export const TransformKindSchema = z.enum(TRANSFORM_KINDS);
+export type TransformKind = z.infer<typeof TransformKindSchema>;
+
 export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
@@ -429,6 +434,13 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('evolve') }),
   /** Raises a run attribute as soon as it's bought (shop attribute items; never goes in the Bag). */
   z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
+  /** A key item that unlocks a battle transformation (Mega Ring, ...). Kept for the whole run, never used up. */
+  z.object({ kind: z.literal('keyItem'), mechanic: TransformKindSchema }),
+  /**
+   * A Mega Stone (or Primal orb): species id -> the form it becomes. Owning it
+   * lets that species Mega Evolve. Primal orbs work automatically and need no Mega Ring.
+   */
+  z.object({ kind: z.literal('megaStone'), forms: z.record(z.string(), z.string()), primal: z.boolean().default(false) }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -436,7 +448,7 @@ export const ItemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution', 'attribute']),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution', 'attribute', 'key', 'transformation']),
   iconAssetId: z.string(),
   usableInBattle: z.boolean(),
   usableOutside: z.boolean(),
@@ -594,7 +606,7 @@ export const RewardSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute']),
+  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute', 'key', 'transformation']),
   rarity: RaritySchema,
   effect: RewardEffectSchema,
   /** How repeated picks combine: applied once now, or stacks up to a limit. */
@@ -636,6 +648,13 @@ export const BalanceSchema = z.object({
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
+  /** Battle transformations (M8.5): which bosses may use them. */
+  transformations: z.object({
+    /** Gym leaders use them from this gym of the run on (1 = the first gym). */
+    bossGymFrom: z.number().int().min(1),
+    /** Elite Four members and champions always may. */
+    league: z.boolean(),
+  }),
   /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
   friendship: z.object({
     max: z.number().int().positive().max(255),

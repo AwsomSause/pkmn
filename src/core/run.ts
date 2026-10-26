@@ -14,6 +14,7 @@
 
 import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
+import { bossMechanics, revertTransformations } from './battle/transform';
 import type { Content } from './contentSchema';
 import {
   candiesForRelease,
@@ -92,6 +93,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     regionsCleared: [],
     victory: false,
     draft: null,
+    disabledMechanics: [],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: zeroAttributes(),
     rng,
@@ -264,6 +266,9 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
+    const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
+    // Gym number counted from the start of the run (1 = the first gym).
+    run.battle.transform.enemyMechanics = bossMechanics(content, role, run.badges.length + 1, run.disabledMechanics);
   }
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
@@ -297,9 +302,15 @@ function healParty(content: Content, run: RunState): void {
   }
 }
 
-/** What the shop sells right now: more stock unlocks as the player earns badges. */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'>): Content['shop'] {
-  return content.shop.filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e));
+/** What the shop sells right now: more stock unlocks as the player earns badges. Key items you own aren't sold again. */
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>>): Content['shop'] {
+  return content.shop.filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e) && !(run.inventory && ownsKeepsake(content, run.inventory, e.item)));
+}
+
+/** Key items and Mega Stones last the whole run, so you only ever need one. */
+function ownsKeepsake(content: Content, inventory: Record<string, number>, itemId: string): boolean {
+  const kind = content.items.get(itemId)?.effect.kind;
+  return (kind === 'keyItem' || kind === 'megaStone') && itemCount(inventory, itemId) > 0;
 }
 
 /** Badges needed before the shop sells an entry, after the trainer's shopUnlockOffset. */
@@ -322,6 +333,7 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   if (current.badges.length < badges) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
   const price = shopPrice(content, current, entry);
   if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
+  if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const run = structuredClone(current);
   run.money -= price;
   count(run, 'moneySpent', price);
@@ -390,6 +402,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       healMultiplier: healingMultiplier(archetype) * attributes.healing,
       typeModifiers: typeModifiers(archetype),
       attributes,
+      disabledMechanics: run.disabledMechanics,
     },
     action,
   );
@@ -403,6 +416,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   }
 
   const events = awardExperience(content, run, engineEvents);
+  // Mega Evolution and other transformations end with the battle.
+  if (battle.outcome) revertTransformations(content, battle, run.party);
 
   if (battle.outcome === 'win' || battle.outcome === 'caught') {
     const end = finishBattle(content, run);

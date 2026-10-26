@@ -234,6 +234,13 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Tags:** `delta`, `zform`, `spooky`. First-stage forms (120) can be met in the wild like regional forms; Megas and battle-only forms wait for M8.5.
 - **No save format change.**
 
+## 6h5. Milestone 8.5 — battle transformations
+
+**Mega Evolution built 2026-10-26** (first slice; Tera, Z-Moves and Dynamax follow as separate pull requests). Rules: GAME_DESIGN.md §5f.
+- **Data:** `npm run data:megas -- <images.zip>` (`tools/build-mega-stones.ts`) writes `src/data/megaStones.json` (items + draft rewards), merged into items and rewards when the game loads. Stone names and species come from Pokémon Showdown's `data/items.ts` (MIT, cached in `.cache/showdown`); designed stones for Delta and Z-Megas. 26 stones without art of their own use Meganiumite's icon. Mega Ring is hand-written in items/rewards/shop.
+- **Engine:** `core/battle/transform.ts` (rules, revert, boss mechanics); the engine calls it once per turn after switches and items and emits `transform` events (presentation cues; the battle screen flashes and swaps the sprite, cinematics are M9.5). A transformed Pokémon's `speciesId` is its new form during battle; `battle.transform.forms` remembers the old one.
+- **Save:** `battle.transform` and `run.disabledMechanics` have defaults, so older saves load without a version bump.
+
 ## 6j. Milestone 8.75 — planned features catch-up
 
 **Planned 2026-10-25** (director request: "pull everything that has been planned but not put into a Milestone and create a new milestone to use before M9"). Collected from the director's Master Development Brief and Design Decisions, the Out-of-Run/Run-Prep design (GAME_DESIGN §14), every milestone's "known limits", and every project thread. Work that already has a milestone stays there: Mega/Tera/Z-Moves/Dynamax in **M8.5**; the Grand Region roster, final boss, ending, battle animations, music and deploy in **M9**; looks in **M10**. The parts below can ship as separate pull requests, in this order: B to H first, then A last.

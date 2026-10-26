@@ -164,5 +164,10 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} learned ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
     case 'wantsMove':
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
+    case 'transform': {
+      const before = e.side === 'player' ? species(e.from) : `The ${foe} ${species(e.from)}`;
+      if (e.kind === 'primal') return `${before}'s Primal Reversion! It reverted to its primal form!`;
+      return `${before} has Mega Evolved into ${species(e.to)}!`;
+    }
   }
 }
