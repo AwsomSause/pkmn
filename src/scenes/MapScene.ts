@@ -7,15 +7,15 @@
 import Phaser from 'phaser';
 import { currentColumn, findNode, nextChoices } from '../core/map';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
-import { getTheme } from '../core/themes';
+import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import type { Picker } from '../ui/partyPanel';
-import { pokemonIcon } from '../ui/sprites';
-import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
+import { pokemonIcon, trainerVisual } from '../ui/sprites';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, drawPanel, focusFrame } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
@@ -81,8 +81,16 @@ export class MapScene extends Phaser.Scene {
     this.busy = false;
     playMusic(this, 'bgm.menu');
 
+    // ---------- backdrop: the stage's own arena, dimmed ----------
+    const arena = league ? undefined : arenaFor(content, theme);
+    const bg = arena && this.textures.exists(arena) ? arena : this.textures.exists('bg.battle') ? 'bg.battle' : null;
+    if (bg) {
+      this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE).setDepth(-60);
+      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0e0b12, 0.62).setOrigin(0).setDepth(-55);
+    }
+
     // ---------- header ----------
-    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.92 });
     const column = currentColumn(stage);
     if (league) {
       this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
@@ -128,7 +136,10 @@ export class MapScene extends Phaser.Scene {
         const b = pos(findNode(stage.map, id));
         const walked = stage.visited.includes(n.id) && stage.visited.includes(id);
         const open = n.id === stage.current && choiceIds.has(id);
-        lines.lineStyle(open ? 5 : 3, walked ? 0xf0c028 : open ? 0xf8f8f8 : 0x48506a, 1);
+        // A dark edge under each path, like a drawn route on a town map.
+        lines.lineStyle(open ? 11 : 9, 0x181818, 0.9);
+        lines.lineBetween(a.x, a.y, b.x, b.y);
+        lines.lineStyle(open ? 5 : 3, walked ? 0xf8c030 : open ? 0xf8f8f8 : 0x6b5a73, 1);
         lines.lineBetween(a.x, a.y, b.x, b.y);
       }
     }
@@ -136,7 +147,7 @@ export class MapScene extends Phaser.Scene {
     // Trainer column markers along the bottom.
     for (const col of stage.map.trainerColumns) {
       const x = MAP_LEFT + (col - 1) * COL_SPACING;
-      mapLayer.add(this.add.text(x, 400, 'trainers', textStyle(13, '#d08030')).setOrigin(0.5));
+      mapLayer.add(this.add.text(x, 402, 'Trainers', textStyle(14, '#f8a850')).setOrigin(0.5));
     }
 
     for (const n of stage.map.nodes) {
@@ -146,31 +157,57 @@ export class MapScene extends Phaser.Scene {
       const isCurrent = n.id === stage.current;
       const reachable = choiceIds.has(n.id);
       const dim = !visited && !reachable && n.column <= column;
+      const isBoss = BOSS_KINDS.includes(n.kind);
+      const r = isBoss ? NODE_RADIUS + 6 : NODE_RADIUS;
+      const alpha = dim ? 0.35 : visited && !isCurrent ? 0.6 : 1;
+      // A pixel token: dark rim, the kind's colour, a lighter top and a darker bottom.
       const g = this.add.graphics();
-      g.fillStyle(style.color, dim ? 0.3 : visited && !isCurrent ? 0.55 : 1);
-      g.fillCircle(x, y, BOSS_KINDS.includes(n.kind) ? NODE_RADIUS + 6 : NODE_RADIUS);
+      g.fillStyle(0x181818, alpha);
+      g.fillCircle(x, y + 2, r + 3);
+      g.fillStyle(mixColor(style.color, 0x000000, 0.35), alpha);
+      g.fillCircle(x, y, r);
+      g.fillStyle(style.color, alpha);
+      g.fillCircle(x, y - 2, r - 3);
+      g.fillStyle(mixColor(style.color, 0xffffff, 0.35), alpha);
+      g.fillEllipse(x, y - r * 0.45, r * 1.1, r * 0.5);
       if (n.harder) {
         g.lineStyle(5, HARDER_COLOR, dim ? 0.4 : 1);
-        g.strokeCircle(x, y, NODE_RADIUS + 4);
-      }
-      if (isCurrent) {
-        g.lineStyle(4, 0xffffff, 1);
-        g.strokeCircle(x, y, NODE_RADIUS + 9);
+        g.strokeCircle(x, y, r + 6);
       }
       mapLayer.add(g);
-      mapLayer.add(this.add.text(x, y, n.harder ? `${style.glyph}!` : style.glyph, textStyle(22, '#ffffff')).setOrigin(0.5));
-      if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
+      if (isCurrent) {
+        const ring = this.add.graphics();
+        ring.lineStyle(4, 0xffffff, 1);
+        ring.strokeCircle(x, y, r + 11);
+        mapLayer.add(ring);
+        this.tweens.add({ targets: ring, alpha: 0.35, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      }
+      // What waits there: a Poké Ball for wild Pokémon, the boss's portrait, or a letter.
       const boss = this.bossFor(n);
+      if (n.kind === 'wild' && this.textures.exists('ball.pb')) {
+        mapLayer.add(this.add.image(x, y - 1, 'ball.pb').setScale(2).setAlpha(alpha));
+      } else if (boss) {
+        const art = trainerVisual(this, boss.spriteAssetId, boss.name, x, y + r - 4, 1);
+        if (art instanceof Phaser.GameObjects.Sprite) art.setScale(Math.min(1, (r * 2.2) / art.height));
+        art.setAlpha(alpha);
+        mapLayer.add(art);
+      } else {
+        mapLayer.add(this.add.text(x, y, style.glyph, textStyle(26, '#ffffff', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5).setAlpha(alpha));
+      }
+      if (n.harder) mapLayer.add(this.add.text(x + r - 2, y - r + 2, '!', textStyle(22, '#f8f8f8', { stroke: '#5a2890', strokeThickness: 5 })).setOrigin(0.5));
+      if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
       if (league && boss) mapLayer.add(this.add.text(x, y + NODE_RADIUS + 14, boss.name, textStyle(15, COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
         const s = SIDE_STYLE[side.kind];
         const sg = this.add.graphics();
+        sg.fillStyle(0x181818, side.used ? 0.3 : 1);
+        sg.fillRect(sx - 11, sy - 11, 22, 22);
         sg.fillStyle(s.color, side.used ? 0.3 : 1);
-        sg.fillRoundedRect(sx - 9, sy - 9, 18, 18, 4);
+        sg.fillRect(sx - 9, sy - 9, 18, 18);
         mapLayer.add(sg);
-        mapLayer.add(this.add.text(sx, sy, s.glyph, textStyle(14, '#ffffff')).setOrigin(0.5));
+        mapLayer.add(this.add.text(sx, sy, s.glyph, textStyle(18, '#ffffff', { stroke: '#181818', strokeThickness: 3 })).setOrigin(0.5).setAlpha(side.used ? 0.4 : 1));
       });
       if (reachable) {
         this.addOption({ kind: 'node', node: n }, () => this.ringCursor(mapLayer, x, y, BOSS_KINDS.includes(n.kind) ? NODE_RADIUS + 14 : NODE_RADIUS + 10), {
@@ -183,7 +220,7 @@ export class MapScene extends Phaser.Scene {
     }
 
     // ---------- bottom panel: info, side stops, party, bag ----------
-    drawPanel(this, 8, 424, GAME_WIDTH - 16, 110, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    drawPanel(this, 8, 424, GAME_WIDTH - 16, 110, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.94 });
     run.party.forEach((mon, i) => {
       const species = content.species.get(mon.speciesId)!;
       const x = 40 + i * 52;
@@ -202,8 +239,8 @@ export class MapScene extends Phaser.Scene {
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
       const bxPos = x;
-      drawPanel(this, bxPos, 444, 92, 52, { fill: b.color });
-      this.add.text(bxPos + 46, 470, b.label, textStyle(22, b.color === COLORS.panel ? COLORS.text : '#ffffff')).setOrigin(0.5);
+      drawPanel(this, bxPos, 444, 92, 52, { fill: b.color, border: b.color === COLORS.panel ? COLORS.border : mixColor(b.color, 0xffffff, 0.35) });
+      this.add.text(bxPos + 46, 470, b.label, textStyle(22, '#ffffff')).setOrigin(0.5);
       this.addOption(b.option, () => this.boxCursor(bxPos, 444, 92, 52), { x: bxPos, y: 444, w: 92, h: 52 });
       x += 100;
     }
@@ -341,10 +378,17 @@ export class MapScene extends Phaser.Scene {
 
   private showBanner(top: string, title: string, sub: string): void {
     const layer = this.add.container(0, 0).setDepth(80);
-    layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.7).setOrigin(0));
-    layer.add(this.add.text(GAME_WIDTH / 2, 200, top, textStyle(26, '#d8d0e0')).setOrigin(0.5));
-    layer.add(this.add.text(GAME_WIDTH / 2, 250, title, textStyle(48, COLORS.textLight)).setOrigin(0.5));
-    layer.add(this.add.text(GAME_WIDTH / 2, 300, sub, textStyle(20, '#d8d0e0')).setOrigin(0.5));
+    layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.55).setOrigin(0));
+    // A banner band across the screen, like a Pokémon game's location sign.
+    const band = this.add.graphics();
+    band.fillStyle(0x181818, 0.95).fillRect(0, 168, GAME_WIDTH, 168);
+    band.fillStyle(COLORS.border, 1).fillRect(0, 174, GAME_WIDTH, 6).fillRect(0, 324, GAME_WIDTH, 6);
+    layer.add(band);
+    layer.add(this.add.text(GAME_WIDTH / 2, 208, top, textStyle(26, COLORS.gold)).setOrigin(0.5));
+    layer.add(this.add.text(GAME_WIDTH / 2, 254, title, textStyle(56, COLORS.textLight)).setOrigin(0.5));
+    layer.add(this.add.text(GAME_WIDTH / 2, 302, sub, textStyle(20, '#d8d0e0')).setOrigin(0.5));
+    band.x = -GAME_WIDTH;
+    this.tweens.add({ targets: band, x: 0, duration: 260, ease: 'Cubic.easeOut' });
     this.busy = true;
     this.tweens.add({ targets: layer, alpha: 0, delay: 1400, duration: 400, onComplete: () => {
       layer.destroy();

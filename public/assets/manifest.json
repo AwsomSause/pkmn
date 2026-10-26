@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T22:51:51.777Z",
+  "generatedAt": "2026-10-26T03:52:13.892Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -42,6 +42,78 @@
       "kind": "image",
       "category": "ui",
       "path": "images/ui/bg.png"
+    },
+    {
+      "id": "item.scanner",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/scanner.png"
+    },
+    {
+      "id": "item.leaders_crest",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/leaders_crest.png"
+    },
+    {
+      "id": "item.calendar",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/calendar.png"
+    },
+    {
+      "id": "item.golden_mystic_ticket",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/golden_mystic_ticket.png"
+    },
+    {
+      "id": "item.master_ribbon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/master_ribbon.png"
+    },
+    {
+      "id": "item.coin_case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/coin_case.png"
+    },
+    {
+      "id": "item.mystery_egg",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/mystery_egg.png"
+    },
+    {
+      "id": "item.exp_charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/exp_charm.png"
+    },
+    {
+      "id": "item.map",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/map.png"
+    },
+    {
+      "id": "item.pair_of_tickets",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/pair_of_tickets.png"
+    },
+    {
+      "id": "item.dna_splicers",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dna_splicers.png"
+    },
+    {
+      "id": "item.candy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/candy.png"
     },
     {
       "id": "bgm.menu",
@@ -144,6 +216,12 @@
       "kind": "font",
       "category": "font",
       "path": "fonts/pokemon-emerald-pro.ttf"
+    },
+    {
+      "id": "font.bold",
+      "kind": "font",
+      "category": "font",
+      "path": "fonts/pkmnems.ttf"
     },
     {
       "id": "pokemon.front.1",

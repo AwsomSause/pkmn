@@ -54,7 +54,25 @@ export const TYPE_COLORS: Record<string, number> = {
   dark: 0x705848, steel: 0xb8b8d0, fairy: 0xee99ac,
 };
 
+/** Fine print: Pokémon Emerald Pro, drawn on a 16-px grid. */
 export const FONT_FAMILY = '"PokemonMain", "Courier New", monospace';
+/** Everything else: the chunky Gen 3 battle font, drawn on an 8-px grid (falls back to FONT_FAMILY for symbols it lacks). */
+export const BOLD_FONT_FAMILY = '"PokemonBold", "PokemonMain", "Courier New", monospace';
+
+/** Sizes below this use the fine-print font; this size and up use the bold one. */
+const BOLD_FROM = 18;
+
+/**
+ * Snaps a requested size to one the pixel fonts draw crisply, and picks the
+ * font. Fine print snaps to 16 (one font pixel = one screen pixel). Larger text
+ * uses the bold font at a multiple of 8, about three quarters of the requested
+ * size because its letters are much bigger: 18–25 → 16, 26–37 → 24, 38–47 → 32…
+ */
+export function pixelFont(size: number): { family: string; size: number; grid: number } {
+  if (size < BOLD_FROM) return { family: FONT_FAMILY, size: 16, grid: 1 };
+  const snapped = Math.max(16, Math.round((size * 0.75) / 8) * 8);
+  return { family: BOLD_FONT_FAMILY, size: snapped, grid: snapped / 8 };
+}
 
 /** Mixes two 0xRRGGBB colours; t = 0 gives a, t = 1 gives b. */
 export function mixColor(a: number, b: number, t: number): number {
@@ -64,7 +82,7 @@ export function mixColor(a: number, b: number, t: number): number {
 
 const hex = (n: number) => `#${n.toString(16).padStart(6, '0')}`;
 
-/** The drop-shadow colour PokeRogue pairs with a text colour (white → plum grey). */
+/** The drop-shadow colour Pokémon games pair with a text colour (white → plum grey). */
 export function shadowFor(color: string): string {
   const m = /^#([0-9a-f]{6})$/i.exec(color);
   if (!m) return '#3a3242';
@@ -72,13 +90,14 @@ export function shadowFor(color: string): string {
 }
 
 /**
- * Pixel text. Every style gets PokeRogue's drop shadow unless it asks for an
- * outline (stroke) or its own shadow.
+ * Pixel text in the Pokémon style: crisp sizes only, and a drop shadow one font
+ * pixel down and right, unless the style asks for an outline (stroke) or its own shadow.
  */
 export function textStyle(size: number, color: string = COLORS.text, extra: Phaser.Types.GameObjects.Text.TextStyle = {}): Phaser.Types.GameObjects.Text.TextStyle {
-  const offset = Math.max(1, Math.round(size / 12));
+  const font = pixelFont(size);
+  const offset = font.grid;
   const shadow = extra.stroke ? undefined : { offsetX: offset, offsetY: offset, color: shadowFor(color), fill: true, blur: 0 };
-  return { fontFamily: FONT_FAMILY, fontSize: `${size}px`, color, ...(shadow ? { shadow } : {}), ...extra };
+  return { fontFamily: font.family, fontSize: `${font.size}px`, color, ...(shadow ? { shadow } : {}), ...extra };
 }
 
 export const STATUS_LABELS: Record<string, { label: string; color: number }> = {

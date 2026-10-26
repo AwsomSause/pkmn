@@ -5,17 +5,20 @@
 
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
-import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, type Achievement, type Archetype } from '../core/contentSchema';
+import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, type Achievement, type Archetype, type Species } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
-import { onInputAction } from '../ui/input';
+import { onInputAction, type InputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
-import { pokemonIcon, trainerVisual } from '../ui/sprites';
-import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
+import { preloadPokemon } from '../ui/lazyAssets';
+import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
+import { pokemonAssetIds } from '../assets/catalog';
+import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
+import { Menu, paintWindow } from '../ui/widgets';
 
 type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'save' | 'back';
 
@@ -60,61 +63,251 @@ const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = 
   endgame: 'Endgame',
 };
 
+/** The five tiles along the bottom of the Hub; a tile with several rooms opens a small menu. */
+const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
+  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
+  { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive'], blurb: ROOMS[1]!.blurb },
+  { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
+  { id: 'history', label: 'Past Runs', icon: 'item.calendar', rooms: ['history'], blurb: ROOMS[6]!.blurb },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes'], blurb: 'Achievements, the Bank, the Starter Laboratory and your Attributes.' },
+];
+
+const ROOM_ICON: Partial<Record<Room, string>> = {
+  achievements: 'item.master_ribbon',
+  bank: 'item.coin_case',
+  lab: 'item.mystery_egg',
+  attributes: 'item.exp_charm',
+  save: 'item.map',
+  back: 'item.pair_of_tickets',
+};
+
+const TILE_Y = 470;
+const TILE_H = 104;
+/** How far a focused tile rises. */
+const TILE_RISE = 16;
+
+interface Tile {
+  root: Phaser.GameObjects.Container;
+  idle: Phaser.GameObjects.Graphics;
+  lit: Phaser.GameObjects.Graphics;
+  icon: Phaser.GameObjects.GameObject & { y: number };
+  label: Phaser.GameObjects.Text;
+  x: number;
+  w: number;
+}
+
 export class HubScene extends Phaser.Scene {
-  private menu!: Menu;
   private picker: Picker | null = null;
   private detail!: Phaser.GameObjects.Container;
+  private tiles: Tile[] = [];
+  private tileIndex = 2;
+  /** The small menu above a tile with several rooms, while it is open. */
+  private submenu: { menu: Menu; layer: Phaser.GameObjects.Container; rooms: Room[] } | null = null;
+  private blurb!: Phaser.GameObjects.Text;
+  private blurbPill!: Phaser.GameObjects.Graphics;
+  private showcase!: ShowcaseMon;
+  /** One Pokémon per tile, shown behind the menu when that tile is focused. */
+  private tileMons: Species[] = [];
 
   constructor() {
     super('Hub');
+  }
+
+  preload(): void {
+    const { session } = services();
+    // Five random Pokémon from the game (not the custom forms) to show behind the tiles.
+    const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
+    this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
+    preloadPokemon(this, this.tileMons, { front: true });
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
     const { session } = services();
     session.closeRun();
     this.picker = null;
+    this.submenu = null;
+    this.tiles = [];
     playMusic(this, 'bgm.menu');
-
     const p = session.profile;
-    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
-    this.add.text(24, 12, 'The Hub', textStyle(30, COLORS.textLight));
-    this.add.text(26, 46, p.activeTitle ? `Title: ${p.activeTitle}` : 'Prepare for your next run', textStyle(16, '#d8d0e0'));
-    this.add
-      .text(GAME_WIDTH - 24, 16, `Bank Credits ${p.bankCredits}  ·  Research ${p.researchPoints}  ·  Candies ${p.candies}`, textStyle(20, COLORS.textLight))
-      .setOrigin(1, 0);
+
+    new ArenaBackdrop(this, { platformAt: { x: GAME_WIDTH / 2, y: 350 } });
+    // Darken the top (logo, counters) and the bottom (tiles) so text stays readable.
+    const shade = this.add.graphics().setDepth(-20);
+    for (let i = 0; i < 12; i++) {
+      shade.fillStyle(0x0e0b12, 0.5 * (1 - i / 12));
+      shade.fillRect(0, i * 8, GAME_WIDTH, 8);
+      shade.fillStyle(0x0e0b12, 0.75 * (i / 12));
+      shade.fillRect(0, 380 + i * 14, GAME_WIDTH, 14);
+    }
+    this.showcase = new ShowcaseMon(this, GAME_WIDTH / 2, 356, PIXEL_SCALE, 250);
+
+    drawLogo(this, 20, 10, 40);
+    let right = GAME_WIDTH - 16;
+    right -= currencyChip(this, right, 32, 'item.candy', p.candies, 'Candies') + 8;
+    right -= currencyChip(this, right, 32, 'item.dna_splicers', p.researchPoints, 'Research Points') + 8;
+    currencyChip(this, right, 32, 'item.coin_case', p.bankCredits, 'Bank Credits');
     const earned = Object.keys(p.achievements).length;
     this.add
-      .text(GAME_WIDTH - 24, 46, `Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, '#d8d0e0'))
+      .text(GAME_WIDTH - 16, 62, `${p.activeTitle ? `${p.activeTitle}  ·  ` : ''}Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, COLORS.textMuted))
       .setOrigin(1, 0);
 
-    drawPanel(this, 16, 82, 300, 400);
-    drawPanel(this, 330, 82, GAME_WIDTH - 346, 400, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     this.detail = this.add.container(0, 0);
+    this.blurbPill = this.add.graphics();
+    this.blurb = this.add.text(GAME_WIDTH / 2, 397, '', textStyle(16, COLORS.textLight, { align: 'center' })).setOrigin(0.5, 0.5);
 
     const ready = [...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'claimable').length;
-    this.menu = new Menu(this, {
-      x: 52,
-      y: 104,
-      options: ROOMS.map((r) => ({ label: r.room === 'archive' && ready > 0 ? `${r.label} (${ready}!)` : r.label })),
-      itemHeight: 42,
-      fontSize: 22,
-      onFocus: (i) => this.showDetail(ROOMS[i]!.room),
-      onSelect: (i) => this.enter(ROOMS[i]!.room),
-      onBack: () => this.scene.start('MainMenu'),
+    this.buildTiles(ready);
+
+    if (data.notice) {
+      const notice = this.add
+        .text(GAME_WIDTH / 2, 110, data.notice, textStyle(20, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
+        .setOrigin(0.5, 0);
+      this.tweens.add({ targets: notice, alpha: 0, delay: 5000, duration: 800 });
+    }
+
+    // Start on New Run, or on the room the screen was reopened for.
+    const room = data.focus !== undefined ? ROOMS[Math.min(data.focus, ROOMS.length - 1)]!.room : 'run';
+    const tile = Math.max(0, TILES.findIndex((t) => t.rooms.includes(room)));
+    this.focusTile(tile, false);
+    if (data.focus !== undefined && TILES[tile]!.rooms.length > 1) this.openSubmenu(TILES[tile]!.rooms.indexOf(room));
+
+    onInputAction(this, (a) => this.handle(a));
+  }
+
+  private buildTiles(ready: number): void {
+    const widths = [164, 172, 220, 172, 164];
+    const gap = (GAME_WIDTH - 32 - widths.reduce((a, b) => a + b, 0)) / (widths.length - 1);
+    let x = 16;
+    TILES.forEach((t, i) => {
+      const w = widths[i]!;
+      const big = t.id === 'run';
+      const h = big ? TILE_H + 12 : TILE_H;
+      const top = TILE_Y - h / 2;
+      const root = this.add.container(x, top);
+      const idle = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x2a2431, border: big ? COLORS.border : COLORS.borderMuted, alpha: 0.94 });
+      const lit = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x3a3048, border: COLORS.accent }).setVisible(false);
+      const icon = itemVisual(this, t.icon, w / 2, big ? 42 : 38, big ? 3 : 2) as Tile['icon'];
+      const text = t.id === 'trainers' && ready > 0 ? `${t.label} (${ready}!)` : t.label;
+      const label = this.add.text(w / 2, h - 26, text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5);
+      root.add([idle, lit, icon, label]);
+      const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
+      zone.on('pointerover', () => {
+        if (!this.picker && !this.submenu) this.focusTile(i);
+      });
+      zone.on('pointerdown', () => {
+        if (this.picker) return;
+        if (this.submenu) this.closeSubmenu();
+        this.focusTile(i, false);
+        this.confirmTile();
+      });
+      root.add(zone);
+      this.tiles.push({ root, idle, lit, icon, label, x, w });
+      x += w + gap;
     });
+  }
 
-    const notice = this.add.text(GAME_WIDTH / 2, 500, data.notice ?? '', textStyle(18, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
-    void notice;
-    this.add.text(16, GAME_HEIGHT - 22, 'Arrows: move  ·  Enter: select  ·  Esc: back', textStyle(14, '#8a7f96'));
-
-    const focus = Math.min(data.focus ?? 0, ROOMS.length - 1);
-    this.menu.focus(focus, false);
-    this.showDetail(ROOMS[focus]!.room);
-
-    onInputAction(this, (a) => {
-      if (this.picker) this.picker.handle(a);
-      else this.menu.handle(a);
+  private focusTile(i: number, sound = true): void {
+    if (sound && i !== this.tileIndex) playSfx(this, 'ui.select', 0.5);
+    this.tileIndex = i;
+    this.tiles.forEach((tile, n) => {
+      const on = n === i;
+      tile.idle.setVisible(!on);
+      tile.lit.setVisible(on);
+      tile.label.setColor(on ? COLORS.gold : COLORS.textLight);
+      const h = TILES[n]!.id === 'run' ? TILE_H + 12 : TILE_H;
+      this.tweens.killTweensOf(tile.root);
+      this.tweens.add({ targets: tile.root, y: TILE_Y - h / 2 - (on ? TILE_RISE : 0), duration: 180, ease: 'Cubic.easeOut' });
+      this.tweens.killTweensOf(tile.icon);
+      const iconY = TILES[n]!.id === 'run' ? 42 : 38;
+      tile.icon.y = iconY;
+      if (on) this.tweens.add({ targets: tile.icon, y: iconY - 5, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     });
+    const t = TILES[i]!;
+    this.setBlurb(t.blurb);
+    const mon = this.tileMons[i];
+    if (mon) this.showcase.show(mon);
+    this.showDetail(t.rooms[0]!);
+  }
+
+  /** The one-line description above the tiles, on a dark pill. */
+  private setBlurb(text: string): void {
+    this.blurb.setText(text);
+    const w = this.blurb.width + 32;
+    this.blurbPill.clear();
+    this.blurbPill.fillStyle(0x0e0b12, 0.78);
+    this.blurbPill.fillRoundedRect(GAME_WIDTH / 2 - w / 2, 397 - 14, w, 28, 14);
+  }
+
+  private confirmTile(): void {
+    const t = TILES[this.tileIndex]!;
+    playSfx(this, 'ui.select');
+    if (t.rooms.length === 1) this.enter(t.rooms[0]!);
+    else this.openSubmenu(0);
+  }
+
+  private openSubmenu(focus: number): void {
+    const t = TILES[this.tileIndex]!;
+    const tile = this.tiles[this.tileIndex]!;
+    const w = 280;
+    const itemH = 46;
+    const h = t.rooms.length * itemH + 28;
+    const x = Phaser.Math.Clamp(tile.x + tile.w / 2 - w / 2, 12, GAME_WIDTH - w - 12);
+    const y = TILE_Y - TILE_H / 2 - TILE_RISE - h - 8;
+    const layer = this.add.container(0, 0).setDepth(50);
+    layer.add(paintWindow(this.add.graphics(), x, y, w, h, { border: COLORS.accent }));
+    t.rooms.forEach((room, n) => {
+      const icon = ROOM_ICON[room];
+      if (icon) layer.add(itemVisual(this, icon, x + w - 30, y + 14 + n * itemH + 16, 1));
+    });
+    const menu = new Menu(this, {
+      x: x + 18,
+      y: y + 16,
+      options: t.rooms.map((room) => ({ label: ROOMS.find((r) => r.room === room)!.label })),
+      itemHeight: itemH,
+      fontSize: 24,
+      onFocus: (n) => {
+        const room = t.rooms[n]!;
+        this.setBlurb(ROOMS.find((r) => r.room === room)!.blurb || t.blurb);
+        this.showDetail(room);
+      },
+      onSelect: (n) => this.enter(t.rooms[n]!),
+      onBack: () => this.closeSubmenu(),
+    });
+    menu.container.setDepth(51);
+    layer.setAlpha(0);
+    menu.container.setAlpha(0);
+    this.tweens.add({ targets: [layer, menu.container], alpha: 1, duration: 160 });
+    this.submenu = { menu, layer, rooms: t.rooms };
+    menu.focus(Phaser.Math.Clamp(focus, 0, t.rooms.length - 1), false);
+  }
+
+  private closeSubmenu(): void {
+    if (!this.submenu) return;
+    this.submenu.menu.destroy();
+    this.submenu.layer.destroy();
+    this.submenu = null;
+    this.focusTile(this.tileIndex, false);
+  }
+
+  private handle(a: InputAction): void {
+    if (this.picker) {
+      this.picker.handle(a);
+      return;
+    }
+    if (this.submenu) {
+      if (a === 'left' || a === 'right') {
+        this.closeSubmenu();
+        this.focusTile((this.tileIndex + (a === 'left' ? TILES.length - 1 : 1)) % TILES.length);
+      } else {
+        this.submenu.menu.handle(a);
+      }
+      return;
+    }
+    if (a === 'left') this.focusTile((this.tileIndex + TILES.length - 1) % TILES.length);
+    else if (a === 'right') this.focusTile((this.tileIndex + 1) % TILES.length);
+    else if (a === 'confirm' || a === 'up') {
+      if (a === 'confirm' || TILES[this.tileIndex]!.rooms.length > 1) this.confirmTile();
+    } else if (a === 'back') this.scene.start('MainMenu');
   }
 
   private focusIndex(room: Room): number {
@@ -125,82 +318,74 @@ export class HubScene extends Phaser.Scene {
     this.scene.restart({ notice, focus: this.focusIndex(room) });
   }
 
-  // ---------- the panel on the right ----------
+  // ---------- the information card on the right ----------
 
   private line(y: number, text: string, size = 18, color: string = COLORS.textLight): number {
-    const t = this.add.text(350, y, text, textStyle(size, color, { wordWrap: { width: GAME_WIDTH - 390 } }));
+    const t = this.add.text(32, y, text, textStyle(size, color, { wordWrap: { width: 270 } }));
     this.detail.add(t);
-    return y + t.height + 6;
+    return y + t.height + 4;
   }
 
   private showDetail(room: Room): void {
     this.detail.removeAll(true);
     const { session } = services();
     const p = session.profile;
-    const info = ROOMS.find((r) => r.room === room)!;
-    let y = this.line(96, info.label, 26);
-    if (info.blurb) y = this.line(y, info.blurb, 17, '#d8d0e0') + 8;
+    const card = this.add.graphics();
+    this.detail.add(card);
+    let y = 136;
     switch (room) {
       case 'bank': {
-        y = this.line(y, `Bank Credits: ${p.bankCredits}   (earned in total: ${p.lifetimeBankCredits})`);
-        y = this.line(y, `Research Points: ${p.researchPoints}`);
-        y = this.line(y, `Candies: ${p.candies}`);
-        y += 8;
+        y = this.line(y, 'Bank', 22);
+        y = this.line(y, `Bank Credits: ${p.bankCredits}`, 16);
+        y = this.line(y, `Earned in total: ${p.lifetimeBankCredits}`, 16, COLORS.textMuted);
+        y = this.line(y, `Research Points: ${p.researchPoints}`, 16);
+        y = this.line(y, `Candies: ${p.candies}`, 16);
         const last = p.lastPayout;
-        if (last) {
-          y = this.line(y, 'Last run paid:', 18, '#f0e0a0');
-          y = this.line(y, `  Savings (leftover Poké Dollars): ${last.savings}`, 17);
-          y = this.line(y, `  Stipend (progress): ${last.stipend}`, 17);
-          y = this.line(y, `  Achievements: ${last.achievements}`, 17);
-          y = this.line(y, `  Total: ${last.total} Bank Credits`, 17);
-        } else {
-          y = this.line(y, 'No runs paid out yet.', 17, '#d8d0e0');
-        }
-        const bank = session.content.balance.bank;
-        y += 8;
-        this.line(
-          y,
-          `At the end of every run, ${Math.round(bank.moneyConversionRate * 100)}% of your leftover Poké Dollars becomes Bank Credits, plus a stipend for encounters, badges, Elite Four, champions and regions, even if the run is lost. Spend credits on trainers in the Trainer Archive and on licenses here. Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned.`,
-          15,
-          '#b8aec6',
-        );
+        y = last ? this.line(y + 4, `Last run paid ${last.total} credits`, 16, COLORS.gold) : this.line(y + 4, 'No runs paid out yet.', 16, COLORS.textMuted);
+        y = this.line(y, `Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned`, 16);
         break;
       }
       case 'archive': {
-        const all = [...session.content.archetypes.values()];
-        for (const a of all) y = this.line(y, `${a.name}  ·  ${STATUS_LABEL[trainerStatus(p, a)]}`, 18);
+        y = this.line(y, 'Trainers', 22);
+        for (const a of session.content.archetypes.values()) y = this.line(y, `${a.name}  ·  ${STATUS_LABEL[trainerStatus(p, a)]}`, 16, trainerStatus(p, a) === 'unlocked' ? COLORS.textLight : COLORS.textMuted);
         break;
       }
       case 'lab': {
-        y = this.line(y, `Research Points: ${p.researchPoints}`);
-        for (const pool of session.content.starterPools.values()) y = this.line(y, `${pool.name}  ·  ${POOL_LABEL[poolStatus(session.content, p, pool)]}`, 18);
+        y = this.line(y, 'Starter Laboratory', 22);
+        y = this.line(y, `Research Points: ${p.researchPoints}`, 16);
+        for (const pool of session.content.starterPools.values()) y = this.line(y, `${pool.name}  ·  ${POOL_LABEL[poolStatus(session.content, p, pool)]}`, 16);
         break;
       }
       case 'attributes': {
+        y = this.line(y, 'Attributes', 22);
         const a = readAttributes(session.content, p.attributes);
-        for (const k of ATTRIBUTE_KEYS) y = this.line(y, `${attributeText(k, a[k])}  ·  ${a[k] === 0 ? 'no effect yet' : attributeEffectText(session.content, k, a[k])}`, 17);
+        for (const k of ATTRIBUTE_KEYS) y = this.line(y, attributeText(k, a[k]), 16);
         break;
       }
       case 'achievements': {
-        const earned = Object.keys(p.achievements).length;
-        y = this.line(y, `${earned} of ${session.content.achievements.size} earned`);
-        if (p.titles.length > 0) y = this.line(y, `Titles: ${p.titles.join(', ')}`, 17);
+        y = this.line(y, 'Achievement Hall', 22);
+        y = this.line(y, `${Object.keys(p.achievements).length} of ${session.content.achievements.size} earned`, 16);
+        if (p.titles.length > 0) y = this.line(y, `Titles: ${p.titles.join(', ')}`, 16);
         break;
       }
       case 'history': {
-        const runs = p.runHistory.slice(0, 5);
-        if (runs.length === 0) y = this.line(y, 'No finished runs yet.', 17, '#d8d0e0');
+        y = this.line(y, 'Past Runs', 22);
+        const runs = p.runHistory.slice(0, 4);
+        if (runs.length === 0) y = this.line(y, 'No finished runs yet.', 16, COLORS.textMuted);
         for (const r of runs) y = this.line(y, historyLine(r), 16);
         break;
       }
       case 'run': {
-        y = this.line(y, `Trainers unlocked: ${[...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'unlocked').length}`);
-        if (session.savedRun.status === 'ok') this.line(y, 'You have a run in progress: starting a new one replaces it.', 16, '#f0b0a0');
+        y = this.line(y, 'New Run', 22);
+        y = this.line(y, `Trainers unlocked: ${[...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'unlocked').length}`, 16);
+        if (session.savedRun.status === 'ok') y = this.line(y, 'You have a run in progress: starting a new one replaces it.', 16, COLORS.bad);
         break;
       }
       default:
-        break;
+        card.destroy();
+        return;
     }
+    paintWindow(card, 16, 124, 300, y - 116, { thin: true, fill: 0x221d29, border: COLORS.borderMuted, alpha: 0.88 });
   }
 
   // ---------- rooms ----------
@@ -238,14 +423,14 @@ export class HubScene extends Phaser.Scene {
   }
 
   private openPicker(config: ConstructorParameters<typeof Picker>[1]): void {
-    this.menu.enabled = false;
+    if (this.submenu) this.submenu.menu.enabled = false;
     this.picker = new Picker(this, config);
   }
 
   private closePicker(): void {
     this.picker?.close();
     this.picker = null;
-    this.menu.enabled = true;
+    if (this.submenu) this.submenu.menu.enabled = true;
   }
 
   private openArchive(): void {
