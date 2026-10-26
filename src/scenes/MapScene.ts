@@ -6,6 +6,7 @@
 
 import Phaser from 'phaser';
 import { currentColumn, findNode, nextChoices } from '../core/map';
+import { mapItemSummary, repelActive } from '../core/mapItems';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
@@ -208,7 +209,11 @@ export class MapScene extends Phaser.Scene {
       x += 100;
     }
 
-    this.notice = this.add.text(GAME_WIDTH - 24, 506, data.notice ?? '', textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } })).setOrigin(1, 0);
+    // Without a notice, the corner shows the map items that are working (Repel ×2 · Black Flute...).
+    const working = mapItemSummary(content, run);
+    this.notice = this.add
+      .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : ''), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
+      .setOrigin(1, 0);
     this.focus(Math.min(data.focus ?? 0, this.options.length - 1), false);
 
     onInputAction(this, (action) => {
@@ -314,7 +319,12 @@ export class MapScene extends Phaser.Scene {
       case 'node': {
         this.busy = true;
         playSfx(this, 'ui.select');
+        const repelled = option.node.kind === 'wild' && repelActive(session.content, session.run!);
         const run = session.chooseNode(option.node.id);
+        if (repelled && run.phase === 'map') {
+          this.scene.restart({ notice: 'The Repel kept wild Pokémon away!', focus: 0 });
+          break;
+        }
         this.cameras.main.fadeOut(250);
         this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
         break;

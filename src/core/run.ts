@@ -43,6 +43,21 @@ import { count, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
+import {
+  activeMods,
+  mapItemRng,
+  repelActive,
+  startStageEffects,
+  throwMultiplier,
+  useRepel,
+  useThrowCharges,
+  useWildBattleCharges,
+  wildBattleSetup,
+  wildExpMultiplier,
+  wildLevelBonus,
+  wildShinyMultiplier,
+  wildSpeciesWithItems,
+} from './mapItems';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
@@ -193,6 +208,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
+  startStageEffects(run);
   run.battle = null;
   run.phase = 'map';
 }
@@ -218,6 +234,7 @@ function enterLeague(content: Content, run: RunState): void {
     current: null,
     visited: [],
   };
+  startStageEffects(run);
   healParty(content, run);
   run.battle = null;
   run.phase = 'map';
@@ -251,6 +268,11 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   stage.visited.push(nodeId);
   const node = findNode(stage.map, nodeId);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
+  // A Repel keeps a wild Pokémon away: no battle and no reward, but the level counts.
+  if (node.kind === 'wild' && repelActive(content, run)) {
+    useRepel(content, run);
+    return run;
+  }
   startEncounter(content, run, node);
   return run;
 }
@@ -269,16 +291,24 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
   const activeUid = run.party[activeIndex]!.uid;
 
   if (node.kind === 'wild') {
+    // Map items (Flutes, Incense, Mail, Poké Radar...) change the wild Pokémon; their own rolls use a generator of their own.
+    const mods = activeMods(content, run);
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
-      const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
+      const bonus = (node.harder ? r.int(lo, hi) : 0) + wildLevelBonus(content, run, mods);
+      const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
     });
-    const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
+    const speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    const enemy = createPokemon(content, speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
+    const setup = wildBattleSetup(content, run, mods);
+    if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
+    if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
+    useWildBattleCharges(run);
   } else {
     const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) => {
       switch (node.kind) {
@@ -428,6 +458,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const attributes = runAttributeEffects(content, run);
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
+  const targetUid = currentEnemy(battle).uid;
   const engineEvents = resolveTurn(
     {
       content,
@@ -436,7 +467,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       inventory: run.inventory,
       rng,
       captureRng,
-      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate,
+      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(battle)),
       healMultiplier: healingMultiplier(archetype) * attributes.healing,
       typeModifiers: typeModifiers(archetype),
       attributes,
@@ -447,6 +478,9 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   );
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
+  // Apricorns and the Fluffy Tail are used up by the throws they help.
+  const thrownAt = engineEvents.some((e) => e.type === 'ball') ? (battle.enemyTeam.find((m) => m.uid === targetUid) ?? null) : null;
+  if (thrownAt) useThrowCharges(content, run, thrownAt);
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
   countAttributeGrowth(content, run, engineEvents);
   applyHeldAttributes(content, run, engineEvents);
@@ -521,7 +555,8 @@ function countAttributeGrowth(content: Content, run: RunState, events: BattleEve
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
   const effects = runAttributeEffects(content, run);
-  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp;
+  // White Flute: more EXP from wild battles.
+  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);

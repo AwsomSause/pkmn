@@ -2556,7 +2556,8 @@
    "kind": "held",
    "hooks": [
     {
-     "hook": "moveLast"
+     "hook": "moveLast",
+     "sureHit": true
     }
    ]
   }
@@ -2951,16 +2952,22 @@
   "id": "cleanse-tag",
   "name": "Cleanse Tag",
   "family": "Battle held items",
-  "description": "While the holder leads, wild Pokémon on the map are 1 level lower",
+  "description": "While the holder leads, wild Pokémon are 1 level lower",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "cleanse-tag",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "wildLevel",
+     "amount": -1
+    }
+   ]
+  }
  },
  {
   "id": "macho-brace",
@@ -5372,16 +5379,29 @@
   "id": "bluk-berry",
   "name": "Bluk Berry",
   "family": "Berries (held, eaten in battle)",
-  "description": "Next wild Pokémon is guaranteed to be a type from the stage theme",
+  "description": "Next 3 wild Pokémon are all of the stage's main type",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "bluk-berry",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "themeFirst"
+     ],
+     "percent": 100
+    }
+   ]
+  }
  },
  {
   "id": "wepear-berry",
@@ -5925,16 +5945,28 @@
   "id": "honey",
   "name": "Honey",
   "family": "Attribute items",
-  "description": "+2 Charisma; next wild Pokémon is a rarer species",
+  "description": "+2 Charisma; the next wild Pokémon is the strongest of three",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "honey",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "rare"
+    }
+   ],
+   "changes": {
+    "charisma": 2
+   }
+  }
  },
  {
   "id": "pink-scarf",
@@ -6953,16 +6985,25 @@
   "id": "repel",
   "name": "Repel",
   "family": "Map and encounter items",
-  "description": "Skip the next wild battle (no reward, still counts as a level)",
+  "description": "Skip the next wild battle (no battle and no reward, but the level counts)",
   "rarity": "common",
   "stacksOn": "player",
   "max": 5,
   "how": "use",
   "icon": "repel",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "repel"
+    }
+   ]
+  }
  },
  {
   "id": "super-repel",
@@ -6974,10 +7015,19 @@
   "max": 5,
   "how": "use",
   "icon": "super-repel",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "repel"
+    }
+   ]
+  }
  },
  {
   "id": "max-repel",
@@ -6989,10 +7039,19 @@
   "max": 5,
   "how": "use",
   "icon": "max-repel",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "repel"
+    }
+   ]
+  }
  },
  {
   "id": "escape-rope",
@@ -7019,10 +7078,19 @@
   "max": 3,
   "how": "use",
   "icon": "black-flute",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "stage"
+   },
+   "mods": [
+    {
+     "mod": "level",
+     "amount": -2
+    }
+   ]
+  }
  },
  {
   "id": "white-flute",
@@ -7034,10 +7102,23 @@
   "max": 3,
   "how": "use",
   "icon": "white-flute",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "stage"
+   },
+   "mods": [
+    {
+     "mod": "level",
+     "amount": 2
+    },
+    {
+     "mod": "exp",
+     "percent": 25
+    }
+   ]
+  }
  },
  {
   "id": "blue-flute",
@@ -7049,10 +7130,16 @@
   "max": null,
   "how": "use",
   "icon": "blue-flute",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "immune",
+     "status": "slp"
+    }
+   ]
+  }
  },
  {
   "id": "red-flute",
@@ -7066,7 +7153,7 @@
   "icon": "red-flute",
   "status": "pending",
   "needs": [
-   "map"
+   "battle"
   ]
  },
  {
@@ -7102,83 +7189,143 @@
   "icon": "poke-flute",
   "status": "pending",
   "needs": [
-   "map"
+   "battle"
   ]
  },
  {
   "id": "rock-incense",
   "name": "Rock Incense",
   "family": "Map and encounter items",
-  "description": "Rock-type wild Pokémon twice as common",
+  "description": "Each wild battle: 20% chance per copy of a Rock-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "passive",
   "icon": "rock-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "rock"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "odd-incense",
   "name": "Odd Incense",
   "family": "Map and encounter items",
-  "description": "Psychic-type wild Pokémon twice as common",
+  "description": "Each wild battle: 20% chance per copy of a Psychic-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "passive",
   "icon": "odd-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "psychic"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "rose-incense",
   "name": "Rose Incense",
   "family": "Map and encounter items",
-  "description": "Grass-type wild Pokémon twice as common",
+  "description": "Each wild battle: 20% chance per copy of a Grass-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "passive",
   "icon": "rose-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "grass"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "sea-incense",
   "name": "Sea Incense",
   "family": "Map and encounter items",
-  "description": "Water-type wild Pokémon twice as common",
+  "description": "Each wild battle: 20% chance per copy of a Water-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "passive",
   "icon": "sea-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "water"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "wave-incense",
   "name": "Wave Incense",
   "family": "Map and encounter items",
-  "description": "Wild Pokémon of the stage's second theme type twice as common",
+  "description": "Each wild battle: 20% chance per copy of a Pokémon of the stage's second type",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 3,
   "how": "passive",
   "icon": "wave-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "themeSecond"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "full-incense",
@@ -7190,10 +7337,19 @@
   "max": 1,
   "how": "held",
   "icon": "full-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "moveLast"
+    },
+    {
+     "hook": "power",
+     "percent": 30
+    }
+   ]
+  }
  },
  {
   "id": "lax-incense",
@@ -7205,10 +7361,15 @@
   "max": 1,
   "how": "held",
   "icon": "lax-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "dodgeFirst"
+    }
+   ]
+  }
  },
  {
   "id": "luck-incense",
@@ -7231,46 +7392,71 @@
   "id": "pure-incense",
   "name": "Pure Incense",
   "family": "Map and encounter items",
-  "description": "Wild Pokémon miss their status moves 25% more often",
+  "description": "Whole team: wild Pokémon miss their status moves 25% more often",
   "rarity": "common",
   "stacksOn": "team",
   "max": 1,
   "how": "passive",
   "icon": "pure-incense",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "statusShield",
+     "percent": 25
+    }
+   ]
+  }
  },
  {
   "id": "poke-doll",
   "name": "Poké Doll",
   "family": "Map and encounter items",
-  "description": "Next wild battle: you get a free first turn",
+  "description": "Next wild battle: the wild Pokémon loses its first turn",
   "rarity": "common",
   "stacksOn": "player",
   "max": 5,
   "how": "use",
   "icon": "poke-doll",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "freeTurn"
+    }
+   ]
+  }
  },
  {
   "id": "fluffy-tail",
   "name": "Fluffy Tail",
   "family": "Map and encounter items",
-  "description": "Next wild battle: the wild Pokémon is 1.5x easier to catch on the first throw",
+  "description": "Your next ball throw is 1.5x as likely to catch",
   "rarity": "common",
   "stacksOn": "player",
   "max": 5,
   "how": "use",
   "icon": "fluffy-tail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "poke-toy",
@@ -7282,10 +7468,20 @@
   "max": 5,
   "how": "use",
   "icon": "poke-toy",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "foeSpeed",
+     "stages": -1
+    }
+   ]
+  }
  },
  {
   "id": "old-rod",
@@ -7387,10 +7583,19 @@
   "max": 1,
   "how": "passive",
   "icon": "poke-radar",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "shiny",
+     "multiplier": 2
+    }
+   ]
+  }
  },
  {
   "id": "itemfinder",
@@ -7719,10 +7924,23 @@
   "max": 5,
   "how": "use",
   "icon": "red-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "fire"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "blu-apricorn",
@@ -7734,10 +7952,23 @@
   "max": 5,
   "how": "use",
   "icon": "blu-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "water"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "ylw-apricorn",
@@ -7749,10 +7980,23 @@
   "max": 5,
   "how": "use",
   "icon": "ylw-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "electric"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "grn-apricorn",
@@ -7764,10 +8008,23 @@
   "max": 5,
   "how": "use",
   "icon": "grn-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "grass"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "pnk-apricorn",
@@ -7779,10 +8036,24 @@
   "max": 5,
   "how": "use",
   "icon": "pnk-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "fairy",
+      "normal"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "wht-apricorn",
@@ -7794,10 +8065,21 @@
   "max": 5,
   "how": "use",
   "icon": "wht-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "shiny": true
+    }
+   ]
+  }
  },
  {
   "id": "blk-apricorn",
@@ -7809,10 +8091,24 @@
   "max": 5,
   "how": "use",
   "icon": "blk-apricorn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "throws",
+    "count": 3
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 2,
+     "types": [
+      "dark",
+      "ghost"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "powder-jar",
@@ -8765,181 +9061,327 @@
   "id": "flame-mail",
   "name": "Flame Mail",
   "family": "Mail",
-  "description": "Next stage: Fire-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Fire-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "flame-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "fire"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "bubble-mail",
   "name": "Bubble Mail",
   "family": "Mail",
-  "description": "Next stage: Water-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Water-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "bubble-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "water"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "grass-mail",
   "name": "Grass Mail",
   "family": "Mail",
-  "description": "Next stage: Grass-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Grass-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "grass-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "grass"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "snow-mail",
   "name": "Snow Mail",
   "family": "Mail",
-  "description": "Next stage: Ice-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Ice-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "snow-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "ice"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "space-mail",
   "name": "Space Mail",
   "family": "Mail",
-  "description": "Next stage: Psychic-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Psychic-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "space-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "psychic"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "steel-mail",
   "name": "Steel Mail",
   "family": "Mail",
-  "description": "Next stage: Steel-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Steel-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "steel-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "steel"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "tunnel-mail",
   "name": "Tunnel Mail",
   "family": "Mail",
-  "description": "Next stage: Ground-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Ground-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "tunnel-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "ground"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "shadow-mail",
   "name": "Shadow Mail",
   "family": "Mail",
-  "description": "Next stage: Ghost and Dark wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Ghost or Dark-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "shadow-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "ghost",
+      "dark"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "wood-mail",
   "name": "Wood Mail",
   "family": "Mail",
-  "description": "Next stage: Bug-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Bug-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "wood-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "bug"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "air-mail",
   "name": "Air Mail",
   "family": "Mail",
-  "description": "Next stage: Flying-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Flying-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "air-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "flying"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "brick-mail",
   "name": "Brick Mail",
   "family": "Mail",
-  "description": "Next stage: Fighting and Rock wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Fighting or Rock-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "brick-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "fighting",
+      "rock"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "mech-mail",
   "name": "Mech Mail",
   "family": "Mail",
-  "description": "Next stage: Electric-type wild Pokémon twice as common",
+  "description": "Next stage: each wild battle has a 50% chance of a Electric-type Pokémon",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "mech-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "electric"
+     ],
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "wave-mail",
@@ -8990,16 +9432,24 @@
   "id": "mosaic-mail",
   "name": "Mosaic Mail",
   "family": "Mail",
-  "description": "Next stage: wild Pokémon may be any type (theme ignored)",
+  "description": "Next stage: wild Pokémon may be any type (the theme is ignored)",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "mosaic-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "anyType"
+    }
+   ]
+  }
  },
  {
   "id": "glitter-mail",
@@ -9011,40 +9461,65 @@
   "max": null,
   "how": "use",
   "icon": "glitter-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "shiny",
+     "multiplier": 2
+    }
+   ]
+  }
  },
  {
   "id": "dream-mail",
   "name": "Dream Mail",
   "family": "Mail",
-  "description": "Next stage: one wild battle is a rare Pokémon",
+  "description": "Next stage: every wild Pokémon is the strongest of three",
   "rarity": "rare",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "dream-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "rare"
+    }
+   ]
+  }
  },
  {
   "id": "retro-mail",
   "name": "Retro Mail",
   "family": "Mail",
-  "description": "Next stage: one wild battle is a Gen 1 Pokémon of your choice of type",
+  "description": "Next stage: wild Pokémon are first-generation Pokémon of the stage's types, when there are any",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "retro-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "mods": [
+    {
+     "mod": "gen1"
+    }
+   ]
+  }
  },
  {
   "id": "bloom-mail",
@@ -10135,16 +10610,26 @@
   "id": "unown-report",
   "name": "Unown Report",
   "family": "Key items: tickets, keys and story items",
-  "description": "Unown appear as rare wild Pokémon",
+  "description": "Each wild battle has a 5% chance to be an Unown",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "unown-report",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "species",
+     "species": "unown",
+     "percent": 5
+    }
+   ]
+  }
  },
  {
   "id": "pass",

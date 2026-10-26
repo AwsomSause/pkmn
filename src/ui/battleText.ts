@@ -134,6 +134,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
           return `${who(e.side)} is protected by Guard Spec.!`;
         case 'boostEnd':
           return e.stat ? `${who(e.side)}'s ${e.stat === 'crit' ? 'focus' : STAT_NAMES[e.stat]} boost wore off.` : `${who(e.side)}'s Guard Spec. wore off.`;
+        case 'distracted':
+          return `${who(e.side)} is distracted by the Poké Doll!`;
         case 'attribute':
           return null;
       }

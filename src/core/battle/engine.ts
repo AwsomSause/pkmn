@@ -351,9 +351,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
         : [{ user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }, { user: playerC, target: enemy, move: playerMove, slot: action.index }];
     actions.forEach((a, index) => {
       if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
+      if (a.user.side === 'enemy' && loseFreeTurn(battle, events)) return;
       executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events);
     });
-  } else {
+  } else if (!loseFreeTurn(battle, events)) {
     executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events);
   }
   recordFaints(ctx, playerC, enemy, events);
@@ -469,6 +470,15 @@ function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[])
   if (!battle.participants.includes(mon.uid)) battle.participants.push(mon.uid);
   events.push({ type: 'switchIn', side: 'player', uid: mon.uid, speciesId: mon.speciesId, level: mon.level });
   enterField(ctx, { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
+}
+
+/** Poké Doll: the wild Pokémon loses this turn (uses up one free turn). */
+function loseFreeTurn(battle: BattleState, events: BattleEvent[]): boolean {
+  const items = battle.mapItems;
+  if (!items || items.freeTurns <= 0) return false;
+  items.freeTurns -= 1;
+  events.push({ type: 'held', side: 'enemy', itemId: 'poke-doll', what: 'distracted' });
+  return true;
 }
 
 /** A Pokémon comes onto the field: its battle boosts (X items, Dire Hit) apply once per stay. */
@@ -748,7 +758,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
   const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
-  const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst) : 1;
+  const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst, move) : 1;
   const accuracy =
     itemAccuracy === null
       ? 1
