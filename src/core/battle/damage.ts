@@ -60,6 +60,8 @@ export interface DamageInput {
   randomFactor: number;
   burned: boolean;
   physical: boolean;
+  /** Rain or sun: 1.5 or 0.5 for Water and Fire moves (default 1). */
+  weather?: number;
 }
 
 /**
@@ -74,7 +76,7 @@ export function pokeRound(value: number, multiplier: number): number {
 /**
  * Gen 5+ damage formula, with the main games' rounding:
  *   base = floor(floor(floor(2 × L / 5 + 2) × Power × A / D) / 50) + 2
- *   then × crit (1.5, rounded down) × random (0.85–1.00, rounded down)
+ *   then × weather (rain/sun, rounded half down) × crit (1.5, rounded down) × random (0.85–1.00, rounded down)
  *   × STAB (1.5, rounded half down) × type (rounded down) × burn (0.5, physical, rounded half down)
  * A critical hit ignores the attacker's negative attack stages and the
  * defender's positive defense stages. Minimum 1 damage unless immune.
@@ -87,6 +89,7 @@ export function calcDamage(ruleset: Ruleset, input: DamageInput): number {
   const d = Math.max(1, Math.floor(input.defense * statStageMultiplier(defStage)));
 
   let damage = Math.floor(Math.floor(Math.floor((2 * input.level) / 5 + 2) * input.power * a / d) / 50) + 2;
+  if (input.weather !== undefined && input.weather !== 1) damage = pokeRound(damage, input.weather);
   if (input.crit) damage = Math.floor(damage * ruleset.critMultiplier);
   damage = Math.floor((damage * input.randomFactor) / 100);
   if (input.stab) damage = pokeRound(damage, ruleset.stabMultiplier);

@@ -7,7 +7,7 @@ import { createBattle, resolveTurn as resolveAction, switchProblem, type BattleC
 import { lowHpPower, multiHitCount, pokeRound } from '../../src/core/battle/damage';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { BattleStateSchema, type PokemonInstance } from '../../src/core/state';
+import { BattleStateSchema, freshVolatile, type PokemonInstance } from '../../src/core/state';
 import { content } from './helpers';
 
 function setup(playerSpecies: string, playerLevel: number, enemySpecies: string, enemyLevel: number, seed = 'tier1', extra: PokemonInstance[] = []) {
@@ -242,8 +242,9 @@ describe('power rules and rounding', () => {
 
   it('an older battle save without the new battle conditions still loads', () => {
     const { battle } = setup('rattata', 10, 'pidgey', 10);
-    const { playerVolatile: _p, enemyVolatile: _e, ...old } = battle;
+    const { playerVolatile: _p, enemyVolatile: _e, weather: _w, ...old } = battle;
     const parsed = BattleStateSchema.parse(old);
-    expect(parsed.playerVolatile).toEqual({ confusion: 0, recharge: false, protectChain: 0, bound: 0, seeded: false });
+    expect(parsed.playerVolatile).toEqual(freshVolatile());
+    expect(parsed.weather).toBeNull();
   });
 });
