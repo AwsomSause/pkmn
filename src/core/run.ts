@@ -45,12 +45,20 @@ import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import {
   activeMods,
+  afterPurchase,
+  afterTrainerWin,
+  earlyStockCount,
   mapItemRng,
+  type MapItemRun,
+  priceMultiplierFromItems,
+  prizeMoneyFromItems,
+  regionMoneyFromItems,
   repelActive,
   startStageEffects,
   throwMultiplier,
   useRepel,
   useThrowCharges,
+  useUses,
   useWildBattleCharges,
   wildBattleSetup,
   wildExpMultiplier,
@@ -249,6 +257,10 @@ function enterNextRegion(content: Content, run: RunState): void {
   }
   run.regionIndex += 1;
   run.log.charmUsedInRegion = false;
+  // Pass Orbs turn into money in each new region.
+  const orbMoney = regionMoneyFromItems(content, run);
+  run.money += orbMoney;
+  count(run, 'moneyEarned', orbMoney);
   enterStage(content, run, 0);
 }
 
@@ -368,9 +380,19 @@ function healParty(content: Content, run: RunState): void {
   }
 }
 
-/** What the shop sells right now: more stock unlocks as the player earns badges. Key items you own aren't sold again. */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>>): Content['shop'] {
-  return content.shop.filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e) && !(run.inventory && ownsKeepsake(content, run.inventory, e.item)));
+/**
+ * What the shop sells right now: more stock unlocks as the player earns badges,
+ * and the Member Card and Wepear Berry put the next locked entries on sale early.
+ * Key items you own aren't sold again.
+ */
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>> & MapItemRun): Content['shop'] {
+  const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
+  const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
+  const early = content.shop
+    .filter((e) => !open(e) && !owned(e))
+    .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
+    .slice(0, earlyStockCount(content, run));
+  return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e));
 }
 
 /** Key items and Mega Stones last the whole run, so you only ever need one. */
@@ -386,7 +408,8 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
-  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price);
+  // Coupons lower the price; a full Point Card makes it free.
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
 }
 
 /** Buys one of an item at the shop. */
@@ -395,14 +418,15 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   const entry = content.shop.find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
+  if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const badges = shopBadgesNeeded(content, current, entry);
-  if (current.badges.length < badges) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
+  if (!shopStock(content, current).includes(entry)) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
   const price = shopPrice(content, current, entry);
   if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
-  if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const run = structuredClone(current);
   run.money -= price;
   count(run, 'moneySpent', price);
+  afterPurchase(content, run, priceMultiplierFromItems(content, current) === 0);
   if (item.effect.kind === 'attribute') {
     // Attribute items work as soon as they're bought.
     const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
@@ -412,10 +436,12 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   return { run, message: `You bought a ${item.name} for ₽${price}.` };
 }
 
-export function leaveShop(current: RunState): RunState {
+export function leaveShop(content: Content, current: RunState): RunState {
   assertPhase(current, 'shop');
   const run = structuredClone(current);
   run.phase = 'map';
+  // A Wepear Berry's extra item lasts one shop visit.
+  useUses(content, run, 'shops');
   return run;
 }
 
@@ -430,6 +456,8 @@ export type RunEvent =
 export interface BattleEndResult {
   outcome: 'win' | 'caught';
   moneyGained: number;
+  /** Bag items found after the battle (Loot Sack, Blue Card). */
+  itemsFound: string[];
   caughtSpeciesId: string | null;
   evolutions: (EvolutionResult & { uid: string })[];
   /** The gym leader's id when this win beat a gym leader. */
@@ -623,7 +651,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   // Amulet Coin (all prize money) and Luck Incense (trainers only) add their percent per copy.
   const itemBonus = passivePercent(content, run, 'money') + (battle.kind === 'trainer' ? passivePercent(content, run, 'trainerMoney') : 0);
-  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + itemBonus / 100));
+  // Reply and Bead Mail (trainers), Soot Sack (wild battles on its type's stages).
+  const theme = run.stage ? (content.themes.get(run.stage.themeId) ?? null) : null;
+  const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
+  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -673,6 +704,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const charisma = passivePercent(content, run, 'stageCharisma');
     if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
   }
+  // Loot Sack and Blue Card: Bag items after trainer wins, from a generator of their own.
+  const itemsFound =
+    outcome === 'win' && battle.kind === 'trainer'
+      ? afterTrainerWin(content, run, shopStock(content, run).map((e) => ({ item: e.item, price: e.price })), new Rng(hashSeed(`${run.seed}::trainer-loot::${run.encountersCompleted}`)))
+      : [];
+  for (const id of itemsFound) addItem(run.inventory, id, 1);
   if (outcome === 'win') {
     count(run, 'battlesWon');
     const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
@@ -701,7 +738,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.log.battlesWon += 1;
   run.afterDecisions = 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
 }
 
 /**

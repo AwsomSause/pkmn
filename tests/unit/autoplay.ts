@@ -31,7 +31,7 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
     case 'map':
       return { run: toBattle(run, content), turn: null };
     case 'shop':
-      return { run: leaveShop(run), turn: null };
+      return { run: leaveShop(content, run), turn: null };
     case 'battle': {
       const battle = run.battle!;
       if (battle.needsSwitch) {

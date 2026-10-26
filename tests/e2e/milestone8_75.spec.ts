@@ -153,3 +153,49 @@ test('map items: a Repel skips a wild battle and the map shows what is working',
   expect(after.mapEffects.map((e: any) => e.itemId)).toEqual(['black-flute']);
   expect(errors).toEqual([]);
 });
+
+test('shop items: a Coupon halves a price and the Member Card sells an item early', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
+  await startRun(page, 'e2e-shop-items');
+
+  for (const id of ['item:coupon-3', 'item:member-card']) {
+    await showDraft(page, [id, 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl']);
+    await page.keyboard.press('Enter');
+    await waitForScene(page, 'Map');
+  }
+  // Open a shop beside the next node.
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    const run = session.run;
+    const node = run.stage.map.nodes[0];
+    node.sides = [{ id: 'e2e-shop', kind: 'shop', used: false }];
+    run.stage.current = node.id;
+    run.money = 5000;
+    session.visitSide('e2e-shop');
+    for (const s of game.scene.getScenes(true)) s.scene.stop();
+    game.scene.start('Shop');
+  });
+  await waitForScene(page, 'Shop');
+  // Every text on the shop screen, however deep in its containers.
+  const rows = () =>
+    page.evaluate(() => {
+      const out: string[] = [];
+      const walk = (o: any) => {
+        if (typeof o.text === 'string') out.push(o.text);
+        for (const c of o.list ?? []) walk(c);
+      };
+      for (const c of (window as any).__pkr.game.scene.getScene('Shop').children.list) walk(c);
+      return out;
+    });
+  const texts: string[] = await rows();
+  expect(texts.some((t) => t.endsWith('(early)'))).toBe(true);
+  expect(texts).toContain('₽100');
+  await page.screenshot({ path: 'test-results/m875-shop-items.png' });
+  // The first row is the Poké Ball at half price.
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await run(page)).money, { timeout: 10_000 }).toBe(4900);
+  expect((await run(page)).mapEffects).toEqual([]);
+  expect(errors).toEqual([]);
+});

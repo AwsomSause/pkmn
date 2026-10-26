@@ -135,7 +135,7 @@ export class GameSession {
   }
 
   leaveShop(): void {
-    this.run = Run.leaveShop(this.requireRun());
+    this.run = Run.leaveShop(this.content, this.requireRun());
     this.persistRun();
   }
 

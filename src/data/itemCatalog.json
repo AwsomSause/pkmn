@@ -5407,16 +5407,26 @@
   "id": "wepear-berry",
   "name": "Wepear Berry",
   "family": "Berries (held, eaten in battle)",
-  "description": "Next shop has one extra item for sale",
+  "description": "Next shop sells one extra item: the next one you would unlock with badges",
   "rarity": "common",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "wepear-berry",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "shops",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "earlyStock",
+     "count": 1
+    }
+   ]
+  }
  },
  {
   "id": "cornn-berry",
@@ -7753,16 +7763,25 @@
   "id": "point-card",
   "name": "Point Card",
   "family": "Shop and money items",
-  "description": "Every shop purchase earns points; 10 points = a free Common item",
+  "description": "Every shop purchase earns a point; at 10 points your next purchase is free",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "point-card",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "points",
+     "every": 10
+    }
+   ]
+  }
  },
  {
   "id": "coupon-1",
@@ -7774,10 +7793,20 @@
   "max": null,
   "how": "use",
   "icon": "coupon-1",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "purchases",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "discount",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "coupon-2",
@@ -7789,10 +7818,20 @@
   "max": null,
   "how": "use",
   "icon": "coupon-2",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "purchases",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "discount",
+     "percent": 25
+    }
+   ]
+  }
  },
  {
   "id": "coupon-3",
@@ -7804,25 +7843,43 @@
   "max": null,
   "how": "use",
   "icon": "coupon-3",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "purchases",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "discount",
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "loot-sack",
   "name": "Loot Sack",
   "family": "Shop and money items",
-  "description": "Trainers you beat drop one extra Common item",
+  "description": "Trainers you beat drop a Bag item from the shop's cheapest third",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "loot-sack",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "trainerLoot"
+    }
+   ]
+  }
  },
  {
   "id": "soot-sack",
@@ -7834,10 +7891,20 @@
   "max": 5,
   "how": "passive",
   "icon": "soot-sack",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "wildMoney",
+     "type": "fire",
+     "amount": 20
+    }
+   ]
+  }
  },
  {
   "id": "seal-bag",
@@ -7858,16 +7925,25 @@
   "id": "member-card",
   "name": "Member Card",
   "family": "Shop and money items",
-  "description": "Shops show one Rare item each visit",
+  "description": "Shops sell one item early: the next one you would unlock with badges",
   "rarity": "epic",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "member-card",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "earlyStock",
+     "count": 1
+    }
+   ]
+  }
  },
  {
   "id": "rule-book",
@@ -9546,10 +9622,19 @@
   "max": null,
   "how": "use",
   "icon": "bead-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "trainerMoney",
+     "percent": 25
+    }
+   ]
+  }
  },
  {
   "id": "fab-mail",
@@ -9668,10 +9753,20 @@
   "max": null,
   "how": "use",
   "icon": "reply-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "trainers",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "trainerMoney",
+     "percent": 100
+    }
+   ]
+  }
  },
  {
   "id": "inquiry-mail",
@@ -10686,10 +10781,19 @@
   "max": 5,
   "how": "passive",
   "icon": "pass-orb",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "regionMoney",
+     "amount": 200
+    }
+   ]
+  }
  },
  {
   "id": "contest-pass",
@@ -10710,16 +10814,25 @@
   "id": "blue-card",
   "name": "Blue Card",
   "family": "Key items: tickets, keys and story items",
-  "description": "Each trainer you beat adds a point; 10 points = a Rare item",
+  "description": "Each trainer you beat adds a point; at 10 points, a Bag item from the shop's dearest third",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "blue-card",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "trainerPoints",
+     "every": 10
+    }
+   ]
+  }
  },
  {
   "id": "xtransceiver",

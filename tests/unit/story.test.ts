@@ -54,24 +54,24 @@ describe('story foundation: random streams', () => {
   // Fingerprints of what the rules decided for these seeds, recorded on main (after M8.75 C2 and M8.5 Mega)
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
-  // effects slices 2 and 3a (held, map and encounter items in drafts, bosses
+  // effects slices 2, 3a and 3b (held, map, shop and money items in drafts, bosses
   // holding items), which change play on purpose; STORY7 now loses its first
   // battles whatever its Love is.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '6d9cd25e4a0c215a',
-    'STORY1/100': '4417687ce160414f',
+    'STORY1/0': '5d6cccf737651c8b',
+    'STORY1/100': '2c10a2f5f2b5e5da',
     'STORY2/0': '289336f1e73c4f84',
     'STORY2/100': '65d8fc32c8e70661',
     'STORY3/0': '39a773d9071b10af',
     'STORY3/100': '855c5699c777326a',
-    'STORY4/0': 'e014d53631ca04c2',
-    'STORY4/100': '5a4c3f6a52e27e6f',
-    'STORY5/0': '200a67a3f06b4f9f',
-    'STORY5/100': '615e59d1f268b661',
+    'STORY4/0': '96f2cac3866fccfe',
+    'STORY4/100': 'bb97106881cccfbd',
+    'STORY5/0': '6a94ccb4c56bb170',
+    'STORY5/100': '6cf2303e9bc7b416',
     'STORY6/0': 'fb12816df446bfee',
     'STORY6/100': '3277c132e50d5fc6',
-    'STORY7/0': '0746e00559c72ae4',
-    'STORY7/100': '0746e00559c72ae4',
+    'STORY7/0': '173c815313e80667',
+    'STORY7/100': '173c815313e80667',
     'STORY8/0': '9c19185effaefb06',
     'STORY8/100': '96f296d09a87b1f1',
   };

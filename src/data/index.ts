@@ -392,8 +392,8 @@ function addCatalog(content: Content, problems: string[]): void {
     }
     if (effect.kind === 'encounter') {
       for (const mod of effect.mods) if (mod.mod === 'species' && !content.species.has(mod.species)) problems.push(`${where} brings unknown species "${mod.species}"`);
-      if (entry.stacksOn === 'pokemon') problems.push(`${where} is a map item, so it must stack on the team or the player`);
     }
+    if ((effect.kind === 'encounter' || effect.kind === 'perk') && entry.stacksOn === 'pokemon') problems.push(`${where} is a map item, so it must stack on the team or the player`);
     const reward = catalogReward(entry);
     if (content.rewards.has(reward.id)) problems.push(`${where} clashes with reward "${reward.id}"`);
     content.rewards.set(reward.id, reward);
