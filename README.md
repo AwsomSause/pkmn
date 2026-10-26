@@ -76,6 +76,17 @@ npm run assets:manifest
 
 `data:custom` (needs Python with Pillow) downloads Insurgence's Delta data into `.cache/insurgence` the first time, reads the designs in `tools/custom-forms.json`, writes `src/data/customSpecies.json` and `customEvolutions.json`, and converts the zip's sprites into `public/assets/images/pokemon/**/custom/`. To change a designed form's types, stats or evolution, edit `tools/custom-forms.json` and run it again.
 
+Battle animations (Milestone 9) come from PokeRogue's animation data plus the packs' sprite sheets and sounds (needs ffmpeg to shrink the sounds):
+
+```
+git clone --depth 1 --filter=blob:none --sparse -b beta https://github.com/pagefaultgames/pokerogue-assets.git .cache/pokerogue-assets
+git -C .cache/pokerogue-assets sparse-checkout set battle-anims
+npm run data:anims -- .cache/pokerogue-assets/battle-anims /path/to/images.zip /path/to/audio.zip
+npm run assets:manifest
+```
+
+It writes `src/data/moveAnims.json` (how each move looks; the battle rules never read it) and the files under `public/assets/battle-anims/`, `images/battle_anims/` and `audio/battle_anims/`.
+
 ## Project layout
 
 ```

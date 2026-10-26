@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 9, settings: 1, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 9, settings: 2, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -169,7 +169,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       };
     },
   },
-  settings: {},
+  settings: {
+    // v2 (Milestone 9): battle animation settings.
+    1: (data) => ({ ...(data as Json), battleAnimations: 'full', effectIntensity: 1 }),
+  },
   meta: {},
 };
 
@@ -190,7 +193,16 @@ export type LoadResult<T> =
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1 };
+
+/** True when the browser asks for less motion (then new players start with reduced battle animations). */
+function prefersReducedMotion(): boolean {
+  try {
+    return typeof globalThis.matchMedia === 'function' && globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
+}
 
 export class SaveManager {
   constructor(
@@ -432,7 +444,8 @@ export class SaveManager {
 
   loadSettings(): Settings {
     const result = this.read('settings', SettingsSchema);
-    return result.status === 'ok' ? result.data : { ...DEFAULT_SETTINGS };
+    if (result.status === 'ok') return result.data;
+    return { ...DEFAULT_SETTINGS, battleAnimations: prefersReducedMotion() ? 'reduced' : 'full' };
   }
 
   saveSettings(settings: Settings): SaveResult {

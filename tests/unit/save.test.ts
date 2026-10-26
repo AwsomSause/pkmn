@@ -68,14 +68,14 @@ describe('save manager', () => {
     const storage = new MemoryStorageProvider();
     const saves = new SaveManager(storage, content);
     const original = CURRENT_VERSIONS.settings;
-    CURRENT_VERSIONS.settings = 2;
-    MIGRATIONS.settings[1] = (data) => ({ ...(data as object), muted: true });
+    CURRENT_VERSIONS.settings = original + 1;
+    MIGRATIONS.settings[original] = (data) => ({ ...(data as object), muted: true });
     try {
       storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 1, savedAt: '', data: { musicVolume: 0.1, sfxVolume: 0.2, muted: false } }));
-      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true });
+      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1 });
     } finally {
       CURRENT_VERSIONS.settings = original;
-      delete MIGRATIONS.settings[1];
+      delete MIGRATIONS.settings[original];
     }
   });
 
