@@ -6209,6 +6209,1389 @@
   }
  },
  {
+  "id": "arm-thrust",
+  "name": "Arm Thrust",
+  "type": "fighting",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "baby-doll-eyes",
+  "name": "Baby-Doll Eyes",
+  "type": "fairy",
+  "category": "status",
+  "power": null,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 1,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "barrage",
+  "name": "Barrage",
+  "type": "normal",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 85,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "bind",
+  "name": "Bind",
+  "type": "normal",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 85,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "blast-burn",
+  "name": "Blast Burn",
+  "type": "fire",
+  "category": "special",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "bone-rush",
+  "name": "Bone Rush",
+  "type": "ground",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "bonemerang",
+  "name": "Bonemerang",
+  "type": "ground",
+  "category": "physical",
+  "power": 50,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "brine",
+  "name": "Brine",
+  "type": "water",
+  "category": "special",
+  "power": 65,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "doubleBelowHalf": true
+  }
+ },
+ {
+  "id": "bullet-seed",
+  "name": "Bullet Seed",
+  "type": "grass",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "chip-away",
+  "name": "Chip Away",
+  "type": "normal",
+  "category": "physical",
+  "power": 70,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ignoreStages": true
+  }
+ },
+ {
+  "id": "clamp",
+  "name": "Clamp",
+  "type": "water",
+  "category": "physical",
+  "power": 35,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "comet-punch",
+  "name": "Comet Punch",
+  "type": "normal",
+  "category": "physical",
+  "power": 18,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "confuse-ray",
+  "name": "Confuse Ray",
+  "type": "ghost",
+  "category": "status",
+  "power": null,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "darkest-lariat",
+  "name": "Darkest Lariat",
+  "type": "dark",
+  "category": "physical",
+  "power": 85,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ignoreStages": true
+  }
+ },
+ {
+  "id": "detect",
+  "name": "Detect",
+  "type": "fighting",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 4,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "protect": true
+  }
+ },
+ {
+  "id": "dizzy-punch",
+  "name": "Dizzy Punch",
+  "type": "normal",
+  "category": "physical",
+  "power": 70,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 20
+   }
+  }
+ },
+ {
+  "id": "double-hit",
+  "name": "Double Hit",
+  "type": "normal",
+  "category": "physical",
+  "power": 35,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "double-kick",
+  "name": "Double Kick",
+  "type": "fighting",
+  "category": "physical",
+  "power": 30,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "double-slap",
+  "name": "Double Slap",
+  "type": "normal",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 85,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "dual-chop",
+  "name": "Dual Chop",
+  "type": "dragon",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 90,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "explosion",
+  "name": "Explosion",
+  "type": "normal",
+  "category": "physical",
+  "power": 250,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "selfFaint": true
+  }
+ },
+ {
+  "id": "false-swipe",
+  "name": "False Swipe",
+  "type": "normal",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 40,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "leaveOne": true
+  }
+ },
+ {
+  "id": "fire-spin",
+  "name": "Fire Spin",
+  "type": "fire",
+  "category": "special",
+  "power": 35,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "fissure",
+  "name": "Fissure",
+  "type": "ground",
+  "category": "physical",
+  "power": null,
+  "accuracy": 30,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ohko": true
+  }
+ },
+ {
+  "id": "flail",
+  "name": "Flail",
+  "type": "normal",
+  "category": "physical",
+  "power": null,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "lowHpPower": true
+  }
+ },
+ {
+  "id": "frenzy-plant",
+  "name": "Frenzy Plant",
+  "type": "grass",
+  "category": "special",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "frost-breath",
+  "name": "Frost Breath",
+  "type": "ice",
+  "category": "special",
+  "power": 60,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 3,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "fury-attack",
+  "name": "Fury Attack",
+  "type": "normal",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 85,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "fury-swipes",
+  "name": "Fury Swipes",
+  "type": "normal",
+  "category": "physical",
+  "power": 18,
+  "accuracy": 80,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "gear-grind",
+  "name": "Gear Grind",
+  "type": "steel",
+  "category": "physical",
+  "power": 50,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "giga-impact",
+  "name": "Giga Impact",
+  "type": "normal",
+  "category": "physical",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "guillotine",
+  "name": "Guillotine",
+  "type": "normal",
+  "category": "physical",
+  "power": null,
+  "accuracy": 30,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ohko": true
+  }
+ },
+ {
+  "id": "heal-order",
+  "name": "Heal Order",
+  "type": "bug",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "hold-back",
+  "name": "Hold Back",
+  "type": "normal",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 40,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "leaveOne": true
+  }
+ },
+ {
+  "id": "horn-drill",
+  "name": "Horn Drill",
+  "type": "normal",
+  "category": "physical",
+  "power": null,
+  "accuracy": 30,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ohko": true
+  }
+ },
+ {
+  "id": "hurricane",
+  "name": "Hurricane",
+  "type": "flying",
+  "category": "special",
+  "power": 110,
+  "accuracy": 70,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "hydro-cannon",
+  "name": "Hydro Cannon",
+  "type": "water",
+  "category": "special",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "hyper-beam",
+  "name": "Hyper Beam",
+  "type": "normal",
+  "category": "special",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "icicle-spear",
+  "name": "Icicle Spear",
+  "type": "ice",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 100,
+  "pp": 30,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "infestation",
+  "name": "Infestation",
+  "type": "bug",
+  "category": "special",
+  "power": 20,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "jet-punch",
+  "name": "Jet Punch",
+  "type": "water",
+  "category": "physical",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 1,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "kowtow-cleave",
+  "name": "Kowtow Cleave",
+  "type": "dark",
+  "category": "physical",
+  "power": 85,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "leech-seed",
+  "name": "Leech Seed",
+  "type": "grass",
+  "category": "status",
+  "power": null,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "seed": true
+  }
+ },
+ {
+  "id": "magma-storm",
+  "name": "Magma Storm",
+  "type": "fire",
+  "category": "special",
+  "power": 100,
+  "accuracy": 75,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "meteor-assault",
+  "name": "Meteor Assault",
+  "type": "fighting",
+  "category": "physical",
+  "power": 150,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "milk-drink",
+  "name": "Milk Drink",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "moonlight",
+  "name": "Moonlight",
+  "type": "fairy",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "morning-sun",
+  "name": "Morning Sun",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "pin-missile",
+  "name": "Pin Missile",
+  "type": "bug",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 95,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "play-nice",
+  "name": "Play Nice",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
+ },
+ {
+  "id": "protect",
+  "name": "Protect",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 4,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "protect": true
+  }
+ },
+ {
+  "id": "psyshock",
+  "name": "Psyshock",
+  "type": "psychic",
+  "category": "special",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "targetsDefense": true
+  }
+ },
+ {
+  "id": "psystrike",
+  "name": "Psystrike",
+  "type": "psychic",
+  "category": "special",
+  "power": 100,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "targetsDefense": true
+  }
+ },
+ {
+  "id": "recover",
+  "name": "Recover",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "reversal",
+  "name": "Reversal",
+  "type": "fighting",
+  "category": "physical",
+  "power": null,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "lowHpPower": true
+  }
+ },
+ {
+  "id": "roar-of-time",
+  "name": "Roar of Time",
+  "type": "dragon",
+  "category": "special",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "rock-blast",
+  "name": "Rock Blast",
+  "type": "rock",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 90,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "rock-climb",
+  "name": "Rock Climb",
+  "type": "normal",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 85,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 20
+   }
+  }
+ },
+ {
+  "id": "rock-wrecker",
+  "name": "Rock Wrecker",
+  "type": "rock",
+  "category": "physical",
+  "power": 150,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "recharge": true
+  }
+ },
+ {
+  "id": "sacred-sword",
+  "name": "Sacred Sword",
+  "type": "fighting",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ignoreStages": true
+  }
+ },
+ {
+  "id": "sand-tomb",
+  "name": "Sand Tomb",
+  "type": "ground",
+  "category": "physical",
+  "power": 35,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "secret-sword",
+  "name": "Secret Sword",
+  "type": "fighting",
+  "category": "special",
+  "power": 85,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "targetsDefense": true
+  }
+ },
+ {
+  "id": "self-destruct",
+  "name": "Self-Destruct",
+  "type": "normal",
+  "category": "physical",
+  "power": 200,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "selfFaint": true
+  }
+ },
+ {
+  "id": "sheer-cold",
+  "name": "Sheer Cold",
+  "type": "ice",
+  "category": "special",
+  "power": null,
+  "accuracy": 30,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "ohko": true
+  }
+ },
+ {
+  "id": "signal-beam",
+  "name": "Signal Beam",
+  "type": "bug",
+  "category": "special",
+  "power": 75,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 10
+   }
+  }
+ },
+ {
+  "id": "slack-off",
+  "name": "Slack Off",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "snap-trap",
+  "name": "Snap Trap",
+  "type": "grass",
+  "category": "physical",
+  "power": 35,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "soft-boiled",
+  "name": "Soft-Boiled",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "spike-cannon",
+  "name": "Spike Cannon",
+  "type": "normal",
+  "category": "physical",
+  "power": 20,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "storm-throw",
+  "name": "Storm Throw",
+  "type": "fighting",
+  "category": "physical",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 3,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
+  "id": "strange-steam",
+  "name": "Strange Steam",
+  "type": "fairy",
+  "category": "special",
+  "power": 90,
+  "accuracy": 95,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 20
+   }
+  }
+ },
+ {
+  "id": "supersonic",
+  "name": "Supersonic",
+  "type": "normal",
+  "category": "status",
+  "power": null,
+  "accuracy": 55,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "sweet-kiss",
+  "name": "Sweet Kiss",
+  "type": "fairy",
+  "category": "status",
+  "power": null,
+  "accuracy": 75,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "synthesis",
+  "name": "Synthesis",
+  "type": "grass",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5
+  }
+ },
+ {
+  "id": "tail-slap",
+  "name": "Tail Slap",
+  "type": "normal",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 85,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "twin-beam",
+  "name": "Twin Beam",
+  "type": "psychic",
+  "category": "special",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
+ },
+ {
+  "id": "twineedle",
+  "name": "Twineedle",
+  "type": "bug",
+  "category": "physical",
+  "power": 25,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    2
+   ],
+   "status": {
+    "id": "psn",
+    "chance": 20
+   }
+  }
+ },
+ {
+  "id": "water-shuriken",
+  "name": "Water Shuriken",
+  "type": "water",
+  "category": "special",
+  "power": 15,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 1,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ]
+  }
+ },
+ {
+  "id": "whirlpool",
+  "name": "Whirlpool",
+  "type": "water",
+  "category": "special",
+  "power": 35,
+  "accuracy": 85,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "wrap",
+  "name": "Wrap",
+  "type": "normal",
+  "category": "physical",
+  "power": 15,
+  "accuracy": 90,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "bind": true
+  }
+ },
+ {
+  "id": "zippy-zap",
+  "name": "Zippy Zap",
+  "type": "electric",
+  "category": "physical",
+  "power": 50,
+  "accuracy": 100,
+  "pp": 15,
+  "priority": 2,
+  "critStage": 3,
+  "target": "enemy",
+  "flags": [],
+  "effects": {}
+ },
+ {
   "id": "10-000-000-volt-thunderbolt",
   "name": "10,000,000 Volt Thunderbolt",
   "type": "electric",
@@ -6348,9 +7731,40 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May raise all user's stats at once."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    }
+   ]
+  }
  },
  {
   "id": "aqua-ring",
@@ -6367,22 +7781,6 @@
   "effects": {},
   "supported": false,
   "needs": "Restores a little HP each turn."
- },
- {
-  "id": "arm-thrust",
-  "name": "Arm Thrust",
-  "type": "fighting",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "aromatherapy",
@@ -6561,22 +7959,6 @@
   "needs": "May confuse opponent. If it misses, the user loses HP."
  },
  {
-  "id": "baby-doll-eyes",
-  "name": "Baby-Doll Eyes",
-  "type": "fairy",
-  "category": "status",
-  "power": null,
-  "accuracy": 100,
-  "pp": 30,
-  "priority": 1,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always goes first. Lowers the target's attack."
- },
- {
   "id": "baddy-bad",
   "name": "Baddy Bad",
   "type": "dark",
@@ -6623,22 +8005,6 @@
   "effects": {},
   "supported": false,
   "needs": "May poison opponent; inflicts double damage if the target is already poisoned."
- },
- {
-  "id": "barrage",
-  "name": "Barrage",
-  "type": "normal",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 85,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "baton-pass",
@@ -6785,22 +8151,6 @@
   "needs": "User takes damage for two turns then strikes back double."
  },
  {
-  "id": "bind",
-  "name": "Bind",
-  "type": "normal",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 85,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
- },
- {
   "id": "black-hole-eclipse",
   "name": "Black Hole Eclipse",
   "type": "dark",
@@ -6815,22 +8165,6 @@
   "effects": {},
   "supported": false,
   "needs": "Dark type Z-Move."
- },
- {
-  "id": "blast-burn",
-  "name": "Blast Burn",
-  "type": "fire",
-  "category": "special",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
  },
  {
   "id": "blazing-torque",
@@ -6945,38 +8279,6 @@
   "needs": "If the user attacks before the target, the power of this move is doubled."
  },
  {
-  "id": "bone-rush",
-  "name": "Bone Rush",
-  "type": "ground",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
-  "id": "bonemerang",
-  "name": "Bonemerang",
-  "type": "ground",
-  "category": "physical",
-  "power": 50,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
   "id": "bounce",
   "name": "Bounce",
   "type": "flying",
@@ -7025,22 +8327,6 @@
   "needs": "Normal type Z-Move."
  },
  {
-  "id": "brine",
-  "name": "Brine",
-  "type": "water",
-  "category": "special",
-  "power": 65,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if opponent's HP is less than 50%."
- },
- {
   "id": "brutal-swing",
   "name": "Brutal Swing",
   "type": "dark",
@@ -7055,22 +8341,6 @@
   "effects": {},
   "supported": false,
   "needs": "The user swings its body around violently to inflict damage on everything in its vicinity."
- },
- {
-  "id": "bullet-seed",
-  "name": "Bullet Seed",
-  "type": "grass",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 100,
-  "pp": 30,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "burn-up",
@@ -7228,9 +8498,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent."
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
  },
  {
   "id": "chilly-reception",
@@ -7249,22 +8521,6 @@
   "needs": "Switches out and summons a snowstorm lasting 5 turns."
  },
  {
-  "id": "chip-away",
-  "name": "Chip Away",
-  "type": "normal",
-  "category": "physical",
-  "power": 70,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores opponent's stat changes."
- },
- {
   "id": "circle-throw",
   "name": "Circle Throw",
   "type": "fighting",
@@ -7279,22 +8535,6 @@
   "effects": {},
   "supported": false,
   "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
- },
- {
-  "id": "clamp",
-  "name": "Clamp",
-  "type": "water",
-  "category": "physical",
-  "power": 35,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "clangorous-soul",
@@ -7393,22 +8633,6 @@
   "needs": "May paralyze the opponent."
  },
  {
-  "id": "comet-punch",
-  "name": "Comet Punch",
-  "type": "normal",
-  "category": "physical",
-  "power": 18,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
   "id": "comeuppance",
   "name": "Comeuppance",
   "type": "dark",
@@ -7423,22 +8647,6 @@
   "effects": {},
   "supported": false,
   "needs": "Deals more damage to the opponent that last inflicted damage on it."
- },
- {
-  "id": "confuse-ray",
-  "name": "Confuse Ray",
-  "type": "ghost",
-  "category": "status",
-  "power": null,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent."
  },
  {
   "id": "constrict",
@@ -7681,22 +8889,6 @@
   "needs": "Puts all adjacent opponents to sleep."
  },
  {
-  "id": "darkest-lariat",
-  "name": "Darkest Lariat",
-  "type": "dark",
-  "category": "physical",
-  "power": 85,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores opponent's stat changes."
- },
- {
   "id": "defog",
   "name": "Defog",
   "type": "flying",
@@ -7727,22 +8919,6 @@
   "effects": {},
   "supported": false,
   "needs": "If the user faints, the opponent also faints."
- },
- {
-  "id": "detect",
-  "name": "Detect",
-  "type": "fighting",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 4,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user, but may fail if used consecutively."
  },
  {
   "id": "devastating-drake",
@@ -7825,22 +9001,6 @@
   "needs": "Dives underwater on first turn, attacks on second turn."
  },
  {
-  "id": "dizzy-punch",
-  "name": "Dizzy Punch",
-  "type": "normal",
-  "category": "physical",
-  "power": 70,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent."
- },
- {
   "id": "doodle",
   "name": "Doodle",
   "type": "normal",
@@ -7873,22 +9033,6 @@
   "needs": "Damage occurs 2 turns later."
  },
  {
-  "id": "double-hit",
-  "name": "Double Hit",
-  "type": "normal",
-  "category": "physical",
-  "power": 35,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
   "id": "double-iron-bash",
   "name": "Double Iron Bash",
   "type": "steel",
@@ -7905,22 +9049,6 @@
   "needs": "Hits twice in one turn; may cause flinching."
  },
  {
-  "id": "double-kick",
-  "name": "Double Kick",
-  "type": "fighting",
-  "category": "physical",
-  "power": 30,
-  "accuracy": 100,
-  "pp": 30,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
   "id": "double-shock",
   "name": "Double Shock",
   "type": "electric",
@@ -7935,22 +9063,6 @@
   "effects": {},
   "supported": false,
   "needs": "After using this move, the user will no longer be Electric type."
- },
- {
-  "id": "double-slap",
-  "name": "Double Slap",
-  "type": "normal",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 85,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "dragon-cheer",
@@ -8065,22 +9177,6 @@
   "needs": "User recovers half the HP inflicted on a sleeping opponent."
  },
  {
-  "id": "dual-chop",
-  "name": "Dual Chop",
-  "type": "dragon",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 90,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
   "id": "dual-wingbeat",
   "name": "Dual Wingbeat",
   "type": "flying",
@@ -8124,9 +9220,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent."
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
  },
  {
   "id": "echoed-voice",
@@ -8369,22 +9467,6 @@
   "needs": "Increases power and hits all opponents on Psychic Terrain."
  },
  {
-  "id": "explosion",
-  "name": "Explosion",
-  "type": "normal",
-  "category": "physical",
-  "power": 250,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User faints."
- },
- {
   "id": "extreme-evoboost",
   "name": "Extreme Evoboost",
   "type": "normal",
@@ -8447,22 +9529,6 @@
   "effects": {},
   "supported": false,
   "needs": "User attacks first, foe flinches. Only usable on first turn."
- },
- {
-  "id": "false-swipe",
-  "name": "False Swipe",
-  "type": "normal",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 100,
-  "pp": 40,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always leaves opponent with at least 1 HP."
  },
  {
   "id": "feint",
@@ -8577,22 +9643,6 @@
   "needs": "Added effects appear if combined with Grass Pledge or Water Pledge."
  },
  {
-  "id": "fire-spin",
-  "name": "Fire Spin",
-  "type": "fire",
-  "category": "special",
-  "power": 35,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
- },
- {
   "id": "first-impression",
   "name": "First Impression",
   "type": "bug",
@@ -8623,38 +9673,6 @@
   "effects": {},
   "supported": false,
   "needs": "If the user attacks before the target, the power of this move is doubled."
- },
- {
-  "id": "fissure",
-  "name": "Fissure",
-  "type": "ground",
-  "category": "physical",
-  "power": null,
-  "accuracy": 30,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "One-Hit-KO, if it hits."
- },
- {
-  "id": "flail",
-  "name": "Flail",
-  "type": "normal",
-  "category": "physical",
-  "power": null,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The lower the user's HP, the higher the power."
  },
  {
   "id": "flame-burst",
@@ -8945,38 +9963,6 @@
   "needs": "Resets all stat changes."
  },
  {
-  "id": "frenzy-plant",
-  "name": "Frenzy Plant",
-  "type": "grass",
-  "category": "special",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
- },
- {
-  "id": "frost-breath",
-  "name": "Frost Breath",
-  "type": "ice",
-  "category": "special",
-  "power": 60,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always results in a critical hit."
- },
- {
   "id": "frustration",
   "name": "Frustration",
   "type": "normal",
@@ -8991,38 +9977,6 @@
   "effects": {},
   "supported": false,
   "needs": "Power decreases with higher Friendship."
- },
- {
-  "id": "fury-attack",
-  "name": "Fury Attack",
-  "type": "normal",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 85,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
-  "id": "fury-swipes",
-  "name": "Fury Swipes",
-  "type": "normal",
-  "category": "physical",
-  "power": 18,
-  "accuracy": 80,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "fusion-bolt",
@@ -9617,22 +10571,6 @@
   "needs": "Cancels out the effect of the opponent's Ability."
  },
  {
-  "id": "gear-grind",
-  "name": "Gear Grind",
-  "type": "steel",
-  "category": "physical",
-  "power": 50,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
   "id": "gear-up",
   "name": "Gear Up",
   "type": "steel",
@@ -9679,22 +10617,6 @@
   "effects": {},
   "supported": false,
   "needs": "Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second."
- },
- {
-  "id": "giga-impact",
-  "name": "Giga Impact",
-  "type": "normal",
-  "category": "physical",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
  },
  {
   "id": "gigaton-hammer",
@@ -9937,22 +10859,6 @@
   "needs": "Tapu-exclusive Z-move. Cuts opponent's HP by 75%."
  },
  {
-  "id": "guillotine",
-  "name": "Guillotine",
-  "type": "normal",
-  "category": "physical",
-  "power": null,
-  "accuracy": 30,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "One-Hit-KO, if it hits."
- },
- {
   "id": "gyro-ball",
   "name": "Gyro Ball",
   "type": "steel",
@@ -10063,22 +10969,6 @@
   "effects": {},
   "supported": false,
   "needs": "Prevents the opponent from restoring HP for 5 turns."
- },
- {
-  "id": "heal-order",
-  "name": "Heal Order",
-  "type": "bug",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half its max HP."
  },
  {
   "id": "heal-pulse",
@@ -10241,22 +11131,6 @@
   "needs": "If it misses, the user loses half their HP."
  },
  {
-  "id": "hold-back",
-  "name": "Hold Back",
-  "type": "normal",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 100,
-  "pp": 40,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always leaves opponent with at least 1 HP."
- },
- {
   "id": "hold-hands",
   "name": "Hold Hands",
   "type": "normal",
@@ -10273,22 +11147,6 @@
   "needs": "Makes the user and an ally very happy."
  },
  {
-  "id": "horn-drill",
-  "name": "Horn Drill",
-  "type": "normal",
-  "category": "physical",
-  "power": null,
-  "accuracy": 30,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "One-Hit-KO, if it hits."
- },
- {
   "id": "howl",
   "name": "Howl",
   "type": "normal",
@@ -10303,38 +11161,6 @@
   "effects": {},
   "supported": false,
   "needs": "Raises Attack of allies."
- },
- {
-  "id": "hurricane",
-  "name": "Hurricane",
-  "type": "flying",
-  "category": "special",
-  "power": 110,
-  "accuracy": 70,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent."
- },
- {
-  "id": "hydro-cannon",
-  "name": "Hydro Cannon",
-  "type": "water",
-  "category": "special",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
  },
  {
   "id": "hydro-steam",
@@ -10367,22 +11193,6 @@
   "effects": {},
   "supported": false,
   "needs": "Water type Z-Move."
- },
- {
-  "id": "hyper-beam",
-  "name": "Hyper Beam",
-  "type": "normal",
-  "category": "special",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
  },
  {
   "id": "ice-ball",
@@ -10449,22 +11259,6 @@
   "needs": "Removes effects of Terrain."
  },
  {
-  "id": "icicle-spear",
-  "name": "Icicle Spear",
-  "type": "ice",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 100,
-  "pp": 30,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
   "id": "imprison",
   "name": "Imprison",
   "type": "psychic",
@@ -10527,22 +11321,6 @@
   "effects": {},
   "supported": false,
   "needs": "Fire type Z-Move."
- },
- {
-  "id": "infestation",
-  "name": "Infestation",
-  "type": "bug",
-  "category": "special",
-  "power": 20,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "ingrain",
@@ -10625,22 +11403,6 @@
   "needs": "Prevents user and opponent from switching out."
  },
  {
-  "id": "jet-punch",
-  "name": "Jet Punch",
-  "type": "water",
-  "category": "physical",
-  "power": 60,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 1,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always goes first."
- },
- {
   "id": "judgment",
   "name": "Judgment",
   "type": "normal",
@@ -10721,22 +11483,6 @@
   "needs": "Removes opponent's held item for the rest of the battle."
  },
  {
-  "id": "kowtow-cleave",
-  "name": "Kowtow Cleave",
-  "type": "dark",
-  "category": "physical",
-  "power": 85,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always hits."
- },
- {
   "id": "laser-focus",
   "name": "Laser Focus",
   "type": "normal",
@@ -10815,22 +11561,6 @@
   "effects": {},
   "supported": false,
   "needs": "Strikes opponent with leaves."
- },
- {
-  "id": "leech-seed",
-  "name": "Leech Seed",
-  "type": "grass",
-  "category": "status",
-  "power": null,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Drains HP from opponent each turn."
  },
  {
   "id": "lets-snuggle-forever",
@@ -11071,22 +11801,6 @@
   "effects": {},
   "supported": false,
   "needs": "May confuse the opponent."
- },
- {
-  "id": "magma-storm",
-  "name": "Magma Storm",
-  "type": "fire",
-  "category": "special",
-  "power": 100,
-  "accuracy": 75,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "magnet-rise",
@@ -11601,22 +12315,6 @@
   "needs": "Deals damage equal to 1.5x opponent's attack."
  },
  {
-  "id": "meteor-assault",
-  "name": "Meteor Assault",
-  "type": "fighting",
-  "category": "physical",
-  "power": 150,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
- },
- {
   "id": "meteor-beam",
   "name": "Meteor Beam",
   "type": "rock",
@@ -11647,22 +12345,6 @@
   "effects": {},
   "supported": false,
   "needs": "User performs almost any move in the game at random."
- },
- {
-  "id": "milk-drink",
-  "name": "Milk Drink",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half its max HP."
  },
  {
   "id": "mimic",
@@ -11823,38 +12505,6 @@
   "effects": {},
   "supported": false,
   "needs": "Ignores the target's ability."
- },
- {
-  "id": "moonlight",
-  "name": "Moonlight",
-  "type": "fairy",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers HP. Amount varies with the weather."
- },
- {
-  "id": "morning-sun",
-  "name": "Morning Sun",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers HP. Amount varies with the weather."
  },
  {
   "id": "mortal-spin",
@@ -12108,9 +12758,40 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May raise all user's stats at once."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    }
+   ]
+  }
  },
  {
   "id": "order-up",
@@ -12289,22 +12970,6 @@
   "needs": "Power increases when player's bond is stronger."
  },
  {
-  "id": "pin-missile",
-  "name": "Pin Missile",
-  "type": "bug",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 95,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
   "id": "plasma-fists",
   "name": "Plasma Fists",
   "type": "electric",
@@ -12319,22 +12984,6 @@
   "effects": {},
   "supported": false,
   "needs": "Changes Normal-type moves to Electric-type moves."
- },
- {
-  "id": "play-nice",
-  "name": "Play Nice",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Attack. Always hits."
  },
  {
   "id": "pluck",
@@ -12561,22 +13210,6 @@
   "needs": "The user shoots powerful lasers using the power of a prism. The user can't move on the next turn."
  },
  {
-  "id": "protect",
-  "name": "Protect",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 4,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user, but may fail if used consecutively."
- },
- {
   "id": "psyblade",
   "name": "Psyblade",
   "type": "psychic",
@@ -12671,38 +13304,6 @@
   "effects": {},
   "supported": false,
   "needs": "Transfers user's status condition to the opponent."
- },
- {
-  "id": "psyshock",
-  "name": "Psyshock",
-  "type": "psychic",
-  "category": "special",
-  "power": 80,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts damage based on the target's Defense, not Special Defense."
- },
- {
-  "id": "psystrike",
-  "name": "Psystrike",
-  "type": "psychic",
-  "category": "special",
-  "power": 100,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts damage based on the target's Defense, not Special Defense."
  },
  {
   "id": "psywave",
@@ -12929,22 +13530,6 @@
   "needs": "Charges on first turn, attacks on second. High critical hit ratio."
  },
  {
-  "id": "recover",
-  "name": "Recover",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half its max HP."
- },
- {
   "id": "recycle",
   "name": "Recycle",
   "type": "normal",
@@ -13105,22 +13690,6 @@
   "needs": "Power increases if user was hit first."
  },
  {
-  "id": "reversal",
-  "name": "Reversal",
-  "type": "fighting",
-  "category": "physical",
-  "power": null,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The lower the user's HP, the higher the power."
- },
- {
   "id": "revival-blessing",
   "name": "Revival Blessing",
   "type": "normal",
@@ -13167,70 +13736,6 @@
   "effects": {},
   "supported": false,
   "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
- },
- {
-  "id": "roar-of-time",
-  "name": "Roar of Time",
-  "type": "dragon",
-  "category": "special",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
- },
- {
-  "id": "rock-blast",
-  "name": "Rock Blast",
-  "type": "rock",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 90,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
-  "id": "rock-climb",
-  "name": "Rock Climb",
-  "type": "normal",
-  "category": "physical",
-  "power": 90,
-  "accuracy": 85,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent."
- },
- {
-  "id": "rock-wrecker",
-  "name": "Rock Wrecker",
-  "type": "rock",
-  "category": "physical",
-  "power": 150,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must recharge next turn."
  },
  {
   "id": "role-play",
@@ -13329,22 +13834,6 @@
   "needs": "Halves the opponent's HP."
  },
  {
-  "id": "sacred-sword",
-  "name": "Sacred Sword",
-  "type": "fighting",
-  "category": "physical",
-  "power": 90,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores opponent's stat changes."
- },
- {
   "id": "safeguard",
   "name": "Safeguard",
   "type": "normal",
@@ -13375,22 +13864,6 @@
   "effects": {},
   "supported": false,
   "needs": "Deals damage each turn; Steel and Water types are more affected."
- },
- {
-  "id": "sand-tomb",
-  "name": "Sand Tomb",
-  "type": "ground",
-  "category": "physical",
-  "power": 35,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "sandsear-storm",
@@ -13521,38 +13994,6 @@
   "needs": "Effects of the attack vary with the location."
  },
  {
-  "id": "secret-sword",
-  "name": "Secret Sword",
-  "type": "fighting",
-  "category": "special",
-  "power": 85,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts damage based on the target's Defense, not Special Defense."
- },
- {
-  "id": "self-destruct",
-  "name": "Self-Destruct",
-  "type": "normal",
-  "category": "physical",
-  "power": 200,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User faints."
- },
- {
   "id": "shadow-force",
   "name": "Shadow Force",
   "type": "ghost",
@@ -13599,22 +14040,6 @@
   "effects": {},
   "supported": false,
   "needs": "Creates a substitute, then swaps places with a party Pokémon in waiting."
- },
- {
-  "id": "sheer-cold",
-  "name": "Sheer Cold",
-  "type": "ice",
-  "category": "special",
-  "power": null,
-  "accuracy": 30,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "One-Hit-KO, if it hits."
  },
  {
   "id": "shell-side-arm",
@@ -13695,22 +14120,6 @@
   "effects": {},
   "supported": false,
   "needs": "The user regains up to half of its max HP. It restores more HP in a sandstorm."
- },
- {
-  "id": "signal-beam",
-  "name": "Signal Beam",
-  "type": "bug",
-  "category": "special",
-  "power": 75,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent."
  },
  {
   "id": "silk-trap",
@@ -13889,22 +14298,6 @@
   "needs": "Hits the opponent, even during Fly."
  },
  {
-  "id": "slack-off",
-  "name": "Slack Off",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half its max HP."
- },
- {
   "id": "sleep-talk",
   "name": "Sleep Talk",
   "type": "normal",
@@ -13967,22 +14360,6 @@
   "effects": {},
   "supported": false,
   "needs": "Power doubles if opponent is paralyzed, but cures it."
- },
- {
-  "id": "snap-trap",
-  "name": "Snap Trap",
-  "type": "grass",
-  "category": "physical",
-  "power": 35,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "snatch",
@@ -14063,22 +14440,6 @@
   "effects": {},
   "supported": false,
   "needs": "Changes the target's type to water."
- },
- {
-  "id": "soft-boiled",
-  "name": "Soft-Boiled",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half its max HP."
  },
  {
   "id": "solar-beam",
@@ -14239,22 +14600,6 @@
   "effects": {},
   "supported": false,
   "needs": "Opponent cannot escape/switch."
- },
- {
-  "id": "spike-cannon",
-  "name": "Spike Cannon",
-  "type": "normal",
-  "category": "physical",
-  "power": 20,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "spikes",
@@ -14561,38 +14906,6 @@
   "needs": "Power increases when user's stats have been raised."
  },
  {
-  "id": "storm-throw",
-  "name": "Storm Throw",
-  "type": "fighting",
-  "category": "physical",
-  "power": 60,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always results in a critical hit."
- },
- {
-  "id": "strange-steam",
-  "name": "Strange Steam",
-  "type": "fairy",
-  "category": "special",
-  "power": 90,
-  "accuracy": 95,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent."
- },
- {
   "id": "strength-sap",
   "name": "Strength Sap",
   "type": "grass",
@@ -14721,22 +15034,6 @@
   "needs": "Always takes off half of the opponent's HP."
  },
  {
-  "id": "supersonic",
-  "name": "Supersonic",
-  "type": "normal",
-  "category": "status",
-  "power": null,
-  "accuracy": 55,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent."
- },
- {
   "id": "supersonic-skystrike",
   "name": "Supersonic Skystrike",
   "type": "flying",
@@ -14801,22 +15098,6 @@
   "needs": "The more times the user has performed Stockpile, the more HP is recovered."
  },
  {
-  "id": "sweet-kiss",
-  "name": "Sweet Kiss",
-  "type": "fairy",
-  "category": "status",
-  "power": null,
-  "accuracy": 75,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent."
- },
- {
   "id": "switcheroo",
   "name": "Switcheroo",
   "type": "dark",
@@ -14849,22 +15130,6 @@
   "needs": "Hits any Pokémon that shares a type with the user."
  },
  {
-  "id": "synthesis",
-  "name": "Synthesis",
-  "type": "grass",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers HP. Amount varies with the weather."
- },
- {
   "id": "syrup-bomb",
   "name": "Syrup Bomb",
   "type": "grass",
@@ -14895,22 +15160,6 @@
   "effects": {},
   "supported": false,
   "needs": "Guaranteed to hit twice in a row."
- },
- {
-  "id": "tail-slap",
-  "name": "Tail Slap",
-  "type": "normal",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 85,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
  },
  {
   "id": "tailwind",
@@ -15489,38 +15738,6 @@
   "needs": "The lower the PP, the higher the power."
  },
  {
-  "id": "twin-beam",
-  "name": "Twin Beam",
-  "type": "psychic",
-  "category": "special",
-  "power": 40,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn."
- },
- {
-  "id": "twineedle",
-  "name": "Twineedle",
-  "type": "bug",
-  "category": "physical",
-  "power": 25,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn. May poison opponent."
- },
- {
   "id": "twinkle-tackle",
   "name": "Twinkle Tackle",
   "type": "fairy",
@@ -15713,22 +15930,6 @@
   "needs": "Added effects appear if preceded by Fire Pledge or succeeded by Grass Pledge."
  },
  {
-  "id": "water-shuriken",
-  "name": "Water Shuriken",
-  "type": "water",
-  "category": "special",
-  "power": 15,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 1,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn."
- },
- {
   "id": "water-sport",
   "name": "Water Sport",
   "type": "water",
@@ -15775,22 +15976,6 @@
   "effects": {},
   "supported": false,
   "needs": "Move's power and type changes with the weather."
- },
- {
-  "id": "whirlpool",
-  "name": "Whirlpool",
-  "type": "water",
-  "category": "special",
-  "power": 35,
-  "accuracy": 85,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
  },
  {
   "id": "whirlwind",
@@ -15921,22 +16106,6 @@
   "needs": "Changes the opponent's Ability to Insomnia."
  },
  {
-  "id": "wrap",
-  "name": "Wrap",
-  "type": "normal",
-  "category": "physical",
-  "power": 15,
-  "accuracy": 90,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Traps opponent, damaging them for 4-5 turns."
- },
- {
   "id": "wring-out",
   "name": "Wring Out",
   "type": "normal",
@@ -15967,21 +16136,5 @@
   "effects": {},
   "supported": false,
   "needs": "Puts opponent to sleep in the next turn."
- },
- {
-  "id": "zippy-zap",
-  "name": "Zippy Zap",
-  "type": "electric",
-  "category": "physical",
-  "power": 50,
-  "accuracy": 100,
-  "pp": 15,
-  "priority": 2,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always results in a critical hit."
  }
 ]

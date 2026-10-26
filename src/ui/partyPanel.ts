@@ -11,7 +11,7 @@ import { playSfx } from './audio';
 import type { InputAction } from './input';
 import { itemVisual, pokemonIcon } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './theme';
-import { Bar, drawPanel } from './widgets';
+import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
 
 const DEPTH = 100;
 
@@ -54,10 +54,10 @@ export class Picker {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
-    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { fill: COLORS.panelDark, border: 0x101420 }));
+    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true }));
     this.root.add(scene.add.text(48, 28, config.title, textStyle(30, COLORS.textLight)));
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
-    this.root.add(scene.add.text(GAME_WIDTH - 48, 34, `Enter choose${backHint}`, textStyle(18, '#8090a8')).setOrigin(1, 0));
+    this.root.add(scene.add.text(GAME_WIDTH - 48, 34, `Enter choose${backHint}`, textStyle(18, '#a69cb4')).setOrigin(1, 0));
 
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
     this.list = scene.add.container(0, 0);
@@ -68,14 +68,14 @@ export class Picker {
       const x = 48 + (i % config.columns) * (colW + 16);
       const y = LIST_TOP + Math.floor(i / config.columns) * (config.rowHeight + 10);
       const box = scene.add.container(x, y);
-      const bg = scene.add.graphics();
-      bg.fillStyle(row.problem ? 0x343c4c : COLORS.panel, 1);
-      bg.fillRoundedRect(0, 0, colW, config.rowHeight, 8);
+      const bg = paintWindow(scene.add.graphics(), 0, 0, colW, config.rowHeight, {
+        thin: true,
+        fill: row.problem ? 0x2a2630 : COLORS.panel,
+        border: row.problem ? 0x4a4352 : COLORS.borderMuted,
+      });
       box.add(bg);
       row.draw(scene, box, colW, config.rowHeight);
-      const hl = scene.add.graphics();
-      hl.lineStyle(5, COLORS.accent, 1);
-      hl.strokeRoundedRect(-3, -3, colW + 6, config.rowHeight + 6, 10);
+      const hl = focusFrame(scene, 0, 0, colW, config.rowHeight);
       box.add(hl);
       this.highlights.push(hl);
       const zone = scene.add.zone(0, 0, colW, config.rowHeight).setOrigin(0).setInteractive({ useHandCursor: true });

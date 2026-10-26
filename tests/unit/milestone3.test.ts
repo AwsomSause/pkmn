@@ -326,8 +326,9 @@ describe('move data from the director\'s move list', () => {
   it('every status move does something and every damaging move has power', () => {
     for (const move of content.moves.values()) {
       if (!move.supported) continue;
-      if (move.category === 'status') expect(Boolean(move.effects.status || move.effects.statChanges?.length), move.id).toBe(true);
-      else expect(move.power !== null || move.effects.fixedDamage === 'level', move.id).toBe(true);
+      const fx = move.effects;
+      if (move.category === 'status') expect(Boolean(fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed), move.id).toBe(true);
+      else expect(move.power !== null || fx.fixedDamage === 'level' || fx.ohko || fx.lowHpPower, move.id).toBe(true);
     }
   });
 

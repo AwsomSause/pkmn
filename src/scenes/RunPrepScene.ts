@@ -69,7 +69,7 @@ export class RunPrepScene extends Phaser.Scene {
 
     this.add.text(GAME_WIDTH / 2, 26, 'Preparation Desk', textStyle(36, COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, 16, 56, 400, 420);
-    drawPanel(this, 430, 56, GAME_WIDTH - 446, 420, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 430, 56, GAME_WIDTH - 446, 420, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
 
     const archetype = content.archetypes.get(this.archetypeId)!;
     const pool = content.starterPools.get(this.prep.poolId)!;
@@ -107,18 +107,18 @@ export class RunPrepScene extends Phaser.Scene {
     line('Run Build Summary', 24);
     for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
     y += 6;
-    line(`${rule.description}`, 15, '#c8d0e0');
+    line(`${rule.description}`, 15, '#d8d0e0');
     const locked = [
       ...[...content.draftRules.values()].filter((r) => !draftRuleAvailable(profile, r)).map((r) => `${r.name} (needs the ${content.licenses.get(r.license!)?.name})`),
       ...[...content.prepTokens.values()].filter((t) => !tokenAvailable(profile, t)).map((t) => `${t.name} (${tokenLockText(content, t)})`),
     ];
     if (locked.length > 0) {
       y += 4;
-      line(`Not yet available: ${locked.join(', ')}.`, 14, '#8890a8');
+      line(`Not yet available: ${locked.join(', ')}.`, 14, '#a69cb4');
     }
 
     this.add.text(GAME_WIDTH / 2, 484, notice, textStyle(16, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
-    this.add.text(16, GAME_HEIGHT - 22, '↑/↓ choose  ·  ←/→ change  ·  Enter select  ·  Esc back to trainers', textStyle(14, '#5a6680'));
+    this.add.text(16, GAME_HEIGHT - 22, '↑/↓ choose  ·  ←/→ change  ·  Enter select  ·  Esc back to trainers', textStyle(14, '#8a7f96'));
 
     this.focusIndex = Math.min(data.focus ?? 0, ROWS.length - 1);
     this.menu.focus(this.focusIndex, false);

@@ -99,9 +99,15 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | M7 ✅ | **Attributes & luck.** Implement each attribute only after you approve its formula; luck-weighted rewards; shiny rules. | M5, D8, D9 | Attributes visibly matter. |
 | M8 ✅ | **Custom Pokémon and forms** (director request, 2026-10-25): the director's sprite pack of Pokémon Insurgence Delta species, Z-Forms, Spooky forms and new Megas, with types, stats, evolutions and learnsets (§6i). | M6 | Over 300 new Pokémon and forms to meet, catch and evolve. |
 | M8.5 | **Advanced mechanics**, one at a time: Mega → Tera → Z-Moves → Dynamax → regional forms. (Was M8; renumbered by the director, 2026-10-25.) | M6, M7, M8 | Key items unlock real mechanics, including the new Megas. |
+| M8.6 | **Systems audit and quality gates** (Electric plan, 2026-10-25). `SYSTEMS_AUDIT.md`, `FEATURE_INTERACTION_MATRIX.md`, `QUALITY_GATES.md`, a content report command (counts and offending ids for unsupported moves, unusable species, missing assets, unreachable map nodes, duplicate boss teams, broken evolutions, unused balance settings, untested save upgrades), a support status on every content entry, battle simulations for balance, CI checks that fail when a number gets worse. | nothing | We can see exactly what works and what does not. |
 | M8.75 | **Planned features catch-up** (director request, 2026-10-25): everything planned but not yet in a milestone (§6j). Event system and new map stops (special encounters, events, trades, detours, rare Pokémon), friendship and "Between-Level" interactions, the unsupported moves, abilities and held items, Bank tiers, the other licenses, challenge modifiers, contracts and spending candies, Pokédex & Research and starter mastery, Cynthia and the D12 trainers, party-strength difficulty, levels up to 500 and custom regions. | M7, M8 (M8.5 for anything that touches Megas or Z-Moves) | Every planned system has a home; the run gets events, side stops and relationships. |
+| M8.9-0 | **Story foundation** (Electric plan, §6k). Domain event bus on top of the battle events, per-Pokémon history, relationship and enemy records, run chronicle, event queue with priorities and per-battle budget, effect ids so nothing applies twice, `story` and `hyper` RNG streams, save upgrade, debug Story Log. | nothing (can run alongside M8.5 and M8.75) | Every battle and choice is recorded; the run-end screen shows the run's top moments. |
+| M8.9 | **Story systems** (Electric plan and the Hyper/Overdrive/Techno blueprint, §6k): rival trainer and Pokémon rivalries, nemeses, Hyper moments and Overdrive, the Seven Emotions, mentorship (Protégé), team chemistry, grudge and respect, promises, wild recognition, Legacy card and Chronicle. Designed with the director first. | M8.9-0, M8.75 C and A | Runs become stories: rivals and nemeses remember you, Pokémon have moments and memories. |
+| M8.95 | **Raids and Grand-Enemies** (§6k): multi-phase raid battles, the regional crisis meter, the campaign Grand-Enemy, the Rival Tournament Circuit. | M8.5 (Dynamax), M8.9 | Big set-piece battles that change the campaign. |
 | M9 | **Grand Region, ending, polish, deploy.** Battle animation player for the supplied anim JSON, music, final boss, ending, static deploy. | All, D1, D4 | Complete game from start to credits. |
+| M9.5 | **Spectacle pass** (Electric plan): boss intros and cinematics, cut-ins, dynamic music layers, transformation scenes, event staging, victory sequences, regional recaps. All driven by game-state cues, never deciding outcomes. | M9, M10 style | Big moments look and sound big. |
 | M10 | **Visuals and presentation** (director request, 2026-10-25). Purely about looks: make every screen stunning and consistent. A shared visual style (palette, fonts, window frames from the asset pack's `ui/` art, spacing); redesigned menus, Hub, Preparation Desk, map, battle and reward screens; scene transitions and small animations (cursor, cards, HP and EXP bars, level-up and catch effects); battle backgrounds per theme; readable layouts at every screen size; a final pass for clipped or overlapping text. No gameplay changes. | M9 (can start earlier, screen by screen, once a screen's features are stable) | The whole game looks finished and well put together. |
+| M11 | **Legacy and live systems** (old M8.75 part H, moved by the Electric plan): Hall of Fame with Legacy cards and Chronicles, Research Laboratory, Training Center, Contract Board upgrades, Berry Garden, Prestige, Legacy runs, Rival Ghosts, reunions with Pokémon from earlier runs, trainer mastery, collection goals, shared seeds, hub upgrades. Online play and cloud sync stay separate projects. | M8.9 (for reunions and ghosts) | The Hub grows with everything you achieve. |
 
 ## 6. Milestone 1 — the smallest playable prototype
 
@@ -239,7 +245,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Friendship evolutions** by real friendship, with the Soothe Bell kept as a shortcut.
 - **N's** friendship passive and alternate event outcomes (needs N's sprite).
 
-**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits)
+**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits). *First batch built 2026-10-25: 85 moves (confusion, multi-hit, recharge, healing, Protect, binding, Leech Seed, OHKO, Explosion and more), main-game rounding and the both-faint rule. Held items and every item's effect moved to their own work (director, 2026-10-25).*
 - The **611 unsupported moves**, in tiers: confusion, multi-hit, recharge, healing and drain, Protect, weather and terrain, then the rare ones. Each tier makes more Pokémon learnable (Ditto, Smeargle, Unown, Cosmog and Abra come back).
 - **Abilities**, then **held items** (also as a reward category, brief §8).
 - Smarter enemy trainers: they use items and switch on purpose.
@@ -272,7 +278,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Levels above 100, up to 500** (D14, director 2026-10-25): stats, experience curve, level caps (+50 per region) and boss levels past 100, a 500 maximum in `balance.json`, and a save upgrade.
 - **Custom regions** (D6, left to me by the director): new regions added to the pool so each run draws its 9 regular regions from a bigger list. First proposal: **Torren** (Pokémon Insurgence's region, where Delta Pokémon are native), plus a Z-Form region and a Spooky region, each with its own native forms and boss roster. Designs shown to the director before they're built.
 
-**H. Later Out-of-Run systems** (§14.6, §14.8, priorities 7–8; the biggest part, may become its own milestone)
+**H. Later Out-of-Run systems** (§14.6, §14.8, priorities 7–8). **Moved to M11** by the Electric plan (2026-10-25).
 - Trainer Wardrobe and hub upgrades, Battle Records and Hall of Fame, Berry Garden, Move Research and Training Center, Regional Intelligence Board, Permanent Item Museum, Research Laboratory and Research Tree.
 - Prestige and Legacy, Legacy Records, Trainer Network, Rival Ghosts, shared seeds.
 
@@ -284,7 +290,19 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 
 **Optional, only if the director wants them:** IVs/EVs/natures (D2 left them out "for now"); gender, time of day and weather, so evolutions that need them work without the §5c stand-in rules.
 
-**Answered by the director, 2026-10-25:** levels go above 100 with a cap of 500; Peace and Charisma were left to me (now half a percent per point, built in PR #12); custom regions were left to me; Oak's and N's sprites were supplied. **Still open:** whether part H stays here or becomes its own milestone.
+**Answered by the director, 2026-10-25:** levels go above 100 with a cap of 500; Peace and Charisma were left to me (now half a percent per point, built in PR #12); custom regions were left to me; Oak's and N's sprites were supplied. Part H became M11 (Electric plan, 2026-10-25).
+
+## 6k. The Electric plan: story systems and spectacle
+
+**Planned 2026-10-25** from two director files: "Implementation Plan Electric" and "Overdrive Hyper Techno Supreme Z" (text copies in `docs/plans/`). The full expansion of every idea, with proposed numbers, is the Claude Doc [Electric plan: expanded roadmap](https://claude.ai/artifact/JuBS4mwazHULE8fuM1uKac); the director approves the open choices there before M8.9 starts. Summary:
+
+- **Order:** M8.5 transformations, M8.6 audit, M8.75 engine and systems, M8.9-0 story foundation, M8.9 story systems, M8.95 raids and Grand-Enemies, M9 Grand Region and full campaign (with a Campaign Director: five acts per region), M9.5 spectacle, M10 visuals and release, M11 legacy and live systems.
+- **Running in parallel from 2026-10-25:** M8.5, M8.6, M8.9-0 and the M9 battle animation player, beside M8.75 C, the item effects work and the M10 redesign.
+- **Story foundation (M8.9-0):** domain events, commands, effects with ids (applied once), presentation cues the core never reads, and persistence rules. Records: PokemonHistory, RelationshipRecord, EnemyProfile, RunChronicle, EventQueue, each with a size limit.
+- **Hyper and Overdrive:** data-driven moments (`hyperEvents.json`, 14 fields), the Seven Emotions tied to attributes, enemy Overdrive with telegraphs and counters, a per-battle budget, no stacking combat buffs.
+- **Techno:** rival trainer, Pokémon rivalries, nemeses (3 appearances at most), raids (three HP segments, shields, assists instead of double battles), mentorship, one Grand-Enemy per campaign, plus Legacy card, Chronicle, Grudge and Respect, Sacrifice, Comeback, Promise, Wild Recognition, Team Chemistry, Retirement and Reunion.
+- **Battle stack:** mechanics, feedback, transformations, boss spectacle; every move gets a separate presentation definition for the animation player.
+- **Working rules:** `CLAUDE.md` holds the director's development directive for every session.
 
 ## 7. Risks
 

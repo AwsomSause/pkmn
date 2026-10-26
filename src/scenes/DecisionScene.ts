@@ -116,7 +116,7 @@ export class DecisionScene extends Phaser.Scene {
     const name = getSpecies(content, mon.speciesId).name;
     pokemonVisual(this, getSpecies(content, mon.speciesId), 'front', 150, 260, 3, mon.shiny);
     this.add.text(300, 40, `${name} wants to learn ${newMove.name}!`, textStyle(34, COLORS.textLight));
-    this.add.text(300, 86, 'But it already knows four moves. Forget one to make room?', textStyle(22, '#c8d0e0'));
+    this.add.text(300, 86, 'But it already knows four moves. Forget one to make room?', textStyle(22, '#d8d0e0'));
     const describe = (id: string, pp?: number) => {
       const m = content.moves.get(id)!;
       const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
@@ -124,7 +124,7 @@ export class DecisionScene extends Phaser.Scene {
     };
     drawPanel(this, 300, 124, 620, 70, { fill: COLORS.panelDark, border: TYPE_COLORS[newMove.type] ?? 0x808080 });
     this.add.text(320, 132, `NEW: ${newMove.name}`, textStyle(24, COLORS.textLight));
-    this.add.text(320, 162, describe(moveId), textStyle(18, '#c8d0e0'));
+    this.add.text(320, 162, describe(moveId), textStyle(18, '#d8d0e0'));
 
     const options = [
       ...mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, detail: describe(slot.id, slot.pp) })),
@@ -168,7 +168,7 @@ export class DecisionScene extends Phaser.Scene {
       `HP ${caught.hp}/${stats.hp}   Atk ${stats.atk}  Def ${stats.def}  Spe ${stats.spe}`,
       `Moves: ${caught.moves.map((m) => content.moves.get(m.id)!.name).join(', ')}`,
     ];
-    this.add.text(400, 100, lines.join('\n'), textStyle(22, '#c8d0e0', { lineSpacing: 6, wordWrap: { width: 520 } }));
+    this.add.text(400, 100, lines.join('\n'), textStyle(22, '#d8d0e0', { lineSpacing: 6, wordWrap: { width: 520 } }));
     this.add.text(400, 250, full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`, textStyle(22, full ? '#f0c028' : '#a0e0a0'));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
@@ -193,7 +193,7 @@ export class DecisionScene extends Phaser.Scene {
           });
       },
     });
-    this.add.text(GAME_WIDTH / 2, 500, 'Candies are kept after the run ends.', textStyle(18, '#8090a8')).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 500, 'Candies are kept after the run ends.', textStyle(18, '#a69cb4')).setOrigin(0.5);
   }
 
   private openReplace(caught: PokemonInstance): void {

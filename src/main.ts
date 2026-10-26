@@ -19,6 +19,7 @@ import { ShopScene } from './scenes/ShopScene';
 import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
 import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
+import { drawBackdrop } from './ui/widgets';
 import './style.css';
 
 function showFatalError(message: string): void {
@@ -61,12 +62,20 @@ function start(): void {
     parent: 'game',
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-    backgroundColor: '#101828',
+    backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
+      postBoot: (g) => {
+        // Menu screens share one PokeRogue-style backdrop, drawn behind
+        // everything else (the battle draws its arena instead).
+        for (const scene of g.scene.getScenes(false)) {
+          if (scene.scene.key === 'Battle' || scene.scene.key === 'Boot') continue;
+          scene.events.on(Phaser.Scenes.Events.CREATE, () => drawBackdrop(scene));
+        }
+      },
     },
   });
 

@@ -39,6 +39,22 @@ export const PokemonInstanceSchema = z.object({
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
+/** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
+export const VolatileSchema = z.object({
+  /** Turns of confusion left (0 = not confused). */
+  confusion: z.number().int().min(0).default(0),
+  /** Must rest this turn (after Hyper Beam). */
+  recharge: z.boolean().default(false),
+  /** Protect uses in a row (each one is less likely to work). */
+  protectChain: z.number().int().min(0).default(0),
+  /** Turns left of being bound (Wrap); it can't switch out meanwhile. */
+  bound: z.number().int().min(0).default(0),
+  /** Seeded by Leech Seed. */
+  seeded: z.boolean().default(false),
+});
+export type Volatile = z.infer<typeof VolatileSchema>;
+export const freshVolatile = (): Volatile => ({ confusion: 0, recharge: false, protectChain: 0, bound: 0, seeded: false });
+
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
 export type Stages = z.infer<typeof StagesSchema>;
 
@@ -83,6 +99,8 @@ export const BattleStateSchema = z.object({
   trainer: z.object({ classId: z.string(), name: z.string(), leaderId: z.string().nullable().default(null) }).nullable(),
   playerStages: StagesSchema,
   enemyStages: StagesSchema,
+  playerVolatile: VolatileSchema.default(freshVolatile),
+  enemyVolatile: VolatileSchema.default(freshVolatile),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
   /** True when the active Pokémon fainted and the player must send out another. */

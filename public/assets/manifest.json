@@ -1,11 +1,47 @@
 {
-  "generatedAt": "2026-10-25T23:07:10.057Z",
+  "generatedAt": "2026-10-26T03:43:25.499Z",
   "assets": [
     {
       "id": "bg.battle",
       "kind": "image",
       "category": "background",
       "path": "images/arenas/grass_bg.png"
+    },
+    {
+      "id": "bg.battle.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/grass_a.png"
+    },
+    {
+      "id": "bg.battle.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/grass_b.png"
+    },
+    {
+      "id": "ui.cursor",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/ui/cursor.png"
+    },
+    {
+      "id": "ui.pbinfo_player",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/ui/pbinfo_player.png"
+    },
+    {
+      "id": "ui.pbinfo_enemy",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/ui/pbinfo_enemy_mini.png"
+    },
+    {
+      "id": "ui.message_bg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/ui/bg.png"
     },
     {
       "id": "bgm.menu",
@@ -71974,6 +72010,222 @@
       "kind": "image",
       "category": "background",
       "path": "images/arenas/fairy_cave_bg.png"
+    },
+    {
+      "id": "bg.arena.plains.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/plains_a.png"
+    },
+    {
+      "id": "bg.arena.plains.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/plains_b.png"
+    },
+    {
+      "id": "bg.arena.volcano.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/volcano_a.png"
+    },
+    {
+      "id": "bg.arena.volcano.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/volcano_b.png"
+    },
+    {
+      "id": "bg.arena.sea.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/sea_a.png"
+    },
+    {
+      "id": "bg.arena.sea.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/sea_b.png"
+    },
+    {
+      "id": "bg.arena.power_plant.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/power_plant_a.png"
+    },
+    {
+      "id": "bg.arena.power_plant.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/power_plant_b.png"
+    },
+    {
+      "id": "bg.arena.tall_grass.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/tall_grass_a.png"
+    },
+    {
+      "id": "bg.arena.tall_grass.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/tall_grass_b.png"
+    },
+    {
+      "id": "bg.arena.ice_cave.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ice_cave_a.png"
+    },
+    {
+      "id": "bg.arena.ice_cave.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ice_cave_b.png"
+    },
+    {
+      "id": "bg.arena.dojo.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/dojo_a.png"
+    },
+    {
+      "id": "bg.arena.dojo.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/dojo_b.png"
+    },
+    {
+      "id": "bg.arena.swamp.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/swamp_a.png"
+    },
+    {
+      "id": "bg.arena.swamp.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/swamp_b.png"
+    },
+    {
+      "id": "bg.arena.desert.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/desert_a.png"
+    },
+    {
+      "id": "bg.arena.desert.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/desert_b.png"
+    },
+    {
+      "id": "bg.arena.mountain.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/mountain_a.png"
+    },
+    {
+      "id": "bg.arena.mountain.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/mountain_b.png"
+    },
+    {
+      "id": "bg.arena.ruins.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ruins_a.png"
+    },
+    {
+      "id": "bg.arena.ruins.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/ruins_b.png"
+    },
+    {
+      "id": "bg.arena.forest.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/forest_a.png"
+    },
+    {
+      "id": "bg.arena.forest.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/forest_b.png"
+    },
+    {
+      "id": "bg.arena.cave.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/cave_a.png"
+    },
+    {
+      "id": "bg.arena.cave.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/cave_b.png"
+    },
+    {
+      "id": "bg.arena.graveyard.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/graveyard_a.png"
+    },
+    {
+      "id": "bg.arena.graveyard.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/graveyard_b.png"
+    },
+    {
+      "id": "bg.arena.wasteland.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/wasteland_a.png"
+    },
+    {
+      "id": "bg.arena.wasteland.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/wasteland_b.png"
+    },
+    {
+      "id": "bg.arena.abyss.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/abyss_a.png"
+    },
+    {
+      "id": "bg.arena.abyss.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/abyss_b.png"
+    },
+    {
+      "id": "bg.arena.factory.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/factory_a.png"
+    },
+    {
+      "id": "bg.arena.factory.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/factory_b.png"
+    },
+    {
+      "id": "bg.arena.fairy_cave.player",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/fairy_cave_a.png"
+    },
+    {
+      "id": "bg.arena.fairy_cave.enemy",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/fairy_cave_b.png"
     }
   ],
   "missing": []

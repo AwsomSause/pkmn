@@ -7,7 +7,9 @@
 // Every move in the list is added. A move is "supported" only when every
 // sentence of its effect is something the battle engine already does (plain
 // damage, stat changes, status, flinching, draining, recoil, priority, high
-// critical-hit ratio, level damage). The rest are added with
+// critical-hit ratio, level damage, and since M8.75 part C confusion,
+// multi-hit, recharge, healing, Protect, one-hit KOs, Explosion, False Swipe,
+// binding, Leech Seed and a few power rules). The rest are added with
 // `supported: false` and `needs` (the effect text still to build), so
 // learnsets can list them and the game skips them until they work. Supported
 // moves already in moves.json keep their effects; their power, accuracy and
@@ -39,6 +41,20 @@ type Effects = {
   drain?: number;
   recoil?: number;
   fixedDamage?: 'level';
+  confuse?: { chance: number };
+  hits?: [number, number];
+  recharge?: true;
+  heal?: number;
+  protect?: true;
+  ohko?: true;
+  selfFaint?: true;
+  leaveOne?: true;
+  bind?: true;
+  seed?: true;
+  doubleBelowHalf?: true;
+  lowHpPower?: true;
+  targetsDefense?: true;
+  ignoreStages?: true;
 };
 type MoveRow = {
   id: string;
@@ -123,6 +139,34 @@ function applySentence(move: MoveRow, sentence: string, chance: number | null): 
     return recoil ? ((move.effects.recoil = recoil), true) : false;
   }
   if (s === 'Puts opponent to sleep') return (move.effects.status = { id: 'slp', chance: 100 }), true;
+  // M8.75 part C, tier 1.
+  if (s === 'Hits 2-5 times in one turn') return (move.effects.hits = [2, 5]), true;
+  if (s === 'Hits twice in one turn') return (move.effects.hits = [2, 2]), true;
+  if (s === 'User must recharge next turn') return (move.effects.recharge = true), true;
+  if (s === 'May confuse opponent') return chance ? ((move.effects.confuse = { chance }), true) : false;
+  if (s === 'Confuses opponent') return (move.effects.confuse = { chance: 100 }), true;
+  if (s === "May raise all user's stats at once") {
+    if (!chance) return false;
+    const all: Stat[] = ['atk', 'def', 'spa', 'spd', 'spe'];
+    move.effects.statChanges = [...(move.effects.statChanges ?? []), ...all.map((stat) => ({ stat, stages: 1, target: 'self' as const, chance }))];
+    return true;
+  }
+  if (s === 'User recovers half its max HP' || s === 'User recovers HP') return move.category === 'status' && ((move.effects.heal = 0.5), true);
+  // There is no weather yet, so Synthesis and friends always heal half.
+  if (s === 'Amount varies with the weather') return move.effects.heal !== undefined;
+  if (s === 'Protects the user, but may fail if used consecutively') return (move.effects.protect = true), true;
+  if (s === 'One-Hit-KO, if it hits') return (move.effects.ohko = true), true;
+  if (s === 'User faints') return (move.effects.selfFaint = true), true;
+  if (s === 'Always results in a critical hit') return (move.critStage = 3), true;
+  if (s === 'Always goes first') return move.priority > 0;
+  if (s === 'Always hits') return move.accuracy === null;
+  if (s === 'Always leaves opponent with at least 1 HP') return (move.effects.leaveOne = true), true;
+  if (s === 'Traps opponent, damaging them for 4-5 turns') return (move.effects.bind = true), true;
+  if (s === 'Drains HP from opponent each turn') return move.category === 'status' && ((move.effects.seed = true), true);
+  if (s === "Power doubles if opponent's HP is less than 50%") return (move.effects.doubleBelowHalf = true), true;
+  if (s === "The lower the user's HP, the higher the power") return (move.effects.lowHpPower = true), true;
+  if (s === "Inflicts damage based on the target's Defense, not Special Defense") return (move.effects.targetsDefense = true), true;
+  if (s === "Ignores opponent's stat changes") return (move.effects.ignoreStages = true), true;
 
   let m = /^May (burn|paralyze|poison|freeze) (?:the )?opponent$/.exec(s);
   if (m) return chance ? ((move.effects.status = { id: STATUS_VERBS[m[1]!]!, chance }), true) : false;
@@ -250,7 +294,7 @@ for (const row of list) {
     addUnsupported(row, id, row.effect || 'Z-Move or Max Move');
     continue;
   }
-  if (row.category !== 'status' && row.power === null && !/damage equal to user's level/.test(row.effect)) {
+  if (row.category !== 'status' && row.power === null && !/damage equal to user's level|One-Hit-KO|lower the user's HP, the higher the power/.test(row.effect)) {
     addUnsupported(row, id, row.effect || '(variable power)');
     continue;
   }
@@ -262,7 +306,7 @@ for (const row of list) {
     power: row.category === 'status' ? null : row.power,
     accuracy: row.accuracy,
     pp: row.pp,
-    priority: 0,
+    priority: Number(pokeApi.get(id)?.priority ?? 0),
     critStage: 0,
     target: 'enemy',
     flags: /Powder|Spore/.test(row.name) ? ['powder'] : [],
@@ -271,13 +315,15 @@ for (const row of list) {
   const sentences = row.effect.split(/(?<=\.)\s+/).filter(Boolean);
   const ok = sentences.every((s) => applySentence(move, s, row.chance));
   // A status move has to do something the engine understands.
-  const doesSomething = move.category !== 'status' || move.effects.status || move.effects.statChanges?.length;
+  const fx = move.effects;
+  const doesSomething = move.category !== 'status' || fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed;
   if (!ok || !doesSomething) {
     addUnsupported(row, id, row.effect || '(no effect text)');
     continue;
   }
   const changes = move.effects.statChanges ?? [];
-  if (move.category === 'status' && !move.effects.status && changes.every((c) => c.target === 'self')) move.target = 'self';
+  const onTarget = fx.status || fx.confuse || fx.seed || changes.some((c) => c.target === 'enemy');
+  if (move.category === 'status' && !onTarget) move.target = 'self';
   moves.push(move);
   known.set(id, move);
   added.push(move.name);
