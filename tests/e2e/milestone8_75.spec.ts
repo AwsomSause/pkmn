@@ -122,3 +122,34 @@ test('held items: Leftovers from the draft heal in battle, and an X Attack raise
   await page.screenshot({ path: 'test-results/m875-held.png' });
   expect(errors).toEqual([]);
 });
+
+test('map items: a Repel skips a wild battle and the map shows what is working', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
+  await startRun(page, 'e2e-map-items');
+
+  await showDraft(page, ['item:black-flute', 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl']);
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await run(page)).mapEffects?.length ?? 0, { timeout: 10_000 }).toBe(1);
+  await waitForScene(page, 'Map');
+  await showDraft(page, ['item:repel', 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl']);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  const notice = () => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').notice?.text ?? '');
+  await expect.poll(notice).toBe('Working: Black Flute · Repel ×1');
+  await page.screenshot({ path: 'test-results/m875-map-items.png' });
+
+  // Focus a wild stop and walk into it: the Repel keeps the battle away.
+  const wildIndex = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').options.findIndex((o: any) => o.kind === 'node' && o.node.kind === 'wild'));
+  expect(wildIndex).toBeGreaterThanOrEqual(0);
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), wildIndex);
+  await page.keyboard.press('Enter');
+  await expect.poll(notice, { timeout: 10_000 }).toBe('The Repel kept wild Pokémon away!');
+  const after = await run(page);
+  expect(after.phase).toBe('map');
+  expect(after.stage.current).not.toBeNull();
+  expect(after.mapEffects.map((e: any) => e.itemId)).toEqual(['black-flute']);
+  expect(errors).toEqual([]);
+});
