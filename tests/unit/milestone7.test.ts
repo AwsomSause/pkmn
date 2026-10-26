@@ -221,7 +221,7 @@ describe('effects in the game', () => {
       if (events.some((e) => e.type === 'endure')) {
         endured++;
         expect(player.hp).toBe(1);
-        expect(ctx.battle.enduredUids).toEqual(['p1']);
+        expect(ctx.battle.storyEffects).toEqual(['love-hung-on@p1']);
       }
     }
     expect(endured).toBeGreaterThan(5);

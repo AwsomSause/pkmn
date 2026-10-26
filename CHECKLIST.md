@@ -43,7 +43,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - ~~No Bag/battle items~~ (done in Milestone 2).
 - Encounters are a straight sequence, not a stage map (Milestone 3).
 - Luck and the other nine attributes are stored but have no effect until their formulas are approved.
-- Move animations from the supplied pack are not played yet (hit flashes only).
+- ~~Move animations from the supplied pack are not played yet~~ (done in Milestone 9, battle animations).
 - ~~Prototype learnsets are hand-written and simplified to supported moves~~ (full data import done in Milestone 6).
 - ~~Damage uses whole-number rounding after each step~~ (main-game rounding since Milestone 8.75 part C).
 - ~~If both Pokémon faint in the same turn, the player wins~~ (since Milestone 8.75 part C: the user of Explosion loses, the user of a recoil move wins; otherwise the player wins).
@@ -185,7 +185,7 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - 611 moves (Protect, multi-hit moves, weather, healing, …) are not supported by the battle engine yet, so many Pokémon know fewer moves than in the main games. Ditto, Smeargle, Unown, Cosmog and Abra have no supported moves and don't appear.
 - Gender, time of day and weather don't exist, so evolutions that depend on them use the rules in GAME_DESIGN.md §5c.
 - A few forms have no art of their own in the pack and use their species' art (White-Striped Basculin, Mega Floette, Mega Meowstic).
-- Battle animations from the pack are still not played (M9).
+- ~~Battle animations from the pack are still not played~~ (done in Milestone 9, battle animations).
 
 ## Milestone 7 — Attributes and luck
 
@@ -267,9 +267,44 @@ Everything planned but not yet in a milestone, gathered on 2026-10-25. Details i
 - [ ] A. Event system; new map stops: special encounters, events, trades, detours, rare Pokémon; merchants (Giovanni's black market); events that change attributes; "Between-Level" interactions — built last, designed with the director first in the Events and map stops plan
 - [ ] Optional: IVs/EVs/natures; gender, time of day and weather
 
-## Milestone 9 — Grand Region, ending, deploy (not started)
+## Milestone 8.9-0 — Story foundation ✅
+
+The shared layer every story system reads (design: docs/plans/hyper-overdrive-techno.md §7–9 and the Electric plan; how it works: docs/story-foundation.md).
+
+- [x] 28 domain event types with deterministic ids (seed + sequence number), recorded from the run's actions and each battle turn
+- [x] Story effects with ids; the save keeps the applied ids, so an effect never applies twice (battle-scope ids live in the battle and go when it ends)
+- [x] Presentation cues (banner, colour, sound, shake) that the rules never read; the battle screen shows them
+- [x] PokemonHistory per uid (survives evolution), RelationshipRecord, EnemyProfile, RunChronicle, with the plan's limits (20 memories, 12 open relationships, 6 enemies per run and 3 per region, 300 chronicle entries)
+- [x] Event queue: the plan's priority order, one combat effect per turn, merged banners, 3 cinematic moments per battle
+- [x] New "story" and "hyper" random streams; old seeds play exactly as before (pinned by fingerprints taken on main)
+- [x] Love's "hung on at 1 HP" runs through the story layer as its first user (story.json "love-hung-on")
+- [x] Run save v9 and profile save v6 upgrades
+- [x] Debug Story Log (F2); the run-end screen and the Run History show the run's top five moments
+
+### Known limits in Milestone 8.9-0 (by design, documented)
+
+- Trades, escapes, Mega/Tera/Z/Dynamax and map events don't exist yet, so their event types (`traded`, `trainerEscaped`, `transformed`, `eventChoice`) are defined but not emitted.
+- Knockouts don't record overkill yet (the engine caps damage at the HP left; adding the raw number needs an engine change, left for the Hyper slices).
+- Relationships and recurring enemies have their records, limits and functions, but nothing creates them yet: that is M8.9 (rivals, nemesis).
+- Only the newest 250 domain events are kept in the save; histories and the chronicle keep what matters from older ones.
+
+## Milestone 9 — Grand Region, ending, deploy
 
 See IMPLEMENTATION_PLAN.md §5.
+
+### Battle animations (done)
+
+- [x] PokeRogue's animation frame data (from its asset repo; the packs only had the sprite sheets) converted to a compact format by `npm run data:anims`: 887 animation files, 492 sprite sheets, 1,111 sounds (WAV turned into small .m4a)
+- [x] Every move has a presentation definition in `src/data/moveAnims.json` (animation, shake, flash colour, hit-stop, telegraph), kept apart from its rules: 851 moves use their own animation, 83 borrow one of their type; two-turn moves have a wind-up animation
+- [x] A presentation-cue layer (`src/core/presentation/cues.ts`) plans what the screen shows from the finished turn; it never changes battle state or draws random numbers (unit tests check both)
+- [x] The animation player (`src/ui/battleFx/`) draws sheet pieces, moves the Pokémon, plays sounds and background fades; status, healing, confusion, binding, Leech Seed, Protect and weather animations too
+- [x] Feedback: hit-stop, field-only screen shake, type-coloured flashes, floating damage and heal numbers, Super effective / Not very effective / No effect / Critical hit badges, an HP bar that drains smoothly with a trailing "damage ghost", telegraph rings (speed lines for priority moves), stat arrows
+- [x] Settings on the title screen: Animations Full / Reduced motion / Off, Effects 100% / 50% / 25%; Enter or a click skips a playing animation; new players whose browser asks for reduced motion start on Reduced motion (settings save v2)
+- [x] Animation files load the first time a move is used (and the moves on the field load while you read); a file that is missing, damaged or slow (1.5 s) plays a short fallback (lunge and flash)
+
+Known limits: a frame that shows two copies of the same Pokémon shows one; colour tones can only darken; animation backgrounds fill the field rather than PokeRogue's exact scroll; Fly/Dig don't hide the user's sprite yet; boss cinematics are M9.5.
+
+- [ ] Grand Region roster, final boss, ending, music, static deploy
 
 ## Boss teams (director request, 2026-10-25)
 

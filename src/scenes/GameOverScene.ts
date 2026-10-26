@@ -3,6 +3,7 @@
 // before this screen appears; the right side shows what they paid out.
 
 import { attributeChanges } from '../core/attributes';
+import { topMoments } from '../core/story/record';
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
@@ -20,10 +21,10 @@ export class GameOverScene extends Phaser.Scene {
     const { session } = services();
     const run = session.run;
     const won = run?.victory ?? false;
-    this.add.text(GAME_WIDTH / 2, 50, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 50, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
+    this.add.text(GAME_WIDTH / 2, 38, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 50, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
     // Left: the run. Right: what it earned for the permanent profile.
-    drawPanel(this, 24, 96, 440, 330);
-    drawPanel(this, 480, 96, GAME_WIDTH - 504, 330, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    drawPanel(this, 24, 72, 440, 286);
+    drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];
@@ -32,7 +33,7 @@ export class GameOverScene extends Phaser.Scene {
       const byName = by ? `${by.trainer ? `${by.trainer}'s ` : ''}${session.content.species.get(by.speciesId)?.name ?? by.speciesId} (Lv${by.level})` : null;
       this.add.text(
         44,
-        110,
+        84,
         [
           `Trainer: ${archetype}`,
           `Lead: ${leadName}`,
@@ -44,8 +45,20 @@ export class GameOverScene extends Phaser.Scene {
           ...(byName ? [`Defeated by ${byName}`] : []),
           `Seed: ${run.seed}`,
         ].join('\n'),
-        textStyle(21, COLORS.text, { lineSpacing: 4, wordWrap: { width: 400 } }),
+        textStyle(19, COLORS.text, { lineSpacing: 3, wordWrap: { width: 400 } }),
       );
+      // The run's story: the chronicle's five most memorable moments.
+      const moments = topMoments(run.story);
+      if (moments.length > 0) {
+        const name = (uid: string | undefined) => {
+          const species = uid ? run.story.histories[uid]?.speciesId : undefined;
+          return species ? `${session.content.species.get(species)?.name ?? species}: ` : '';
+        };
+        const lines = moments.map((m) => `★ ${m.type === 'runEnded' || m.actors.length !== 1 ? '' : name(m.actors[0])}${m.text}`);
+        drawPanel(this, 24, 366, GAME_WIDTH - 48, 118, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+        this.add.text(44, 374, 'Moments of this run', textStyle(17, '#f0d060'));
+        this.add.text(44, 394, lines.join('\n'), textStyle(16, COLORS.textLight, { lineSpacing: 1, wordWrap: { width: GAME_WIDTH - 88 } }));
+      }
     }
     const summary = session.lastRunSummary;
     const lines: string[] = [];
@@ -64,12 +77,12 @@ export class GameOverScene extends Phaser.Scene {
     } else {
       lines.push('This run was already added to your profile.');
     }
-    this.add.text(500, 110, lines.join('\n'), textStyle(19, COLORS.textLight, { lineSpacing: 3, wordWrap: { width: GAME_WIDTH - 540 } }));
+    this.add.text(500, 84, lines.join('\n'), textStyle(18, COLORS.textLight, { lineSpacing: 3, wordWrap: { width: GAME_WIDTH - 540 } }));
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,
-      y: 446,
+      y: 492,
       options: [{ label: 'Back to the Hub' }],
-      fontSize: 32,
+      fontSize: 28,
       color: COLORS.textLight,
       onSelect: () => this.scene.start('Hub'),
     });
