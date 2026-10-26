@@ -54,6 +54,9 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
     case 'lastStand':
     case 'attribute':
       return `${item.name} can't be used on your Pokémon.`;
+    case 'keyItem':
+    case 'megaStone':
+      return `${item.name} works by itself in battle.`;
   }
 }
 

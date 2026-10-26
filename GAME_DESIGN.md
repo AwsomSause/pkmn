@@ -122,6 +122,15 @@ Every Pokémon has a **friendship** value from 0 to 255, shown as five hearts on
 - **Friendship evolutions** (Pichu, Golbat, Chansey, Eevee, Togepi, ...) happen on their own after a battle once friendship is **220** or more, like level evolutions. A branching one (Eevee) is picked from the Pokémon, as with level branches. The Soothe Bell still evolves them at any friendship, and lets the player choose the branch.
 - Still to come with events (part A): "Between-Level" interactions that change friendship, friendship-based event outcomes, and N's passive.
 
+### 5f. Battle transformations (Milestone 8.5)
+
+Mega Evolution, Terastallization, Z-Moves and Dynamax are built one at a time. Each is unlocked by a **key item** from the reward draft or the shop, and only changes the battle it is used in. Rules in `core/battle/transform.ts`; numbers in `balance.json` (`transformations`).
+- **Shared rules:** each mechanic works **once per battle** for each side, and a Pokémon can only transform **once per battle** (no Mega + Tera on the same Pokémon). Transformations happen before anyone moves, so they count for that turn's order. They end when the battle ends; HP is kept (capped at the normal maximum). A run can switch a mechanic off (`disabledMechanics`, a challenge); it then applies to both sides.
+- **Bosses:** gym leaders from the **5th gym** of the run on, and every Elite Four member and champion, may transform their **ace** (the last Pokémon of their team). They need no items. Other trainers and wild Pokémon never transform.
+- **Mega Evolution (built):** needs the **Mega Ring** (key item: rare draft reward, or ₽10,000 in the shop from 3 badges) and that species' **Mega Stone** in the Bag. In battle the menu gets a "Mega" option; press it (again to pick Mega Charizard X or Y), then choose a move. 145 stones: the official ones from Pokémon Showdown's data (including the Legends: Z-A Megas), **Rayquazite** for Mega Rayquaza (instead of knowing Dragon Ascent, like PokeRogue), "Delta …" stones for the 22 Delta Megas and "… Z" stones for the 28 Z-Megas. A stone is a rare draft reward offered only when a party member can use it. Key items and stones are kept for the run and never offered or sold twice.
+- **Primal Reversion (built):** the **Red Orb** (Groudon) and **Blue Orb** (Kyogre) work by themselves at the start of the turn, need no Mega Ring and don't use up the Mega.
+- **Still to come:** Terastallization, Z-Moves, Dynamax/Gigantamax. Not reachable: Magearna's Original Color Mega and Tatsugiri's Droopy and Stretchy Megas (the game has no base form for them).
+
 ## 6. Battles
 
 Traditional single battles (1v1 active Pokémon), turn-based.

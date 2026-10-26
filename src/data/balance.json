@@ -23,6 +23,10 @@
  "repeatFamilyWeight": 0.5,
  "vitaminMultiplierPerStack": 0.1,
  "vitaminMaxStacks": 3,
+ "transformations": {
+  "bossGymFrom": 5,
+  "league": true
+ },
  "friendship": {
   "max": 255,
   "base": 70,

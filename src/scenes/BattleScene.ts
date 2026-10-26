@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
+import { megaOptions, ownedMegaForms, stoneForms } from '../core/battle/transform';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -60,6 +61,8 @@ export class BattleScene extends Phaser.Scene {
   private header!: Phaser.GameObjects.Text;
   private advance: (() => void) | null = null;
   private busy = false;
+  /** The Mega form the player chose to Mega Evolve into with their next move (null = off). */
+  private megaChoice: string | null = null;
   /** What the screen currently shows for each side (may lag the real state during playback). */
   private shown!: { player: PokemonInstance; enemy: PokemonInstance };
 
@@ -70,9 +73,17 @@ export class BattleScene extends Phaser.Scene {
   preload(): void {
     // Every party member (switching), the whole enemy team, and the cries.
     const { session } = services();
-    const enemies = (session.run?.battle?.enemyTeam ?? []).flatMap((m) => session.content.species.get(m.speciesId) ?? []);
+    const { content } = session;
+    const run = session.run;
+    const enemies = (run?.battle?.enemyTeam ?? []).flatMap((m) => content.species.get(m.speciesId) ?? []);
     preloadPokemon(this, partySpecies(), { back: true, shiny: true, icon: true, cry: true });
     preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
+    // Forms they might transform into this battle (Megas for stones you own; any Mega or Primal for the enemy).
+    const formsOf = (ids: string[]) => ids.flatMap((id) => content.species.get(id) ?? []);
+    const partyForms = (run?.party ?? []).flatMap((m) => [...ownedMegaForms(content, run!.inventory, m), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
+    const enemyForms = (run?.battle?.enemyTeam ?? []).flatMap((m) => [...stoneForms(content, m.speciesId, false), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
+    preloadPokemon(this, formsOf(partyForms), { back: true, shiny: true, cry: true });
+    preloadPokemon(this, formsOf(enemyForms), { front: true, shiny: true, cry: true });
   }
 
   create(): void {
@@ -373,8 +384,14 @@ export class BattleScene extends Phaser.Scene {
 
   private showRootMenu(): void {
     this.clearMenus();
-    this.message.setText(`What will ${this.speciesName(this.activeMon())} do?`);
+    const content = services().session.content;
+    // Mega Evolution: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> off.
+    const megas = megaOptions(this.battleCtx());
+    if (!megas.some((o) => o.formId === this.megaChoice)) this.megaChoice = null;
+    const ready = this.megaChoice ? ` It will Mega Evolve into ${content.species.get(this.megaChoice)?.name}!` : '';
+    this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
+    if (megas.length > 0) options.push({ label: this.megaChoice ? 'Mega: ON' : 'Mega: OFF' });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -388,7 +405,12 @@ export class BattleScene extends Phaser.Scene {
       onSelect: (i) => {
         if (i === 0) this.showMoveMenu();
         else if (i === 1) this.openBag();
-        else this.openPartyPicker(false);
+        else if (i === 2) this.openPartyPicker(false);
+        else {
+          const at = megas.findIndex((o) => o.formId === this.megaChoice);
+          this.megaChoice = megas[at + 1]?.formId ?? null;
+          this.showRootMenu();
+        }
       },
     });
   }
@@ -425,7 +447,11 @@ export class BattleScene extends Phaser.Scene {
         this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
       },
-      onSelect: (i) => void this.act({ kind: 'move', index: anyPp ? i : -1 }),
+      onSelect: (i) => {
+        const mega = this.megaChoice;
+        this.megaChoice = null;
+        void this.act({ kind: 'move', index: anyPp ? i : -1, ...(mega ? { transform: { kind: 'mega' as const, formId: mega } } : {}) });
+      },
       onBack: () => this.showRootMenu(),
     });
     this.moveInfo.setVisible(true);
@@ -633,6 +659,17 @@ export class BattleScene extends Phaser.Scene {
         }
         case 'item': {
           preText = `You used the ${content.items.get(e.itemId)?.name ?? 'item'}!`;
+          break;
+        }
+        case 'transform': {
+          // Presentation cue only: a flash and the new form's sprite (full cinematics are M9.5).
+          if (e.kind === 'mega' && e.itemId) await this.say(`${this.speciesName(mon!)}'s ${content.items.get(e.itemId)?.name ?? 'Mega Stone'} is reacting to your Mega Ring!`);
+          const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0);
+          await tween(this, { targets: flash, alpha: 0.9, duration: 250, yoyo: true, hold: 150 });
+          flash.destroy();
+          mon!.speciesId = e.to;
+          this.showSprite(e.side, mon!);
+          await this.refreshInfoBox(box, mon!, false);
           break;
         }
         case 'ball':
