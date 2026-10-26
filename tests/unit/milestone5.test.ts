@@ -43,7 +43,7 @@ function powerUp(run: RunState): RunState {
 function win(run: RunState): RunState {
   let guard = 0;
   while (run.phase === 'battle' && guard++ < 300) run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
-  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
+  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   return run;
 }
 
@@ -52,7 +52,7 @@ function play(run: RunState, battles: number): RunState {
   for (let i = 0; i < battles; i++) {
     run = win(toBattle(run));
     if (run.phase === 'reward') run = chooseReward(content, run, 0).run;
-    while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+    while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   }
   return run;
 }

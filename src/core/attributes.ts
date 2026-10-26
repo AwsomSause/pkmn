@@ -68,6 +68,9 @@ export interface AttributeEffects {
   endureChance: number;
   uncommonWeight: number;
   rareWeight: number;
+  epicWeight: number;
+  /** 0–1: how strongly the draft avoids repeating an item family (Luck). */
+  draftVariety: number;
   shinyChance: number;
 }
 
@@ -92,6 +95,8 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
     endureChance: e.loveEndureChance * share(a.love),
     uncommonWeight: 1 + e.luckUncommonWeight * share(a.luck),
     rareWeight: 1 + e.luckRareWeight * share(a.luck),
+    epicWeight: 1 + e.luckEpicWeight * share(a.luck),
+    draftVariety: e.luckDraftVariety * share(a.luck),
     shinyChance: 1 + e.luckShinyChance * share(a.luck),
   };
 }
@@ -100,12 +105,13 @@ export function runAttributeEffects(content: Content, run: RunState): AttributeE
   return attributeEffects(content, effectiveAttributes(content, run));
 }
 
-/** Luck tilts the draft's rarity weights toward uncommon and rare; common is unchanged. */
+/** Luck tilts the draft's rarity weights toward uncommon, rare and epic; common is unchanged. */
 export function luckWeights(weights: Partial<Record<Rarity, number>>, effects: AttributeEffects): Partial<Record<Rarity, number>> {
   return {
     ...weights,
     uncommon: (weights.uncommon ?? 0) * effects.uncommonWeight,
     rare: (weights.rare ?? 0) * effects.rareWeight,
+    epic: (weights.epic ?? 0) * effects.epicWeight,
   };
 }
 
@@ -147,7 +153,7 @@ export function attributeEffectText(content: Content, key: AttributeKey, value: 
     case 'charisma':
       return `Shop prices −${pct(2 - fx.price)}, +${pct(fx.exp)} experience, +${pct(fx.friendship)} friendship`;
     case 'luck':
-      return `Rare rewards ×${fx.rareWeight.toFixed(2)}, shinies ×${fx.shinyChance.toFixed(2)}`;
+      return `Rare rewards ×${fx.rareWeight.toFixed(2)}, epic ×${fx.epicWeight.toFixed(2)}, more varied drafts, shinies ×${fx.shinyChance.toFixed(2)}`;
     case 'love':
       return `${Math.round(fx.endureChance * 1000) / 10}% chance to hang on at 1 HP, once per battle`;
     case 'ragePeace':

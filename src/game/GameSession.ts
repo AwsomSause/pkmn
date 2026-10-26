@@ -170,6 +170,13 @@ export class GameSession {
     return result.message;
   }
 
+  cashIn(itemId: string): string {
+    const result = Run.cashInItem(this.content, this.requireRun(), itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
   setLead(partyIndex: number): void {
     this.run = Run.setLead(this.requireRun(), partyIndex);
     this.persistRun();
