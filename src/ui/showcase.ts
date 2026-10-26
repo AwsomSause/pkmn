@@ -112,16 +112,22 @@ export class ShowcaseMon {
       this.scene.tweens.add({ targets: old, alpha: 0, duration: 220, ease: 'Sine.easeIn', onComplete: () => old.destroy() });
     }
     const mon = pokemonVisual(this.scene, species, 'front', this.x, this.y + 10, this.scale).setAlpha(0).setDepth(-10);
-    const fit = () => {
-      const h = mon instanceof Phaser.GameObjects.Sprite ? mon.height : mon.getBounds().height / mon.scaleY;
-      if (h * mon.scaleY > this.maxHeight) mon.setScale(this.maxHeight / h);
-    };
-    fit();
-    // Art that loads later replaces the placeholder inside the container; fit it then too.
-    if (!(mon instanceof Phaser.GameObjects.Sprite)) this.scene.time.delayedCall(600, fit);
+    fitHeight(this.scene, mon, this.maxHeight);
     this.current = mon;
     this.scene.tweens.add({ targets: mon, alpha: 1, y: this.y, duration: 420, ease: 'Cubic.easeOut' });
   }
+}
+
+/** Shrinks a Pokémon picture that is taller than `maxHeight` (also once late-loading art arrives). */
+export function fitHeight(scene: Phaser.Scene, mon: Visual, maxHeight: number): Visual {
+  const fit = () => {
+    if (!mon.active) return;
+    const h = mon instanceof Phaser.GameObjects.Sprite ? mon.height : mon.getBounds().height / mon.scaleY;
+    if (h * mon.scaleY > maxHeight) mon.setScale(maxHeight / h);
+  };
+  fit();
+  if (!(mon instanceof Phaser.GameObjects.Sprite)) scene.time.delayedCall(600, fit);
+  return mon;
 }
 
 /** A small rounded counter with an item icon, e.g. Bank Credits. Returns its width. */

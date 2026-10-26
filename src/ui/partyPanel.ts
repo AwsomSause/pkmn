@@ -36,8 +36,8 @@ export interface PickerConfig {
   backLabel?: string;
 }
 
-const LIST_TOP = 76;
-const LIST_BOTTOM = GAME_HEIGHT - 72;
+const LIST_TOP = 82;
+const LIST_BOTTOM = GAME_HEIGHT - 84;
 
 /** A modal list of rows. Keyboard: arrows to move, confirm to pick, back to cancel. Mouse: hover and click. */
 export class Picker {
@@ -54,10 +54,15 @@ export class Picker {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
-    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true }));
-    this.root.add(scene.add.text(48, 28, config.title, textStyle(30, COLORS.textLight)));
+    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32));
+    // A title band across the top, like a Pokémon menu header.
+    const band = scene.add.graphics();
+    band.fillStyle(0x18141d, 0.9).fillRect(36, 26, GAME_WIDTH - 72, 42);
+    band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
+    this.root.add(band);
+    this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
-    this.root.add(scene.add.text(GAME_WIDTH - 48, 34, `Enter choose${backHint}`, textStyle(18, '#a69cb4')).setOrigin(1, 0));
+    this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
 
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
     this.list = scene.add.container(0, 0);
@@ -89,9 +94,14 @@ export class Picker {
       this.list.add(box);
     });
 
-    this.footer = scene.add.text(48, GAME_HEIGHT - 60, '', textStyle(22, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 96 } }));
+    // The message box along the bottom, like the games' text window.
+    this.root.add(paintWindow(scene.add.graphics(), 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { thin: true, fill: 0x18141d, border: COLORS.borderMuted }));
+    this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
     this.root.add(this.footer);
-    if (config.rows.length === 0) this.footer.setText('Nothing here.');
+    if (config.rows.length === 0) {
+      this.root.add(scene.add.text(GAME_WIDTH / 2, (LIST_TOP + LIST_BOTTOM) / 2, 'Nothing here yet', textStyle(32, COLORS.textMuted)).setOrigin(0.5));
+      this.footer.setText(config.onBack ? 'Press Esc to go back.' : '');
+    }
     const first = config.rows.findIndex((r) => !r.problem);
     this.focus(first >= 0 ? first : 0, false);
   }

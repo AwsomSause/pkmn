@@ -64,6 +64,9 @@ const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = 
 };
 
 /** The five tiles along the bottom of the Hub; a tile with several rooms opens a small menu. */
+/** The hint line sits between the Pokémon's ground patch and the raised tile. */
+const BLURB_Y = 382;
+
 const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive'], blurb: ROOMS[1]!.blurb },
@@ -153,7 +156,7 @@ export class HubScene extends Phaser.Scene {
 
     this.detail = this.add.container(0, 0);
     this.blurbPill = this.add.graphics();
-    this.blurb = this.add.text(GAME_WIDTH / 2, 397, '', textStyle(16, COLORS.textLight, { align: 'center' })).setOrigin(0.5, 0.5);
+    this.blurb = this.add.text(GAME_WIDTH / 2, BLURB_Y, '', textStyle(16, COLORS.textLight, { align: 'center' })).setOrigin(0.5, 0.5);
 
     const ready = [...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'claimable').length;
     this.buildTiles(ready);
@@ -235,7 +238,7 @@ export class HubScene extends Phaser.Scene {
     const w = this.blurb.width + 32;
     this.blurbPill.clear();
     this.blurbPill.fillStyle(0x0e0b12, 0.78);
-    this.blurbPill.fillRoundedRect(GAME_WIDTH / 2 - w / 2, 397 - 14, w, 28, 14);
+    this.blurbPill.fillRoundedRect(GAME_WIDTH / 2 - w / 2, BLURB_Y - 14, w, 28, 14);
   }
 
   private confirmTile(): void {
