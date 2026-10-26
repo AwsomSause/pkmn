@@ -15,7 +15,7 @@ export class MainMenuScene extends Phaser.Scene {
     super('MainMenu');
   }
 
-  create(): void {
+  create(data?: { focus?: number }): void {
     const { session } = services();
     session.closeRun();
     playMusic(this, 'bgm.menu');
@@ -37,7 +37,7 @@ export class MainMenuScene extends Phaser.Scene {
       .setOrigin(0.5);
     this.add.text(GAME_WIDTH / 2, 152, 'Milestone 5 prototype', textStyle(24, COLORS.textMuted)).setOrigin(0.5);
 
-    drawPanel(this, GAME_WIDTH / 2 - 180, 190, 360, 220);
+    drawPanel(this, GAME_WIDTH / 2 - 200, 186, 400, 290);
 
     const saved = session.savedRun;
     const damaged = saved.status === 'corrupt' || saved.status === 'incompatible';
@@ -54,15 +54,25 @@ export class MainMenuScene extends Phaser.Scene {
       option: { label: session.settings.muted ? 'Sound: Off' : 'Sound: On' },
       action: () => this.toggleSound(),
     });
+    const animLabels = { full: 'Full', reduced: 'Reduced motion', off: 'Off' } as const;
+    options.push({
+      option: { label: `Animations: ${animLabels[session.settings.battleAnimations]}` },
+      action: () => this.cycleAnimations(),
+    });
+    options.push({
+      option: { label: `Effects: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
+      action: () => this.cycleIntensity(),
+    });
 
     this.menu = new Menu(this, {
-      x: GAME_WIDTH / 2 - 130,
-      y: 220,
+      x: GAME_WIDTH / 2 - 170,
+      y: 206,
       options: options.map((o) => o.option),
-      itemHeight: 60,
-      fontSize: 34,
+      itemHeight: 52,
+      fontSize: 30,
       onSelect: (i) => options[i]!.action(),
     });
+    if (data?.focus) this.menu.focus(data.focus, false);
     onInputAction(this, (a) => this.menu.handle(a));
 
     // Messages: damaged saves, storage problems, save failures.
@@ -72,7 +82,7 @@ export class MainMenuScene extends Phaser.Scene {
     if (session.lastSaveError) notes.push(`Last save failed: ${session.lastSaveError}`);
     if (notes.length > 0) {
       this.add
-        .text(GAME_WIDTH / 2, 430, notes.join('\n'), textStyle(18, COLORS.bad, { align: 'center', wordWrap: { width: 860 } }))
+        .text(GAME_WIDTH / 2, 484, notes.join('\n'), textStyle(18, COLORS.bad, { align: 'center', wordWrap: { width: 860 } }))
         .setOrigin(0.5, 0);
     }
 
@@ -92,6 +102,24 @@ export class MainMenuScene extends Phaser.Scene {
   private discardDamaged(): void {
     services().session.discardDamagedRun();
     this.scene.restart();
+  }
+
+  /** Battle animations: full → reduced motion (no flashing or shaking) → off (skipped). */
+  private cycleAnimations(): void {
+    const { session } = services();
+    const order = ['full', 'reduced', 'off'] as const;
+    const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
+    session.saveSettings({ ...session.settings, battleAnimations: next });
+    this.scene.restart({ focus: this.menu.index });
+  }
+
+  /** Strength of screen shake and flashes: 100% → 50% → 25%. */
+  private cycleIntensity(): void {
+    const { session } = services();
+    const order = [1, 0.5, 0.25];
+    const i = order.findIndex((v) => Math.abs(v - session.settings.effectIntensity) < 0.01);
+    session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! });
+    this.scene.restart({ focus: this.menu.index });
   }
 
   private toggleSound(): void {
