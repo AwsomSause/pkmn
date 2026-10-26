@@ -315,6 +315,10 @@ export const SettingsSchema = z.object({
   musicVolume: z.number().min(0).max(1),
   sfxVolume: z.number().min(0).max(1),
   muted: z.boolean(),
+  /** Battle animations: full, reduced (no flashing, shaking or big motion), or off (skipped). */
+  battleAnimations: z.enum(['full', 'reduced', 'off']),
+  /** 0–1: how strong screen shake and flashes are. */
+  effectIntensity: z.number().min(0).max(1),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
