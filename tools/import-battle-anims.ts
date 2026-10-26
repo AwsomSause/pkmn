@@ -81,6 +81,11 @@ const COMMON_ANIMS: Record<string, string> = {
   protect: 'common-protect',
   bind: 'common-bind',
   seed: 'common-leech-seed',
+  'weather.rain': 'common-rain',
+  'weather.sun': 'common-sunny',
+  'weather.sand': 'common-sandstorm',
+  'weather.hail': 'common-hail',
+  'weather.snow': 'common-snow',
 };
 
 const TYPE_HEX: Record<string, string> = {
@@ -168,6 +173,9 @@ for (const m of moves) {
   const anim = hasOwn ? m.id : pick(fallback[m.category === 'physical' ? 0 : m.category === 'special' ? 1 : 2]);
   if (hasOwn) own++;
   used.add(anim);
+  // Two-turn moves have a separate wind-up animation (fly-charging, solar-beam-charging …).
+  const chargeAnim = available.has(`${m.id}-charging`) ? `${m.id}-charging` : undefined;
+  if (chargeAnim) used.add(chargeAnim);
   const power = m.effects.fixedDamage ? 60 : (m.power ?? 0);
   const attack = m.category !== 'status';
   moveDefs[m.id] = {
@@ -177,6 +185,7 @@ for (const m of moves) {
     flash: attack && power >= 90 ? TYPE_HEX[m.type] ?? null : null,
     hitStopMs: attack ? Math.min(110, Math.max(50, 40 + Math.round(power / 3))) : 0,
     telegraph: (m.priority ?? 0) > 0 ? 'quick' : attack && power >= 100 ? 'strong' : 'normal',
+    ...(chargeAnim ? { chargeAnim } : {}),
   };
 }
 for (const name of Object.values(COMMON_ANIMS)) used.add(pick(name));

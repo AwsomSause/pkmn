@@ -110,6 +110,14 @@ describe('presentation cues', () => {
     expect(kinds(cues)).toEqual(['telegraph']);
   });
 
+  it('two-turn moves play their wind-up on the charging turn, not the attack', () => {
+    const [id, look] = Object.entries(data.moves).find(([, l]) => l.chargeAnim)!;
+    const events: BattleEvent[] = [{ type: 'move', side: 'player', moveId: id }, { type: 'charge', side: 'player', moveId: id, semi: null }];
+    const cues = planCues(events, content, data, FULL);
+    expect(kinds(cues)).toEqual(['telegraph', 'commonAnim']);
+    expect(cues[1]![0]).toMatchObject({ anim: look.chargeAnim, side: 'player' });
+  });
+
   it('aims self-targeting moves at the user', () => {
     const self = [...content.moves.values()].find((m) => m.target === 'self' && m.supported)!;
     const events: BattleEvent[] = [{ type: 'move', side: 'enemy', moveId: self.id }];

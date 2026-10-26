@@ -94,3 +94,21 @@ test('animation settings cycle on the title screen and turn animations off', asy
   await waitForMenu(page);
   expect(animRequests).toEqual([]);
 });
+
+test('a missing animation file falls back to a quick effect and the battle carries on', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.route('**/battle-anims/**', (route) => route.abort());
+  await page.goto('/?seed=m9-fallback');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  const before = await page.evaluate(() => (window as any).__pkr.session.run.battle.turn);
+  await waitForMenu(page);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter');
+  await expect
+    .poll(async () => (await scene(page)) !== 'Battle' || (await page.evaluate(() => (window as any).__pkr.session.run?.battle?.turn)) > before, { timeout: 20_000 })
+    .toBe(true);
+  expect(errors).toEqual([]);
+});

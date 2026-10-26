@@ -315,7 +315,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 | R5 | **Undefined rules** (attributes, candies, bank, luck, Grand Region). | Building on guesses means rework. | Each is a listed open decision; systems ship without those effects until you approve formulas. |
 | R6 | **Level cap vs. 10 regions.** Pokémon stop at 100, but difficulty should keep rising. | Late game flattens. | Needs a decision (D14): e.g. caps reached around region 7, then difficulty comes from team quality, held items, mechanics. |
 | R7 | **Save reliability.** Browser storage can be cleared or full. | Lost progress. | Validation, migrations, atomic checkpoint writes, export/import, clear error messages. |
-| R8 | **Battle animation format.** Supplied anim JSON is PokeRogue's own format. | Needs a custom player. | Deferred to M9; simple hit flashes/shakes until then. |
+| R8 | **Battle animation format.** Supplied anim JSON is PokeRogue's own format. | Needs a custom player. | Done in M9 (battle animations): the frame data comes from PokeRogue's asset repo (the packs only had the sheets); see `src/ui/battleFx/`. |
 
 ## 8. How I'll report each milestone
 

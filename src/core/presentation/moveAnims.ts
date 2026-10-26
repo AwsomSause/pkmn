@@ -18,6 +18,8 @@ export const MovePresentationSchema = z.object({
   hitStopMs: z.number().int().min(0).max(250),
   /** The marker shown on the user before the move: quick (priority), strong (big attacks) or normal. */
   telegraph: z.enum(['normal', 'strong', 'quick']),
+  /** Two-turn moves: the animation for the turn it charges up. */
+  chargeAnim: z.string().optional(),
 });
 export type MovePresentation = z.infer<typeof MovePresentationSchema>;
 

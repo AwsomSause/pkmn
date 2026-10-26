@@ -48,7 +48,7 @@ const TYPE_HEX: Record<string, string> = {
 };
 
 /** Events that mean the move didn't connect, so its animation is skipped. */
-const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected']);
+const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected', 'avoided', 'charge']);
 
 /**
  * Plans the cues for one turn's events. The result has one list per event,
@@ -127,6 +127,17 @@ export function planCues(
         if (e.amount <= 0) break;
         if (full && anims.common.heal) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.heal });
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'heal', motion: full });
+        break;
+      case 'charge': {
+        const charge = presentationFor(anims, e.moveId).chargeAnim;
+        if (full && charge) cues.push({ kind: 'commonAnim', side: e.side, anim: charge });
+        break;
+      }
+      case 'weather':
+        if (full) cues.push({ kind: 'commonAnim', side: 'player', anim: anims.common[`weather.${e.weather}`] ?? '' });
+        break;
+      case 'weatherDamage':
+        cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'damage', motion: full });
         break;
       case 'confused':
       case 'confusion':

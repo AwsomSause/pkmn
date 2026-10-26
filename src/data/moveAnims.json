@@ -12,7 +12,12 @@
   "confusion": "common-confusion",
   "protect": "common-protect",
   "bind": "common-bind",
-  "seed": "common-leech-seed"
+  "seed": "common-leech-seed",
+  "weather.rain": "common-rain",
+  "weather.sun": "common-sunny",
+  "weather.sand": "common-sandstorm",
+  "weather.hail": "common-hail",
+  "weather.snow": "common-snow"
  },
  "anims": {
   "absorb": {
@@ -510,6 +515,16 @@
     "prsfx-beak-blast4"
    ]
   },
+  "beak-blast-charging": {
+   "graphics": [
+    "pras-fire"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-beak-blast1",
+    "prsfx-beak-blast2"
+   ]
+  },
   "beat-up": {
    "graphics": [
     "pras-strike"
@@ -794,6 +809,14 @@
    "sounds": [
     "prsfx-bounce3",
     "prsfx-bounce4"
+   ]
+  },
+  "bounce-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-bounce1",
+    "prsfx-bounce2"
    ]
   },
   "bouncy-bubble": {
@@ -1275,6 +1298,15 @@
     "prsfx-frozen"
    ]
   },
+  "common-hail": {
+   "graphics": [
+    "pras-weather"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-hail"
+   ]
+  },
   "common-health-up": {
    "graphics": [
     "pras-recovery"
@@ -1320,6 +1352,26 @@
     "prsfx-protect"
    ]
   },
+  "common-rain": {
+   "graphics": [
+    "pras-weather"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-rain"
+   ]
+  },
+  "common-sandstorm": {
+   "graphics": [
+    "weather"
+   ],
+   "backgrounds": [
+    "pras-sandstorm"
+   ],
+   "sounds": [
+    "prsfx-sand"
+   ]
+  },
   "common-sleep": {
    "graphics": [
     "pras-status"
@@ -1327,6 +1379,26 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-sleep"
+   ]
+  },
+  "common-snow": {
+   "graphics": [
+    "pras-weather"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-hail"
+   ]
+  },
+  "common-sunny": {
+   "graphics": [
+    "weather"
+   ],
+   "backgrounds": [
+    "pras-sunny-day"
+   ],
+   "sounds": [
+    "prsfx-sunny"
    ]
   },
   "common-use-item": {
@@ -1676,6 +1748,15 @@
     "prsfx-dig2"
    ]
   },
+  "dig-charging": {
+   "graphics": [
+    "pras-dig"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-dig1"
+   ]
+  },
   "dire-claw": {
    "graphics": [
     "pras-slash"
@@ -1722,6 +1803,15 @@
     "prsfx-dive3"
    ]
   },
+  "dive-charging": {
+   "graphics": [
+    "pras-dive"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-dive1"
+   ]
+  },
   "dizzy-punch": {
    "graphics": [
     "pras-elemental-punch"
@@ -1749,6 +1839,15 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-psychic-terrain2"
+   ]
+  },
+  "doom-desire-charging": {
+   "graphics": [
+    "pras-wish"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-doom-desire1"
    ]
   },
   "double-edge": {
@@ -2153,6 +2252,15 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-charge-beam"
+   ]
+  },
+  "electro-shot-charging": {
+   "graphics": [
+    "pras-electric"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-charge"
    ]
   },
   "electroweb": {
@@ -2734,6 +2842,15 @@
     "prsfx-fly2"
    ]
   },
+  "fly-charging": {
+   "graphics": [
+    "pras-fly"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-fly2"
+   ]
+  },
   "flying-press": {
    "graphics": [
     "pras-strike"
@@ -2848,6 +2965,15 @@
     "prsfx-freeze-shock1",
     "prsfx-freeze-shock2",
     "prsfx-freeze-shock3"
+   ]
+  },
+  "freeze-shock-charging": {
+   "graphics": [
+    "pras-freeze-shock"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-freeze-shock1"
    ]
   },
   "freezing-glare": {
@@ -2968,6 +3094,17 @@
     "prsfx-future-sight2"
    ]
   },
+  "future-sight-charging": {
+   "graphics": [
+    "pras-kenesis"
+   ],
+   "backgrounds": [
+    "pras-black-bg"
+   ],
+   "sounds": [
+    "prsfx-future-sight1"
+   ]
+  },
   "gastro-acid": {
    "graphics": [
     "pras-gastro-acid"
@@ -3001,6 +3138,17 @@
    ]
   },
   "geomancy": {
+   "graphics": [
+    "pras-geomancy"
+   ],
+   "backgrounds": [
+    "pras-geomancy-bg"
+   ],
+   "sounds": [
+    "prsfx-geomancy"
+   ]
+  },
+  "geomancy-charging": {
    "graphics": [
     "pras-geomancy"
    ],
@@ -3698,6 +3846,15 @@
     "prsfx-ice-burn1",
     "prsfx-ice-burn2",
     "prsfx-ice-burn3"
+   ]
+  },
+  "ice-burn-charging": {
+   "graphics": [
+    "pras-ice-burn"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-ice-burn4"
    ]
   },
   "ice-fang": {
@@ -4579,6 +4736,17 @@
     "prsfx-solar-beam2"
    ]
   },
+  "meteor-beam-charging": {
+   "graphics": [
+    "pras-stats"
+   ],
+   "backgrounds": [
+    "pras-space-bg"
+   ],
+   "sounds": [
+    "prsfx-cosmic-power"
+   ]
+  },
   "meteor-mash": {
    "graphics": [
     "pras-meteor-mash"
@@ -5222,6 +5390,13 @@
    "backgrounds": [],
    "sounds": [
     "prsfx-phantom-force2"
+   ]
+  },
+  "phantom-force-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-phantom-force1"
    ]
   },
   "photon-geyser": {
@@ -5883,6 +6058,13 @@
     "wind8"
    ]
   },
+  "razor-wind-charging": {
+   "graphics": [
+    "pras-gust"
+   ],
+   "backgrounds": [],
+   "sounds": []
+  },
   "recover": {
    "graphics": [
     "pras-recovery"
@@ -6441,6 +6623,13 @@
     "prsfx-shadow-force2"
    ]
   },
+  "shadow-force-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-phantom-force1"
+   ]
+  },
   "shadow-punch": {
    "graphics": [
     "pras-shadow-punch"
@@ -6671,6 +6860,13 @@
     "prsfx-skull-bash2"
    ]
   },
+  "skull-bash-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-skull-bash1"
+   ]
+  },
   "sky-attack": {
    "graphics": [
     "pras-brave-bird"
@@ -6681,12 +6877,26 @@
     "prsfx-sky-attack3"
    ]
   },
+  "sky-attack-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-sky-attack1"
+   ]
+  },
   "sky-drop": {
    "graphics": [],
    "backgrounds": [],
    "sounds": [
     "prsfx-sky-drop2",
     "prsfx-sky-drop3"
+   ]
+  },
+  "sky-drop-charging": {
+   "graphics": [],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-sky-drop1"
    ]
   },
   "sky-uppercut": {
@@ -6901,6 +7111,15 @@
     "prsfx-solar-beam2"
    ]
   },
+  "solar-beam-charging": {
+   "graphics": [
+    "pras-orbs"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-solar-beam1"
+   ]
+  },
   "solar-blade": {
    "graphics": [
     "gen8-solar-blade"
@@ -6909,6 +7128,15 @@
    "sounds": [
     "saint7",
     "saint9"
+   ]
+  },
+  "solar-blade-charging": {
+   "graphics": [
+    "pras-orbs"
+   ],
+   "backgrounds": [],
+   "sounds": [
+    "prsfx-solar-beam1"
    ]
   },
   "sonic-boom": {
@@ -11808,6 +12036,38 @@
    "hitStopMs": 57,
    "telegraph": "quick"
   },
+  "ancient-power": {
+   "anim": "ancient-power",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 60,
+   "telegraph": "normal"
+  },
+  "chatter": {
+   "anim": "chatter",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 62,
+   "telegraph": "normal"
+  },
+  "dynamic-punch": {
+   "anim": "dynamic-punch",
+   "source": "own",
+   "shake": 3,
+   "flash": "#c03028",
+   "hitStopMs": 73,
+   "telegraph": "strong"
+  },
+  "ominous-wind": {
+   "anim": "ominous-wind",
+   "source": "own",
+   "shake": 2,
+   "flash": null,
+   "hitStopMs": 60,
+   "telegraph": "normal"
+  },
   "10-000-000-volt-thunderbolt": {
    "anim": "thunder-shock",
    "source": "type",
@@ -11870,14 +12130,6 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 67,
-   "telegraph": "normal"
-  },
-  "ancient-power": {
-   "anim": "ancient-power",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 60,
    "telegraph": "normal"
   },
   "aqua-ring": {
@@ -12014,7 +12266,8 @@
    "shake": 3,
    "flash": "#a890f0",
    "hitStopMs": 73,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "beak-blast-charging"
   },
   "beat-up": {
    "anim": "beat-up",
@@ -12142,7 +12395,8 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 68,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "bounce-charging"
   },
   "breaking-swipe": {
    "anim": "breaking-swipe",
@@ -12238,14 +12492,6 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
-  },
-  "chatter": {
-   "anim": "chatter",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 62,
    "telegraph": "normal"
   },
   "chilly-reception": {
@@ -12470,7 +12716,8 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 67,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "dig-charging"
   },
   "dire-claw": {
    "anim": "dire-claw",
@@ -12494,7 +12741,8 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 67,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "dive-charging"
   },
   "doodle": {
    "anim": "doodle",
@@ -12510,7 +12758,8 @@
    "shake": 3,
    "flash": "#b8b8d0",
    "hitStopMs": 87,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "doom-desire-charging"
   },
   "double-iron-bash": {
    "anim": "double-iron-bash",
@@ -12600,14 +12849,6 @@
    "hitStopMs": 73,
    "telegraph": "strong"
   },
-  "dynamic-punch": {
-   "anim": "dynamic-punch",
-   "source": "own",
-   "shake": 3,
-   "flash": "#c03028",
-   "hitStopMs": 73,
-   "telegraph": "strong"
-  },
   "echoed-voice": {
    "anim": "echoed-voice",
    "source": "own",
@@ -12662,7 +12903,8 @@
    "shake": 3,
    "flash": "#f8d030",
    "hitStopMs": 83,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "electro-shot-charging"
   },
   "embargo": {
    "anim": "embargo",
@@ -12894,7 +13136,8 @@
    "shake": 2,
    "flash": "#a890f0",
    "hitStopMs": 70,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "fly-charging"
   },
   "flying-press": {
    "anim": "flying-press",
@@ -12958,7 +13201,8 @@
    "shake": 3,
    "flash": "#98d8d8",
    "hitStopMs": 87,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "freeze-shock-charging"
   },
   "freeze-dry": {
    "anim": "freeze-dry",
@@ -13006,7 +13250,8 @@
    "shake": 3,
    "flash": "#f85888",
    "hitStopMs": 80,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "future-sight-charging"
   },
   "g-max-befuddle": {
    "anim": "string-shot",
@@ -13302,7 +13547,8 @@
    "shake": 0,
    "flash": null,
    "hitStopMs": 0,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "geomancy-charging"
   },
   "gigaton-hammer": {
    "anim": "gigaton-hammer",
@@ -13606,7 +13852,8 @@
    "shake": 3,
    "flash": "#98d8d8",
    "hitStopMs": 87,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "ice-burn-charging"
   },
   "ice-hammer": {
    "anim": "ice-hammer",
@@ -14158,7 +14405,8 @@
    "shake": 3,
    "flash": "#b8a038",
    "hitStopMs": 80,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "meteor-beam-charging"
   },
   "metronome": {
    "anim": "metronome",
@@ -14368,14 +14616,6 @@
    "hitStopMs": 0,
    "telegraph": "normal"
   },
-  "ominous-wind": {
-   "anim": "ominous-wind",
-   "source": "own",
-   "shake": 2,
-   "flash": null,
-   "hitStopMs": 60,
-   "telegraph": "normal"
-  },
   "order-up": {
    "anim": "order-up",
    "source": "own",
@@ -14446,7 +14686,8 @@
    "shake": 2,
    "flash": "#705898",
    "hitStopMs": 70,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "phantom-force-charging"
   },
   "photon-geyser": {
    "anim": "photon-geyser",
@@ -14742,7 +14983,8 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 67,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "razor-wind-charging"
   },
   "recycle": {
    "anim": "recycle",
@@ -14982,7 +15224,8 @@
    "shake": 3,
    "flash": "#705898",
    "hitStopMs": 80,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "shadow-force-charging"
   },
   "shattered-psyche": {
    "anim": "calm-mind",
@@ -15102,7 +15345,8 @@
    "shake": 3,
    "flash": "#a8a878",
    "hitStopMs": 83,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "skull-bash-charging"
   },
   "sky-attack": {
    "anim": "sky-attack",
@@ -15110,7 +15354,8 @@
    "shake": 3,
    "flash": "#a890f0",
    "hitStopMs": 87,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "sky-attack-charging"
   },
   "sky-drop": {
    "anim": "sky-drop",
@@ -15118,7 +15363,8 @@
    "shake": 2,
    "flash": null,
    "hitStopMs": 60,
-   "telegraph": "normal"
+   "telegraph": "normal",
+   "chargeAnim": "sky-drop-charging"
   },
   "sky-uppercut": {
    "anim": "sky-uppercut",
@@ -15206,7 +15452,8 @@
    "shake": 3,
    "flash": "#78c850",
    "hitStopMs": 80,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "solar-beam-charging"
   },
   "solar-blade": {
    "anim": "solar-blade",
@@ -15214,7 +15461,8 @@
    "shake": 3,
    "flash": "#78c850",
    "hitStopMs": 82,
-   "telegraph": "strong"
+   "telegraph": "strong",
+   "chargeAnim": "solar-blade-charging"
   },
   "sonic-boom": {
    "anim": "sonic-boom",

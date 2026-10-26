@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T03:44:59.014Z",
+  "generatedAt": "2026-10-26T08:46:47.525Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71995,6 +71995,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.beak-blast-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/beak-blast-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.beat-up",
       "kind": "json",
       "category": "animation",
@@ -72188,6 +72195,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/bounce.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.bounce-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/bounce-charging.json",
       "lazy": true
     },
     {
@@ -72534,6 +72548,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.common-hail",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-hail.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.common-health-up",
       "kind": "json",
       "category": "animation",
@@ -72569,10 +72590,38 @@
       "lazy": true
     },
     {
+      "id": "anim.data.common-rain",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-rain.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.common-sandstorm",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-sandstorm.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.common-sleep",
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/common-sleep.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.common-snow",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-snow.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.common-sunny",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/common-sunny.json",
       "lazy": true
     },
     {
@@ -72835,6 +72884,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.dig-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/dig-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.dire-claw",
       "kind": "json",
       "category": "animation",
@@ -72870,6 +72926,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.dive-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/dive-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.dizzy-punch",
       "kind": "json",
       "category": "animation",
@@ -72888,6 +72951,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/doom-desire.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.doom-desire-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/doom-desire-charging.json",
       "lazy": true
     },
     {
@@ -73175,6 +73245,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/electro-shot.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.electro-shot-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/electro-shot-charging.json",
       "lazy": true
     },
     {
@@ -73584,6 +73661,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.fly-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/fly-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.flying-press",
       "kind": "json",
       "category": "animation",
@@ -73658,6 +73742,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/freeze-shock.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.freeze-shock-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/freeze-shock-charging.json",
       "lazy": true
     },
     {
@@ -73738,6 +73829,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.future-sight-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/future-sight-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.gastro-acid",
       "kind": "json",
       "category": "animation",
@@ -73763,6 +73861,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/geomancy.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.geomancy-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/geomancy-charging.json",
       "lazy": true
     },
     {
@@ -74253,6 +74358,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/ice-burn.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ice-burn-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ice-burn-charging.json",
       "lazy": true
     },
     {
@@ -74865,6 +74977,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.meteor-beam-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/meteor-beam-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.meteor-mash",
       "kind": "json",
       "category": "animation",
@@ -75317,6 +75436,13 @@
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/phantom-force.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.phantom-force-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/phantom-force-charging.json",
       "lazy": true
     },
     {
@@ -75775,6 +75901,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.razor-wind-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/razor-wind-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.recover",
       "kind": "json",
       "category": "animation",
@@ -76174,6 +76307,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.shadow-force-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/shadow-force-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.shadow-punch",
       "kind": "json",
       "category": "animation",
@@ -76335,6 +76475,13 @@
       "lazy": true
     },
     {
+      "id": "anim.data.skull-bash-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/skull-bash-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.sky-attack",
       "kind": "json",
       "category": "animation",
@@ -76342,10 +76489,24 @@
       "lazy": true
     },
     {
+      "id": "anim.data.sky-attack-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/sky-attack-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.sky-drop",
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/sky-drop.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.sky-drop-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/sky-drop-charging.json",
       "lazy": true
     },
     {
@@ -76503,10 +76664,24 @@
       "lazy": true
     },
     {
+      "id": "anim.data.solar-beam-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/solar-beam-charging.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.solar-blade",
       "kind": "json",
       "category": "animation",
       "path": "battle-anims/solar-blade.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.solar-blade-charging",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/solar-blade-charging.json",
       "lazy": true
     },
     {
@@ -80686,6 +80861,14 @@
       "lazy": true
     },
     {
+      "id": "anim.sheet.weather",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/weather.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
       "id": "anim.bg.gen8-astralbarrage-bg",
       "kind": "image",
       "category": "animation",
@@ -81292,6 +81475,13 @@
       "kind": "image",
       "category": "animation",
       "path": "images/battle_anims/pras-retaliate-bg.png",
+      "lazy": true
+    },
+    {
+      "id": "anim.bg.pras-sandstorm",
+      "kind": "image",
+      "category": "animation",
+      "path": "images/battle_anims/pras-sandstorm.png",
       "lazy": true
     },
     {
@@ -82170,6 +82360,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-beak-blast1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-beak-blast1.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-beak-blast2",
       "kind": "audio",
       "category": "animation",
@@ -82426,6 +82623,20 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-boomburst.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-bounce1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-bounce1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-bounce2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-bounce2.m4a",
       "lazy": true
     },
     {
@@ -83031,6 +83242,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-dig1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-dig1.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-dig2",
       "kind": "audio",
       "category": "animation",
@@ -83049,6 +83267,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-discharge.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-dive1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-dive1.m4a",
       "lazy": true
     },
     {
@@ -83077,6 +83302,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-dizzy-punch2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-doom-desire1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-doom-desire1.m4a",
       "lazy": true
     },
     {
@@ -84137,6 +84369,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-future-sight1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-future-sight1.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-future-sight2",
       "kind": "audio",
       "category": "animation",
@@ -84372,6 +84611,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-gyro-ball2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-hail",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-hail.m4a",
       "lazy": true
     },
     {
@@ -84736,6 +84982,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-ice-burn3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-ice-burn4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-ice-burn4.m4a",
       "lazy": true
     },
     {
@@ -86013,6 +86266,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-phantom-force1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-phantom-force1.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-phantom-force2",
       "kind": "audio",
       "category": "animation",
@@ -86636,6 +86896,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-rain",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-rain.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-rain-dance",
       "kind": "audio",
       "category": "animation",
@@ -86927,6 +87194,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-safeguard.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-sand",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-sand.m4a",
       "lazy": true
     },
     {
@@ -87336,6 +87610,13 @@
       "lazy": true
     },
     {
+      "id": "anim.sound.prsfx-skull-bash1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-skull-bash1.m4a",
+      "lazy": true
+    },
+    {
       "id": "anim.sound.prsfx-skull-bash2",
       "kind": "audio",
       "category": "animation",
@@ -87361,6 +87642,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-sky-attack3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-sky-drop1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-sky-drop1.m4a",
       "lazy": true
     },
     {
@@ -87571,6 +87859,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-softboiled2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-solar-beam1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-solar-beam1.m4a",
       "lazy": true
     },
     {
@@ -87998,6 +88293,13 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/prsfx-sucker-punch2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.prsfx-sunny",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/prsfx-sunny.m4a",
       "lazy": true
     },
     {
