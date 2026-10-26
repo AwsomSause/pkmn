@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
-import type { Content } from './contentSchema';
+import type { AttributeKey, Content } from './contentSchema';
 import {
   candiesForRelease,
   CHAMPION_CLASS,
@@ -33,11 +33,12 @@ import {
 import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
-import { createPokemon, gainXp, getSpecies, maxHp, xpForDefeat } from './pokemon';
+import { createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
+import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { createStreams, Rng, withStream } from './rng';
@@ -293,7 +294,7 @@ function healParty(content: Content, run: RunState): void {
   for (const mon of run.party) {
     mon.hp = maxHp(content, mon);
     mon.status = null;
-    for (const slot of mon.moves) slot.pp = content.moves.get(slot.id)!.pp;
+    for (const slot of mon.moves) slot.pp = maxPp(content, slot);
   }
 }
 
@@ -451,10 +452,18 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
     }
     if (!defeated) continue;
     const baseExp = getSpecies(content, defeated.speciesId).baseExp;
-    for (const uid of participants) {
+    // Exp. Share: party members that didn't battle get its percent of the EXP.
+    const share = passivePercent(content, run, 'expShare');
+    const sharers = share > 0 ? run.party.filter((p) => p.hp > 0 && !participants.includes(p.uid)).map((p) => p.uid) : [];
+    const leadLevel = run.party[0]?.level ?? 0;
+    for (const uid of [...participants, ...sharers]) {
       const mon = run.party.find((p) => p.uid === uid);
       if (!mon || mon.hp <= 0) continue;
-      const amount = xpForDefeat(baseExp, defeated.level, mon.level, multiplier);
+      // Teachy TV: Pokémon below the lead's level catch up faster.
+      const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
+      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * (1 + catchUp / 100));
+      const amount = participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100);
+      if (amount <= 0) continue;
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
       out.push({ type: 'xp', uid, amount });
       if (result.levelsGained > 0) {
@@ -491,7 +500,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   } else {
     base = content.balance.money.wildPerEnemyLevel * currentEnemy(battle).level;
   }
-  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money);
+  // Amulet Coin (all prize money) and Luck Incense (trainers only) add their percent per copy.
+  const itemBonus = passivePercent(content, run, 'money') + (battle.kind === 'trainer' ? passivePercent(content, run, 'trainerMoney') : 0);
+  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + itemBonus / 100));
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -502,6 +513,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     caught.uid = nextUid(run, 'p');
     caughtSpeciesId = caught.speciesId;
     count(run, 'pokemonCaught');
+    // Photo Album: a species caught for the first time this run gives Love.
+    const album = passivePercent(content, run, 'newSpeciesLove');
+    if (album > 0 && !run.log.speciesCaught.includes(caught.speciesId)) addRunAttribute(content, run, 'love', album);
     discover(run, caught.speciesId, true);
     caughtPending.push({ kind: 'caught', mon: caught });
   }
@@ -529,7 +543,15 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const outcome = battle.outcome as 'win' | 'caught';
   const won = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
   const badge = won && classId === GYM_LEADER_CLASS ? won : null;
-  if (badge) run.badges.push(badge);
+  if (badge) {
+    run.badges.push(badge);
+    // Coin Case: interest on the money held; Fashion Case: Charisma per stage cleared.
+    const interest = Math.floor((run.money * passivePercent(content, run, 'gymInterest')) / 100);
+    run.money += interest;
+    count(run, 'moneyEarned', interest);
+    const charisma = passivePercent(content, run, 'stageCharisma');
+    if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
+  }
   if (outcome === 'win') {
     count(run, 'battlesWon');
     const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
@@ -629,7 +651,9 @@ export type DecisionChoice =
   | { kind: 'skipMove' }
   | { kind: 'addToParty' }
   | { kind: 'replace'; partyIndex: number }
-  | { kind: 'release' };
+  | { kind: 'release' }
+  | { kind: 'teachMove'; moveIndex: number }
+  | { kind: 'ppUpMove'; moveIndex: number };
 
 export interface DecisionResult {
   run: RunState;
@@ -643,6 +667,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
   const decision = run.pending[0];
   if (!decision) throw new Error('No decision is pending');
   let message: string;
+  let followUp: PendingDecision | null = null;
 
   if (decision.kind === 'learnMove') {
     const mon = run.party.find((p) => p.uid === decision.uid);
@@ -659,7 +684,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else {
       throw new Error('Choose a move to forget, or skip');
     }
-  } else {
+  } else if (decision.kind === 'caught') {
     const caught = decision.mon;
     const name = speciesName(content, caught.speciesId);
     if (choice.kind === 'addToParty') {
@@ -682,9 +707,49 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else {
       throw new Error('Choose what to do with the caught Pokémon');
     }
+  } else if (decision.kind === 'teachMove') {
+    const mon = run.party.find((p) => p.uid === decision.uid);
+    if (!mon) {
+      message = '';
+    } else if (choice.kind === 'teachMove') {
+      const moveId = decision.moveIds[choice.moveIndex];
+      if (!moveId) throw new Error(`Invalid move choice ${choice.moveIndex}`);
+      const move = content.moves.get(moveId)!;
+      if (mon.moves.length < 4) {
+        mon.moves.push({ id: move.id, pp: move.pp });
+        message = `${speciesName(content, mon.speciesId)} learned ${move.name}!`;
+      } else {
+        // Four moves known: ask which to forget, like a level-up move.
+        followUp = { kind: 'learnMove', uid: mon.uid, moveId };
+        message = `${speciesName(content, mon.speciesId)} wants to learn ${move.name}.`;
+      }
+    } else if (choice.kind === 'skipMove') {
+      message = `The ${decision.itemName} went unused.`;
+    } else {
+      throw new Error('Choose a move to teach, or skip');
+    }
+  } else {
+    const mon = run.party.find((p) => p.uid === decision.uid);
+    if (!mon) {
+      message = '';
+    } else if (choice.kind === 'ppUpMove') {
+      const slot = mon.moves[choice.moveIndex];
+      if (!slot) throw new Error(`Invalid move slot ${choice.moveIndex}`);
+      const room = MAX_PP_UPS - (slot.ppUps ?? 0);
+      if (room <= 0) throw new Error('That move already has the most PP it can.');
+      const before = maxPp(content, slot);
+      slot.ppUps = (slot.ppUps ?? 0) + Math.min(room, decision.ups);
+      slot.pp += maxPp(content, slot) - before;
+      message = `${content.moves.get(slot.id)!.name}'s max PP rose to ${maxPp(content, slot)}!`;
+    } else if (choice.kind === 'skipMove') {
+      message = `The ${decision.itemName} went unused.`;
+    } else {
+      throw new Error('Choose a move for the ' + decision.itemName);
+    }
   }
 
   run.pending.shift();
+  if (followUp) run.pending.unshift(followUp);
   continueAfterDecisions(content, run);
   return { run, message };
 }
@@ -705,8 +770,14 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
   const problem = rewardTargetProblem(content, current, content.rewards.get(rewardId)!, targetIndex);
   if (problem) throw new Error(problem);
   const run = structuredClone(current);
-  const reward = applyReward(content, run, getArchetype(content, run.archetypeId), rewardId, targetIndex);
+  const reward = withStream(run.rng, 'reward', (r) => applyReward(content, run, getArchetype(content, run.archetypeId), rewardId, targetIndex, r));
   count(run, 'moneyEarned', run.money - current.money);
+  if (reward.reroll) {
+    // A free re-roll: a fresh draft, still in the reward phase.
+    const weights = luckWeights(rewardWeights(content, run), runAttributeEffects(content, run));
+    run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
+    return { run, reward };
+  }
   run.draft = null;
   run.pending.push(...reward.pending);
   run.afterDecisions = 'map';
@@ -734,6 +805,25 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
   if (item.effect.kind === 'evolve') count(run, 'evolutions');
   consumeItem(run.inventory, itemId);
   return { run, message };
+}
+
+/** Whether a Bag item can be cashed in now: it has a cash-in value and nobody in the party can use it. */
+export function canCashIn(content: Content, run: RunState, itemId: string): boolean {
+  const item = content.items.get(itemId);
+  if (!item?.cashIn || itemCount(run.inventory, itemId) <= 0) return false;
+  const regionId = run.regionOrder[run.regionIndex];
+  return !run.party.some((mon) => itemUseProblem(content, item, mon, regionId) === null);
+}
+
+/** Trades an evolution item nobody in the party can use for its attribute bonus (M8.75 item effects). */
+export function cashInItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
+  assertPhase(current, 'reward', 'decision', 'map', 'shop');
+  const item = getItem(content, itemId);
+  if (!canCashIn(content, current, itemId)) throw new Error(`The ${item.name} can't be cashed in right now`);
+  const run = structuredClone(current);
+  consumeItem(run.inventory, itemId);
+  const parts = Object.entries(item.cashIn!).map(([key, amount]) => attributeText(key as AttributeKey, addRunAttribute(content, run, key as AttributeKey, amount)));
+  return { run, message: `You cashed in the ${item.name}: ${parts.join(', ')}.` };
 }
 
 /** Moves a party member to the front, so it leads the next battle. */

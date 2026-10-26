@@ -3,7 +3,7 @@
 
 import type { Content, Item } from './contentSchema';
 import { evolve, itemEvolutionTargets } from './evolution';
-import { getSpecies, maxHp } from './pokemon';
+import { getSpecies, maxHp, maxPp } from './pokemon';
 import type { PokemonInstance } from './state';
 
 export function getItem(content: Content, id: string): Item {
@@ -44,7 +44,7 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
       return mon.hp < maxHp(content, mon) || mon.status ? null : `${name} is already healthy.`;
     case 'restorePp':
       if (fainted) return `${name} has fainted.`;
-      return mon.moves.some((m) => m.pp < content.moves.get(m.id)!.pp) ? null : `${name}'s PP is already full.`;
+      return mon.moves.some((m) => m.pp < maxPp(content, m)) ? null : `${name}'s PP is already full.`;
     case 'revive':
       return fainted ? null : `${name} hasn't fainted.`;
     case 'evolve':
@@ -87,7 +87,7 @@ export function applyItemToPokemon(content: Content, item: Item, mon: PokemonIns
       mon.status = null;
       return `${name} is fully restored.`;
     case 'restorePp':
-      for (const slot of mon.moves) slot.pp = Math.min(content.moves.get(slot.id)!.pp, slot.pp + (item.effect as { amount: number }).amount);
+      for (const slot of mon.moves) slot.pp = Math.min(maxPp(content, slot), slot.pp + (item.effect as { amount: number }).amount);
       return `${name}'s moves regained PP.`;
     case 'revive':
       mon.hp = Math.max(1, Math.floor(max * item.effect.fraction));

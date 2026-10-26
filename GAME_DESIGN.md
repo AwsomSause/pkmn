@@ -152,8 +152,11 @@ After every completed encounter, show five *different* rewards; pick exactly one
 - Each reward entry has: id, category, rarity tier, effect, stacking rule, duration, scope, restrictions.
 - Rarity tiers **[PROPOSED]**: Common, Uncommon, Rare, Epic, Legendary, each with a base weight.
 - Bosses improve the weights (gym < Elite Four < champion < final boss).
-- Luck multiplies the uncommon and rare weights (§9); common is unchanged, so luck never guarantees rare.
+- Luck multiplies the uncommon, rare and epic weights (§9); common is unchanged, so luck never guarantees rare.
 - Too few valid rewards → configuration error, never duplicates.
+- **Item catalog and variety** (item effects, slice 1, 2026-10-26): every working catalog item is a reward with its own family (Wings, TMs, valuables…). Each slot rolls a tier, then a family, then an item. A family already in the draft keeps only half its chance (`repeatFamilyWeight` 0.5), and Luck cuts that further: at Luck 100 a draft never repeats a family while others are left (director: "five items a draft with variety based on luck stats").
+- **Stacking:** a catalog item stacks on a Pokémon (Wings: up to 10 each; PP Ups: 3 per move), on the team or on the player (Amulet Coin up to 5, Exp. Share 1). A team or player item already at its max still appears; picking it is a **free re-roll** of the draft (director's answer 5).
+- **TMs and HMs:** a TM teaches 1 of 3 random moves of its type the Pokémon can learn; an HM lets you pick any of them (up to 15 shown).
 
 ## 9. Attributes (built in Milestone 7)
 
@@ -167,7 +170,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 | Intelligence | Special moves +1% damage | +100% |
 | Speed | Your Pokémon +1% Speed | +100% |
 | Charisma | Shop prices −0.5%, experience +1%, friendship gains +1% | half price, double experience, double friendship gains |
-| Luck | Uncommon reward weight +0.5%, rare +1%, shiny chance +1% | rare ×2, shinies ×2 |
+| Luck | Uncommon reward weight +0.5%, rare +1%, epic +1.5%, shiny chance +1%, more varied drafts | rare ×2, epic ×2.5, shinies ×2, no repeated item families |
 | Love | +0.1% chance to hang on at 1 HP after a lethal hit, once per Pokémon per battle | 10% |
 | Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |
 | Peace | Healing +2%, damage taken −0.5% | +200% / half damage taken |
@@ -327,6 +330,7 @@ What that means in plain language:
 | audio.zip | 424 MB zipped, 5,490 entries | `bgm/` 181 (incl. `title.mp3`, `menu.mp3`, `battle_wild.mp3`, `town.mp3`, gym/elite/champion tracks), `cry/` 1,201 (`.m4a` by dex number), `se/` 40 (hit, faint, level_up, pb_throw, pb_catch, buy, save…), `ui/` 4 (select, menu_open, error…), `battle_anims/` 1,317 sound effects. |
 | battle-anims.zip | 1.9 MB, 929 `.json` files | Per-move animation data (e.g. `tackle.json`, frame lists referencing graphics like `PRAS- Strike`). Needs a custom player; planned for a later milestone. |
 | fonts.zip | 1.8 MB | `pokemon-emerald-pro.ttf`, `pkmnems.ttf`, `rogue-thai.ttf`, `terrible-thaifix.ttf`, `8-bit-devanagari.ttf`, `item-count.png/.xml` (bitmap font). |
+| itemicons.zip (2026-10-25, item effects) | 580 PNGs, 24×24, Gen 5-style item icons named by item (`deepseascale.png`, `x-attack.png`); `0.png` is a blank icon | The 550 icons the item catalog uses are copied to `public/assets/images/items/gen5/` (asset id `item.gen5/<name>`). Same origin notes as the other packs (Nintendo item art). |
 
 **Not supplied (needed):**
 - **Game data.** Species stats, types, moves, learnsets, catch rates, evolutions. These packs are art and sound only. **[PROPOSED]** Generate our own JSON from an open dataset (Pokémon Showdown's data is MIT-licensed) with an import script; M1 uses a small hand-checked subset.

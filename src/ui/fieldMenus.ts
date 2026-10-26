@@ -3,7 +3,10 @@
 
 import type Phaser from 'phaser';
 import { itemEvolutionTargets } from '../core/evolution';
+import { attributeText } from '../core/attributes';
+import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
+import { canCashIn } from '../core/run';
 import { services } from '../game/services';
 import { bagRow, partyRows, Picker, speciesRow } from './partyPanel';
 
@@ -52,12 +55,17 @@ export function openBagMenu(host: FieldMenuHost): void {
     rows: allIds.map((id) => {
       const item = content.items.get(id)!;
       const anyTarget = item.usableOutside && run.party.some((mon) => itemUseProblem(content, item, mon, regionId) === null);
+      if (canCashIn(content, run, id)) {
+        const gives = Object.entries(item.cashIn!).map(([key, amount]) => attributeText(key as AttributeKey, amount)).join(', ');
+        return { ...bagRow(content, run.inventory, id, null), hint: `Nobody can use it. Choose it to cash it in for ${gives}.` };
+      }
       const problem = !item.usableOutside ? `${item.name}: ${item.description}` : anyTarget ? null : `No Pokémon needs the ${item.name} right now.`;
       return bagRow(content, run.inventory, id, problem);
     }),
     onSelect: (i) => {
       close(host, picker);
-      openItemTarget(host, allIds[i]!);
+      if (canCashIn(content, run, allIds[i]!)) host.changed(session.cashIn(allIds[i]!));
+      else openItemTarget(host, allIds[i]!);
     },
     onBack: () => close(host, picker),
   });

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T22:51:51.777Z",
+  "generatedAt": "2026-10-26T08:50:32.482Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71326,6 +71326,3306 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/dread_plate.png"
+    },
+    {
+      "id": "item.gen5/x-attack",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-attack.png"
+    },
+    {
+      "id": "item.gen5/x-attack-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-attack-2.png"
+    },
+    {
+      "id": "item.gen5/x-attack-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-attack-3.png"
+    },
+    {
+      "id": "item.gen5/x-attack-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-attack-6.png"
+    },
+    {
+      "id": "item.gen5/x-defend",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-defend.png"
+    },
+    {
+      "id": "item.gen5/x-defend-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-defend-2.png"
+    },
+    {
+      "id": "item.gen5/x-defend-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-defend-3.png"
+    },
+    {
+      "id": "item.gen5/x-defend-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-defend-6.png"
+    },
+    {
+      "id": "item.gen5/x-special",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-special.png"
+    },
+    {
+      "id": "item.gen5/x-special-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-special-2.png"
+    },
+    {
+      "id": "item.gen5/x-special-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-special-3.png"
+    },
+    {
+      "id": "item.gen5/x-special-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-special-6.png"
+    },
+    {
+      "id": "item.gen5/x-sp-def",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-sp-def.png"
+    },
+    {
+      "id": "item.gen5/x-sp-def-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-sp-def-2.png"
+    },
+    {
+      "id": "item.gen5/x-sp-def-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-sp-def-3.png"
+    },
+    {
+      "id": "item.gen5/x-sp-def-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-sp-def-6.png"
+    },
+    {
+      "id": "item.gen5/x-speed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-speed.png"
+    },
+    {
+      "id": "item.gen5/x-speed-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-speed-2.png"
+    },
+    {
+      "id": "item.gen5/x-speed-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-speed-3.png"
+    },
+    {
+      "id": "item.gen5/x-speed-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-speed-6.png"
+    },
+    {
+      "id": "item.gen5/x-accuracy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-accuracy.png"
+    },
+    {
+      "id": "item.gen5/x-accuracy-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-accuracy-2.png"
+    },
+    {
+      "id": "item.gen5/x-accuracy-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-accuracy-3.png"
+    },
+    {
+      "id": "item.gen5/x-accuracy-6",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/x-accuracy-6.png"
+    },
+    {
+      "id": "item.gen5/dire-hit",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dire-hit.png"
+    },
+    {
+      "id": "item.gen5/dire-hit-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dire-hit-2.png"
+    },
+    {
+      "id": "item.gen5/dire-hit-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dire-hit-3.png"
+    },
+    {
+      "id": "item.gen5/guard-spec",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/guard-spec.png"
+    },
+    {
+      "id": "item.gen5/hp-up",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hp-up.png"
+    },
+    {
+      "id": "item.gen5/protein",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/protein.png"
+    },
+    {
+      "id": "item.gen5/iron",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/iron.png"
+    },
+    {
+      "id": "item.gen5/calcium",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/calcium.png"
+    },
+    {
+      "id": "item.gen5/zinc",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/zinc.png"
+    },
+    {
+      "id": "item.gen5/carbos",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/carbos.png"
+    },
+    {
+      "id": "item.gen5/rare-candy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rare-candy.png"
+    },
+    {
+      "id": "item.gen5/health-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/health-wing.png"
+    },
+    {
+      "id": "item.gen5/muscle-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/muscle-wing.png"
+    },
+    {
+      "id": "item.gen5/resist-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/resist-wing.png"
+    },
+    {
+      "id": "item.gen5/genius-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/genius-wing.png"
+    },
+    {
+      "id": "item.gen5/clever-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/clever-wing.png"
+    },
+    {
+      "id": "item.gen5/swift-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/swift-wing.png"
+    },
+    {
+      "id": "item.gen5/pretty-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pretty-wing.png"
+    },
+    {
+      "id": "item.gen5/pp-up",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pp-up.png"
+    },
+    {
+      "id": "item.gen5/pp-max",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pp-max.png"
+    },
+    {
+      "id": "item.gen5/silk-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/silk-scarf.png"
+    },
+    {
+      "id": "item.gen5/black-belt",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/black-belt.png"
+    },
+    {
+      "id": "item.gen5/sharp-beak",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sharp-beak.png"
+    },
+    {
+      "id": "item.gen5/poison-barb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poison-barb.png"
+    },
+    {
+      "id": "item.gen5/soft-sand",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/soft-sand.png"
+    },
+    {
+      "id": "item.gen5/hard-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hard-stone.png"
+    },
+    {
+      "id": "item.gen5/silverpowder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/silverpowder.png"
+    },
+    {
+      "id": "item.gen5/spell-tag",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/spell-tag.png"
+    },
+    {
+      "id": "item.gen5/metal-coat",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/metal-coat.png"
+    },
+    {
+      "id": "item.gen5/charcoal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/charcoal.png"
+    },
+    {
+      "id": "item.gen5/mystic-water",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mystic-water.png"
+    },
+    {
+      "id": "item.gen5/miracle-seed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/miracle-seed.png"
+    },
+    {
+      "id": "item.gen5/magnet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/magnet.png"
+    },
+    {
+      "id": "item.gen5/twistedspoon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/twistedspoon.png"
+    },
+    {
+      "id": "item.gen5/nevermeltice",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/nevermeltice.png"
+    },
+    {
+      "id": "item.gen5/dragon-fang",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-fang.png"
+    },
+    {
+      "id": "item.gen5/normal-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/normal-gem.png"
+    },
+    {
+      "id": "item.gen5/fighting-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fighting-gem.png"
+    },
+    {
+      "id": "item.gen5/flying-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flying-gem.png"
+    },
+    {
+      "id": "item.gen5/poison-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poison-gem.png"
+    },
+    {
+      "id": "item.gen5/ground-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ground-gem.png"
+    },
+    {
+      "id": "item.gen5/rock-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rock-gem.png"
+    },
+    {
+      "id": "item.gen5/bug-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bug-gem.png"
+    },
+    {
+      "id": "item.gen5/ghost-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ghost-gem.png"
+    },
+    {
+      "id": "item.gen5/steel-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/steel-gem.png"
+    },
+    {
+      "id": "item.gen5/fire-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fire-gem.png"
+    },
+    {
+      "id": "item.gen5/water-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/water-gem.png"
+    },
+    {
+      "id": "item.gen5/grass-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grass-gem.png"
+    },
+    {
+      "id": "item.gen5/electric-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/electric-gem.png"
+    },
+    {
+      "id": "item.gen5/psychic-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/psychic-gem.png"
+    },
+    {
+      "id": "item.gen5/ice-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ice-gem.png"
+    },
+    {
+      "id": "item.gen5/dragon-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-gem.png"
+    },
+    {
+      "id": "item.gen5/dark-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dark-gem.png"
+    },
+    {
+      "id": "item.gen5/fist-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fist-plate.png"
+    },
+    {
+      "id": "item.gen5/mind-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mind-plate.png"
+    },
+    {
+      "id": "item.gen5/zap-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/zap-plate.png"
+    },
+    {
+      "id": "item.gen5/flame-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flame-plate.png"
+    },
+    {
+      "id": "item.gen5/meadow-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/meadow-plate.png"
+    },
+    {
+      "id": "item.gen5/dread-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dread-plate.png"
+    },
+    {
+      "id": "item.gen5/0",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/0.png"
+    },
+    {
+      "id": "item.gen5/draco-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/draco-plate.png"
+    },
+    {
+      "id": "item.gen5/earth-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/earth-plate.png"
+    },
+    {
+      "id": "item.gen5/icicle-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/icicle-plate.png"
+    },
+    {
+      "id": "item.gen5/insect-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/insect-plate.png"
+    },
+    {
+      "id": "item.gen5/iron-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/iron-plate.png"
+    },
+    {
+      "id": "item.gen5/sky-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sky-plate.png"
+    },
+    {
+      "id": "item.gen5/splash-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/splash-plate.png"
+    },
+    {
+      "id": "item.gen5/spooky-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/spooky-plate.png"
+    },
+    {
+      "id": "item.gen5/stone-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/stone-plate.png"
+    },
+    {
+      "id": "item.gen5/toxic-plate",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/toxic-plate.png"
+    },
+    {
+      "id": "item.gen5/burn-drive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/burn-drive.png"
+    },
+    {
+      "id": "item.gen5/chill-drive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/chill-drive.png"
+    },
+    {
+      "id": "item.gen5/douse-drive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/douse-drive.png"
+    },
+    {
+      "id": "item.gen5/shock-drive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shock-drive.png"
+    },
+    {
+      "id": "item.gen5/leftovers",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/leftovers.png"
+    },
+    {
+      "id": "item.gen5/razor-fang",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/razor-fang.png"
+    },
+    {
+      "id": "item.gen5/scope-lens",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/scope-lens.png"
+    },
+    {
+      "id": "item.gen5/focus-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/focus-band.png"
+    },
+    {
+      "id": "item.gen5/focus-sash",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/focus-sash.png"
+    },
+    {
+      "id": "item.gen5/choice-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/choice-band.png"
+    },
+    {
+      "id": "item.gen5/choice-specs",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/choice-specs.png"
+    },
+    {
+      "id": "item.gen5/choice-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/choice-scarf.png"
+    },
+    {
+      "id": "item.gen5/life-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/life-orb.png"
+    },
+    {
+      "id": "item.gen5/expert-belt",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/expert-belt.png"
+    },
+    {
+      "id": "item.gen5/muscle-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/muscle-band.png"
+    },
+    {
+      "id": "item.gen5/wide-lens",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wide-lens.png"
+    },
+    {
+      "id": "item.gen5/zoom-lens",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/zoom-lens.png"
+    },
+    {
+      "id": "item.gen5/brightpowder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/brightpowder.png"
+    },
+    {
+      "id": "item.gen5/eviolite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/eviolite.png"
+    },
+    {
+      "id": "item.gen5/light-clay",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/light-clay.png"
+    },
+    {
+      "id": "item.gen5/heat-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/heat-rock.png"
+    },
+    {
+      "id": "item.gen5/damp-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/damp-rock.png"
+    },
+    {
+      "id": "item.gen5/icy-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/icy-rock.png"
+    },
+    {
+      "id": "item.gen5/smooth-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/smooth-rock.png"
+    },
+    {
+      "id": "item.gen5/iron-ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/iron-ball.png"
+    },
+    {
+      "id": "item.gen5/lagging-tail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lagging-tail.png"
+    },
+    {
+      "id": "item.gen5/sticky-barb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sticky-barb.png"
+    },
+    {
+      "id": "item.gen5/toxic-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/toxic-orb.png"
+    },
+    {
+      "id": "item.gen5/flame-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flame-orb.png"
+    },
+    {
+      "id": "item.gen5/black-sludge",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/black-sludge.png"
+    },
+    {
+      "id": "item.gen5/rocky-helmet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rocky-helmet.png"
+    },
+    {
+      "id": "item.gen5/air-balloon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/air-balloon.png"
+    },
+    {
+      "id": "item.gen5/red-card",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-card.png"
+    },
+    {
+      "id": "item.gen5/eject-button",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/eject-button.png"
+    },
+    {
+      "id": "item.gen5/shed-shell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shed-shell.png"
+    },
+    {
+      "id": "item.gen5/binding-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/binding-band.png"
+    },
+    {
+      "id": "item.gen5/grip-claw",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grip-claw.png"
+    },
+    {
+      "id": "item.gen5/big-root",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/big-root.png"
+    },
+    {
+      "id": "item.gen5/power-herb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-herb.png"
+    },
+    {
+      "id": "item.gen5/white-herb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/white-herb.png"
+    },
+    {
+      "id": "item.gen5/mental-herb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mental-herb.png"
+    },
+    {
+      "id": "item.gen5/destiny-knot",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/destiny-knot.png"
+    },
+    {
+      "id": "item.gen5/metronome",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/metronome.png"
+    },
+    {
+      "id": "item.gen5/float-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/float-stone.png"
+    },
+    {
+      "id": "item.gen5/smoke-ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/smoke-ball.png"
+    },
+    {
+      "id": "item.gen5/cleanse-tag",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cleanse-tag.png"
+    },
+    {
+      "id": "item.gen5/macho-brace",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/macho-brace.png"
+    },
+    {
+      "id": "item.gen5/power-weight",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-weight.png"
+    },
+    {
+      "id": "item.gen5/power-bracer",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-bracer.png"
+    },
+    {
+      "id": "item.gen5/power-belt",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-belt.png"
+    },
+    {
+      "id": "item.gen5/power-lens",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-lens.png"
+    },
+    {
+      "id": "item.gen5/power-anklet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-anklet.png"
+    },
+    {
+      "id": "item.gen5/everstone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/everstone.png"
+    },
+    {
+      "id": "item.gen5/exp-share",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/exp-share.png"
+    },
+    {
+      "id": "item.gen5/amulet-coin",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/amulet-coin.png"
+    },
+    {
+      "id": "item.gen5/light-ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/light-ball.png"
+    },
+    {
+      "id": "item.gen5/thick-club",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/thick-club.png"
+    },
+    {
+      "id": "item.gen5/lucky-punch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lucky-punch.png"
+    },
+    {
+      "id": "item.gen5/stick",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/stick.png"
+    },
+    {
+      "id": "item.gen5/metal-powder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/metal-powder.png"
+    },
+    {
+      "id": "item.gen5/quick-powder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/quick-powder.png"
+    },
+    {
+      "id": "item.gen5/deepseatooth",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/deepseatooth.png"
+    },
+    {
+      "id": "item.gen5/deepseascale",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/deepseascale.png"
+    },
+    {
+      "id": "item.gen5/soul-dew",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/soul-dew.png"
+    },
+    {
+      "id": "item.gen5/adamant-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/adamant-orb.png"
+    },
+    {
+      "id": "item.gen5/lustrous-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lustrous-orb.png"
+    },
+    {
+      "id": "item.gen5/griseous-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/griseous-orb.png"
+    },
+    {
+      "id": "item.gen5/gracidea",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gracidea.png"
+    },
+    {
+      "id": "item.gen5/red-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-orb.png"
+    },
+    {
+      "id": "item.gen5/blue-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-orb.png"
+    },
+    {
+      "id": "item.gen5/jade-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/jade-orb.png"
+    },
+    {
+      "id": "item.gen5/fire-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fire-stone.png"
+    },
+    {
+      "id": "item.gen5/water-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/water-stone.png"
+    },
+    {
+      "id": "item.gen5/thunderstone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/thunderstone.png"
+    },
+    {
+      "id": "item.gen5/leaf-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/leaf-stone.png"
+    },
+    {
+      "id": "item.gen5/moon-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/moon-stone.png"
+    },
+    {
+      "id": "item.gen5/sun-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sun-stone.png"
+    },
+    {
+      "id": "item.gen5/dawn-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dawn-stone.png"
+    },
+    {
+      "id": "item.gen5/dusk-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dusk-stone.png"
+    },
+    {
+      "id": "item.gen5/shiny-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shiny-stone.png"
+    },
+    {
+      "id": "item.gen5/oval-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/oval-stone.png"
+    },
+    {
+      "id": "item.gen5/dragon-scale",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-scale.png"
+    },
+    {
+      "id": "item.gen5/up-grade",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/up-grade.png"
+    },
+    {
+      "id": "item.gen5/dubious-disc",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dubious-disc.png"
+    },
+    {
+      "id": "item.gen5/protector",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/protector.png"
+    },
+    {
+      "id": "item.gen5/electirizer",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/electirizer.png"
+    },
+    {
+      "id": "item.gen5/magmarizer",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/magmarizer.png"
+    },
+    {
+      "id": "item.gen5/reaper-cloth",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/reaper-cloth.png"
+    },
+    {
+      "id": "item.gen5/prism-scale",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/prism-scale.png"
+    },
+    {
+      "id": "item.gen5/oran-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/oran-berry.png"
+    },
+    {
+      "id": "item.gen5/sitrus-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sitrus-berry.png"
+    },
+    {
+      "id": "item.gen5/figy-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/figy-berry.png"
+    },
+    {
+      "id": "item.gen5/wiki-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wiki-berry.png"
+    },
+    {
+      "id": "item.gen5/mago-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mago-berry.png"
+    },
+    {
+      "id": "item.gen5/aguav-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/aguav-berry.png"
+    },
+    {
+      "id": "item.gen5/iapapa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/iapapa-berry.png"
+    },
+    {
+      "id": "item.gen5/cheri-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cheri-berry.png"
+    },
+    {
+      "id": "item.gen5/chesto-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/chesto-berry.png"
+    },
+    {
+      "id": "item.gen5/pecha-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pecha-berry.png"
+    },
+    {
+      "id": "item.gen5/rawst-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rawst-berry.png"
+    },
+    {
+      "id": "item.gen5/aspear-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/aspear-berry.png"
+    },
+    {
+      "id": "item.gen5/persim-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/persim-berry.png"
+    },
+    {
+      "id": "item.gen5/lum-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lum-berry.png"
+    },
+    {
+      "id": "item.gen5/leppa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/leppa-berry.png"
+    },
+    {
+      "id": "item.gen5/liechi-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/liechi-berry.png"
+    },
+    {
+      "id": "item.gen5/ganlon-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ganlon-berry.png"
+    },
+    {
+      "id": "item.gen5/salac-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/salac-berry.png"
+    },
+    {
+      "id": "item.gen5/petaya-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/petaya-berry.png"
+    },
+    {
+      "id": "item.gen5/apicot-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/apicot-berry.png"
+    },
+    {
+      "id": "item.gen5/lansat-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lansat-berry.png"
+    },
+    {
+      "id": "item.gen5/starf-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/starf-berry.png"
+    },
+    {
+      "id": "item.gen5/micle-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/micle-berry.png"
+    },
+    {
+      "id": "item.gen5/custap-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/custap-berry.png"
+    },
+    {
+      "id": "item.gen5/enigma-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/enigma-berry.png"
+    },
+    {
+      "id": "item.gen5/jaboca-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/jaboca-berry.png"
+    },
+    {
+      "id": "item.gen5/rowap-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rowap-berry.png"
+    },
+    {
+      "id": "item.gen5/occa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/occa-berry.png"
+    },
+    {
+      "id": "item.gen5/passho-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/passho-berry.png"
+    },
+    {
+      "id": "item.gen5/wacan-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wacan-berry.png"
+    },
+    {
+      "id": "item.gen5/rindo-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rindo-berry.png"
+    },
+    {
+      "id": "item.gen5/yache-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/yache-berry.png"
+    },
+    {
+      "id": "item.gen5/chople-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/chople-berry.png"
+    },
+    {
+      "id": "item.gen5/kebia-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kebia-berry.png"
+    },
+    {
+      "id": "item.gen5/shuca-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shuca-berry.png"
+    },
+    {
+      "id": "item.gen5/coba-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/coba-berry.png"
+    },
+    {
+      "id": "item.gen5/payapa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/payapa-berry.png"
+    },
+    {
+      "id": "item.gen5/tanga-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tanga-berry.png"
+    },
+    {
+      "id": "item.gen5/charti-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/charti-berry.png"
+    },
+    {
+      "id": "item.gen5/kasib-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kasib-berry.png"
+    },
+    {
+      "id": "item.gen5/haban-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/haban-berry.png"
+    },
+    {
+      "id": "item.gen5/colbur-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/colbur-berry.png"
+    },
+    {
+      "id": "item.gen5/babiri-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/babiri-berry.png"
+    },
+    {
+      "id": "item.gen5/chilan-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/chilan-berry.png"
+    },
+    {
+      "id": "item.gen5/pomeg-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pomeg-berry.png"
+    },
+    {
+      "id": "item.gen5/kelpsy-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kelpsy-berry.png"
+    },
+    {
+      "id": "item.gen5/qualot-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/qualot-berry.png"
+    },
+    {
+      "id": "item.gen5/hondew-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hondew-berry.png"
+    },
+    {
+      "id": "item.gen5/grepa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grepa-berry.png"
+    },
+    {
+      "id": "item.gen5/tamato-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tamato-berry.png"
+    },
+    {
+      "id": "item.gen5/razz-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/razz-berry.png"
+    },
+    {
+      "id": "item.gen5/nanab-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/nanab-berry.png"
+    },
+    {
+      "id": "item.gen5/pinap-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pinap-berry.png"
+    },
+    {
+      "id": "item.gen5/bluk-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bluk-berry.png"
+    },
+    {
+      "id": "item.gen5/wepear-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wepear-berry.png"
+    },
+    {
+      "id": "item.gen5/cornn-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cornn-berry.png"
+    },
+    {
+      "id": "item.gen5/magost-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/magost-berry.png"
+    },
+    {
+      "id": "item.gen5/rabuta-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rabuta-berry.png"
+    },
+    {
+      "id": "item.gen5/nomel-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/nomel-berry.png"
+    },
+    {
+      "id": "item.gen5/spelon-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/spelon-berry.png"
+    },
+    {
+      "id": "item.gen5/pamtre-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pamtre-berry.png"
+    },
+    {
+      "id": "item.gen5/watmel-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/watmel-berry.png"
+    },
+    {
+      "id": "item.gen5/durin-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/durin-berry.png"
+    },
+    {
+      "id": "item.gen5/belue-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/belue-berry.png"
+    },
+    {
+      "id": "item.gen5/power-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/power-band.png"
+    },
+    {
+      "id": "item.gen5/wise-glasses",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wise-glasses.png"
+    },
+    {
+      "id": "item.gen5/quick-claw",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/quick-claw.png"
+    },
+    {
+      "id": "item.gen5/lucky-egg",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lucky-egg.png"
+    },
+    {
+      "id": "item.gen5/soothe-bell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/soothe-bell.png"
+    },
+    {
+      "id": "item.gen5/razor-claw",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/razor-claw.png"
+    },
+    {
+      "id": "item.gen5/shell-bell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shell-bell.png"
+    },
+    {
+      "id": "item.gen5/kings-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kings-rock.png"
+    },
+    {
+      "id": "item.gen5/blackglasses",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blackglasses.png"
+    },
+    {
+      "id": "item.gen5/heart-scale",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/heart-scale.png"
+    },
+    {
+      "id": "item.gen5/red-shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-shard.png"
+    },
+    {
+      "id": "item.gen5/blue-shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-shard.png"
+    },
+    {
+      "id": "item.gen5/yellow-shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/yellow-shard.png"
+    },
+    {
+      "id": "item.gen5/green-shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/green-shard.png"
+    },
+    {
+      "id": "item.gen5/shoal-salt",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shoal-salt.png"
+    },
+    {
+      "id": "item.gen5/shoal-shell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shoal-shell.png"
+    },
+    {
+      "id": "item.gen5/red-scale",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-scale.png"
+    },
+    {
+      "id": "item.gen5/sweet-heart",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sweet-heart.png"
+    },
+    {
+      "id": "item.gen5/ragecandybar",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ragecandybar.png"
+    },
+    {
+      "id": "item.gen5/honey",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/honey.png"
+    },
+    {
+      "id": "item.gen5/pink-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pink-scarf.png"
+    },
+    {
+      "id": "item.gen5/red-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-scarf.png"
+    },
+    {
+      "id": "item.gen5/blue-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-scarf.png"
+    },
+    {
+      "id": "item.gen5/green-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/green-scarf.png"
+    },
+    {
+      "id": "item.gen5/yellow-scarf",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/yellow-scarf.png"
+    },
+    {
+      "id": "item.gen5/nugget",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/nugget.png"
+    },
+    {
+      "id": "item.gen5/big-nugget",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/big-nugget.png"
+    },
+    {
+      "id": "item.gen5/pearl",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pearl.png"
+    },
+    {
+      "id": "item.gen5/big-pearl",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/big-pearl.png"
+    },
+    {
+      "id": "item.gen5/pearl-string",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pearl-string.png"
+    },
+    {
+      "id": "item.gen5/stardust",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/stardust.png"
+    },
+    {
+      "id": "item.gen5/star-piece",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/star-piece.png"
+    },
+    {
+      "id": "item.gen5/comet-shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/comet-shard.png"
+    },
+    {
+      "id": "item.gen5/tinymushroom",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tinymushroom.png"
+    },
+    {
+      "id": "item.gen5/big-mushroom",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/big-mushroom.png"
+    },
+    {
+      "id": "item.gen5/balmmushroom",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/balmmushroom.png"
+    },
+    {
+      "id": "item.gen5/rare-bone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rare-bone.png"
+    },
+    {
+      "id": "item.gen5/relic-copper",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-copper.png"
+    },
+    {
+      "id": "item.gen5/relic-silver",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-silver.png"
+    },
+    {
+      "id": "item.gen5/relic-gold",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-gold.png"
+    },
+    {
+      "id": "item.gen5/relic-vase",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-vase.png"
+    },
+    {
+      "id": "item.gen5/relic-band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-band.png"
+    },
+    {
+      "id": "item.gen5/relic-statue",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-statue.png"
+    },
+    {
+      "id": "item.gen5/relic-crown",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relic-crown.png"
+    },
+    {
+      "id": "item.gen5/slowpoketail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/slowpoketail.png"
+    },
+    {
+      "id": "item.gen5/ruby",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ruby.png"
+    },
+    {
+      "id": "item.gen5/sapphire",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sapphire.png"
+    },
+    {
+      "id": "item.gen5/full-heal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/full-heal.png"
+    },
+    {
+      "id": "item.gen5/revive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/revive.png"
+    },
+    {
+      "id": "item.gen5/ether",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ether.png"
+    },
+    {
+      "id": "item.gen5/antidote",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/antidote.png"
+    },
+    {
+      "id": "item.gen5/awakening",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/awakening.png"
+    },
+    {
+      "id": "item.gen5/burn-heal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/burn-heal.png"
+    },
+    {
+      "id": "item.gen5/ice-heal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ice-heal.png"
+    },
+    {
+      "id": "item.gen5/parlyz-heal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/parlyz-heal.png"
+    },
+    {
+      "id": "item.gen5/max-revive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/max-revive.png"
+    },
+    {
+      "id": "item.gen5/sacred-ash",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sacred-ash.png"
+    },
+    {
+      "id": "item.gen5/revival-herb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/revival-herb.png"
+    },
+    {
+      "id": "item.gen5/max-ether",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/max-ether.png"
+    },
+    {
+      "id": "item.gen5/elixir",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/elixir.png"
+    },
+    {
+      "id": "item.gen5/max-elixir",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/max-elixir.png"
+    },
+    {
+      "id": "item.gen5/fresh-water",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fresh-water.png"
+    },
+    {
+      "id": "item.gen5/soda-pop",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/soda-pop.png"
+    },
+    {
+      "id": "item.gen5/lemonade",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lemonade.png"
+    },
+    {
+      "id": "item.gen5/moomoo-milk",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/moomoo-milk.png"
+    },
+    {
+      "id": "item.gen5/berry-juice",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/berry-juice.png"
+    },
+    {
+      "id": "item.gen5/energypowder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/energypowder.png"
+    },
+    {
+      "id": "item.gen5/energy-root",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/energy-root.png"
+    },
+    {
+      "id": "item.gen5/heal-powder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/heal-powder.png"
+    },
+    {
+      "id": "item.gen5/lava-cookie",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lava-cookie.png"
+    },
+    {
+      "id": "item.gen5/old-gateau",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/old-gateau.png"
+    },
+    {
+      "id": "item.gen5/casteliacone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/casteliacone.png"
+    },
+    {
+      "id": "item.gen5/tea",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tea.png"
+    },
+    {
+      "id": "item.gen5/secretpotion",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/secretpotion.png"
+    },
+    {
+      "id": "item.gen5/repel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/repel.png"
+    },
+    {
+      "id": "item.gen5/super-repel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/super-repel.png"
+    },
+    {
+      "id": "item.gen5/max-repel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/max-repel.png"
+    },
+    {
+      "id": "item.gen5/escape-rope",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/escape-rope.png"
+    },
+    {
+      "id": "item.gen5/black-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/black-flute.png"
+    },
+    {
+      "id": "item.gen5/white-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/white-flute.png"
+    },
+    {
+      "id": "item.gen5/blue-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-flute.png"
+    },
+    {
+      "id": "item.gen5/red-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-flute.png"
+    },
+    {
+      "id": "item.gen5/yellow-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/yellow-flute.png"
+    },
+    {
+      "id": "item.gen5/poke-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poke-flute.png"
+    },
+    {
+      "id": "item.gen5/rock-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rock-incense.png"
+    },
+    {
+      "id": "item.gen5/odd-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/odd-incense.png"
+    },
+    {
+      "id": "item.gen5/rose-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rose-incense.png"
+    },
+    {
+      "id": "item.gen5/sea-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sea-incense.png"
+    },
+    {
+      "id": "item.gen5/wave-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wave-incense.png"
+    },
+    {
+      "id": "item.gen5/full-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/full-incense.png"
+    },
+    {
+      "id": "item.gen5/lax-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lax-incense.png"
+    },
+    {
+      "id": "item.gen5/luck-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/luck-incense.png"
+    },
+    {
+      "id": "item.gen5/pure-incense",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pure-incense.png"
+    },
+    {
+      "id": "item.gen5/poke-doll",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poke-doll.png"
+    },
+    {
+      "id": "item.gen5/fluffy-tail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fluffy-tail.png"
+    },
+    {
+      "id": "item.gen5/poke-toy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poke-toy.png"
+    },
+    {
+      "id": "item.gen5/old-rod",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/old-rod.png"
+    },
+    {
+      "id": "item.gen5/good-rod",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/good-rod.png"
+    },
+    {
+      "id": "item.gen5/super-rod",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/super-rod.png"
+    },
+    {
+      "id": "item.gen5/town-map",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/town-map.png"
+    },
+    {
+      "id": "item.gen5/silph-scope",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/silph-scope.png"
+    },
+    {
+      "id": "item.gen5/devon-scope",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/devon-scope.png"
+    },
+    {
+      "id": "item.gen5/poke-radar",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poke-radar.png"
+    },
+    {
+      "id": "item.gen5/itemfinder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/itemfinder.png"
+    },
+    {
+      "id": "item.gen5/dowsing-mchn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dowsing-mchn.png"
+    },
+    {
+      "id": "item.gen5/bicycle",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bicycle.png"
+    },
+    {
+      "id": "item.gen5/mach-bike",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mach-bike.png"
+    },
+    {
+      "id": "item.gen5/acro-bike",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/acro-bike.png"
+    },
+    {
+      "id": "item.gen5/bike-voucher",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bike-voucher.png"
+    },
+    {
+      "id": "item.gen5/go-goggles",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/go-goggles.png"
+    },
+    {
+      "id": "item.gen5/vs-seeker",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/vs-seeker.png"
+    },
+    {
+      "id": "item.gen5/explorer-kit",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/explorer-kit.png"
+    },
+    {
+      "id": "item.gen5/coin-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/coin-case.png"
+    },
+    {
+      "id": "item.gen5/point-card",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/point-card.png"
+    },
+    {
+      "id": "item.gen5/coupon-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/coupon-1.png"
+    },
+    {
+      "id": "item.gen5/coupon-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/coupon-2.png"
+    },
+    {
+      "id": "item.gen5/coupon-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/coupon-3.png"
+    },
+    {
+      "id": "item.gen5/loot-sack",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/loot-sack.png"
+    },
+    {
+      "id": "item.gen5/soot-sack",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/soot-sack.png"
+    },
+    {
+      "id": "item.gen5/seal-bag",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/seal-bag.png"
+    },
+    {
+      "id": "item.gen5/member-card",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/member-card.png"
+    },
+    {
+      "id": "item.gen5/rule-book",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rule-book.png"
+    },
+    {
+      "id": "item.gen5/fame-checker",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fame-checker.png"
+    },
+    {
+      "id": "item.gen5/apricorn-box",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/apricorn-box.png"
+    },
+    {
+      "id": "item.gen5/red-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-apricorn.png"
+    },
+    {
+      "id": "item.gen5/blu-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blu-apricorn.png"
+    },
+    {
+      "id": "item.gen5/ylw-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ylw-apricorn.png"
+    },
+    {
+      "id": "item.gen5/grn-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grn-apricorn.png"
+    },
+    {
+      "id": "item.gen5/pnk-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pnk-apricorn.png"
+    },
+    {
+      "id": "item.gen5/wht-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wht-apricorn.png"
+    },
+    {
+      "id": "item.gen5/blk-apricorn",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blk-apricorn.png"
+    },
+    {
+      "id": "item.gen5/powder-jar",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/powder-jar.png"
+    },
+    {
+      "id": "item.gen5/berry-pouch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/berry-pouch.png"
+    },
+    {
+      "id": "item.gen5/berry-pots",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/berry-pots.png"
+    },
+    {
+      "id": "item.gen5/damp-mulch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/damp-mulch.png"
+    },
+    {
+      "id": "item.gen5/growth-mulch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/growth-mulch.png"
+    },
+    {
+      "id": "item.gen5/stable-mulch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/stable-mulch.png"
+    },
+    {
+      "id": "item.gen5/gooey-mulch",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gooey-mulch.png"
+    },
+    {
+      "id": "item.gen5/wailmer-pail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wailmer-pail.png"
+    },
+    {
+      "id": "item.gen5/sprayduck",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sprayduck.png"
+    },
+    {
+      "id": "item.gen5/squirtbottle",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/squirtbottle.png"
+    },
+    {
+      "id": "item.gen5/pokeblock-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pokeblock-case.png"
+    },
+    {
+      "id": "item.gen5/poffin-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poffin-case.png"
+    },
+    {
+      "id": "item.gen5/lock-capsule",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lock-capsule.png"
+    },
+    {
+      "id": "item.gen5/tm-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-case.png"
+    },
+    {
+      "id": "item.gen5/mystery-egg",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mystery-egg.png"
+    },
+    {
+      "id": "item.gen5/tm-normal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-normal.png"
+    },
+    {
+      "id": "item.gen5/tm-fighting",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-fighting.png"
+    },
+    {
+      "id": "item.gen5/tm-flying",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-flying.png"
+    },
+    {
+      "id": "item.gen5/tm-poison",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-poison.png"
+    },
+    {
+      "id": "item.gen5/tm-ground",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-ground.png"
+    },
+    {
+      "id": "item.gen5/tm-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-rock.png"
+    },
+    {
+      "id": "item.gen5/tm-bug",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-bug.png"
+    },
+    {
+      "id": "item.gen5/tm-ghost",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-ghost.png"
+    },
+    {
+      "id": "item.gen5/tm-steel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-steel.png"
+    },
+    {
+      "id": "item.gen5/tm-fire",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-fire.png"
+    },
+    {
+      "id": "item.gen5/tm-water",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-water.png"
+    },
+    {
+      "id": "item.gen5/tm-grass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-grass.png"
+    },
+    {
+      "id": "item.gen5/tm-electric",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-electric.png"
+    },
+    {
+      "id": "item.gen5/tm-psychic",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-psychic.png"
+    },
+    {
+      "id": "item.gen5/tm-ice",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-ice.png"
+    },
+    {
+      "id": "item.gen5/tm-dragon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-dragon.png"
+    },
+    {
+      "id": "item.gen5/tm-dark",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tm-dark.png"
+    },
+    {
+      "id": "item.gen5/hm-normal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-normal.png"
+    },
+    {
+      "id": "item.gen5/hm-fighting",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-fighting.png"
+    },
+    {
+      "id": "item.gen5/hm-flying",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-flying.png"
+    },
+    {
+      "id": "item.gen5/hm-poison",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-poison.png"
+    },
+    {
+      "id": "item.gen5/hm-ground",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-ground.png"
+    },
+    {
+      "id": "item.gen5/hm-rock",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-rock.png"
+    },
+    {
+      "id": "item.gen5/hm-bug",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-bug.png"
+    },
+    {
+      "id": "item.gen5/hm-ghost",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-ghost.png"
+    },
+    {
+      "id": "item.gen5/hm-steel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-steel.png"
+    },
+    {
+      "id": "item.gen5/hm-fire",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-fire.png"
+    },
+    {
+      "id": "item.gen5/hm-water",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-water.png"
+    },
+    {
+      "id": "item.gen5/hm-grass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-grass.png"
+    },
+    {
+      "id": "item.gen5/hm-electric",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-electric.png"
+    },
+    {
+      "id": "item.gen5/hm-psychic",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-psychic.png"
+    },
+    {
+      "id": "item.gen5/hm-ice",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-ice.png"
+    },
+    {
+      "id": "item.gen5/hm-dragon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-dragon.png"
+    },
+    {
+      "id": "item.gen5/hm-dark",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hm-dark.png"
+    },
+    {
+      "id": "item.gen5/helix-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/helix-fossil.png"
+    },
+    {
+      "id": "item.gen5/dome-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dome-fossil.png"
+    },
+    {
+      "id": "item.gen5/old-amber",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/old-amber.png"
+    },
+    {
+      "id": "item.gen5/root-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/root-fossil.png"
+    },
+    {
+      "id": "item.gen5/claw-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/claw-fossil.png"
+    },
+    {
+      "id": "item.gen5/skull-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/skull-fossil.png"
+    },
+    {
+      "id": "item.gen5/armor-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/armor-fossil.png"
+    },
+    {
+      "id": "item.gen5/cover-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cover-fossil.png"
+    },
+    {
+      "id": "item.gen5/plume-fossil",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/plume-fossil.png"
+    },
+    {
+      "id": "item.gen5/flame-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flame-mail.png"
+    },
+    {
+      "id": "item.gen5/bubble-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bubble-mail.png"
+    },
+    {
+      "id": "item.gen5/grass-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grass-mail.png"
+    },
+    {
+      "id": "item.gen5/snow-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/snow-mail.png"
+    },
+    {
+      "id": "item.gen5/space-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/space-mail.png"
+    },
+    {
+      "id": "item.gen5/steel-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/steel-mail.png"
+    },
+    {
+      "id": "item.gen5/tunnel-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tunnel-mail.png"
+    },
+    {
+      "id": "item.gen5/shadow-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shadow-mail.png"
+    },
+    {
+      "id": "item.gen5/wood-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wood-mail.png"
+    },
+    {
+      "id": "item.gen5/air-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/air-mail.png"
+    },
+    {
+      "id": "item.gen5/brick-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/brick-mail.png"
+    },
+    {
+      "id": "item.gen5/mech-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mech-mail.png"
+    },
+    {
+      "id": "item.gen5/wave-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/wave-mail.png"
+    },
+    {
+      "id": "item.gen5/tropic-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tropic-mail.png"
+    },
+    {
+      "id": "item.gen5/harbor-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/harbor-mail.png"
+    },
+    {
+      "id": "item.gen5/mosaic-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mosaic-mail.png"
+    },
+    {
+      "id": "item.gen5/glitter-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/glitter-mail.png"
+    },
+    {
+      "id": "item.gen5/dream-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dream-mail.png"
+    },
+    {
+      "id": "item.gen5/retro-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/retro-mail.png"
+    },
+    {
+      "id": "item.gen5/bloom-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bloom-mail.png"
+    },
+    {
+      "id": "item.gen5/bead-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bead-mail.png"
+    },
+    {
+      "id": "item.gen5/fab-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fab-mail.png"
+    },
+    {
+      "id": "item.gen5/greet-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/greet-mail.png"
+    },
+    {
+      "id": "item.gen5/thanks-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/thanks-mail.png"
+    },
+    {
+      "id": "item.gen5/like-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/like-mail.png"
+    },
+    {
+      "id": "item.gen5/heart-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/heart-mail.png"
+    },
+    {
+      "id": "item.gen5/favored-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/favored-mail.png"
+    },
+    {
+      "id": "item.gen5/reply-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/reply-mail.png"
+    },
+    {
+      "id": "item.gen5/inquiry-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/inquiry-mail.png"
+    },
+    {
+      "id": "item.gen5/rsvp-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rsvp-mail.png"
+    },
+    {
+      "id": "item.gen5/orange-mail",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/orange-mail.png"
+    },
+    {
+      "id": "item.gen5/bridgemail-d",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bridgemail-d.png"
+    },
+    {
+      "id": "item.gen5/bridgemail-m",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bridgemail-m.png"
+    },
+    {
+      "id": "item.gen5/bridgemail-s",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bridgemail-s.png"
+    },
+    {
+      "id": "item.gen5/bridgemail-t",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bridgemail-t.png"
+    },
+    {
+      "id": "item.gen5/bridgemail-v",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bridgemail-v.png"
+    },
+    {
+      "id": "item.gen5/oaks-parcel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/oaks-parcel.png"
+    },
+    {
+      "id": "item.gen5/oaks-letter",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/oaks-letter.png"
+    },
+    {
+      "id": "item.gen5/letter",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/letter.png"
+    },
+    {
+      "id": "item.gen5/parcel",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/parcel.png"
+    },
+    {
+      "id": "item.gen5/devon-goods",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/devon-goods.png"
+    },
+    {
+      "id": "item.gen5/ss-ticket",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ss-ticket.png"
+    },
+    {
+      "id": "item.gen5/card-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/card-key.png"
+    },
+    {
+      "id": "item.gen5/secret-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/secret-key.png"
+    },
+    {
+      "id": "item.gen5/lift-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lift-key.png"
+    },
+    {
+      "id": "item.gen5/basement-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/basement-key.png"
+    },
+    {
+      "id": "item.gen5/storage-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/storage-key.png"
+    },
+    {
+      "id": "item.gen5/suite-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/suite-key.png"
+    },
+    {
+      "id": "item.gen5/works-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/works-key.png"
+    },
+    {
+      "id": "item.gen5/rm-1-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rm-1-key.png"
+    },
+    {
+      "id": "item.gen5/rm-2-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rm-2-key.png"
+    },
+    {
+      "id": "item.gen5/rm-4-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rm-4-key.png"
+    },
+    {
+      "id": "item.gen5/rm-6-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rm-6-key.png"
+    },
+    {
+      "id": "item.gen5/scanner",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/scanner.png"
+    },
+    {
+      "id": "item.gen5/galactic-key",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/galactic-key.png"
+    },
+    {
+      "id": "item.gen5/magma-emblem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/magma-emblem.png"
+    },
+    {
+      "id": "item.gen5/red-chain",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-chain.png"
+    },
+    {
+      "id": "item.gen5/eon-ticket",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/eon-ticket.png"
+    },
+    {
+      "id": "item.gen5/mysticticket",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mysticticket.png"
+    },
+    {
+      "id": "item.gen5/auroraticket",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/auroraticket.png"
+    },
+    {
+      "id": "item.gen5/old-sea-map",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/old-sea-map.png"
+    },
+    {
+      "id": "item.gen5/liberty-pass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/liberty-pass.png"
+    },
+    {
+      "id": "item.gen5/azure-flute",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/azure-flute.png"
+    },
+    {
+      "id": "item.gen5/meteorite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/meteorite.png"
+    },
+    {
+      "id": "item.gen5/odd-keystone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/odd-keystone.png"
+    },
+    {
+      "id": "item.gen5/enigma-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/enigma-stone.png"
+    },
+    {
+      "id": "item.gen5/tidal-bell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tidal-bell.png"
+    },
+    {
+      "id": "item.gen5/clear-bell",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/clear-bell.png"
+    },
+    {
+      "id": "item.gen5/god-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/god-stone.png"
+    },
+    {
+      "id": "item.gen5/dark-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dark-stone.png"
+    },
+    {
+      "id": "item.gen5/light-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/light-stone.png"
+    },
+    {
+      "id": "item.gen5/dragon-skull",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-skull.png"
+    },
+    {
+      "id": "item.gen5/kyurem-black",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kyurem-black.png"
+    },
+    {
+      "id": "item.gen5/kyurem-white",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kyurem-white.png"
+    },
+    {
+      "id": "item.gen5/tornadus-therian",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tornadus-therian.png"
+    },
+    {
+      "id": "item.gen5/thundurus-therian",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/thundurus-therian.png"
+    },
+    {
+      "id": "item.gen5/landorus-therian",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/landorus-therian.png"
+    },
+    {
+      "id": "item.gen5/gold-teeth",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gold-teeth.png"
+    },
+    {
+      "id": "item.gen5/old-charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/old-charm.png"
+    },
+    {
+      "id": "item.gen5/magma-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/magma-stone.png"
+    },
+    {
+      "id": "item.gen5/lunar-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lunar-wing.png"
+    },
+    {
+      "id": "item.gen5/rainbow-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rainbow-wing.png"
+    },
+    {
+      "id": "item.gen5/silver-wing",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/silver-wing.png"
+    },
+    {
+      "id": "item.gen5/keldeo-resolution",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/keldeo-resolution.png"
+    },
+    {
+      "id": "item.gen5/gram-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gram-1.png"
+    },
+    {
+      "id": "item.gen5/gram-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gram-2.png"
+    },
+    {
+      "id": "item.gen5/gram-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gram-3.png"
+    },
+    {
+      "id": "item.gen5/machine-part",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/machine-part.png"
+    },
+    {
+      "id": "item.gen5/lost-item",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lost-item.png"
+    },
+    {
+      "id": "item.gen5/data-card",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/data-card.png"
+    },
+    {
+      "id": "item.gen5/unown-report",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/unown-report.png"
+    },
+    {
+      "id": "item.gen5/pass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pass.png"
+    },
+    {
+      "id": "item.gen5/tri-pass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tri-pass.png"
+    },
+    {
+      "id": "item.gen5/rainbow-pass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rainbow-pass.png"
+    },
+    {
+      "id": "item.gen5/pass-orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pass-orb.png"
+    },
+    {
+      "id": "item.gen5/contest-pass",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/contest-pass.png"
+    },
+    {
+      "id": "item.gen5/blue-card",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-card.png"
+    },
+    {
+      "id": "item.gen5/xtransceiver",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/xtransceiver.png"
+    },
+    {
+      "id": "item.gen5/pal-pad",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pal-pad.png"
+    },
+    {
+      "id": "item.gen5/vs-recorder",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/vs-recorder.png"
+    },
+    {
+      "id": "item.gen5/gb-sounds",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gb-sounds.png"
+    },
+    {
+      "id": "item.gen5/teachy-tv",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/teachy-tv.png"
+    },
+    {
+      "id": "item.gen5/photo-album",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/photo-album.png"
+    },
+    {
+      "id": "item.gen5/journal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/journal.png"
+    },
+    {
+      "id": "item.gen5/fashion-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fashion-case.png"
+    },
+    {
+      "id": "item.gen5/prop-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/prop-case.png"
+    },
+    {
+      "id": "item.gen5/seal-case",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/seal-case.png"
+    },
+    {
+      "id": "item.gen5/ability-urge",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ability-urge.png"
+    },
+    {
+      "id": "item.gen5/item-urge",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/item-urge.png"
+    },
+    {
+      "id": "item.gen5/item-drop",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/item-drop.png"
+    },
+    {
+      "id": "item.gen5/reset-urge",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/reset-urge.png"
+    },
+    {
+      "id": "item.gen5/absorb-bulb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/absorb-bulb.png"
+    },
+    {
+      "id": "item.gen5/cell-battery",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cell-battery.png"
+    },
+    {
+      "id": "item.gen5/ring-target",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ring-target.png"
     },
     {
       "id": "bg.arena.plains",
