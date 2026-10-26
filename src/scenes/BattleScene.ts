@@ -3,7 +3,7 @@
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
 import Phaser from 'phaser';
-import { itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
+import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { megaOptions, ownedMegaForms, stoneForms } from '../core/battle/transform';
 import { calcStats, getSpecies, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
@@ -370,7 +370,13 @@ export class BattleScene extends Phaser.Scene {
 
   /** Shows the right prompt for the current state: forced switch or the action menu. */
   private nextPrompt(): void {
-    if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
+    if (this.run.battle?.needsSwitch) {
+      this.openPartyPicker(true);
+      return;
+    }
+    // In the middle of a two-turn move or Thrash, the Pokémon carries on by itself.
+    const forced = this.run.battle ? forcedMoveIndex(this.run.battle, this.run.party) : null;
+    if (forced !== null) void this.act({ kind: 'move', index: forced });
     else this.showRootMenu();
   }
 
@@ -608,6 +614,7 @@ export class BattleScene extends Phaser.Scene {
         case 'confusionHit':
         case 'bindDamage':
         case 'seedDamage':
+        case 'weatherDamage':
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');

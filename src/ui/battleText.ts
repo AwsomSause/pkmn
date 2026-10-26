@@ -1,7 +1,7 @@
 // Turns battle events into the sentences shown in the battle message box.
 
 import type { Side } from '../core/battle/engine';
-import type { Content } from '../core/contentSchema';
+import type { Content, Weather } from '../core/contentSchema';
 import type { RunEvent } from '../core/run';
 
 const STAT_NAMES: Record<string, string> = {
@@ -10,6 +10,13 @@ const STAT_NAMES: Record<string, string> = {
 
 const STATUS_INFLICTED: Record<string, string> = {
   brn: 'was burned!', psn: 'was poisoned!', par: 'is paralyzed! It may be unable to move!', slp: 'fell asleep!', frz: 'was frozen solid!',
+};
+
+const WEATHER_START: Record<Weather, string> = {
+  rain: 'It started to rain!', sun: 'The sunlight turned harsh!', sand: 'A sandstorm kicked up!', snow: 'It started to snow!', hail: 'It started to hail!',
+};
+const WEATHER_END: Record<Weather, string> = {
+  rain: 'The rain stopped.', sun: 'The harsh sunlight faded.', sand: 'The sandstorm subsided.', snow: 'The snow stopped.', hail: 'The hail stopped.',
 };
 
 export interface Names {
@@ -116,6 +123,31 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} was seeded!`;
     case 'seedDamage':
       return `${who(e.side)}'s health is sapped by Leech Seed!`;
+    case 'charge': {
+      const name = who(e.side);
+      switch (e.semi) {
+        case 'air':
+          return e.moveId === 'bounce' ? `${name} sprang up!` : `${name} flew up high!`;
+        case 'underground':
+          return `${name} burrowed its way under the ground!`;
+        case 'underwater':
+          return `${name} hid underwater!`;
+        case 'vanished':
+          return `${name} vanished instantly!`;
+        default:
+          return e.moveId === 'solar-beam' || e.moveId === 'solar-blade' ? `${name} absorbed light!` : `${name} is charging up power!`;
+      }
+    }
+    case 'avoided':
+      return `${who(e.side)} avoided the attack!`;
+    case 'fatigue':
+      return `${who(e.side)} became confused due to fatigue!`;
+    case 'weather':
+      return WEATHER_START[e.weather];
+    case 'weatherEnd':
+      return WEATHER_END[e.weather];
+    case 'weatherDamage':
+      return `${who(e.side)} is buffeted by the ${e.weather === 'sand' ? 'sandstorm' : 'hail'}!`;
     case 'switchOut':
       return e.side === 'player' ? `Come back, ${names.player}!` : null;
     case 'switchIn':

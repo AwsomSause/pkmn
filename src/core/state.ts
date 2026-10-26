@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BoostStatSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -51,9 +51,27 @@ export const VolatileSchema = z.object({
   bound: z.number().int().min(0).default(0),
   /** Seeded by Leech Seed. */
   seeded: z.boolean().default(false),
+  /** The two-turn move it is charging (it uses it next turn). */
+  charging: z.string().nullable().default(null),
+  /** Hidden in the air, underground, underwater or vanished (first turn of Fly, Dig, Dive, Phantom Force). */
+  semi: SemiSchema.nullable().default(null),
+  /** Locked into Thrash or Outrage for `turns` more turns. */
+  locked: z.object({ moveId: z.string(), turns: z.number().int().min(0) }).nullable().default(null),
+  /** Full turns it has been in battle (Fake Out works only on the first). */
+  turnsOut: z.number().int().min(0).default(0),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
-export const freshVolatile = (): Volatile => ({ confusion: 0, recharge: false, protectChain: 0, bound: 0, seeded: false });
+export const freshVolatile = (): Volatile => ({
+  confusion: 0,
+  recharge: false,
+  protectChain: 0,
+  bound: 0,
+  seeded: false,
+  charging: null,
+  semi: null,
+  locked: null,
+  turnsOut: 0,
+});
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
 export type Stages = z.infer<typeof StagesSchema>;
@@ -101,6 +119,8 @@ export const BattleStateSchema = z.object({
   enemyStages: StagesSchema,
   playerVolatile: VolatileSchema.default(freshVolatile),
   enemyVolatile: VolatileSchema.default(freshVolatile),
+  /** The weather and how many turns it has left. */
+  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
   /** True when the active Pokémon fainted and the player must send out another. */
