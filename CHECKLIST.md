@@ -220,6 +220,22 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 
 See IMPLEMENTATION_PLAN.md §5.
 
+## Milestone 8.6 — Systems audit and quality gates ✅
+
+- [x] SYSTEMS_AUDIT.md: real status of every planned system, with the code and tests behind it
+- [x] FEATURE_INTERACTION_MATRIX.md: where each pair of systems meets and which meeting points are tested
+- [x] QUALITY_GATES.md: the gates, what runs automatically, the content gate and the balance report
+- [x] `npm run report:content`: counts and offending ids for unsupported moves, species with no usable moves, missing sprites and cries, map problems, duplicate boss teams, broken evolutions, unused balance settings, untested save upgrades
+- [x] A support status (supported / limited / disabled / invalid) on every species, form, move, item and evolution, with reasons
+- [x] `npm run report:balance`: seeded battle simulations (species strength, difficulty curve), written to docs/quality/BALANCE_REPORT.md
+- [x] `npm run report:check` in `npm run check` and CI: fails when a content number gets worse than tools/content-baseline.json
+
+### Known limits in Milestone 8.6
+
+- GitHub Actions has never run on the repository, so CI (including the new gate) only runs when switched on in the repository settings.
+- The balance simulations use a fresh party with no items; they show the curve's shape, not real win rates.
+- Abilities, held items and battle mechanics have no entries to give a status to until they exist.
+
 ## Milestone 8.75 — Planned features catch-up (planned)
 
 Everything planned but not yet in a milestone, gathered on 2026-10-25. Details in IMPLEMENTATION_PLAN.md §6j.
