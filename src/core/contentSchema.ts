@@ -413,7 +413,7 @@ export const RunPrepFileSchema = z.object({
   licenses: z.array(LicenseSchema),
 });
 
-export const RARITIES = ['common', 'uncommon', 'rare'] as const;
+export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
@@ -455,8 +455,101 @@ export const ItemSchema = z.object({
   /** party = a healthy party member, fainted = a fainted one, enemy = the wild Pokémon. */
   target: z.enum(['party', 'fainted', 'enemy', 'none']),
   effect: ItemEffectSchema,
+  /**
+   * Attribute changes for cashing the item in from the Bag when nobody in the
+   * party can use it (evolution items; filled in from itemCatalog.json).
+   */
+  cashIn: z.partialRecord(AttributeKeySchema, z.number().int()).optional(),
 });
 export type Item = z.infer<typeof ItemSchema>;
+
+// ---------- the item catalog (itemCatalog.json, M8.75 item effects) ----------
+//
+// Every item in the director's icon pack except Poké Balls and Potions has an
+// entry with its own effect (design: the "Item effects plan" Claude Doc).
+// status: "supported" entries work and are offered in the draft;
+// "existing" entries are items that were already in the game (their reward
+// or Bag item keeps working); "pending" entries wait on a part of the plan
+// named in `needs` and are never offered until it is built.
+
+const AttributeChangesSchema = z.partialRecord(AttributeKeySchema, z.number().int());
+
+export const CatalogEffectSchema = z.discriminatedUnion('kind', [
+  /** Attribute changes for the run; optionally heals or befriends the lead. */
+  z.object({
+    kind: z.literal('attributes'),
+    changes: AttributeChangesSchema,
+    healLead: z.number().int().positive().optional(),
+    leadFriendship: z.number().int().optional(),
+  }),
+  /** Money now (trainer money bonuses apply), plus attribute changes and an optional team heal. */
+  z.object({ kind: z.literal('money'), amount: z.number().int().positive(), changes: AttributeChangesSchema, teamHeal: z.number().positive().max(1).optional() }),
+  /** A permanent percentage on one stat of one Pokémon, per copy (Wings). */
+  z.object({ kind: z.literal('statBoost'), stat: StatNameSchema, percent: z.number().positive() }),
+  /** One Pokémon gains friendship (negative: loses it), plus attribute changes. */
+  z.object({ kind: z.literal('feed'), friendship: z.number().int(), changes: AttributeChangesSchema }),
+  /** Raises the max PP of one move the player picks (each up is +20%, at most 3 per move). */
+  z.object({ kind: z.literal('ppUp'), ups: z.number().int().min(1).max(3) }),
+  /** Care for one Pokémon: heal HP, revive, cure status, restore one move's PP; friendship and attribute side effects. */
+  z.object({
+    kind: z.literal('care'),
+    heal: z.number().int().positive().optional(),
+    revive: z.number().positive().max(1).optional(),
+    cure: z.boolean().optional(),
+    ppMove: z.literal('lowest').optional(),
+    friendship: z.number().int().optional(),
+    changes: AttributeChangesSchema.optional(),
+  }),
+  /** Care for the whole team. `pp` -1 means full PP; `heal` is a fraction of max HP. */
+  z.object({
+    kind: z.literal('teamCare'),
+    heal: z.number().positive().max(1).optional(),
+    revive: z.number().positive().max(1).optional(),
+    pp: z.number().int().min(-1).optional(),
+    cureSleep: z.boolean().optional(),
+    changes: AttributeChangesSchema.optional(),
+  }),
+  /** A run-long perk (Amulet Coin, Exp. Share...). `percent` is per copy. */
+  z.object({
+    kind: z.literal('passive'),
+    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp']),
+    percent: z.number().positive(),
+  }),
+  /** The fossil's Pokémon joins the party (or is released, like a catch). */
+  z.object({ kind: z.literal('fossil'), species: z.string() }),
+  /** Teach a move of one type the Pokémon can learn: TM = pick 1 of 3 random ones, HM = pick any. */
+  z.object({ kind: z.literal('teachMove'), type: TypeNameSchema, mode: z.enum(['tm', 'hm']) }),
+]);
+export type CatalogEffect = z.infer<typeof CatalogEffectSchema>;
+
+export const CATALOG_NEEDS = ['battle', 'map', 'events', 'm8.5'] as const;
+
+export const CatalogEntrySchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    family: z.string().min(1),
+    description: z.string().min(1),
+    rarity: RaritySchema,
+    /** Where copies pile up: on one Pokémon, the whole team, or the player. */
+    stacksOn: z.enum(['pokemon', 'team', 'player']),
+    /** Most copies that do anything (null: no limit). */
+    max: z.number().int().positive().nullable(),
+    how: z.enum(['held', 'use', 'passive']),
+    /** File name in the director's icon pack (images/items/gen5/<icon>.png), or null when the pack has none. */
+    icon: z.string().nullable(),
+    status: z.enum(['supported', 'existing', 'pending']),
+    /** For "existing" (and some "pending") entries: the reward or Bag item already in the game. */
+    existing: z.string().optional(),
+    /** Evolution items: what cashing the item in gives. */
+    cashIn: AttributeChangesSchema.optional(),
+    /** For "pending" entries: which parts of the plan it waits on. */
+    needs: z.array(z.enum(CATALOG_NEEDS)).optional(),
+    effect: CatalogEffectSchema.optional(),
+  })
+  .refine((e) => (e.status === 'supported') === (e.effect !== undefined), { message: 'a supported entry needs an effect (and only supported entries have one)' })
+  .refine((e) => e.status !== 'pending' || (e.needs?.length ?? 0) > 0, { message: 'a pending entry must say what it needs' });
+export type CatalogEntry = z.infer<typeof CatalogEntrySchema>;
 
 export const TrainerClassSchema = z.object({
   id: z.string().min(1),
@@ -599,6 +692,8 @@ export const RewardEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('vitamin'), stat: StatNameSchema }),
   /** Adds to an attribute for the rest of the run (negative moves a meter toward its other end). */
   z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
+  /** An item from the item catalog (itemCatalog.json); its effect is the entry's. */
+  z.object({ kind: z.literal('catalog'), entry: z.string() }),
 ]);
 export type RewardEffect = z.infer<typeof RewardEffectSchema>;
 
@@ -606,8 +701,10 @@ export const RewardSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute', 'key', 'transformation']),
+  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute', 'key', 'transformation', 'item']),
   rarity: RaritySchema,
+  /** Item family for draft variety (catalog items); rewards without one use their category. */
+  family: z.string().optional(),
   effect: RewardEffectSchema,
   /** How repeated picks combine: applied once now, or stacks up to a limit. */
   stacking: z.enum(['instant', 'stacks']),
@@ -646,6 +743,11 @@ export const BalanceSchema = z.object({
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
+  /**
+   * Draft variety: a family already in the draft keeps this share of its
+   * weight for the next slot (lowered further by Luck, see luckDraftVariety).
+   */
+  repeatFamilyWeight: z.number().min(0).max(1),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
   /** Battle transformations (M8.5): which bosses may use them. */
@@ -733,6 +835,9 @@ export const BalanceSchema = z.object({
     charismaPriceCut: z.number().min(0).max(1),
     luckUncommonWeight: z.number().min(0),
     luckRareWeight: z.number().min(0),
+    luckEpicWeight: z.number().min(0),
+    /** Luck at its maximum removes repeated item families from a draft entirely. */
+    luckDraftVariety: z.number().min(0).max(1),
     luckShinyChance: z.number().min(0),
     rageDamageDealt: z.number().min(0),
     rageDamageTaken: z.number().min(0),
@@ -841,6 +946,10 @@ export interface Content {
   licenses: Map<string, License>;
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
+  /** Every catalog item (itemCatalog.json), supported or not. */
+  catalog: Map<string, CatalogEntry>;
+  /** Every move each species can learn by TM, tutor or egg, beyond its level-up moves (learnables.json). */
+  learnables: Map<string, string[]>;
   trainers: Map<string, TrainerClass>;
   /** Every gym leader, Elite Four member and champion, with their teams. */
   bosses: Map<string, Boss>;

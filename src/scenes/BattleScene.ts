@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { megaOptions, ownedMegaForms, stoneForms } from '../core/battle/transform';
-import { calcStats, getSpecies, xpForLevel } from '../core/pokemon';
+import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -444,7 +444,7 @@ export class BattleScene extends Phaser.Scene {
         }
         const move = content.moves.get(slot.id)!;
         const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
-        this.moveInfo.setText(`PP  ${slot.pp}/${move.pp}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
+        this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
       },
       onSelect: (i) => {

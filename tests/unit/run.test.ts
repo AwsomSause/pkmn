@@ -31,7 +31,7 @@ function playBattle(run: RunState): RunState {
 function skipDecisions(run: RunState): RunState {
   while (run.phase === 'decision') {
     const kind = run.pending[0]!.kind;
-    run = resolveDecision(content, run, kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
+    run = resolveDecision(content, run, kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   }
   return run;
 }
@@ -94,7 +94,7 @@ describe('reward draft', () => {
   });
 
   it('throws a configuration error with fewer than five eligible rewards', () => {
-    const small = buildContent({ ...RAW_CONTENT, rewards: (RAW_CONTENT.rewards as unknown[]).slice(0, 4) });
+    const small = buildContent({ ...RAW_CONTENT, rewards: (RAW_CONTENT.rewards as unknown[]).slice(0, 4), itemCatalog: [] });
     const run = chooseStarter(small, createRun(small, { runId: 'r', seed: 's', archetypeId: 'red' }), 0);
     expect(() => generateDraft(small, run, new Rng(hashSeed('x')))).toThrow(RewardConfigError);
   });

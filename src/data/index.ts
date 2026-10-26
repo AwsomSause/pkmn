@@ -10,6 +10,7 @@ import {
   BalanceSchema,
   BossProfileSchema,
   BossTeamsFileSchema,
+  CatalogEntrySchema,
   ItemSchema,
   MoveSchema,
   RegionSchema,
@@ -20,8 +21,10 @@ import {
   ThemesFileSchema,
   TrainerClassSchema,
   TypeChartSchema,
+  type CatalogEntry,
   type Content,
   type Requirement,
+  type Reward,
 } from '../core/contentSchema';
 import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
@@ -30,6 +33,8 @@ import balanceJson from './balance.json';
 import bossesJson from './bosses.json';
 import bossTeamsJson from './bossTeams.json';
 import itemsJson from './items.json';
+import itemCatalogJson from './itemCatalog.json';
+import learnablesJson from './learnables.json';
 import megaStonesJson from './megaStones.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
@@ -59,6 +64,8 @@ export interface RawContent {
   runPrep: unknown;
   rewards: unknown;
   items: unknown;
+  itemCatalog: unknown;
+  learnables: unknown;
   trainers: unknown;
   bosses: unknown;
   bossTeams: unknown;
@@ -96,6 +103,8 @@ export const RAW_CONTENT: RawContent = {
   // Mega Stones are generated (npm run data:megas) and kept in their own file.
   rewards: [...rewardsJson, ...megaStonesJson.rewards],
   items: [...itemsJson, ...megaStonesJson.items],
+  itemCatalog: itemCatalogJson,
+  learnables: learnablesJson,
   trainers: trainersJson,
   bosses: bossesJson,
   bossTeams: bossTeamsJson,
@@ -134,6 +143,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const runPrep = parse(RunPrepFileSchema, raw.runPrep, 'runPrep.json', problems);
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
+  const itemCatalog = parse(z.array(CatalogEntrySchema), raw.itemCatalog, 'itemCatalog.json', problems);
+  const learnables = parse(z.record(z.string(), z.object({ egg: z.array(z.string()), other: z.array(z.string()) })), raw.learnables, 'learnables.json', problems);
   const trainers = parse(z.array(TrainerClassSchema), raw.trainers, 'trainers.json', problems);
   const bossProfiles = parse(z.array(BossProfileSchema), raw.bosses, 'bosses.json', problems);
   const bossTeams = parse(BossTeamsFileSchema, raw.bossTeams, 'bossTeams.json', problems);
@@ -142,7 +153,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
-  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -158,6 +169,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     licenses: toMap(runPrep.licenses, 'runPrep.json licenses', problems),
     rewards: toMap(rewards, 'rewards.json', problems),
     items: toMap(items, 'items.json', problems),
+    catalog: toMap(itemCatalog, 'itemCatalog.json', problems),
+    learnables: new Map(Object.entries(learnables).map(([id, l]) => [id, [...new Set([...l.egg, ...l.other])]])),
     trainers: toMap(trainers, 'trainers.json', problems),
     bosses: new Map(),
     regions: toMap(regions, 'regions.json', problems),
@@ -168,6 +181,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
   };
+
+  addCatalog(content, problems);
 
   for (const [id, profile] of toMap(bossProfiles, 'bosses.json', problems)) {
     const teams = bossTeams[id];
@@ -314,6 +329,47 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const l of content.licenses.values()) checkRequirement(l.unlock, `license "${l.id}"`);
   if (problems.length > 0) throw new ContentError(problems);
   return content;
+}
+
+/** The draft card for a working catalog item; it is offered like any other reward. */
+export function catalogReward(entry: CatalogEntry): Reward {
+  return {
+    id: catalogRewardId(entry.id),
+    name: entry.name,
+    description: entry.description,
+    category: 'item',
+    rarity: entry.rarity,
+    family: entry.family,
+    effect: { kind: 'catalog', entry: entry.id },
+    stacking: entry.max === 1 ? 'instant' : 'stacks',
+    scope: entry.stacksOn === 'pokemon' ? 'pokemon' : 'run',
+    moneyMultiplierApplies: entry.effect?.kind === 'money',
+    iconAssetId: catalogIconAssetId(entry),
+  };
+}
+
+export const catalogRewardId = (entryId: string) => `item:${entryId}`;
+
+/** Catalog items use the director's icon pack (images/items/gen5); 0.png is its blank icon. */
+export const catalogIconAssetId = (entry: CatalogEntry) => `item.gen5/${entry.icon ?? '0'}`;
+
+/** Adds draft cards for the working catalog items, cash-in values to Bag items, and checks the catalog. */
+function addCatalog(content: Content, problems: string[]): void {
+  for (const entry of content.catalog.values()) {
+    const where = `itemCatalog.json "${entry.id}"`;
+    if (entry.existing && !content.rewards.has(entry.existing) && !content.items.has(entry.existing)) problems.push(`${where} points at unknown reward or item "${entry.existing}"`);
+    if (entry.cashIn) {
+      const item = entry.existing ? content.items.get(entry.existing) : undefined;
+      if (!item) problems.push(`${where} has a cash-in value but no Bag item`);
+      else content.items.set(item.id, { ...item, cashIn: entry.cashIn });
+    }
+    if (entry.status !== 'supported') continue;
+    const effect = entry.effect!;
+    if (effect.kind === 'fossil' && !content.species.has(effect.species)) problems.push(`${where} revives unknown species "${effect.species}"`);
+    const reward = catalogReward(entry);
+    if (content.rewards.has(reward.id)) problems.push(`${where} clashes with reward "${reward.id}"`);
+    content.rewards.set(reward.id, reward);
+  }
 }
 
 let cached: Content | null = null;
