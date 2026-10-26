@@ -9,12 +9,12 @@
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
-import type { BoostStat, Content, Move, StatusId } from '../contentSchema';
+import type { BoostStat, Content, Move, StatusId, TransformKind } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
-import { currentEnemy, freshStages, type BattleState, type PokemonInstance, type Stages } from '../state';
+import { currentEnemy, freshStages, freshTransform, type BattleState, type PokemonInstance, type Stages } from '../state';
 import {
   calcDamage,
   clampStage,
@@ -25,6 +25,7 @@ import {
   isStatusImmune,
   typeEffectiveness,
 } from './damage';
+import { applyTransformations, transformProblem, type TransformEvent, type TransformRequest } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -52,10 +53,13 @@ export type BattleEvent =
   | { type: 'switchOut'; side: Side; uid: string }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
-  | { type: 'ball'; itemId: string; shakes: number; caught: boolean };
+  | { type: 'ball'; itemId: string; shakes: number; caught: boolean }
+  /** Mega Evolution / Primal Reversion (battle/transform.ts). */
+  | TransformEvent;
 
 export type PlayerAction =
-  | { kind: 'move'; index: number }
+  /** `transform`: Mega Evolve (etc.) before moving this turn. */
+  | { kind: 'move'; index: number; transform?: TransformRequest }
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number };
 
@@ -84,6 +88,8 @@ export interface BattleContext {
   typeModifiers?: TypeModifiers;
   /** The player's attributes (damage, Speed, damage taken, Love's chance to hang on). */
   attributes?: AttributeEffects;
+  /** Transformations switched off for this run (a challenge). */
+  disabledMechanics?: readonly TransformKind[];
 }
 
 export function createBattle(
@@ -109,6 +115,7 @@ export function createBattle(
     outcome: null,
     levelInfo: [],
     ai: 0,
+    transform: freshTransform(),
   };
 }
 
@@ -223,6 +230,9 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     }
   }
 
+  // Transformations (Mega Evolution, ...) happen before any move, so they count for turn order.
+  if (!battle.outcome) applyTransformations(ctx, action.kind === 'move' ? action.transform : undefined, events as TransformEvent[]);
+
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, flinched: false });
   const playerC = player();
 
@@ -272,6 +282,10 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
     const slot = mon.moves[action.index];
     if (!slot) throw new Error(`Invalid move slot ${action.index}`);
     if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
+    if (action.transform) {
+      const problem = transformProblem(ctx, action.transform);
+      if (problem) throw new Error(problem);
+    }
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
