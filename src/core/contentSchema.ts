@@ -474,6 +474,146 @@ export type Item = z.infer<typeof ItemSchema>;
 
 const AttributeChangesSchema = z.partialRecord(AttributeKeySchema, z.number().int());
 
+/**
+ * What a held item does in battle (item effects, slice 2). Numbers are per
+ * copy unless the hook says otherwise; berries and "once" hooks are used up.
+ * The battle engine reads these in core/battle/held.ts.
+ */
+const Species = z.array(z.string()).optional();
+export const HeldHookSchema = z.discriminatedUnion('hook', [
+  /** Moves of these types do more damage (type boosters, Plates for the whole team, species orbs). */
+  z.object({ hook: z.literal('typePower'), types: z.array(TypeNameSchema).min(1), percent: z.number().positive(), species: Species }),
+  /** The holder's first move of this type in each battle does `multiplier` damage, once per copy (Gems). */
+  z.object({ hook: z.literal('gem'), type: TypeNameSchema, multiplier: z.number().positive() }),
+  /** Physical (or special) moves do more damage. */
+  z.object({ hook: z.literal('categoryPower'), category: z.enum(['physical', 'special']), percent: z.number().positive() }),
+  /** Every damaging move does more damage; `recoil` is the share of max HP lost per hit that lands (Life Orb). */
+  z.object({ hook: z.literal('power'), percent: z.number().positive(), recoil: z.number().positive().optional() }),
+  /** Super-effective moves do more damage (Expert Belt). */
+  z.object({ hook: z.literal('superPower'), percent: z.number().positive() }),
+  /** Normal moves become this type and do more damage (Drives). */
+  z.object({ hook: z.literal('drive'), type: TypeNameSchema, percent: z.number().positive() }),
+  /** Repeating the same move: +percent per use in a row, up to max (Metronome). */
+  z.object({ hook: z.literal('metronome'), percent: z.number().positive(), max: z.number().positive() }),
+  /** A stat is multiplied ("all" = every stat but HP); `species` limits it, `canEvolve` needs a holder that can still evolve. */
+  z.object({
+    hook: z.literal('stat'),
+    stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'all']),
+    multiplier: z.number().positive(),
+    species: Species,
+    canEvolve: z.boolean().optional(),
+  }),
+  /** Locked into the first move it uses until it switches out (Choice items). */
+  z.object({ hook: z.literal('choiceLock') }),
+  /** More critical-hit stages; `critDamage` replaces the 1.5x of a critical hit. */
+  z.object({ hook: z.literal('crit'), stages: z.number().int().min(0), critDamage: z.number().positive().optional(), species: Species }),
+  /** The holder's moves are more accurate (only when it moves after the target, for the Zoom Lens). */
+  z.object({ hook: z.literal('accuracy'), percent: z.number().positive(), whenMovingLast: z.boolean().optional() }),
+  /** Moves aimed at the holder are less accurate (Bright Powder). */
+  z.object({ hook: z.literal('evasion'), percent: z.number().positive() }),
+  /** Always moves last in its priority bracket, but its moves can't miss (Lagging Tail). */
+  z.object({ hook: z.literal('moveLast') }),
+  /** End of turn: heal (positive) or lose (negative) a share of max HP. `typed`: only that type heals, others take `otherwise`. */
+  z.object({ hook: z.literal('endTurn'), fraction: z.number(), typed: TypeNameSchema.optional(), otherwise: z.number().optional() }),
+  /** A chance to survive a knockout hit with 1 HP (Focus Band). */
+  z.object({ hook: z.literal('survive'), percent: z.number().positive() }),
+  /** At full HP, survives one knockout hit with 1 HP, once per battle (Focus Sash). */
+  z.object({ hook: z.literal('sash') }),
+  /** Physical attackers lose a share of their max HP (Rocky Helmet; physical moves count as contact). */
+  z.object({ hook: z.literal('contactDamage'), fraction: z.number().positive() }),
+  /** The holder's physical hits may inflict a status (Electirizer, Magmarizer). */
+  z.object({ hook: z.literal('contactStatus'), status: StatusIdSchema, percent: z.number().positive() }),
+  /** The holder's physical hits may make the target flinch; `bonus` is extra damage to a flinched target (Razor Fang). */
+  z.object({ hook: z.literal('flinch'), percent: z.number().positive(), bonus: z.number().min(0).optional() }),
+  /** End of the holder's first turn: it gets this status (Toxic and Flame Orb), and its moves of `type` get +percent. */
+  z.object({ hook: z.literal('selfStatus'), status: StatusIdSchema, type: TypeNameSchema, percent: z.number().positive() }),
+  /** Immune to Ground moves until it is first hit (Air Balloon). */
+  z.object({ hook: z.literal('airBalloon') }),
+  /** The holder's type immunities don't apply (Ring Target). */
+  z.object({ hook: z.literal('ringTarget') }),
+  /** The holder's trapping moves hurt more each turn (Binding Band). */
+  z.object({ hook: z.literal('bindDamage'), multiplier: z.number().positive() }),
+  /** Draining moves heal more (Big Root). */
+  z.object({ hook: z.literal('drain'), percent: z.number().positive() }),
+  /** A two-turn move fires at once, once per battle (Power Herb). */
+  z.object({ hook: z.literal('powerHerb') }),
+  /** Lowered stats are restored once per battle (White Herb). */
+  z.object({ hook: z.literal('whiteHerb') }),
+  /** Damage taken changes: from wild Pokémon only, from super-effective hits only, or when the holder is a type. */
+  z.object({
+    hook: z.literal('damageTaken'),
+    percent: z.number(),
+    fromWild: z.boolean().optional(),
+    superEffective: z.boolean().optional(),
+    holderType: TypeNameSchema.optional(),
+  }),
+  /** Weather the holder starts lasts longer (Heat Rock, ...). */
+  z.object({ hook: z.literal('weatherTurns'), weathers: z.array(WeatherSchema).min(1), turns: z.number().int().positive() }),
+  /** Extra experience for the holder (Macho Brace). */
+  z.object({ hook: z.literal('exp'), multiplier: z.number().positive() }),
+  /** Every few levels the holder grows a stat like a vitamin (Power items). */
+  z.object({ hook: z.literal('growth'), stat: StatNameSchema, everyLevels: z.number().int().positive() }),
+  /** The holder can't evolve (Everstone). */
+  z.object({ hook: z.literal('noEvolve') }),
+  /** Healing the holder receives is larger (Oval Stone). */
+  z.object({ hook: z.literal('healing'), percent: z.number().positive() }),
+  /** The holder gains friendship faster (Prism Scale). */
+  z.object({ hook: z.literal('friendship'), percent: z.number().positive() }),
+  /** Love's chance to hang on at 1 HP is multiplied (Destiny Knot). */
+  z.object({ hook: z.literal('endure'), multiplier: z.number().positive() }),
+  /** Each turn, a chance to raise a random stat (Dubious Disc). */
+  z.object({ hook: z.literal('randomStat'), percent: z.number().positive() }),
+  /** When the holder knocks out a foe it heals a share of max HP (only when it is `holderType`). */
+  z.object({ hook: z.literal('koHeal'), fraction: z.number().positive(), holderType: TypeNameSchema.optional() }),
+  /** When the holder knocks out a foe: +1 to an attribute, up to `cap` from this item in a run (Scarves). */
+  z.object({ hook: z.literal('koAttribute'), attribute: AttributeKeySchema, amount: z.number().int(), cap: z.number().int().positive() }),
+  /** A chance, when it hits, to take one of the target's held items (Grip Claw). */
+  z.object({ hook: z.literal('steal'), percent: z.number().positive() }),
+  /** The holder loses 1/8 HP each turn; a physical attacker catches it (Sticky Barb). */
+  z.object({ hook: z.literal('stickyBarb'), fraction: z.number().positive() }),
+  /** Hit by a move of this type: a stat rises, once per battle (Absorb Bulb, Cell Battery). */
+  z.object({ hook: z.literal('absorb'), type: TypeNameSchema, stat: BoostStatSchema, stages: z.number().int() }),
+  /** The holder can always switch out, even when trapped (Shed Shell). */
+  z.object({ hook: z.literal('shedShell') }),
+  // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
+  /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
+  z.object({
+    hook: z.literal('berryHeal'),
+    below: z.number().positive().max(1),
+    fraction: z.number().positive().optional(),
+    flat: z.number().int().positive().optional(),
+    changes: z.partialRecord(AttributeKeySchema, z.number().int()).optional(),
+  }),
+  /** Cures these statuses (and confusion if `confusion`). */
+  z.object({ hook: z.literal('berryCure'), statuses: z.array(StatusIdSchema), confusion: z.boolean().optional() }),
+  /** A move at 0 PP regains some PP (Leppa). */
+  z.object({ hook: z.literal('berryPp'), amount: z.number().int().positive() }),
+  /** At or below `below`: a stat rises (`random` = a random one), or critical-hit stages ("crit"). */
+  z.object({ hook: z.literal('berryStat'), below: z.number().positive().max(1), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'crit', 'random']), stages: z.number().int().positive() }),
+  /** At or below `below`: the next move can't miss (Micle). */
+  z.object({ hook: z.literal('berrySure'), below: z.number().positive().max(1) }),
+  /** At or below `below`: moves first next turn (Custap). */
+  z.object({ hook: z.literal('berryFirst'), below: z.number().positive().max(1) }),
+  /** Halves one super-effective hit of this type (`any` = any hit of the type, for Chilan). */
+  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional() }),
+  /** Hit by a super-effective move: heal a share of max HP (Enigma). */
+  z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
+  /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
+  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive() }),
+]);
+export type HeldHook = z.infer<typeof HeldHookSchema>;
+
+/** A temporary battle effect a Pokémon carries into its next battles (X items, Dire Hit, Guard Spec., status healers). */
+export const BattleBoostSchema = z.discriminatedUnion('kind', [
+  /** Stat stages ("crit" = critical-hit stages) for `turns` turns of battle. */
+  z.object({ kind: z.literal('stage'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive() }),
+  /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
+  z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
+  /** Can't get this status (or confusion) during its next battle. */
+  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion']) }),
+]);
+export type BattleBoost = z.infer<typeof BattleBoostSchema>;
+
 export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   /** Attribute changes for the run; optionally heals or befriends the lead. */
   z.object({
@@ -519,6 +659,10 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('fossil'), species: z.string() }),
   /** Teach a move of one type the Pokémon can learn: TM = pick 1 of 3 random ones, HM = pick any. */
   z.object({ kind: z.literal('teachMove'), type: TypeNameSchema, mode: z.enum(['tm', 'hm']) }),
+  /** A held item: copies go on the chosen Pokémon (or on every team member for team items like the Plates). */
+  z.object({ kind: z.literal('held'), hooks: z.array(HeldHookSchema).min(1) }),
+  /** Battle effects carried into the chosen Pokémon's next battles (or every team member's); `cure` also cures that status now. */
+  z.object({ kind: z.literal('battleBoost'), boosts: z.array(BattleBoostSchema).min(1), cure: StatusIdSchema.optional() }),
 ]);
 export type CatalogEffect = z.infer<typeof CatalogEffectSchema>;
 
@@ -748,6 +892,17 @@ export const BalanceSchema = z.object({
    * weight for the next slot (lowered further by Luck, see luckDraftVariety).
    */
   repeatFamilyWeight: z.number().min(0).max(1),
+  /**
+   * Held items bosses carry (director, answer 3): how many for each role, the
+   * rarity weights, and how much the rare and epic weights grow per region.
+   */
+  bossHeldItems: z.object({
+    gym: z.number().int().min(0),
+    elite: z.number().int().min(0),
+    champion: z.number().int().min(0),
+    rarityWeights: z.record(RaritySchema, z.number().min(0)),
+    betterPerRegion: z.number().min(0),
+  }),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
   /** Battle transformations (M8.5): which bosses may use them. */

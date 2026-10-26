@@ -167,11 +167,21 @@ export class Picker {
   }
 }
 
-/** One party row: icon, name, level, HP bar, status and friendship hearts. */
+/** What a Pokémon holds, e.g. "Leftovers, Charcoal ×2", or '' for nothing. */
+export function heldSummary(content: Content, mon: PokemonInstance): string {
+  return Object.entries(mon.held ?? {})
+    .map(([id, copies]) => `${content.catalog.get(id)?.name ?? id}${copies > 1 ? ` ×${copies}` : ''}`)
+    .join(', ');
+}
+
+/** One party row: icon, name, level, HP bar, status, held items and friendship hearts. */
 export function partyRow(content: Content, mon: PokemonInstance, problem: string | null, opts: { tag?: string; hint?: string } = {}): PickerRow {
+  const holding = heldSummary(content, mon);
+  const boosts = mon.boosts?.length ? `${mon.boosts.length} battle boost${mon.boosts.length > 1 ? 's' : ''} ready` : '';
+  const extra = [holding && `Holding: ${holding}.`, boosts && `${boosts}.`].filter(Boolean).join(' ');
   return {
     problem,
-    hint: opts.hint,
+    hint: [opts.hint, extra].filter(Boolean).join('  ') || undefined,
     draw: (scene, box, w) => {
       const species = getSpecies(content, mon.speciesId);
       const max = calcStats(content, mon).hp;
@@ -185,7 +195,14 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       box.add(scene.add.text(w - 12, 38, `${mon.hp}/${max}`, textStyle(20)).setOrigin(1, 0));
       const status = mon.hp <= 0 ? { label: 'FNT', color: 0x806060 } : mon.status ? STATUS_LABELS[mon.status.id] : null;
       const tags = [status?.label, opts.tag].filter(Boolean).join('  ');
-      if (tags) box.add(scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020')));
+      let tagEnd = 72;
+      if (tags) {
+        const tagText = scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020'));
+        box.add(tagText);
+        tagEnd += tagText.width + 10;
+      }
+      const count = Object.values(mon.held ?? {}).reduce((a, b) => a + b, 0);
+      if (count) box.add(scene.add.text(tagEnd, 58, `◆ ${count} held`, textStyle(16, '#8fb8e0')));
       const hearts = friendshipHearts(content, mon);
       box.add(scene.add.text(w - 12, 60, '♥'.repeat(hearts) + '♡'.repeat(5 - hearts), textStyle(14, hearts === 5 ? '#e04870' : '#c07890')).setOrigin(1, 0));
     },

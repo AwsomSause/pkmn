@@ -2,6 +2,7 @@
 // battle engine because they need the opponent.
 
 import type { Content, Item } from './contentSchema';
+import { blocksEvolution } from './battle/held';
 import { evolve, itemEvolutionTargets } from './evolution';
 import { getSpecies, maxHp, maxPp } from './pokemon';
 import type { PokemonInstance } from './state';
@@ -49,6 +50,7 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
       return fainted ? null : `${name} hasn't fainted.`;
     case 'evolve':
       if (fainted) return `${name} has fainted.`;
+      if (blocksEvolution(content, mon)) return `${name} is holding an Everstone.`;
       return itemEvolutionTargets(content, mon, item.id, regionId).length > 0 ? null : `It won't have any effect on ${name}.`;
     case 'catch':
     case 'lastStand':

@@ -91,6 +91,54 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} fainted!`;
     case 'lastStand':
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
+    case 'held': {
+      const item = content.catalog.get(e.itemId)?.name ?? content.items.get(e.itemId)?.name ?? 'item';
+      switch (e.what) {
+        case 'heal':
+          return `${who(e.side)} restored HP using its ${item}!`;
+        case 'hurt':
+          return `${who(e.side)} was hurt by its ${item}!`;
+        case 'recoil':
+          return `${who(e.side)} lost some of its HP!`;
+        case 'helmet':
+          return `${who(e.side)} was hurt by the ${item}!`;
+        case 'cure':
+          return `${who(e.side)}'s ${item} cured it!`;
+        case 'gem':
+          return `The ${item} strengthened ${whoLower(e.side)}'s power!`;
+        case 'survive':
+          return `${who(e.side)} hung on using its ${item}!`;
+        case 'pop':
+          return `${who(e.side)}'s Air Balloon popped!`;
+        case 'balloon':
+          return `${who(e.side)} floats in the air with its Air Balloon!`;
+        case 'orb':
+          return `${who(e.side)} was affected by the ${item}!`;
+        case 'resist':
+          return `The ${item} weakened the damage to ${whoLower(e.side)}!`;
+        case 'stat':
+          return e.stat === 'crit' ? `${who(e.side)} used its ${item} to get pumped!` : `The ${item} raised ${whoLower(e.side)}'s ${STAT_NAMES[e.stat ?? 'atk']}!`;
+        case 'sure':
+          return `${who(e.side)} boosted the accuracy of its next move using its ${item}!`;
+        case 'first':
+          return `${who(e.side)} can act faster than normal, thanks to its ${item}!`;
+        case 'pp':
+          return `${who(e.side)} restored PP using its ${item}!`;
+        case 'steal':
+          return `${who(e.side)} stole an item with its ${item}!`;
+        case 'barb':
+          return `The Sticky Barb latched on to ${whoLower(e.side)}!`;
+        case 'herb':
+          return `${who(e.side)} used its ${item}!`;
+        case 'guard':
+          return `${who(e.side)} is protected by Guard Spec.!`;
+        case 'boostEnd':
+          return e.stat ? `${who(e.side)}'s ${e.stat === 'crit' ? 'focus' : STAT_NAMES[e.stat]} boost wore off.` : `${who(e.side)}'s Guard Spec. wore off.`;
+        case 'attribute':
+          return null;
+      }
+      return null;
+    }
     case 'endure':
       return `${who(e.side)} hung on for you, out of love!`;
     case 'confused':

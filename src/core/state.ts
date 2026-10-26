@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -45,8 +45,29 @@ export const PokemonInstanceSchema = z.object({
   held: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
+  /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
+  boosts: z.array(BattleBoostSchema).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
+
+/** What held items have done this battle (by Pokémon uid); see core/battle/held.ts. */
+export const HeldStateSchema = z.object({
+  /** Once-per-battle items used: uid → item id → times (Gems, Focus Sash, herbs, Absorb Bulb). */
+  used: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
+  /** Choice items: the move the holder is locked into. */
+  choice: z.record(z.string(), z.string()).default({}),
+  /** Metronome: the holder's last move and how many times in a row. */
+  streak: z.record(z.string(), z.object({ moveId: z.string(), count: z.number().int().min(0) })).default({}),
+  /** Air Balloons that have popped. */
+  popped: z.array(z.string()).default([]),
+  /** Micle Berry: the next move can't miss. Custap Berry: moves first next turn. */
+  sure: z.array(z.string()).default([]),
+  first: z.array(z.string()).default([]),
+  /** Critical-hit stages from berries and Dire Hit. */
+  crit: z.record(z.string(), z.number().int().min(0)).default({}),
+});
+export type HeldState = z.infer<typeof HeldStateSchema>;
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {} });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -144,6 +165,7 @@ export const BattleStateSchema = z.object({
   /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */
   ai: z.number().min(0).max(1).default(0),
   transform: BattleTransformSchema.default(freshTransform),
+  held: HeldStateSchema.default(freshHeldState),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -252,6 +274,8 @@ export const RunStateSchema = z.object({
   inventory: z.record(z.string(), z.number().int().min(0)),
   /** Team and player catalog items owned this run (catalog id → copies): passives like the Amulet Coin. */
   passives: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
+  itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Candies earned this run; added to the profile when the run ends (D7). */
   candies: z.number().int().min(0),
   /** Number of encounters completed so far. */

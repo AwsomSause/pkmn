@@ -3,406 +3,622 @@
   "id": "x-attack",
   "name": "X Attack",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 Attack for 5 turns",
+  "description": "+1 Attack for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-attack",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "atk",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-attack-2",
   "name": "X Attack 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 Attack for 5 turns",
+  "description": "+2 Attack for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-attack-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "atk",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-attack-3",
   "name": "X Attack 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 Attack for 5 turns",
+  "description": "+3 Attack for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-attack-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "atk",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-attack-6",
   "name": "X Attack 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 Attack (maximum) for 5 turns",
+  "description": "+6 Attack (maximum) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-attack-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "atk",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-defend",
   "name": "X Defense",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 Defense for 5 turns",
+  "description": "+1 Defense for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-defend",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "def",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-defend-2",
   "name": "X Defense 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 Defense for 5 turns",
+  "description": "+2 Defense for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-defend-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "def",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-defend-3",
   "name": "X Defense 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 Defense for 5 turns",
+  "description": "+3 Defense for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-defend-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "def",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-defend-6",
   "name": "X Defense 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 Defense (maximum) for 5 turns",
+  "description": "+6 Defense (maximum) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-defend-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "def",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-special",
   "name": "X Sp. Atk",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 Sp. Atk for 5 turns",
+  "description": "+1 Sp. Atk for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-special",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spa",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-special-2",
   "name": "X Sp. Atk 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 Sp. Atk for 5 turns",
+  "description": "+2 Sp. Atk for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-special-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spa",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-special-3",
   "name": "X Sp. Atk 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 Sp. Atk for 5 turns",
+  "description": "+3 Sp. Atk for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-special-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spa",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-special-6",
   "name": "X Sp. Atk 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 Sp. Atk (maximum) for 5 turns",
+  "description": "+6 Sp. Atk (maximum) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-special-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spa",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-sp-def",
   "name": "X Sp. Def",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 Sp. Def for 5 turns",
+  "description": "+1 Sp. Def for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-sp-def",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spd",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-sp-def-2",
   "name": "X Sp. Def 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 Sp. Def for 5 turns",
+  "description": "+2 Sp. Def for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-sp-def-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spd",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-sp-def-3",
   "name": "X Sp. Def 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 Sp. Def for 5 turns",
+  "description": "+3 Sp. Def for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-sp-def-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spd",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-sp-def-6",
   "name": "X Sp. Def 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 Sp. Def (maximum) for 5 turns",
+  "description": "+6 Sp. Def (maximum) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-sp-def-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spd",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-speed",
   "name": "X Speed",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 Speed for 5 turns",
+  "description": "+1 Speed for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-speed",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-speed-2",
   "name": "X Speed 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 Speed for 5 turns",
+  "description": "+2 Speed for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-speed-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-speed-3",
   "name": "X Speed 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 Speed for 5 turns",
+  "description": "+3 Speed for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-speed-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-speed-6",
   "name": "X Speed 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 Speed (maximum) for 5 turns",
+  "description": "+6 Speed (maximum) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-speed-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-accuracy",
   "name": "X Accuracy",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 accuracy for 5 turns",
+  "description": "+1 accuracy for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-accuracy",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "acc",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-accuracy-2",
   "name": "X Accuracy 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 accuracy for 5 turns",
+  "description": "+2 accuracy for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-accuracy-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "acc",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-accuracy-3",
   "name": "X Accuracy 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 accuracy for 5 turns",
+  "description": "+3 accuracy for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-accuracy-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "acc",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "x-accuracy-6",
   "name": "X Accuracy 6",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+6 accuracy (never misses) for 5 turns",
+  "description": "+6 accuracy (never misses) for the first 5 turns of its next battle",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "x-accuracy-6",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "acc",
+     "stages": 6,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "dire-hit",
   "name": "Dire Hit",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+1 critical-hit stage for 5 turns",
+  "description": "+1 critical-hit stage for the first 5 turns of its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "dire-hit",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "crit",
+     "stages": 1,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "dire-hit-2",
   "name": "Dire Hit 2",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+2 critical-hit stages for 5 turns",
+  "description": "+2 critical-hit stages for the first 5 turns of its next battle",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "dire-hit-2",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "crit",
+     "stages": 2,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "dire-hit-3",
   "name": "Dire Hit 3",
   "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
-  "description": "+3 critical-hit stages (every hit is critical) for 5 turns",
+  "description": "+3 critical-hit stages (every hit is critical) for the first 5 turns of its next battle",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
   "icon": "dire-hit-3",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "crit",
+     "stages": 3,
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "guard-spec",
@@ -414,10 +630,16 @@
   "max": 3,
   "how": "use",
   "icon": "guard-spec",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "guard",
+     "turns": 5
+    }
+   ]
+  }
  },
  {
   "id": "hp-up",
@@ -673,10 +895,19 @@
   "max": 5,
   "how": "held",
   "icon": "silk-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "normal"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "black-belt",
@@ -688,10 +919,19 @@
   "max": 5,
   "how": "held",
   "icon": "black-belt",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "fighting"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "sharp-beak",
@@ -703,10 +943,19 @@
   "max": 5,
   "how": "held",
   "icon": "sharp-beak",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "flying"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "poison-barb",
@@ -718,10 +967,19 @@
   "max": 5,
   "how": "held",
   "icon": "poison-barb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "poison"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "soft-sand",
@@ -733,10 +991,19 @@
   "max": 5,
   "how": "held",
   "icon": "soft-sand",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ground"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "hard-stone",
@@ -748,10 +1015,19 @@
   "max": 5,
   "how": "held",
   "icon": "hard-stone",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "rock"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "silverpowder",
@@ -763,10 +1039,19 @@
   "max": 5,
   "how": "held",
   "icon": "silverpowder",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "bug"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "spell-tag",
@@ -778,10 +1063,19 @@
   "max": 5,
   "how": "held",
   "icon": "spell-tag",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ghost"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "metal-coat",
@@ -793,11 +1087,20 @@
   "max": 5,
   "how": "held",
   "icon": "metal-coat",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "metal-coat"
+  "status": "supported",
+  "existing": "metal-coat",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "steel"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "charcoal",
@@ -809,10 +1112,19 @@
   "max": 5,
   "how": "held",
   "icon": "charcoal",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "fire"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "mystic-water",
@@ -824,10 +1136,19 @@
   "max": 5,
   "how": "held",
   "icon": "mystic-water",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "water"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "miracle-seed",
@@ -839,10 +1160,19 @@
   "max": 5,
   "how": "held",
   "icon": "miracle-seed",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "grass"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "magnet",
@@ -854,10 +1184,19 @@
   "max": 5,
   "how": "held",
   "icon": "magnet",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "electric"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "twistedspoon",
@@ -869,10 +1208,19 @@
   "max": 5,
   "how": "held",
   "icon": "twistedspoon",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "psychic"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "nevermeltice",
@@ -884,10 +1232,19 @@
   "max": 5,
   "how": "held",
   "icon": "nevermeltice",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ice"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "dragon-fang",
@@ -899,10 +1256,19 @@
   "max": 5,
   "how": "held",
   "icon": "dragon-fang",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "dragon"
+     ],
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "normal-gem",
@@ -914,10 +1280,17 @@
   "max": 3,
   "how": "held",
   "icon": "normal-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "normal",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "fighting-gem",
@@ -929,10 +1302,17 @@
   "max": 3,
   "how": "held",
   "icon": "fighting-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "fighting",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "flying-gem",
@@ -944,10 +1324,17 @@
   "max": 3,
   "how": "held",
   "icon": "flying-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "flying",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "poison-gem",
@@ -959,10 +1346,17 @@
   "max": 3,
   "how": "held",
   "icon": "poison-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "poison",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "ground-gem",
@@ -974,10 +1368,17 @@
   "max": 3,
   "how": "held",
   "icon": "ground-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "ground",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "rock-gem",
@@ -989,10 +1390,17 @@
   "max": 3,
   "how": "held",
   "icon": "rock-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "rock",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "bug-gem",
@@ -1004,10 +1412,17 @@
   "max": 3,
   "how": "held",
   "icon": "bug-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "bug",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "ghost-gem",
@@ -1019,10 +1434,17 @@
   "max": 3,
   "how": "held",
   "icon": "ghost-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "ghost",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "steel-gem",
@@ -1034,10 +1456,17 @@
   "max": 3,
   "how": "held",
   "icon": "steel-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "steel",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "fire-gem",
@@ -1049,10 +1478,17 @@
   "max": 3,
   "how": "held",
   "icon": "fire-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "fire",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "water-gem",
@@ -1064,10 +1500,17 @@
   "max": 3,
   "how": "held",
   "icon": "water-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "water",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "grass-gem",
@@ -1079,10 +1522,17 @@
   "max": 3,
   "how": "held",
   "icon": "grass-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "grass",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "electric-gem",
@@ -1094,10 +1544,17 @@
   "max": 3,
   "how": "held",
   "icon": "electric-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "electric",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "psychic-gem",
@@ -1109,10 +1566,17 @@
   "max": 3,
   "how": "held",
   "icon": "psychic-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "psychic",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "ice-gem",
@@ -1124,10 +1588,17 @@
   "max": 3,
   "how": "held",
   "icon": "ice-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "ice",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "dragon-gem",
@@ -1139,10 +1610,17 @@
   "max": 3,
   "how": "held",
   "icon": "dragon-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "dragon",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "dark-gem",
@@ -1154,10 +1632,17 @@
   "max": 3,
   "how": "held",
   "icon": "dark-gem",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "dark",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "fist-plate",
@@ -1260,10 +1745,19 @@
   "max": 5,
   "how": "passive",
   "icon": "draco-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "dragon"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "earth-plate",
@@ -1275,10 +1769,19 @@
   "max": 5,
   "how": "passive",
   "icon": "earth-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ground"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "icicle-plate",
@@ -1290,10 +1793,19 @@
   "max": 5,
   "how": "passive",
   "icon": "icicle-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ice"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "insect-plate",
@@ -1305,10 +1817,19 @@
   "max": 5,
   "how": "passive",
   "icon": "insect-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "bug"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "iron-plate",
@@ -1320,10 +1841,19 @@
   "max": 5,
   "how": "passive",
   "icon": "iron-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "steel"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "sky-plate",
@@ -1335,10 +1865,19 @@
   "max": 5,
   "how": "passive",
   "icon": "sky-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "flying"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "splash-plate",
@@ -1350,10 +1889,19 @@
   "max": 5,
   "how": "passive",
   "icon": "splash-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "water"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "spooky-plate",
@@ -1365,10 +1913,19 @@
   "max": 5,
   "how": "passive",
   "icon": "spooky-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ghost"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "stone-plate",
@@ -1380,10 +1937,19 @@
   "max": 5,
   "how": "passive",
   "icon": "stone-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "rock"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "toxic-plate",
@@ -1395,10 +1961,19 @@
   "max": 5,
   "how": "passive",
   "icon": "toxic-plate",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "poison"
+     ],
+     "percent": 8
+    }
+   ]
+  }
  },
  {
   "id": "burn-drive",
@@ -1410,10 +1985,17 @@
   "max": 1,
   "how": "held",
   "icon": "burn-drive",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "drive",
+     "type": "fire",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "chill-drive",
@@ -1425,10 +2007,17 @@
   "max": 1,
   "how": "held",
   "icon": "chill-drive",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "drive",
+     "type": "ice",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "douse-drive",
@@ -1440,10 +2029,17 @@
   "max": 1,
   "how": "held",
   "icon": "douse-drive",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "drive",
+     "type": "water",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "shock-drive",
@@ -1455,10 +2051,17 @@
   "max": 1,
   "how": "held",
   "icon": "shock-drive",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "drive",
+     "type": "electric",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "leftovers",
@@ -1470,25 +2073,38 @@
   "max": 4,
   "how": "held",
   "icon": "leftovers",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "endTurn",
+     "fraction": 0.0625
+    }
+   ]
+  }
  },
  {
   "id": "razor-fang",
   "name": "Razor Fang",
   "family": "Battle held items",
-  "description": "10% flinch chance on contact moves per copy, +5% damage to flinched targets; still evolves Gligar",
+  "description": "10% flinch chance on physical hits per copy, +5% damage to flinched targets; still evolves Gligar",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "held",
   "icon": "razor-fang",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "flinch",
+     "percent": 10,
+     "bonus": 5
+    }
+   ]
+  }
  },
  {
   "id": "scope-lens",
@@ -1500,10 +2116,17 @@
   "max": 1,
   "how": "held",
   "icon": "scope-lens",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "crit",
+     "stages": 1,
+     "critDamage": 1.75
+    }
+   ]
+  }
  },
  {
   "id": "focus-band",
@@ -1515,10 +2138,16 @@
   "max": 5,
   "how": "held",
   "icon": "focus-band",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "survive",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "focus-sash",
@@ -1530,10 +2159,15 @@
   "max": 1,
   "how": "held",
   "icon": "focus-sash",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "sash"
+    }
+   ]
+  }
  },
  {
   "id": "choice-band",
@@ -1545,10 +2179,20 @@
   "max": 1,
   "how": "held",
   "icon": "choice-band",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "atk",
+     "multiplier": 1.5
+    },
+    {
+     "hook": "choiceLock"
+    }
+   ]
+  }
  },
  {
   "id": "choice-specs",
@@ -1560,10 +2204,20 @@
   "max": 1,
   "how": "held",
   "icon": "choice-specs",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spa",
+     "multiplier": 1.5
+    },
+    {
+     "hook": "choiceLock"
+    }
+   ]
+  }
  },
  {
   "id": "choice-scarf",
@@ -1575,10 +2229,20 @@
   "max": 1,
   "how": "held",
   "icon": "choice-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 1.5
+    },
+    {
+     "hook": "choiceLock"
+    }
+   ]
+  }
  },
  {
   "id": "life-orb",
@@ -1590,10 +2254,17 @@
   "max": 1,
   "how": "held",
   "icon": "life-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "power",
+     "percent": 30,
+     "recoil": 0.1
+    }
+   ]
+  }
  },
  {
   "id": "expert-belt",
@@ -1605,10 +2276,16 @@
   "max": 1,
   "how": "held",
   "icon": "expert-belt",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "superPower",
+     "percent": 20
+    }
+   ]
+  }
  },
  {
   "id": "muscle-band",
@@ -1620,10 +2297,17 @@
   "max": 3,
   "how": "held",
   "icon": "muscle-band",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "categoryPower",
+     "category": "physical",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "wide-lens",
@@ -1635,10 +2319,16 @@
   "max": 3,
   "how": "held",
   "icon": "wide-lens",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "accuracy",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "zoom-lens",
@@ -1650,10 +2340,17 @@
   "max": 1,
   "how": "held",
   "icon": "zoom-lens",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "accuracy",
+     "percent": 20,
+     "whenMovingLast": true
+    }
+   ]
+  }
  },
  {
   "id": "brightpowder",
@@ -1665,10 +2362,16 @@
   "max": 1,
   "how": "held",
   "icon": "brightpowder",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "evasion",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "eviolite",
@@ -1680,10 +2383,24 @@
   "max": 1,
   "how": "held",
   "icon": "eviolite",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "def",
+     "multiplier": 1.5,
+     "canEvolve": true
+    },
+    {
+     "hook": "stat",
+     "stat": "spd",
+     "multiplier": 1.5,
+     "canEvolve": true
+    }
+   ]
+  }
  },
  {
   "id": "light-clay",
@@ -1710,10 +2427,19 @@
   "max": 1,
   "how": "held",
   "icon": "heat-rock",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherTurns",
+     "weathers": [
+      "sun"
+     ],
+     "turns": 8
+    }
+   ]
+  }
  },
  {
   "id": "damp-rock",
@@ -1725,10 +2451,19 @@
   "max": 1,
   "how": "held",
   "icon": "damp-rock",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherTurns",
+     "weathers": [
+      "rain"
+     ],
+     "turns": 8
+    }
+   ]
+  }
  },
  {
   "id": "icy-rock",
@@ -1740,10 +2475,20 @@
   "max": 1,
   "how": "held",
   "icon": "icy-rock",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherTurns",
+     "weathers": [
+      "hail",
+      "snow"
+     ],
+     "turns": 8
+    }
+   ]
+  }
  },
  {
   "id": "smooth-rock",
@@ -1755,25 +2500,46 @@
   "max": 1,
   "how": "held",
   "icon": "smooth-rock",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherTurns",
+     "weathers": [
+      "sand"
+     ],
+     "turns": 8
+    }
+   ]
+  }
  },
  {
   "id": "iron-ball",
   "name": "Iron Ball",
   "family": "Battle held items",
-  "description": "Holder is grounded and Speed halved, but Defense +25%",
+  "description": "Holder's Speed halved, but Defense +25%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "iron-ball",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.5
+    },
+    {
+     "hook": "stat",
+     "stat": "def",
+     "multiplier": 1.25
+    }
+   ]
+  }
  },
  {
   "id": "lagging-tail",
@@ -1785,40 +2551,59 @@
   "max": 1,
   "how": "held",
   "icon": "lagging-tail",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "moveLast"
+    }
+   ]
+  }
  },
  {
   "id": "sticky-barb",
   "name": "Sticky Barb",
   "family": "Battle held items",
-  "description": "Holder loses 1/8 HP a turn; when hit by contact, the barb jumps to the attacker",
+  "description": "Holder loses 1/8 HP a turn; when hit by a physical move, the barb jumps to the attacker",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "sticky-barb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stickyBarb",
+     "fraction": 0.125
+    }
+   ]
+  }
  },
  {
   "id": "toxic-orb",
   "name": "Toxic Orb",
   "family": "Battle held items",
-  "description": "Badly poisons the holder at the end of its first turn (for Guts/Poison Heal users); holder's Poison moves +15%",
+  "description": "Poisons the holder at the end of its first turn (for Guts users later); holder's Poison moves +15%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "toxic-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "selfStatus",
+     "status": "psn",
+     "type": "poison",
+     "percent": 15
+    }
+   ]
+  }
  },
  {
   "id": "flame-orb",
@@ -1830,10 +2615,18 @@
   "max": 1,
   "how": "held",
   "icon": "flame-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "selfStatus",
+     "status": "brn",
+     "type": "fire",
+     "percent": 15
+    }
+   ]
+  }
  },
  {
   "id": "black-sludge",
@@ -1845,25 +2638,39 @@
   "max": 1,
   "how": "held",
   "icon": "black-sludge",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "endTurn",
+     "fraction": 0.0625,
+     "typed": "poison",
+     "otherwise": -0.125
+    }
+   ]
+  }
  },
  {
   "id": "rocky-helmet",
   "name": "Rocky Helmet",
   "family": "Battle held items",
-  "description": "Contact attackers lose 1/6 of their max HP",
+  "description": "Physical attackers lose 1/6 of their max HP",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 2,
   "how": "held",
   "icon": "rocky-helmet",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "contactDamage",
+     "fraction": 0.16666666666666666
+    }
+   ]
+  }
  },
  {
   "id": "air-balloon",
@@ -1875,10 +2682,15 @@
   "max": 1,
   "how": "held",
   "icon": "air-balloon",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "airBalloon"
+    }
+   ]
+  }
  },
  {
   "id": "red-card",
@@ -1920,10 +2732,15 @@
   "max": 1,
   "how": "held",
   "icon": "shed-shell",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "shedShell"
+    }
+   ]
+  }
  },
  {
   "id": "binding-band",
@@ -1935,10 +2752,16 @@
   "max": 1,
   "how": "held",
   "icon": "binding-band",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "bindDamage",
+     "multiplier": 2
+    }
+   ]
+  }
  },
  {
   "id": "grip-claw",
@@ -1950,10 +2773,16 @@
   "max": 3,
   "how": "held",
   "icon": "grip-claw",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "steal",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "big-root",
@@ -1965,10 +2794,16 @@
   "max": 1,
   "how": "held",
   "icon": "big-root",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "drain",
+     "percent": 30
+    }
+   ]
+  }
  },
  {
   "id": "power-herb",
@@ -1980,10 +2815,15 @@
   "max": 1,
   "how": "held",
   "icon": "power-herb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "powerHerb"
+    }
+   ]
+  }
  },
  {
   "id": "white-herb",
@@ -1995,10 +2835,15 @@
   "max": 1,
   "how": "held",
   "icon": "white-herb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "whiteHerb"
+    }
+   ]
+  }
  },
  {
   "id": "mental-herb",
@@ -2019,16 +2864,22 @@
   "id": "destiny-knot",
   "name": "Destiny Knot",
   "family": "Battle held items",
-  "description": "If the holder is infatuated, the attacker is too; holder's Love-based endure chance x2",
+  "description": "Love's chance for the holder to hang on at 1 HP is doubled",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "destiny-knot",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "endure",
+     "multiplier": 2
+    }
+   ]
+  }
  },
  {
   "id": "metronome",
@@ -2040,25 +2891,39 @@
   "max": 1,
   "how": "held",
   "icon": "metronome",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "metronome",
+     "percent": 20,
+     "max": 100
+    }
+   ]
+  }
  },
  {
   "id": "float-stone",
   "name": "Float Stone",
   "family": "Battle held items",
-  "description": "Holder's weight halved; Speed +10%",
+  "description": "Holder's Speed +10%",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "float-stone",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 1.1
+    }
+   ]
+  }
  },
  {
   "id": "smoke-ball",
@@ -2070,10 +2935,17 @@
   "max": 1,
   "how": "held",
   "icon": "smoke-ball",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "damageTaken",
+     "percent": -10,
+     "fromWild": true
+    }
+   ]
+  }
  },
  {
   "id": "cleanse-tag",
@@ -2087,7 +2959,7 @@
   "icon": "cleanse-tag",
   "status": "pending",
   "needs": [
-   "battle"
+   "map"
   ]
  },
  {
@@ -2100,10 +2972,21 @@
   "max": 1,
   "how": "held",
   "icon": "macho-brace",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "exp",
+     "multiplier": 2
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.5
+    }
+   ]
+  }
  },
  {
   "id": "power-weight",
@@ -2115,10 +2998,22 @@
   "max": 1,
   "how": "held",
   "icon": "power-weight",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "growth",
+     "stat": "hp",
+     "everyLevels": 5
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.75
+    }
+   ]
+  }
  },
  {
   "id": "power-bracer",
@@ -2130,10 +3025,22 @@
   "max": 1,
   "how": "held",
   "icon": "power-bracer",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "growth",
+     "stat": "atk",
+     "everyLevels": 5
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.75
+    }
+   ]
+  }
  },
  {
   "id": "power-belt",
@@ -2145,10 +3052,22 @@
   "max": 1,
   "how": "held",
   "icon": "power-belt",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "growth",
+     "stat": "def",
+     "everyLevels": 5
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.75
+    }
+   ]
+  }
  },
  {
   "id": "power-lens",
@@ -2160,10 +3079,22 @@
   "max": 1,
   "how": "held",
   "icon": "power-lens",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "growth",
+     "stat": "spa",
+     "everyLevels": 5
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 0.75
+    }
+   ]
+  }
  },
  {
   "id": "power-anklet",
@@ -2175,10 +3106,17 @@
   "max": 1,
   "how": "held",
   "icon": "power-anklet",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "growth",
+     "stat": "spe",
+     "everyLevels": 5
+    }
+   ]
+  }
  },
  {
   "id": "everstone",
@@ -2190,10 +3128,20 @@
   "max": 1,
   "how": "held",
   "icon": "everstone",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "noEvolve"
+    },
+    {
+     "hook": "stat",
+     "stat": "all",
+     "multiplier": 1.1
+    }
+   ]
+  }
  },
  {
   "id": "exp-share",
@@ -2239,10 +3187,32 @@
   "max": 1,
   "how": "held",
   "icon": "light-ball",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "atk",
+     "multiplier": 2,
+     "species": [
+      "pichu",
+      "pikachu",
+      "raichu"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spa",
+     "multiplier": 2,
+     "species": [
+      "pichu",
+      "pikachu",
+      "raichu"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "thick-club",
@@ -2254,10 +3224,21 @@
   "max": 1,
   "how": "held",
   "icon": "thick-club",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "atk",
+     "multiplier": 2,
+     "species": [
+      "cubone",
+      "marowak"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "lucky-punch",
@@ -2269,10 +3250,19 @@
   "max": 1,
   "how": "held",
   "icon": "lucky-punch",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "crit",
+     "stages": 2,
+     "species": [
+      "chansey"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "stick",
@@ -2284,10 +3274,20 @@
   "max": 1,
   "how": "held",
   "icon": "stick",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "crit",
+     "stages": 2,
+     "species": [
+      "farfetchd",
+      "sirfetchd"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "metal-powder",
@@ -2299,10 +3299,20 @@
   "max": 1,
   "how": "held",
   "icon": "metal-powder",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "def",
+     "multiplier": 2,
+     "species": [
+      "ditto"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "quick-powder",
@@ -2314,10 +3324,20 @@
   "max": 1,
   "how": "held",
   "icon": "quick-powder",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 2,
+     "species": [
+      "ditto"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "deepseatooth",
@@ -2329,11 +3349,21 @@
   "max": 1,
   "how": "held",
   "icon": "deepseatooth",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "deep-sea-tooth"
+  "status": "supported",
+  "existing": "deep-sea-tooth",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spa",
+     "multiplier": 2,
+     "species": [
+      "clamperl"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "deepseascale",
@@ -2345,11 +3375,21 @@
   "max": 1,
   "how": "held",
   "icon": "deepseascale",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "deep-sea-scale"
+  "status": "supported",
+  "existing": "deep-sea-scale",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spd",
+     "multiplier": 2,
+     "species": [
+      "clamperl"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "soul-dew",
@@ -2361,10 +3401,24 @@
   "max": 1,
   "how": "held",
   "icon": "soul-dew",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "psychic",
+      "dragon"
+     ],
+     "percent": 20,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "adamant-orb",
@@ -2376,10 +3430,23 @@
   "max": 1,
   "how": "held",
   "icon": "adamant-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "steel",
+      "dragon"
+     ],
+     "percent": 20,
+     "species": [
+      "dialga"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "lustrous-orb",
@@ -2391,10 +3458,23 @@
   "max": 1,
   "how": "held",
   "icon": "lustrous-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "water",
+      "dragon"
+     ],
+     "percent": 20,
+     "species": [
+      "palkia"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "griseous-orb",
@@ -2947,11 +4027,17 @@
   "max": 1,
   "how": "held",
   "icon": "oval-stone",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "oval-stone"
+  "status": "supported",
+  "existing": "oval-stone",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "healing",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "dragon-scale",
@@ -2963,11 +4049,18 @@
   "max": 1,
   "how": "held",
   "icon": "dragon-scale",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "dragon-scale"
+  "status": "supported",
+  "existing": "dragon-scale",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "damageTaken",
+     "percent": -10,
+     "holderType": "dragon"
+    }
+   ]
+  }
  },
  {
   "id": "up-grade",
@@ -2979,11 +4072,25 @@
   "max": 1,
   "how": "held",
   "icon": "up-grade",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "up-grade"
+  "status": "supported",
+  "existing": "up-grade",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "normal"
+     ],
+     "percent": 10
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 1.05
+    }
+   ]
+  }
  },
  {
   "id": "dubious-disc",
@@ -2995,11 +4102,17 @@
   "max": 1,
   "how": "held",
   "icon": "dubious-disc",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "dubious-disc"
+  "status": "supported",
+  "existing": "dubious-disc",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "randomStat",
+     "percent": 5
+    }
+   ]
+  }
  },
  {
   "id": "protector",
@@ -3011,43 +4124,64 @@
   "max": 1,
   "how": "held",
   "icon": "protector",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "protector"
+  "status": "supported",
+  "existing": "protector",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "damageTaken",
+     "percent": -15,
+     "superEffective": true
+    }
+   ]
+  }
  },
  {
   "id": "electirizer",
   "name": "Electirizer",
   "family": "Evolution items",
-  "description": "Evolves Electabuzz (in game). Held: 10% paralyze chance on contact",
+  "description": "Evolves Electabuzz (in game). Held: 10% paralyze chance on physical hits",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "electirizer",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "electirizer"
+  "status": "supported",
+  "existing": "electirizer",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "contactStatus",
+     "status": "par",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "magmarizer",
   "name": "Magmarizer",
   "family": "Evolution items",
-  "description": "Evolves Magmar (in game). Held: 10% burn chance on contact",
+  "description": "Evolves Magmar (in game). Held: 10% burn chance on physical hits",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "magmarizer",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "magmarizer"
+  "status": "supported",
+  "existing": "magmarizer",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "contactStatus",
+     "status": "brn",
+     "percent": 10
+    }
+   ]
+  }
  },
  {
   "id": "reaper-cloth",
@@ -3059,11 +4193,18 @@
   "max": 1,
   "how": "held",
   "icon": "reaper-cloth",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "reaper-cloth"
+  "status": "supported",
+  "existing": "reaper-cloth",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koHeal",
+     "fraction": 0.125,
+     "holderType": "ghost"
+    }
+   ]
+  }
  },
  {
   "id": "prism-scale",
@@ -3075,11 +4216,17 @@
   "max": 1,
   "how": "held",
   "icon": "prism-scale",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ],
-  "existing": "prism-scale"
+  "status": "supported",
+  "existing": "prism-scale",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "friendship",
+     "percent": 50
+    }
+   ]
+  }
  },
  {
   "id": "oran-berry",
@@ -3091,10 +4238,17 @@
   "max": 5,
   "how": "held",
   "icon": "oran-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.5,
+     "flat": 10
+    }
+   ]
+  }
  },
  {
   "id": "sitrus-berry",
@@ -3106,10 +4260,17 @@
   "max": 5,
   "how": "held",
   "icon": "sitrus-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.5,
+     "fraction": 0.25
+    }
+   ]
+  }
  },
  {
   "id": "figy-berry",
@@ -3121,10 +4282,20 @@
   "max": 3,
   "how": "held",
   "icon": "figy-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.25,
+     "fraction": 0.33,
+     "changes": {
+      "ragePeace": 1
+     }
+    }
+   ]
+  }
  },
  {
   "id": "wiki-berry",
@@ -3136,10 +4307,20 @@
   "max": 3,
   "how": "held",
   "icon": "wiki-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.25,
+     "fraction": 0.33,
+     "changes": {
+      "intelligence": 1
+     }
+    }
+   ]
+  }
  },
  {
   "id": "mago-berry",
@@ -3151,10 +4332,20 @@
   "max": 3,
   "how": "held",
   "icon": "mago-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.25,
+     "fraction": 0.33,
+     "changes": {
+      "love": 1
+     }
+    }
+   ]
+  }
  },
  {
   "id": "aguav-berry",
@@ -3166,10 +4357,20 @@
   "max": 3,
   "how": "held",
   "icon": "aguav-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.25,
+     "fraction": 0.33,
+     "changes": {
+      "ragePeace": -1
+     }
+    }
+   ]
+  }
  },
  {
   "id": "iapapa-berry",
@@ -3181,10 +4382,20 @@
   "max": 3,
   "how": "held",
   "icon": "iapapa-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.25,
+     "fraction": 0.33,
+     "changes": {
+      "strength": 1
+     }
+    }
+   ]
+  }
  },
  {
   "id": "cheri-berry",
@@ -3196,10 +4407,18 @@
   "max": 5,
   "how": "held",
   "icon": "cheri-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "par"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "chesto-berry",
@@ -3211,10 +4430,18 @@
   "max": 5,
   "how": "held",
   "icon": "chesto-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "slp"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "pecha-berry",
@@ -3226,10 +4453,18 @@
   "max": 5,
   "how": "held",
   "icon": "pecha-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "psn"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "rawst-berry",
@@ -3241,10 +4476,18 @@
   "max": 5,
   "how": "held",
   "icon": "rawst-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "brn"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "aspear-berry",
@@ -3256,10 +4499,18 @@
   "max": 5,
   "how": "held",
   "icon": "aspear-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "frz"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "persim-berry",
@@ -3271,10 +4522,17 @@
   "max": 5,
   "how": "held",
   "icon": "persim-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [],
+     "confusion": true
+    }
+   ]
+  }
  },
  {
   "id": "lum-berry",
@@ -3286,10 +4544,23 @@
   "max": 3,
   "how": "held",
   "icon": "lum-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryCure",
+     "statuses": [
+      "par",
+      "slp",
+      "psn",
+      "brn",
+      "frz"
+     ],
+     "confusion": true
+    }
+   ]
+  }
  },
  {
   "id": "leppa-berry",
@@ -3301,10 +4572,16 @@
   "max": 5,
   "how": "held",
   "icon": "leppa-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryPp",
+     "amount": 10
+    }
+   ]
+  }
  },
  {
   "id": "liechi-berry",
@@ -3316,10 +4593,18 @@
   "max": 3,
   "how": "held",
   "icon": "liechi-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "atk",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "ganlon-berry",
@@ -3331,10 +4616,18 @@
   "max": 3,
   "how": "held",
   "icon": "ganlon-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "def",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "salac-berry",
@@ -3346,10 +4639,18 @@
   "max": 3,
   "how": "held",
   "icon": "salac-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "spe",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "petaya-berry",
@@ -3361,10 +4662,18 @@
   "max": 3,
   "how": "held",
   "icon": "petaya-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "spa",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "apicot-berry",
@@ -3376,10 +4685,18 @@
   "max": 3,
   "how": "held",
   "icon": "apicot-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "spd",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "lansat-berry",
@@ -3391,10 +4708,18 @@
   "max": 3,
   "how": "held",
   "icon": "lansat-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "crit",
+     "stages": 2
+    }
+   ]
+  }
  },
  {
   "id": "starf-berry",
@@ -3406,10 +4731,18 @@
   "max": 3,
   "how": "held",
   "icon": "starf-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryStat",
+     "below": 0.25,
+     "stat": "random",
+     "stages": 2
+    }
+   ]
+  }
  },
  {
   "id": "micle-berry",
@@ -3421,10 +4754,16 @@
   "max": 3,
   "how": "held",
   "icon": "micle-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berrySure",
+     "below": 0.25
+    }
+   ]
+  }
  },
  {
   "id": "custap-berry",
@@ -3436,10 +4775,16 @@
   "max": 3,
   "how": "held",
   "icon": "custap-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryFirst",
+     "below": 0.25
+    }
+   ]
+  }
  },
  {
   "id": "enigma-berry",
@@ -3451,10 +4796,16 @@
   "max": 3,
   "how": "held",
   "icon": "enigma-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berrySuper",
+     "fraction": 0.25
+    }
+   ]
+  }
  },
  {
   "id": "jaboca-berry",
@@ -3466,10 +4817,17 @@
   "max": 3,
   "how": "held",
   "icon": "jaboca-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryRetaliate",
+     "category": "physical",
+     "fraction": 0.125
+    }
+   ]
+  }
  },
  {
   "id": "rowap-berry",
@@ -3481,10 +4839,17 @@
   "max": 3,
   "how": "held",
   "icon": "rowap-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryRetaliate",
+     "category": "special",
+     "fraction": 0.125
+    }
+   ]
+  }
  },
  {
   "id": "occa-berry",
@@ -3496,10 +4861,16 @@
   "max": 3,
   "how": "held",
   "icon": "occa-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fire"
+    }
+   ]
+  }
  },
  {
   "id": "passho-berry",
@@ -3511,10 +4882,16 @@
   "max": 3,
   "how": "held",
   "icon": "passho-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "water"
+    }
+   ]
+  }
  },
  {
   "id": "wacan-berry",
@@ -3526,10 +4903,16 @@
   "max": 3,
   "how": "held",
   "icon": "wacan-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "electric"
+    }
+   ]
+  }
  },
  {
   "id": "rindo-berry",
@@ -3541,10 +4924,16 @@
   "max": 3,
   "how": "held",
   "icon": "rindo-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "grass"
+    }
+   ]
+  }
  },
  {
   "id": "yache-berry",
@@ -3556,10 +4945,16 @@
   "max": 3,
   "how": "held",
   "icon": "yache-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ice"
+    }
+   ]
+  }
  },
  {
   "id": "chople-berry",
@@ -3571,10 +4966,16 @@
   "max": 3,
   "how": "held",
   "icon": "chople-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fighting"
+    }
+   ]
+  }
  },
  {
   "id": "kebia-berry",
@@ -3586,10 +4987,16 @@
   "max": 3,
   "how": "held",
   "icon": "kebia-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "poison"
+    }
+   ]
+  }
  },
  {
   "id": "shuca-berry",
@@ -3601,10 +5008,16 @@
   "max": 3,
   "how": "held",
   "icon": "shuca-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ground"
+    }
+   ]
+  }
  },
  {
   "id": "coba-berry",
@@ -3616,10 +5029,16 @@
   "max": 3,
   "how": "held",
   "icon": "coba-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "flying"
+    }
+   ]
+  }
  },
  {
   "id": "payapa-berry",
@@ -3631,10 +5050,16 @@
   "max": 3,
   "how": "held",
   "icon": "payapa-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "psychic"
+    }
+   ]
+  }
  },
  {
   "id": "tanga-berry",
@@ -3646,10 +5071,16 @@
   "max": 3,
   "how": "held",
   "icon": "tanga-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "bug"
+    }
+   ]
+  }
  },
  {
   "id": "charti-berry",
@@ -3661,10 +5092,16 @@
   "max": 3,
   "how": "held",
   "icon": "charti-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "rock"
+    }
+   ]
+  }
  },
  {
   "id": "kasib-berry",
@@ -3676,10 +5113,16 @@
   "max": 3,
   "how": "held",
   "icon": "kasib-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ghost"
+    }
+   ]
+  }
  },
  {
   "id": "haban-berry",
@@ -3691,10 +5134,16 @@
   "max": 3,
   "how": "held",
   "icon": "haban-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "dragon"
+    }
+   ]
+  }
  },
  {
   "id": "colbur-berry",
@@ -3706,10 +5155,16 @@
   "max": 3,
   "how": "held",
   "icon": "colbur-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "dark"
+    }
+   ]
+  }
  },
  {
   "id": "babiri-berry",
@@ -3721,10 +5176,16 @@
   "max": 3,
   "how": "held",
   "icon": "babiri-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "steel"
+    }
+   ]
+  }
  },
  {
   "id": "chilan-berry",
@@ -3736,10 +5197,17 @@
   "max": 3,
   "how": "held",
   "icon": "chilan-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "normal",
+     "any": true
+    }
+   ]
+  }
  },
  {
   "id": "pomeg-berry",
@@ -3912,7 +5380,7 @@
   "icon": "bluk-berry",
   "status": "pending",
   "needs": [
-   "battle"
+   "map"
   ]
  },
  {
@@ -3927,7 +5395,7 @@
   "icon": "wepear-berry",
   "status": "pending",
   "needs": [
-   "battle"
+   "map"
   ]
  },
  {
@@ -3942,7 +5410,7 @@
   "icon": "cornn-berry",
   "status": "pending",
   "needs": [
-   "battle"
+   "map"
   ]
  },
  {
@@ -4465,7 +5933,7 @@
   "icon": "honey",
   "status": "pending",
   "needs": [
-   "battle"
+   "map"
   ]
  },
  {
@@ -4478,10 +5946,18 @@
   "max": 1,
   "how": "held",
   "icon": "pink-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koAttribute",
+     "attribute": "charisma",
+     "amount": 1,
+     "cap": 10
+    }
+   ]
+  }
  },
  {
   "id": "red-scarf",
@@ -4493,10 +5969,18 @@
   "max": 1,
   "how": "held",
   "icon": "red-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koAttribute",
+     "attribute": "strength",
+     "amount": 1,
+     "cap": 10
+    }
+   ]
+  }
  },
  {
   "id": "blue-scarf",
@@ -4508,10 +5992,18 @@
   "max": 1,
   "how": "held",
   "icon": "blue-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koAttribute",
+     "attribute": "intelligence",
+     "amount": 1,
+     "cap": 10
+    }
+   ]
+  }
  },
  {
   "id": "green-scarf",
@@ -4523,10 +6015,18 @@
   "max": 1,
   "how": "held",
   "icon": "green-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koAttribute",
+     "attribute": "goodEvil",
+     "amount": 1,
+     "cap": 10
+    }
+   ]
+  }
  },
  {
   "id": "yellow-scarf",
@@ -4538,10 +6038,18 @@
   "max": 1,
   "how": "held",
   "icon": "yellow-scarf",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "koAttribute",
+     "attribute": "ragePeace",
+     "amount": 1,
+     "cap": 10
+    }
+   ]
+  }
  },
  {
   "id": "nugget",
@@ -4985,16 +6493,23 @@
   "id": "antidote",
   "name": "Antidote",
   "family": "Healing and status items",
-  "description": "Cures poison, and the Pokémon can't be poisoned for the rest of the battle",
+  "description": "Cures poison, and the Pokémon can't be poisoned in its next battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": null,
   "how": "use",
   "icon": "antidote",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "immune",
+     "status": "psn"
+    }
+   ],
+   "cure": "psn"
+  }
  },
  {
   "id": "awakening",
@@ -5006,10 +6521,19 @@
   "max": null,
   "how": "use",
   "icon": "awakening",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spd",
+     "stages": 1,
+     "turns": 3
+    }
+   ],
+   "cure": "slp"
+  }
  },
  {
   "id": "burn-heal",
@@ -5021,10 +6545,19 @@
   "max": null,
   "how": "use",
   "icon": "burn-heal",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "atk",
+     "stages": 1,
+     "turns": 3
+    }
+   ],
+   "cure": "brn"
+  }
  },
  {
   "id": "ice-heal",
@@ -5036,10 +6569,19 @@
   "max": null,
   "how": "use",
   "icon": "ice-heal",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spa",
+     "stages": 1,
+     "turns": 3
+    }
+   ],
+   "cure": "frz"
+  }
  },
  {
   "id": "parlyz-heal",
@@ -5051,10 +6593,19 @@
   "max": null,
   "how": "use",
   "icon": "parlyz-heal",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 1,
+     "turns": 3
+    }
+   ],
+   "cure": "par"
+  }
  },
  {
   "id": "max-revive",
@@ -5233,16 +6784,23 @@
   "id": "berry-juice",
   "name": "Berry Juice",
   "family": "Healing and status items",
-  "description": "Heals 20 HP; when held, drunk automatically below 50%",
+  "description": "Held: drunk below 50% HP, heals 20 HP",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "held",
   "icon": "berry-juice",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryHeal",
+     "below": 0.5,
+     "flat": 20
+    }
+   ]
+  }
  },
  {
   "id": "energypowder",
@@ -5521,10 +7079,16 @@
   "max": null,
   "how": "use",
   "icon": "yellow-flute",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "immune",
+     "status": "confusion"
+    }
+   ]
+  }
  },
  {
   "id": "poke-flute",
@@ -8898,10 +10462,18 @@
   "max": 1,
   "how": "held",
   "icon": "absorb-bulb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "absorb",
+     "type": "water",
+     "stat": "spa",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "cell-battery",
@@ -8913,10 +10485,18 @@
   "max": 1,
   "how": "held",
   "icon": "cell-battery",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "absorb",
+     "type": "electric",
+     "stat": "atk",
+     "stages": 1
+    }
+   ]
+  }
  },
  {
   "id": "ring-target",
@@ -8928,9 +10508,14 @@
   "max": 1,
   "how": "held",
   "icon": "ring-target",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "ringTarget"
+    }
+   ]
+  }
  }
 ]

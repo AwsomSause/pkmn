@@ -24,7 +24,7 @@ import { pickGymLeader, themePool, trainerClassesFor, wildEligibleSpecies } from
 import { TYPE_NAMES } from '../../src/core/contentSchema';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, scaleAt, toBattle } from './helpers';
+import { content, scaleAt, takeAnyReward, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 const FULL = content.campaigns.get('full')!;
@@ -275,7 +275,7 @@ describe('map flow', () => {
       }
       run = win(run);
       expect(run.phase).toBe('reward');
-      run = chooseReward(content, run, 0).run;
+      run = takeAnyReward(run);
       while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
       run.party[0]!.hp = maxHp(content, run.party[0]!);
     }
