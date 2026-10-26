@@ -245,7 +245,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 - **Friendship evolutions** by real friendship, with the Soothe Bell kept as a shortcut.
 - **N's** friendship passive and alternate event outcomes (needs N's sprite).
 
-**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits). *First batch built 2026-10-25: 85 moves (confusion, multi-hit, recharge, healing, Protect, binding, Leech Seed, OHKO, Explosion and more), main-game rounding and the both-faint rule. Held items and every item's effect moved to their own work (director, 2026-10-25).*
+**C. Battle engine gaps** (brief §6/§8, M1–M6 known limits). *First batch built 2026-10-25: 85 moves (confusion, multi-hit, recharge, healing, Protect, binding, Leech Seed, OHKO, Explosion and more), main-game rounding and the both-faint rule. Second batch built 2026-10-26: two-turn and hiding moves, Thrash, weather, Fake Out (28 more moves). Held items and every item's effect moved to their own work (director, 2026-10-25).*
 - The **611 unsupported moves**, in tiers: confusion, multi-hit, recharge, healing and drain, Protect, weather and terrain, then the rare ones. Each tier makes more Pokémon learnable (Ditto, Smeargle, Unown, Cosmog and Abra come back).
 - **Abilities**, then **held items** (also as a reward category, brief §8).
 - Smarter enemy trainers: they use items and switch on purpose.

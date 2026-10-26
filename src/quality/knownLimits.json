@@ -1,0 +1,42 @@
+{
+ "_about": "Hand-kept notes for the content report (npm run report:content). An entry listed here is \"supported with documented limits\". moves: supported moves whose effect text has a part the battle engine leaves out on purpose (found with the same sentence rules as tools/import-moves.ts in the director's move list). species: anything the automatic checks cannot see.",
+ "moves": {
+  "boomburst": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "brick-break": [
+   "breaks screens (Reflect and Light Screen are not in the game yet)"
+  ],
+  "dazzling-gleam": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "earthquake": [
+   "double power against a Pokémon using Dig, Dive or Fly (two-turn moves are not in the game yet)"
+  ],
+  "hyper-drill": [
+   "goes through Protect (Protect is not in the game yet)"
+  ],
+  "hyperspace-fury": [
+   "goes through Protect (Protect is not in the game yet)"
+  ],
+  "hyperspace-hole": [
+   "goes through Protect (Protect is not in the game yet)"
+  ],
+  "origin-pulse": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "overdrive": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "petal-blizzard": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "precipice-blades": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ],
+  "surf": [
+   "hits several targets in double battles (battles are one-on-one)"
+  ]
+ },
+ "species": {}
+}

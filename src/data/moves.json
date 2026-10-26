@@ -665,7 +665,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "hitsSemi": {
+    "semi": "air",
+    "double": true
+   }
+  }
  },
  {
   "id": "peck",
@@ -1083,7 +1088,11 @@
   "target": "enemy",
   "flags": [],
   "effects": {
-   "flinchChance": 20
+   "flinchChance": 20,
+   "hitsSemi": {
+    "semi": "air",
+    "double": true
+   }
   }
  },
  {
@@ -2110,7 +2119,8 @@
    "status": {
     "id": "frz",
     "chance": 10
-   }
+   },
+   "sureIn": "snow"
   }
  },
  {
@@ -3121,7 +3131,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "hitsSemi": {
+    "semi": "underground",
+    "double": true
+   }
+  }
  },
  {
   "id": "eerie-impulse",
@@ -3840,7 +3855,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "breaksProtect": true
+  }
  },
  {
   "id": "hyper-fang",
@@ -3892,7 +3909,8 @@
      "target": "self",
      "chance": 100
     }
-   ]
+   ],
+   "breaksProtect": true
   }
  },
  {
@@ -3907,7 +3925,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "breaksProtect": true
+  }
  },
  {
   "id": "ice-beam",
@@ -5676,7 +5696,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "hitsSemi": {
+    "semi": "underwater",
+    "double": true
+   }
+  }
  },
  {
   "id": "sweet-scent",
@@ -5805,7 +5830,12 @@
    "status": {
     "id": "par",
     "chance": 30
-   }
+   },
+   "hitsSemi": {
+    "semi": "air",
+    "double": false
+   },
+   "sureIn": "rain"
   }
  },
  {
@@ -6831,7 +6861,12 @@
   "effects": {
    "confuse": {
     "chance": 30
-   }
+   },
+   "hitsSemi": {
+    "semi": "air",
+    "double": false
+   },
+   "sureIn": "rain"
   }
  },
  {
@@ -7006,7 +7041,8 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "heal": 0.5
+   "heal": 0.5,
+   "healWeather": true
   }
  },
  {
@@ -7022,7 +7058,8 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "heal": 0.5
+   "heal": 0.5,
+   "healWeather": true
   }
  },
  {
@@ -7462,7 +7499,8 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "heal": 0.5
+   "heal": 0.5,
+   "healWeather": true
   }
  },
  {
@@ -7558,7 +7596,11 @@
   "target": "enemy",
   "flags": [],
   "effects": {
-   "bind": true
+   "bind": true,
+   "hitsSemi": {
+    "semi": "underwater",
+    "double": true
+   }
   }
  },
  {
@@ -7590,6 +7632,136 @@
   "target": "enemy",
   "flags": [],
   "effects": {}
+ },
+ {
+  "id": "ancient-power",
+  "name": "Ancient Power",
+  "type": "rock",
+  "category": "special",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    }
+   ]
+  }
+ },
+ {
+  "id": "chatter",
+  "name": "Chatter",
+  "type": "flying",
+  "category": "special",
+  "power": 65,
+  "accuracy": 100,
+  "pp": 20,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "dynamic-punch",
+  "name": "Dynamic Punch",
+  "type": "fighting",
+  "category": "physical",
+  "power": 100,
+  "accuracy": 50,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "confuse": {
+    "chance": 100
+   }
+  }
+ },
+ {
+  "id": "ominous-wind",
+  "name": "Ominous Wind",
+  "type": "ghost",
+  "category": "special",
+  "power": 60,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    }
+   ]
+  }
  },
  {
   "id": "10-000-000-volt-thunderbolt",
@@ -7718,53 +7890,6 @@
   "effects": {},
   "supported": false,
   "needs": "The user entangles the target with its anchor chain while attacking. The target becomes unable to flee."
- },
- {
-  "id": "ancient-power",
-  "name": "Ancient Power",
-  "type": "rock",
-  "category": "special",
-  "power": 60,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "statChanges": [
-    {
-     "stat": "atk",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "def",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spa",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spd",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spe",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    }
-   ]
-  }
  },
  {
   "id": "aqua-ring",
@@ -8290,9 +8415,15 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Springs up on first turn, attacks on second. May paralyze opponent."
+  "effects": {
+   "charge": {
+    "semi": "air"
+   },
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "breaking-swipe",
@@ -8485,24 +8616,6 @@
   "effects": {},
   "supported": false,
   "needs": "Raises user's Special Defense and next Electric move's power increases."
- },
- {
-  "id": "chatter",
-  "name": "Chatter",
-  "type": "flying",
-  "category": "special",
-  "power": 65,
-  "accuracy": 100,
-  "pp": 20,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "confuse": {
-    "chance": 100
-   }
-  }
  },
  {
   "id": "chilly-reception",
@@ -8948,9 +9061,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Digs underground on first turn, attacks on second. Can also escape from caves."
+  "effects": {
+   "charge": {
+    "semi": "underground"
+   }
+  }
  },
  {
   "id": "dire-claw",
@@ -8996,9 +9111,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Dives underwater on first turn, attacks on second turn."
+  "effects": {
+   "charge": {
+    "semi": "underwater"
+   }
+  }
  },
  {
   "id": "doodle",
@@ -9209,24 +9326,6 @@
   "needs": "Damage doubles if opponent is Dynamaxed."
  },
  {
-  "id": "dynamic-punch",
-  "name": "Dynamic Punch",
-  "type": "fighting",
-  "category": "physical",
-  "power": 100,
-  "accuracy": 50,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "confuse": {
-    "chance": 100
-   }
-  }
- },
- {
   "id": "echoed-voice",
   "name": "Echoed Voice",
   "type": "normal",
@@ -9334,9 +9433,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second."
+  "effects": {
+   "charge": {}
+  }
  },
  {
   "id": "embargo",
@@ -9526,9 +9625,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks first, foe flinches. Only usable on first turn."
+  "effects": {
+   "flinchChance": 100,
+   "firstTurnOnly": true
+  }
  },
  {
   "id": "feint",
@@ -9654,9 +9754,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Although this move has great power, it only works the first turn the user is in battle."
+  "effects": {
+   "firstTurnOnly": true
+  }
  },
  {
   "id": "fishious-rend",
@@ -9798,9 +9898,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Flies up on first turn, attacks on second turn."
+  "effects": {
+   "charge": {
+    "semi": "air"
+   }
+  }
  },
  {
   "id": "flying-press",
@@ -9926,9 +10028,13 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second. May paralyze opponent."
+  "effects": {
+   "charge": {},
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "freeze-dry",
@@ -10884,11 +10990,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Non-Ice types are damaged for 5 turns."
+  "effects": {
+   "weather": "hail"
+  }
  },
  {
   "id": "happy-hour",
@@ -11222,9 +11328,13 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second. May burn opponent."
+  "effects": {
+   "charge": {},
+   "status": {
+    "id": "brn",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "ice-hammer",
@@ -12747,53 +12857,6 @@
   "needs": "Resets opponent's Evasiveness, and allows Normal- and Fighting-type attacks to hit Ghosts."
  },
  {
-  "id": "ominous-wind",
-  "name": "Ominous Wind",
-  "type": "ghost",
-  "category": "special",
-  "power": 60,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "statChanges": [
-    {
-     "stat": "atk",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "def",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spa",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spd",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    },
-    {
-     "stat": "spe",
-     "stages": 1,
-     "target": "self",
-     "chance": 10
-    }
-   ]
-  }
- },
- {
   "id": "order-up",
   "name": "Order Up",
   "type": "dragon",
@@ -12821,9 +12884,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks for 2-3 turns but then becomes confused."
+  "effects": {
+   "lockIn": true
+  }
  },
  {
   "id": "pain-split",
@@ -12917,9 +12980,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks for 2-3 turns but then becomes confused."
+  "effects": {
+   "lockIn": true
+  }
  },
  {
   "id": "phantom-force",
@@ -12933,9 +12996,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Disappears on first turn, attacks on second. Can strike through Protect/Detect."
+  "effects": {
+   "charge": {
+    "semi": "vanished"
+   },
+   "breaksProtect": true
+  }
  },
  {
   "id": "photon-geyser",
@@ -13477,9 +13543,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks for 2-3 turns but then becomes confused."
+  "effects": {
+   "lockIn": true
+  }
  },
  {
   "id": "rain-dance",
@@ -13491,11 +13557,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes it rain for 5 turns."
+  "effects": {
+   "weather": "rain"
+  }
  },
  {
   "id": "rapid-spin",
@@ -13522,12 +13588,12 @@
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
-  "critStage": 0,
+  "critStage": 1,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second. High critical hit ratio."
+  "effects": {
+   "charge": {}
+  }
  },
  {
   "id": "recycle",
@@ -13891,11 +13957,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Creates a sandstorm for 5 turns."
+  "effects": {
+   "weather": "sand"
+  }
  },
  {
   "id": "sappy-seed",
@@ -14005,9 +14071,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Disappears on first turn, attacks on second. Can strike through Protect/Detect."
+  "effects": {
+   "charge": {
+    "semi": "vanished"
+   },
+   "breaksProtect": true
+  }
  },
  {
   "id": "shattered-psyche",
@@ -14115,11 +14184,12 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user regains up to half of its max HP. It restores more HP in a sandstorm."
+  "effects": {
+   "heal": 0.5,
+   "healSand": true
+  }
  },
  {
   "id": "silk-trap",
@@ -14245,9 +14315,18 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Defense on first turn, attacks on second."
+  "effects": {
+   "charge": {
+    "boosts": [
+     {
+      "stat": "def",
+      "stages": 1,
+      "target": "self",
+      "chance": 100
+     }
+    ]
+   }
+  }
  },
  {
   "id": "sky-attack",
@@ -14258,12 +14337,13 @@
   "accuracy": 90,
   "pp": 5,
   "priority": 0,
-  "critStage": 0,
+  "critStage": 1,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second. May cause flinching. High critical hit ratio."
+  "effects": {
+   "charge": {},
+   "flinchChance": 30
+  }
  },
  {
   "id": "sky-drop",
@@ -14293,9 +14373,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits the opponent, even during Fly."
+  "effects": {
+   "hitsSemi": {
+    "semi": "air",
+    "double": false
+   }
+  }
  },
  {
   "id": "sleep-talk",
@@ -14419,11 +14502,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Defense of Ice types for 5 turns."
+  "effects": {
+   "weather": "snow"
+  }
  },
  {
   "id": "soak",
@@ -14453,9 +14536,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second."
+  "effects": {
+   "charge": {
+    "sunSkips": true
+   }
+  }
  },
  {
   "id": "solar-blade",
@@ -14469,9 +14554,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, attacks on second."
+  "effects": {
+   "charge": {
+    "sunSkips": true
+   }
+  }
  },
  {
   "id": "sonic-boom",
@@ -14995,11 +15082,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes it sunny for 5 turns."
+  "effects": {
+   "weather": "sun"
+  }
  },
  {
   "id": "sunsteel-strike",
@@ -15429,9 +15516,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks for 2-3 turns but then becomes confused."
+  "effects": {
+   "lockIn": true
+  }
  },
  {
   "id": "throat-chop",
@@ -15973,9 +16060,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Move's power and type changes with the weather."
+  "effects": {
+   "weatherBall": true
+  }
  },
  {
   "id": "whirlwind",
