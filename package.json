@@ -20,6 +20,7 @@
     "data:bosses": "node tools/build-boss-teams.ts",
     "data:custom": "node tools/import-custom-forms.ts",
     "data:anims": "node tools/import-battle-anims.ts",
+    "data:megas": "node tools/build-mega-stones.ts",
     "report:content": "node tools/report-content.ts",
     "report:check": "node tools/report-content.ts --check",
     "report:balance": "node tools/report-balance.ts"

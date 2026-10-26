@@ -1189,5 +1189,21 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.black_glasses"
+ },
+ {
+  "id": "mega-ring",
+  "name": "Mega Ring",
+  "description": "Key item: Mega Evolve once per battle (needs the Pokémon's Mega Stone).",
+  "category": "key",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "mega-ring",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.mega_bracelet"
  }
 ]

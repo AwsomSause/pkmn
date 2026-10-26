@@ -12,7 +12,8 @@ export function readCatalogInputs(): CatalogInputs {
   const species = [...(readJson('species.json') as { assets: PokemonArt }[]), ...(readJson('customSpecies.json') as { assets: PokemonArt }[])];
   const archetypes = readJson('archetypes.json') as { spriteAssetId: string }[];
   const rewards = readJson('rewards.json') as { iconAssetId: string }[];
-  const items = readJson('items.json') as { iconAssetId: string }[];
+  const megaStones = readJson('megaStones.json') as { items: { iconAssetId: string }[]; rewards: { iconAssetId: string }[] };
+  const items = [...(readJson('items.json') as { iconAssetId: string }[]), ...megaStones.items, ...megaStones.rewards];
   const trainers = readJson('trainers.json') as { spriteAssetId: string }[];
   const bosses = readJson('bosses.json') as { sprites: Record<string, string> }[];
   const themes = readJson('themes.json') as { arenas: Record<string, string> };

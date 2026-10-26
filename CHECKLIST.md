@@ -216,9 +216,17 @@ Status of every feature. "Done" means implemented **and** tested (unit tests and
 - Sprites are single frames (the pack has no animations); a missing shiny reuses the normal sprite, a missing back sprite the mirrored front.
 - Cries are the base species' cries.
 
-## Milestone 8.5 — Advanced mechanics (not started)
+## Milestone 8.5 — Advanced mechanics (in progress)
 
-See IMPLEMENTATION_PLAN.md §5.
+Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
+
+- [x] Mega Evolution: Mega Ring key item (draft + shop), 145 Mega Stones (`npm run data:megas`), once per battle, one transformation per Pokémon, changes back after battle, boss aces from gym 5 and in the league, challenge switch, battle menu option with a flash and the new sprite
+- [x] Primal Reversion with the Red and Blue Orbs
+- [x] Tests: unit (rules, data, save/load mid-battle, rewards and shop) and a browser test
+- [ ] Terastallization
+- [ ] Z-Moves
+- [ ] Dynamax / Gigantamax
+- [ ] Regional forms as a mechanic (if still wanted)
 
 ## Milestone 8.6 — Systems audit and quality gates ✅
 

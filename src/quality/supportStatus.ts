@@ -96,6 +96,13 @@ export function meetableSpecies(content: Content, withBosses = false): Set<strin
 /** The species a form belongs to (itself for a base species). */
 const lineOf = (content: Content, id: string) => content.species.get(id)?.form?.base ?? id;
 
+/** Mega and Primal forms that a Mega Stone or orb can reach (M8.5, built). */
+function stoneTargets(content: Content): Set<string> {
+  const out = new Set<string>();
+  for (const item of content.items.values()) if (item.effect.kind === 'megaStone') for (const to of Object.values(item.effect.forms)) out.add(to);
+  return out;
+}
+
 export function isTransformation(s: Species): boolean {
   return Boolean(s.form && TRANSFORMATION_KINDS.has(s.form.kind));
 }
@@ -128,7 +135,10 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   const cryOwner = cryOwners.get(s.assets.cry);
   const custom = s.tags.some((t) => t === 'delta' || t === 'zform' || t === 'spooky');
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
-  if (isTransformation(s)) notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics (M8.5)` });
+  if (isTransformation(s)) {
+    if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
+    else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
+  }
   const usable = new Set(usableLearnset(content, s).map((e) => e.move));
   const total = new Set(s.learnset.map((e) => e.move)).size;
   if (usable.size === 0) notes.push({ status: 'disabled', note: 'no level-up move the battle engine supports' });

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T08:46:47.525Z",
+  "generatedAt": "2026-10-26T15:52:31.842Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71274,6 +71274,12 @@
       "path": "images/items/black_glasses.png"
     },
     {
+      "id": "item.mega_bracelet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/mega_bracelet.png"
+    },
+    {
       "id": "item.fist_plate",
       "kind": "image",
       "category": "item",
@@ -71326,6 +71332,576 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/dread_plate.png"
+    },
+    {
+      "id": "item.abomasite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/abomasite.png"
+    },
+    {
+      "id": "item.absolite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/absolite.png"
+    },
+    {
+      "id": "item.absolite_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/absolite_z.png"
+    },
+    {
+      "id": "item.aerodactylite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/aerodactylite.png"
+    },
+    {
+      "id": "item.aggronite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/aggronite.png"
+    },
+    {
+      "id": "item.alakazite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/alakazite.png"
+    },
+    {
+      "id": "item.altarianite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/altarianite.png"
+    },
+    {
+      "id": "item.ampharosite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ampharosite.png"
+    },
+    {
+      "id": "item.audinite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/audinite.png"
+    },
+    {
+      "id": "item.banettite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/banettite.png"
+    },
+    {
+      "id": "item.barbaracite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/barbaracite.png"
+    },
+    {
+      "id": "item.baxcalibrite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/baxcalibrite.png"
+    },
+    {
+      "id": "item.beedrillite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/beedrillite.png"
+    },
+    {
+      "id": "item.blastoisinite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/blastoisinite.png"
+    },
+    {
+      "id": "item.blazikenite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/blazikenite.png"
+    },
+    {
+      "id": "item.cameruptite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/cameruptite.png"
+    },
+    {
+      "id": "item.chandelurite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/chandelurite.png"
+    },
+    {
+      "id": "item.charizardite_x",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/charizardite_x.png"
+    },
+    {
+      "id": "item.charizardite_y",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/charizardite_y.png"
+    },
+    {
+      "id": "item.chesnaughtite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/chesnaughtite.png"
+    },
+    {
+      "id": "item.chimechite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/chimechite.png"
+    },
+    {
+      "id": "item.clefablite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/clefablite.png"
+    },
+    {
+      "id": "item.crabominite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/crabominite.png"
+    },
+    {
+      "id": "item.darkranite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/darkranite.png"
+    },
+    {
+      "id": "item.delphoxite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/delphoxite.png"
+    },
+    {
+      "id": "item.diancite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/diancite.png"
+    },
+    {
+      "id": "item.dragalgite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dragalgite.png"
+    },
+    {
+      "id": "item.dragoninite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dragoninite.png"
+    },
+    {
+      "id": "item.drampanite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/drampanite.png"
+    },
+    {
+      "id": "item.eelektrossite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/eelektrossite.png"
+    },
+    {
+      "id": "item.emboarite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/emboarite.png"
+    },
+    {
+      "id": "item.excadrite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/excadrite.png"
+    },
+    {
+      "id": "item.falinksite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/falinksite.png"
+    },
+    {
+      "id": "item.feraligite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/feraligite.png"
+    },
+    {
+      "id": "item.floettite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/floettite.png"
+    },
+    {
+      "id": "item.froslassite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/froslassite.png"
+    },
+    {
+      "id": "item.galladite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/galladite.png"
+    },
+    {
+      "id": "item.garchompite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/garchompite.png"
+    },
+    {
+      "id": "item.garchompite_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/garchompite_z.png"
+    },
+    {
+      "id": "item.gardevoirite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gardevoirite.png"
+    },
+    {
+      "id": "item.gengarite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gengarite.png"
+    },
+    {
+      "id": "item.glalitite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/glalitite.png"
+    },
+    {
+      "id": "item.glimmoranite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/glimmoranite.png"
+    },
+    {
+      "id": "item.golisopite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/golisopite.png"
+    },
+    {
+      "id": "item.golurkite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/golurkite.png"
+    },
+    {
+      "id": "item.greninjite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/greninjite.png"
+    },
+    {
+      "id": "item.gyaradosite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gyaradosite.png"
+    },
+    {
+      "id": "item.hawluchanite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/hawluchanite.png"
+    },
+    {
+      "id": "item.heatranite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/heatranite.png"
+    },
+    {
+      "id": "item.heracronite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/heracronite.png"
+    },
+    {
+      "id": "item.houndoominite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/houndoominite.png"
+    },
+    {
+      "id": "item.kangaskhanite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/kangaskhanite.png"
+    },
+    {
+      "id": "item.latiasite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/latiasite.png"
+    },
+    {
+      "id": "item.latiosite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/latiosite.png"
+    },
+    {
+      "id": "item.lopunnite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/lopunnite.png"
+    },
+    {
+      "id": "item.lucarionite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/lucarionite.png"
+    },
+    {
+      "id": "item.lucarionite_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/lucarionite_z.png"
+    },
+    {
+      "id": "item.magearnite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/magearnite.png"
+    },
+    {
+      "id": "item.malamarite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/malamarite.png"
+    },
+    {
+      "id": "item.manectite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/manectite.png"
+    },
+    {
+      "id": "item.mawilite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/mawilite.png"
+    },
+    {
+      "id": "item.medichamite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/medichamite.png"
+    },
+    {
+      "id": "item.meganiumite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/meganiumite.png"
+    },
+    {
+      "id": "item.meowsticite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/meowsticite.png"
+    },
+    {
+      "id": "item.metagrossite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/metagrossite.png"
+    },
+    {
+      "id": "item.mewtwonite_x",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/mewtwonite_x.png"
+    },
+    {
+      "id": "item.mewtwonite_y",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/mewtwonite_y.png"
+    },
+    {
+      "id": "item.pidgeotite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/pidgeotite.png"
+    },
+    {
+      "id": "item.pinsirite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/pinsirite.png"
+    },
+    {
+      "id": "item.pyroarite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/pyroarite.png"
+    },
+    {
+      "id": "item.raichunite_x",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/raichunite_x.png"
+    },
+    {
+      "id": "item.raichunite_y",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/raichunite_y.png"
+    },
+    {
+      "id": "item.sablenite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/sablenite.png"
+    },
+    {
+      "id": "item.salamencite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/salamencite.png"
+    },
+    {
+      "id": "item.sceptilite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/sceptilite.png"
+    },
+    {
+      "id": "item.scizorite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/scizorite.png"
+    },
+    {
+      "id": "item.scolipite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/scolipite.png"
+    },
+    {
+      "id": "item.scovillainite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/scovillainite.png"
+    },
+    {
+      "id": "item.scraftinite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/scraftinite.png"
+    },
+    {
+      "id": "item.sharpedonite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/sharpedonite.png"
+    },
+    {
+      "id": "item.skarmorite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/skarmorite.png"
+    },
+    {
+      "id": "item.slowbronite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/slowbronite.png"
+    },
+    {
+      "id": "item.staraptite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/staraptite.png"
+    },
+    {
+      "id": "item.starminite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/starminite.png"
+    },
+    {
+      "id": "item.steelixite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/steelixite.png"
+    },
+    {
+      "id": "item.swampertite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/swampertite.png"
+    },
+    {
+      "id": "item.tatsugirinite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/tatsugirinite.png"
+    },
+    {
+      "id": "item.tyranitarite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/tyranitarite.png"
+    },
+    {
+      "id": "item.venusaurite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/venusaurite.png"
+    },
+    {
+      "id": "item.victreebelite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/victreebelite.png"
+    },
+    {
+      "id": "item.zeraorite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/zeraorite.png"
+    },
+    {
+      "id": "item.zygardite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/zygardite.png"
+    },
+    {
+      "id": "item.rayquazite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/rayquazite.png"
+    },
+    {
+      "id": "item.red_orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/red_orb.png"
+    },
+    {
+      "id": "item.blue_orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/blue_orb.png"
     },
     {
       "id": "bg.arena.plains",

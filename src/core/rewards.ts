@@ -16,7 +16,7 @@ import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { evolveFully } from './evolution';
 import { changeFriendship } from './friendship';
-import { addItem, itemUseProblem } from './items';
+import { addItem, itemCount, itemUseProblem } from './items';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
 import { runLevelCap } from './regions';
@@ -39,6 +39,12 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
   if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < runLevelCap(content, run));
   // Evolution items are only offered when someone in the party can evolve with them.
   const item = reward.effect.kind === 'addItem' ? content.items.get(reward.effect.item) : undefined;
+  // Key items and Mega Stones are kept for the run, so they're offered once; a stone only when a party member can use it.
+  if (item?.effect.kind === 'keyItem') return itemCount(run.inventory, item.id) === 0;
+  if (item?.effect.kind === 'megaStone') {
+    const forms = item.effect.forms;
+    return itemCount(run.inventory, item.id) === 0 && run.party.some((p) => forms[p.speciesId] !== undefined);
+  }
   if (item?.effect.kind === 'evolve') {
     return run.party.some((p) => itemUseProblem(content, item, p, run.regionOrder[run.regionIndex]) === null);
   }
