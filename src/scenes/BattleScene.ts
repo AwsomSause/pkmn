@@ -623,6 +623,12 @@ export class BattleScene extends Phaser.Scene {
     this.scene.start(sceneForRun(result.run));
   }
 
+  /** The Pokémon as the run has it now (after the turn), for statuses an item gave. */
+  private findLive(side: 'player' | 'enemy', uid: string): PokemonInstance | undefined {
+    const run = services().session.run;
+    return side === 'player' ? run?.party.find((m) => m.uid === uid) : run?.battle?.enemyTeam.find((m) => m.uid === uid);
+  }
+
   private findMon(before: RunState, uid: string): PokemonInstance | undefined {
     return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid);
   }
@@ -705,6 +711,16 @@ export class BattleScene extends Phaser.Scene {
         }
         case 'item': {
           preText = `You used the ${content.items.get(e.itemId)?.name ?? 'item'}!`;
+          break;
+        }
+        case 'held': {
+          // A held item did something: show its HP, status and held items as they are now.
+          if (mon) {
+            if (e.hpAfter !== undefined) mon.hp = e.hpAfter;
+            if (e.what === 'cure') mon.status = null;
+            if (e.what === 'orb') mon.status = this.findLive(side!, mon.uid)?.status ?? mon.status;
+            await this.refreshInfoBox(box, mon, e.hpAfter !== undefined);
+          }
           break;
         }
         case 'transform': {

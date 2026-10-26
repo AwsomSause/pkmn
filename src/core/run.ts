@@ -14,6 +14,7 @@
 
 import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
+import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
 import type { AttributeKey, Content } from './contentSchema';
 import {
@@ -42,7 +43,7 @@ import { count, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
-import { createStreams, Rng, withStream } from './rng';
+import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
 import {
@@ -300,6 +301,8 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
+    // Bosses hold items, from their own generator so no other roll changes.
+    if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));
     // Gym number counted from the start of the run (1 = the first gym).
     run.battle.transform.enemyMechanics = bossMechanics(content, role, run.badges.length + 1, run.disabledMechanics);
   }
@@ -441,6 +444,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       attributes,
       disabledMechanics: run.disabledMechanics,
       hyper: buildHyperContext(content, run, hyperRng),
+      teamItems: run.passives,
     },
     action,
   );
@@ -449,6 +453,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   run.rng.hyper = hyperRng.state;
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
   countAttributeGrowth(content, run, engineEvents);
+  applyHeldAttributes(content, run, engineEvents);
   for (const e of engineEvents) {
     const fainted = e.type === 'faint' && e.side === 'player' ? run.party.find((p) => p.uid === e.uid) : undefined;
     if (fainted) changeFriendship(content, fainted, content.balance.friendship.perFaint);
@@ -456,8 +461,11 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
 
   const events = awardExperience(content, run, engineEvents);
   const cues = recordBattleTurn(content, current, run, events);
-  // Mega Evolution and other transformations end with the battle.
-  if (battle.outcome) revertTransformations(content, battle, run.party);
+  // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
+  if (battle.outcome) {
+    revertTransformations(content, battle, run.party);
+    for (const mon of run.party) endHeldBattle(mon);
+  }
 
   if (battle.outcome === 'win' || battle.outcome === 'caught') {
     const end = finishBattle(content, run);
@@ -475,6 +483,27 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   }
   recordChanges(content, current, run, 'battle');
   return { run, events, end: null, defeated: false, cues };
+}
+
+/**
+ * Held items that change the run's attributes: healing berries' side effects,
+ * and the Scarves (+1 per knockout, at most `cap` from each Scarf in a run).
+ */
+function applyHeldAttributes(content: Content, run: RunState, events: BattleEvent[]): void {
+  for (const e of events) {
+    if (e.type !== 'held' || e.what !== 'attribute' || !e.attribute || !e.amount) continue;
+    const effect = content.catalog.get(e.itemId)?.effect;
+    const cap = effect?.kind === 'held' ? effect.hooks.find((h) => h.hook === 'koAttribute')?.cap : undefined;
+    let amount = e.amount;
+    if (cap !== undefined) {
+      const key = `ko:${e.itemId}`;
+      const used = run.itemCounters?.[key] ?? 0;
+      amount = Math.max(0, Math.min(amount, cap - used));
+      if (amount === 0) continue;
+      run.itemCounters = { ...run.itemCounters, [key]: used + amount };
+    }
+    addRunAttribute(content, run, e.attribute as AttributeKey, amount);
+  }
 }
 
 /** Counts what grows attributes: stats your Pokémon raise on themselves, and enemies defeated or caught by type. */
@@ -520,13 +549,15 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       if (!mon || mon.hp <= 0) continue;
       // Teachy TV: Pokémon below the lead's level catch up faster.
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
-      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * (1 + catchUp / 100));
+      // Macho Brace: more EXP for its holder.
+      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * (1 + catchUp / 100) * expMultiplier(content, mon));
       const amount = participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100);
       if (amount <= 0) continue;
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
       out.push({ type: 'xp', uid, amount });
       if (result.levelsGained > 0) {
         out.push({ type: 'levelUp', uid, level: result.newLevel });
+        growthOnLevelUp(content, mon, result.newLevel - result.levelsGained);
         changeFriendship(content, mon, content.balance.friendship.perLevel * result.levelsGained, effects.friendship);
       }
       for (const moveId of result.learnedMoves) out.push({ type: 'learnedMove', uid, moveId });

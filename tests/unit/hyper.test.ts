@@ -115,6 +115,17 @@ describe('Toughened It Out', () => {
   });
 });
 
+describe('Toughened It Out with a Destiny Knot', () => {
+  it('doubles the holder\'s chance (50% becomes certain)', () => {
+    for (let i = 0; i < 20; i++) {
+      const player = pidgey();
+      player.held = { 'destiny-knot': 1 };
+      const half: HyperContext = { ...certain([]), rng: new Rng(hashSeed(`knot-${i}`)), eligibility: (t) => (t === 'toughenedItOut' ? { def: def(t), chance: 0.5, variant: null } : null) };
+      expect(hypers(resolveTurn(battleCtx(player, machamp(), half), { kind: 'move', index: 0 }))).toHaveLength(1);
+    }
+  });
+});
+
 describe('Felt a Bond', () => {
   it('needs friendship 220 and a memory to draw on', () => {
     let run = chooseStarter(content, createRun(content, { runId: 'bond', seed: 'bond', archetypeId: 'red' }), 0);

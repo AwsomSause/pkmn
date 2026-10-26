@@ -53,14 +53,16 @@ describe('story foundation: random streams', () => {
 
   // Fingerprints of what the rules decided for these seeds, recorded on main (after item effects slice 1)
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
-  // the story layer has changed a gameplay roll.
+  // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
+  // effects slice 2 (held items in drafts, bosses holding items), which changes
+  // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '8ecc7311e9c90ff0',
+    'STORY1/0': 'b3651a49ce808703',
     'STORY2/0': '289336f1e73c4f84',
-    'STORY4/0': '65a3e6b1b95d30c2',
+    'STORY4/0': '29f2880cb3e9a110',
     'STORY5/0': '200a67a3f06b4f9f',
     'STORY6/0': 'fb12816df446bfee',
-    'STORY7/0': '6c07d60fa00dfece',
+    'STORY7/0': '0746e00559c72ae4',
     'STORY8/0': '9c19185effaefb06',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
