@@ -52,8 +52,11 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   });
   await waitForScene(page, 'Hub');
 
-  // Bank → licenses: the first one is the Type Specialist License.
-  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowDown');
+  // Unlocks tile → Bank → licenses: the first one is the Type Specialist License.
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter'); // Achievement Hall, Bank, Starter Laboratory, Attributes
+  await page.waitForTimeout(200);
+  await page.keyboard.press('ArrowDown'); // Bank
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
   await page.screenshot({ path: 'test-results/m55-licenses.png' });
@@ -61,7 +64,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await expect.poll(async () => (await profile(page)).licenses).toEqual(['type-specialist']);
   await waitForScene(page, 'Hub');
 
-  // Starter Laboratory: unlock Johto (the second pool).
+  // Starter Laboratory: unlock Johto (the second pool). The Hub reopens on the Bank in the Unlocks menu.
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
@@ -73,7 +76,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   expect((await profile(page)).researchPoints).toBe(350);
 
   // Preparation Desk: Johto pool, Type Focus.
-  for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowUp');
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowLeft'); // Unlocks → Past Runs → New Run
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
