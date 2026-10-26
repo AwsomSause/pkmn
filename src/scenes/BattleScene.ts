@@ -24,12 +24,19 @@ import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
-const ENEMY_POS = { x: 690, y: 250 };
-const PLAYER_POS = { x: 250, y: 404 };
+// Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
+const ENEMY_POS = { x: 648, y: 246 };
+const PLAYER_POS = { x: 312, y: 400 };
+/** The bottom message bar, and the command window on its right. */
+const MESSAGE_Y = 396;
+const COMMAND_X = 588;
 
 interface InfoBox {
   container: Phaser.GameObjects.Container;
   name: Phaser.GameObjects.Text;
+  level: Phaser.GameObjects.Text;
+  /** Where a status badge goes inside the box. */
+  statusAt: { x: number; y: number };
   hpBar: Bar;
   hpText?: Phaser.GameObjects.Text;
   xpBar?: Bar;
@@ -46,6 +53,7 @@ export class BattleScene extends Phaser.Scene {
   private menu: Menu | null = null;
   private picker: Picker | null = null;
   private moveInfo!: Phaser.GameObjects.Text;
+  private commandWindow!: Phaser.GameObjects.Graphics;
   private playerBox!: InfoBox;
   private enemyBox!: InfoBox;
   private playerSprite: Visual | null = null;
@@ -88,16 +96,27 @@ export class BattleScene extends Phaser.Scene {
     const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
     if (assets.has(bg)) this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE);
     else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0);
+    // The ground patches each side stands on.
+    for (const side of ['enemy', 'player']) {
+      const key = `${bg}.${side}`;
+      if (assets.has(key) && this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE);
+    }
 
     this.shown = { player: structuredClone(this.activeMon()), enemy: structuredClone(currentEnemy(battle)) };
-    this.enemyBox = this.makeInfoBox(40, 36, false);
-    this.playerBox = this.makeInfoBox(540, 270, true);
-    this.header = this.add.text(GAME_WIDTH - 20, 14, '', textStyle(22, COLORS.textLight, { stroke: '#202838', strokeThickness: 4 })).setOrigin(1, 0);
+    this.enemyBox = this.makeInfoBox(0, 30, false);
+    this.playerBox = this.makeInfoBox(GAME_WIDTH - 390, MESSAGE_Y - 132, true);
+    this.header = this.add.text(GAME_WIDTH - 16, 10, '', textStyle(20, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
     this.updateHeader();
 
-    drawPanel(this, 8, 404, GAME_WIDTH - 16, 128, { fill: COLORS.panelDark, border: 0x101420 });
-    this.message = this.add.text(32, 424, '', textStyle(30, COLORS.textLight, { wordWrap: { width: 520 }, lineSpacing: 4 }));
-    this.moveInfo = this.add.text(GAME_WIDTH - 28, 500, '', textStyle(20, '#c8d0e0')).setOrigin(1, 0).setVisible(false);
+    // PokeRogue's message bar along the bottom, with the command window on its right.
+    if (this.textures.exists('ui.message_bg')) {
+      this.add.image(0, MESSAGE_Y, 'ui.message_bg').setOrigin(0).setScale(PIXEL_SCALE).setCrop(0, 0, 320, 48);
+    } else {
+      drawPanel(this, 0, MESSAGE_Y, GAME_WIDTH, GAME_HEIGHT - MESSAGE_Y);
+    }
+    this.commandWindow = drawPanel(this, COMMAND_X, MESSAGE_Y, GAME_WIDTH - COMMAND_X, GAME_HEIGHT - MESSAGE_Y).setVisible(false);
+    this.message = this.add.text(36, MESSAGE_Y + 24, '', textStyle(30, COLORS.textLight, { wordWrap: { width: 520 }, lineSpacing: 6 }));
+    this.moveInfo = this.add.text(COMMAND_X + 30, MESSAGE_Y + 24, '', textStyle(24, COLORS.textLight, { lineSpacing: 8 })).setVisible(false);
 
     onInputAction(this, (a) => this.handleInput(a));
     this.input.on('pointerdown', () => this.advance?.());
@@ -174,29 +193,32 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private makeInfoBox(x: number, y: number, isPlayer: boolean): InfoBox {
-    const w = 380;
-    const h = isPlayer ? 116 : 84;
     const container = this.add.container(x, y);
-    const g = this.add.graphics();
-    g.fillStyle(COLORS.panel, 0.95);
-    g.fillRoundedRect(0, 0, w, h, 10);
-    g.lineStyle(4, COLORS.border, 1);
-    g.strokeRoundedRect(0, 0, w, h, 10);
-    container.add(g);
-    const name = this.add.text(16, 8, '', textStyle(28));
-    container.add(name);
-    container.add(this.add.text(36, 52, 'HP', textStyle(18, '#e09030')));
-    const hpBar = new Bar(this, 72, 62, 280, 14, 'hp');
-    hpBar.addTo(container);
-    const box: InfoBox = { container, name, hpBar };
-    if (isPlayer) {
-      box.hpText = this.add.text(w - 20, 72, '', textStyle(22)).setOrigin(1, 0);
-      container.add(box.hpText);
-      box.xpBar = new Bar(this, 72, 104, 280, 8, 'xp');
-      box.xpBar.addTo(container);
-      container.add(this.add.text(36, 96, 'XP', textStyle(14, '#4090d0')));
+    const art = isPlayer ? 'ui.pbinfo_player' : 'ui.pbinfo_enemy';
+    if (this.textures.exists(art)) {
+      // PokeRogue's info box art (130×42 for the player, 130×31 for the foe), drawn 3× larger.
+      container.add(this.add.image(0, 0, art).setOrigin(0).setScale(PIXEL_SCALE));
     } else {
-      box.teamText = this.add.text(w - 16, h - 4, '', textStyle(16, '#c03028')).setOrigin(1, 1);
+      container.add(drawPanel(this, isPlayer ? 18 : 0, 12, 372, isPlayer ? 102 : 66));
+    }
+    // Text and bar positions follow the art's slots (art pixel × 3).
+    const left = isPlayer ? 48 : 24;
+    const right = isPlayer ? 366 : 342;
+    const name = this.add.text(left, 14, '', textStyle(26));
+    const level = this.add.text(right, 14, '', textStyle(24)).setOrigin(1, 0);
+    container.add([name, level]);
+    const hpX = isPlayer ? 210 : 177;
+    container.add(this.add.text(hpX - 8, 63, 'HP', textStyle(15, '#f8a030', { shadow: undefined })).setOrigin(1, 0.5));
+    const hpBar = new Bar(this, hpX, 63, 144, 6, 'hp');
+    hpBar.addTo(container);
+    const box: InfoBox = { container, name, level, hpBar, statusAt: { x: left, y: isPlayer ? 80 : 80 } };
+    if (isPlayer) {
+      box.hpText = this.add.text(right, 76, '', textStyle(24)).setOrigin(1, 0);
+      container.add(box.hpText);
+      box.xpBar = new Bar(this, 123, 120, 255, 6, 'xp');
+      box.xpBar.addTo(container);
+    } else {
+      box.teamText = this.add.text(right, 80, '', textStyle(18, '#f8f8f8', { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
       container.add(box.teamText);
     }
     container.setVisible(false);
@@ -207,13 +229,14 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     const max = calcStats(content, mon).hp;
     box.container.setVisible(true);
-    box.name.setText(`${this.speciesName(mon)}${mon.shiny ? '★' : ''}  Lv${mon.level}`);
+    box.name.setText(`${this.speciesName(mon)}${mon.shiny ? ' ★' : ''}`);
+    box.level.setText(`Lv${mon.level}`);
     box.hpText?.setText(`${Math.max(0, mon.hp)}/${max}`);
     box.statusBadge?.destroy();
     box.statusBadge = undefined;
     if (mon.status) {
       const s = STATUS_LABELS[mon.status.id]!;
-      box.statusBadge = badge(this, 330, 30, s.label, s.color, 16);
+      box.statusBadge = badge(this, box.statusAt.x, box.statusAt.y, s.label, s.color, 16);
       box.container.add(box.statusBadge);
     }
     if (box.xpBar) {
@@ -284,6 +307,8 @@ export class BattleScene extends Phaser.Scene {
     this.picker?.close();
     this.picker = null;
     this.moveInfo.setVisible(false);
+    this.commandWindow.setVisible(false);
+    this.message.setVisible(true);
   }
 
   // ---------- intro ----------
@@ -345,13 +370,14 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.message.setText(`What will ${this.speciesName(this.activeMon())} do?`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
+    this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
-      x: 600,
-      y: 424,
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 26,
       options,
       columns: 2,
       itemWidth: 170,
-      itemHeight: 46,
+      itemHeight: 50,
       fontSize: 30,
       color: COLORS.textLight,
       onSelect: (i) => {
@@ -371,14 +397,17 @@ export class BattleScene extends Phaser.Scene {
     const options = anyPp
       ? mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, disabled: slot.pp <= 0 }))
       : [{ label: 'Struggle' }];
+    // Moves fill the message bar; the command window shows the focused move's details.
+    this.message.setVisible(false);
+    this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
-      x: 560,
-      y: 420,
+      x: 30,
+      y: MESSAGE_Y + 26,
       options,
       columns: 2,
-      itemWidth: 190,
-      itemHeight: 40,
-      fontSize: 24,
+      itemWidth: 270,
+      itemHeight: 50,
+      fontSize: 28,
       color: COLORS.textLight,
       onFocus: (i) => {
         const slot = mon.moves[i];
@@ -388,7 +417,7 @@ export class BattleScene extends Phaser.Scene {
         }
         const move = content.moves.get(slot.id)!;
         const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
-        this.moveInfo.setText(`${move.type.toUpperCase()}  ·  ${move.category}  ·  Pow ${power}  ·  PP ${slot.pp}/${move.pp}`);
+        this.moveInfo.setText(`PP  ${slot.pp}/${move.pp}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
       },
       onSelect: (i) => void this.act({ kind: 'move', index: anyPp ? i : -1 }),
@@ -550,8 +579,12 @@ export class BattleScene extends Phaser.Scene {
         case 'residual':
         case 'recoil':
         case 'drain':
+        case 'heal':
+        case 'confusionHit':
+        case 'bindDamage':
+        case 'seedDamage':
           mon!.hp = e.hpAfter;
-          if (e.type !== 'drain') {
+          if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');
             if (sprite) this.tweens.add({ targets: sprite, alpha: 0.2, yoyo: true, repeat: 2, duration: 70 });
           }
@@ -569,6 +602,10 @@ export class BattleScene extends Phaser.Scene {
         case 'lastStand':
           mon!.hp = 1;
           if (sprite) this.tweens.add({ targets: sprite, x: sprite.x + 8, yoyo: true, repeat: 3, duration: 50 });
+          await this.refreshInfoBox(box, mon!, true);
+          break;
+        case 'selfKo':
+          mon!.hp = 0;
           await this.refreshInfoBox(box, mon!, true);
           break;
         case 'faint':

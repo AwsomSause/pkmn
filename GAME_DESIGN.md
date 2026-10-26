@@ -131,7 +131,8 @@ Traditional single battles (1v1 active Pokémon), turn-based.
 - Critical hits: 1/24 base chance, 1.5× damage.
 - Order: move priority first, then Speed, then a seeded coin flip for ties.
 - Accuracy check per move.
-- Statuses: burn, poison, bad poison, paralysis, sleep, freeze (main); confusion later.
+- Statuses: burn, poison, bad poison, paralysis, sleep, freeze (main). Battle-only conditions (M8.75 part C), cleared on switching: confusion (2–5 turns, a third of the time it hits itself with a 40-power attack), recharging after Hyper Beam, Protect (each use in a row is a third as likely to work), binding (Wrap: 1/8 HP a turn for 4–5 turns, can't switch out) and Leech Seed (1/8 HP a turn to the other side; Grass types are immune).
+- Also since M8.75 part C: multi-hit moves (2–5 hits at 35/35/15/15%), healing moves (half of max HP; no weather yet, so Synthesis always heals half), one-hit KOs (30% + level difference, fail against a higher level), Explosion (the user faints), False Swipe (leaves 1 HP), Flail/Reversal, Brine, Psyshock and Chip Away. Damage multipliers round halves down like the main games. If both sides run out of Pokémon at once, the user of Explosion loses and the user of a recoil move wins; otherwise the player wins.
 - Abilities and held items: off in the first milestones, added later through data.
 - Battle stats: the standard stat formula from base stats and level. **[PROPOSED]** No IVs/EVs/natures at first (keeps it readable); could be added later.
 

@@ -142,6 +142,34 @@ export const MoveSchema = z.object({
       recoilMaxHp: z.number().positive().max(1).optional(),
       /** Deals damage equal to the user's level, ignoring stats. */
       fixedDamage: z.literal('level').optional(),
+      /** Confuses the target (chance in percent). */
+      confuse: z.object({ chance: z.number().min(1).max(100) }).optional(),
+      /** Hits this many times: [2, 5] rolls 2–5 hits (35/35/15/15%), [2, 2] always twice. */
+      hits: z.tuple([z.number().int().min(2), z.number().int().min(2)]).optional(),
+      /** The user must rest on its next turn after this move hits (Hyper Beam). */
+      recharge: z.literal(true).optional(),
+      /** Status move: the user regains this fraction of its max HP. */
+      heal: z.number().positive().max(1).optional(),
+      /** Protects the user from moves this turn; fails more often when used in a row. */
+      protect: z.literal(true).optional(),
+      /** Knocks out the target in one hit; misses more against higher levels and always against higher-level targets. */
+      ohko: z.literal(true).optional(),
+      /** The user faints after using it (Explosion). */
+      selfFaint: z.literal(true).optional(),
+      /** Always leaves the target at 1 HP or more (False Swipe). */
+      leaveOne: z.literal(true).optional(),
+      /** Traps the target and hurts it each turn for 4–5 turns (Wrap). */
+      bind: z.literal(true).optional(),
+      /** Status move: plants a seed that drains the target each turn (Leech Seed). */
+      seed: z.literal(true).optional(),
+      /** Power doubles when the target is at half HP or less (Brine). */
+      doubleBelowHalf: z.literal(true).optional(),
+      /** Power grows as the user's HP falls (Flail, Reversal). */
+      lowHpPower: z.literal(true).optional(),
+      /** A special move that hits the target's Defense (Psyshock). */
+      targetsDefense: z.literal(true).optional(),
+      /** Ignores the target's stat stages (Chip Away). */
+      ignoreStages: z.literal(true).optional(),
     })
     .default({}),
 });

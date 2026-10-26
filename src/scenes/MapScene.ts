@@ -16,7 +16,7 @@ import { onInputAction } from '../ui/input';
 import type { Picker } from '../ui/partyPanel';
 import { pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
-import { badge, drawPanel } from '../ui/widgets';
+import { badge, drawPanel, focusFrame } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
@@ -82,11 +82,11 @@ export class MapScene extends Phaser.Scene {
     playMusic(this, 'bgm.menu');
 
     // ---------- header ----------
-    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     const column = currentColumn(stage);
     if (league) {
       this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
-      this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#c8d0e0'));
+      this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#d8d0e0'));
     } else {
       this.add.text(24, 12, `Stage ${stage.index + 1}: ${theme.name}`, textStyle(28, COLORS.textLight));
       let bx = 26;
@@ -94,13 +94,13 @@ export class MapScene extends Phaser.Scene {
         const b = badge(this, bx, 44, type, TYPE_COLORS[type] ?? 0x808080, 14);
         bx += b.width + 6;
       }
-      this.add.text(bx + 8, 44, leader.title, textStyle(16, '#c8d0e0'));
+      this.add.text(bx + 8, 44, leader.title, textStyle(16, '#d8d0e0'));
     }
     this.add
       .text(GAME_WIDTH - 24, 14, `${region.name}  ·  ${league ? 'Battle' : 'Level'} ${column}/${stage.map.columns}`, textStyle(24, COLORS.textLight))
       .setOrigin(1, 0);
     this.add
-      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#c8d0e0'))
+      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
 
     // ---------- the map (scrolls sideways) ----------
@@ -159,7 +159,7 @@ export class MapScene extends Phaser.Scene {
       }
       mapLayer.add(g);
       mapLayer.add(this.add.text(x, y, n.harder ? `${style.glyph}!` : style.glyph, textStyle(22, '#ffffff')).setOrigin(0.5));
-      if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#8090a8')).setOrigin(0.5, 0));
+      if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
       const boss = this.bossFor(n);
       if (league && boss) mapLayer.add(this.add.text(x, y + NODE_RADIUS + 14, boss.name, textStyle(15, COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
@@ -183,7 +183,7 @@ export class MapScene extends Phaser.Scene {
     }
 
     // ---------- bottom panel: info, side stops, party, bag ----------
-    drawPanel(this, 8, 424, GAME_WIDTH - 16, 110, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 8, 424, GAME_WIDTH - 16, 110, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     run.party.forEach((mon, i) => {
       const species = content.species.get(mon.speciesId)!;
       const x = 40 + i * 52;
@@ -268,10 +268,7 @@ export class MapScene extends Phaser.Scene {
   }
 
   private boxCursor(x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics();
-    g.lineStyle(5, COLORS.accent, 1);
-    g.strokeRoundedRect(x - 4, y - 4, w + 8, h + 8, 10);
-    return g;
+    return focusFrame(this, x, y, w, h);
   }
 
   private describe(option: Option): string {
@@ -345,9 +342,9 @@ export class MapScene extends Phaser.Scene {
   private showBanner(top: string, title: string, sub: string): void {
     const layer = this.add.container(0, 0).setDepth(80);
     layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.7).setOrigin(0));
-    layer.add(this.add.text(GAME_WIDTH / 2, 200, top, textStyle(26, '#c8d0e0')).setOrigin(0.5));
+    layer.add(this.add.text(GAME_WIDTH / 2, 200, top, textStyle(26, '#d8d0e0')).setOrigin(0.5));
     layer.add(this.add.text(GAME_WIDTH / 2, 250, title, textStyle(48, COLORS.textLight)).setOrigin(0.5));
-    layer.add(this.add.text(GAME_WIDTH / 2, 300, sub, textStyle(20, '#c8d0e0')).setOrigin(0.5));
+    layer.add(this.add.text(GAME_WIDTH / 2, 300, sub, textStyle(20, '#d8d0e0')).setOrigin(0.5));
     this.busy = true;
     this.tweens.add({ targets: layer, alpha: 0, delay: 1400, duration: 400, onComplete: () => {
       layer.destroy();

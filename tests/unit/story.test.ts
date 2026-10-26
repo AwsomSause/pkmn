@@ -51,7 +51,7 @@ describe('story foundation: random streams', () => {
     }
   });
 
-  // Fingerprints of what the rules decided for these seeds, recorded on main
+  // Fingerprints of what the rules decided for these seeds, recorded on main (after M8.75 C1)
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll.
   const BEFORE_STORY: Record<string, string> = {
@@ -59,8 +59,8 @@ describe('story foundation: random streams', () => {
     'STORY1/100': 'c322455b05cb8b5a',
     'STORY2/0': '289336f1e73c4f84',
     'STORY2/100': '65d8fc32c8e70661',
-    'STORY3/0': '0194a8a1ef3bbbd5',
-    'STORY3/100': '0194a8a1ef3bbbd5',
+    'STORY3/0': 'ffdee161144ebb19',
+    'STORY3/100': 'ffdee161144ebb19',
     'STORY4/0': '63f14c8ea958a553',
     'STORY4/100': '9fd9a5f7be5be6b6',
     'STORY5/0': 'bb7ad33f0ab70189',
@@ -69,8 +69,8 @@ describe('story foundation: random streams', () => {
     'STORY6/100': '3277c132e50d5fc6',
     'STORY7/0': 'b9c16c8fd3465c16',
     'STORY7/100': 'fc2e340688fd884e',
-    'STORY8/0': '7b9d74f77e681b6c',
-    'STORY8/100': 'b9b7fc46546d0f1d',
+    'STORY8/0': '3bc049c6d6f0e211',
+    'STORY8/100': '99efb0aa2269ec96',
   };
   it('old seeds play exactly as they did before the story layer (with and without Love)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {

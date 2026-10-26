@@ -5,6 +5,7 @@ A browser-playable Pokémon-inspired roguelike built with TypeScript, Phaser 3 a
 - Design: [GAME_DESIGN.md](GAME_DESIGN.md)
 - Milestone plan: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
 - What works right now: [CHECKLIST.md](CHECKLIST.md)
+- Working rules for Claude sessions: [CLAUDE.md](CLAUDE.md)
 
 This repository is private. The art and audio come from the director's asset packs (see GAME_DESIGN.md §13 for licensing notes); do not publish builds publicly.
 

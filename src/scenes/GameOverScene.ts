@@ -24,7 +24,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, 38, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 50, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
     // Left: the run. Right: what it earned for the permanent profile.
     drawPanel(this, 24, 72, 440, 286);
-    drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: 0x101420 });
+    drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];
@@ -55,7 +55,7 @@ export class GameOverScene extends Phaser.Scene {
           return species ? `${session.content.species.get(species)?.name ?? species}: ` : '';
         };
         const lines = moments.map((m) => `★ ${m.type === 'runEnded' || m.actors.length !== 1 ? '' : name(m.actors[0])}${m.text}`);
-        drawPanel(this, 24, 366, GAME_WIDTH - 48, 118, { fill: COLORS.panelDark, border: 0x101420 });
+        drawPanel(this, 24, 366, GAME_WIDTH - 48, 118, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
         this.add.text(44, 374, 'Moments of this run', textStyle(17, '#f0d060'));
         this.add.text(44, 394, lines.join('\n'), textStyle(16, COLORS.textLight, { lineSpacing: 1, wordWrap: { width: GAME_WIDTH - 88 } }));
       }
