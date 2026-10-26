@@ -280,11 +280,20 @@ export const RunStateSchema = z.object({
   /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
   itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
   /**
-   * Map and encounter items still working (Repels, Flutes, Mail, Apricorns...; see core/mapItems.ts):
-   * wild battles or ball throws left, or the stage it lasts for ("next" until the next stage starts).
+   * Map, shop and money items still working (Repels, Flutes, Mail, Apricorns, Coupons...; see core/mapItems.ts):
+   * wild battles, ball throws or other uses left, or the stage it lasts for ("next" until the next stage starts).
    */
   mapEffects: z
-    .array(z.object({ itemId: z.string(), battles: z.number().int().min(0).optional(), throws: z.number().int().min(0).optional(), stage: z.string().optional() }))
+    .array(
+      z.object({
+        itemId: z.string(),
+        battles: z.number().int().min(0).optional(),
+        throws: z.number().int().min(0).optional(),
+        /** Shop purchases, shop visits or trainer wins left (the item's `lasts` says which). */
+        uses: z.number().int().min(0).optional(),
+        stage: z.string().optional(),
+      }),
+    )
     .optional(),
   /** Candies earned this run; added to the profile when the run ends (D7). */
   candies: z.number().int().min(0),

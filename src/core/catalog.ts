@@ -34,7 +34,7 @@ export function getCatalogEntry(content: Content, id: string): CatalogEntry {
 
 /** Copies of a team or player item this run (map items: charges left or stage effects waiting). */
 export function ownedCopies(run: RunState, entry: CatalogEntry): number {
-  if (entry.effect?.kind === 'encounter') return mapItemCopies(run, entry);
+  if (entry.effect?.kind === 'encounter' || entry.effect?.kind === 'perk') return mapItemCopies(run, entry);
   return run.passives?.[entry.id] ?? 0;
 }
 
@@ -169,7 +169,7 @@ export function applyCatalog(
   };
 
   // Team and player items are counted on the run (one-time battle boosts and map items with charges aren't kept there).
-  const counted = effect.kind !== 'battleBoost' && (effect.kind !== 'encounter' || effect.lasts.for === 'run');
+  const counted = effect.kind !== 'battleBoost' && ((effect.kind !== 'encounter' && effect.kind !== 'perk') || effect.lasts.for === 'run');
   if (entry.stacksOn !== 'pokemon' && counted) run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
 
   switch (effect.kind) {
@@ -271,8 +271,9 @@ export function applyCatalog(
       messages.push(`${entry.description}: it takes effect in the next battle.`);
       break;
     }
-    case 'encounter': {
-      applyChanges(effect.changes);
+    case 'encounter':
+    case 'perk': {
+      if (effect.kind === 'encounter') applyChanges(effect.changes);
       addMapItem(content, run, entry);
       messages.push(`${entry.name}: ${entry.description}.`);
       break;

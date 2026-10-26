@@ -2,6 +2,7 @@
 
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
+import { mapItemSummary } from '../core/mapItems';
 import { shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
@@ -33,16 +34,20 @@ export class ShopScene extends Phaser.Scene {
     const stock = shopStock(content, run);
     const badgesFor = (e: (typeof content.shop)[number]) => shopBadgesNeeded(content, run, e);
     const next = content.shop.filter((e) => !stock.includes(e)).sort((a, b) => badgesFor(a) - badgesFor(b))[0];
+    // Coupons and the Point Card show in the hint while they work.
+    const working = mapItemSummary(content, run);
     const rows: PickerRow[] = stock.map((entry) => {
       const item = content.items.get(entry.item)!;
       const price = shopPrice(content, run, entry);
+      // Member Card and Wepear Berry: sold before the badges would unlock it.
+      const early = run.badges.length < badgesFor(entry);
       return {
         problem: run.money < price ? `Not enough money for the ${item.name} (₽${price}, you have ₽${run.money}).` : null,
-        hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${badgesFor(next)} badges.` : ''}`,
+        hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${badgesFor(next)} badges.` : ''}${working ? `  ·  ${working}` : ''}`,
         draw: (scene, box, w, h) => {
           box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
-          box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
-          box.add(scene.add.text(w - 90, h / 2, `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
+          box.add(scene.add.text(56, h / 2, early ? `${item.name} (early)` : item.name, textStyle(22, early ? '#f0c060' : undefined)).setOrigin(0, 0.5));
+          box.add(scene.add.text(w - 90, h / 2, price === 0 ? 'FREE' : `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
           // Attribute items are used when bought, so there's no count in the Bag to show.
           if (item.effect.kind !== 'attribute') box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#a69cb4')).setOrigin(1, 0.5));
         },

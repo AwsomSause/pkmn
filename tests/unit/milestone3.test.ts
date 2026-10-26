@@ -253,7 +253,7 @@ describe('map flow', () => {
     expect(run.inventory['poke-ball']).toBe(before + 1);
     expect(run.money).toBe(100);
     expect(() => buyItem(content, run, 'potion')).toThrow(/need/);
-    run = leaveShop(run);
+    run = leaveShop(content, run);
     expect(run.phase).toBe('map');
     // A shop can be visited again.
     expect(visitSide(content, run, 'test-shop').run.phase).toBe('shop');

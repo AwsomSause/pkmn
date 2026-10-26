@@ -654,14 +654,41 @@ export const EncounterModSchema = z.discriminatedUnion('mod', [
 ]);
 export type EncounterMod = z.infer<typeof EncounterModSchema>;
 
-/** How long a map item lasts: some wild battles, some ball throws, the rest of this stage, the whole next stage, or the run. */
+/**
+ * How long a map item lasts: some wild battles, ball throws, shop purchases,
+ * shop visits or trainer wins, the rest of this stage, the whole next stage, or the run.
+ */
 export const EncounterLastsSchema = z.discriminatedUnion('for', [
   z.object({ for: z.literal('battles'), count: z.number().int().positive() }),
   z.object({ for: z.literal('throws'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('purchases'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('shops'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('trainers'), count: z.number().int().positive() }),
   z.object({ for: z.literal('stage') }),
   z.object({ for: z.literal('nextStage') }),
   z.object({ for: z.literal('run') }),
 ]);
+
+/** What a shop or money item changes (M8.75 item effects, slice 3b). */
+export const PerkSchema = z.discriminatedUnion('perk', [
+  /** Shop prices are this much lower (Coupons). */
+  z.object({ perk: z.literal('discount'), percent: z.number().positive().max(100) }),
+  /** Each shop purchase earns a point per copy; at `every` points the next purchase is free (Point Card). */
+  z.object({ perk: z.literal('points'), every: z.number().int().positive() }),
+  /** Shops also sell this many items early: the next ones you would unlock with badges (Member Card, Wepear Berry). */
+  z.object({ perk: z.literal('earlyStock'), count: z.number().int().positive() }),
+  /** Trainers (not wild Pokémon) pay this much more prize money. */
+  z.object({ perk: z.literal('trainerMoney'), percent: z.number().positive() }),
+  /** Wild battles on a stage of this type pay this much more per copy (Soot Sack). */
+  z.object({ perk: z.literal('wildMoney'), type: TypeNameSchema, amount: z.number().int().positive() }),
+  /** A Bag item from the shop after each trainer win: one of the cheapest third (Loot Sack). */
+  z.object({ perk: z.literal('trainerLoot') }),
+  /** Every `every` trainer wins: a Bag item from the dearest third of the shop (Blue Card). */
+  z.object({ perk: z.literal('trainerPoints'), every: z.number().int().positive() }),
+  /** Money per copy when the run reaches a new region (Pass Orb). */
+  z.object({ perk: z.literal('regionMoney'), amount: z.number().int().positive() }),
+]);
+export type Perk = z.infer<typeof PerkSchema>;
 
 export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   /** Attribute changes for the run; optionally heals or befriends the lead. */
@@ -714,6 +741,8 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('battleBoost'), boosts: z.array(BattleBoostSchema).min(1), cure: StatusIdSchema.optional() }),
   /** A map and encounter item (Repels, Flutes, Incense, Mail, Poké Doll, Apricorns...), plus attribute changes now. */
   z.object({ kind: z.literal('encounter'), lasts: EncounterLastsSchema, mods: z.array(EncounterModSchema).min(1), changes: AttributeChangesSchema.optional() }),
+  /** A shop or money item (Coupons, Point Card, Loot Sack, Reply Mail...). */
+  z.object({ kind: z.literal('perk'), lasts: EncounterLastsSchema, perks: z.array(PerkSchema).min(1) }),
 ]);
 export type CatalogEffect = z.infer<typeof CatalogEffectSchema>;
 
