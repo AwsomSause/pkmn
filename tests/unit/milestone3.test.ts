@@ -140,7 +140,8 @@ describe('stage map', () => {
         expect(kinds.at(-1)).toBe('gym');
       }
     }
-  });
+    // 300 maps take about 4.5 s on their own, so the default 5 s limit failed now and then when every test file ran at once.
+  }, 30_000);
 
   it('the same seed builds the same map', () => {
     const a = generateStageMap(content, FULL, new Rng(hashSeed('same')));

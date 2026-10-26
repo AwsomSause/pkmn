@@ -8,9 +8,9 @@ Totals: species 1027, forms 591, moves 934, items 64, evolutions 675, meetableSp
 
 | Kind | Supported | Limited | Disabled | Invalid |
 |---|---|---|---|---|
-| species | 1002 | 20 | 5 | 0 |
+| species | 1011 | 11 | 5 | 0 |
 | form | 105 | 276 | 210 | 0 |
-| move | 311 | 12 | 611 | 0 |
+| move | 424 | 12 | 498 | 0 |
 | item | 62 | 2 | 0 | 0 |
 | evolution | 611 | 64 | 0 | 0 |
 
@@ -18,8 +18,8 @@ Totals: species 1027, forms 591, moves 934, items 64, evolutions 675, meetableSp
 
 | Check | Count | What it means |
 |---|---|---|
-| Unsupported moves (`unsupported-moves`) | 611 | Moves in the data that the battle engine cannot run yet; no Pokémon learns or uses them. |
-| Level-up moves skipped (`unsupported-learnset-entries`) | 12549 | Level-up learnset entries skipped because the move is unsupported (species learn fewer moves than in the main games). |
+| Unsupported moves (`unsupported-moves`) | 498 | Moves in the data that the battle engine cannot run yet; no Pokémon learns or uses them. |
+| Level-up moves skipped (`unsupported-learnset-entries`) | 8693 | Level-up learnset entries skipped because the move is unsupported (species learn fewer moves than in the main games). |
 | Species with no usable moves (`species-no-usable-moves`) | 5 | Species and forms with no supported level-up move at all (they could only use Struggle). |
 | Meetable species with no usable moves (`meetable-species-no-usable-moves`) | 0 | Of those, ones a player can own (wild, starter, or by evolving). Should be zero. |
 | Missing Pokémon sprites (`missing-sprites`) | 0 | Sprite or icon files a species points at that are not in public/assets (the game shows a fallback). |
@@ -34,7 +34,7 @@ Totals: species 1027, forms 591, moves 934, items 64, evolutions 675, meetableSp
 | Save upgrades with no test (`untested-save-migrations`) | 0 | Save upgrades (old version to new) that no unit test loads an old save through. |
 | Invalid content entries (`invalid-entries`) | 0 | Entries whose support status is "invalid" (broken data). |
 
-### Unsupported moves: 611
+### Unsupported moves: 498
 
 - 10-000-000-volt-thunderbolt
 - acid-downpour
@@ -44,9 +44,7 @@ Totals: species 1027, forms 591, moves 934, items 64, evolutions 675, meetableSp
 - all-out-pummeling
 - ally-switch
 - anchor-shot
-- ancient-power
 - aqua-ring
-- arm-thrust
 - aromatherapy
 - aromatic-mist
 - assist
@@ -58,39 +56,41 @@ Totals: species 1027, forms 591, moves 934, items 64, evolutions 675, meetableSp
 - autotomize
 - avalanche
 - axe-kick
-- baby-doll-eyes
 - baddy-bad
 - baneful-bunker
-- ... and 586 more (`npm run report:content -- --only unsupported-moves`)
+- barb-barrage
+- baton-pass
+- beak-blast
+- ... and 473 more (`npm run report:content -- --only unsupported-moves`)
 
-### Level-up moves skipped: 12549
+### Level-up moves skipped: 8693
 
-- bulbasaur@7:leech-seed
 - bulbasaur@30:worry-seed
-- bulbasaur@33:synthesis
-- bulbasaur@42:solar-beam
-- ivysaur@4:leech-seed
 - ivysaur@37:worry-seed
-- ivysaur@40:synthesis
-- ivysaur@49:solar-beam
-- venusaur@4:leech-seed
-- venusaur@11:petal-dance
 - venusaur@40:worry-seed
-- venusaur@45:synthesis
-- venusaur@59:solar-beam
-- venusaur-mega@4:leech-seed
-- venusaur-mega@11:petal-dance
 - venusaur-mega@40:worry-seed
-- venusaur-mega@45:synthesis
-- venusaur-mega@59:solar-beam
-- venusaur-gmax@4:leech-seed
-- venusaur-gmax@11:petal-dance
 - venusaur-gmax@40:worry-seed
-- venusaur-gmax@45:synthesis
-- venusaur-gmax@59:solar-beam
-- charmander@18:fury-swipes
 - charmander@20:rage
-- ... and 12524 more (`npm run report:content -- --only unsupported-learnset-entries`)
+- charmander@26:dragon-rage
+- charmander@28:flame-burst
+- charmeleon@21:rage
+- charmeleon@29:dragon-rage
+- charmeleon@32:flame-burst
+- charizard@1:counter
+- charizard@21:rage
+- charizard@32:dragon-rage
+- charizard@32:flame-burst
+- charizard-mega-x@1:counter
+- charizard-mega-x@21:rage
+- charizard-mega-x@32:dragon-rage
+- charizard-mega-x@32:flame-burst
+- charizard-mega-y@1:counter
+- charizard-mega-y@21:rage
+- charizard-mega-y@32:dragon-rage
+- charizard-mega-y@32:flame-burst
+- charizard-gmax@1:counter
+- charizard-gmax@21:rage
+- ... and 8668 more (`npm run report:content -- --only unsupported-learnset-entries`)
 
 ### Species with no usable moves: 5
 
