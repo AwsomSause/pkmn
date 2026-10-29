@@ -3,7 +3,7 @@
 import type { Content, GrowthRate, Species, StatBlock, StatName } from './contentSchema';
 import { STAT_NAMES } from './contentSchema';
 import { Rng, hashSeed } from './rng';
-import type { PokemonInstance } from './state';
+import type { MoveSlot, PokemonInstance } from './state';
 
 export function getSpecies(content: Content, id: string): Species {
   const species = content.species.get(id);
@@ -28,9 +28,20 @@ export function calcStats(content: Content, mon: PokemonInstance): StatBlock {
         ? Math.floor((2 * base * mon.level) / 100) + mon.level + 10
         : Math.floor((2 * base * mon.level) / 100) + 5;
     const stacks = mon.vitamins[stat] ?? 0;
-    stats[stat] = Math.floor(raw * (1 + perStack * stacks));
+    const boost = (mon.statBoosts?.[stat] ?? 0) / 100;
+    stats[stat] = Math.floor(raw * (1 + perStack * stacks + boost));
   }
   return stats;
+}
+
+/** Each PP Up adds a fifth of the move's base PP (as in the main games); PP Max counts as three. */
+export const PP_UP_SHARE = 0.2;
+export const MAX_PP_UPS = 3;
+
+/** A move slot's max PP, counting PP Ups. */
+export function maxPp(content: Content, slot: MoveSlot): number {
+  const base = content.moves.get(slot.id)!.pp;
+  return base + Math.floor(base * PP_UP_SHARE * (slot.ppUps ?? 0));
 }
 
 export function maxHp(content: Content, mon: PokemonInstance): number {

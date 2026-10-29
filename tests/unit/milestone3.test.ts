@@ -24,7 +24,7 @@ import { pickGymLeader, themePool, trainerClassesFor, wildEligibleSpecies } from
 import { TYPE_NAMES } from '../../src/core/contentSchema';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, scaleAt, toBattle } from './helpers';
+import { content, scaleAt, takeAnyReward, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 const FULL = content.campaigns.get('full')!;
@@ -54,7 +54,7 @@ function win(run: RunState): RunState {
     const idx = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
     run = takeTurn(content, run, { kind: 'move', index: idx >= 0 ? idx : 0 }).run;
   }
-  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
+  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   return run;
 }
 
@@ -140,7 +140,8 @@ describe('stage map', () => {
         expect(kinds.at(-1)).toBe('gym');
       }
     }
-  });
+    // 300 maps take about 4.5 s on their own, so the default 5 s limit failed now and then when every test file ran at once.
+  }, 30_000);
 
   it('the same seed builds the same map', () => {
     const a = generateStageMap(content, FULL, new Rng(hashSeed('same')));
@@ -241,7 +242,7 @@ describe('map flow', () => {
     run = powerUp(run);
     run = win(run);
     run = chooseReward(content, run, 0).run;
-    while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+    while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
     const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
     node.sides.push({ id: 'test-shop', kind: 'shop', used: false });
     run.money = 300;
@@ -252,7 +253,7 @@ describe('map flow', () => {
     expect(run.inventory['poke-ball']).toBe(before + 1);
     expect(run.money).toBe(100);
     expect(() => buyItem(content, run, 'potion')).toThrow(/need/);
-    run = leaveShop(run);
+    run = leaveShop(content, run);
     expect(run.phase).toBe('map');
     // A shop can be visited again.
     expect(visitSide(content, run, 'test-shop').run.phase).toBe('shop');
@@ -274,8 +275,8 @@ describe('map flow', () => {
       }
       run = win(run);
       expect(run.phase).toBe('reward');
-      run = chooseReward(content, run, 0).run;
-      while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+      run = takeAnyReward(run);
+      while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
       run.party[0]!.hp = maxHp(content, run.party[0]!);
     }
     expect(kinds).toHaveLength(20);
@@ -307,7 +308,7 @@ describe('save upgrades (v2 → v3)', () => {
     expect(loaded.data.battle!.levelInfo).toEqual([]);
     run = win(loaded.data);
     run = chooseReward(content, run, 0).run;
-    while (run.phase === 'decision') run = resolveDecision(content, run, { kind: 'skipMove' }).run;
+    while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
     expect(run.phase).toBe('map');
     expect(run.stage!.index).toBe(0);
   });

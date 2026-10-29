@@ -6,6 +6,8 @@
 import Phaser from 'phaser';
 import { buildCatalog, type AssetManifest } from '../assets/catalog';
 import { bossSpriteIds } from '../core/regions';
+import { animCatalogInputs } from '../core/presentation/moveAnims';
+import { moveAnims } from '../data/presentation';
 import { AssetRegistry, setServices } from '../game/services';
 import type { GameSession } from '../game/GameSession';
 import { queueAsset } from '../ui/lazyAssets';
@@ -30,6 +32,7 @@ export class BootScene extends Phaser.Scene {
       trainerAssetIds: [...content.archetypes.values(), ...content.trainers.values()].map((a) => a.spriteAssetId).concat(bossSpriteIds(content)),
       itemAssetIds: [...content.rewards.values(), ...content.items.values()].map((r) => r.iconAssetId),
       backgroundAssetIds: Object.values(content.arenas).filter((id): id is string => Boolean(id)),
+      battleAnims: animCatalogInputs(moveAnims()),
     });
     const assets = new AssetRegistry(manifest, catalog);
     setServices({ session, assets });
@@ -41,16 +44,24 @@ export class BootScene extends Phaser.Scene {
     this.loadAssets(assets);
   }
 
+  /** Loads the pixel fonts; a font that fails falls back to the next one in FONT_FAMILY. */
   private async loadFont(assets: AssetRegistry): Promise<void> {
-    const entry = assets.entries().find((e) => e.id === 'font.main');
-    if (!entry || typeof FontFace === 'undefined') return;
-    try {
-      const face = new FontFace('PokemonMain', `url(assets/${entry.path})`);
-      await face.load();
-      document.fonts.add(face);
-    } catch {
-      assets.markFailed('font.main');
-    }
+    if (typeof FontFace === 'undefined') return;
+    const families: Record<string, string> = { 'font.main': 'PokemonMain', 'font.bold': 'PokemonBold' };
+    await Promise.all(
+      assets
+        .entries()
+        .filter((e) => e.kind === 'font' && families[e.id])
+        .map(async (entry) => {
+          try {
+            const face = new FontFace(families[entry.id]!, `url(assets/${entry.path})`);
+            await face.load();
+            document.fonts.add(face);
+          } catch {
+            assets.markFailed(entry.id);
+          }
+        }),
+    );
   }
 
   private loadAssets(assets: AssetRegistry): void {

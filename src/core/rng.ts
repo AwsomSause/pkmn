@@ -12,7 +12,9 @@ export interface RngState {
   d: number;
 }
 
-export const STREAM_NAMES = ['starter', 'encounter', 'reward', 'battle', 'map', 'capture', 'shop'] as const;
+// Streams are derived from the seed by name, so adding a stream never changes
+// the rolls of the others ("story" and "hyper" were added in M8.9-0).
+export const STREAM_NAMES = ['starter', 'encounter', 'reward', 'battle', 'map', 'capture', 'shop', 'story', 'hyper'] as const;
 export type StreamName = (typeof STREAM_NAMES)[number];
 export type RngStreams = Record<StreamName, RngState>;
 

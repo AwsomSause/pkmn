@@ -37,8 +37,8 @@ export interface PickerConfig {
   backLabel?: string;
 }
 
-const LIST_TOP = 76;
-const LIST_BOTTOM = GAME_HEIGHT - 72;
+const LIST_TOP = 82;
+const LIST_BOTTOM = GAME_HEIGHT - 84;
 
 /** A modal list of rows. Keyboard: arrows to move, confirm to pick, back to cancel. Mouse: hover and click. */
 export class Picker {
@@ -55,10 +55,15 @@ export class Picker {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
-    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true }));
-    this.root.add(scene.add.text(48, 28, config.title, textStyle(30, COLORS.textLight)));
+    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32));
+    // A title band across the top, like a Pokémon menu header.
+    const band = scene.add.graphics();
+    band.fillStyle(0x18141d, 0.9).fillRect(36, 26, GAME_WIDTH - 72, 42);
+    band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
+    this.root.add(band);
+    this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
-    this.root.add(scene.add.text(GAME_WIDTH - 48, 34, `Enter choose${backHint}`, textStyle(18, '#a69cb4')).setOrigin(1, 0));
+    this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
 
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
     this.list = scene.add.container(0, 0);
@@ -90,9 +95,14 @@ export class Picker {
       this.list.add(box);
     });
 
-    this.footer = scene.add.text(48, GAME_HEIGHT - 60, '', textStyle(22, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 96 } }));
+    // The message box along the bottom, like the games' text window.
+    this.root.add(paintWindow(scene.add.graphics(), 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { thin: true, fill: 0x18141d, border: COLORS.borderMuted }));
+    this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
     this.root.add(this.footer);
-    if (config.rows.length === 0) this.footer.setText('Nothing here.');
+    if (config.rows.length === 0) {
+      this.root.add(scene.add.text(GAME_WIDTH / 2, (LIST_TOP + LIST_BOTTOM) / 2, 'Nothing here yet', textStyle(32, COLORS.textMuted)).setOrigin(0.5));
+      this.footer.setText(config.onBack ? 'Press Esc to go back.' : '');
+    }
     const first = config.rows.findIndex((r) => !r.problem);
     this.focus(first >= 0 ? first : 0, false);
   }
@@ -178,10 +188,22 @@ function abilityHint(content: Content, mon: PokemonInstance): string | undefined
 }
 
 /** One party row: icon, name, level, HP bar, status, ability and friendship hearts. */
+
+/** What a Pokémon holds, e.g. "Leftovers, Charcoal ×2", or '' for nothing. */
+export function heldSummary(content: Content, mon: PokemonInstance): string {
+  return Object.entries(mon.held ?? {})
+    .map(([id, copies]) => `${content.catalog.get(id)?.name ?? id}${copies > 1 ? ` ×${copies}` : ''}`)
+    .join(', ');
+}
+
+/** One party row: icon, name, level, HP bar, status, held items and friendship hearts. */
 export function partyRow(content: Content, mon: PokemonInstance, problem: string | null, opts: { tag?: string; hint?: string } = {}): PickerRow {
+  const holding = heldSummary(content, mon);
+  const boosts = mon.boosts?.length ? `${mon.boosts.length} battle boost${mon.boosts.length > 1 ? 's' : ''} ready` : '';
+  const extra = [holding && `Holding: ${holding}.`, boosts && `${boosts}.`].filter(Boolean).join(' ');
   return {
     problem,
-    hint: opts.hint ?? abilityHint(content, mon),
+    hint: [opts.hint ?? abilityHint(content, mon), extra].filter(Boolean).join('  ') || undefined,
     draw: (scene, box, w) => {
       const species = getSpecies(content, mon.speciesId);
       const max = calcStats(content, mon).hp;
@@ -195,7 +217,14 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       box.add(scene.add.text(w - 12, 38, `${mon.hp}/${max}`, textStyle(20)).setOrigin(1, 0));
       const status = mon.hp <= 0 ? { label: 'FNT', color: 0x806060 } : mon.status ? STATUS_LABELS[mon.status.id] : null;
       const tags = [status?.label, opts.tag].filter(Boolean).join('  ');
-      if (tags) box.add(scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020')));
+      let tagEnd = 72;
+      if (tags) {
+        const tagText = scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020'));
+        box.add(tagText);
+        tagEnd += tagText.width + 10;
+      }
+      const count = Object.values(mon.held ?? {}).reduce((a, b) => a + b, 0);
+      if (count) box.add(scene.add.text(tagEnd, 58, `◆ ${count} held`, textStyle(16, '#8fb8e0')));
       const abilityId = abilityOf(content, mon);
       const abilityName = abilityId ? content.abilities.get(abilityId)?.name : undefined;
       if (abilityName) box.add(scene.add.text(w - 100, 60, abilityName, textStyle(14, '#a69cb4')).setOrigin(1, 0));

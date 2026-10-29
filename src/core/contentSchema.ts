@@ -3,6 +3,7 @@
 // so a typo in a data file shows a clear error instead of a strange bug.
 
 import { z } from 'zod';
+import type { StoryConfig } from './story/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -424,9 +425,14 @@ export const RunPrepFileSchema = z.object({
   licenses: z.array(LicenseSchema),
 });
 
-export const RARITIES = ['common', 'uncommon', 'rare'] as const;
+export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
+
+/** Battle transformations (Milestone 8.5): each is unlocked by its key item. */
+export const TRANSFORM_KINDS = ['mega', 'tera', 'zmove', 'dynamax'] as const;
+export const TransformKindSchema = z.enum(TRANSFORM_KINDS);
+export type TransformKind = z.infer<typeof TransformKindSchema>;
 
 export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
@@ -440,6 +446,13 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('evolve') }),
   /** Raises a run attribute as soon as it's bought (shop attribute items; never goes in the Bag). */
   z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
+  /** A key item that unlocks a battle transformation (Mega Ring, ...). Kept for the whole run, never used up. */
+  z.object({ kind: z.literal('keyItem'), mechanic: TransformKindSchema }),
+  /**
+   * A Mega Stone (or Primal orb): species id -> the form it becomes. Owning it
+   * lets that species Mega Evolve. Primal orbs work automatically and need no Mega Ring.
+   */
+  z.object({ kind: z.literal('megaStone'), forms: z.record(z.string(), z.string()), primal: z.boolean().default(false) }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -447,15 +460,331 @@ export const ItemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution', 'attribute']),
+  category: z.enum(['ball', 'healing', 'revive', 'pp', 'charm', 'evolution', 'attribute', 'key', 'transformation']),
   iconAssetId: z.string(),
   usableInBattle: z.boolean(),
   usableOutside: z.boolean(),
   /** party = a healthy party member, fainted = a fainted one, enemy = the wild Pokémon. */
   target: z.enum(['party', 'fainted', 'enemy', 'none']),
   effect: ItemEffectSchema,
+  /**
+   * Attribute changes for cashing the item in from the Bag when nobody in the
+   * party can use it (evolution items; filled in from itemCatalog.json).
+   */
+  cashIn: z.partialRecord(AttributeKeySchema, z.number().int()).optional(),
 });
 export type Item = z.infer<typeof ItemSchema>;
+
+// ---------- the item catalog (itemCatalog.json, M8.75 item effects) ----------
+//
+// Every item in the director's icon pack except Poké Balls and Potions has an
+// entry with its own effect (design: the "Item effects plan" Claude Doc).
+// status: "supported" entries work and are offered in the draft;
+// "existing" entries are items that were already in the game (their reward
+// or Bag item keeps working); "pending" entries wait on a part of the plan
+// named in `needs` and are never offered until it is built.
+
+const AttributeChangesSchema = z.partialRecord(AttributeKeySchema, z.number().int());
+
+/**
+ * What a held item does in battle (item effects, slice 2). Numbers are per
+ * copy unless the hook says otherwise; berries and "once" hooks are used up.
+ * The battle engine reads these in core/battle/held.ts.
+ */
+const Species = z.array(z.string()).optional();
+export const HeldHookSchema = z.discriminatedUnion('hook', [
+  /** Moves of these types do more damage (type boosters, Plates for the whole team, species orbs). */
+  z.object({ hook: z.literal('typePower'), types: z.array(TypeNameSchema).min(1), percent: z.number().positive(), species: Species }),
+  /** The holder's first move of this type in each battle does `multiplier` damage, once per copy (Gems). */
+  z.object({ hook: z.literal('gem'), type: TypeNameSchema, multiplier: z.number().positive() }),
+  /** Physical (or special) moves do more damage. */
+  z.object({ hook: z.literal('categoryPower'), category: z.enum(['physical', 'special']), percent: z.number().positive() }),
+  /** Every damaging move does more damage; `recoil` is the share of max HP lost per hit that lands (Life Orb). */
+  z.object({ hook: z.literal('power'), percent: z.number().positive(), recoil: z.number().positive().optional() }),
+  /** Super-effective moves do more damage (Expert Belt). */
+  z.object({ hook: z.literal('superPower'), percent: z.number().positive() }),
+  /** Normal moves become this type and do more damage (Drives). */
+  z.object({ hook: z.literal('drive'), type: TypeNameSchema, percent: z.number().positive() }),
+  /** Repeating the same move: +percent per use in a row, up to max (Metronome). */
+  z.object({ hook: z.literal('metronome'), percent: z.number().positive(), max: z.number().positive() }),
+  /** A stat is multiplied ("all" = every stat but HP); `species` limits it, `canEvolve` needs a holder that can still evolve. */
+  z.object({
+    hook: z.literal('stat'),
+    stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'all']),
+    multiplier: z.number().positive(),
+    species: Species,
+    canEvolve: z.boolean().optional(),
+  }),
+  /** Locked into the first move it uses until it switches out (Choice items). */
+  z.object({ hook: z.literal('choiceLock') }),
+  /** More critical-hit stages; `critDamage` replaces the 1.5x of a critical hit. */
+  z.object({ hook: z.literal('crit'), stages: z.number().int().min(0), critDamage: z.number().positive().optional(), species: Species }),
+  /** The holder's moves are more accurate (only when it moves after the target, for the Zoom Lens). */
+  z.object({ hook: z.literal('accuracy'), percent: z.number().positive(), whenMovingLast: z.boolean().optional() }),
+  /** Moves aimed at the holder are less accurate (Bright Powder). */
+  z.object({ hook: z.literal('evasion'), percent: z.number().positive() }),
+  /** Always moves last in its priority bracket; with `sureHit` its moves can't miss (Lagging Tail). */
+  z.object({ hook: z.literal('moveLast'), sureHit: z.boolean().optional() }),
+  /** End of turn: heal (positive) or lose (negative) a share of max HP. `typed`: only that type heals, others take `otherwise`. */
+  z.object({ hook: z.literal('endTurn'), fraction: z.number(), typed: TypeNameSchema.optional(), otherwise: z.number().optional() }),
+  /** A chance to survive a knockout hit with 1 HP (Focus Band). */
+  z.object({ hook: z.literal('survive'), percent: z.number().positive() }),
+  /** At full HP, survives one knockout hit with 1 HP, once per battle (Focus Sash). */
+  z.object({ hook: z.literal('sash') }),
+  /** Physical attackers lose a share of their max HP (Rocky Helmet; physical moves count as contact). */
+  z.object({ hook: z.literal('contactDamage'), fraction: z.number().positive() }),
+  /** The holder's physical hits may inflict a status (Electirizer, Magmarizer). */
+  z.object({ hook: z.literal('contactStatus'), status: StatusIdSchema, percent: z.number().positive() }),
+  /** The holder's physical hits may make the target flinch; `bonus` is extra damage to a flinched target (Razor Fang). */
+  z.object({ hook: z.literal('flinch'), percent: z.number().positive(), bonus: z.number().min(0).optional() }),
+  /** End of the holder's first turn: it gets this status (Toxic and Flame Orb), and its moves of `type` get +percent. */
+  z.object({ hook: z.literal('selfStatus'), status: StatusIdSchema, type: TypeNameSchema, percent: z.number().positive() }),
+  /** Immune to Ground moves until it is first hit (Air Balloon). */
+  z.object({ hook: z.literal('airBalloon') }),
+  /** The holder's type immunities don't apply (Ring Target). */
+  z.object({ hook: z.literal('ringTarget') }),
+  /** The holder's trapping moves hurt more each turn (Binding Band). */
+  z.object({ hook: z.literal('bindDamage'), multiplier: z.number().positive() }),
+  /** Draining moves heal more (Big Root). */
+  z.object({ hook: z.literal('drain'), percent: z.number().positive() }),
+  /** A two-turn move fires at once, once per battle (Power Herb). */
+  z.object({ hook: z.literal('powerHerb') }),
+  /** Lowered stats are restored once per battle (White Herb). */
+  z.object({ hook: z.literal('whiteHerb') }),
+  /** Damage taken changes: from wild Pokémon only, from super-effective hits only, or when the holder is a type. */
+  z.object({
+    hook: z.literal('damageTaken'),
+    percent: z.number(),
+    fromWild: z.boolean().optional(),
+    superEffective: z.boolean().optional(),
+    holderType: TypeNameSchema.optional(),
+  }),
+  /** Weather the holder starts lasts longer (Heat Rock, ...). */
+  z.object({ hook: z.literal('weatherTurns'), weathers: z.array(WeatherSchema).min(1), turns: z.number().int().positive() }),
+  /** Extra experience for the holder (Macho Brace). */
+  z.object({ hook: z.literal('exp'), multiplier: z.number().positive() }),
+  /** Every few levels the holder grows a stat like a vitamin (Power items). */
+  z.object({ hook: z.literal('growth'), stat: StatNameSchema, everyLevels: z.number().int().positive() }),
+  /** The holder can't evolve (Everstone). */
+  z.object({ hook: z.literal('noEvolve') }),
+  /** Healing the holder receives is larger (Oval Stone). */
+  z.object({ hook: z.literal('healing'), percent: z.number().positive() }),
+  /** The holder gains friendship faster (Prism Scale). */
+  z.object({ hook: z.literal('friendship'), percent: z.number().positive() }),
+  /** Love's chance to hang on at 1 HP is multiplied (Destiny Knot). */
+  z.object({ hook: z.literal('endure'), multiplier: z.number().positive() }),
+  /** Each turn, a chance to raise a random stat (Dubious Disc). */
+  z.object({ hook: z.literal('randomStat'), percent: z.number().positive() }),
+  /** When the holder knocks out a foe it heals a share of max HP (only when it is `holderType`). */
+  z.object({ hook: z.literal('koHeal'), fraction: z.number().positive(), holderType: TypeNameSchema.optional() }),
+  /** When the holder knocks out a foe: +1 to an attribute, up to `cap` from this item in a run (Scarves). */
+  z.object({ hook: z.literal('koAttribute'), attribute: AttributeKeySchema, amount: z.number().int(), cap: z.number().int().positive() }),
+  /** A chance, when it hits, to take one of the target's held items (Grip Claw). */
+  z.object({ hook: z.literal('steal'), percent: z.number().positive() }),
+  /** The holder loses 1/8 HP each turn; a physical attacker catches it (Sticky Barb). */
+  z.object({ hook: z.literal('stickyBarb'), fraction: z.number().positive() }),
+  /** Hit by a move of this type: a stat rises, once per battle (Absorb Bulb, Cell Battery). */
+  z.object({ hook: z.literal('absorb'), type: TypeNameSchema, stat: BoostStatSchema, stages: z.number().int() }),
+  /** The holder can always switch out, even when trapped (Shed Shell). */
+  z.object({ hook: z.literal('shedShell') }),
+  /** While the holder leads the party, wild Pokémon are this many levels higher (negative: lower) (Cleanse Tag). */
+  z.object({ hook: z.literal('wildLevel'), amount: z.number().int() }),
+  /** The first move aimed at the holder each battle misses (Lax Incense). */
+  z.object({ hook: z.literal('dodgeFirst') }),
+  /** Wild Pokémon's status moves aimed at the holder miss this much more often, in percent (Pure Incense). */
+  z.object({ hook: z.literal('statusShield'), percent: z.number().positive().max(100) }),
+  // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
+  /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
+  z.object({
+    hook: z.literal('berryHeal'),
+    below: z.number().positive().max(1),
+    fraction: z.number().positive().optional(),
+    flat: z.number().int().positive().optional(),
+    changes: z.partialRecord(AttributeKeySchema, z.number().int()).optional(),
+  }),
+  /** Cures these statuses (and confusion if `confusion`). */
+  z.object({ hook: z.literal('berryCure'), statuses: z.array(StatusIdSchema), confusion: z.boolean().optional() }),
+  /** A move at 0 PP regains some PP (Leppa). */
+  z.object({ hook: z.literal('berryPp'), amount: z.number().int().positive() }),
+  /** At or below `below`: a stat rises (`random` = a random one), or critical-hit stages ("crit"). */
+  z.object({ hook: z.literal('berryStat'), below: z.number().positive().max(1), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'crit', 'random']), stages: z.number().int().positive() }),
+  /** At or below `below`: the next move can't miss (Micle). */
+  z.object({ hook: z.literal('berrySure'), below: z.number().positive().max(1) }),
+  /** At or below `below`: moves first next turn (Custap). */
+  z.object({ hook: z.literal('berryFirst'), below: z.number().positive().max(1) }),
+  /** Halves one super-effective hit of this type (`any` = any hit of the type, for Chilan). */
+  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional() }),
+  /** Hit by a super-effective move: heal a share of max HP (Enigma). */
+  z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
+  /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
+  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive() }),
+]);
+export type HeldHook = z.infer<typeof HeldHookSchema>;
+
+/** A temporary battle effect a Pokémon carries into its next battles (X items, Dire Hit, Guard Spec., status healers). */
+export const BattleBoostSchema = z.discriminatedUnion('kind', [
+  /** Stat stages ("crit" = critical-hit stages) for `turns` turns of battle. */
+  z.object({ kind: z.literal('stage'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive() }),
+  /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
+  z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
+  /** Can't get this status (or confusion) during its next battle. */
+  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion']) }),
+]);
+export type BattleBoost = z.infer<typeof BattleBoostSchema>;
+
+/**
+ * What a map and encounter item changes (M8.75 item effects, slice 3a). Wild
+ * Pokémon changes apply to wild battles only; random choices use a generator
+ * of their own (see core/mapItems.ts), so they never change any other roll.
+ */
+export const EncounterModSchema = z.discriminatedUnion('mod', [
+  /** The wild battle is skipped: no battle and no reward, but the level counts (Repels). */
+  z.object({ mod: z.literal('repel') }),
+  /** Wild Pokémon are this many levels higher (negative: lower). */
+  z.object({ mod: z.literal('level'), amount: z.number().int() }),
+  /** Extra EXP from wild battles, in percent. */
+  z.object({ mod: z.literal('exp'), percent: z.number().positive() }),
+  /** A chance (percent, per copy for run-long items) that the wild Pokémon is one of these types; "themeFirst"/"themeSecond" are the stage's types. */
+  z.object({ mod: z.literal('types'), types: z.array(z.union([TypeNameSchema, z.enum(['themeFirst', 'themeSecond'])])).min(1), percent: z.number().positive().max(100) }),
+  /** Shiny chance multiplier. */
+  z.object({ mod: z.literal('shiny'), multiplier: z.number().positive() }),
+  /** Wild Pokémon may be of any type (the stage theme is ignored). */
+  z.object({ mod: z.literal('anyType') }),
+  /** The wild Pokémon is the strongest (highest base stats) of three drawn. */
+  z.object({ mod: z.literal('rare') }),
+  /** The wild Pokémon is from the first generation and the stage's types (or the item's pool), when there are any. */
+  z.object({ mod: z.literal('gen1') }),
+  /** A chance (percent per copy) that the wild Pokémon is this species. */
+  z.object({ mod: z.literal('species'), species: z.string(), percent: z.number().positive().max(100) }),
+  /** The wild Pokémon loses its first turn. */
+  z.object({ mod: z.literal('freeTurn') }),
+  /** The wild Pokémon starts with lowered Speed. */
+  z.object({ mod: z.literal('foeSpeed'), stages: z.number().int() }),
+  /** Ball throws: catch-rate multiplier, only at these types or at shiny Pokémon when given. */
+  z.object({ mod: z.literal('catch'), multiplier: z.number().positive(), types: z.array(TypeNameSchema).optional(), shiny: z.boolean().optional() }),
+]);
+export type EncounterMod = z.infer<typeof EncounterModSchema>;
+
+/**
+ * How long a map item lasts: some wild battles, ball throws, shop purchases,
+ * shop visits or trainer wins, the rest of this stage, the whole next stage, or the run.
+ */
+export const EncounterLastsSchema = z.discriminatedUnion('for', [
+  z.object({ for: z.literal('battles'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('throws'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('purchases'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('shops'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('trainers'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('stage') }),
+  z.object({ for: z.literal('nextStage') }),
+  z.object({ for: z.literal('run') }),
+]);
+
+/** What a shop or money item changes (M8.75 item effects, slice 3b). */
+export const PerkSchema = z.discriminatedUnion('perk', [
+  /** Shop prices are this much lower (Coupons). */
+  z.object({ perk: z.literal('discount'), percent: z.number().positive().max(100) }),
+  /** Each shop purchase earns a point per copy; at `every` points the next purchase is free (Point Card). */
+  z.object({ perk: z.literal('points'), every: z.number().int().positive() }),
+  /** Shops also sell this many items early: the next ones you would unlock with badges (Member Card, Wepear Berry). */
+  z.object({ perk: z.literal('earlyStock'), count: z.number().int().positive() }),
+  /** Trainers (not wild Pokémon) pay this much more prize money. */
+  z.object({ perk: z.literal('trainerMoney'), percent: z.number().positive() }),
+  /** Wild battles on a stage of this type pay this much more per copy (Soot Sack). */
+  z.object({ perk: z.literal('wildMoney'), type: TypeNameSchema, amount: z.number().int().positive() }),
+  /** A Bag item from the shop after each trainer win: one of the cheapest third (Loot Sack). */
+  z.object({ perk: z.literal('trainerLoot') }),
+  /** Every `every` trainer wins: a Bag item from the dearest third of the shop (Blue Card). */
+  z.object({ perk: z.literal('trainerPoints'), every: z.number().int().positive() }),
+  /** Money per copy when the run reaches a new region (Pass Orb). */
+  z.object({ perk: z.literal('regionMoney'), amount: z.number().int().positive() }),
+]);
+export type Perk = z.infer<typeof PerkSchema>;
+
+export const CatalogEffectSchema = z.discriminatedUnion('kind', [
+  /** Attribute changes for the run; optionally heals or befriends the lead. */
+  z.object({
+    kind: z.literal('attributes'),
+    changes: AttributeChangesSchema,
+    healLead: z.number().int().positive().optional(),
+    leadFriendship: z.number().int().optional(),
+  }),
+  /** Money now (trainer money bonuses apply), plus attribute changes and an optional team heal. */
+  z.object({ kind: z.literal('money'), amount: z.number().int().positive(), changes: AttributeChangesSchema, teamHeal: z.number().positive().max(1).optional() }),
+  /** A permanent percentage on one stat of one Pokémon, per copy (Wings). */
+  z.object({ kind: z.literal('statBoost'), stat: StatNameSchema, percent: z.number().positive() }),
+  /** One Pokémon gains friendship (negative: loses it), plus attribute changes. */
+  z.object({ kind: z.literal('feed'), friendship: z.number().int(), changes: AttributeChangesSchema }),
+  /** Raises the max PP of one move the player picks (each up is +20%, at most 3 per move). */
+  z.object({ kind: z.literal('ppUp'), ups: z.number().int().min(1).max(3) }),
+  /** Care for one Pokémon: heal HP, revive, cure status, restore one move's PP; friendship and attribute side effects. */
+  z.object({
+    kind: z.literal('care'),
+    heal: z.number().int().positive().optional(),
+    revive: z.number().positive().max(1).optional(),
+    cure: z.boolean().optional(),
+    ppMove: z.literal('lowest').optional(),
+    friendship: z.number().int().optional(),
+    changes: AttributeChangesSchema.optional(),
+  }),
+  /** Care for the whole team. `pp` -1 means full PP; `heal` is a fraction of max HP. */
+  z.object({
+    kind: z.literal('teamCare'),
+    heal: z.number().positive().max(1).optional(),
+    revive: z.number().positive().max(1).optional(),
+    pp: z.number().int().min(-1).optional(),
+    cureSleep: z.boolean().optional(),
+    changes: AttributeChangesSchema.optional(),
+  }),
+  /** A run-long perk (Amulet Coin, Exp. Share...). `percent` is per copy. */
+  z.object({
+    kind: z.literal('passive'),
+    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp']),
+    percent: z.number().positive(),
+  }),
+  /** The fossil's Pokémon joins the party (or is released, like a catch). */
+  z.object({ kind: z.literal('fossil'), species: z.string() }),
+  /** Teach a move of one type the Pokémon can learn: TM = pick 1 of 3 random ones, HM = pick any. */
+  z.object({ kind: z.literal('teachMove'), type: TypeNameSchema, mode: z.enum(['tm', 'hm']) }),
+  /** A held item: copies go on the chosen Pokémon (or on every team member for team items like the Plates). */
+  z.object({ kind: z.literal('held'), hooks: z.array(HeldHookSchema).min(1) }),
+  /** Battle effects carried into the chosen Pokémon's next battles (or every team member's); `cure` also cures that status now. */
+  z.object({ kind: z.literal('battleBoost'), boosts: z.array(BattleBoostSchema).min(1), cure: StatusIdSchema.optional() }),
+  /** A map and encounter item (Repels, Flutes, Incense, Mail, Poké Doll, Apricorns...), plus attribute changes now. */
+  z.object({ kind: z.literal('encounter'), lasts: EncounterLastsSchema, mods: z.array(EncounterModSchema).min(1), changes: AttributeChangesSchema.optional() }),
+  /** A shop or money item (Coupons, Point Card, Loot Sack, Reply Mail...). */
+  z.object({ kind: z.literal('perk'), lasts: EncounterLastsSchema, perks: z.array(PerkSchema).min(1) }),
+]);
+export type CatalogEffect = z.infer<typeof CatalogEffectSchema>;
+
+export const CATALOG_NEEDS = ['battle', 'map', 'events', 'm8.5'] as const;
+
+export const CatalogEntrySchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    family: z.string().min(1),
+    description: z.string().min(1),
+    rarity: RaritySchema,
+    /** Where copies pile up: on one Pokémon, the whole team, or the player. */
+    stacksOn: z.enum(['pokemon', 'team', 'player']),
+    /** Most copies that do anything (null: no limit). */
+    max: z.number().int().positive().nullable(),
+    how: z.enum(['held', 'use', 'passive']),
+    /** File name in the director's icon pack (images/items/gen5/<icon>.png), or null when the pack has none. */
+    icon: z.string().nullable(),
+    status: z.enum(['supported', 'existing', 'pending']),
+    /** For "existing" (and some "pending") entries: the reward or Bag item already in the game. */
+    existing: z.string().optional(),
+    /** Evolution items: what cashing the item in gives. */
+    cashIn: AttributeChangesSchema.optional(),
+    /** For "pending" entries: which parts of the plan it waits on. */
+    needs: z.array(z.enum(CATALOG_NEEDS)).optional(),
+    effect: CatalogEffectSchema.optional(),
+  })
+  .refine((e) => (e.status === 'supported') === (e.effect !== undefined), { message: 'a supported entry needs an effect (and only supported entries have one)' })
+  .refine((e) => e.status !== 'pending' || (e.needs?.length ?? 0) > 0, { message: 'a pending entry must say what it needs' });
+export type CatalogEntry = z.infer<typeof CatalogEntrySchema>;
 
 export const TrainerClassSchema = z.object({
   id: z.string().min(1),
@@ -598,6 +927,8 @@ export const RewardEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('vitamin'), stat: StatNameSchema }),
   /** Adds to an attribute for the rest of the run (negative moves a meter toward its other end). */
   z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
+  /** An item from the item catalog (itemCatalog.json); its effect is the entry's. */
+  z.object({ kind: z.literal('catalog'), entry: z.string() }),
 ]);
 export type RewardEffect = z.infer<typeof RewardEffectSchema>;
 
@@ -605,8 +936,10 @@ export const RewardSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute']),
+  category: z.enum(['healing', 'currency', 'stat-buff', 'consumable', 'attribute', 'key', 'transformation', 'item']),
   rarity: RaritySchema,
+  /** Item family for draft variety (catalog items); rewards without one use their category. */
+  family: z.string().optional(),
   effect: RewardEffectSchema,
   /** How repeated picks combine: applied once now, or stacks up to a limit. */
   stacking: z.enum(['instant', 'stacks']),
@@ -645,10 +978,33 @@ export const BalanceSchema = z.object({
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
+  /**
+   * Draft variety: a family already in the draft keeps this share of its
+   * weight for the next slot (lowered further by Luck, see luckDraftVariety).
+   */
+  repeatFamilyWeight: z.number().min(0).max(1),
+  /**
+   * Held items bosses carry (director, answer 3): how many for each role, the
+   * rarity weights, and how much the rare and epic weights grow per region.
+   */
+  bossHeldItems: z.object({
+    gym: z.number().int().min(0),
+    elite: z.number().int().min(0),
+    champion: z.number().int().min(0),
+    rarityWeights: z.record(RaritySchema, z.number().min(0)),
+    betterPerRegion: z.number().min(0),
+  }),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
   /** Abilities (M8.75 part C3): the chance a new Pokémon has its hidden ability instead of a normal one. */
   abilities: z.object({ hiddenChance: z.number().min(0).max(1) }),
+  /** Battle transformations (M8.5): which bosses may use them. */
+  transformations: z.object({
+    /** Gym leaders use them from this gym of the run on (1 = the first gym). */
+    bossGymFrom: z.number().int().min(1),
+    /** Elite Four members and champions always may. */
+    league: z.boolean(),
+  }),
   /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
   friendship: z.object({
     max: z.number().int().positive().max(255),
@@ -727,6 +1083,9 @@ export const BalanceSchema = z.object({
     charismaPriceCut: z.number().min(0).max(1),
     luckUncommonWeight: z.number().min(0),
     luckRareWeight: z.number().min(0),
+    luckEpicWeight: z.number().min(0),
+    /** Luck at its maximum removes repeated item families from a draft entirely. */
+    luckDraftVariety: z.number().min(0).max(1),
     luckShinyChance: z.number().min(0),
     rageDamageDealt: z.number().min(0),
     rageDamageTaken: z.number().min(0),
@@ -836,6 +1195,10 @@ export interface Content {
   licenses: Map<string, License>;
   rewards: Map<string, Reward>;
   items: Map<string, Item>;
+  /** Every catalog item (itemCatalog.json), supported or not. */
+  catalog: Map<string, CatalogEntry>;
+  /** Every move each species can learn by TM, tutor or egg, beyond its level-up moves (learnables.json). */
+  learnables: Map<string, string[]>;
   trainers: Map<string, TrainerClass>;
   /** Every gym leader, Elite Four member and champion, with their teams. */
   bosses: Map<string, Boss>;
@@ -846,4 +1209,6 @@ export interface Content {
   shop: ShopEntry[];
   ruleset: Ruleset;
   balance: Balance;
+  /** Story layer settings and story event definitions (story.json, core/story). */
+  story: StoryConfig;
 }

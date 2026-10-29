@@ -4,19 +4,25 @@
 //   1. Work out which rewards are eligible right now (e.g. a vitamin at its
 //      stack limit is not).
 //   2. For each of the five slots: roll a rarity tier using the tier weights
-//      (only tiers that still have unused eligible rewards can be rolled), then
-//      pick a random unused reward from that tier.
+//      (only tiers that still have unused eligible rewards can be rolled),
+//      then a family in that tier (item families, or the reward's category),
+//      then a random unused reward from that family. A family already in the
+//      draft keeps only repeatFamilyWeight of its chance, and Luck lowers that
+//      further (director, answer 4: "variety based on luck stats").
 //   3. Fewer than five eligible rewards is a configuration error: we never
 //      show duplicates.
-// Luck tilts the weights toward uncommon and rare (attributes.ts luckWeights).
+// Luck tilts the weights toward uncommon, rare and epic (attributes.ts luckWeights).
+// Catalog items (core/catalog.ts) work like any other reward; a team or player
+// item already at its max is a free re-roll of the draft (director, answer 5).
 
 import { moneyMultiplier } from './archetypes';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
+import { applyCatalog, catalogTargetProblem, getCatalogEntry, isCatalogUseful, isFreeReroll } from './catalog';
 import { evolveFully } from './evolution';
 import { changeFriendship } from './friendship';
-import { addItem, itemUseProblem } from './items';
+import { addItem, itemCount, itemUseProblem } from './items';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
 import { runLevelCap } from './regions';
@@ -32,6 +38,10 @@ export class RewardConfigError extends Error {
 
 export function isRewardEligible(content: Content, run: RunState, reward: Reward): boolean {
   if (reward.scope === 'pokemon' && run.party.length === 0) return false;
+  if (reward.effect.kind === 'catalog') {
+    const entry = getCatalogEntry(content, reward.effect.entry);
+    return isFreeReroll(run, entry) || isCatalogUseful(content, run, entry);
+  }
   if (reward.effect.kind === 'vitamin') {
     const stat = reward.effect.stat;
     return run.party.some((p) => (p.vitamins[stat] ?? 0) < content.balance.vitaminMaxStacks);
@@ -39,6 +49,12 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
   if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < runLevelCap(content, run));
   // Evolution items are only offered when someone in the party can evolve with them.
   const item = reward.effect.kind === 'addItem' ? content.items.get(reward.effect.item) : undefined;
+  // Key items and Mega Stones are kept for the run, so they're offered once; a stone only when a party member can use it.
+  if (item?.effect.kind === 'keyItem') return itemCount(run.inventory, item.id) === 0;
+  if (item?.effect.kind === 'megaStone') {
+    const forms = item.effect.forms;
+    return itemCount(run.inventory, item.id) === 0 && run.party.some((p) => forms[p.speciesId] !== undefined);
+  }
   if (item?.effect.kind === 'evolve') {
     return run.party.some((p) => itemUseProblem(content, item, p, run.regionOrder[run.regionIndex]) === null);
   }
@@ -50,6 +66,7 @@ export function rewardTargetProblem(content: Content, run: RunState, reward: Rew
   if (reward.scope !== 'pokemon') return null;
   const mon = run.party[targetIndex];
   if (!mon) return 'Choose a Pokémon.';
+  if (reward.effect.kind === 'catalog') return catalogTargetProblem(content, run, getCatalogEntry(content, reward.effect.entry), mon);
   if (reward.effect.kind === 'vitamin' && (mon.vitamins[reward.effect.stat] ?? 0) >= content.balance.vitaminMaxStacks) {
     return 'That Pokémon has already had the maximum.';
   }
@@ -58,22 +75,45 @@ export function rewardTargetProblem(content: Content, run: RunState, reward: Rew
   return null;
 }
 
-export function generateDraft(content: Content, run: RunState, rng: Rng, weights: Partial<Record<Rarity, number>> = content.balance.rarityWeights): string[] {
+/** A free re-roll card: a team or player item the run already has the most of. */
+export function isRerollReward(content: Content, run: RunState, reward: Reward): boolean {
+  return reward.effect.kind === 'catalog' && isFreeReroll(run, getCatalogEntry(content, reward.effect.entry));
+}
+
+export function rewardFamily(reward: Reward): string {
+  return reward.family ?? reward.category;
+}
+
+export function generateDraft(
+  content: Content,
+  run: RunState,
+  rng: Rng,
+  weights: Partial<Record<Rarity, number>> = content.balance.rarityWeights,
+  draftVariety = runAttributeEffects(content, run).draftVariety,
+): string[] {
   const size = content.balance.draftSize;
   const eligible = [...content.rewards.values()].filter((r) => isRewardEligible(content, run, r));
   if (eligible.length < size) {
     throw new RewardConfigError(`Only ${eligible.length} eligible rewards; a draft needs ${size} distinct rewards`);
   }
   const byTier = new Map<Rarity, Reward[]>(RARITIES.map((t) => [t, eligible.filter((r) => r.rarity === t)]));
+  const repeatWeight = content.balance.repeatFamilyWeight * (1 - draftVariety);
   const chosen: string[] = [];
+  const families = new Set<string>();
   while (chosen.length < size) {
     const tier = rng.weighted(
       RARITIES.map((t) => ({ item: t, weight: byTier.get(t)!.length > 0 ? weights[t] ?? 0 : 0 })),
     );
     const pool = byTier.get(tier)!;
-    const index = rng.int(0, pool.length - 1);
-    const [reward] = pool.splice(index, 1);
-    chosen.push(reward!.id);
+    const tierFamilies = [...new Set(pool.map(rewardFamily))];
+    const anyFresh = tierFamilies.some((f) => !families.has(f));
+    // A tier holding only families already shown still fills the slot.
+    const family = rng.weighted(tierFamilies.map((f) => ({ item: f, weight: anyFresh && families.has(f) ? repeatWeight : 1 })));
+    const members = pool.filter((r) => rewardFamily(r) === family);
+    const reward = members[rng.int(0, members.length - 1)]!;
+    pool.splice(pool.indexOf(reward), 1);
+    families.add(family);
+    chosen.push(reward.id);
   }
   return chosen;
 }
@@ -81,15 +121,17 @@ export function generateDraft(content: Content, run: RunState, rng: Rng, weights
 export interface RewardResult {
   rewardId: string;
   messages: string[];
-  /** Moves a levelled-up Pokémon wants to learn (it already knows four). */
+  /** Moves a levelled-up Pokémon wants to learn (it already knows four), and choices items ask for. */
   pending: PendingDecision[];
+  /** The pick was a free re-roll: the run gets a new draft instead of moving on. */
+  reroll?: boolean;
 }
 
 /**
  * Applies a reward to the run (mutates `run`). Rewards with scope "pokemon"
  * go to `targetIndex` in the party. Returns messages for the player.
  */
-export function applyReward(content: Content, run: RunState, archetype: Archetype, rewardId: string, targetIndex = 0): RewardResult {
+export function applyReward(content: Content, run: RunState, archetype: Archetype, rewardId: string, targetIndex = 0, rng?: Rng): RewardResult {
   const reward = content.rewards.get(rewardId);
   if (!reward) throw new Error(`Unknown reward "${rewardId}"`);
   const problem = rewardTargetProblem(content, run, reward, targetIndex);
@@ -99,6 +141,19 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
   const messages: string[] = [];
   const pending: PendingDecision[] = [];
   switch (effect.kind) {
+    case 'catalog': {
+      const entry = getCatalogEntry(content, effect.entry);
+      if (isFreeReroll(run, entry)) {
+        messages.push(`You already have the ${entry.name}. Free re-roll!`);
+        run.log.rewardsTaken.push(rewardId);
+        return { rewardId, messages, pending, reroll: true };
+      }
+      if (!rng) throw new Error('A catalog item needs the reward stream');
+      const result = applyCatalog(content, run, entry, target, { moneyMultiplier: reward.moneyMultiplierApplies ? moneyMultiplier(archetype) : 1, rng });
+      messages.push(...result.messages);
+      pending.push(...result.pending);
+      break;
+    }
     case 'addItem': {
       addItem(run.inventory, effect.item, effect.quantity);
       const item = content.items.get(effect.item)!;

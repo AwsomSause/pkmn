@@ -17,12 +17,30 @@
  "rarityWeights": {
   "common": 60,
   "uncommon": 30,
-  "rare": 10
+  "rare": 10,
+  "epic": 1
+ },
+ "repeatFamilyWeight": 0.5,
+ "bossHeldItems": {
+  "gym": 1,
+  "elite": 2,
+  "champion": 3,
+  "rarityWeights": {
+   "common": 40,
+   "uncommon": 35,
+   "rare": 20,
+   "epic": 5
+  },
+  "betterPerRegion": 0.5
  },
  "vitaminMultiplierPerStack": 0.1,
  "vitaminMaxStacks": 3,
  "abilities": {
   "hiddenChance": 0.05
+ },
+ "transformations": {
+  "bossGymFrom": 5,
+  "league": true
  },
  "friendship": {
   "max": 255,
@@ -107,12 +125,14 @@
  "harderRarityWeights": {
   "common": 40,
   "uncommon": 40,
-  "rare": 20
+  "rare": 18,
+  "epic": 2
  },
  "bossRarityWeights": {
   "common": 20,
   "uncommon": 45,
-  "rare": 35
+  "rare": 30,
+  "epic": 5
  },
  "campaigns": [
   {
@@ -202,7 +222,9 @@
   "peaceDamageTakenCut": 0.5,
   "goodCatch": 2.0,
   "evilMoney": 1.0,
-  "loveEndureChance": 0.1
+  "loveEndureChance": 0.1,
+  "luckEpicWeight": 1.5,
+  "luckDraftVariety": 1.0
  },
  "attributeGrowth": [
   {

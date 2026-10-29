@@ -267,6 +267,8 @@ export class Bar {
   private readonly fill: Phaser.GameObjects.Rectangle;
   /** The lighter top half of the bar (PokeRogue's bars are two-tone). */
   private readonly shine: Phaser.GameObjects.Rectangle;
+  /** HP bars: the pale strip showing the HP just lost, which catches up after the bar drains. */
+  private readonly ghost: Phaser.GameObjects.Rectangle | null;
   private ratio = 1;
 
   constructor(
@@ -278,6 +280,7 @@ export class Bar {
     private readonly kind: 'hp' | 'xp',
   ) {
     this.bg = scene.add.rectangle(x, y, width, height, 0x212121).setOrigin(0, 0.5);
+    this.ghost = kind === 'hp' ? scene.add.rectangle(x, y, width, height, 0xf8e0c0).setOrigin(0, 0.5) : null;
     const shades = kind === 'xp' ? BAR_SHADES.xp : BAR_SHADES.high;
     this.fill = scene.add.rectangle(x, y, width, height, shades[1]).setOrigin(0, 0.5);
     this.shine = scene.add.rectangle(x, y - height / 2, width, Math.ceil(height / 2), shades[0]).setOrigin(0, 0);
@@ -292,23 +295,35 @@ export class Bar {
         return;
       }
       const from = { r: this.ratio };
+      // Bigger changes take a little longer, so the drain reads as one smooth motion.
+      const duration = Math.round(250 + 450 * Math.abs(target - this.ratio));
+      const dropping = target < this.ratio;
+      if (this.ghost && dropping) this.ghost.width = this.fill.width;
       this.scene.tweens.add({
         targets: from,
         r: target,
-        duration: 400,
-        onUpdate: () => this.apply(from.r),
+        duration,
+        ease: 'Sine.easeOut',
+        onUpdate: () => this.apply(from.r, !dropping),
         onComplete: () => {
-          this.apply(target);
+          this.apply(target, !dropping);
+          if (this.ghost && dropping) {
+            this.scene.tweens.add({ targets: this.ghost, width: this.fill.width, delay: 180, duration: 320, ease: 'Quad.easeIn' });
+          }
           resolve();
         },
       });
     });
   }
 
-  private apply(ratio: number): void {
+  private apply(ratio: number, moveGhost = true): void {
     this.ratio = ratio;
     this.fill.width = Math.max(0, this.width * ratio);
     this.shine.width = this.fill.width;
+    if (this.ghost && moveGhost) {
+      this.scene.tweens.killTweensOf(this.ghost);
+      this.ghost.width = this.fill.width;
+    }
     if (this.kind === 'hp') {
       const shades = ratio > 0.5 ? BAR_SHADES.high : ratio > 0.2 ? BAR_SHADES.medium : BAR_SHADES.low;
       this.shine.fillColor = shades[0];
@@ -317,7 +332,7 @@ export class Bar {
   }
 
   addTo(container: Phaser.GameObjects.Container): void {
-    container.add([this.bg, this.fill, this.shine]);
+    container.add([this.bg, ...(this.ghost ? [this.ghost] : []), this.fill, this.shine]);
   }
 }
 

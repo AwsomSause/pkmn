@@ -3,7 +3,7 @@
 // Before choosing, the player can also use Bag items or change the lead.
 
 import Phaser from 'phaser';
-import { rewardTargetProblem } from '../core/rewards';
+import { isRerollReward, rewardTargetProblem } from '../core/rewards';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -61,7 +61,9 @@ export class RewardScene extends Phaser.Scene {
       this.add
         .text(x + cardW / 2, y + 118, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba))
         .setOrigin(0.5, 0);
-      this.add.text(x + 12, y + 144, reward.description, textStyle(17, COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
+      // A team or player item already at its max: picking it re-rolls the draft for free.
+      const reroll = isRerollReward(content, run, reward);
+      this.add.text(x + 12, y + 144, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
       this.clickZone(x, y, cardW, 270, i);
     });
 
@@ -147,7 +149,7 @@ export class RewardScene extends Phaser.Scene {
     const run = session.run!;
     const content = session.content;
     const reward = content.rewards.get(run.draft![draftIndex]!)!;
-    if (reward.scope !== 'pokemon' || run.party.length === 1) {
+    if (reward.scope !== 'pokemon' || run.party.length === 1 || isRerollReward(content, run, reward)) {
       const problem = rewardTargetProblem(content, run, reward, 0);
       if (problem) {
         playSfx(this, 'ui.error');
@@ -186,6 +188,11 @@ export class RewardScene extends Phaser.Scene {
     if (this.chosen) return;
     this.chosen = true;
     const result = services().session.chooseReward(draftIndex, targetIndex);
+    if (result.reward.reroll) {
+      playSfx(this, 'ui.select');
+      this.scene.restart({ notice: result.reward.messages.join(' '), focus: 0 });
+      return;
+    }
     playSfx(this, 'se.level_up', 0.6);
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.75).setOrigin(0).setDepth(50);
     const next = result.run.phase === 'map' ? 'Choose your next path…' : '';

@@ -25,7 +25,7 @@ import {
 import type { RunState } from '../../src/core/state';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
-import { content, toBattle } from './helpers';
+import { content, takeAnyReward, toBattle } from './helpers';
 
 const RED = getArchetype(content, 'red');
 const FULL = content.campaigns.get('full')!;
@@ -64,7 +64,7 @@ function win(run: RunState, topUp = false): RunState {
 }
 
 function skipDecisions(run: RunState): RunState {
-  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'learnMove' ? { kind: 'skipMove' } : { kind: 'release' }).run;
+  while (run.phase === 'decision') run = resolveDecision(content, run, run.pending[0]!.kind === 'caught' ? { kind: 'release' } : { kind: 'skipMove' }).run;
   return run;
 }
 
@@ -168,7 +168,7 @@ describe('the Pokémon League', () => {
       expect(run.battle!.trainer!.leaderId).toBe(run.stage!.eliteFour[i]);
       run.party[0]!.hp = Math.floor(maxHp(content, run.party[0]!) / 2); // hurt before the win…
       run.party[0]!.moves[0]!.pp -= 1;
-      run = win(run);
+      run = win(run, true);
       expect(run.party[0]!.hp).toBe(maxHp(content, run.party[0]!)); // …healed after it
       expect(run.phase).toBe('reward');
       expect(run.draft).toHaveLength(content.balance.draftSize);
@@ -218,7 +218,7 @@ describe('the dev campaign, start to finish', () => {
       run = win(run, true);
       if (run.phase === 'over') break;
       expect(run.phase).toBe('reward');
-      run = skipDecisions(chooseReward(content, run, 0).run);
+      run = skipDecisions(takeAnyReward(run));
       if (run.regionIndex === 1 && !sawSecondRegion) {
         sawSecondRegion = true;
         expect(run.regionsCleared).toEqual([firstRegion]);

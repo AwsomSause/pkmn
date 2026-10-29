@@ -4,6 +4,7 @@
 // evolutions also happen on their own once friendship is high enough.
 
 import type { Content, Evolution } from './contentSchema';
+import { blocksEvolution } from './battle/held';
 import { friendshipReady } from './friendship';
 import { calcStats, getSpecies, isUsableMove, maxHp } from './pokemon';
 import type { PokemonInstance } from './state';
@@ -92,6 +93,8 @@ export function evolve(content: Content, mon: PokemonInstance, to: string): Evol
 /** Repeats level and friendship evolution while possible (e.g. a Rare Candy past two thresholds). */
 export function evolveFully(content: Content, mon: PokemonInstance, regionId?: string): EvolutionResult[] {
   const results: EvolutionResult[] = [];
+  // An Everstone stops evolution.
+  if (blocksEvolution(content, mon)) return results;
   for (let guard = 0; guard < 3; guard++) {
     const to = evolutionTarget(content, mon, regionId);
     if (!to) break;

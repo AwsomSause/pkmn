@@ -5,18 +5,26 @@
 
 import Phaser from 'phaser';
 import { candiesForRelease } from '../core/encounters';
-import { calcStats, getSpecies } from '../core/pokemon';
+import type { Content } from '../core/contentSchema';
+import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
-import type { PokemonInstance } from '../core/state';
+import type { MoveSlot, PokemonInstance } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { partyRows, Picker } from '../ui/partyPanel';
+import { fitHeight } from '../ui/showcase';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+
+function describeMove(content: Content, id: string): string {
+  const m = content.moves.get(id)!;
+  const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
+  return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${m.pp}`;
+}
 
 export class DecisionScene extends Phaser.Scene {
   private menu: Menu | null = null;
@@ -48,7 +56,9 @@ export class DecisionScene extends Phaser.Scene {
 
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);
-    else this.buildCaught(decision.mon);
+    else if (decision.kind === 'caught') this.buildCaught(decision.mon);
+    else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
+    else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
 
   private handleInput(action: InputAction): void {
@@ -117,17 +127,17 @@ export class DecisionScene extends Phaser.Scene {
     pokemonVisual(this, getSpecies(content, mon.speciesId), 'front', 150, 260, 3, mon.shiny);
     this.add.text(300, 40, `${name} wants to learn ${newMove.name}!`, textStyle(34, COLORS.textLight));
     this.add.text(300, 86, 'But it already knows four moves. Forget one to make room?', textStyle(22, '#d8d0e0'));
-    const describe = (id: string, pp?: number) => {
+    const describe = (id: string, pp?: number, slot?: MoveSlot) => {
       const m = content.moves.get(id)!;
       const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
-      return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${pp ?? m.pp}/${m.pp}`;
+      return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${pp ?? m.pp}/${slot ? maxPp(content, slot) : m.pp}`;
     };
     drawPanel(this, 300, 124, 620, 70, { fill: COLORS.panelDark, border: TYPE_COLORS[newMove.type] ?? 0x808080 });
     this.add.text(320, 132, `NEW: ${newMove.name}`, textStyle(24, COLORS.textLight));
     this.add.text(320, 162, describe(moveId), textStyle(18, '#d8d0e0'));
 
     const options = [
-      ...mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, detail: describe(slot.id, slot.pp) })),
+      ...mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, detail: describe(slot.id, slot.pp, slot) })),
       { label: `Don't learn ${newMove.name}` },
     ];
     drawPanel(this, 300, 210, 620, 310);
@@ -149,6 +159,68 @@ export class DecisionScene extends Phaser.Scene {
     });
   }
 
+  // ---------- a TM or HM from the reward draft ----------
+
+  private buildTeachMove(uid: string, itemName: string, moveIds: string[]): void {
+    const { session } = services();
+    const content = session.content;
+    const mon = session.run!.party.find((p) => p.uid === uid);
+    if (!mon) {
+      this.resolve({ kind: 'skipMove' });
+      return;
+    }
+    const species = getSpecies(content, mon.speciesId);
+    pokemonVisual(this, species, 'front', 150, 260, 3, mon.shiny);
+    this.add.text(300, 40, `The ${itemName}: which move should ${species.name} learn?`, textStyle(30, COLORS.textLight, { wordWrap: { width: 640 } }));
+    this.add.text(300, 120, mon.moves.length < 4 ? '' : 'It knows four moves, so it will forget one.', textStyle(20, '#d8d0e0'));
+    // An HM can offer many moves: two columns of names then (up to 15 moves).
+    const wide = moveIds.length > 7;
+    const shown = moveIds.slice(0, wide ? 15 : 7);
+    drawPanel(this, 300, 150, 620, 380);
+    this.menu = new Menu(this, {
+      x: 316,
+      y: 160,
+      options: [
+        ...shown.map((id) => ({ label: content.moves.get(id)!.name, detail: wide ? undefined : describeMove(content, id) })),
+        { label: "Don't teach a move" },
+      ],
+      columns: wide ? 2 : 1,
+      itemHeight: 46,
+      itemWidth: wide ? 300 : 600,
+      fontSize: 22,
+      onSelect: (i) => {
+        if (i >= shown.length) this.confirm(`Throw away the ${itemName}?`, () => this.resolve({ kind: 'skipMove' }));
+        else this.resolve({ kind: 'teachMove', moveIndex: i });
+      },
+    });
+  }
+
+  // ---------- a PP Up or PP Max ----------
+
+  private buildPpUp(uid: string, itemName: string, ups: number): void {
+    const { session } = services();
+    const content = session.content;
+    const mon = session.run!.party.find((p) => p.uid === uid)!;
+    const species = getSpecies(content, mon.speciesId);
+    pokemonVisual(this, species, 'front', 150, 260, 3, mon.shiny);
+    this.add.text(300, 40, `Use the ${itemName} on which of ${species.name}'s moves?`, textStyle(30, COLORS.textLight, { wordWrap: { width: 640 } }));
+    this.add.text(300, 120, `Each PP Up adds a fifth of the move's PP (at most ${MAX_PP_UPS}).${ups > 1 ? ` This counts as ${ups}.` : ''}`, textStyle(20, '#d8d0e0'));
+    drawPanel(this, 300, 160, 620, 280);
+    this.menu = new Menu(this, {
+      x: 316,
+      y: 172,
+      options: mon.moves.map((slot) => ({
+        label: content.moves.get(slot.id)!.name,
+        detail: `PP ${slot.pp}/${maxPp(content, slot)} · PP Ups ${slot.ppUps ?? 0}/${MAX_PP_UPS}`,
+        disabled: (slot.ppUps ?? 0) >= MAX_PP_UPS,
+      })),
+      itemHeight: 58,
+      itemWidth: 600,
+      fontSize: 24,
+      onSelect: (i) => this.resolve({ kind: 'ppUpMove', moveIndex: i }),
+    });
+  }
+
   // ---------- a caught Pokémon ----------
 
   private buildCaught(caught: PokemonInstance): void {
@@ -159,7 +231,11 @@ export class DecisionScene extends Phaser.Scene {
     const candies = candiesForRelease(content, caught.level);
     const full = run.party.length >= content.balance.partyMax;
 
-    pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny);
+    // A soft spotlight for the new Pokémon to stand on.
+    const spot = this.add.graphics();
+    spot.fillStyle(0x0e0b12, 0.55).fillEllipse(200, 300, 240, 44);
+    spot.fillStyle(0x4a3f5c, 0.9).fillEllipse(200, 298, 200, 32);
+    fitHeight(this, pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny), 240);
     this.add.text(400, 40, `You caught ${species.name}!`, textStyle(40, COLORS.textLight));
     const stats = calcStats(content, caught);
     const lines = [

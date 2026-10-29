@@ -11,15 +11,27 @@ import { services } from '../game/services';
 
 /** Whether an asset is already in Phaser's caches. */
 export function isLoaded(scene: Phaser.Scene, entry: AssetEntry): boolean {
-  return entry.kind === 'audio' ? scene.cache.audio.exists(entry.id) : scene.textures.exists(entry.id);
+  if (entry.kind === 'audio') return scene.cache.audio.exists(entry.id);
+  if (entry.kind === 'json') return scene.cache.json.exists(entry.id);
+  return scene.textures.exists(entry.id);
 }
 
 /** Adds one asset to the scene's loader (does not start it). */
 export function queueAsset(scene: Phaser.Scene, entry: AssetEntry): void {
   switch (entry.kind) {
     case 'atlas': {
+      // The packs mix two atlas formats: TexturePacker's ("textures": [...]) and
+      // Aseprite's ("frames": [...]). Read the JSON first, then load the picture
+      // with the matching Phaser loader (the wrong one gives a texture with no frames).
       const dir = entry.atlasPath!.slice(0, entry.atlasPath!.lastIndexOf('/') + 1);
-      scene.load.multiatlas(entry.id, `assets/${entry.atlasPath}`, `assets/${dir}`);
+      const jsonKey = `${entry.id}#atlas-json`;
+      scene.load.once(`filecomplete-json-${jsonKey}`, (_key: string, _type: string, data: unknown) => {
+        scene.cache.json.remove(jsonKey);
+        // Phaser accepts the already-read JSON in place of its URL (its types only list strings).
+        if (data && typeof data === 'object' && 'textures' in data) scene.load.multiatlas(entry.id, data as unknown as string, `assets/${dir}`);
+        else scene.load.atlas(entry.id, `assets/${entry.path}`, data as object);
+      });
+      scene.load.json(jsonKey, `assets/${entry.atlasPath}`);
       break;
     }
     case 'image':
@@ -27,6 +39,12 @@ export function queueAsset(scene: Phaser.Scene, entry: AssetEntry): void {
       break;
     case 'audio':
       scene.load.audio(entry.id, `assets/${entry.path}`);
+      break;
+    case 'spritesheet':
+      scene.load.spritesheet(entry.id, `assets/${entry.path}`, { frameWidth: entry.frameSize ?? 96, frameHeight: entry.frameSize ?? 96 });
+      break;
+    case 'json':
+      scene.load.json(entry.id, `assets/${entry.path}`);
       break;
     case 'font':
       break;

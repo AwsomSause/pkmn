@@ -18,12 +18,13 @@
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
-import type { BoostStat, Content, Move, Semi, StatusId, TypeName, Weather } from '../contentSchema';
+import type { BoostStat, Content, Move, Semi, StatusId, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
-import { currentEnemy, freshStages, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
+import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
+import { currentEnemy, freshHeldState, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
   pokeRound,
@@ -57,6 +58,8 @@ import {
   WEATHER_SETTERS,
   WEATHER_SPEED,
 } from './abilities';
+import * as Held from './held';
+import { applyTransformations, transformProblem, type TransformEvent, type TransformRequest } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -116,10 +119,14 @@ export type BattleEvent =
   | { type: 'switchOut'; side: Side; uid: string }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
-  | { type: 'ball'; itemId: string; shakes: number; caught: boolean };
+  | { type: 'ball'; itemId: string; shakes: number; caught: boolean }
+  | Held.HeldEvent
+  /** Mega Evolution / Primal Reversion (battle/transform.ts). */
+  | TransformEvent;
 
 export type PlayerAction =
-  | { kind: 'move'; index: number }
+  /** `transform`: Mega Evolve (etc.) before moving this turn. */
+  | { kind: 'move'; index: number; transform?: TransformRequest }
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number };
 
@@ -152,6 +159,10 @@ export interface BattleContext {
   typeModifiers?: TypeModifiers;
   /** The player's attributes (damage, Speed, damage taken, Love's chance to hang on). */
   attributes?: AttributeEffects;
+  /** The player's team items (run.passives): the Plates help every team member. */
+  teamItems?: Record<string, number>;
+  /** Transformations switched off for this run (a challenge). */
+  disabledMechanics?: readonly TransformKind[];
   /**
    * Set during a turn: the side that loses if both sides run out of Pokémon at
    * once (the user of Explosion loses; the user of a recoil move wins).
@@ -182,10 +193,12 @@ export function createBattle(
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
-    enduredUids: [],
+    storyEffects: [],
     outcome: null,
     levelInfo: [],
     ai: 0,
+    transform: freshTransform(),
+    held: freshHeldState(),
   };
 }
 
@@ -270,21 +283,30 @@ export function forcedMoveId(vol: Volatile | undefined): string | null {
   return vol?.charging ?? vol?.locked?.moveId ?? null;
 }
 
-/** The move slot the player's Pokémon must use this turn, or null if it can choose. */
+/** The move slot the player's Pokémon must use this turn (a two-turn move, Thrash, or a Choice item's lock), or null if it can choose. */
 export function forcedMoveIndex(battle: BattleState, party: PokemonInstance[]): number | null {
-  const id = forcedMoveId(battle.playerVolatile);
+  const mon = party[battle.activeIndex];
+  const id = forcedMoveId(battle.playerVolatile) ?? choiceLock(battle, mon);
   if (!id) return null;
-  const index = party[battle.activeIndex]?.moves.findIndex((m) => m.id === id) ?? -1;
+  const index = mon?.moves.findIndex((m) => m.id === id) ?? -1;
   return index >= 0 ? index : null;
 }
 
+/** A Choice item's locked move, while it still has PP. */
+function choiceLock(battle: BattleState, mon: PokemonInstance | undefined): string | null {
+  const id = mon ? Held.choiceLockedMove({ battle }, mon) : null;
+  return id && mon!.moves.some((m) => m.id === id && m.pp > 0) ? id : null;
+}
+
 /** Why the player can't switch to this party slot, or null if they can. */
-export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'>, partyIndex: number): string | null {
+export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Partial<Pick<BattleContext, 'content' | 'teamItems'>>, partyIndex: number): string | null {
   const mon = ctx.party[partyIndex];
   if (!mon) return 'There is no Pokémon in that slot.';
   if (partyIndex === ctx.battle.activeIndex && !ctx.battle.needsSwitch) return 'That Pokémon is already in battle.';
   if (mon.hp <= 0) return 'That Pokémon has fainted.';
-  if (!ctx.battle.needsSwitch && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
+  const active = ctx.party[ctx.battle.activeIndex];
+  const shedShell = active && 'content' in ctx ? Held.canAlwaysSwitch(ctx as Pick<BattleContext, 'content' | 'teamItems'>, active, 'player') : false;
+  if (!ctx.battle.needsSwitch && !shedShell && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
   if (!ctx.battle.needsSwitch && forcedMoveId(ctx.battle.playerVolatile)) return 'Your Pokémon is in the middle of a move!';
   return null;
 }
@@ -313,6 +335,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   battle.enemyVolatile ??= freshVolatile();
   battle.weather ??= null;
   battle.pendingEntry ??= [];
+  battle.held ??= freshHeldState();
+  // X items and Dire Hit take effect when a Pokémon is first in battle.
+  enterField(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
+  enterField(ctx, { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false });
   // A Pokémon in the middle of a two-turn or lock-in move must carry on with it.
   const forced = forcedMoveIndex(battle, ctx.party);
   if (forced !== null) {
@@ -328,8 +354,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
+  const enemyChoice = choiceLock(battle, enemy.mon);
+  const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   const enemyMoveIndex =
-    enemyForcedIndex >= 0 ? enemyForcedIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
+    enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
   const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -346,6 +374,9 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     }
   }
 
+  // Transformations (Mega Evolution, ...) happen before any move, so they count for turn order.
+  if (!battle.outcome) applyTransformations(ctx, action.kind === 'move' ? action.transform : undefined, events as TransformEvent[]);
+
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false });
   const playerC = player();
 
@@ -359,9 +390,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
         : [{ user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }, { user: playerC, target: enemy, move: playerMove, slot: action.index }];
     actions.forEach((a, index) => {
       if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
+      if (a.user.side === 'enemy' && loseFreeTurn(battle, events)) return;
       executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events);
     });
-  } else {
+  } else if (!loseFreeTurn(battle, events)) {
     executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events);
   }
   recordFaints(ctx, playerC, enemy, events);
@@ -386,6 +418,12 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
         applyStageChange(ctx, c, 'spe', 1, events);
       }
     }
+  }
+  // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
+  if (!anyFainted(playerC, enemy)) {
+    Held.endOfTurn(ctx, playerC, events as Held.HeldEvent[]);
+    Held.endOfTurn(ctx, enemy, events as Held.HeldEvent[]);
+    recordFaints(ctx, playerC, enemy, events);
   }
 
   // A Pokémon that switched in this turn still gets its "first turn" next turn (Fake Out).
@@ -418,6 +456,10 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
     const slot = mon.moves[action.index];
     if (!slot) throw new Error(`Invalid move slot ${action.index}`);
     if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
+    if (action.transform) {
+      const problem = transformProblem(ctx, action.transform);
+      if (problem) throw new Error(problem);
+    }
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
@@ -469,6 +511,8 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
 
 function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[]): void {
   const { battle } = ctx;
+  const outgoing = ctx.party[battle.activeIndex];
+  if (outgoing) leaveField(ctx, outgoing);
   const mon = ctx.party[partyIndex]!;
   battle.activeIndex = partyIndex;
   battle.playerStages = freshStages();
@@ -476,6 +520,30 @@ function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[])
   if (!battle.participants.includes(mon.uid)) battle.participants.push(mon.uid);
   events.push({ type: 'switchIn', side: 'player', uid: mon.uid, speciesId: mon.speciesId, level: mon.level });
   battle.pendingEntry = [...(battle.pendingEntry ?? []).filter((side) => side !== 'player'), 'player'];
+  enterField(ctx, { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
+}
+
+/** Poké Doll: the wild Pokémon loses this turn (uses up one free turn). */
+function loseFreeTurn(battle: BattleState, events: BattleEvent[]): boolean {
+  const items = battle.mapItems;
+  if (!items || items.freeTurns <= 0) return false;
+  items.freeTurns -= 1;
+  events.push({ type: 'held', side: 'enemy', itemId: 'poke-doll', what: 'distracted' });
+  return true;
+}
+
+/** A Pokémon comes onto the field: its battle boosts (X items, Dire Hit) apply once per stay. */
+function enterField(ctx: BattleContext, holder: Held.Holder): void {
+  const state = ctx.battle.held!;
+  const key = `entered:${holder.mon.uid}`;
+  if (state.used[key]) return;
+  state.used[key] = { on: 1 };
+  Held.onSwitchIn(ctx, holder);
+}
+
+function leaveField(ctx: BattleContext, mon: PokemonInstance): void {
+  delete ctx.battle.held?.used[`entered:${mon.uid}`];
+  Held.onSwitchOut(ctx, mon);
 }
 
 /** Natural Cure and Regenerator, when a Pokémon still standing is called back (silently, as in the main games). */
@@ -626,7 +694,7 @@ function speedOf(ctx: BattleContext, c: Combatant): number {
   const ability = abilityIn(ctx, c);
   const weather = ctx.battle.weather?.id;
   const quickFeet = ability === 'quick-feet' && c.mon.status !== null;
-  let speed = effectiveSpeed(content.ruleset, calcStats(content, c.mon).spe, c.stages.spe, c.mon.status?.id === 'par' && !quickFeet);
+  let speed = effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par' && !quickFeet);
   if (ability && weather && WEATHER_SPEED[ability]?.includes(weather)) speed *= 2;
   if (quickFeet) speed = Math.floor(speed * 1.5);
   if (ability === 'slow-start' && c.vol.turnsOut < 5) speed = Math.floor(speed / 2);
@@ -643,9 +711,10 @@ function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
 }
 
 function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
+  // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: priorityOf(ctx, player, pMove), speed: speedOf(ctx, player) },
-    { priority: priorityOf(ctx, enemy, eMove), speed: speedOf(ctx, enemy) },
+    { priority: priorityOf(ctx, player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) },
+    { priority: priorityOf(ctx, enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
   return result === 'a' ? 'player' : 'enemy';
@@ -761,11 +830,15 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
 function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = false): { lost: number; lastStand: string | null; endured: boolean } {
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
-  // Love: once per battle, each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
-  const endureChance = ctx.attributes?.endureChance ?? 0;
-  if (fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && endureChance > 0 && !ctx.battle.enduredUids.includes(c.mon.uid)) {
+  // Love: each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
+  // It is the "loveEndure" story event (story.json): its cooldown key in the
+  // battle's story ledger makes it once per battle per Pokémon. Destiny Knot raises the chance.
+  const endureChance = (ctx.attributes?.endureChance ?? 0) * Held.endureMultiplier(ctx, c.mon, c.side);
+  const endure = endureChance > 0 ? ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'loveEndure') : undefined;
+  const endureKey = endure ? cooldownKey(endure, c.mon.uid) : '';
+  if (endure && fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && !hasBattleEffect(ctx.battle, endureKey)) {
     if (ctx.rng.chance(endureChance)) {
-      ctx.battle.enduredUids.push(c.mon.uid);
+      markBattleEffect(ctx.battle, endureKey);
       lost = c.mon.hp - 1;
       c.mon.hp -= lost;
       return { lost, lastStand: null, endured: true };
@@ -813,6 +886,7 @@ function executeMove(
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
   if (!move.effects.protect) user.vol.protectChain = 0;
+  if (slot !== -1) Held.noteMoveUsed(ctx, user, move.id);
 
   // Damp stops Explosion and Self-Destruct from either side.
   if (move.effects.selfFaint) {
@@ -866,7 +940,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (user.vol.charging === move.id) {
       user.vol.charging = null;
       user.vol.semi = null;
-    } else if (!(fx.charge.sunSkips && weather === 'sun')) {
+    } else if (!(fx.charge.sunSkips && weather === 'sun') && !Held.usePowerHerb(ctx, user, events as Held.HeldEvent[])) {
       user.vol.charging = move.id;
       user.vol.semi = fx.charge.semi ?? null;
       events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
@@ -879,7 +953,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (weather === fx.weather) {
       events.push({ type: 'fail', side: user.side });
     } else {
-      ctx.battle.weather = { id: fx.weather, turns: 5 };
+      ctx.battle.weather = { id: fx.weather, turns: Held.weatherTurns(ctx, user, fx.weather, 5) };
       events.push({ type: 'weather', weather: fx.weather });
     }
     return;
@@ -923,22 +997,25 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
   const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
+  const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst, move) : 1;
   let accuracy: number;
-  if (fx.ohko) {
+  if (itemAccuracy === null) {
+    accuracy = 1;
+  } else if (fx.ohko) {
     accuracy = ohkoAccuracy(user.mon.level, target.mon.level);
   } else {
     // Unaware ignores the other side's stages; Keen Eye ignores raised evasion.
     const accStage = foeAbility === 'unaware' ? 0 : user.stages.acc;
     const keenEye = (userAbility === 'keen-eye' || userAbility === 'minds-eye') && target.stages.eva > 0;
     const evaStage = fx.ignoreStages || userAbility === 'unaware' || keenEye ? 0 : target.stages.eva;
-    accuracy = hitChance(baseAccuracy, accStage, evaStage);
+    accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy;
     if (baseAccuracy !== null) {
       if (userAbility === 'compound-eyes') accuracy *= 1.3;
       if (userAbility === 'victory-star') accuracy *= 1.1;
       if (userAbility === 'hustle' && move.category === 'physical') accuracy *= 0.8;
       if (foeAbility && weather && WEATHER_EVASION[foeAbility]?.includes(weather)) accuracy *= 0.8;
-      accuracy = Math.min(1, accuracy);
     }
+    accuracy = Math.min(1, accuracy);
   }
   if (noGuard) accuracy = 1;
   if (targetsEnemy && rng.float() >= accuracy) {
@@ -947,14 +1024,14 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   // The move's type: Weather Ball follows the weather; Pixilate and friends turn Normal moves into their type.
-  const baseType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : move.type;
+  const baseType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
   const typeChange = userAbility ? TYPE_CHANGE[userAbility] : undefined;
   const changedType = typeChange !== undefined && baseType === 'normal' && !move.flags.includes('typeless');
   const moveType = changedType ? typeChange : baseType;
   const targetTypes = getSpecies(content, target.mon.speciesId).types;
   // Scrappy: Normal and Fighting moves hit Ghost types.
   const hitTypes = userAbility === 'scrappy' && (moveType === 'normal' || moveType === 'fighting') ? targetTypes.filter((t) => t !== 'ghost') : targetTypes;
-  const effectiveness = move.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, moveType, hitTypes);
+  const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, hitTypes));
   if (targetsEnemy && abilityBlocksMove(ctx, user, target, move, moveType, effectiveness, events)) return;
 
   if (move.category === 'status') {
@@ -991,7 +1068,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const physical = move.category === 'physical';
       const hitsDefense = physical || fx.targetsDefense;
       const userStatus = user.mon.status?.id;
-      crit = rng.chance(critChance(content.ruleset, move.critStage + (userAbility === 'super-luck' ? 1 : 0)));
+      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0)));
       if (userAbility === 'merciless' && target.mon.status?.id === 'psn') crit = true;
       if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor') crit = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
@@ -1014,7 +1091,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (foeAbility === 'dry-skin' && moveType === 'fire') powerMult *= 1.25;
       if (powerMult !== 1) power = Math.max(1, pokeRound(power, powerMult));
       // Abilities that change the attacking stat.
-      let attack = physical ? userStats.atk : userStats.spa;
+      let attack = Math.floor((physical ? userStats.atk : userStats.spa) * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa'));
       let attackMult = 1;
       if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
       if (physical && userAbility === 'hustle') attackMult *= 1.5;
@@ -1030,7 +1107,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (attackMult !== 1) attack = Math.max(1, pokeRound(attack, attackMult));
       const defenseStage = hitsDefense ? target.stages.def : target.stages.spd;
       // Sandstorm raises Rock types' Sp. Def and snow raises Ice types' Defense by half.
-      let defense = hitsDefense ? targetStats.def : targetStats.spd;
+      let defense = Math.floor((hitsDefense ? targetStats.def : targetStats.spd) * Held.heldStatMultiplier(ctx, target.mon, target.side, hitsDefense ? 'def' : 'spd'));
       if (weather === 'sand' && !hitsDefense && targetTypes.includes('rock')) defense = Math.floor(defense * 1.5);
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'marvel-scale' && target.mon.status) defense = Math.floor(defense * 1.5);
@@ -1044,7 +1121,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
       if (foeAbility === 'punk-rock' && move.flags.includes('sound')) final *= 0.5;
-      damage = calcDamage(content.ruleset, {
+      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) } : content.ruleset;
+      damage = calcDamage(ruleset, {
         level: user.mon.level,
         power,
         attack,
@@ -1055,7 +1133,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         stabMultiplier: userAbility === 'adaptability' ? 2 : undefined,
         effectiveness,
         crit,
-        critMultiplier: userAbility === 'sniper' ? content.ruleset.critMultiplier * 1.5 : undefined,
+        critMultiplier: userAbility === 'sniper' ? ruleset.critMultiplier * 1.5 : undefined,
         randomFactor,
         // Guts ignores the burn's Attack cut.
         burned: userStatus === 'brn' && userAbility !== 'guts',
@@ -1064,7 +1142,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         final,
       });
       damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
+      const itemMultiplier =
+        Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
+        Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
+      if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
     }
+    damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
     // Sturdy: a hit at full HP leaves it with at least 1 HP.
     const sturdy = foeAbility === 'sturdy' && target.mon.hp >= targetMax && target.mon.hp > 1 && damage >= target.mon.hp;
@@ -1080,6 +1163,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (endured) events.push({ type: 'endure', side: target.side });
   }
   if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
+  Held.afterHit(ctx, user, target, move, moveType, effectiveness, dealt, movedFirst, events as Held.HeldEvent[]);
+  if (target.mon.hp <= 0) Held.onKnockout(ctx, user, events as Held.HeldEvent[]);
   if (fx.ohko && target.mon.hp <= 0) events.push({ type: 'ohko', side: target.side });
   if (fx.recharge) user.vol.recharge = true;
 
@@ -1090,7 +1175,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   if (fx.drain && dealt > 0) {
-    const amount = Math.max(1, Math.floor(dealt * fx.drain));
+    const amount = Math.max(1, Math.floor(dealt * fx.drain * Held.drainMultiplier(ctx, user.mon, user.side)));
     if (abilityIn(ctx, target) === 'liquid-ooze') {
       // Liquid Ooze: draining it hurts instead.
       announce(target, 'liquid-ooze', events);
@@ -1134,7 +1219,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (sheerForce && (change.target === 'enemy' || change.chance < 100)) continue;
     if (shielded && change.target === 'enemy') continue;
     if (!rolls.has(change.chance)) rolls.set(change.chance, roll(change.chance));
-    if (rolls.get(change.chance)) applyStageChange(ctx, recipient, change.stat, change.stages, events, recipient === target ? user : undefined);
+    if (rolls.get(change.chance)) changeStage(ctx, user, recipient, change.stat, change.stages, events);
   }
 
   if (landed > 0) afterHitAbilities(ctx, user, target, move, moveType, contact, anyCrit, events);
@@ -1251,7 +1336,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   }
   for (const change of fx.statChanges ?? []) {
     const recipient = change.target === 'self' ? user : target;
-    didSomething = applyStageChange(ctx, recipient, change.stat, change.stages, events, recipient === target ? user : undefined) || didSomething;
+    didSomething = changeStage(ctx, user, recipient, change.stat, change.stages, events) || didSomething;
   }
   if (!didSomething && !fx.statChanges?.length && !fx.status && !fx.confuse) events.push({ type: 'fail', side: user.side });
 }
@@ -1259,7 +1344,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
 /** Confuses for 2–5 turns of moves (1–4 of them are checks); Own Tempo prevents it. Returns true if it worked. */
 function tryConfuse(ctx: BattleContext, source: Combatant, target: Combatant, events: BattleEvent[], announceFailure: boolean): boolean {
   const ownTempo = targetAbility(ctx, source, target) === 'own-tempo';
-  if (target.vol.confusion > 0 || ownTempo) {
+  if (target.vol.confusion > 0 || ownTempo || Held.statusBlocked(ctx, target, 'confusion')) {
     if (announceFailure && ownTempo) announce(target, 'own-tempo', events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
@@ -1273,6 +1358,7 @@ function tryConfuse(ctx: BattleContext, source: Combatant, target: Combatant, ev
 function canGetStatus(ctx: BattleContext, source: Combatant, target: Combatant, status: StatusId, move?: Move): boolean {
   if (target.mon.status || target.mon.hp <= 0) return false;
   if (isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
+  if (Held.statusBlocked({ content: ctx.content }, target, status)) return false;
   return statusAbilityBlock(ctx, source, target, status) === null;
 }
 
@@ -1301,7 +1387,7 @@ function tryInflictStatus(
   const { content, rng } = ctx;
   const types = getSpecies(content, target.mon.speciesId).types;
   const blocker = target.mon.status ? null : statusAbilityBlock(ctx, source, target, status);
-  if (target.mon.status || isStatusImmune(status, types, move) || blocker) {
+  if (target.mon.status || isStatusImmune(status, types, move) || blocker || Held.statusBlocked({ content }, target, status)) {
     if (announceFailure && blocker) announce(target, blocker, events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
@@ -1317,6 +1403,20 @@ function tryInflictStatus(
     tryInflictStatus(ctx, target, source, status, undefined, events, false);
   }
   return true;
+}
+
+/**
+ * A move changes a stat stage. The opponent can't lower stats guarded by
+ * Guard Spec.; a White Herb undoes a drop once per battle.
+ */
+function changeStage(ctx: BattleContext, user: Combatant, recipient: Combatant, stat: BoostStat, stages: number, events: BattleEvent[]): boolean {
+  if (stages < 0 && recipient !== user && Held.statsGuarded(recipient)) {
+    events.push({ type: 'held', side: recipient.side, itemId: 'guard-spec', what: 'guard' });
+    return false;
+  }
+  const changed = applyStageChange(ctx, recipient, stat, stages, events, recipient !== user ? user : undefined);
+  if (changed && stages < 0) Held.whiteHerb(ctx, recipient, events as Held.HeldEvent[]);
+  return changed;
 }
 
 /**
@@ -1451,7 +1551,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     if (c.vol.bound === 0) {
       events.push({ type: 'bindEnd', side: c.side });
     } else {
-      const { lost, lastStand } = hurt(1 / 8);
+      const { lost, lastStand } = hurt((1 / 8) * Held.bindMultiplier(ctx, other.mon, other.side));
       events.push({ type: 'bindDamage', side: c.side, amount: lost, hpAfter: c.mon.hp });
       if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
     }

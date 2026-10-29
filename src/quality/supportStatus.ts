@@ -97,17 +97,23 @@ export function meetableSpecies(content: Content, withBosses = false): Set<strin
 /** The species a form belongs to (itself for a base species). */
 const lineOf = (content: Content, id: string) => content.species.get(id)?.form?.base ?? id;
 
+/** Mega and Primal forms that a Mega Stone or orb can reach (M8.5, built). */
+function stoneTargets(content: Content): Set<string> {
+  const out = new Set<string>();
+  for (const item of content.items.values()) if (item.effect.kind === 'megaStone') for (const to of Object.values(item.effect.forms)) out.add(to);
+  return out;
+}
+
 export function isTransformation(s: Species): boolean {
   return Boolean(s.form && TRANSFORMATION_KINDS.has(s.form.kind));
 }
 
 export function moveStatus(content: Content, m: Move): EntryStatus {
   const notes: { status: SupportStatus; note: string }[] = [];
-  const fx = m.effects;
-  if (m.supported && m.category !== 'status' && m.power === null && !fx.fixedDamage && !fx.ohko && !fx.lowHpPower) notes.push({ status: 'invalid', note: 'damaging move with no power' });
-  // The same check as tools/import-moves.ts: a status move has to do something the engine runs.
-  const statusEffect = fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather;
-  if (m.supported && m.category === 'status' && !statusEffect) notes.push({ status: 'invalid', note: 'status move with no effect the engine runs' });
+  // Same rule as the content check in src/data/index.ts: these effects set the damage themselves.
+  if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage && !m.effects.ohko && !m.effects.lowHpPower) notes.push({ status: 'invalid', note: 'damaging move with no power' });
+  // The schema only allows effects the engine runs, so a status move with any effect does something.
+  if (m.supported && m.category === 'status' && Object.keys(m.effects).length === 0) notes.push({ status: 'invalid', note: 'status move with no effect the engine runs' });
   if (!m.supported) notes.push({ status: 'disabled', note: m.needs ? `needs: ${m.needs}` : 'not supported by the battle engine yet' });
   for (const note of KNOWN.moves[m.id] ?? []) notes.push({ status: 'limited', note });
   return { kind: 'move', id: m.id, ...worst(notes) };
@@ -138,7 +144,10 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   const cryOwner = cryOwners.get(s.assets.cry);
   const custom = s.tags.some((t) => t === 'delta' || t === 'zform' || t === 'spooky');
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
-  if (isTransformation(s)) notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics (M8.5)` });
+  if (isTransformation(s)) {
+    if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
+    else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
+  }
   const usable = new Set(usableLearnset(content, s).map((e) => e.move));
   const total = new Set(s.learnset.map((e) => e.move)).size;
   if (usable.size === 0) notes.push({ status: 'disabled', note: 'no level-up move the battle engine supports' });

@@ -12,6 +12,7 @@ import { permanentAttributes, readAttributes, type Attributes } from './attribut
 import { getCampaign } from './regions';
 import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
+import { topMoments } from './story/record';
 
 /** Adds to one of this run's counters (mutates `run`). */
 export function count(run: RunState, counter: string, amount = 1): void {
@@ -170,6 +171,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       bankCredits: payout.total,
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
+      moments: topMoments(run.story).map((m) => m.text),
     },
     ...profile.runHistory,
   ].slice(0, content.balance.runHistorySize);
