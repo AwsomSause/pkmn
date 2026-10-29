@@ -7,6 +7,7 @@
 
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type AttributeKey, type Content, type Rarity } from './contentSchema';
 import type { Profile, RunState } from './state';
+import { hyperChance } from './story/hyper';
 
 export type Attributes = Record<AttributeKey, number>;
 
@@ -65,7 +66,6 @@ export interface AttributeEffects {
   healing: number;
   catchRate: number;
   money: number;
-  endureChance: number;
   uncommonWeight: number;
   rareWeight: number;
   epicWeight: number;
@@ -92,7 +92,6 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
     healing: 1 + e.peaceHealing * peace,
     catchRate: 1 + e.goodCatch * share(a.goodEvil),
     money: 1 + e.evilMoney * share(-a.goodEvil),
-    endureChance: e.loveEndureChance * share(a.love),
     uncommonWeight: 1 + e.luckUncommonWeight * share(a.luck),
     rareWeight: 1 + e.luckRareWeight * share(a.luck),
     epicWeight: 1 + e.luckEpicWeight * share(a.luck),
@@ -155,7 +154,7 @@ export function attributeEffectText(content: Content, key: AttributeKey, value: 
     case 'luck':
       return `Rare rewards ×${fx.rareWeight.toFixed(2)}, epic ×${fx.epicWeight.toFixed(2)}, more varied drafts, shinies ×${fx.shinyChance.toFixed(2)}`;
     case 'love':
-      return `${Math.round(fx.endureChance * 1000) / 10}% chance to hang on at 1 HP, once per battle`;
+      return loveText(content, value);
     case 'ragePeace':
       return value >= 0
         ? `+${pct(fx.damageDealt)} damage dealt, +${pct(fx.damageTaken)} damage taken`
@@ -163,6 +162,16 @@ export function attributeEffectText(content: Content, key: AttributeKey, value: 
     case 'goodEvil':
       return value >= 0 ? `Catching +${pct(fx.catchRate)} easier` : `+${pct(fx.money)} prize money`;
   }
+}
+
+/** Love feeds the Hyper moments (story.json): each point adds to their chances. */
+function loveText(content: Content, value: number): string {
+  const attrs = { ...zeroAttributes(), love: value };
+  const pct = (trigger: string) => {
+    const def = content.story.definitions.find((d) => d.triggerConditions.trigger === trigger);
+    return def?.chance ? `${Math.round(hyperChance(def.chance, attrs, false) * 1000) / 10}%` : '—';
+  };
+  return `Toughened It Out ${pct('toughenedItOut')}, Felt a Bond ${pct('feltABond')}, Pushed Itself Back Up ${pct('pushedBackUp')}`;
 }
 
 /** "Luck +1, Rage +2" for what changed between two attribute sets ('' when nothing did). */

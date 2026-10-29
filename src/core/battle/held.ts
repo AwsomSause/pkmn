@@ -324,7 +324,7 @@ export function survive(ctx: HeldContext, target: Holder, damage: number, events
   return damage;
 }
 
-/** Love's chance to hang on at 1 HP, multiplied by a Destiny Knot. */
+/** Multiplies the holder's Toughened It Out chance (a Destiny Knot doubles it). */
 export function endureMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): number {
   return hooks(hooksOf(ctx, mon, side), 'endure').reduce((m, h) => m * h.hook.multiplier, 1);
 }

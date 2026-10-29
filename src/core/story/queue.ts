@@ -14,6 +14,8 @@ import { PRIORITY_TIERS, type PresentationCueSpec, type PriorityTier } from './s
 /** One story event that fired this turn, waiting to be resolved. */
 export interface StoryTrigger {
   defId: string;
+  /** The Pokémon it happened to. */
+  uid: string;
   title: string;
   /** The line shown for it (names already filled in). */
   message: string;

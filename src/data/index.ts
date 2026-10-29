@@ -28,6 +28,7 @@ import {
   type Requirement,
   type Reward,
 } from '../core/contentSchema';
+import { HISTORY_MEMORIES, HYPER_EFFECTS } from '../core/story/hyper';
 import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
@@ -232,9 +233,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const def of story.definitions) {
     for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);
     if (def.effect?.kind === 'item' && !content.items.has(def.effect.itemId)) problems.push(`story.json "${def.id}" gives unknown item "${def.effect.itemId}"`);
-    // The battle engine decides Love's endure on the battle stream, so the definition can't add its own chance or another effect.
-    if (def.triggerConditions.trigger === 'loveEndure' && (def.chance !== null || def.effect?.kind !== 'endure' || def.duration !== 'battle')) {
-      problems.push(`story.json "${def.id}": a loveEndure event needs chance null, an endure effect and battle duration`);
+    // Hyper moments are decided by the battle engine, which only knows one effect for each trigger.
+    const expected = HYPER_EFFECTS[def.triggerConditions.trigger];
+    if (def.effect?.kind !== expected || def.duration !== 'battle') {
+      problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and battle duration`);
+    }
+    for (const m of def.triggerConditions.needsMemory ?? []) {
+      if (!HISTORY_MEMORIES.includes(m) && !storyIds.has(m)) problems.push(`story.json "${def.id}" needs unknown memory "${m}"`);
     }
   }
   for (const trigger of STORY_TRIGGERS) {

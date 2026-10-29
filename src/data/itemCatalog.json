@@ -2865,7 +2865,7 @@
   "id": "destiny-knot",
   "name": "Destiny Knot",
   "family": "Battle held items",
-  "description": "Love's chance for the holder to hang on at 1 HP is doubled",
+  "description": "The holder's chance to Toughen It Out (hang on at 1 HP) is doubled",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 1,

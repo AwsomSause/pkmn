@@ -14,7 +14,12 @@
   "majorCuesPerBattle": 3,
   "closeCallHpShare": 0.1,
   "lowHpShare": 0.25,
-  "friendshipMilestones": [100, 150, 200, 255],
+  "friendshipMilestones": [
+    100,
+    150,
+    200,
+    255
+  ],
   "chronicleMinImportance": 40,
   "importance": {
     "runStarted": 30,
@@ -48,24 +53,207 @@
   },
   "definitions": [
     {
-      "id": "love-hung-on",
-      "displayName": "Hung on for you!",
+      "id": "toughened-it-out",
+      "displayName": "Toughened It Out!",
       "messagePool": [
-        "{name} hung on for you, out of love!",
-        "{name} refused to fall. It hung on for you!",
-        "{name} took the hit and stayed standing, for you!"
+        "{name} toughened it out!",
+        "{name} took the hit and refused to go down!",
+        "{name} gritted its teeth and toughened it out!"
       ],
-      "category": "bond",
-      "triggerConditions": { "trigger": "loveEndure" },
-      "chance": null,
-      "effect": { "kind": "endure" },
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "toughenedItOut",
+        "minHpShare": 0.25
+      },
+      "chance": {
+        "base": 0.15,
+        "attributes": [
+          "love"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 0.5
+      },
+      "effect": {
+        "kind": "endure"
+      },
       "duration": "battle",
       "cooldown": "oncePerBattlePerPokemon",
-      "memoryRecord": { "importance": 70, "text": "Hung on at 1 HP out of love against {enemy}" },
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Toughened it out against {enemy}'s {move}"
+      },
       "followUpEvents": [],
-      "visualCue": { "major": true, "color": "#ff7fb0", "sound": "se.shiny", "music": null, "cutIn": false, "shake": true },
+      "visualCue": {
+        "major": true,
+        "color": "#ff7fb0",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
       "priority": "knockoutPrevention",
-      "eligibilityTags": []
+      "eligibilityTags": [],
+      "variants": {
+        "again": {
+          "displayName": "Toughened It Out Again!",
+          "messagePool": [
+            "{name} toughened it out again!",
+            "Not again! {name} still won't go down!"
+          ]
+        }
+      }
+    },
+    {
+      "id": "pushed-back-up",
+      "displayName": "Pushed Itself Back Up!",
+      "messagePool": [
+        "{name} pushed itself back up! One more step!",
+        "{name} pushed itself back up! It's not finished yet!",
+        "{name} pushed itself back up! It found its strength!",
+        "{name} pushed itself back up! It refused to fall!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "pushedBackUp",
+        "needsMemory": [
+          "closeCall",
+          "survivedFatal",
+          "felt-a-bond"
+        ]
+      },
+      "chance": {
+        "base": 0.03,
+        "attributes": [
+          "love",
+          "luck"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 1
+      },
+      "effect": {
+        "kind": "revive",
+        "hpShare": 0.2
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattle",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Was knocked out by {enemy} and pushed itself back up"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd84a",
+        "sound": "se.level_up",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "knockoutPrevention",
+      "eligibilityTags": [],
+      "variants": {}
+    },
+    {
+      "id": "felt-a-bond",
+      "displayName": "Felt a Bond!",
+      "messagePool": [
+        "{name} felt a bond with you!",
+        "{name} heard you cheering and felt a bond!",
+        "{name} looked back at you. It felt a bond!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "feltABond",
+        "minFriendship": 220,
+        "needsMemory": [
+          "closeCall",
+          "survivedFatal",
+          "bossBeaten"
+        ]
+      },
+      "chance": {
+        "base": 0.1,
+        "attributes": [
+          "love",
+          "charisma"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 1
+      },
+      "effect": {
+        "kind": "endureOrCure"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Felt a bond with you against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff9ad5",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "variants": {}
+    },
+    {
+      "id": "hung-in-there",
+      "displayName": "Hung In There!",
+      "messagePool": [
+        "{name} hung in there! Its defenses rose!",
+        "{name} is badly hurt, but it's hanging in there!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "hungInThere",
+        "lowHpShare": 0.25,
+        "turns": 3,
+        "superEffectiveHits": 2
+      },
+      "chance": null,
+      "effect": {
+        "kind": "boost",
+        "stats": {
+          "def": 1,
+          "spd": 1
+        },
+        "healShare": 0.1,
+        "healAttribute": "peace"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Hung in there at low HP against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#7fc8ff",
+        "sound": "se.level_up",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "variants": {
+        "wouldntStayDown": {
+          "displayName": "Wouldn't Stay Down!",
+          "messagePool": [
+            "{name} took super-effective hits and wouldn't stay down!"
+          ]
+        }
+      }
     }
   ]
 }

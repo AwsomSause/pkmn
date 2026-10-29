@@ -748,6 +748,13 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.add({ targets: sprite, x: sprite.x + 8, yoyo: true, repeat: 3, duration: 50 });
           await this.refreshInfoBox(box, mon!, true);
           break;
+        case 'hyper':
+          // A Hyper moment: hung on, got back up, shook off its status or dug in.
+          mon!.hp = e.hpAfter;
+          if (e.cured) mon!.status = null;
+          if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
+          await this.refreshInfoBox(box, mon!, true);
+          break;
         case 'selfKo':
           mon!.hp = 0;
           await this.refreshInfoBox(box, mon!, true);

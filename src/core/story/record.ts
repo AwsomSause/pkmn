@@ -180,6 +180,7 @@ export function openHistory(content: Content, run: RunState, uid: string, specie
     evolutions: [],
     titles: [],
     memories: [],
+    hyper: {},
   };
   run.story.histories[uid] = history;
   trimHistories(content, run);
