@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
-import { megaOptions, ownedMegaForms, stoneForms, teraOption, type TransformRequest } from '../core/battle/transform';
+import { megaOptions, ownedMegaForms, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -438,20 +438,31 @@ export class BattleScene extends Phaser.Scene {
   private showRootMenu(): void {
     this.clearMenus();
     const content = services().session.content;
-    // Mega Evolution: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> off.
-    // Transformations: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> Tera -> off.
+    // Transformations: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> Tera -> Z-Move -> off.
     const ctx = this.battleCtx();
     const tera = teraOption(ctx);
-    const choices: TransformRequest[] = [...megaOptions(ctx).map((o) => ({ kind: 'mega' as const, formId: o.formId })), ...(tera ? [{ kind: 'tera' as const }] : [])];
+    const zMove = zMoveOptions(ctx).some((z) => z !== null);
+    const choices: TransformRequest[] = [
+      ...megaOptions(ctx).map((o) => ({ kind: 'mega' as const, formId: o.formId })),
+      ...(tera ? [{ kind: 'tera' as const }] : []),
+      ...(zMove ? [{ kind: 'zmove' as const }] : []),
+    ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind && (a.kind !== 'mega' || b.kind !== 'mega' || a.formId === b.formId);
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
     const choice = this.transformChoice;
     const ready =
-      choice?.kind === 'mega' ? ` It will Mega Evolve into ${content.species.get(choice.formId!)?.name}!` : choice?.kind === 'tera' ? ` It will Terastallize into the ${tera![0]!.toUpperCase()}${tera!.slice(1)} type!` : '';
+      choice?.kind === 'mega'
+        ? ` It will Mega Evolve into ${content.species.get(choice.formId!)?.name}!`
+        : choice?.kind === 'tera'
+          ? ` It will Terastallize into the ${tera![0]!.toUpperCase()}${tera!.slice(1)} type!`
+          : choice?.kind === 'zmove'
+            ? ' Pick a move to unleash as a Z-Move!'
+            : '';
     this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
-    const kinds = [...new Set(choices.map((c) => (c.kind === 'mega' ? 'Mega' : 'Tera')))];
-    if (choices.length > 0) options.push({ label: choice ? `${choice.kind === 'mega' ? 'Mega' : 'Tera'}: ON` : `${kinds.join('/')}: OFF` });
+    const label = (c: TransformRequest) => (c.kind === 'mega' ? 'Mega' : c.kind === 'tera' ? 'Tera' : 'Z');
+    const kinds = [...new Set(choices.map(label))];
+    if (choices.length > 0) options.push({ label: choice ? `${choice.kind === 'zmove' ? 'Z-Move' : label(choice)}: ON` : `${kinds.join('/')}: OFF` });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -481,8 +492,14 @@ export class BattleScene extends Phaser.Scene {
     const anyPp = mon.moves.some((m) => m.pp > 0);
     this.clearMenus();
     this.message.setText(`What will ${this.speciesName(mon)} do?`);
+    // With Z-Move on, each move shows the Z-Move it becomes; moves without one can't be picked.
+    const zMoves = this.transformChoice?.kind === 'zmove' ? zMoveOptions(this.battleCtx()) : null;
+    const zLabel = (i: number, name: string) => {
+      const z = zMoves?.[i];
+      return z ? (z.category === 'status' ? `Z-${name}` : z.name) : name;
+    };
     const options = anyPp
-      ? mon.moves.map((slot) => ({ label: content.moves.get(slot.id)!.name, disabled: slot.pp <= 0 }))
+      ? mon.moves.map((slot, i) => ({ label: zLabel(i, content.moves.get(slot.id)!.name), disabled: slot.pp <= 0 || (zMoves !== null && !zMoves[i]) }))
       : [{ label: 'Struggle' }];
     // Moves fill the message bar; the command window shows the focused move's details.
     this.message.setVisible(false);
@@ -502,7 +519,7 @@ export class BattleScene extends Phaser.Scene {
           this.moveInfo.setText('Your Pokémon has no PP left');
           return;
         }
-        const move = content.moves.get(slot.id)!;
+        const move = zMoves?.[i] ?? content.moves.get(slot.id)!;
         const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
         this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
@@ -519,7 +536,7 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory };
+    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics };
   }
 
   private openBag(): void {
@@ -749,10 +766,12 @@ export class BattleScene extends Phaser.Scene {
         case 'transform': {
           // Presentation cue only: a flash and the new form's sprite (full cinematics are M9.5).
           if (e.kind === 'mega' && e.itemId) await this.say(`${this.speciesName(mon!)}'s ${content.items.get(e.itemId)?.name ?? 'Mega Stone'} is reacting to your Mega Ring!`);
-          const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0);
+          // A Z-Move flashes in its type's colour.
+          const zType = e.kind === 'zmove' && e.moveId ? content.moves.get(e.moveId)?.type : undefined;
+          const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, zType ? (TYPE_COLORS[zType] ?? 0xffffff) : 0xffffff, 0).setOrigin(0);
           await tween(this, { targets: flash, alpha: 0.9, duration: 250, yoyo: true, hold: 150 });
           flash.destroy();
-          if (e.kind === 'tera') playSfx(this, 'se.level_up');
+          if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
           else {
             mon!.speciesId = e.to;
             this.showSprite(e.side, mon!);

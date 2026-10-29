@@ -54,6 +54,11 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
   if (item?.effect.kind === 'keyItem') return itemCount(run.inventory, item.id) === 0;
   // Tera Shards only matter once you have the Tera Orb.
   if (item?.effect.kind === 'teraShard') return hasKeyItem(content, run.inventory, 'tera');
+  // A Z-Crystal is offered once you have the Z-Ring, and only when a party member knows a move of its type.
+  if (item?.effect.kind === 'zCrystal') {
+    const type = item.effect.type;
+    return itemCount(run.inventory, item.id) === 0 && hasKeyItem(content, run.inventory, 'zmove') && run.party.some((p) => p.moves.some((m) => content.moves.get(m.id)?.type === type));
+  }
   if (item?.effect.kind === 'megaStone') {
     const forms = item.effect.forms;
     return itemCount(run.inventory, item.id) === 0 && run.party.some((p) => forms[p.speciesId] !== undefined);

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T23:23:19.695Z",
+  "generatedAt": "2026-10-29T23:26:46.014Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71470,6 +71470,120 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/fairy_tera_shard.png"
+    },
+    {
+      "id": "item.z_ring",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/z_ring.png"
+    },
+    {
+      "id": "item.normalium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/normalium_z.png"
+    },
+    {
+      "id": "item.fightinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fightinium_z.png"
+    },
+    {
+      "id": "item.flyinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/flyinium_z.png"
+    },
+    {
+      "id": "item.poisonium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/poisonium_z.png"
+    },
+    {
+      "id": "item.groundium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/groundium_z.png"
+    },
+    {
+      "id": "item.rockium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/rockium_z.png"
+    },
+    {
+      "id": "item.buginium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/buginium_z.png"
+    },
+    {
+      "id": "item.ghostium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ghostium_z.png"
+    },
+    {
+      "id": "item.steelium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/steelium_z.png"
+    },
+    {
+      "id": "item.firium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/firium_z.png"
+    },
+    {
+      "id": "item.waterium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/waterium_z.png"
+    },
+    {
+      "id": "item.grassium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/grassium_z.png"
+    },
+    {
+      "id": "item.electrium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/electrium_z.png"
+    },
+    {
+      "id": "item.psychium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/psychium_z.png"
+    },
+    {
+      "id": "item.icium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/icium_z.png"
+    },
+    {
+      "id": "item.dragonium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dragonium_z.png"
+    },
+    {
+      "id": "item.darkinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/darkinium_z.png"
+    },
+    {
+      "id": "item.fairium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fairium_z.png"
     },
     {
       "id": "item.fist_plate",

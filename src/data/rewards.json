@@ -1509,5 +1509,309 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.fairy_tera_shard"
+ },
+ {
+  "id": "z-ring",
+  "name": "Z-Ring",
+  "description": "Key item: use a Z-Move once per battle (needs the move type's Z-Crystal).",
+  "category": "key",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "z-ring",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.z_ring"
+ },
+ {
+  "id": "normalium-z",
+  "name": "Normalium Z",
+  "description": "Z-Crystal: turns a Normal-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "normalium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.normalium_z"
+ },
+ {
+  "id": "fightinium-z",
+  "name": "Fightinium Z",
+  "description": "Z-Crystal: turns a Fighting-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fightinium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fightinium_z"
+ },
+ {
+  "id": "flyinium-z",
+  "name": "Flyinium Z",
+  "description": "Z-Crystal: turns a Flying-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "flyinium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.flyinium_z"
+ },
+ {
+  "id": "poisonium-z",
+  "name": "Poisonium Z",
+  "description": "Z-Crystal: turns a Poison-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "poisonium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.poisonium_z"
+ },
+ {
+  "id": "groundium-z",
+  "name": "Groundium Z",
+  "description": "Z-Crystal: turns a Ground-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "groundium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.groundium_z"
+ },
+ {
+  "id": "rockium-z",
+  "name": "Rockium Z",
+  "description": "Z-Crystal: turns a Rock-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "rockium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.rockium_z"
+ },
+ {
+  "id": "buginium-z",
+  "name": "Buginium Z",
+  "description": "Z-Crystal: turns a Bug-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "buginium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.buginium_z"
+ },
+ {
+  "id": "ghostium-z",
+  "name": "Ghostium Z",
+  "description": "Z-Crystal: turns a Ghost-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "ghostium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ghostium_z"
+ },
+ {
+  "id": "steelium-z",
+  "name": "Steelium Z",
+  "description": "Z-Crystal: turns a Steel-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "steelium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.steelium_z"
+ },
+ {
+  "id": "firium-z",
+  "name": "Firium Z",
+  "description": "Z-Crystal: turns a Fire-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "firium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.firium_z"
+ },
+ {
+  "id": "waterium-z",
+  "name": "Waterium Z",
+  "description": "Z-Crystal: turns a Water-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "waterium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.waterium_z"
+ },
+ {
+  "id": "grassium-z",
+  "name": "Grassium Z",
+  "description": "Z-Crystal: turns a Grass-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "grassium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.grassium_z"
+ },
+ {
+  "id": "electrium-z",
+  "name": "Electrium Z",
+  "description": "Z-Crystal: turns a Electric-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "electrium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.electrium_z"
+ },
+ {
+  "id": "psychium-z",
+  "name": "Psychium Z",
+  "description": "Z-Crystal: turns a Psychic-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "psychium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.psychium_z"
+ },
+ {
+  "id": "icium-z",
+  "name": "Icium Z",
+  "description": "Z-Crystal: turns a Ice-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "icium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.icium_z"
+ },
+ {
+  "id": "dragonium-z",
+  "name": "Dragonium Z",
+  "description": "Z-Crystal: turns a Dragon-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "dragonium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dragonium_z"
+ },
+ {
+  "id": "darkinium-z",
+  "name": "Darkinium Z",
+  "description": "Z-Crystal: turns a Dark-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "darkinium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.darkinium_z"
+ },
+ {
+  "id": "fairium-z",
+  "name": "Fairium Z",
+  "description": "Z-Crystal: turns a Fairy-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fairium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fairium_z"
  }
 ]

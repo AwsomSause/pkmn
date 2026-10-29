@@ -1136,5 +1136,271 @@
    "kind": "teraShard",
    "type": "fairy"
   }
+ },
+ {
+  "id": "z-ring",
+  "name": "Z-Ring",
+  "description": "A key item. Lets one of your Pokémon use a Z-Move once per battle, if you also have the Z-Crystal of that move's type.",
+  "category": "key",
+  "iconAssetId": "item.z_ring",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "keyItem",
+   "mechanic": "zmove"
+  }
+ },
+ {
+  "id": "normalium-z",
+  "name": "Normalium Z",
+  "description": "Lets a Pokémon turn a Normal-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.normalium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "normal"
+  }
+ },
+ {
+  "id": "fightinium-z",
+  "name": "Fightinium Z",
+  "description": "Lets a Pokémon turn a Fighting-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.fightinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fighting"
+  }
+ },
+ {
+  "id": "flyinium-z",
+  "name": "Flyinium Z",
+  "description": "Lets a Pokémon turn a Flying-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.flyinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "flying"
+  }
+ },
+ {
+  "id": "poisonium-z",
+  "name": "Poisonium Z",
+  "description": "Lets a Pokémon turn a Poison-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.poisonium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "poison"
+  }
+ },
+ {
+  "id": "groundium-z",
+  "name": "Groundium Z",
+  "description": "Lets a Pokémon turn a Ground-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.groundium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ground"
+  }
+ },
+ {
+  "id": "rockium-z",
+  "name": "Rockium Z",
+  "description": "Lets a Pokémon turn a Rock-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.rockium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "rock"
+  }
+ },
+ {
+  "id": "buginium-z",
+  "name": "Buginium Z",
+  "description": "Lets a Pokémon turn a Bug-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.buginium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "bug"
+  }
+ },
+ {
+  "id": "ghostium-z",
+  "name": "Ghostium Z",
+  "description": "Lets a Pokémon turn a Ghost-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.ghostium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ghost"
+  }
+ },
+ {
+  "id": "steelium-z",
+  "name": "Steelium Z",
+  "description": "Lets a Pokémon turn a Steel-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.steelium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "steel"
+  }
+ },
+ {
+  "id": "firium-z",
+  "name": "Firium Z",
+  "description": "Lets a Pokémon turn a Fire-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.firium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fire"
+  }
+ },
+ {
+  "id": "waterium-z",
+  "name": "Waterium Z",
+  "description": "Lets a Pokémon turn a Water-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.waterium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "water"
+  }
+ },
+ {
+  "id": "grassium-z",
+  "name": "Grassium Z",
+  "description": "Lets a Pokémon turn a Grass-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.grassium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "grass"
+  }
+ },
+ {
+  "id": "electrium-z",
+  "name": "Electrium Z",
+  "description": "Lets a Pokémon turn a Electric-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.electrium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "electric"
+  }
+ },
+ {
+  "id": "psychium-z",
+  "name": "Psychium Z",
+  "description": "Lets a Pokémon turn a Psychic-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.psychium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "psychic"
+  }
+ },
+ {
+  "id": "icium-z",
+  "name": "Icium Z",
+  "description": "Lets a Pokémon turn a Ice-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.icium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ice"
+  }
+ },
+ {
+  "id": "dragonium-z",
+  "name": "Dragonium Z",
+  "description": "Lets a Pokémon turn a Dragon-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.dragonium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "dragon"
+  }
+ },
+ {
+  "id": "darkinium-z",
+  "name": "Darkinium Z",
+  "description": "Lets a Pokémon turn a Dark-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.darkinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "dark"
+  }
+ },
+ {
+  "id": "fairium-z",
+  "name": "Fairium Z",
+  "description": "Lets a Pokémon turn a Fairy-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.fairium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fairy"
+  }
  }
 ]

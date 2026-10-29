@@ -1,0 +1,2238 @@
+{
+  "byType": {
+    "normal": "breakneck-blitz",
+    "fighting": "all-out-pummeling",
+    "flying": "supersonic-skystrike",
+    "poison": "acid-downpour",
+    "ground": "tectonic-rage",
+    "rock": "continental-crush",
+    "bug": "savage-spin-out",
+    "ghost": "never-ending-nightmare",
+    "steel": "corkscrew-crash",
+    "fire": "inferno-overdrive",
+    "water": "hydro-vortex",
+    "grass": "bloom-doom",
+    "electric": "gigavolt-havoc",
+    "psychic": "shattered-psyche",
+    "ice": "subzero-slammer",
+    "dragon": "devastating-drake",
+    "dark": "black-hole-eclipse",
+    "fairy": "twinkle-tackle"
+  },
+  "power": {
+    "struggle": 100,
+    "tackle": 100,
+    "scratch": 100,
+    "pound": 100,
+    "quick-attack": 100,
+    "headbutt": 140,
+    "take-down": 175,
+    "ember": 100,
+    "fire-fang": 120,
+    "water-gun": 100,
+    "bubble-beam": 120,
+    "vine-whip": 100,
+    "razor-leaf": 100,
+    "seed-bomb": 160,
+    "absorb": 100,
+    "mega-drain": 120,
+    "poison-sting": 100,
+    "acid": 100,
+    "thunder-shock": 100,
+    "spark": 120,
+    "gust": 100,
+    "peck": 100,
+    "wing-attack": 120,
+    "bite": 120,
+    "lick": 100,
+    "night-shade": 100,
+    "karate-chop": 100,
+    "low-sweep": 120,
+    "rock-throw": 100,
+    "mud-slap": 100,
+    "mud-shot": 100,
+    "metal-claw": 100,
+    "confusion": 100,
+    "psybeam": 120,
+    "psychic": 175,
+    "extrasensory": 160,
+    "powder-snow": 100,
+    "ice-shard": 100,
+    "ice-fang": 120,
+    "aurora-beam": 120,
+    "icy-wind": 100,
+    "dragon-breath": 120,
+    "twister": 100,
+    "dragon-claw": 160,
+    "dragon-pulse": 160,
+    "feint-attack": 120,
+    "pursuit": 100,
+    "crunch": 160,
+    "snarl": 100,
+    "night-slash": 140,
+    "fairy-wind": 100,
+    "disarming-voice": 100,
+    "draining-kiss": 100,
+    "play-rough": 175,
+    "bug-bite": 120,
+    "struggle-bug": 100,
+    "fury-cutter": 100,
+    "poison-jab": 160,
+    "rock-tomb": 120,
+    "rock-slide": 140,
+    "astonish": 100,
+    "shadow-sneak": 100,
+    "shadow-ball": 160,
+    "flash-cannon": 160,
+    "iron-head": 160,
+    "thunder-fang": 120,
+    "thunderbolt": 175,
+    "flame-wheel": 120,
+    "flamethrower": 175,
+    "aqua-tail": 175,
+    "water-pulse": 120,
+    "air-slash": 140,
+    "slash": 140,
+    "accelerock": 100,
+    "acid-spray": 100,
+    "aerial-ace": 120,
+    "aeroblast": 180,
+    "air-cutter": 120,
+    "alluring-voice": 160,
+    "apple-acid": 160,
+    "aqua-cutter": 140,
+    "aqua-jet": 100,
+    "aqua-step": 160,
+    "armor-cannon": 190,
+    "attack-order": 175,
+    "aura-sphere": 160,
+    "bitter-blade": 175,
+    "bitter-malice": 140,
+    "blaze-kick": 160,
+    "blizzard": 185,
+    "blue-flare": 195,
+    "body-slam": 160,
+    "bolt-strike": 195,
+    "bone-club": 120,
+    "boomburst": 200,
+    "bouncy-bubble": 175,
+    "branch-poke": 100,
+    "brave-bird": 190,
+    "brick-break": 140,
+    "bubble": 100,
+    "bug-buzz": 175,
+    "bulldoze": 120,
+    "bullet-punch": 100,
+    "buzzy-buzz": 175,
+    "charge-beam": 100,
+    "chilling-water": 100,
+    "chloroblast": 200,
+    "clanging-scales": 185,
+    "close-combat": 190,
+    "crabhammer": 180,
+    "cross-chop": 180,
+    "cross-poison": 140,
+    "crush-claw": 140,
+    "cut": 100,
+    "dark-pulse": 160,
+    "dazzling-gleam": 160,
+    "diamond-storm": 180,
+    "discharge": 160,
+    "double-edge": 190,
+    "draco-meteor": 195,
+    "dragon-ascent": 190,
+    "dragon-rush": 180,
+    "drain-punch": 140,
+    "drill-peck": 160,
+    "drill-run": 160,
+    "drum-beating": 160,
+    "earth-power": 175,
+    "earthquake": 180,
+    "egg-bomb": 180,
+    "electroweb": 100,
+    "energy-ball": 175,
+    "esper-wing": 160,
+    "extreme-speed": 160,
+    "false-surrender": 160,
+    "fiery-dance": 160,
+    "fiery-wrath": 175,
+    "fire-blast": 185,
+    "fire-punch": 140,
+    "flame-charge": 100,
+    "flare-blitz": 190,
+    "fleur-cannon": 195,
+    "floaty-fall": 175,
+    "focus-blast": 190,
+    "force-palm": 120,
+    "freezing-glare": 175,
+    "giga-drain": 140,
+    "glaciate": 120,
+    "gunk-shot": 190,
+    "hammer-arm": 180,
+    "head-charge": 190,
+    "head-smash": 200,
+    "headlong-rush": 190,
+    "heart-stamp": 120,
+    "heat-wave": 175,
+    "horn-attack": 120,
+    "horn-leech": 140,
+    "hydro-pump": 185,
+    "hyper-drill": 180,
+    "hyper-fang": 160,
+    "hyper-voice": 175,
+    "hyperspace-fury": 180,
+    "hyperspace-hole": 160,
+    "ice-beam": 175,
+    "ice-punch": 140,
+    "icicle-crash": 160,
+    "inferno": 180,
+    "iron-tail": 180,
+    "lands-wrath": 185,
+    "lava-plume": 160,
+    "leaf-blade": 175,
+    "leaf-storm": 195,
+    "leaf-tornado": 120,
+    "leech-life": 160,
+    "light-of-ruin": 200,
+    "liquidation": 160,
+    "luster-purge": 175,
+    "mach-punch": 100,
+    "magical-leaf": 120,
+    "magnet-bomb": 120,
+    "mega-kick": 190,
+    "mega-punch": 160,
+    "megahorn": 190,
+    "meteor-mash": 175,
+    "mighty-cleave": 175,
+    "mirror-shot": 120,
+    "mist-ball": 175,
+    "moonblast": 175,
+    "mountain-gale": 180,
+    "mud-bomb": 120,
+    "muddy-water": 175,
+    "mystical-fire": 140,
+    "mystical-power": 140,
+    "needle-arm": 120,
+    "night-daze": 160,
+    "nuzzle": 100,
+    "octazooka": 120,
+    "origin-pulse": 185,
+    "overdrive": 160,
+    "overheat": 195,
+    "parabolic-charge": 120,
+    "petal-blizzard": 175,
+    "poison-tail": 100,
+    "pounce": 100,
+    "power-gem": 160,
+    "power-whip": 190,
+    "precipice-blades": 190,
+    "psycho-boost": 200,
+    "psycho-cut": 140,
+    "psyshield-bash": 140,
+    "pyro-ball": 190,
+    "razor-shell": 140,
+    "rock-smash": 100,
+    "rolling-kick": 120,
+    "sacred-fire": 180,
+    "scald": 160,
+    "searing-shot": 180,
+    "seed-flare": 190,
+    "seismic-toss": 100,
+    "shadow-bone": 160,
+    "shadow-claw": 140,
+    "shadow-punch": 120,
+    "shock-wave": 120,
+    "sizzly-slide": 175,
+    "slam": 160,
+    "sludge": 120,
+    "sludge-bomb": 175,
+    "sludge-wave": 175,
+    "smog": 100,
+    "spacial-rend": 180,
+    "spirit-break": 140,
+    "splishy-splash": 175,
+    "steam-eruption": 185,
+    "steamroller": 120,
+    "steel-wing": 140,
+    "stomp": 120,
+    "stone-edge": 180,
+    "strength": 160,
+    "submission": 160,
+    "supercell-slam": 180,
+    "superpower": 190,
+    "surf": 175,
+    "swift": 120,
+    "temper-flare": 140,
+    "tera-starstorm": 190,
+    "thunder": 185,
+    "thunder-punch": 140,
+    "thunderous-kick": 175,
+    "torch-song": 160,
+    "trailblaze": 100,
+    "trop-kick": 140,
+    "v-create": 220,
+    "vacuum-wave": 100,
+    "vise-grip": 100,
+    "volt-tackle": 190,
+    "waterfall": 160,
+    "wave-crash": 190,
+    "wild-charge": 175,
+    "wood-hammer": 190,
+    "x-scissor": 160,
+    "zap-cannon": 190,
+    "zen-headbutt": 160,
+    "zing-zap": 160,
+    "arm-thrust": 100,
+    "barrage": 100,
+    "bind": 100,
+    "blast-burn": 200,
+    "bone-rush": 140,
+    "bonemerang": 100,
+    "brine": 120,
+    "bullet-seed": 140,
+    "chip-away": 140,
+    "clamp": 100,
+    "comet-punch": 100,
+    "darkest-lariat": 160,
+    "dizzy-punch": 140,
+    "double-hit": 140,
+    "double-kick": 100,
+    "double-slap": 100,
+    "dual-chop": 100,
+    "explosion": 200,
+    "false-swipe": 100,
+    "fire-spin": 100,
+    "fissure": 180,
+    "flail": 160,
+    "frenzy-plant": 200,
+    "frost-breath": 120,
+    "fury-attack": 100,
+    "fury-swipes": 100,
+    "gear-grind": 180,
+    "giga-impact": 200,
+    "guillotine": 180,
+    "hold-back": 100,
+    "horn-drill": 180,
+    "hurricane": 185,
+    "hydro-cannon": 200,
+    "hyper-beam": 200,
+    "icicle-spear": 140,
+    "infestation": 100,
+    "jet-punch": 120,
+    "kowtow-cleave": 160,
+    "magma-storm": 180,
+    "meteor-assault": 200,
+    "pin-missile": 140,
+    "psyshock": 160,
+    "psystrike": 180,
+    "reversal": 160,
+    "roar-of-time": 200,
+    "rock-blast": 140,
+    "rock-climb": 175,
+    "rock-wrecker": 200,
+    "sacred-sword": 175,
+    "sand-tomb": 100,
+    "secret-sword": 160,
+    "self-destruct": 200,
+    "sheer-cold": 180,
+    "signal-beam": 140,
+    "snap-trap": 100,
+    "spike-cannon": 120,
+    "storm-throw": 120,
+    "strange-steam": 175,
+    "tail-slap": 140,
+    "twin-beam": 100,
+    "twineedle": 100,
+    "water-shuriken": 100,
+    "whirlpool": 100,
+    "wrap": 100,
+    "zippy-zap": 100,
+    "ancient-power": 120,
+    "chatter": 120,
+    "dynamic-punch": 180,
+    "ominous-wind": 120,
+    "acrobatics": 100,
+    "anchor-shot": 160,
+    "assurance": 120,
+    "astral-barrage": 190,
+    "aura-wheel": 185,
+    "avalanche": 120,
+    "axe-kick": 190,
+    "baddy-bad": 175,
+    "barb-barrage": 120,
+    "beak-blast": 180,
+    "beat-up": 100,
+    "behemoth-bash": 180,
+    "behemoth-blade": 180,
+    "belch": 190,
+    "bide": 100,
+    "blazing-torque": 160,
+    "bleakwind-storm": 180,
+    "blood-moon": 200,
+    "body-press": 160,
+    "bolt-beak": 160,
+    "bounce": 160,
+    "breaking-swipe": 120,
+    "brutal-swing": 120,
+    "burn-up": 195,
+    "burning-jealousy": 140,
+    "ceaseless-edge": 120,
+    "circle-throw": 120,
+    "clear-smog": 100,
+    "collision-course": 180,
+    "combat-torque": 180,
+    "comeuppance": 100,
+    "constrict": 100,
+    "core-enforcer": 140,
+    "counter": 100,
+    "covet": 120,
+    "crush-grip": 190,
+    "dig": 160,
+    "dire-claw": 160,
+    "dive": 160,
+    "doom-desire": 200,
+    "double-iron-bash": 180,
+    "double-shock": 190,
+    "dragon-darts": 100,
+    "dragon-energy": 200,
+    "dragon-hammer": 175,
+    "dragon-rage": 100,
+    "dragon-tail": 120,
+    "dream-eater": 180,
+    "dual-wingbeat": 100,
+    "dynamax-cannon": 180,
+    "echoed-voice": 100,
+    "eerie-spell": 160,
+    "electro-ball": 160,
+    "electro-drift": 180,
+    "electro-shot": 195,
+    "endeavor": 160,
+    "eruption": 200,
+    "eternabeam": 200,
+    "expanding-force": 160,
+    "facade": 140,
+    "fake-out": 100,
+    "feint": 100,
+    "fell-stinger": 100,
+    "fickle-beam": 160,
+    "final-gambit": 180,
+    "fire-lash": 160,
+    "fire-pledge": 160,
+    "first-impression": 175,
+    "fishious-rend": 160,
+    "flame-burst": 140,
+    "fling": 100,
+    "flip-turn": 120,
+    "flower-trick": 140,
+    "fly": 175,
+    "flying-press": 170,
+    "focus-punch": 200,
+    "foul-play": 175,
+    "freeze-shock": 200,
+    "freeze-dry": 140,
+    "freezy-frost": 175,
+    "frustration": 160,
+    "fusion-bolt": 180,
+    "fusion-flare": 180,
+    "future-sight": 190,
+    "gigaton-hammer": 200,
+    "glacial-lance": 190,
+    "glaive-rush": 190,
+    "glitzy-glow": 175,
+    "grass-knot": 160,
+    "grass-pledge": 160,
+    "grassy-glide": 100,
+    "grav-apple": 160,
+    "gyro-ball": 160,
+    "hard-press": 100,
+    "heat-crash": 160,
+    "heavy-slam": 160,
+    "hex": 160,
+    "hidden-power": 120,
+    "high-horsepower": 175,
+    "high-jump-kick": 195,
+    "hydro-steam": 160,
+    "ice-ball": 100,
+    "ice-burn": 200,
+    "ice-hammer": 180,
+    "ice-spinner": 160,
+    "incinerate": 120,
+    "infernal-parade": 120,
+    "ivy-cudgel": 180,
+    "jaw-lock": 160,
+    "judgment": 180,
+    "jump-kick": 180,
+    "knock-off": 120,
+    "lash-out": 140,
+    "last-resort": 200,
+    "last-respects": 100,
+    "leafage": 100,
+    "low-kick": 160,
+    "lumina-crash": 160,
+    "lunge": 160,
+    "magical-torque": 180,
+    "magnitude": 140,
+    "make-it-rain": 190,
+    "malignant-chain": 180,
+    "matcha-gotcha": 160,
+    "metal-burst": 100,
+    "meteor-beam": 190,
+    "mind-blown": 200,
+    "mirror-coat": 100,
+    "misty-explosion": 180,
+    "moongeist-beam": 180,
+    "mortal-spin": 100,
+    "multi-attack": 185,
+    "natural-gift": 160,
+    "natures-madness": 100,
+    "noxious-torque": 180,
+    "oblivion-wing": 160,
+    "order-up": 160,
+    "outrage": 190,
+    "pay-day": 100,
+    "payback": 100,
+    "petal-dance": 190,
+    "phantom-force": 175,
+    "photon-geyser": 180,
+    "pika-papow": 100,
+    "plasma-fists": 180,
+    "pluck": 120,
+    "poison-fang": 100,
+    "pollen-puff": 175,
+    "poltergeist": 185,
+    "population-bomb": 100,
+    "power-trip": 160,
+    "power-up-punch": 100,
+    "present": 100,
+    "prismatic-laser": 200,
+    "psyblade": 160,
+    "psychic-fangs": 160,
+    "psychic-noise": 140,
+    "psywave": 100,
+    "punishment": 160,
+    "rage": 100,
+    "rage-fist": 100,
+    "raging-bull": 175,
+    "raging-fury": 190,
+    "rapid-spin": 100,
+    "razor-wind": 160,
+    "relic-song": 140,
+    "retaliate": 140,
+    "return": 160,
+    "revelation-dance": 175,
+    "revenge": 120,
+    "rising-voltage": 140,
+    "rollout": 100,
+    "round": 120,
+    "ruination": 100,
+    "salt-cure": 100,
+    "sandsear-storm": 180,
+    "sappy-seed": 175,
+    "scale-shot": 140,
+    "scorching-sands": 140,
+    "secret-power": 140,
+    "shadow-force": 190,
+    "shell-side-arm": 175,
+    "shell-trap": 200,
+    "silver-wind": 120,
+    "skitter-smack": 140,
+    "skull-bash": 195,
+    "sky-attack": 200,
+    "sky-drop": 120,
+    "sky-uppercut": 160,
+    "smack-down": 100,
+    "smart-strike": 140,
+    "smelling-salts": 140,
+    "snipe-shot": 160,
+    "snore": 100,
+    "solar-beam": 190,
+    "solar-blade": 190,
+    "sonic-boom": 100,
+    "sparkling-aria": 175,
+    "sparkly-swirl": 175,
+    "spectral-thief": 175,
+    "spin-out": 180,
+    "spirit-shackle": 160,
+    "spit-up": 100,
+    "springtide-storm": 180,
+    "steel-beam": 200,
+    "steel-roller": 195,
+    "stomping-tantrum": 140,
+    "stone-axe": 120,
+    "stored-power": 160,
+    "sucker-punch": 140,
+    "sunsteel-strike": 180,
+    "super-fang": 100,
+    "surging-strikes": 140,
+    "synchronoise": 190,
+    "syrup-bomb": 120,
+    "tachyon-cutter": 180,
+    "techno-blast": 190,
+    "tera-blast": 160,
+    "terrain-pulse": 160,
+    "thief": 120,
+    "thousand-arrows": 180,
+    "thousand-waves": 175,
+    "thrash": 190,
+    "throat-chop": 160,
+    "thunder-cage": 160,
+    "thunderclap": 140,
+    "tri-attack": 160,
+    "triple-arrows": 175,
+    "triple-axel": 120,
+    "triple-dive": 100,
+    "triple-kick": 120,
+    "trump-card": 160,
+    "u-turn": 140,
+    "upper-hand": 120,
+    "uproar": 175,
+    "veevee-volley": 100,
+    "venoshock": 120,
+    "vital-throw": 140,
+    "volt-switch": 140,
+    "wake-up-slap": 140,
+    "water-pledge": 160,
+    "water-spout": 200,
+    "weather-ball": 160,
+    "wicked-blow": 140,
+    "wicked-torque": 160,
+    "wildbolt-storm": 180,
+    "wring-out": 190
+  },
+  "status": {
+    "growl": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "tail-whip": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "leer": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "smokescreen": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "harden": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "defense-curl": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "growth": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "withdraw": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "string-shot": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "sand-attack": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "sleep-powder": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "stun-spore": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "poison-powder": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "thunder-wave": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "hypnosis": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "charm": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "iron-defense": {
+      "effect": "clearNegative"
+    },
+    "metal-sound": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "agility": {
+      "effect": "clearNegative"
+    },
+    "screech": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "scary-face": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "acid-armor": {
+      "effect": "clearNegative"
+    },
+    "amnesia": {
+      "effect": "clearNegative"
+    },
+    "barrier": {
+      "effect": "clearNegative"
+    },
+    "bulk-up": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "calm-mind": {
+      "effect": "clearNegative"
+    },
+    "coil": {
+      "effect": "clearNegative"
+    },
+    "confide": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "cosmic-power": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "cotton-guard": {
+      "effect": "clearNegative"
+    },
+    "cotton-spore": {
+      "effect": "clearNegative"
+    },
+    "defend-order": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "double-team": {
+      "effect": "clearNegative"
+    },
+    "dragon-dance": {
+      "effect": "clearNegative"
+    },
+    "eerie-impulse": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "fake-tears": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "feather-dance": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "flash": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "glare": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "grass-whistle": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "hone-claws": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "kinesis": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "lovely-kiss": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "meditate": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "minimize": {
+      "effect": "clearNegative"
+    },
+    "nasty-plot": {
+      "effect": "clearNegative"
+    },
+    "noble-roar": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "poison-gas": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "quiver-dance": {
+      "effect": "clearNegative"
+    },
+    "rock-polish": {
+      "effect": "clearNegative"
+    },
+    "sharpen": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "sing": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "spore": {
+      "effect": "clearNegative"
+    },
+    "sweet-scent": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "swords-dance": {
+      "effect": "clearNegative"
+    },
+    "tail-glow": {
+      "effect": "clearNegative"
+    },
+    "tickle": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "will-o-wisp": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "work-up": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "baby-doll-eyes": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "confuse-ray": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "detect": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "heal-order": {
+      "effect": "clearNegative"
+    },
+    "leech-seed": {
+      "effect": "clearNegative"
+    },
+    "milk-drink": {
+      "effect": "clearNegative"
+    },
+    "moonlight": {
+      "effect": "clearNegative"
+    },
+    "morning-sun": {
+      "effect": "clearNegative"
+    },
+    "play-nice": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "protect": {
+      "effect": "clearNegative"
+    },
+    "recover": {
+      "effect": "clearNegative"
+    },
+    "slack-off": {
+      "effect": "clearNegative"
+    },
+    "soft-boiled": {
+      "effect": "clearNegative"
+    },
+    "supersonic": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "sweet-kiss": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "synthesis": {
+      "effect": "clearNegative"
+    },
+    "after-you": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "ally-switch": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "aqua-ring": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "aromatherapy": {
+      "effect": "heal"
+    },
+    "aromatic-mist": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 2
+        }
+      ]
+    },
+    "attract": {
+      "effect": "clearNegative"
+    },
+    "aurora-veil": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "autotomize": {
+      "effect": "clearNegative"
+    },
+    "baneful-bunker": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "baton-pass": {
+      "effect": "clearNegative"
+    },
+    "belly-drum": {
+      "effect": "heal"
+    },
+    "bestow": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "block": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "camouflage": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "captivate": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 2
+        }
+      ]
+    },
+    "celebrate": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "charge": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "conversion": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "conversion-2": {
+      "effect": "heal"
+    },
+    "copycat": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "crafty-shield": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "dark-void": {
+      "effect": "clearNegative"
+    },
+    "defog": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "disable": {
+      "effect": "clearNegative"
+    },
+    "electric-terrain": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "electrify": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "embargo": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "encore": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "endure": {
+      "effect": "clearNegative"
+    },
+    "entrainment": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "fairy-lock": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "flatter": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "floral-healing": {
+      "effect": "clearNegative"
+    },
+    "flower-shield": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "focus-energy": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "follow-me": {
+      "effect": "clearNegative"
+    },
+    "forests-curse": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "gastro-acid": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "gear-up": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "geomancy": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "grassy-terrain": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "gravity": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "guard-split": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "guard-swap": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "hail": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "happy-hour": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "haze": {
+      "effect": "heal"
+    },
+    "heal-bell": {
+      "effect": "heal"
+    },
+    "heal-block": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 2
+        }
+      ]
+    },
+    "heal-pulse": {
+      "effect": "clearNegative"
+    },
+    "helping-hand": {
+      "effect": "clearNegative"
+    },
+    "hold-hands": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "howl": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "imprison": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 2
+        }
+      ]
+    },
+    "ingrain": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "instruct": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "ion-deluge": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "kings-shield": {
+      "effect": "clearNegative"
+    },
+    "laser-focus": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "light-screen": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "lock-on": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "lucky-chant": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "magic-coat": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 2
+        }
+      ]
+    },
+    "magic-room": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "magnet-rise": {
+      "boosts": [
+        {
+          "stat": "eva",
+          "stages": 1
+        }
+      ]
+    },
+    "magnetic-flux": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "mat-block": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "me-first": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "mean-look": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "mimic": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "mind-reader": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "miracle-eye": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "mirror-move": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 2
+        }
+      ]
+    },
+    "mist": {
+      "effect": "heal"
+    },
+    "misty-terrain": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "mud-sport": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "nightmare": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "odor-sleuth": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "pain-split": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "perish-song": {
+      "effect": "clearNegative"
+    },
+    "powder": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 2
+        }
+      ]
+    },
+    "power-split": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "power-swap": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "power-trick": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "psych-up": {
+      "effect": "heal"
+    },
+    "psychic-terrain": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "psycho-shift": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 2
+        }
+      ]
+    },
+    "purify": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "quash": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "quick-guard": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "rage-powder": {
+      "effect": "clearNegative"
+    },
+    "rain-dance": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "recycle": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "reflect": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "reflect-type": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "refresh": {
+      "effect": "heal"
+    },
+    "rest": {
+      "effect": "clearNegative"
+    },
+    "roar": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "role-play": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "roost": {
+      "effect": "clearNegative"
+    },
+    "rototiller": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "safeguard": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "sandstorm": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "shed-tail": {
+      "effect": "clearNegative"
+    },
+    "shell-smash": {
+      "effect": "clearNegative"
+    },
+    "shift-gear": {
+      "effect": "clearNegative"
+    },
+    "shore-up": {
+      "effect": "clearNegative"
+    },
+    "simple-beam": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "sketch": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "skill-swap": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "snatch": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "soak": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "speed-swap": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "spider-web": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "spikes": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "spiky-shield": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "spite": {
+      "effect": "heal"
+    },
+    "splash": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 3
+        }
+      ]
+    },
+    "spotlight": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "stealth-rock": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "sticky-web": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "stockpile": {
+      "effect": "heal"
+    },
+    "strength-sap": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "substitute": {
+      "effect": "clearNegative"
+    },
+    "sunny-day": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "swagger": {
+      "effect": "clearNegative"
+    },
+    "swallow": {
+      "effect": "clearNegative"
+    },
+    "switcheroo": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "taunt": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "tearful-look": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "teeter-dance": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "telekinesis": {
+      "boosts": [
+        {
+          "stat": "spa",
+          "stages": 1
+        }
+      ]
+    },
+    "teleport": {
+      "effect": "heal"
+    },
+    "topsy-turvy": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        }
+      ]
+    },
+    "torment": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "toxic": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "toxic-spikes": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "toxic-thread": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "transform": {
+      "effect": "heal"
+    },
+    "trick": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 2
+        }
+      ]
+    },
+    "trick-room": {
+      "boosts": [
+        {
+          "stat": "acc",
+          "stages": 1
+        }
+      ]
+    },
+    "trick-or-treat": {
+      "boosts": [
+        {
+          "stat": "atk",
+          "stages": 1
+        },
+        {
+          "stat": "def",
+          "stages": 1
+        },
+        {
+          "stat": "spa",
+          "stages": 1
+        },
+        {
+          "stat": "spd",
+          "stages": 1
+        },
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "venom-drench": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "water-sport": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "whirlwind": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "wide-guard": {
+      "boosts": [
+        {
+          "stat": "def",
+          "stages": 1
+        }
+      ]
+    },
+    "wish": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "wonder-room": {
+      "boosts": [
+        {
+          "stat": "spd",
+          "stages": 1
+        }
+      ]
+    },
+    "worry-seed": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    },
+    "yawn": {
+      "boosts": [
+        {
+          "stat": "spe",
+          "stages": 1
+        }
+      ]
+    }
+  }
+}
