@@ -467,6 +467,8 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
     const itemId = node.kind === 'wild' ? wildItem : node.kind === 'trainer' ? trainerItem : null;
     if (!itemId) continue;
     const copy = structuredClone(run);
+    // A preview never stops the map: with no Pokémon able to battle there is nothing to show.
+    if (!copy.party.some((p) => p.hp > 0)) break;
     startEncounter(content, copy, node);
     const battle = copy.battle!;
     out[node.id] = { itemId, team: battle.enemyTeam.map((m) => ({ speciesId: m.speciesId, level: m.level })), trainerName: battle.trainer?.name ?? null };

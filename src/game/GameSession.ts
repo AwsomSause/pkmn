@@ -120,7 +120,15 @@ export class GameSession {
     return this.run;
   }
 
-  visitSide(sideId: string): string {
+  /** Uses a map item from the map's Items menu (Escape Rope, a bike, VS Seeker). */
+  useMapAction(kind: Run.MapActionKind): string {
+    const result = Run.useMapAction(this.content, this.requireRun(), kind);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+    visitSide(sideId: string): string {
     const result = Run.visitSide(this.content, this.requireRun(), sideId);
     this.run = result.run;
     this.persistRun();
