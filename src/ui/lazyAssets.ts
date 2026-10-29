@@ -20,8 +20,18 @@ export function isLoaded(scene: Phaser.Scene, entry: AssetEntry): boolean {
 export function queueAsset(scene: Phaser.Scene, entry: AssetEntry): void {
   switch (entry.kind) {
     case 'atlas': {
+      // The packs mix two atlas formats: TexturePacker's ("textures": [...]) and
+      // Aseprite's ("frames": [...]). Read the JSON first, then load the picture
+      // with the matching Phaser loader (the wrong one gives a texture with no frames).
       const dir = entry.atlasPath!.slice(0, entry.atlasPath!.lastIndexOf('/') + 1);
-      scene.load.multiatlas(entry.id, `assets/${entry.atlasPath}`, `assets/${dir}`);
+      const jsonKey = `${entry.id}#atlas-json`;
+      scene.load.once(`filecomplete-json-${jsonKey}`, (_key: string, _type: string, data: unknown) => {
+        scene.cache.json.remove(jsonKey);
+        // Phaser accepts the already-read JSON in place of its URL (its types only list strings).
+        if (data && typeof data === 'object' && 'textures' in data) scene.load.multiatlas(entry.id, data as unknown as string, `assets/${dir}`);
+        else scene.load.atlas(entry.id, `assets/${entry.path}`, data as object);
+      });
+      scene.load.json(jsonKey, `assets/${entry.atlasPath}`);
       break;
     }
     case 'image':

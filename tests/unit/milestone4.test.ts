@@ -168,7 +168,7 @@ describe('the Pokémon League', () => {
       expect(run.battle!.trainer!.leaderId).toBe(run.stage!.eliteFour[i]);
       run.party[0]!.hp = Math.floor(maxHp(content, run.party[0]!) / 2); // hurt before the win…
       run.party[0]!.moves[0]!.pp -= 1;
-      run = win(run);
+      run = win(run, true);
       expect(run.party[0]!.hp).toBe(maxHp(content, run.party[0]!)); // …healed after it
       expect(run.phase).toBe('reward');
       expect(run.draft).toHaveLength(content.balance.draftSize);

@@ -512,8 +512,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('accuracy'), percent: z.number().positive(), whenMovingLast: z.boolean().optional() }),
   /** Moves aimed at the holder are less accurate (Bright Powder). */
   z.object({ hook: z.literal('evasion'), percent: z.number().positive() }),
-  /** Always moves last in its priority bracket, but its moves can't miss (Lagging Tail). */
-  z.object({ hook: z.literal('moveLast') }),
+  /** Always moves last in its priority bracket; with `sureHit` its moves can't miss (Lagging Tail). */
+  z.object({ hook: z.literal('moveLast'), sureHit: z.boolean().optional() }),
   /** End of turn: heal (positive) or lose (negative) a share of max HP. `typed`: only that type heals, others take `otherwise`. */
   z.object({ hook: z.literal('endTurn'), fraction: z.number(), typed: TypeNameSchema.optional(), otherwise: z.number().optional() }),
   /** A chance to survive a knockout hit with 1 HP (Focus Band). */
@@ -576,6 +576,12 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('absorb'), type: TypeNameSchema, stat: BoostStatSchema, stages: z.number().int() }),
   /** The holder can always switch out, even when trapped (Shed Shell). */
   z.object({ hook: z.literal('shedShell') }),
+  /** While the holder leads the party, wild Pokémon are this many levels higher (negative: lower) (Cleanse Tag). */
+  z.object({ hook: z.literal('wildLevel'), amount: z.number().int() }),
+  /** The first move aimed at the holder each battle misses (Lax Incense). */
+  z.object({ hook: z.literal('dodgeFirst') }),
+  /** Wild Pokémon's status moves aimed at the holder miss this much more often, in percent (Pure Incense). */
+  z.object({ hook: z.literal('statusShield'), percent: z.number().positive().max(100) }),
   // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
   /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
   z.object({
@@ -614,6 +620,75 @@ export const BattleBoostSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion']) }),
 ]);
 export type BattleBoost = z.infer<typeof BattleBoostSchema>;
+
+/**
+ * What a map and encounter item changes (M8.75 item effects, slice 3a). Wild
+ * Pokémon changes apply to wild battles only; random choices use a generator
+ * of their own (see core/mapItems.ts), so they never change any other roll.
+ */
+export const EncounterModSchema = z.discriminatedUnion('mod', [
+  /** The wild battle is skipped: no battle and no reward, but the level counts (Repels). */
+  z.object({ mod: z.literal('repel') }),
+  /** Wild Pokémon are this many levels higher (negative: lower). */
+  z.object({ mod: z.literal('level'), amount: z.number().int() }),
+  /** Extra EXP from wild battles, in percent. */
+  z.object({ mod: z.literal('exp'), percent: z.number().positive() }),
+  /** A chance (percent, per copy for run-long items) that the wild Pokémon is one of these types; "themeFirst"/"themeSecond" are the stage's types. */
+  z.object({ mod: z.literal('types'), types: z.array(z.union([TypeNameSchema, z.enum(['themeFirst', 'themeSecond'])])).min(1), percent: z.number().positive().max(100) }),
+  /** Shiny chance multiplier. */
+  z.object({ mod: z.literal('shiny'), multiplier: z.number().positive() }),
+  /** Wild Pokémon may be of any type (the stage theme is ignored). */
+  z.object({ mod: z.literal('anyType') }),
+  /** The wild Pokémon is the strongest (highest base stats) of three drawn. */
+  z.object({ mod: z.literal('rare') }),
+  /** The wild Pokémon is from the first generation and the stage's types (or the item's pool), when there are any. */
+  z.object({ mod: z.literal('gen1') }),
+  /** A chance (percent per copy) that the wild Pokémon is this species. */
+  z.object({ mod: z.literal('species'), species: z.string(), percent: z.number().positive().max(100) }),
+  /** The wild Pokémon loses its first turn. */
+  z.object({ mod: z.literal('freeTurn') }),
+  /** The wild Pokémon starts with lowered Speed. */
+  z.object({ mod: z.literal('foeSpeed'), stages: z.number().int() }),
+  /** Ball throws: catch-rate multiplier, only at these types or at shiny Pokémon when given. */
+  z.object({ mod: z.literal('catch'), multiplier: z.number().positive(), types: z.array(TypeNameSchema).optional(), shiny: z.boolean().optional() }),
+]);
+export type EncounterMod = z.infer<typeof EncounterModSchema>;
+
+/**
+ * How long a map item lasts: some wild battles, ball throws, shop purchases,
+ * shop visits or trainer wins, the rest of this stage, the whole next stage, or the run.
+ */
+export const EncounterLastsSchema = z.discriminatedUnion('for', [
+  z.object({ for: z.literal('battles'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('throws'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('purchases'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('shops'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('trainers'), count: z.number().int().positive() }),
+  z.object({ for: z.literal('stage') }),
+  z.object({ for: z.literal('nextStage') }),
+  z.object({ for: z.literal('run') }),
+]);
+
+/** What a shop or money item changes (M8.75 item effects, slice 3b). */
+export const PerkSchema = z.discriminatedUnion('perk', [
+  /** Shop prices are this much lower (Coupons). */
+  z.object({ perk: z.literal('discount'), percent: z.number().positive().max(100) }),
+  /** Each shop purchase earns a point per copy; at `every` points the next purchase is free (Point Card). */
+  z.object({ perk: z.literal('points'), every: z.number().int().positive() }),
+  /** Shops also sell this many items early: the next ones you would unlock with badges (Member Card, Wepear Berry). */
+  z.object({ perk: z.literal('earlyStock'), count: z.number().int().positive() }),
+  /** Trainers (not wild Pokémon) pay this much more prize money. */
+  z.object({ perk: z.literal('trainerMoney'), percent: z.number().positive() }),
+  /** Wild battles on a stage of this type pay this much more per copy (Soot Sack). */
+  z.object({ perk: z.literal('wildMoney'), type: TypeNameSchema, amount: z.number().int().positive() }),
+  /** A Bag item from the shop after each trainer win: one of the cheapest third (Loot Sack). */
+  z.object({ perk: z.literal('trainerLoot') }),
+  /** Every `every` trainer wins: a Bag item from the dearest third of the shop (Blue Card). */
+  z.object({ perk: z.literal('trainerPoints'), every: z.number().int().positive() }),
+  /** Money per copy when the run reaches a new region (Pass Orb). */
+  z.object({ perk: z.literal('regionMoney'), amount: z.number().int().positive() }),
+]);
+export type Perk = z.infer<typeof PerkSchema>;
 
 export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   /** Attribute changes for the run; optionally heals or befriends the lead. */
@@ -664,6 +739,10 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('held'), hooks: z.array(HeldHookSchema).min(1) }),
   /** Battle effects carried into the chosen Pokémon's next battles (or every team member's); `cure` also cures that status now. */
   z.object({ kind: z.literal('battleBoost'), boosts: z.array(BattleBoostSchema).min(1), cure: StatusIdSchema.optional() }),
+  /** A map and encounter item (Repels, Flutes, Incense, Mail, Poké Doll, Apricorns...), plus attribute changes now. */
+  z.object({ kind: z.literal('encounter'), lasts: EncounterLastsSchema, mods: z.array(EncounterModSchema).min(1), changes: AttributeChangesSchema.optional() }),
+  /** A shop or money item (Coupons, Point Card, Loot Sack, Reply Mail...). */
+  z.object({ kind: z.literal('perk'), lasts: EncounterLastsSchema, perks: z.array(PerkSchema).min(1) }),
 ]);
 export type CatalogEffect = z.infer<typeof CatalogEffectSchema>;
 

@@ -60,7 +60,8 @@ export type HeldWhat =
   | 'herb'
   | 'boostEnd'
   | 'attribute'
-  | 'guard';
+  | 'guard'
+  | 'distracted';
 
 export interface HeldEvent {
   type: 'held';
@@ -169,10 +170,10 @@ export function critDamage(ctx: HeldContext, holder: Holder, base: number): numb
 }
 
 /** Multiplier on the holder's chance to hit; null means it can't miss (Lagging Tail, Micle Berry). */
-export function accuracyMultiplier(ctx: HeldContext, user: Holder, target: Holder, movedLast: boolean): number | null {
+export function accuracyMultiplier(ctx: HeldContext, user: Holder, target: Holder, movedLast: boolean, move?: Pick<Move, 'category'>): number | null {
   const state = stateOf(ctx.battle);
   const userHooks = hooksOf(ctx, user.mon, user.side);
-  if (hooks(userHooks, 'moveLast').length > 0) return null;
+  if (hooks(userHooks, 'moveLast').some((h) => h.hook.sureHit)) return null;
   if (state.sure.includes(user.mon.uid)) {
     state.sure = state.sure.filter((u) => u !== user.mon.uid);
     return null;
@@ -182,7 +183,18 @@ export function accuracyMultiplier(ctx: HeldContext, user: Holder, target: Holde
     if (hook.whenMovingLast && !movedLast) continue;
     m *= 1 + (hook.percent * copies) / 100;
   }
-  for (const { hook } of hooks(hooksOf(ctx, target.mon, target.side), 'evasion')) m *= 1 - hook.percent / 100;
+  const targetHooks = hooksOf(ctx, target.mon, target.side);
+  for (const { hook } of hooks(targetHooks, 'evasion')) m *= 1 - hook.percent / 100;
+  // Pure Incense: a wild Pokémon's status moves miss more often.
+  if (ctx.battle.kind === 'wild' && user.side === 'enemy' && move?.category === 'status') {
+    for (const { hook } of hooks(targetHooks, 'statusShield')) m *= 1 - hook.percent / 100;
+  }
+  // Lax Incense: the first move aimed at the holder each battle misses.
+  for (const { itemId } of hooks(targetHooks, 'dodgeFirst')) {
+    if (timesUsed(ctx, target.mon.uid, itemId) > 0) continue;
+    markUsed(ctx, target.mon.uid, itemId);
+    return 0;
+  }
   return m;
 }
 

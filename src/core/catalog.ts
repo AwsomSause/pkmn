@@ -15,6 +15,7 @@ import { addRunAttribute, attributeText, runAttributeEffects } from './attribute
 import type { AttributeKey, CatalogEffect, CatalogEntry, Content } from './contentSchema';
 import { changeFriendship } from './friendship';
 import { createPokemon, getSpecies, MAX_PP_UPS, maxHp, maxPp } from './pokemon';
+import { addMapItem, mapItemCopies } from './mapItems';
 import { discover } from './progress';
 import { runLevelCap } from './regions';
 import type { Rng } from './rng';
@@ -31,8 +32,9 @@ export function getCatalogEntry(content: Content, id: string): CatalogEntry {
   return entry;
 }
 
-/** Copies of a team or player item this run. */
+/** Copies of a team or player item this run (map items: charges left or stage effects waiting). */
 export function ownedCopies(run: RunState, entry: CatalogEntry): number {
+  if (entry.effect?.kind === 'encounter' || entry.effect?.kind === 'perk') return mapItemCopies(run, entry);
   return run.passives?.[entry.id] ?? 0;
 }
 
@@ -166,8 +168,9 @@ export function applyCatalog(
     messages.push(amount >= 0 ? `${name(mon)} likes you a little more.` : `${name(mon)} didn't like that…`);
   };
 
-  // Team and player items are counted on the run (one-time battle boosts aren't kept).
-  if (entry.stacksOn !== 'pokemon' && effect.kind !== 'battleBoost') run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
+  // Team and player items are counted on the run (one-time battle boosts and map items with charges aren't kept there).
+  const counted = effect.kind !== 'battleBoost' && ((effect.kind !== 'encounter' && effect.kind !== 'perk') || effect.lasts.for === 'run');
+  if (entry.stacksOn !== 'pokemon' && counted) run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
 
   switch (effect.kind) {
     case 'attributes': {
@@ -266,6 +269,13 @@ export function applyCatalog(
         mon.boosts = [...(mon.boosts ?? []), ...effect.boosts];
       }
       messages.push(`${entry.description}: it takes effect in the next battle.`);
+      break;
+    }
+    case 'encounter':
+    case 'perk': {
+      if (effect.kind === 'encounter') applyChanges(effect.changes);
+      addMapItem(content, run, entry);
+      messages.push(`${entry.name}: ${entry.description}.`);
       break;
     }
     case 'fossil': {

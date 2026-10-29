@@ -43,6 +43,29 @@ import { count, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
+import {
+  activeMods,
+  afterPurchase,
+  afterTrainerWin,
+  earlyStockCount,
+  mapItemRng,
+  type MapItemRun,
+  priceMultiplierFromItems,
+  prizeMoneyFromItems,
+  regionMoneyFromItems,
+  repelActive,
+  startStageEffects,
+  throwMultiplier,
+  useRepel,
+  useThrowCharges,
+  useUses,
+  useWildBattleCharges,
+  wildBattleSetup,
+  wildExpMultiplier,
+  wildLevelBonus,
+  wildShinyMultiplier,
+  wildSpeciesWithItems,
+} from './mapItems';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme } from './themes';
@@ -194,6 +217,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
+  startStageEffects(run);
   run.battle = null;
   run.phase = 'map';
 }
@@ -219,6 +243,7 @@ function enterLeague(content: Content, run: RunState): void {
     current: null,
     visited: [],
   };
+  startStageEffects(run);
   healParty(content, run);
   run.battle = null;
   run.phase = 'map';
@@ -233,6 +258,10 @@ function enterNextRegion(content: Content, run: RunState): void {
   }
   run.regionIndex += 1;
   run.log.charmUsedInRegion = false;
+  // Pass Orbs turn into money in each new region.
+  const orbMoney = regionMoneyFromItems(content, run);
+  run.money += orbMoney;
+  count(run, 'moneyEarned', orbMoney);
   enterStage(content, run, 0);
 }
 
@@ -252,6 +281,11 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   stage.visited.push(nodeId);
   const node = findNode(stage.map, nodeId);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
+  // A Repel keeps a wild Pokémon away: no battle and no reward, but the level counts.
+  if (node.kind === 'wild' && repelActive(content, run)) {
+    useRepel(content, run);
+    return run;
+  }
   startEncounter(content, run, node);
   return run;
 }
@@ -270,16 +304,24 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
   const activeUid = run.party[activeIndex]!.uid;
 
   if (node.kind === 'wild') {
+    // Map items (Flutes, Incense, Mail, Poké Radar...) change the wild Pokémon; their own rolls use a generator of their own.
+    const mods = activeMods(content, run);
     const plan = withStream(run.rng, 'encounter', (r) => {
       const [lo, hi] = content.balance.difficulty.harderBonus;
-      const bonus = node.harder ? r.int(lo, hi) : 0;
-      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
+      const bonus = (node.harder ? r.int(lo, hi) : 0) + wildLevelBonus(content, run, mods);
+      const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
     });
-    const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
+    const speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    const enemy = createPokemon(content, speciesId, plan.level, nextUid(run, 'e'));
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
+    const setup = wildBattleSetup(content, run, mods);
+    if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
+    if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
+    useWildBattleCharges(run);
   } else {
     const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) => {
       switch (node.kind) {
@@ -339,9 +381,19 @@ function healParty(content: Content, run: RunState): void {
   }
 }
 
-/** What the shop sells right now: more stock unlocks as the player earns badges. Key items you own aren't sold again. */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>>): Content['shop'] {
-  return content.shop.filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e) && !(run.inventory && ownsKeepsake(content, run.inventory, e.item)));
+/**
+ * What the shop sells right now: more stock unlocks as the player earns badges,
+ * and the Member Card and Wepear Berry put the next locked entries on sale early.
+ * Key items you own aren't sold again.
+ */
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>> & MapItemRun): Content['shop'] {
+  const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
+  const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
+  const early = content.shop
+    .filter((e) => !open(e) && !owned(e))
+    .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
+    .slice(0, earlyStockCount(content, run));
+  return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e));
 }
 
 /** Key items and Mega Stones last the whole run, so you only ever need one. */
@@ -357,7 +409,8 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
-  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price);
+  // Coupons lower the price; a full Point Card makes it free.
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
 }
 
 /** Buys one of an item at the shop. */
@@ -366,14 +419,15 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   const entry = content.shop.find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
+  if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const badges = shopBadgesNeeded(content, current, entry);
-  if (current.badges.length < badges) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
+  if (!shopStock(content, current).includes(entry)) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
   const price = shopPrice(content, current, entry);
   if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
-  if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const run = structuredClone(current);
   run.money -= price;
   count(run, 'moneySpent', price);
+  afterPurchase(content, run, priceMultiplierFromItems(content, current) === 0);
   if (item.effect.kind === 'attribute') {
     // Attribute items work as soon as they're bought.
     const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
@@ -383,10 +437,12 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   return { run, message: `You bought a ${item.name} for ₽${price}.` };
 }
 
-export function leaveShop(current: RunState): RunState {
+export function leaveShop(content: Content, current: RunState): RunState {
   assertPhase(current, 'shop');
   const run = structuredClone(current);
   run.phase = 'map';
+  // A Wepear Berry's extra item lasts one shop visit.
+  useUses(content, run, 'shops');
   return run;
 }
 
@@ -401,6 +457,8 @@ export type RunEvent =
 export interface BattleEndResult {
   outcome: 'win' | 'caught';
   moneyGained: number;
+  /** Bag items found after the battle (Loot Sack, Blue Card). */
+  itemsFound: string[];
   caughtSpeciesId: string | null;
   evolutions: (EvolutionResult & { uid: string })[];
   /** The gym leader's id when this win beat a gym leader. */
@@ -430,6 +488,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
   const hyperRng = new Rng(run.rng.hyper);
+  const targetUid = currentEnemy(battle).uid;
   const engineEvents = resolveTurn(
     {
       content,
@@ -438,7 +497,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       inventory: run.inventory,
       rng,
       captureRng,
-      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate,
+      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(battle)),
       healMultiplier: healingMultiplier(archetype) * attributes.healing,
       typeModifiers: typeModifiers(archetype),
       attributes,
@@ -451,6 +510,9 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   run.rng.hyper = hyperRng.state;
+  // Apricorns and the Fluffy Tail are used up by the throws they help.
+  const thrownAt = engineEvents.some((e) => e.type === 'ball') ? (battle.enemyTeam.find((m) => m.uid === targetUid) ?? null) : null;
+  if (thrownAt) useThrowCharges(content, run, thrownAt);
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
   countAttributeGrowth(content, run, engineEvents);
   applyHeldAttributes(content, run, engineEvents);
@@ -525,7 +587,8 @@ function countAttributeGrowth(content: Content, run: RunState, events: BattleEve
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
   const effects = runAttributeEffects(content, run);
-  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp;
+  // White Flute: more EXP from wild battles.
+  const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -592,7 +655,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   // Amulet Coin (all prize money) and Luck Incense (trainers only) add their percent per copy.
   const itemBonus = passivePercent(content, run, 'money') + (battle.kind === 'trainer' ? passivePercent(content, run, 'trainerMoney') : 0);
-  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + itemBonus / 100));
+  // Reply and Bead Mail (trainers), Soot Sack (wild battles on its type's stages).
+  const theme = run.stage ? (content.themes.get(run.stage.themeId) ?? null) : null;
+  const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
+  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -642,6 +708,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const charisma = passivePercent(content, run, 'stageCharisma');
     if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
   }
+  // Loot Sack and Blue Card: Bag items after trainer wins, from a generator of their own.
+  const itemsFound =
+    outcome === 'win' && battle.kind === 'trainer'
+      ? afterTrainerWin(content, run, shopStock(content, run).map((e) => ({ item: e.item, price: e.price })), new Rng(hashSeed(`${run.seed}::trainer-loot::${run.encountersCompleted}`)))
+      : [];
+  for (const id of itemsFound) addItem(run.inventory, id, 1);
   if (outcome === 'win') {
     count(run, 'battlesWon');
     const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
@@ -670,7 +742,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.log.battlesWon += 1;
   run.afterDecisions = 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
 }
 
 /**
