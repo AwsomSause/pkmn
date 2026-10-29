@@ -7067,16 +7067,25 @@
   "id": "escape-rope",
   "name": "Escape Rope",
   "family": "Map and encounter items",
-  "description": "Go back to the last fork and take the other path, once",
+  "description": "From the map: go back to the last fork and choose another path",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "escape-rope",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "escapeRope"
+    }
+   ]
+  }
  },
  {
   "id": "black-flute",
@@ -7542,16 +7551,25 @@
   "id": "town-map",
   "name": "Town Map",
   "family": "Map and encounter items",
-  "description": "Shows the whole stage map, including \"?\" stops",
+  "description": "The map shows the next trainers' teams",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "town-map",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "preview",
+     "what": "trainers"
+    }
+   ]
+  }
  },
  {
   "id": "silph-scope",
@@ -7572,16 +7590,25 @@
   "id": "devon-scope",
   "name": "Devon Scope",
   "family": "Map and encounter items",
-  "description": "Shows each wild node's Pokémon type and level on the map",
+  "description": "The map shows the wild Pokémon waiting at the next stops",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "devon-scope",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "preview",
+     "what": "wild"
+    }
+   ]
+  }
  },
  {
   "id": "poke-radar",
@@ -7611,16 +7638,24 @@
   "id": "itemfinder",
   "name": "Itemfinder",
   "family": "Map and encounter items",
-  "description": "One extra hidden item on each stage map",
+  "description": "One wild stop on each stage hides a Bag item (marked ✦): win there to find it",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "itemfinder",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "hiddenItem"
+    }
+   ]
+  }
  },
  {
   "id": "dowsing-mchn",
@@ -7641,61 +7676,96 @@
   "id": "bicycle",
   "name": "Bicycle",
   "family": "Map and encounter items",
-  "description": "Once per stage, skip one map column",
+  "description": "Once per stage, from the map: ride two columns ahead, skipping one",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "bicycle",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "bicycle"
+    }
+   ]
+  }
  },
  {
   "id": "mach-bike",
   "name": "Mach Bike",
   "family": "Map and encounter items",
-  "description": "Once per stage, skip a wild battle node with its reward",
+  "description": "Once per stage, from the map: ride past a wild Pokémon and still get its reward",
   "rarity": "epic",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "mach-bike",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "machBike"
+    }
+   ]
+  }
  },
  {
   "id": "acro-bike",
   "name": "Acro Bike",
   "family": "Map and encounter items",
-  "description": "At forks, see two columns further ahead",
+  "description": "Once per stage, from the map: jump to any stop in the next column, even without a path",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "acro-bike",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "acroBike"
+    }
+   ]
+  }
  },
  {
   "id": "bike-voucher",
   "name": "Bike Voucher",
   "family": "Map and encounter items",
-  "description": "Trade at the next shop for a free Bicycle",
+  "description": "Trade at the next shop for a Bicycle (₽1500 if you already have one)",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "use",
   "icon": "bike-voucher",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "voucher",
+     "item": "bicycle",
+     "refund": 1500
+    }
+   ]
+  }
  },
  {
   "id": "go-goggles",
@@ -7716,16 +7786,25 @@
   "id": "vs-seeker",
   "name": "VS Seeker",
   "family": "Map and encounter items",
-  "description": "Rematch a beaten trainer on this stage for double money",
+  "description": "From the map: fight a trainer from this stage again for double money",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "vs-seeker",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "rematch"
+    }
+   ]
+  }
  },
  {
   "id": "explorer-kit",
@@ -7949,31 +8028,48 @@
   "id": "rule-book",
   "name": "Rule Book",
   "family": "Shop and money items",
-  "description": "Shows the gym leader's ace before the gym battle",
+  "description": "The map shows the gym leader's ace",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "rule-book",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "preview",
+     "what": "gymAce"
+    }
+   ]
+  }
  },
  {
   "id": "fame-checker",
   "name": "Fame Checker",
   "family": "Shop and money items",
-  "description": "Shows every gym leader's types for the whole region at the start",
+  "description": "The map shows the gym leaders of this region's next stages and their types",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "fame-checker",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "nextLeaders"
+    }
+   ]
+  }
  },
  {
   "id": "apricorn-box",
@@ -9795,23 +9891,32 @@
   "icon": "rsvp-mail",
   "status": "pending",
   "needs": [
-   "map"
+   "events"
   ]
  },
  {
   "id": "orange-mail",
   "name": "Orange Mail",
   "family": "Mail",
-  "description": "Next stage: the gym leader's team is shown before the battle",
+  "description": "Next stage: the map shows the gym leader's whole team",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "orange-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "preview",
+     "what": "gymTeam"
+    }
+   ]
+  }
  },
  {
   "id": "bridgemail-d",

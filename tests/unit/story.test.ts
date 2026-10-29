@@ -58,12 +58,12 @@ describe('story foundation: random streams', () => {
   // holding items), which change play on purpose; STORY7 now loses its first
   // battles whatever its Love is.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '5d6cccf737651c8b',
-    'STORY1/100': '2c10a2f5f2b5e5da',
+    'STORY1/0': 'a38a50096a2b6b2a',
+    'STORY1/100': 'fca57fdc48254bea',
     'STORY2/0': '289336f1e73c4f84',
     'STORY2/100': '65d8fc32c8e70661',
-    'STORY3/0': '39a773d9071b10af',
-    'STORY3/100': '855c5699c777326a',
+    'STORY3/0': 'c5682a956908f183',
+    'STORY3/100': 'a9e524f03d7a96e9',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY4/100': 'bb97106881cccfbd',
     'STORY5/0': '6a94ccb4c56bb170',
