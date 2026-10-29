@@ -442,6 +442,8 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
    * lets that species Mega Evolve. Primal orbs work automatically and need no Mega Ring.
    */
   z.object({ kind: z.literal('megaStone'), forms: z.record(z.string(), z.string()), primal: z.boolean().default(false) }),
+  /** A Tera Shard: sets a Pokémon's Tera Type (used up). */
+  z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 

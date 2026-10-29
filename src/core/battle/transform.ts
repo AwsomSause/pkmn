@@ -1,6 +1,6 @@
-// Battle transformations (Milestone 8.5, GAME_DESIGN.md §5f). This slice has
-// Mega Evolution and Primal Reversion; Terastallization, Z-Moves and Dynamax
-// follow as their own slices.
+// Battle transformations (Milestone 8.5, GAME_DESIGN.md §5f): Mega Evolution,
+// Primal Reversion and Terastallization so far; Z-Moves and Dynamax follow as
+// their own slices.
 //
 // Rules:
 // - Each mechanic needs its key item in the Bag (Mega Ring) and works once
@@ -13,6 +13,11 @@
 // - The transformed Pokémon's speciesId is its new form until the battle ends;
 //   `battle.transform.forms` remembers the old one and revertTransformations
 //   changes it back. HP stays the same (capped at the new maximum).
+// - Terastallization needs the Tera Orb. The Pokémon's types become its Tera
+//   Type (teraTypeOf) until the battle ends. It keeps STAB on its original
+//   types; moves of its Tera Type get STAB too (2× when the Tera Type is one
+//   of its original types), and those with less than 60 power are raised to
+//   60 (not multi-hit or priority moves).
 // - Bosses (balance.transformations) may transform their ace, the last
 //   Pokémon of their team, and need no items.
 // - A run can switch mechanics off (run.disabledMechanics, a challenge); that
@@ -20,15 +25,16 @@
 // The engine only emits 'transform' events; the battle screen turns them into
 // presentation (text, sprite swap; cinematics come in M9.5).
 
-import type { Content, TransformKind } from '../contentSchema';
+import type { Content, Move, TransformKind, TypeName } from '../contentSchema';
+import { teraTypeOf } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
-export type FormChangeKind = 'mega' | 'primal';
+export type FormChangeKind = 'mega' | 'primal' | 'tera';
 
 /** The player's request, sent with a move. */
-export type TransformRequest = { kind: 'mega'; formId?: string };
+export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' };
 
 export interface TransformEvent {
   type: 'transform';
@@ -37,8 +43,10 @@ export interface TransformEvent {
   kind: FormChangeKind;
   from: string;
   to: string;
-  /** The item that made it happen (Mega Stone or orb); null for bosses. */
+  /** The item that made it happen (Mega Stone or orb); null for bosses and Tera. */
   itemId: string | null;
+  /** Terastallization: the type it became. */
+  teraType?: TypeName;
 }
 
 export interface TransformContext {
@@ -92,7 +100,22 @@ export function megaOptions(ctx: TransformContext): FormOption[] {
 export function transformProblem(ctx: TransformContext, request: TransformRequest): string | null {
   const mon = ctx.party[ctx.battle.activeIndex];
   if (!mon) return 'No active Pokémon.';
-  return megaProblem(ctx, mon, request.formId);
+  return request.kind === 'mega' ? megaProblem(ctx, mon, request.formId) : teraProblem(ctx, mon);
+}
+
+/** The Tera Type the player's active Pokémon can Terastallize into right now, or null. */
+export function teraOption(ctx: TransformContext): TypeName | null {
+  const mon = ctx.party[ctx.battle.activeIndex];
+  return mon && !teraProblem(ctx, mon) ? teraTypeOf(ctx.content, mon) : null;
+}
+
+function teraProblem(ctx: TransformContext, mon: PokemonInstance): string | null {
+  const { content, battle, inventory } = ctx;
+  if (ctx.disabledMechanics?.includes('tera')) return 'Terastallization is switched off for this run.';
+  if (!hasKeyItem(content, inventory, 'tera')) return 'You need a Tera Orb to Terastallize.';
+  if (battle.transform.used.player.includes('tera')) return 'You have already Terastallized this battle.';
+  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
+  return null;
 }
 
 function megaProblem(ctx: TransformContext, mon: PokemonInstance, formId: string | undefined): string | null {
@@ -138,14 +161,56 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
     battle.transform.used.player.push('mega');
   }
 
-  // 3. The opponent's: a boss Mega Evolves its ace as soon as it can.
-  if (enemy.hp > 0 && enemyMay(enemy) && !battle.transform.used.enemy.includes('mega') && !battle.transform.forms[enemy.uid]) {
-    const option = stoneForms(content, enemy.speciesId, false)[0];
+  // ... or Terastallization.
+  if (request?.kind === 'tera' && player.hp > 0 && !teraProblem(ctx, player)) {
+    terastallize(ctx, 'player', player, teraTypeOf(content, player), events);
+  }
+
+  // 3. The opponent's: a boss's ace Mega Evolves if it can, otherwise Terastallizes, as soon as it is out.
+  const may = (kind: TransformKind) =>
+    !ctx.disabledMechanics?.includes(kind) && battle.transform.enemyMechanics.includes(kind) && !battle.transform.used.enemy.includes(kind);
+  const isAce = battle.enemyTeam.indexOf(enemy) === battle.enemyTeam.length - 1;
+  if (enemy.hp > 0 && isAce && !battle.transform.forms[enemy.uid]) {
+    const option = may('mega') ? stoneForms(content, enemy.speciesId, false)[0] : undefined;
     if (option) {
       changeForm(ctx, 'enemy', enemy, 'mega', { ...option, itemId: null }, events);
       battle.transform.used.enemy.push('mega');
+    } else if (may('tera')) {
+      // A type specialist Terastallizes into their speciality.
+      const specialty = battle.trainer?.leaderId ? content.bosses.get(battle.trainer.leaderId)?.types[0] : undefined;
+      terastallize(ctx, 'enemy', enemy, specialty ?? teraTypeOf(content, enemy), events);
     }
   }
+}
+
+function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, type: TypeName, events: TransformEvent[]): void {
+  const { battle } = ctx;
+  battle.transform.forms[mon.uid] = { kind: 'tera', from: mon.speciesId };
+  battle.transform.teraTypes[mon.uid] = type;
+  battle.transform.used[side].push('tera');
+  events.push({ type: 'transform', side, uid: mon.uid, kind: 'tera', from: mon.speciesId, to: mon.speciesId, itemId: null, teraType: type });
+}
+
+/** A Pokémon's types in this battle: its Tera Type once Terastallized, otherwise its species' types. */
+export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
+  const tera = battle.transform.teraTypes[mon.uid];
+  return tera ? [tera] : getSpecies(content, mon.speciesId).types;
+}
+
+/** The STAB multiplier for a move of this type (1 = none), counting Terastallization. */
+export function stabMultiplier(content: Content, battle: BattleState, mon: PokemonInstance, moveType: TypeName): number {
+  const base = content.ruleset.stabMultiplier;
+  const own = getSpecies(content, mon.speciesId).types.includes(moveType);
+  const tera = battle.transform.teraTypes[mon.uid];
+  if (tera === moveType) return own ? 2 : base;
+  return own ? base : 1;
+}
+
+/** A Terastallized Pokémon's weak moves of its Tera Type hit with at least 60 power. */
+export function teraPower(battle: BattleState, mon: PokemonInstance, move: Move, power: number): number {
+  const tera = battle.transform.teraTypes[mon.uid];
+  if (!tera || move.type !== tera || power >= 60 || move.effects.hits || move.priority > 0) return power;
+  return 60;
 }
 
 function changeForm(ctx: TransformContext, side: Side, mon: PokemonInstance, kind: FormChangeKind, option: FormOption, events: TransformEvent[]): void {
@@ -169,6 +234,7 @@ export function revertTransformations(content: Content, battle: BattleState, par
     mon.hp = Math.min(mon.hp, calcStats(content, mon).hp);
   }
   battle.transform.forms = {};
+  battle.transform.teraTypes = {};
 }
 
 /** The mechanics a trainer battle's opponent may use (bosses only; see balance.transformations). */
@@ -176,5 +242,5 @@ export function bossMechanics(content: Content, role: 'gym' | 'elite' | 'champio
   const rules = content.balance.transformations;
   const allowed = role === 'gym' ? gymNumber >= rules.bossGymFrom : role !== null && rules.league;
   if (!allowed) return [];
-  return (['mega'] as TransformKind[]).filter((m) => !disabled.includes(m));
+  return (['mega', 'tera'] as TransformKind[]).filter((m) => !disabled.includes(m));
 }

@@ -54,6 +54,8 @@ export interface DamageInput {
   attackStage: number;
   defenseStage: number;
   stab: boolean;
+  /** The STAB multiplier when `stab` is set (default ruleset.stabMultiplier; 2 for a Terastallized Pokémon's own type). */
+  stabMultiplier?: number;
   effectiveness: number;
   crit: boolean;
   /** Damage roll from ruleset.randomFactorMin to 100 (inclusive). */
@@ -92,7 +94,7 @@ export function calcDamage(ruleset: Ruleset, input: DamageInput): number {
   if (input.weather !== undefined && input.weather !== 1) damage = pokeRound(damage, input.weather);
   if (input.crit) damage = Math.floor(damage * ruleset.critMultiplier);
   damage = Math.floor((damage * input.randomFactor) / 100);
-  if (input.stab) damage = pokeRound(damage, ruleset.stabMultiplier);
+  if (input.stab) damage = pokeRound(damage, input.stabMultiplier ?? ruleset.stabMultiplier);
   damage = Math.floor(damage * input.effectiveness);
   if (input.burned && input.physical) damage = pokeRound(damage, ruleset.burnAttackMultiplier);
   return Math.max(1, damage);

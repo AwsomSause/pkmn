@@ -223,7 +223,7 @@ Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
 - [x] Mega Evolution: Mega Ring key item (draft + shop), 145 Mega Stones (`npm run data:megas`), once per battle, one transformation per Pokémon, changes back after battle, boss aces from gym 5 and in the league, challenge switch, battle menu option with a flash and the new sprite
 - [x] Primal Reversion with the Red and Blue Orbs
 - [x] Tests: unit (rules, data, save/load mid-battle, rewards and shop) and a browser test
-- [ ] Terastallization
+- [x] Terastallization: Tera Orb (draft + shop), Tera Type per Pokémon, 18 Tera Shards, STAB and 60-power rules, boss aces, battle menu option, badge and tint, unit and browser tests
 - [ ] Z-Moves
 - [ ] Dynamax / Gigantamax
 - [ ] Regional forms as a mechanic (if still wanted)
