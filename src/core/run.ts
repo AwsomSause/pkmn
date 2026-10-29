@@ -404,10 +404,10 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
   return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e));
 }
 
-/** Key items and Mega Stones last the whole run, so you only ever need one. */
+/** Key items, Mega Stones and Z-Crystals last the whole run, so you only ever need one. */
 function ownsKeepsake(content: Content, inventory: Record<string, number>, itemId: string): boolean {
   const kind = content.items.get(itemId)?.effect.kind;
-  return (kind === 'keyItem' || kind === 'megaStone') && itemCount(inventory, itemId) > 0;
+  return (kind === 'keyItem' || kind === 'megaStone' || kind === 'zCrystal') && itemCount(inventory, itemId) > 0;
 }
 
 /** Badges needed before the shop sells an entry, after the trainer's shopUnlockOffset. */

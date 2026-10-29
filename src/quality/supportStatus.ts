@@ -114,7 +114,10 @@ export function moveStatus(content: Content, m: Move): EntryStatus {
   if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage && !m.effects.ohko && !m.effects.lowHpPower) notes.push({ status: 'invalid', note: 'damaging move with no power' });
   // The schema only allows effects the engine runs, so a status move with any effect does something.
   if (m.supported && m.category === 'status' && Object.keys(m.effects).length === 0) notes.push({ status: 'invalid', note: 'status move with no effect the engine runs' });
-  if (!m.supported) notes.push({ status: 'disabled', note: m.needs ? `needs: ${m.needs}` : 'not supported by the battle engine yet' });
+  // The type Z-Moves are made in battle from a move and its Z-Crystal (M8.5, battle/transform.ts zMoveFor).
+  const zMade = Object.values(content.zMoves.byType).includes(m.id);
+  if (zMade) notes.push({ status: 'limited', note: 'Z-Move: made in battle from a move of its type with the Z-Crystal (M8.5); never learned' });
+  else if (!m.supported) notes.push({ status: 'disabled', note: m.needs ? `needs: ${m.needs}` : 'not supported by the battle engine yet' });
   for (const note of KNOWN.moves[m.id] ?? []) notes.push({ status: 'limited', note });
   return { kind: 'move', id: m.id, ...worst(notes) };
 }

@@ -54,6 +54,8 @@ export interface DamageInput {
   attackStage: number;
   defenseStage: number;
   stab: boolean;
+  /** The STAB multiplier when `stab` is set (default ruleset.stabMultiplier; 2 for a Terastallized Pokémon's own type or Adaptability). */
+  stabMultiplier?: number;
   effectiveness: number;
   crit: boolean;
   /** Damage roll from ruleset.randomFactorMin to 100 (inclusive). */
@@ -62,8 +64,6 @@ export interface DamageInput {
   physical: boolean;
   /** Rain or sun: 1.5 or 0.5 for Water and Fire moves (default 1). */
   weather?: number;
-  /** Replaces the ruleset's STAB multiplier (Adaptability: 2). */
-  stabMultiplier?: number;
   /** Replaces the ruleset's critical-hit multiplier (Sniper: 2.25). */
   critMultiplier?: number;
   /** Abilities' final multiplier (Filter 0.75, Multiscale 0.5, Tinted Lens 2), rounded half down. */

@@ -2,7 +2,7 @@
 
 Made by `npm run report:content -- --write`. Read-only: nothing in the game data was changed. Statuses and checks are explained in QUALITY_GATES.md.
 
-Totals: species 1027, forms 591, moves 934, items 210, evolutions 675, meetableSpecies 1247, bosses 229, bossTeams 8244.
+Totals: species 1027, forms 591, moves 934, items 248, evolutions 675, meetableSpecies 1247, bosses 229, bossTeams 8244.
 
 ## Support status
 
@@ -10,9 +10,9 @@ Totals: species 1027, forms 591, moves 934, items 210, evolutions 675, meetableS
 |---|---|---|---|---|
 | species | 1011 | 11 | 5 | 0 |
 | form | 105 | 422 | 64 | 0 |
-| move | 428 | 8 | 498 | 0 |
+| move | 428 | 26 | 480 | 0 |
 | ability | 157 | 49 | 107 | 0 |
-| item | 208 | 2 | 0 | 0 |
+| item | 246 | 2 | 0 | 0 |
 | evolution | 611 | 64 | 0 | 0 |
 
 ## Checks

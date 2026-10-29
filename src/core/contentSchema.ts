@@ -137,8 +137,11 @@ export const MoveSchema = z.object({
   priority: z.number().int().min(-7).max(5).default(0),
   critStage: z.number().int().min(0).max(3).default(0),
   target: z.enum(['enemy', 'self']),
-  /** contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them). */
-  flags: z.array(z.enum(['powder', 'typeless', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
+  /**
+   * contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them).
+   * `zmove`: a Z-Move made in battle (battle/transform.ts); it hits through Protect for a quarter of its damage.
+   */
+  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no
@@ -453,6 +456,10 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
    * lets that species Mega Evolve. Primal orbs work automatically and need no Mega Ring.
    */
   z.object({ kind: z.literal('megaStone'), forms: z.record(z.string(), z.string()), primal: z.boolean().default(false) }),
+  /** A Tera Shard: sets a Pokémon's Tera Type (used up). */
+  z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
+  /** A Z-Crystal: with the Z-Ring, turns one move of its type into that type's Z-Move once per battle. */
+  z.object({ kind: z.literal('zCrystal'), type: TypeNameSchema }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -1182,6 +1189,24 @@ export const BalanceSchema = z.object({
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
+/** zMoves.json (npm run data:zmoves, from Pokémon Showdown's move data). */
+export const ZMoveDataSchema = z.object({
+  /** The Z-Move each type's crystal makes. */
+  byType: z.partialRecord(TypeNameSchema, z.string()),
+  /** Z-Move power for each damaging move. */
+  power: z.record(z.string(), z.number().int().positive()),
+  /** What a status move adds when used as a Z-Move (it still works as itself). */
+  status: z.record(
+    z.string(),
+    z.object({
+      boosts: z.array(z.object({ stat: BoostStatSchema, stages: z.number().int() })).optional(),
+      /** `clearNegative`: the user's lowered stats go back to normal; `heal`: the user's HP is restored in full. */
+      effect: z.enum(['clearNegative', 'heal']).optional(),
+    }),
+  ),
+});
+export type ZMoveData = z.infer<typeof ZMoveDataSchema>;
+
 export interface Content {
   species: Map<string, Species>;
   moves: Map<string, Move>;
@@ -1211,4 +1236,5 @@ export interface Content {
   balance: Balance;
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
+  zMoves: ZMoveData;
 }
