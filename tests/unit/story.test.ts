@@ -31,7 +31,7 @@ function freshRun(seed = 'story-seed'): RunState {
   return chooseStarter(content, createRun(content, { runId: `run-${seed}`, seed, archetypeId: 'red', attributes: LOVE }), 0);
 }
 
-/** A battle where the enemy always knocks out the player's Pokémon in one hit, so Love's endure is rolled every turn. */
+/** A battle where the enemy always knocks out the player's Pokémon in one hit. */
 function doomedBattle(seed: string): RunState {
   let run = toBattle(freshRun(seed));
   const enemy = createPokemon(content, 'machamp', 80, 'e900');
@@ -51,7 +51,7 @@ describe('story foundation: random streams', () => {
     }
   });
 
-  // Fingerprints of what the rules decided for these seeds, recorded on main (after M8.75 C2 and M8.5 Mega)
+  // Fingerprints of what the rules decided for these seeds, recorded on main
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2, 3a and 3b (held, map, shop and money items in drafts, bosses
@@ -59,26 +59,22 @@ describe('story foundation: random streams', () => {
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': '93ae64049d3a117d',
-    'STORY1/100': '5b2fd2ae15a47753',
     'STORY2/0': '289336f1e73c4f84',
-    'STORY2/100': '65d8fc32c8e70661',
-    'STORY3/0': '0d00db719acefc6d',
-    'STORY3/100': '99b2dd05fd49fd6a',
     'STORY4/0': '96f2cac3866fccfe',
-    'STORY4/100': 'bb97106881cccfbd',
     'STORY5/0': '6a94ccb4c56bb170',
-    'STORY5/100': '6cf2303e9bc7b416',
     'STORY6/0': '6efa1ccc1d950f44',
-    'STORY6/100': '55bcf94445692147',
     'STORY7/0': 'ca30e9f7e65c56eb',
-    'STORY7/100': '40b80d2acf5c401b',
     'STORY8/0': '9c19185effaefb06',
-    'STORY8/100': '96f296d09a87b1f1',
   };
-  it('old seeds play exactly as they did before the story layer (with and without Love)', () => {
+  // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
+  // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.
+  // Love 0 only, and not STORY3: on main, Love's old endure was rolled on the battle stream once Love grew
+  // above 0 (STORY3 reaches Love 3), and that roll is gone now that Toughened It Out rolls on the hyper stream.
+  const noHyper = buildContent({ ...structuredClone(RAW_CONTENT), story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] } });
+  it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {
       const [seed, love] = key.split('/');
-      const run = autoplay({ seed: seed!, steps: 600, healOnMap: true, attributes: { love: Number(love) } });
+      const run = autoplay({ content: noHyper, seed: seed!, steps: 600, healOnMap: true, attributes: { love: Number(love) } });
       expect(createHash('sha1').update(gameplayFingerprint(run)).digest('hex').slice(0, 16), key).toBe(expected);
     }
   });
@@ -208,6 +204,7 @@ describe('story foundation: effects are never applied twice', () => {
 describe('story foundation: the event queue', () => {
   const trigger = (defId: string, priority: StoryTrigger['priority'], combat: boolean, at: number, order: number, major = true): StoryTrigger => ({
     defId,
+    uid: 'p1',
     title: defId,
     message: `${defId}!`,
     priority,
@@ -236,62 +233,23 @@ describe('story foundation: the event queue', () => {
   });
 });
 
-describe("story foundation: Love's endure is its first user", () => {
-  it('hangs on once per battle through the story ledger, with a story moment and a banner', () => {
-    let found = 0;
-    for (let i = 0; i < 60 && found < 3; i++) {
-      const run = doomedBattle(`love-${i}`);
-      const result = takeTurn(content, run, { kind: 'move', index: 0 });
-      const at = result.events.findIndex((e) => e.type === 'endure');
-      if (at < 0) continue;
-      found++;
-      const uid = run.party[0]!.uid;
-      expect(result.run.party[0]!.hp).toBe(1);
-      expect(result.run.battle!.storyEffects).toEqual([`love-hung-on@${uid}`]);
-      const cue = result.cues.find((c) => c.at === at)!;
-      expect(cue.title).toBe('Hung on for you!');
-      expect(cue.major).toBe(true);
-      const story = result.run.story;
-      expect(story.events.some((e) => e.type === 'survivedFatal' && e.data.cause === 'love')).toBe(true);
-      expect(story.events.some((e) => e.type === 'storyMoment' && e.data.def === 'love-hung-on')).toBe(true);
-      expect(story.histories[uid]!.survivedFatal).toBe(1);
-      expect(story.histories[uid]!.memories.some((m) => m.text.startsWith('Hung on at 1 HP out of love'))).toBe(true);
-      // Never twice in the same battle: the next fatal hit knocks it out.
-      const next = takeTurn(content, result.run, { kind: 'move', index: 0 });
-      expect(next.events.some((e) => e.type === 'endure')).toBe(false);
-    }
-    expect(found).toBe(3);
-  });
-
-  it('the engine checks the definition: without it there is no endure', () => {
+describe('story foundation: Hyper definitions', () => {
+  it('without the definitions the engine has no Hyper moments', () => {
     const raw = structuredClone(RAW_CONTENT) as typeof RAW_CONTENT & { story: { definitions: unknown[] } };
     raw.story.definitions = [];
     const noStory = buildContent(raw);
-    let endured = 0;
-    for (let i = 0; i < 100; i++) {
-      const player = createPokemon(noStory, 'pidgey', 5, 'p1');
-      const enemy = createPokemon(noStory, 'machamp', 80, 'e1');
-      enemy.moves = [{ id: 'cross-chop', pp: 5 }];
-      const run = freshRun('x');
-      const ctx: BattleContext = {
-        content: noStory,
-        battle: createBattle('wild', [enemy], 0, player.uid),
-        party: [player],
-        inventory: {},
-        rng: new Rng(hashSeed(`nodef-${i}`)),
-        captureRng: new Rng(hashSeed(`nodef-c-${i}`)),
-        catchMultiplier: 1,
-        attributes: runAttributeEffects(content, run),
-      };
-      if (resolveTurn(ctx, { kind: 'move', index: 0 }).some((e) => e.type === 'endure')) endured++;
+    for (let i = 0; i < 40; i++) {
+      const before = doomedBattle(`nodef-${i}`);
+      const result = takeTurn(noStory, before, { kind: 'move', index: 0 });
+      expect(result.events.some((e) => e.type === 'hyper')).toBe(false);
+      expect(result.run.rng.hyper).toEqual(before.rng.hyper);
     }
-    expect(endured).toBe(0);
   });
 
-  it('rejects a Love endure definition that adds its own chance', () => {
-    const raw = structuredClone(RAW_CONTENT) as typeof RAW_CONTENT & { story: { definitions: { chance: number | null }[] } };
-    raw.story.definitions[0]!.chance = 0.5;
-    expect(() => buildContent(raw)).toThrow(/loveEndure/);
+  it('rejects a definition whose effect the engine does not know for its trigger', () => {
+    const raw = structuredClone(RAW_CONTENT) as typeof RAW_CONTENT & { story: { definitions: { effect: unknown }[] } };
+    raw.story.definitions[0]!.effect = { kind: 'money', amount: 5 };
+    expect(() => buildContent(raw)).toThrow(/toughenedItOut event needs a "endure" effect/);
   });
 });
 
@@ -331,7 +289,8 @@ describe('story foundation: saves', () => {
     expect(loaded.data.rng.story).toEqual(hashSeed('upgrade::story'));
     expect(loaded.data.rng.hyper).toEqual(hashSeed('upgrade::hyper'));
     expect(loaded.data.rng.battle).toEqual(run.rng.battle);
-    expect(loaded.data.battle!.storyEffects).toEqual(['love-hung-on@p1']);
+    // v8 → v9 → v10: Love's endure is now "Toughened It Out".
+    expect(loaded.data.battle!.storyEffects).toEqual(['toughened-it-out@p1']);
     // Continuing gives the party its histories.
     storage.set('pkr.profile', JSON.stringify({ format: 'pkmn-roguelike', record: 'profile', schemaVersion: CURRENT_VERSIONS.profile, savedAt: '', data: new GameSession(content, new MemoryStorageProvider()).profile }));
     run = new GameSession(content, storage).continueRun();

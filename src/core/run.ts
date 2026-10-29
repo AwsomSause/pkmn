@@ -80,6 +80,7 @@ import {
   recordRouteChosen,
   recordRunStarted,
 } from './story/hooks';
+import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
 
@@ -488,7 +489,7 @@ export interface TurnResult {
 }
 
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
-function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rng): BattleContext {
+function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rng, hyperRng?: Rng): BattleContext {
   const archetype = getArchetype(content, run.archetypeId);
   const attributes = runAttributeEffects(content, run);
   return {
@@ -503,6 +504,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     typeModifiers: typeModifiers(archetype),
     attributes,
     disabledMechanics: run.disabledMechanics,
+    hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
     teamItems: run.passives,
   };
 }
@@ -528,10 +530,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const battle = run.battle!;
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
+  const hyperRng = new Rng(run.rng.hyper);
   const targetUid = currentEnemy(battle).uid;
-  const engineEvents = resolveTurn(battleContext(content, run, rng, captureRng), action);
+  const engineEvents = resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), action);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
+  run.rng.hyper = hyperRng.state;
   // Apricorns and the Fluffy Tail are used up by the throws they help.
   const thrownAt = engineEvents.some((e) => e.type === 'ball') ? (battle.enemyTeam.find((m) => m.uid === targetUid) ?? null) : null;
   if (thrownAt) useThrowCharges(content, run, thrownAt);

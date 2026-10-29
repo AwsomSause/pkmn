@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { getArchetype } from '../../src/core/archetypes';
 import {
   attributeEffects,
+  attributeEffectText,
   effectiveAttributes,
   luckWeights,
   permanentAttributes,
@@ -20,6 +21,7 @@ import { applyReward } from '../../src/core/rewards';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { buyItem, chooseStarter, createRun, shopPrice, takeTurn } from '../../src/core/run';
 import type { Profile, RunState } from '../../src/core/state';
+import { hyperChance } from '../../src/core/story/hyper';
 import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { content } from './helpers';
@@ -95,7 +97,6 @@ describe('effects: each point is worth the full percentage', () => {
     expect(fx({ charisma: 30 }).price).toBeCloseTo(0.85); // half a percent per point (balance pass, 2026-10-25)
     expect(fx({ charisma: 100 }).price).toBeCloseTo(0.5);
     expect(fx({ charisma: 30 }).exp).toBeCloseTo(1.3);
-    expect(fx({ love: 100 }).endureChance).toBeCloseTo(0.1);
   });
 
   it('meters: one end or the other, never both', () => {
@@ -117,7 +118,6 @@ describe('effects: each point is worth the full percentage', () => {
     for (const key of ['physicalDamage', 'specialDamage', 'speed', 'price', 'exp', 'damageDealt', 'damageTaken', 'healing', 'catchRate', 'money', 'uncommonWeight', 'rareWeight', 'shinyChance'] as const) {
       expect(none[key]).toBe(1);
     }
-    expect(none.endureChance).toBe(0);
   });
 });
 
@@ -200,32 +200,13 @@ describe('effects in the game', () => {
     expect(run.log.counters['defeatedOrCaught.flying']).toBe(1);
   });
 
-  it('Love lets a Pokémon hang on at 1 HP once per battle', () => {
-    let endured = 0;
-    for (let i = 0; i < 200; i++) {
-      const player = createPokemon(content, 'pidgey', 5, 'p1');
-      player.moves = [{ id: 'tackle', pp: 35 }];
-      const enemy = createPokemon(content, 'machamp', 80, 'e1');
-      enemy.moves = [{ id: 'cross-chop', pp: 5 }];
-      const ctx: BattleContext = {
-        content,
-        battle: createBattle('wild', [enemy], 0, player.uid),
-        party: [player],
-        inventory: {},
-        rng: new Rng(hashSeed(`love-${i}`)),
-        captureRng: new Rng(hashSeed(`love-c-${i}`)),
-        catchMultiplier: 1,
-        attributes: fx({ love: 100 }),
-      };
-      const events = resolveTurn(ctx, { kind: 'move', index: 0 });
-      if (events.some((e) => e.type === 'endure')) {
-        endured++;
-        expect(player.hp).toBe(1);
-        expect(ctx.battle.storyEffects).toEqual(['love-hung-on@p1']);
-      }
-    }
-    expect(endured).toBeGreaterThan(5);
-    expect(endured).toBeLessThan(45);
+  it('Love raises the Hyper chances (Toughened It Out 15% → 25% at Love 100, at most double)', () => {
+    const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'toughenedItOut')!;
+    const at = (love: number) => hyperChance(def.chance!, { ...zeroAttributes(), love }, false);
+    expect(at(0)).toBeCloseTo(0.15);
+    expect(at(100)).toBeCloseTo(0.25);
+    expect(at(1000)).toBeCloseTo(0.3);
+    expect(attributeEffectText(content, 'love', 100)).toContain('Toughened It Out 25%');
   });
 });
 

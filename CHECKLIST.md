@@ -291,6 +291,22 @@ The shared layer every story system reads (design: docs/plans/hyper-overdrive-te
 - Relationships and recurring enemies have their records, limits and functions, but nothing creates them yet: that is M8.9 (rivals, nemesis).
 - Only the newest 250 domain events are kept in the save; histories and the chronicle keep what matters from older ones.
 
+## Milestone 8.9 — Hyper moments, Phase 1 (in progress)
+
+Design: the Hyper section of the Electric plan doc (Kice ticked all 10 Phase 1 items, 2026-10-25); numbers are the doc's starting balance. One slice per PR.
+
+- [x] Slice 1: Toughened It Out (replaces Love's endure), Felt a Bond, Pushed Itself Back Up, Hung In There (with "Again" and "Wouldn't Stay Down"); run save v10
+- [ ] Slice 2: The Enemy Is Getting Riled Up (telegraphed a turn ahead, with counters)
+- [ ] Slice 3: The Two Pokémon Feel a Heated Rivalry
+- [ ] Slice 4: This Trainer Will Return (rematch pool)
+- [ ] Slice 5: A Past Pokémon Wants to Join Your Party (archive across runs)
+- [ ] Slice 6: The Seven Emotions as event tags; run history and event logging screen
+
+### Known limits in slice 1
+
+- "Our Hearts Beat as One" (Felt a Bond after a Champion win) is not in yet: histories count boss wins but not which boss. Rescues don't exist yet, so Felt a Bond reads close calls, survived knockouts and boss wins.
+- Hyper moments are for your Pokémon only; the enemy's side starts with slice 2.
+
 ## Milestone 9 — Grand Region, ending, deploy
 
 See IMPLEMENTATION_PLAN.md §5.
