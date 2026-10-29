@@ -224,7 +224,7 @@ Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
 - [x] Primal Reversion with the Red and Blue Orbs
 - [x] Tests: unit (rules, data, save/load mid-battle, rewards and shop) and a browser test
 - [x] Terastallization: Tera Orb (draft + shop), Tera Type per Pokémon, 18 Tera Shards, STAB and 60-power rules, boss aces, battle menu option, badge and tint, unit and browser tests
-- [ ] Z-Moves
+- [x] Z-Moves: Z-Ring (draft + shop), 18 type Z-Crystals, Z-power from Showdown data, status Z bonuses, Protect, battle menu option, drawn icons, unit and browser tests (species-exclusive Z-Moves and boss Z-Moves still to come)
 - [ ] Dynamax / Gigantamax
 - [ ] Regional forms as a mechanic (if still wanted)
 

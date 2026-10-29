@@ -1,6 +1,6 @@
 // Battle transformations (Milestone 8.5, GAME_DESIGN.md §5f): Mega Evolution,
-// Primal Reversion and Terastallization so far; Z-Moves and Dynamax follow as
-// their own slices.
+// Primal Reversion, Terastallization and Z-Moves so far; Dynamax follows as
+// its own slice.
 //
 // Rules:
 // - Each mechanic needs its key item in the Bag (Mega Ring) and works once
@@ -18,6 +18,13 @@
 //   types; moves of its Tera Type get STAB too (2× when the Tera Type is one
 //   of its original types), and those with less than 60 power are raised to
 //   60 (not multi-hit or priority moves).
+// - Z-Moves need the Z-Ring and the Z-Crystal of the chosen move's type. A
+//   damaging move becomes its type's Z-Move (zMoves.json power, never misses,
+//   priority 0, no side effects, a quarter of its damage through Protect). A
+//   status move works as itself and adds its Z bonus (stat boosts, clearing
+//   lowered stats, or a full heal). The Z-Power is spent, and a status move's
+//   bonus lands, at the start of the turn, like the other transformations.
+//   It counts as that Pokémon's one transformation.
 // - Bosses (balance.transformations) may transform their ace, the last
 //   Pokémon of their team, and need no items.
 // - A run can switch mechanics off (run.disabledMechanics, a challenge); that
@@ -25,7 +32,8 @@
 // The engine only emits 'transform' events; the battle screen turns them into
 // presentation (text, sprite swap; cinematics come in M9.5).
 
-import type { Content, Move, TransformKind, TypeName } from '../contentSchema';
+import type { BoostStat, Content, Move, TransformKind, TypeName } from '../contentSchema';
+import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
 import type { BattleState, PokemonInstance } from '../state';
@@ -33,21 +41,31 @@ import type { BattleState, PokemonInstance } from '../state';
 type Side = 'player' | 'enemy';
 export type FormChangeKind = 'mega' | 'primal' | 'tera';
 
-/** The player's request, sent with a move. */
-export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' };
+/** The player's request, sent with a move (a Z-Move applies to that move). */
+export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' } | { kind: 'zmove' };
 
 export interface TransformEvent {
   type: 'transform';
   side: Side;
   uid: string;
-  kind: FormChangeKind;
+  kind: FormChangeKind | 'zmove';
   from: string;
   to: string;
   /** The item that made it happen (Mega Stone or orb); null for bosses and Tera. */
   itemId: string | null;
   /** Terastallization: the type it became. */
   teraType?: TypeName;
+  /** Z-Move: the move it powered up and what it became (the same id for a status move). */
+  moveId?: string;
+  zMoveId?: string;
 }
+
+/** Events the transformation step can add (stat and HP changes use the engine's own event shapes). */
+export type TransformStepEvent =
+  | TransformEvent
+  | { type: 'stat'; side: Side; stat: BoostStat; change: number }
+  | { type: 'statLimit'; side: Side; stat: BoostStat; up: boolean }
+  | { type: 'heal'; side: Side; amount: number; hpAfter: number };
 
 export interface TransformContext {
   content: Content;
@@ -96,12 +114,72 @@ export function megaOptions(ctx: TransformContext): FormOption[] {
   return megaProblem(ctx, mon, undefined) ? [] : ownedMegaForms(ctx.content, ctx.inventory, mon);
 }
 
-/** Why the player's active Pokémon can't do this transformation now, or null if it can. */
-export function transformProblem(ctx: TransformContext, request: TransformRequest): string | null {
+/** Why the player's active Pokémon can't do this transformation now (with the move in `moveIndex`), or null if it can. */
+export function transformProblem(ctx: TransformContext, request: TransformRequest, moveIndex = -1): string | null {
   const mon = ctx.party[ctx.battle.activeIndex];
   if (!mon) return 'No active Pokémon.';
+  if (request.kind === 'zmove') return zMoveProblem(ctx, mon, moveIndex);
   return request.kind === 'mega' ? megaProblem(ctx, mon, request.formId) : teraProblem(ctx, mon);
 }
+
+/**
+ * The move a move becomes as a Z-Move: a damaging move turns into its type's
+ * Z-Move; a status move with a Z bonus stays itself. Null when it has no Z-Move.
+ */
+export function zMoveFor(content: Content, move: Move): Move | null {
+  if (move.flags.includes('zmove') || move.supported === false) return null;
+  if (move.category === 'status') return content.zMoves.status[move.id] ? move : null;
+  const power = content.zMoves.power[move.id];
+  const zId = content.zMoves.byType[move.type];
+  const z = zId ? content.moves.get(zId) : undefined;
+  if (!power || !z) return null;
+  return {
+    ...z,
+    type: move.type,
+    category: move.category,
+    power,
+    accuracy: null,
+    pp: 1,
+    priority: 0,
+    critStage: 0,
+    target: 'enemy',
+    flags: ['zmove'],
+    effects: {},
+    supported: true,
+  };
+}
+
+/** The Z-Crystal in the Bag for this type, or null. */
+export function ownedZCrystal(content: Content, inventory: Record<string, number>, type: TypeName): string | null {
+  for (const item of content.items.values()) {
+    if (item.effect.kind === 'zCrystal' && item.effect.type === type && owns(inventory, item.id)) return item.id;
+  }
+  return null;
+}
+
+/** For each of the active Pokémon's moves, the Z-Move it can become right now (null when it can't). */
+export function zMoveOptions(ctx: TransformContext): (Move | null)[] {
+  const mon = ctx.party[ctx.battle.activeIndex];
+  if (!mon) return [];
+  return mon.moves.map((slot, index) => (zMoveProblem(ctx, mon, index) ? null : zMoveFor(ctx.content, ctx.content.moves.get(slot.id)!)));
+}
+
+function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: number): string | null {
+  const { content, battle, inventory } = ctx;
+  if (ctx.disabledMechanics?.includes('zmove')) return 'Z-Moves are switched off for this run.';
+  if (!hasKeyItem(content, inventory, 'zmove')) return 'You need a Z-Ring to use a Z-Move.';
+  if (battle.transform.used.player.includes('zmove')) return 'You have already used a Z-Move this battle.';
+  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
+  const slot = mon.moves[moveIndex];
+  const move = slot ? content.moves.get(slot.id) : undefined;
+  if (!slot || !move) return 'Choose a move for the Z-Move.';
+  if (slot.pp <= 0) return 'That move has no PP left.';
+  if (!zMoveFor(content, move)) return `${move.name} can't become a Z-Move.`;
+  if (!ownedZCrystal(content, inventory, move.type)) return `You need the ${typeName(move.type)} Z-Crystal for ${move.name}.`;
+  return null;
+}
+
+const typeName = (type: TypeName) => type[0]!.toUpperCase() + type.slice(1);
 
 /** The Tera Type the player's active Pokémon can Terastallize into right now, or null. */
 export function teraOption(ctx: TransformContext): TypeName | null {
@@ -134,7 +212,7 @@ function megaProblem(ctx: TransformContext, mon: PokemonInstance, formId: string
  * Applies this turn's transformations, before anyone moves: automatic Primal
  * Reversion for both sides, then the player's request, then the opponent's.
  */
-export function applyTransformations(ctx: TransformContext, request: TransformRequest | undefined, events: TransformEvent[]): void {
+export function applyTransformations(ctx: TransformContext, request: TransformRequest | undefined, events: TransformStepEvent[], moveIndex = -1): void {
   const { content, battle } = ctx;
   const player = ctx.party[battle.activeIndex];
   const enemy = battle.enemyTeam[battle.enemyIndex];
@@ -166,6 +244,19 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
     terastallize(ctx, 'player', player, teraTypeOf(content, player), events);
   }
 
+  // ... or a Z-Move (the engine swaps in the Z-Move itself; see zMoveFor).
+  if (request?.kind === 'zmove' && player.hp > 0 && !zMoveProblem(ctx, player, moveIndex)) {
+    const move = content.moves.get(player.moves[moveIndex]!.id)!;
+    const z = zMoveFor(content, move)!;
+    battle.transform.forms[player.uid] = { kind: 'zmove', from: player.speciesId };
+    battle.transform.used.player.push('zmove');
+    events.push({
+      type: 'transform', side: 'player', uid: player.uid, kind: 'zmove', from: player.speciesId, to: player.speciesId,
+      itemId: ownedZCrystal(content, ctx.inventory, move.type), moveId: move.id, zMoveId: z.id,
+    });
+    if (move.category === 'status') applyZBonus(ctx, 'player', player, move.id, events);
+  }
+
   // 3. The opponent's: a boss's ace Mega Evolves if it can, otherwise Terastallizes, as soon as it is out.
   const may = (kind: TransformKind) =>
     !ctx.disabledMechanics?.includes(kind) && battle.transform.enemyMechanics.includes(kind) && !battle.transform.used.enemy.includes(kind);
@@ -183,7 +274,36 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   }
 }
 
-function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, type: TypeName, events: TransformEvent[]): void {
+/** A status Z-Move's bonus for its user: stat boosts, clearing lowered stats, or a full heal. */
+function applyZBonus(ctx: TransformContext, side: Side, mon: PokemonInstance, moveId: string, events: TransformStepEvent[]): void {
+  const bonus = ctx.content.zMoves.status[moveId];
+  const stages = side === 'player' ? ctx.battle.playerStages : ctx.battle.enemyStages;
+  for (const { stat, stages: by } of bonus?.boosts ?? []) {
+    const before = stages[stat];
+    const after = clampStage(before + by);
+    if (after === before) events.push({ type: 'statLimit', side, stat, up: by > 0 });
+    else {
+      stages[stat] = after;
+      events.push({ type: 'stat', side, stat, change: after - before });
+    }
+  }
+  if (bonus?.effect === 'clearNegative') {
+    for (const stat of Object.keys(stages) as BoostStat[]) {
+      if (stages[stat] >= 0) continue;
+      events.push({ type: 'stat', side, stat, change: -stages[stat] });
+      stages[stat] = 0;
+    }
+  }
+  if (bonus?.effect === 'heal') {
+    const amount = calcStats(ctx.content, mon).hp - mon.hp;
+    if (amount > 0) {
+      mon.hp += amount;
+      events.push({ type: 'heal', side, amount, hpAfter: mon.hp });
+    }
+  }
+}
+
+function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, type: TypeName, events: TransformStepEvent[]): void {
   const { battle } = ctx;
   battle.transform.forms[mon.uid] = { kind: 'tera', from: mon.speciesId };
   battle.transform.teraTypes[mon.uid] = type;
@@ -213,7 +333,7 @@ export function teraPower(battle: BattleState, mon: PokemonInstance, move: Move,
   return 60;
 }
 
-function changeForm(ctx: TransformContext, side: Side, mon: PokemonInstance, kind: FormChangeKind, option: FormOption, events: TransformEvent[]): void {
+function changeForm(ctx: TransformContext, side: Side, mon: PokemonInstance, kind: FormChangeKind, option: FormOption, events: TransformStepEvent[]): void {
   const from = mon.speciesId;
   ctx.battle.transform.forms[mon.uid] = { kind, from };
   mon.speciesId = option.formId;
@@ -242,5 +362,6 @@ export function bossMechanics(content: Content, role: 'gym' | 'elite' | 'champio
   const rules = content.balance.transformations;
   const allowed = role === 'gym' ? gymNumber >= rules.bossGymFrom : role !== null && rules.league;
   if (!allowed) return [];
+  // Bosses don't use Z-Moves yet.
   return (['mega', 'tera'] as TransformKind[]).filter((m) => !disabled.includes(m));
 }

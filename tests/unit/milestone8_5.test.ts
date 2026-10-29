@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext, type BattleEvent, type PlayerAction } from '../../src/core/battle/engine';
-import { battleTypes, bossMechanics, megaOptions, revertTransformations, stabMultiplier, stoneForms, teraOption, teraPower } from '../../src/core/battle/transform';
+import { battleTypes, bossMechanics, megaOptions, revertTransformations, stabMultiplier, stoneForms, teraOption, teraPower, zMoveFor, zMoveOptions } from '../../src/core/battle/transform';
 import { applyItemToPokemon, itemUseProblem, teraTypeOf } from '../../src/core/items';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { isRewardEligible } from '../../src/core/rewards';
@@ -326,5 +326,184 @@ describe('Terastallization', () => {
     const saves = new SaveManager(new MemoryStorageProvider(), content);
     saves.saveRun(run);
     expect(saves.loadRun()).toEqual({ status: 'ok', data: run });
+  });
+});
+
+// ---------- Slice 3: Z-Moves ----------
+
+const Z: PlayerAction = { kind: 'move', index: 0, transform: { kind: 'zmove' } };
+const Z_KIT = { 'z-ring': 1, 'electrium-z': 1, 'normalium-z': 1, 'firium-z': 1 };
+const damageTo = (events: BattleEvent[], side: 'player' | 'enemy') =>
+  events.filter((e) => e.type === 'damage' && e.side === side).reduce((n, e) => n + (e.type === 'damage' ? e.amount : 0), 0);
+
+describe('Z-Move data', () => {
+  it('has a Z-Crystal item and draft reward for every type but Stellar, and a Z-Ring', () => {
+    const crystals = [...content.items.values()].filter((i) => i.effect.kind === 'zCrystal');
+    expect(crystals.map((i) => (i.effect.kind === 'zCrystal' ? i.effect.type : '')).sort()).toEqual(Object.keys(content.zMoves.byType).sort());
+    expect(crystals).toHaveLength(18);
+    for (const c of crystals) expect(content.rewards.get(c.id)?.effect).toEqual({ kind: 'addItem', item: c.id, quantity: 1 });
+    expect(content.items.get('z-ring')?.effect).toEqual({ kind: 'keyItem', mechanic: 'zmove' });
+  });
+
+  it("uses Showdown's Z-power: its own number when a move has one, otherwise the power table", () => {
+    expect(content.zMoves.power.tackle).toBe(100); // 40 power
+    expect(content.zMoves.power.thunderbolt).toBe(175); // 90 power
+    expect(content.zMoves.power['bullet-seed']).toBe(140); // its own number
+    expect(content.zMoves.status['swords-dance']).toEqual({ effect: 'clearNegative' });
+    expect(content.zMoves.status.growl).toEqual({ boosts: [{ stat: 'def', stages: 1 }] });
+  });
+
+  it('turns a damaging move into its type Z-Move: never misses, no priority, no side effects', () => {
+    const z = zMoveFor(content, content.moves.get('quick-attack')!)!;
+    expect(z).toMatchObject({ id: 'breakneck-blitz', name: 'Breakneck Blitz', type: 'normal', category: 'physical', power: 100, accuracy: null, priority: 0, flags: ['zmove'], effects: {} });
+    expect(zMoveFor(content, content.moves.get('swords-dance')!)!.id).toBe('swords-dance');
+    expect(zMoveFor(content, content.moves.get('splash')!)).toBeNull(); // not supported in this game yet
+    expect(zMoveFor(content, z)).toBeNull();
+  });
+});
+
+describe('Z-Moves in battle', () => {
+  it('need the Z-Ring and the Z-Crystal of the move type', () => {
+    for (const inventory of [{}, { 'z-ring': 1 }, { 'electrium-z': 1 }, { 'z-ring': 1, 'firium-z': 1 }] as Record<string, number>[]) {
+      const { ctx } = setup([mon('pikachu', 50, 'p1', 'thunderbolt')], [mon('snorlax', 50, 'e1', 'tackle')], inventory);
+      expect(zMoveOptions(ctx)).toEqual([null]);
+      expect(() => resolveTurn(ctx, Z)).toThrow(/Z-Ring|Electric Z-Crystal/);
+    }
+  });
+
+  it('hit much harder than the move, under its Z-Move name, and use the move PP', () => {
+    const turn = (z: boolean) => {
+      const p = mon('pikachu', 50, 'p1', 'thunderbolt', 'quick-attack');
+      const { ctx } = setup([p], [mon('snorlax', 70, 'e1', 'tackle')], Z_KIT, 'z-dmg');
+      const events = resolveTurn(ctx, z ? Z : { kind: 'move', index: 0 });
+      return { p, events };
+    };
+    const plain = turn(false);
+    const { p, events } = turn(true);
+    expect(transforms(events)).toEqual([
+      { type: 'transform', side: 'player', uid: 'p1', kind: 'zmove', from: 'pikachu', to: 'pikachu', itemId: 'electrium-z', moveId: 'thunderbolt', zMoveId: 'gigavolt-havoc' },
+    ]);
+    expect(events.find((e) => e.type === 'move' && e.side === 'player')).toEqual({ type: 'move', side: 'player', moveId: 'gigavolt-havoc' });
+    expect(damageTo(events, 'enemy')).toBeGreaterThan(damageTo(plain.events, 'enemy') * 1.6);
+    expect(p.moves[0]!.pp).toBe(content.moves.get('thunderbolt')!.pp - 1);
+  });
+
+  it('never miss, and a Z Quick Attack loses its priority', () => {
+    for (const seed of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      const { ctx } = setup([mon('pikachu', 50, 'p1', 'zap-cannon')], [mon('snorlax', 70, 'e1', 'tackle')], Z_KIT, `z-acc-${seed}`);
+      expect(resolveTurn(ctx, Z).some((e) => e.type === 'miss')).toBe(false);
+    }
+    // Snorlax (Speed 30) against a level 5 Pikachu: Quick Attack goes first, Breakneck Blitz doesn't.
+    const order = (z: boolean) => {
+      const { ctx } = setup([mon('pikachu', 5, 'p1', 'quick-attack')], [mon('snorlax', 90, 'e1', 'tackle')], Z_KIT, 'z-prio');
+      return resolveTurn(ctx, z ? Z : { kind: 'move', index: 0 }).find((e) => e.type === 'move')!.side;
+    };
+    expect(order(false)).toBe('player');
+    expect(order(true)).toBe('enemy');
+  });
+
+  it('go through Protect for a quarter of the damage', () => {
+    const p = mon('pikachu', 50, 'p1', 'thunderbolt');
+    const e = mon('snorlax', 70, 'e1', 'protect');
+    e.hp = 999;
+    const { ctx } = setup([p], [e], Z_KIT, 'z-protect');
+    const events = resolveTurn(ctx, Z);
+    expect(events.some((x) => x.type === 'protect' && x.side === 'enemy')).toBe(true);
+    expect(events.some((x) => x.type === 'protected')).toBe(false);
+    expect(damageTo(events, 'enemy')).toBeGreaterThan(0);
+  });
+
+  it('a status Z-Move adds its bonus and still works: Z-Swords Dance clears lowered stats first', () => {
+    const { ctx, battle } = setup([mon('pikachu', 50, 'p1', 'swords-dance', 'growl')], [mon('snorlax', 50, 'e1', 'tackle')], Z_KIT);
+    battle.playerStages.atk = -2;
+    battle.playerStages.spe = -1;
+    const events = resolveTurn(ctx, Z);
+    expect(battle.playerStages.atk).toBe(2);
+    expect(battle.playerStages.spe).toBe(0);
+    expect(events.find((e) => e.type === 'move' && e.side === 'player')).toMatchObject({ moveId: 'swords-dance' });
+
+    const growl = setup([mon('pikachu', 50, 'p1', 'growl')], [mon('snorlax', 50, 'e1', 'tackle')], Z_KIT);
+    resolveTurn(growl.ctx, Z);
+    expect(growl.battle.playerStages.def).toBe(1);
+  });
+
+  it('a full-heal Z bonus restores the user', () => {
+    const c = structuredClone(content);
+    c.zMoves.status.growl = { effect: 'heal' };
+    const p = mon('pikachu', 50, 'p1', 'growl');
+    p.hp = 10;
+    const { ctx } = setup([p], [mon('magikarp', 5, 'e1', 'tackle')], Z_KIT);
+    const events = resolveTurn({ ...ctx, content: c }, Z);
+    expect(events.find((e) => e.type === 'heal')).toMatchObject({ side: 'player', hpAfter: calcStats(content, p).hp });
+  });
+
+  it('work once per battle, and not on a Pokémon that already transformed', () => {
+    const p = mon('pikachu', 50, 'p1', 'thunderbolt', 'tackle');
+    const e = mon('snorlax', 90, 'e1', 'growl');
+    const { ctx, battle } = setup([p], [e], Z_KIT);
+    resolveTurn(ctx, Z);
+    expect(battle.transform.used.player).toEqual(['zmove']);
+    expect(zMoveOptions(ctx)).toEqual([null, null]);
+    expect(() => resolveTurn(ctx, { kind: 'move', index: 1, transform: { kind: 'zmove' } })).toThrow(/already used a Z-Move/);
+
+    const tera = setup([mon('pikachu', 50, 'p2', 'thunderbolt')], [mon('snorlax', 90, 'e2', 'growl')], { ...Z_KIT, 'tera-orb': 1 });
+    resolveTurn(tera.ctx, TERA);
+    expect(() => resolveTurn(tera.ctx, Z)).toThrow(/already transformed/);
+  });
+
+  it('can be switched off for a run', () => {
+    const { ctx } = setup([mon('pikachu', 50, 'p1', 'thunderbolt')], [mon('snorlax', 50, 'e1', 'tackle')], Z_KIT);
+    ctx.disabledMechanics = ['zmove'];
+    expect(zMoveOptions(ctx)).toEqual([null]);
+    expect(() => resolveTurn(ctx, Z)).toThrow(/switched off/);
+  });
+});
+
+describe('Z-Moves in a run', () => {
+  const newRun = (seed: string): RunState => {
+    let run = chooseStarter(content, createRun(content, { runId: `r-${seed}`, seed, archetypeId: 'red' }), 0);
+    run = debugReplaceEnemy(content, toBattle(run), 'magikarp', 100);
+    setMoves(run.battle!.enemyTeam[0]!, 'growl');
+    setMoves(run.party[0]!, 'tackle');
+    Object.assign(run.inventory, Z_KIT);
+    return run;
+  };
+
+  it('survives save and load in the middle of a battle, and is spent until the battle ends', () => {
+    let run = takeTurn(content, newRun('z-save'), Z).run;
+    expect(run.phase).toBe('battle');
+    expect(run.battle!.transform.used.player).toEqual(['zmove']);
+    const saves = new SaveManager(new MemoryStorageProvider(), content);
+    expect(saves.saveRun(run)).toEqual({ ok: true });
+    const loaded = saves.loadRun();
+    expect(loaded).toEqual({ status: 'ok', data: run });
+    run = (loaded as { data: RunState }).data;
+    expect(() => takeTurn(content, run, Z)).toThrow(/already used a Z-Move/);
+  });
+
+  it('is deterministic', () => {
+    expect(takeTurn(content, newRun('z-det'), Z).events).toEqual(takeTurn(content, newRun('z-det'), Z).events);
+  });
+
+  it('offers the Z-Ring once, and a crystal only with the ring and a party move of its type; the shop sells the ring from 3 badges', () => {
+    const r = chooseStarter(content, createRun(content, { runId: 'r-z', seed: 'z', archetypeId: 'red' }), 0);
+    setMoves(r.party[0]!, 'tackle');
+    const normal = content.rewards.get('normalium-z')!;
+    const fire = content.rewards.get('firium-z')!;
+    expect(isRewardEligible(content, r, content.rewards.get('z-ring')!)).toBe(true);
+    expect(isRewardEligible(content, r, normal)).toBe(false);
+    r.inventory['z-ring'] = 1;
+    expect(isRewardEligible(content, r, content.rewards.get('z-ring')!)).toBe(false);
+    expect(isRewardEligible(content, r, normal)).toBe(true);
+    expect(isRewardEligible(content, r, fire)).toBe(false);
+    r.inventory['normalium-z'] = 1;
+    expect(isRewardEligible(content, r, normal)).toBe(false);
+    expect(itemUseProblem(content, content.items.get('normalium-z')!, r.party[0]!)).toMatch(/by itself in battle/);
+
+    delete r.inventory['z-ring'];
+    r.badges = ['a', 'b', 'c'];
+    expect(shopStock(content, r).some((e) => e.item === 'z-ring')).toBe(true);
+    r.inventory['z-ring'] = 1;
+    expect(shopStock(content, r).some((e) => e.item === 'z-ring')).toBe(false);
   });
 });

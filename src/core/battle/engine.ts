@@ -34,7 +34,7 @@ import {
   typeEffectiveness,
 } from './damage';
 import * as Held from './held';
-import { applyTransformations, battleTypes, stabMultiplier, teraPower, transformProblem, type TransformEvent, type TransformRequest } from './transform';
+import { applyTransformations, battleTypes, stabMultiplier, teraPower, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -336,14 +336,19 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
 
   // Transformations (Mega Evolution, ...) happen before any move, so they count for turn order.
-  if (!battle.outcome) applyTransformations(ctx, action.kind === 'move' ? action.transform : undefined, events as TransformEvent[]);
+  if (!battle.outcome) {
+    const move = action.kind === 'move' ? action : undefined;
+    applyTransformations(ctx, move?.transform, events as TransformStepEvent[], move?.index);
+  }
 
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false });
   const playerC = player();
 
   // 2. Moves.
   if (action.kind === 'move') {
-    const playerMove = resolveMove(content, playerC.mon, action.index);
+    const chosen = resolveMove(content, playerC.mon, action.index);
+    // A Z-Move replaces the chosen move (its Z-Power was spent above).
+    const playerMove = action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen;
     const order = decideOrder(ctx, rng, playerC, playerMove, enemy, enemyMove);
     const actions =
       order === 'player'
@@ -407,7 +412,7 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
     if (!slot) throw new Error(`Invalid move slot ${action.index}`);
     if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
     if (action.transform) {
-      const problem = transformProblem(ctx, action.transform);
+      const problem = transformProblem(ctx, action.transform, action.index);
       if (problem) throw new Error(problem);
     }
   } else if (action.kind === 'switch') {
@@ -747,7 +752,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     events.push({ type: 'avoided', side: target.side });
     return;
   }
-  if (targetsEnemy && target.protected && !fx.breaksProtect) {
+  // Z-Moves go through Protect for a quarter of their damage (see the damage step).
+  if (targetsEnemy && target.protected && !fx.breaksProtect && !move.flags.includes('zmove')) {
     events.push({ type: 'protected', side: target.side });
     return;
   }
@@ -835,6 +841,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
         Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
+      if (target.protected && move.flags.includes('zmove')) damage = Math.max(1, Math.floor(damage / 4));
     }
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
