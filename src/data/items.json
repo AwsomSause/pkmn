@@ -1152,6 +1152,20 @@
   }
  },
  {
+  "id": "dynamax-band",
+  "name": "Dynamax Band",
+  "description": "A key item. Lets one of your Pokémon Dynamax once per battle: double HP and Max Moves for 3 turns. Pokémon with a Gigantamax form Gigantamax.",
+  "category": "key",
+  "iconAssetId": "item.dynamax_band",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "keyItem",
+   "mechanic": "dynamax"
+  }
+ },
+ {
   "id": "normalium-z",
   "name": "Normalium Z",
   "description": "Lets a Pokémon turn a Normal-type move into a Z-Move (needs the Z-Ring).",

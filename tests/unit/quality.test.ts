@@ -41,11 +41,11 @@ describe('support status', () => {
     expect(moveStatus(content, content.moves.get('tackle')!)).toEqual({ kind: 'move', id: 'tackle', status: 'supported', notes: [] });
   });
 
-  it('a Mega form with a stone works with limits, one without waits; a species with no usable moves is disabled', () => {
+  it('Mega forms with a stone and Gigantamax forms work with limits, a Mega without a stone waits; a species with no usable moves is disabled', () => {
     const owners = new Map<string, string>();
     expect(speciesStatus(content, content.species.get('venusaur-mega')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'limited' });
     expect(speciesStatus(content, content.species.get('tatsugiri-droopy-mega')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'disabled' });
-    expect(speciesStatus(content, content.species.get('venusaur-gmax')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'disabled' });
+    expect(speciesStatus(content, content.species.get('venusaur-gmax')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'limited' });
     expect(speciesStatus(content, content.species.get('ditto')!, { assetExists: everyFileExists }, owners, owners).status).toBe('disabled');
     expect(speciesStatus(content, content.species.get('bulbasaur')!, { assetExists: everyFileExists }, owners, owners).status).toBe('supported');
   });

@@ -1,6 +1,5 @@
 // Battle transformations (Milestone 8.5, GAME_DESIGN.md §5f): Mega Evolution,
-// Primal Reversion, Terastallization and Z-Moves so far; Dynamax follows as
-// its own slice.
+// Primal Reversion, Terastallization, Z-Moves and Dynamax/Gigantamax.
 //
 // Rules:
 // - Each mechanic needs its key item in the Bag (Mega Ring) and works once
@@ -25,6 +24,14 @@
 //   lowered stats, or a full heal). The Z-Power is spent, and a status move's
 //   bonus lands, at the start of the turn, like the other transformations.
 //   It counts as that Pokémon's one transformation.
+// - Dynamax needs the Dynamax Band. For balance.transformations.dynamaxTurns
+//   turns (counting the first) its HP is doubled and every move becomes a
+//   Max Move (maxMoves.json): damaging moves turn into their type's Max Move,
+//   which never misses, has no priority, hits through Protect for a quarter
+//   and then sets the weather or changes stats; status moves become Max
+//   Guard. A Pokémon with a Gigantamax form takes it, and its type's Max Move
+//   becomes its G-Max Move. Switching out or fainting ends it early. It
+//   can't be made to flinch.
 // - Bosses (balance.transformations) may transform their ace, the last
 //   Pokémon of their team, and need no items.
 // - A run can switch mechanics off (run.disabledMechanics, a challenge); that
@@ -32,7 +39,7 @@
 // The engine only emits 'transform' events; the battle screen turns them into
 // presentation (text, sprite swap; cinematics come in M9.5).
 
-import type { BoostStat, Content, Move, TransformKind, TypeName } from '../contentSchema';
+import type { BoostStat, Content, MaxEffect, Move, TransformKind, TypeName } from '../contentSchema';
 import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
 import { calcStats, getSpecies } from '../pokemon';
@@ -42,13 +49,14 @@ type Side = 'player' | 'enemy';
 export type FormChangeKind = 'mega' | 'primal' | 'tera';
 
 /** The player's request, sent with a move (a Z-Move applies to that move). */
-export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' } | { kind: 'zmove' };
+export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' } | { kind: 'zmove' } | { kind: 'dynamax' };
 
 export interface TransformEvent {
   type: 'transform';
   side: Side;
   uid: string;
-  kind: FormChangeKind | 'zmove';
+  /** `dynamaxEnd`: a Dynamax (or Gigantamax) ran out or ended early. */
+  kind: FormChangeKind | 'zmove' | 'dynamax' | 'gigantamax' | 'dynamaxEnd';
   from: string;
   to: string;
   /** The item that made it happen (Mega Stone or orb); null for bosses and Tera. */
@@ -119,6 +127,7 @@ export function transformProblem(ctx: TransformContext, request: TransformReques
   const mon = ctx.party[ctx.battle.activeIndex];
   if (!mon) return 'No active Pokémon.';
   if (request.kind === 'zmove') return zMoveProblem(ctx, mon, moveIndex);
+  if (request.kind === 'dynamax') return dynamaxProblem(ctx, mon);
   return request.kind === 'mega' ? megaProblem(ctx, mon, request.formId) : teraProblem(ctx, mon);
 }
 
@@ -177,6 +186,127 @@ function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: nu
   if (!zMoveFor(content, move)) return `${move.name} can't become a Z-Move.`;
   if (!ownedZCrystal(content, inventory, move.type)) return `You need the ${typeName(move.type)} Z-Crystal for ${move.name}.`;
   return null;
+}
+
+/** True when the player's active Pokémon can Dynamax now. */
+export function canDynamax(ctx: TransformContext): boolean {
+  const mon = ctx.party[ctx.battle.activeIndex];
+  return Boolean(mon && !dynamaxProblem(ctx, mon));
+}
+
+function dynamaxProblem(ctx: TransformContext, mon: PokemonInstance): string | null {
+  const { content, battle, inventory } = ctx;
+  if (ctx.disabledMechanics?.includes('dynamax')) return 'Dynamax is switched off for this run.';
+  if (!hasKeyItem(content, inventory, 'dynamax')) return 'You need a Dynamax Band to Dynamax.';
+  if (battle.transform.used.player.includes('dynamax')) return 'You have already Dynamaxed this battle.';
+  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
+  return null;
+}
+
+/** The Gigantamax form this species takes when it Dynamaxes, or null. */
+export function gmaxFormFor(content: Content, speciesId: string): string | null {
+  if (content.species.get(`${speciesId}-gmax`)?.form?.kind === 'gigantamax') return `${speciesId}-gmax`;
+  for (const s of content.species.values()) if (s.form?.kind === 'gigantamax' && s.form.base === speciesId) return s.id;
+  return null;
+}
+
+/**
+ * The Max Move a move becomes for a Dynamaxed Pokémon of this species: Max
+ * Guard for a status move, the G-Max Move when its Gigantamax form has one
+ * of this type, otherwise its type's Max Move. Null when it has none.
+ */
+export function maxMoveFor(content: Content, speciesId: string, move: Move): Move | null {
+  const data = content.maxMoves;
+  if (move.flags.includes('max') || move.flags.includes('zmove') || move.supported === false) return null;
+  if (move.category === 'status') {
+    const guard = content.moves.get(data.guard)!;
+    return { ...guard, category: 'status', power: null, accuracy: null, pp: 1, priority: 4, critStage: 0, target: 'self', flags: ['max'], effects: { protect: true }, supported: true };
+  }
+  const power = data.power[move.id];
+  const gmax = Object.entries(data.gmax).find(([, g]) => g.type === move.type && g.forms.includes(speciesId));
+  const id = gmax?.[0] ?? data.byType[move.type];
+  const max = id ? content.moves.get(id) : undefined;
+  if (!power || !max) return null;
+  const effect = gmax ? gmax[1].effects : data.effects[max.id];
+  return {
+    ...max,
+    type: move.type,
+    category: move.category,
+    power: gmax?.[1].power ?? power,
+    accuracy: null,
+    pp: 1,
+    priority: 0,
+    critStage: 0,
+    target: 'enemy',
+    flags: ['max'],
+    effects: maxEffects(effect),
+    supported: true,
+  };
+}
+
+/** A Max Move's side effects in the engine's move-effect form (weather is set by the engine after it hits; see maxMoveWeather). */
+function maxEffects(effect: MaxEffect | undefined): Move['effects'] {
+  if (!effect) return {};
+  return {
+    ...(effect.statChanges ? { statChanges: effect.statChanges.map((c) => ({ ...c, chance: 100 })) } : {}),
+    ...(effect.status ? { status: { id: effect.status, chance: 100 } } : {}),
+    ...(effect.confuse ? { confuse: { chance: 100 } } : {}),
+    ...(effect.bind ? { bind: true as const } : {}),
+    ...(effect.breaksProtect ? { breaksProtect: true as const } : {}),
+  };
+}
+
+/** The weather a Max Move sets after it hits (Max Flare: sun), or null. */
+export function maxMoveWeather(content: Content, moveId: string): MaxEffect['weather'] | null {
+  return content.maxMoves.effects[moveId]?.weather ?? null;
+}
+
+/** The move a Pokémon really uses this turn: its Max Move while Dynamaxed, otherwise the move itself. */
+export function battleMove(content: Content, battle: BattleState, mon: PokemonInstance, move: Move): Move {
+  return battle.transform.dynamax[mon.uid] !== undefined ? (maxMoveFor(content, mon.speciesId, move) ?? move) : move;
+}
+
+/** For the move list: what each of the active Pokémon's moves becomes if it Dynamaxes (or is Dynamaxed). */
+export function maxMoveOptions(ctx: TransformContext): (Move | null)[] {
+  const mon = ctx.party[ctx.battle.activeIndex];
+  if (!mon) return [];
+  const species = ctx.battle.transform.dynamax[mon.uid] !== undefined ? mon.speciesId : (gmaxFormFor(ctx.content, mon.speciesId) ?? mon.speciesId);
+  return mon.moves.map((slot) => maxMoveFor(ctx.content, species, ctx.content.moves.get(slot.id)!));
+}
+
+function dynamax(ctx: TransformContext, side: Side, mon: PokemonInstance, events: TransformStepEvent[]): void {
+  const { content, battle } = ctx;
+  const from = mon.speciesId;
+  const gmax = gmaxFormFor(content, from);
+  const before = calcStats(content, mon).hp;
+  battle.transform.forms[mon.uid] = { kind: 'dynamax', from };
+  battle.transform.dynamax[mon.uid] = content.balance.transformations.dynamaxTurns;
+  battle.transform.used[side].push('dynamax');
+  if (gmax) mon.speciesId = gmax;
+  mon.dynamaxed = true;
+  mon.hp = Math.max(1, Math.round((mon.hp * calcStats(content, mon).hp) / before));
+  events.push({ type: 'transform', side, uid: mon.uid, kind: gmax ? 'gigantamax' : 'dynamax', from, to: mon.speciesId, itemId: null });
+}
+
+/** Ends a Dynamax: HP is scaled back to the normal maximum and a Gigantamax form changes back. */
+export function endDynamax(content: Content, battle: BattleState, side: Side, mon: PokemonInstance, events?: TransformStepEvent[]): void {
+  if (battle.transform.dynamax[mon.uid] === undefined) return;
+  const from = mon.speciesId;
+  const before = calcStats(content, mon).hp;
+  delete battle.transform.dynamax[mon.uid];
+  delete mon.dynamaxed;
+  mon.speciesId = battle.transform.forms[mon.uid]?.from ?? mon.speciesId;
+  if (mon.hp > 0) mon.hp = Math.max(1, Math.round((mon.hp * calcStats(content, mon).hp) / before));
+  events?.push({ type: 'transform', side, uid: mon.uid, kind: 'dynamaxEnd', from, to: mon.speciesId, itemId: null });
+}
+
+/** End of turn: Dynamax turns run down; it ends when they run out or the Pokémon has fainted. */
+export function tickDynamax(content: Content, battle: BattleState, party: PokemonInstance[], events: TransformStepEvent[]): void {
+  for (const [side, mon] of [['player', party[battle.activeIndex]], ['enemy', battle.enemyTeam[battle.enemyIndex]]] as const) {
+    if (!mon || battle.transform.dynamax[mon.uid] === undefined) continue;
+    battle.transform.dynamax[mon.uid]! -= 1;
+    if (battle.transform.dynamax[mon.uid]! <= 0 || mon.hp <= 0) endDynamax(content, battle, side, mon, events);
+  }
 }
 
 const typeName = (type: TypeName) => type[0]!.toUpperCase() + type.slice(1);
@@ -256,6 +386,9 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
     });
     if (move.category === 'status') applyZBonus(ctx, 'player', player, move.id, events);
   }
+
+  // ... or Dynamax (the engine turns its moves into Max Moves; see battleMove).
+  if (request?.kind === 'dynamax' && player.hp > 0 && !dynamaxProblem(ctx, player)) dynamax(ctx, 'player', player, events);
 
   // 3. The opponent's: a boss's ace Mega Evolves if it can, otherwise Terastallizes, as soon as it is out.
   const may = (kind: TransformKind) =>
@@ -347,6 +480,8 @@ function changeForm(ctx: TransformContext, side: Side, mon: PokemonInstance, kin
  * original form's maximum.
  */
 export function revertTransformations(content: Content, battle: BattleState, party: PokemonInstance[]): void {
+  for (const mon of party) endDynamax(content, battle, 'player', mon);
+  for (const mon of battle.enemyTeam) endDynamax(content, battle, 'enemy', mon);
   for (const mon of [...party, ...battle.enemyTeam]) {
     const record = battle.transform.forms[mon.uid];
     if (!record) continue;
@@ -355,6 +490,7 @@ export function revertTransformations(content: Content, battle: BattleState, par
   }
   battle.transform.forms = {};
   battle.transform.teraTypes = {};
+  battle.transform.dynamax = {};
 }
 
 /** The mechanics a trainer battle's opponent may use (bosses only; see balance.transformations). */
@@ -362,6 +498,6 @@ export function bossMechanics(content: Content, role: 'gym' | 'elite' | 'champio
   const rules = content.balance.transformations;
   const allowed = role === 'gym' ? gymNumber >= rules.bossGymFrom : role !== null && rules.league;
   if (!allowed) return [];
-  // Bosses don't use Z-Moves yet.
+  // Bosses don't use Z-Moves or Dynamax yet.
   return (['mega', 'tera'] as TransformKind[]).filter((m) => !disabled.includes(m));
 }

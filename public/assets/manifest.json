@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T23:26:46.014Z",
+  "generatedAt": "2026-10-29T23:36:52.968Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71476,6 +71476,12 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/z_ring.png"
+    },
+    {
+      "id": "item.dynamax_band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dynamax_band.png"
     },
     {
       "id": "item.normalium_z",
