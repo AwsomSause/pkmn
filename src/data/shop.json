@@ -153,5 +153,15 @@
   "item": "mega-ring",
   "price": 10000,
   "minBadges": 3
+ },
+ {
+  "item": "tera-orb",
+  "price": 10000,
+  "minBadges": 3
+ },
+ {
+  "item": "z-ring",
+  "price": 10000,
+  "minBadges": 3
  }
 ]

@@ -217,7 +217,9 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
     case 'transform': {
       const before = e.side === 'player' ? species(e.from) : `The ${foe} ${species(e.from)}`;
+      if (e.kind === 'tera') return `${before} Terastallized into the ${e.teraType![0]!.toUpperCase()}${e.teraType!.slice(1)} type!`;
       if (e.kind === 'primal') return `${before}'s Primal Reversion! It reverted to its primal form!`;
+      if (e.kind === 'zmove') return `${before} surrounded itself with its Z-Power!`;
       return `${before} has Mega Evolved into ${species(e.to)}!`;
     }
   }

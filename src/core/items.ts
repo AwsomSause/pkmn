@@ -1,7 +1,7 @@
 // Using Bag items on Pokémon (in or out of battle). Balls are handled by the
 // battle engine because they need the opponent.
 
-import type { Content, Item } from './contentSchema';
+import type { Content, Item, TypeName } from './contentSchema';
 import { blocksEvolution } from './battle/held';
 import { evolve, itemEvolutionTargets } from './evolution';
 import { getSpecies, maxHp, maxPp } from './pokemon';
@@ -58,7 +58,11 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
       return `${item.name} can't be used on your Pokémon.`;
     case 'keyItem':
     case 'megaStone':
+    case 'zCrystal':
       return `${item.name} works by itself in battle.`;
+    case 'teraShard':
+      if (teraTypeOf(content, mon) === item.effect.type) return `${name}'s Tera Type is already ${typeLabel(item.effect.type)}.`;
+      return null;
   }
 }
 
@@ -108,9 +112,19 @@ export function applyItemToPokemon(content: Content, item: Item, mon: PokemonIns
       const skipped = result.wantsToLearn.length > 0 ? ` (It already knows four moves, so it didn't learn ${result.wantsToLearn.map((m) => content.moves.get(m)!.name).join(', ')}.)` : '';
       return `${name} evolved into ${newName}!${learned}${skipped}`;
     }
+    case 'teraShard':
+      mon.teraType = item.effect.type;
+      return `${name}'s Tera Type is now ${typeLabel(item.effect.type)}!`;
     default:
       throw new Error(`${item.name} can't be used on a Pokémon`);
   }
+}
+
+const typeLabel = (type: string) => type[0]!.toUpperCase() + type.slice(1);
+
+/** The type this Pokémon becomes when it Terastallizes: its own choice, or its first type. */
+export function teraTypeOf(content: Content, mon: PokemonInstance): TypeName {
+  return mon.teraType ?? getSpecies(content, mon.speciesId).types[0]!;
 }
 
 /** The item (if any) that acts as a Last Stand Charm, found by its effect, not its name. */

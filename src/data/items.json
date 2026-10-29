@@ -870,5 +870,537 @@
    "kind": "keyItem",
    "mechanic": "mega"
   }
+ },
+ {
+  "id": "tera-orb",
+  "name": "Tera Orb",
+  "description": "A key item. Lets one of your Pokémon Terastallize once per battle, turning it into its Tera Type.",
+  "category": "key",
+  "iconAssetId": "item.tera_orb",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "keyItem",
+   "mechanic": "tera"
+  }
+ },
+ {
+  "id": "normal-tera-shard",
+  "name": "Normal Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Normal.",
+  "category": "transformation",
+  "iconAssetId": "item.normal_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "normal"
+  }
+ },
+ {
+  "id": "fire-tera-shard",
+  "name": "Fire Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Fire.",
+  "category": "transformation",
+  "iconAssetId": "item.fire_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "fire"
+  }
+ },
+ {
+  "id": "water-tera-shard",
+  "name": "Water Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Water.",
+  "category": "transformation",
+  "iconAssetId": "item.water_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "water"
+  }
+ },
+ {
+  "id": "electric-tera-shard",
+  "name": "Electric Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Electric.",
+  "category": "transformation",
+  "iconAssetId": "item.electric_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "electric"
+  }
+ },
+ {
+  "id": "grass-tera-shard",
+  "name": "Grass Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Grass.",
+  "category": "transformation",
+  "iconAssetId": "item.grass_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "grass"
+  }
+ },
+ {
+  "id": "ice-tera-shard",
+  "name": "Ice Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Ice.",
+  "category": "transformation",
+  "iconAssetId": "item.ice_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "ice"
+  }
+ },
+ {
+  "id": "fighting-tera-shard",
+  "name": "Fighting Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Fighting.",
+  "category": "transformation",
+  "iconAssetId": "item.fighting_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "fighting"
+  }
+ },
+ {
+  "id": "poison-tera-shard",
+  "name": "Poison Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Poison.",
+  "category": "transformation",
+  "iconAssetId": "item.poison_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "poison"
+  }
+ },
+ {
+  "id": "ground-tera-shard",
+  "name": "Ground Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Ground.",
+  "category": "transformation",
+  "iconAssetId": "item.ground_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "ground"
+  }
+ },
+ {
+  "id": "flying-tera-shard",
+  "name": "Flying Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Flying.",
+  "category": "transformation",
+  "iconAssetId": "item.flying_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "flying"
+  }
+ },
+ {
+  "id": "psychic-tera-shard",
+  "name": "Psychic Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Psychic.",
+  "category": "transformation",
+  "iconAssetId": "item.psychic_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "psychic"
+  }
+ },
+ {
+  "id": "bug-tera-shard",
+  "name": "Bug Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Bug.",
+  "category": "transformation",
+  "iconAssetId": "item.bug_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "bug"
+  }
+ },
+ {
+  "id": "rock-tera-shard",
+  "name": "Rock Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Rock.",
+  "category": "transformation",
+  "iconAssetId": "item.rock_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "rock"
+  }
+ },
+ {
+  "id": "ghost-tera-shard",
+  "name": "Ghost Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Ghost.",
+  "category": "transformation",
+  "iconAssetId": "item.ghost_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "ghost"
+  }
+ },
+ {
+  "id": "dragon-tera-shard",
+  "name": "Dragon Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Dragon.",
+  "category": "transformation",
+  "iconAssetId": "item.dragon_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "dragon"
+  }
+ },
+ {
+  "id": "dark-tera-shard",
+  "name": "Dark Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Dark.",
+  "category": "transformation",
+  "iconAssetId": "item.dark_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "dark"
+  }
+ },
+ {
+  "id": "steel-tera-shard",
+  "name": "Steel Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Steel.",
+  "category": "transformation",
+  "iconAssetId": "item.steel_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "steel"
+  }
+ },
+ {
+  "id": "fairy-tera-shard",
+  "name": "Fairy Tera Shard",
+  "description": "Changes a Pokémon's Tera Type to Fairy.",
+  "category": "transformation",
+  "iconAssetId": "item.fairy_tera_shard",
+  "usableInBattle": false,
+  "usableOutside": true,
+  "target": "party",
+  "effect": {
+   "kind": "teraShard",
+   "type": "fairy"
+  }
+ },
+ {
+  "id": "z-ring",
+  "name": "Z-Ring",
+  "description": "A key item. Lets one of your Pokémon use a Z-Move once per battle, if you also have the Z-Crystal of that move's type.",
+  "category": "key",
+  "iconAssetId": "item.z_ring",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "keyItem",
+   "mechanic": "zmove"
+  }
+ },
+ {
+  "id": "normalium-z",
+  "name": "Normalium Z",
+  "description": "Lets a Pokémon turn a Normal-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.normalium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "normal"
+  }
+ },
+ {
+  "id": "fightinium-z",
+  "name": "Fightinium Z",
+  "description": "Lets a Pokémon turn a Fighting-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.fightinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fighting"
+  }
+ },
+ {
+  "id": "flyinium-z",
+  "name": "Flyinium Z",
+  "description": "Lets a Pokémon turn a Flying-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.flyinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "flying"
+  }
+ },
+ {
+  "id": "poisonium-z",
+  "name": "Poisonium Z",
+  "description": "Lets a Pokémon turn a Poison-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.poisonium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "poison"
+  }
+ },
+ {
+  "id": "groundium-z",
+  "name": "Groundium Z",
+  "description": "Lets a Pokémon turn a Ground-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.groundium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ground"
+  }
+ },
+ {
+  "id": "rockium-z",
+  "name": "Rockium Z",
+  "description": "Lets a Pokémon turn a Rock-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.rockium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "rock"
+  }
+ },
+ {
+  "id": "buginium-z",
+  "name": "Buginium Z",
+  "description": "Lets a Pokémon turn a Bug-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.buginium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "bug"
+  }
+ },
+ {
+  "id": "ghostium-z",
+  "name": "Ghostium Z",
+  "description": "Lets a Pokémon turn a Ghost-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.ghostium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ghost"
+  }
+ },
+ {
+  "id": "steelium-z",
+  "name": "Steelium Z",
+  "description": "Lets a Pokémon turn a Steel-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.steelium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "steel"
+  }
+ },
+ {
+  "id": "firium-z",
+  "name": "Firium Z",
+  "description": "Lets a Pokémon turn a Fire-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.firium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fire"
+  }
+ },
+ {
+  "id": "waterium-z",
+  "name": "Waterium Z",
+  "description": "Lets a Pokémon turn a Water-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.waterium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "water"
+  }
+ },
+ {
+  "id": "grassium-z",
+  "name": "Grassium Z",
+  "description": "Lets a Pokémon turn a Grass-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.grassium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "grass"
+  }
+ },
+ {
+  "id": "electrium-z",
+  "name": "Electrium Z",
+  "description": "Lets a Pokémon turn a Electric-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.electrium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "electric"
+  }
+ },
+ {
+  "id": "psychium-z",
+  "name": "Psychium Z",
+  "description": "Lets a Pokémon turn a Psychic-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.psychium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "psychic"
+  }
+ },
+ {
+  "id": "icium-z",
+  "name": "Icium Z",
+  "description": "Lets a Pokémon turn a Ice-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.icium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "ice"
+  }
+ },
+ {
+  "id": "dragonium-z",
+  "name": "Dragonium Z",
+  "description": "Lets a Pokémon turn a Dragon-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.dragonium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "dragon"
+  }
+ },
+ {
+  "id": "darkinium-z",
+  "name": "Darkinium Z",
+  "description": "Lets a Pokémon turn a Dark-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.darkinium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "dark"
+  }
+ },
+ {
+  "id": "fairium-z",
+  "name": "Fairium Z",
+  "description": "Lets a Pokémon turn a Fairy-type move into a Z-Move (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.fairium_z",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "zCrystal",
+   "type": "fairy"
+  }
  }
 ]

@@ -8,6 +8,7 @@ import {
   RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
+  ZMoveDataSchema,
   BossProfileSchema,
   BossTeamsFileSchema,
   CatalogEntrySchema,
@@ -38,6 +39,7 @@ import itemsJson from './items.json';
 import itemCatalogJson from './itemCatalog.json';
 import learnablesJson from './learnables.json';
 import megaStonesJson from './megaStones.json';
+import zMovesJson from './zMoves.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
@@ -78,6 +80,7 @@ export interface RawContent {
   ruleset: unknown;
   balance: unknown;
   story: unknown;
+  zMoves: unknown;
 }
 
 /**
@@ -118,6 +121,8 @@ export const RAW_CONTENT: RawContent = {
   ruleset: rulesetJson,
   balance: balanceJson,
   story: storyJson,
+  // Generated: npm run data:zmoves.
+  zMoves: zMovesJson,
 };
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string, problems: string[]): T | null {
@@ -159,7 +164,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
-  if (!story || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
+  if (!story || !zMoves || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -187,6 +193,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
     story,
+    zMoves,
   };
 
   addCatalog(content, problems);
@@ -265,6 +272,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       const kind = content.species.get(to)?.form?.kind;
       if (kind !== (item.effect.primal ? 'primal' : 'mega')) problems.push(`item "${item.id}" turns "${from}" into "${to}", which is not a ${item.effect.primal ? 'Primal' : 'Mega'} form`);
     }
+  }
+  // Z-Moves: every crystal's Z-Move and every move named must exist.
+  for (const [type, id] of Object.entries(zMoves.byType)) if (!content.moves.has(id)) problems.push(`zMoves.json: the ${type} Z-Move "${id}" is not a move`);
+  for (const id of [...Object.keys(zMoves.power), ...Object.keys(zMoves.status)]) if (!content.moves.has(id)) problems.push(`zMoves.json names unknown move "${id}"`);
+  for (const item of content.items.values()) {
+    if (item.effect.kind === 'zCrystal' && !zMoves.byType[item.effect.type]) problems.push(`item "${item.id}" is a ${item.effect.type} Z-Crystal, but that type has no Z-Move`);
   }
   for (const entry of shop) {
     if (!content.items.has(entry.item)) problems.push(`shop.json sells unknown item "${entry.item}"`);

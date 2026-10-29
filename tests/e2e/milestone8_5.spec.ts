@@ -71,3 +71,79 @@ test('Mega Evolution from the battle menu', async ({ page }) => {
   expect(await page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId)).toBe('venusaur-mega');
   expect(errors).toEqual([]);
 });
+
+test('Terastallization from the battle menu', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await startRun(page, 'e2e-tera');
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    session.debugAddToParty('charizard', 50);
+    session.run.party.unshift(session.run.party.pop());
+    session.run.party[0].teraType = 'water';
+    session.debugGiveItem('tera-orb', 1);
+  });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.debugReplaceEnemy('snorlax', 60);
+    game.scene.getScene('Battle').scene.restart();
+  });
+  await waitForScene(page, 'Battle');
+  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Tera: OFF']);
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => menuLabels(page)).toEqual(['Fight', 'Bag', 'Pokémon', 'Tera: ON']);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.keyboard.press('Enter');
+  const teraType = () =>
+    page.evaluate(() => {
+      const { session } = (window as any).__pkr;
+      return session.run.battle?.transform.teraTypes[session.run.party[0].uid] ?? null;
+    });
+  await expect.poll(teraType, { timeout: 15_000 }).toBe('water');
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: 'test-results/m8_5-tera-charizard.png' });
+  expect(errors).toEqual([]);
+});
+
+test('Z-Move from the battle menu', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await startRun(page, 'e2e-zmove');
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    session.debugAddToParty('pikachu', 50);
+    session.run.party.unshift(session.run.party.pop());
+    session.run.party[0].moves = [{ id: 'thunderbolt', pp: 15 }, { id: 'growl', pp: 40 }];
+    session.debugGiveItem('z-ring', 1);
+    session.debugGiveItem('electrium-z', 1);
+  });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.debugReplaceEnemy('snorlax', 60);
+    game.scene.getScene('Battle').scene.restart();
+  });
+  await waitForScene(page, 'Battle');
+  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Z: OFF']);
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => menuLabels(page)).toEqual(['Fight', 'Bag', 'Pokémon', 'Z-Move: ON']);
+  await page.keyboard.press('Enter');
+  // Thunderbolt shows as its Z-Move; Growl is Normal and there's no Normalium Z, so it stays plain (and can't be picked).
+  await expect.poll(() => menuLabels(page)).toEqual(['Gigavolt Havoc', 'Growl']);
+  await page.screenshot({ path: 'test-results/m8_5-zmove-menu.png' });
+  await page.waitForTimeout(250);
+  await page.keyboard.press('Enter');
+  const used = () => page.evaluate(() => (window as any).__pkr.session.run.battle?.transform.used.player ?? null);
+  await expect.poll(used, { timeout: 15_000 }).toEqual(['zmove']);
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: 'test-results/m8_5-zmove-used.png' });
+  expect(errors).toEqual([]);
+});
