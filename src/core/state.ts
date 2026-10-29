@@ -48,6 +48,8 @@ export const PokemonInstanceSchema = z.object({
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
+  /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
+  teraType: TypeNameSchema.optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -130,10 +132,12 @@ export const BattleTransformSchema = z.object({
   forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'dynamax']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
+  /** uid -> the type a Terastallized Pokémon has become. */
+  teraTypes: z.record(z.string(), TypeNameSchema).default({}),
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [] });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {} });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),

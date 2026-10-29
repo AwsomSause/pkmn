@@ -23,6 +23,7 @@ import { applyCatalog, catalogTargetProblem, getCatalogEntry, isCatalogUseful, i
 import { evolveFully } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, itemCount, itemUseProblem } from './items';
+import { hasKeyItem } from './battle/transform';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
 import { runLevelCap } from './regions';
@@ -51,6 +52,8 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
   const item = reward.effect.kind === 'addItem' ? content.items.get(reward.effect.item) : undefined;
   // Key items and Mega Stones are kept for the run, so they're offered once; a stone only when a party member can use it.
   if (item?.effect.kind === 'keyItem') return itemCount(run.inventory, item.id) === 0;
+  // Tera Shards only matter once you have the Tera Orb.
+  if (item?.effect.kind === 'teraShard') return hasKeyItem(content, run.inventory, 'tera');
   if (item?.effect.kind === 'megaStone') {
     const forms = item.effect.forms;
     return itemCount(run.inventory, item.id) === 0 && run.party.some((p) => forms[p.speciesId] !== undefined);

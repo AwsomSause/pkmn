@@ -34,7 +34,7 @@ import {
   typeEffectiveness,
 } from './damage';
 import * as Held from './held';
-import { applyTransformations, transformProblem, type TransformEvent, type TransformRequest } from './transform';
+import { applyTransformations, battleTypes, stabMultiplier, teraPower, transformProblem, type TransformEvent, type TransformRequest } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -776,7 +776,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   // Damaging move.
-  const targetTypes = getSpecies(content, target.mon.speciesId).types;
+  const targetTypes = battleTypes(content, ctx.battle, target.mon);
   const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
   const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, targetTypes));
   if (effectiveness === 0) {
@@ -801,8 +801,9 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const hitsDefense = physical || fx.targetsDefense;
       crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user)));
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
-      const userTypes = getSpecies(content, user.mon.speciesId).types;
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
+      power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
+      const stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
       if (fx.doubleBelowHalf && target.mon.hp * 2 <= targetStats.hp) power *= 2;
       if (fx.hitsSemi?.double && target.vol.semi === fx.hitsSemi.semi) power *= 2;
       if (fx.weatherBall && weather) power *= 2;
@@ -820,7 +821,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         defense,
         attackStage: physical ? user.stages.atk : user.stages.spa,
         defenseStage: fx.ignoreStages ? 0 : defenseStage,
-        stab: !move.flags.includes('typeless') && userTypes.includes(moveType),
+        stab: stab > 1,
+        stabMultiplier: stab,
         effectiveness,
         crit,
         randomFactor,

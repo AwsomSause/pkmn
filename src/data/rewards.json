@@ -1205,5 +1205,309 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.mega_bracelet"
+ },
+ {
+  "id": "tera-orb",
+  "name": "Tera Orb",
+  "description": "Key item: Terastallize once per battle.",
+  "category": "key",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "tera-orb",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.tera_orb"
+ },
+ {
+  "id": "normal-tera-shard",
+  "name": "Normal Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Normal.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "normal-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.normal_tera_shard"
+ },
+ {
+  "id": "fire-tera-shard",
+  "name": "Fire Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Fire.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fire-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fire_tera_shard"
+ },
+ {
+  "id": "water-tera-shard",
+  "name": "Water Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Water.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "water-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.water_tera_shard"
+ },
+ {
+  "id": "electric-tera-shard",
+  "name": "Electric Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Electric.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "electric-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.electric_tera_shard"
+ },
+ {
+  "id": "grass-tera-shard",
+  "name": "Grass Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Grass.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "grass-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.grass_tera_shard"
+ },
+ {
+  "id": "ice-tera-shard",
+  "name": "Ice Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Ice.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "ice-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ice_tera_shard"
+ },
+ {
+  "id": "fighting-tera-shard",
+  "name": "Fighting Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Fighting.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fighting-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fighting_tera_shard"
+ },
+ {
+  "id": "poison-tera-shard",
+  "name": "Poison Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Poison.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "poison-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.poison_tera_shard"
+ },
+ {
+  "id": "ground-tera-shard",
+  "name": "Ground Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Ground.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "ground-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ground_tera_shard"
+ },
+ {
+  "id": "flying-tera-shard",
+  "name": "Flying Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Flying.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "flying-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.flying_tera_shard"
+ },
+ {
+  "id": "psychic-tera-shard",
+  "name": "Psychic Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Psychic.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "psychic-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.psychic_tera_shard"
+ },
+ {
+  "id": "bug-tera-shard",
+  "name": "Bug Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Bug.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "bug-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.bug_tera_shard"
+ },
+ {
+  "id": "rock-tera-shard",
+  "name": "Rock Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Rock.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "rock-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.rock_tera_shard"
+ },
+ {
+  "id": "ghost-tera-shard",
+  "name": "Ghost Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Ghost.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "ghost-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.ghost_tera_shard"
+ },
+ {
+  "id": "dragon-tera-shard",
+  "name": "Dragon Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Dragon.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "dragon-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dragon_tera_shard"
+ },
+ {
+  "id": "dark-tera-shard",
+  "name": "Dark Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Dark.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "dark-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dark_tera_shard"
+ },
+ {
+  "id": "steel-tera-shard",
+  "name": "Steel Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Steel.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "steel-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.steel_tera_shard"
+ },
+ {
+  "id": "fairy-tera-shard",
+  "name": "Fairy Tera Shard",
+  "description": "For your Bag: changes a Pokémon's Tera Type to Fairy.",
+  "category": "transformation",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "addItem",
+   "item": "fairy-tera-shard",
+   "quantity": 1
+  },
+  "stacking": "stacks",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.fairy_tera_shard"
  }
 ]

@@ -5,7 +5,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext, type BattleEvent, type PlayerAction } from '../../src/core/battle/engine';
-import { bossMechanics, megaOptions, revertTransformations, stoneForms } from '../../src/core/battle/transform';
+import { battleTypes, bossMechanics, megaOptions, revertTransformations, stabMultiplier, stoneForms, teraOption, teraPower } from '../../src/core/battle/transform';
+import { applyItemToPokemon, itemUseProblem, teraTypeOf } from '../../src/core/items';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { isRewardEligible } from '../../src/core/rewards';
 import { hashSeed, Rng } from '../../src/core/rng';
@@ -127,7 +128,8 @@ describe('Mega Evolution in battle', () => {
     expect(megaOptions(ctx)).toEqual([]);
     expect(() => resolveTurn(ctx, MEGA)).toThrow(/switched off/);
     expect(transforms(resolveTurn(ctx, { kind: 'move', index: 0 }))).toEqual([]);
-    expect(bossMechanics(content, 'champion', 1, ['mega'])).toEqual([]);
+    expect(bossMechanics(content, 'champion', 1, ['mega'])).toEqual(['tera']);
+    expect(bossMechanics(content, 'champion', 1, ['mega', 'tera'])).toEqual([]);
   });
 });
 
@@ -147,9 +149,9 @@ describe('Mega Evolution for opponents', () => {
 
   it('bosses use it from gym 5 and in the league; other trainers and wild Pokémon never', () => {
     expect(bossMechanics(content, 'gym', 4, [])).toEqual([]);
-    expect(bossMechanics(content, 'gym', 5, [])).toEqual(['mega']);
-    expect(bossMechanics(content, 'elite', 1, [])).toEqual(['mega']);
-    expect(bossMechanics(content, 'champion', 1, [])).toEqual(['mega']);
+    expect(bossMechanics(content, 'gym', 5, [])).toEqual(['mega', 'tera']);
+    expect(bossMechanics(content, 'elite', 1, [])).toEqual(['mega', 'tera']);
+    expect(bossMechanics(content, 'champion', 1, [])).toEqual(['mega', 'tera']);
     expect(bossMechanics(content, null, 9, [])).toEqual([]);
     const { ctx } = setup([mon('snorlax', 60, 'p1', 'splash')], [mon('garchomp', 30, 'e1', 'splash')], {});
     expect(transforms(resolveTurn(ctx, { kind: 'move', index: 0 }))).toEqual([]);
@@ -234,5 +236,95 @@ describe('Mega Ring and stones as rewards and in the shop', () => {
     expect(bought.inventory['mega-ring']).toBe(1);
     expect(shopStock(content, bought).some((e) => e.item === 'mega-ring')).toBe(false);
     expect(() => buyItem(content, bought, 'mega-ring')).toThrow(/already have/);
+  });
+});
+
+// ---------- Slice 2: Terastallization ----------
+
+const TERA: PlayerAction = { kind: 'move', index: 0, transform: { kind: 'tera' } };
+
+describe('Terastallization', () => {
+  it('needs the Tera Orb, and turns the Pokémon into its Tera Type until the battle ends', () => {
+    const p = mon('venusaur', 50, 'p1', 'tackle');
+    p.teraType = 'water';
+    const e = mon('charizard', 50, 'e1', 'ember');
+    const none = setup([structuredClone(p)], [structuredClone(e)], {});
+    expect(teraOption(none.ctx)).toBeNull();
+    expect(() => resolveTurn(none.ctx, TERA)).toThrow(/Tera Orb/);
+
+    const { battle, ctx } = setup([p], [e], { 'tera-orb': 1 });
+    expect(teraOption(ctx)).toBe('water');
+    const events = resolveTurn(ctx, TERA);
+    expect(transforms(events)).toEqual([{ type: 'transform', side: 'player', uid: 'p1', kind: 'tera', from: 'venusaur', to: 'venusaur', itemId: null, teraType: 'water' }]);
+    expect(battleTypes(content, battle, p)).toEqual(['water']);
+    // Ember is now not very effective on the Water-type Venusaur.
+    const ember = events.find((x) => x.type === 'damage' && x.side === 'player');
+    if (ember?.type === 'damage') expect(ember.effectiveness).toBe(0.5);
+    expect(() => resolveTurn(ctx, TERA)).toThrow(/already/);
+    revertTransformations(content, battle, [p]);
+    expect(battleTypes(content, battle, p)).toEqual(['grass', 'poison']);
+  });
+
+  it('keeps its old STAB, gives STAB to the Tera Type (2× when it was already its type), and lifts weak Tera-type moves to 60', () => {
+    const p = mon('charizard', 50, 'p1', 'ember');
+    const { battle } = setup([p], [mon('snorlax', 50, 'e1', 'splash')], {});
+    expect(stabMultiplier(content, battle, p, 'fire')).toBe(1.5);
+    expect(stabMultiplier(content, battle, p, 'water')).toBe(1);
+    battle.transform.teraTypes[p.uid] = 'water';
+    expect(stabMultiplier(content, battle, p, 'water')).toBe(1.5);
+    expect(stabMultiplier(content, battle, p, 'fire')).toBe(1.5);
+    battle.transform.teraTypes[p.uid] = 'fire';
+    expect(stabMultiplier(content, battle, p, 'fire')).toBe(2);
+    expect(teraPower(battle, p, content.moves.get('ember')!, 40)).toBe(60);
+    expect(teraPower(battle, p, content.moves.get('tackle')!, 40)).toBe(40);
+  });
+
+  it('can be used in the same battle as a Mega, but not on the same Pokémon', () => {
+    const a = mon('venusaur', 50, 'p1', 'tackle');
+    const b = mon('charizard', 50, 'p2', 'tackle');
+    const { battle, ctx } = setup([a, b], [mon('snorlax', 60, 'e1', 'splash')], { 'mega-ring': 1, venusaurite: 1, 'tera-orb': 1 });
+    resolveTurn(ctx, MEGA);
+    expect(teraOption(ctx)).toBeNull();
+    expect(() => resolveTurn(ctx, TERA)).toThrow(/already transformed/);
+    resolveTurn(ctx, { kind: 'switch', partyIndex: 1 });
+    resolveTurn(ctx, TERA);
+    expect(battle.transform.used.player).toEqual(['mega', 'tera']);
+    expect(battleTypes(content, battle, b)).toEqual(['fire']);
+  });
+
+  it('a boss ace with no Mega form Terastallizes into the boss speciality', () => {
+    const p = mon('snorlax', 60, 'p1', 'splash');
+    const ace = mon('rattata', 30, 'e2', 'splash');
+    const { battle, ctx } = setup([p], [mon('pidgey', 5, 'e1', 'splash'), ace], {});
+    battle.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
+    battle.transform.enemyMechanics = ['mega', 'tera'];
+    battle.enemyIndex = 1;
+    const events = transforms(resolveTurn(ctx, { kind: 'move', index: 0 }));
+    expect(events.map((e) => e.type === 'transform' && [e.side, e.kind, e.teraType])).toEqual([['enemy', 'tera', 'rock']]);
+  });
+
+  it('Tera Shards set the Tera Type, and are only offered once you have the Tera Orb', () => {
+    const r = chooseStarter(content, createRun(content, { runId: 'r-tera', seed: 'tera', archetypeId: 'red' }), 0);
+    const shard = content.items.get('fire-tera-shard')!;
+    const starter = r.party[0]!;
+    if (teraTypeOf(content, starter) === 'fire') starter.teraType = 'water';
+    expect(applyItemToPokemon(content, shard, starter)).toMatch(/Fire/);
+    expect(teraTypeOf(content, starter)).toBe('fire');
+    expect(itemUseProblem(content, shard, starter)).toMatch(/already/);
+    expect(isRewardEligible(content, r, content.rewards.get('fire-tera-shard')!)).toBe(false);
+    r.inventory['tera-orb'] = 1;
+    expect(isRewardEligible(content, r, content.rewards.get('fire-tera-shard')!)).toBe(true);
+  });
+
+  it('survives save and load in the middle of a battle', () => {
+    let run = chooseStarter(content, createRun(content, { runId: 'r-tera-save', seed: 'tera-save', archetypeId: 'red' }), 0);
+    run = debugReplaceEnemy(content, toBattle(run), 'magikarp', 100);
+    setMoves(run.battle!.enemyTeam[0]!, 'splash');
+    run.inventory['tera-orb'] = 1;
+    run = takeTurn(content, run, TERA).run;
+    expect(Object.keys(run.battle!.transform.teraTypes)).toEqual([run.party[0]!.uid]);
+    const saves = new SaveManager(new MemoryStorageProvider(), content);
+    saves.saveRun(run);
+    expect(saves.loadRun()).toEqual({ status: 'ok', data: run });
   });
 });
