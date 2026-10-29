@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 9, settings: 2, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 10, settings: 2, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -166,6 +166,27 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         rng: { ...(run.rng as Json), story: hashSeed(`${seed}::story`), hyper: hashSeed(`${seed}::hyper`) },
         battle: upgradedBattle,
         story: createStoryState(),
+      };
+    },
+    // v10 (M8.9 Phase 1, Hyper moments): Love's endure became "Toughened It Out"; battles
+    // count low-HP turns and super-effective hits; histories count each Pokémon's Hyper moments.
+    9: (data) => {
+      const run = data as Json;
+      const battle = run.battle as Json | null;
+      const story = run.story as Json;
+      const histories = Object.fromEntries(
+        Object.entries((story.histories as Record<string, Json>) ?? {}).map(([uid, h]) => [uid, { ...h, hyper: h.hyper ?? {} }]),
+      );
+      return {
+        ...run,
+        battle: battle
+          ? {
+              ...battle,
+              storyEffects: ((battle.storyEffects as string[]) ?? []).map((k) => k.replace(/^love-hung-on@/, 'toughened-it-out@')),
+              hyper: battle.hyper ?? { lowHp: null, superEffective: {} },
+            }
+          : null,
+        story: { ...story, histories },
       };
     },
   },

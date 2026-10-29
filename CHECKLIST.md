@@ -223,9 +223,9 @@ Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
 - [x] Mega Evolution: Mega Ring key item (draft + shop), 145 Mega Stones (`npm run data:megas`), once per battle, one transformation per Pokémon, changes back after battle, boss aces from gym 5 and in the league, challenge switch, battle menu option with a flash and the new sprite
 - [x] Primal Reversion with the Red and Blue Orbs
 - [x] Tests: unit (rules, data, save/load mid-battle, rewards and shop) and a browser test
-- [ ] Terastallization
-- [ ] Z-Moves
-- [ ] Dynamax / Gigantamax
+- [x] Terastallization: Tera Orb (draft + shop), Tera Type per Pokémon, 18 Tera Shards, STAB and 60-power rules, boss aces, battle menu option, badge and tint, unit and browser tests
+- [x] Z-Moves: Z-Ring (draft + shop), 18 type Z-Crystals, Z-power from Showdown data, status Z bonuses, Protect, battle menu option, drawn icons, unit and browser tests (species-exclusive Z-Moves and boss Z-Moves still to come)
+- [x] Dynamax / Gigantamax: Dynamax Band (draft + shop), double HP for 3 turns, Max Moves and Max Guard from Showdown data, 33 G-Max Moves, weather and stat effects, battle menu option, unit and browser tests (terrain and most G-Max side effects still to come)
 - [ ] Regional forms as a mechanic (if still wanted)
 
 ## Milestone 8.6 — Systems audit and quality gates ✅
@@ -290,6 +290,22 @@ The shared layer every story system reads (design: docs/plans/hyper-overdrive-te
 - Knockouts don't record overkill yet (the engine caps damage at the HP left; adding the raw number needs an engine change, left for the Hyper slices).
 - Relationships and recurring enemies have their records, limits and functions, but nothing creates them yet: that is M8.9 (rivals, nemesis).
 - Only the newest 250 domain events are kept in the save; histories and the chronicle keep what matters from older ones.
+
+## Milestone 8.9 — Hyper moments, Phase 1 (in progress)
+
+Design: the Hyper section of the Electric plan doc (Kice ticked all 10 Phase 1 items, 2026-10-25); numbers are the doc's starting balance. One slice per PR.
+
+- [x] Slice 1: Toughened It Out (replaces Love's endure), Felt a Bond, Pushed Itself Back Up, Hung In There (with "Again" and "Wouldn't Stay Down"); run save v10
+- [ ] Slice 2: The Enemy Is Getting Riled Up (telegraphed a turn ahead, with counters)
+- [ ] Slice 3: The Two Pokémon Feel a Heated Rivalry
+- [ ] Slice 4: This Trainer Will Return (rematch pool)
+- [ ] Slice 5: A Past Pokémon Wants to Join Your Party (archive across runs)
+- [ ] Slice 6: The Seven Emotions as event tags; run history and event logging screen
+
+### Known limits in slice 1
+
+- "Our Hearts Beat as One" (Felt a Bond after a Champion win) is not in yet: histories count boss wins but not which boss. Rescues don't exist yet, so Felt a Bond reads close calls, survived knockouts and boss wins.
+- Hyper moments are for your Pokémon only; the enemy's side starts with slice 2.
 
 ## Milestone 9 — Grand Region, ending, deploy
 

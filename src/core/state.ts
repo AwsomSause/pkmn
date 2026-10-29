@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { StoryStateSchema } from './story/schema';
+import { freshHyperBattle } from './battle/hyper';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
@@ -48,6 +49,10 @@ export const PokemonInstanceSchema = z.object({
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
+  /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
+  teraType: TypeNameSchema.optional(),
+  /** In battle only: Dynamaxed, so its HP is doubled (core/battle/transform.ts). */
+  dynamaxed: z.literal(true).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -127,13 +132,17 @@ export const BattleTransformSchema = z.object({
   /** The mechanics each side has already used this battle (each works once per battle). */
   used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
   /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
-  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'dynamax']), from: z.string() })),
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'zmove', 'dynamax']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
+  /** uid -> the type a Terastallized Pokémon has become. */
+  teraTypes: z.record(z.string(), TypeNameSchema).default({}),
+  /** uid -> turns left for a Dynamaxed Pokémon. */
+  dynamax: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [] });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {} });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
@@ -158,8 +167,12 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
-  /** Battle-scope story effects already used this battle (e.g. "love-hung-on@p1"); see core/story/ledger.ts. */
+  /** Battle-scope story effects already used this battle (e.g. "toughened-it-out@p1"); see core/story/ledger.ts. */
   storyEffects: z.array(z.string()),
+  /** Hyper counters: the current low-HP stand and super-effective hits survived (core/battle/hyper.ts). */
+  hyper: z
+    .object({ lowHp: z.object({ uid: z.string(), turns: z.number().int().min(0) }).nullable(), superEffective: z.record(z.string(), z.number().int().min(0)) })
+    .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),

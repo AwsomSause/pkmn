@@ -91,6 +91,9 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} fainted!`;
     case 'lastStand':
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
+    case 'hyper':
+      // The story layer normally shows the moment's own lines instead.
+      return e.cured ? `${who(e.side)} shook off its status!` : `${who(e.side)} won't give up!`;
     case 'held': {
       const item = content.catalog.get(e.itemId)?.name ?? content.items.get(e.itemId)?.name ?? 'item';
       switch (e.what) {
@@ -141,8 +144,6 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       }
       return null;
     }
-    case 'endure':
-      return `${who(e.side)} hung on for you, out of love!`;
     case 'confused':
       return `${who(e.side)} became confused!`;
     case 'confusion':
@@ -216,7 +217,12 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
     case 'transform': {
       const before = e.side === 'player' ? species(e.from) : `The ${foe} ${species(e.from)}`;
+      if (e.kind === 'tera') return `${before} Terastallized into the ${e.teraType![0]!.toUpperCase()}${e.teraType!.slice(1)} type!`;
       if (e.kind === 'primal') return `${before}'s Primal Reversion! It reverted to its primal form!`;
+      if (e.kind === 'zmove') return `${before} surrounded itself with its Z-Power!`;
+      if (e.kind === 'dynamax') return `${before} Dynamaxed!`;
+      if (e.kind === 'gigantamax') return `${before} Gigantamaxed into ${species(e.to)}!`;
+      if (e.kind === 'dynamaxEnd') return `${before} returned to its normal size!`;
       return `${before} has Mega Evolved into ${species(e.to)}!`;
     }
   }

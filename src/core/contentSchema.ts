@@ -127,7 +127,8 @@ export const MoveSchema = z.object({
   priority: z.number().int().min(-7).max(5).default(0),
   critStage: z.number().int().min(0).max(3).default(0),
   target: z.enum(['enemy', 'self']),
-  flags: z.array(z.enum(['powder', 'typeless'])).default([]),
+  /** `zmove`, `max`: a Z-Move or Max Move made in battle (battle/transform.ts); they hit through Protect for a quarter of their damage. */
+  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no
@@ -442,6 +443,10 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
    * lets that species Mega Evolve. Primal orbs work automatically and need no Mega Ring.
    */
   z.object({ kind: z.literal('megaStone'), forms: z.record(z.string(), z.string()), primal: z.boolean().default(false) }),
+  /** A Tera Shard: sets a Pokémon's Tera Type (used up). */
+  z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
+  /** A Z-Crystal: with the Z-Ring, turns one move of its type into that type's Z-Move once per battle. */
+  z.object({ kind: z.literal('zCrystal'), type: TypeNameSchema }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -560,7 +565,7 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('healing'), percent: z.number().positive() }),
   /** The holder gains friendship faster (Prism Scale). */
   z.object({ hook: z.literal('friendship'), percent: z.number().positive() }),
-  /** Love's chance to hang on at 1 HP is multiplied (Destiny Knot). */
+  /** The holder's Toughened It Out chance is multiplied (Destiny Knot). */
   z.object({ hook: z.literal('endure'), multiplier: z.number().positive() }),
   /** Each turn, a chance to raise a random stat (Dubious Disc). */
   z.object({ hook: z.literal('randomStat'), percent: z.number().positive() }),
@@ -1012,6 +1017,8 @@ export const BalanceSchema = z.object({
     bossGymFrom: z.number().int().min(1),
     /** Elite Four members and champions always may. */
     league: z.boolean(),
+    /** Turns a Dynamax lasts, counting the turn it starts. */
+    dynamaxTurns: z.number().int().min(1).default(3),
   }),
   /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
   friendship: z.object({
@@ -1101,7 +1108,6 @@ export const BalanceSchema = z.object({
     peaceDamageTakenCut: z.number().min(0).max(1),
     goodCatch: z.number().min(0),
     evilMoney: z.number().min(0),
-    loveEndureChance: z.number().min(0).max(1),
     /** Charisma: more experience for your Pokémon. */
     charismaExpGain: z.number().min(0),
     /** Charisma: friendship grows faster. */
@@ -1190,6 +1196,53 @@ export const BalanceSchema = z.object({
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
+/** zMoves.json (npm run data:zmoves, from Pokémon Showdown's move data). */
+export const ZMoveDataSchema = z.object({
+  /** The Z-Move each type's crystal makes. */
+  byType: z.partialRecord(TypeNameSchema, z.string()),
+  /** Z-Move power for each damaging move. */
+  power: z.record(z.string(), z.number().int().positive()),
+  /** What a status move adds when used as a Z-Move (it still works as itself). */
+  status: z.record(
+    z.string(),
+    z.object({
+      boosts: z.array(z.object({ stat: BoostStatSchema, stages: z.number().int() })).optional(),
+      /** `clearNegative`: the user's lowered stats go back to normal; `heal`: the user's HP is restored in full. */
+      effect: z.enum(['clearNegative', 'heal']).optional(),
+    }),
+  ),
+});
+export type ZMoveData = z.infer<typeof ZMoveDataSchema>;
+
+/** What a Max or G-Max Move does after it hits (maxMoves.json). */
+const MaxEffectSchema = z.object({
+  weather: WeatherSchema.optional(),
+  statChanges: z.array(StatChangeSchema.omit({ chance: true })).optional(),
+  status: StatusIdSchema.optional(),
+  confuse: z.literal(true).optional(),
+  bind: z.literal(true).optional(),
+  breaksProtect: z.literal(true).optional(),
+});
+export type MaxEffect = z.infer<typeof MaxEffectSchema>;
+
+/** maxMoves.json (npm run data:maxmoves, from Pokémon Showdown's move data). */
+export const MaxMoveDataSchema = z.object({
+  /** The Max Move each type's damaging moves become. */
+  byType: z.partialRecord(TypeNameSchema, z.string()),
+  /** What every status move becomes (Max Guard). */
+  guard: z.string(),
+  /** Max Move power for each damaging move. */
+  power: z.record(z.string(), z.number().int().positive()),
+  /** Max Move id -> its side effect. */
+  effects: z.record(z.string(), MaxEffectSchema),
+  /** G-Max Move id -> the Gigantamax forms that use it instead of their type's Max Move. */
+  gmax: z.record(
+    z.string(),
+    z.object({ forms: z.array(z.string()).min(1), type: TypeNameSchema, power: z.number().int().positive().optional(), effects: MaxEffectSchema.optional() }),
+  ),
+});
+export type MaxMoveData = z.infer<typeof MaxMoveDataSchema>;
+
 export interface Content {
   species: Map<string, Species>;
   moves: Map<string, Move>;
@@ -1218,4 +1271,6 @@ export interface Content {
   balance: Balance;
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
+  zMoves: ZMoveData;
+  maxMoves: MaxMoveData;
 }

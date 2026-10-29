@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T21:23:16.142Z",
+  "generatedAt": "2026-10-29T23:36:52.968Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71356,6 +71356,240 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/mega_bracelet.png"
+    },
+    {
+      "id": "item.tera_orb",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/tera_orb.png"
+    },
+    {
+      "id": "item.normal_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/normal_tera_shard.png"
+    },
+    {
+      "id": "item.fire_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fire_tera_shard.png"
+    },
+    {
+      "id": "item.water_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/water_tera_shard.png"
+    },
+    {
+      "id": "item.electric_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/electric_tera_shard.png"
+    },
+    {
+      "id": "item.grass_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/grass_tera_shard.png"
+    },
+    {
+      "id": "item.ice_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ice_tera_shard.png"
+    },
+    {
+      "id": "item.fighting_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fighting_tera_shard.png"
+    },
+    {
+      "id": "item.poison_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/poison_tera_shard.png"
+    },
+    {
+      "id": "item.ground_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ground_tera_shard.png"
+    },
+    {
+      "id": "item.flying_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/flying_tera_shard.png"
+    },
+    {
+      "id": "item.psychic_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/psychic_tera_shard.png"
+    },
+    {
+      "id": "item.bug_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/bug_tera_shard.png"
+    },
+    {
+      "id": "item.rock_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/rock_tera_shard.png"
+    },
+    {
+      "id": "item.ghost_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ghost_tera_shard.png"
+    },
+    {
+      "id": "item.dragon_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dragon_tera_shard.png"
+    },
+    {
+      "id": "item.dark_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dark_tera_shard.png"
+    },
+    {
+      "id": "item.steel_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/steel_tera_shard.png"
+    },
+    {
+      "id": "item.fairy_tera_shard",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fairy_tera_shard.png"
+    },
+    {
+      "id": "item.z_ring",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/z_ring.png"
+    },
+    {
+      "id": "item.dynamax_band",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dynamax_band.png"
+    },
+    {
+      "id": "item.normalium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/normalium_z.png"
+    },
+    {
+      "id": "item.fightinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fightinium_z.png"
+    },
+    {
+      "id": "item.flyinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/flyinium_z.png"
+    },
+    {
+      "id": "item.poisonium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/poisonium_z.png"
+    },
+    {
+      "id": "item.groundium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/groundium_z.png"
+    },
+    {
+      "id": "item.rockium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/rockium_z.png"
+    },
+    {
+      "id": "item.buginium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/buginium_z.png"
+    },
+    {
+      "id": "item.ghostium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/ghostium_z.png"
+    },
+    {
+      "id": "item.steelium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/steelium_z.png"
+    },
+    {
+      "id": "item.firium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/firium_z.png"
+    },
+    {
+      "id": "item.waterium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/waterium_z.png"
+    },
+    {
+      "id": "item.grassium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/grassium_z.png"
+    },
+    {
+      "id": "item.electrium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/electrium_z.png"
+    },
+    {
+      "id": "item.psychium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/psychium_z.png"
+    },
+    {
+      "id": "item.icium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/icium_z.png"
+    },
+    {
+      "id": "item.dragonium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dragonium_z.png"
+    },
+    {
+      "id": "item.darkinium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/darkinium_z.png"
+    },
+    {
+      "id": "item.fairium_z",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/fairium_z.png"
     },
     {
       "id": "item.fist_plate",

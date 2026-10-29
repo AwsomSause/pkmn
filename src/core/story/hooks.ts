@@ -1,7 +1,7 @@
 // Where the run feeds the story layer. The run's actions (core/run.ts) call
 // these after they have changed the run, so the story is a record of what
-// really happened and never decides an outcome itself (Love's endure is
-// decided by the battle engine; this file only tells its story).
+// really happened and never decides an outcome itself (Hyper moments are
+// decided by the battle engine; this file only tells their story).
 
 import type { Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
@@ -11,19 +11,18 @@ import { withStream } from '../rng';
 import type { RunEvent } from '../run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../state';
 import { applyStoryEffect, isBattleEffect } from './effects';
+import { HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { battleIndex, emit, noteFought, noteLowHpTurn, openHistory, whereNow } from './record';
 import type { StoryEventDefinition, Where } from './schema';
 
+const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
+
 const name = (content: Content, speciesId: string) => content.species.get(speciesId)?.name ?? speciesId;
 
 function fill(text: string, names: Record<string, string>): string {
   return text.replace(/\{(\w+)\}/g, (all, key: string) => names[key] ?? all);
-}
-
-export function definitionFor(content: Content, trigger: StoryEventDefinition['triggerConditions']['trigger']): StoryEventDefinition | undefined {
-  return content.story.definitions.find((d) => d.triggerConditions.trigger === trigger);
 }
 
 const BOSS_ROLES: Record<string, string> = { [GYM_LEADER_CLASS]: 'Gym Leader', [ELITE_FOUR_CLASS]: 'Elite Four', [CHAMPION_CLASS]: 'Champion' };
@@ -101,7 +100,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         if (e.side !== 'player' || e.hpAfter <= 0) break;
         // A hit that was survived by enduring is told by that event instead.
         const next = events[i + 1];
-        if (next && (next.type === 'endure' || next.type === 'lastStand') && next.side === 'player') break;
+        if (next && (next.type === 'hyper' || next.type === 'lastStand') && next.side === 'player') break;
         const target = mon(active.player);
         if (!target || e.hpAfter > maxHp(content, target) * cfg.closeCallHpShare) break;
         const move = lastMove.enemy ? content.moves.get(lastMove.enemy)?.name ?? lastMove.enemy : 'an attack';
@@ -113,11 +112,18 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         });
         break;
       }
-      case 'endure': {
-        if (e.side !== 'player' || !active.player) break;
-        emit(content, run, 'survivedFatal', { where, actors: [active.player], data: { cause: 'love', enemy: mon(active.enemy)?.speciesId ?? null } });
-        const def = definitionFor(content, 'loveEndure');
-        if (def) triggers.push(makeTrigger(run, def, i, triggers.length, { name: speciesOf(active.player), enemy: speciesOf(active.enemy) }));
+      case 'hyper': {
+        if (e.side !== 'player') break;
+        const def = content.story.definitions.find((d) => d.id === e.defId);
+        if (!def) break;
+        const history = run.story.histories[e.uid];
+        if (history) history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
+        const kind = def.effect?.kind;
+        if (!e.cured && (kind === 'endure' || kind === 'endureOrCure' || kind === 'revive')) {
+          emit(content, run, 'survivedFatal', { where, actors: [e.uid], data: { cause: def.id, enemy: mon(active.enemy)?.speciesId ?? null } });
+        }
+        const move = lastMove.enemy ? content.moves.get(lastMove.enemy)?.name ?? lastMove.enemy : 'attack';
+        triggers.push(makeTrigger(run, def, i, triggers.length, { name: speciesOf(e.uid), enemy: speciesOf(active.enemy), move }, e.variant, e.uid));
         break;
       }
       case 'lastStand':
@@ -168,11 +174,22 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   return cues;
 }
 
-function makeTrigger(run: RunState, def: StoryEventDefinition, at: number, order: number, names: Record<string, string>): StoryTrigger {
-  const line = def.messagePool.length === 1 ? def.messagePool[0]! : withStream(run.rng, 'story', (r) => r.pick(def.messagePool));
+function makeTrigger(
+  run: RunState,
+  def: StoryEventDefinition,
+  at: number,
+  order: number,
+  names: Record<string, string>,
+  variant: string | null,
+  uid: string,
+): StoryTrigger {
+  const shown = (variant && def.variants[variant]) || def;
+  const pool = shown.messagePool;
+  const line = pool.length === 1 ? pool[0]! : withStream(run.rng, 'story', (r) => r.pick(pool));
   return {
     defId: def.id,
-    title: def.displayName,
+    uid,
+    title: shown.displayName,
     message: fill(line, names),
     priority: def.priority,
     combat: def.effect !== null,
@@ -189,18 +206,18 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
   const budgetLeft = content.story.majorCuesPerBattle - run.story.majorCuesThisBattle;
   const result = resolveQueue(triggers, budgetLeft);
   run.story.majorCuesThisBattle += result.majorUsed;
-  const actor = run.party[run.battle!.activeIndex]?.uid;
   const tell = (t: StoryTrigger, suppressed: boolean) => {
     const def = content.story.definitions.find((d) => d.id === t.defId)!;
+    const actor = t.uid;
     const event = emit(content, run, 'storyMoment', {
       where,
-      actors: actor ? [actor] : [],
+      actors: [actor],
       data: { def: def.id, suppressed },
       importance: def.memoryRecord?.importance ?? 0,
       text: def.memoryRecord ? fill(def.memoryRecord.text, t.names) : undefined,
     });
-    // Effects the engine has not already applied (Love's endure is decided in the engine).
-    if (!suppressed && def.effect && def.effect.kind !== 'endure' && actor) {
+    // Effects the engine has not already applied (it decides every Hyper moment's effect itself).
+    if (!suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind)) {
       const id = isBattleEffect(def.effect) ? cooldownKey(def, actor) : `${event.id}:${def.id}`;
       applyStoryEffect(content, run, id, def.effect, actor);
     }

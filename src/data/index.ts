@@ -8,6 +8,8 @@ import {
   RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
+  ZMoveDataSchema,
+  MaxMoveDataSchema,
   BossProfileSchema,
   BossTeamsFileSchema,
   CatalogEntrySchema,
@@ -26,6 +28,7 @@ import {
   type Requirement,
   type Reward,
 } from '../core/contentSchema';
+import { HISTORY_MEMORIES, HYPER_EFFECTS } from '../core/story/hyper';
 import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
@@ -37,6 +40,8 @@ import itemsJson from './items.json';
 import itemCatalogJson from './itemCatalog.json';
 import learnablesJson from './learnables.json';
 import megaStonesJson from './megaStones.json';
+import zMovesJson from './zMoves.json';
+import maxMovesJson from './maxMoves.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
@@ -77,6 +82,8 @@ export interface RawContent {
   ruleset: unknown;
   balance: unknown;
   story: unknown;
+  zMoves: unknown;
+  maxMoves: unknown;
 }
 
 /**
@@ -117,6 +124,10 @@ export const RAW_CONTENT: RawContent = {
   ruleset: rulesetJson,
   balance: balanceJson,
   story: storyJson,
+  // Generated: npm run data:zmoves.
+  zMoves: zMovesJson,
+  // Generated: npm run data:maxmoves.
+  maxMoves: maxMovesJson,
 };
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string, problems: string[]): T | null {
@@ -158,7 +169,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
-  if (!story || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
+  const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
+  if (!story || !zMoves || !maxMoves || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -186,6 +199,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
     story,
+    zMoves,
+    maxMoves,
   };
 
   addCatalog(content, problems);
@@ -218,9 +233,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const def of story.definitions) {
     for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);
     if (def.effect?.kind === 'item' && !content.items.has(def.effect.itemId)) problems.push(`story.json "${def.id}" gives unknown item "${def.effect.itemId}"`);
-    // The battle engine decides Love's endure on the battle stream, so the definition can't add its own chance or another effect.
-    if (def.triggerConditions.trigger === 'loveEndure' && (def.chance !== null || def.effect?.kind !== 'endure' || def.duration !== 'battle')) {
-      problems.push(`story.json "${def.id}": a loveEndure event needs chance null, an endure effect and battle duration`);
+    // Hyper moments are decided by the battle engine, which only knows one effect for each trigger.
+    const expected = HYPER_EFFECTS[def.triggerConditions.trigger];
+    if (def.effect?.kind !== expected || def.duration !== 'battle') {
+      problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and battle duration`);
+    }
+    for (const m of def.triggerConditions.needsMemory ?? []) {
+      if (!HISTORY_MEMORIES.includes(m) && !storyIds.has(m)) problems.push(`story.json "${def.id}" needs unknown memory "${m}"`);
     }
   }
   for (const trigger of STORY_TRIGGERS) {
@@ -260,6 +279,19 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       const kind = content.species.get(to)?.form?.kind;
       if (kind !== (item.effect.primal ? 'primal' : 'mega')) problems.push(`item "${item.id}" turns "${from}" into "${to}", which is not a ${item.effect.primal ? 'Primal' : 'Mega'} form`);
     }
+  }
+  // Z-Moves: every crystal's Z-Move and every move named must exist.
+  for (const [type, id] of Object.entries(zMoves.byType)) if (!content.moves.has(id)) problems.push(`zMoves.json: the ${type} Z-Move "${id}" is not a move`);
+  for (const id of [...Object.keys(zMoves.power), ...Object.keys(zMoves.status)]) if (!content.moves.has(id)) problems.push(`zMoves.json names unknown move "${id}"`);
+  // Max Moves: every Max and G-Max Move and every move named must exist; G-Max forms must be Gigantamax forms.
+  for (const id of [...Object.values(maxMoves.byType), maxMoves.guard, ...Object.keys(maxMoves.gmax), ...Object.keys(maxMoves.power), ...Object.keys(maxMoves.effects)]) {
+    if (!content.moves.has(id)) problems.push(`maxMoves.json names unknown move "${id}"`);
+  }
+  for (const [id, g] of Object.entries(maxMoves.gmax)) {
+    for (const form of g.forms) if (content.species.get(form)?.form?.kind !== 'gigantamax') problems.push(`maxMoves.json: ${id} is for "${form}", which is not a Gigantamax form`);
+  }
+  for (const item of content.items.values()) {
+    if (item.effect.kind === 'zCrystal' && !zMoves.byType[item.effect.type]) problems.push(`item "${item.id}" is a ${item.effect.type} Z-Crystal, but that type has no Z-Move`);
   }
   for (const entry of shop) {
     if (!content.items.has(entry.item)) problems.push(`shop.json sells unknown item "${entry.item}"`);

@@ -91,6 +91,7 @@ import {
   recordRouteChosen,
   recordRunStarted,
 } from './story/hooks';
+import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
 
@@ -637,10 +638,10 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
   return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e));
 }
 
-/** Key items and Mega Stones last the whole run, so you only ever need one. */
+/** Key items, Mega Stones and Z-Crystals last the whole run, so you only ever need one. */
 function ownsKeepsake(content: Content, inventory: Record<string, number>, itemId: string): boolean {
   const kind = content.items.get(itemId)?.effect.kind;
-  return (kind === 'keyItem' || kind === 'megaStone') && itemCount(inventory, itemId) > 0;
+  return (kind === 'keyItem' || kind === 'megaStone' || kind === 'zCrystal') && itemCount(inventory, itemId) > 0;
 }
 
 /** Badges needed before the shop sells an entry, after the trainer's shopUnlockOffset. */
@@ -728,6 +729,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const attributes = runAttributeEffects(content, run);
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
+  const hyperRng = new Rng(run.rng.hyper);
   const targetUid = currentEnemy(battle).uid;
   const engineEvents = resolveTurn(
     {
@@ -742,12 +744,14 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       typeModifiers: typeModifiers(archetype),
       attributes,
       disabledMechanics: run.disabledMechanics,
+      hyper: buildHyperContext(content, run, hyperRng),
       teamItems: run.passives,
     },
     action,
   );
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
+  run.rng.hyper = hyperRng.state;
   // Apricorns and the Fluffy Tail are used up by the throws they help.
   const thrownAt = engineEvents.some((e) => e.type === 'ball') ? (battle.enemyTeam.find((m) => m.uid === targetUid) ?? null) : null;
   if (thrownAt) useThrowCharges(content, run, thrownAt);

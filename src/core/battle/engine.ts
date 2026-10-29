@@ -18,6 +18,7 @@ import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, la
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
+import type { StoryTriggerKind } from '../story/schema';
 import { currentEnemy, freshHeldState, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
@@ -34,7 +35,8 @@ import {
   typeEffectiveness,
 } from './damage';
 import * as Held from './held';
-import { applyTransformations, transformProblem, type TransformEvent, type TransformRequest } from './transform';
+import { freshHyperBattle, rollHyper, type HyperContext, type HyperEligibility } from './hyper';
+import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -83,8 +85,11 @@ export type BattleEvent =
   | { type: 'drain'; side: Side; amount: number; hpAfter: number }
   | { type: 'recoil'; side: Side; amount: number; hpAfter: number }
   | { type: 'lastStand'; side: Side; itemId: string }
-  /** Love: the Pokémon hung on at 1 HP. */
-  | { type: 'endure'; side: Side }
+  /**
+   * A Hyper moment (story.json definition `defId`): the Pokémon hung on at 1 HP, got back up,
+   * shook off its status (`cured`) or dug in. `hpAfter` is its HP after the moment.
+   */
+  | { type: 'hyper'; side: Side; uid: string; defId: string; variant: string | null; hpAfter: number; cured: boolean }
   /** `uid` and `participants` let the run award experience for this faint. */
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
@@ -128,10 +133,14 @@ export interface BattleContext {
   healMultiplier?: number;
   /** The trainer's type-based damage multipliers for the player's side. */
   typeModifiers?: TypeModifiers;
-  /** The player's attributes (damage, Speed, damage taken, Love's chance to hang on). */
+  /** The player's attributes (damage, Speed, damage taken). */
   attributes?: AttributeEffects;
   /** The player's team items (run.passives): the Plates help every team member. */
   teamItems?: Record<string, number>;
+  /** Hyper moments for your Pokémon (none when absent). */
+  hyper?: HyperContext;
+  /** Set during a turn once a Hyper moment has changed the battle (one per turn). */
+  hyperUsed?: boolean;
   /** Transformations switched off for this run (a challenge). */
   disabledMechanics?: readonly TransformKind[];
   /**
@@ -164,6 +173,7 @@ export function createBattle(
     needsSwitch: false,
     lastStandUsed: false,
     storyEffects: [],
+    hyper: freshHyperBattle(),
     outcome: null,
     levelInfo: [],
     ai: 0,
@@ -314,6 +324,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     validateAction(ctx, action);
   }
   ctx.doubleKoLoser = undefined;
+  ctx.hyperUsed = false;
+  battle.hyper ??= freshHyperBattle();
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
@@ -321,11 +333,13 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   const enemyMoveIndex =
     enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
-  const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
+  let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
   if (action.kind === 'switch') {
     events.push({ type: 'switchOut', side: 'player', uid: ctx.party[battle.activeIndex]!.uid });
+    // Switching out ends a Dynamax.
+    endDynamax(content, battle, 'player', ctx.party[battle.activeIndex]!, events as TransformStepEvent[]);
     switchIn(ctx, action.partyIndex, events);
   } else if (action.kind === 'item') {
     useItemInBattle(ctx, action.itemId, action.targetIndex, events);
@@ -336,14 +350,21 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
 
   // Transformations (Mega Evolution, ...) happen before any move, so they count for turn order.
-  if (!battle.outcome) applyTransformations(ctx, action.kind === 'move' ? action.transform : undefined, events as TransformEvent[]);
+  if (!battle.outcome) {
+    const move = action.kind === 'move' ? action : undefined;
+    applyTransformations(ctx, move?.transform, events as TransformStepEvent[], move?.index);
+  }
+  // A Dynamaxed Pokémon uses Max Moves.
+  enemyMove = battleMove(content, battle, enemy.mon, enemyMove);
 
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false });
   const playerC = player();
 
   // 2. Moves.
   if (action.kind === 'move') {
-    const playerMove = resolveMove(content, playerC.mon, action.index);
+    const chosen = resolveMove(content, playerC.mon, action.index);
+    // A Z-Move replaces the chosen move (its Z-Power was spent above).
+    const playerMove = battleMove(content, battle, playerC.mon, action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen);
     const order = decideOrder(ctx, rng, playerC, playerMove, enemy, enemyMove);
     const actions =
       order === 'player'
@@ -376,9 +397,15 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     recordFaints(ctx, playerC, enemy, events);
   }
 
+  // Hyper moments that come from how the turn went (Hung In There, a bond that shakes off a status).
+  if (!battle.outcome && enemy.mon.hp > 0) hyperEndOfTurn(ctx, player(), events);
+
   // A Pokémon that switched in this turn still gets its "first turn" next turn (Fake Out).
   if (action.kind !== 'switch') playerC.vol.turnsOut += 1;
   enemy.vol.turnsOut += 1;
+
+  // Dynamax turns run down (and a fainted Dynamax Pokémon shrinks back).
+  tickDynamax(content, battle, ctx.party, events as TransformStepEvent[]);
 
   // 4. Decide the outcome or replace fainted Pokémon.
   settleFaints(ctx, events);
@@ -407,7 +434,7 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
     if (!slot) throw new Error(`Invalid move slot ${action.index}`);
     if (slot.pp <= 0) throw new Error(`${slot.id} has no PP left`);
     if (action.transform) {
-      const problem = transformProblem(ctx, action.transform);
+      const problem = transformProblem(ctx, action.transform, action.index);
       if (problem) throw new Error(problem);
     }
   } else if (action.kind === 'switch') {
@@ -611,21 +638,25 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
 }
 
-function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = false): { lost: number; lastStand: string | null; endured: boolean } {
+/**
+ * Takes HP from a Pokémon (`hit` is the hit number when a move did it). `knockedDown` is true when a
+ * Hyper moment got it back up after the hit took all its HP (the screen shows it at 0 first).
+ */
+function takeHp(
+  ctx: BattleContext,
+  c: Combatant,
+  amount: number,
+  hit: number | null = null,
+): { lost: number; lastStand: string | null; hyper: HyperEvent | null; knockedDown: boolean } {
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
-  // Love: each of your Pokémon may hang on at 1 HP after a move's hit (rolled only when Love is above 0).
-  // It is the "loveEndure" story event (story.json): its cooldown key in the
-  // battle's story ledger makes it once per battle per Pokémon. Destiny Knot raises the chance.
-  const endureChance = (ctx.attributes?.endureChance ?? 0) * Held.endureMultiplier(ctx, c.mon, c.side);
-  const endure = endureChance > 0 ? ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'loveEndure') : undefined;
-  const endureKey = endure ? cooldownKey(endure, c.mon.uid) : '';
-  if (endure && fromMove && c.side === 'player' && lost > 0 && lost >= c.mon.hp && c.mon.hp > 1 && !hasBattleEffect(ctx.battle, endureKey)) {
-    if (ctx.rng.chance(endureChance)) {
-      markBattleEffect(ctx.battle, endureKey);
-      lost = c.mon.hp - 1;
-      c.mon.hp -= lost;
-      return { lost, lastStand: null, endured: true };
+  // A fatal hit from a move may be survived by a Hyper moment (decided before the charm).
+  if (hit !== null && c.side === 'player' && lost > 0 && lost >= c.mon.hp) {
+    const hyper = hyperKnockout(ctx, c, hit);
+    if (hyper) {
+      lost = c.mon.hp - (hyper.hpAfter > 0 && !hyper.revived ? hyper.hpAfter : 0);
+      c.mon.hp = hyper.hpAfter;
+      return { lost, lastStand: null, hyper: hyper.event, knockedDown: hyper.revived };
     }
   }
   if (c.side === 'player' && lost > 0 && lost >= c.mon.hp && !ctx.battle.lastStandUsed) {
@@ -639,7 +670,95 @@ function takeHp(ctx: BattleContext, c: Combatant, amount: number, fromMove = fal
     }
   }
   c.mon.hp -= lost;
-  return { lost, lastStand, endured: false };
+  return { lost, lastStand, hyper: null, knockedDown: false };
+}
+
+type HyperEvent = Extract<BattleEvent, { type: 'hyper' }>;
+
+/**
+ * Tries the moment for `trigger`: eligible, off cooldown, and the roll succeeds (its chance times
+ * `multiplier`, from a held item). Marks the cooldown when it fires.
+ */
+function tryHyper(ctx: BattleContext, trigger: StoryTriggerKind, mon: PokemonInstance, multiplier = 1): HyperEligibility | null {
+  if (!ctx.hyper || ctx.hyperUsed) return null;
+  const found = ctx.hyper.eligibility(trigger, mon);
+  if (!found) return null;
+  const e = multiplier === 1 ? found : { ...found, chance: Math.min(1, found.chance * multiplier) };
+  const key = cooldownKey(e.def, mon.uid);
+  if (hasBattleEffect(ctx.battle, key) || !rollHyper(ctx.hyper, e)) return null;
+  markBattleEffect(ctx.battle, key);
+  ctx.hyperUsed = true;
+  return e;
+}
+
+/**
+ * A fatal hit on your Pokémon: Toughened It Out (it had enough HP before the hit, first hit only),
+ * then Felt a Bond, then Pushed Itself Back Up (it goes down, then gets back up).
+ */
+function hyperKnockout(ctx: BattleContext, c: Combatant, hit: number): { hpAfter: number; revived: boolean; event: HyperEvent } | null {
+  const max = calcStats(ctx.content, c.mon).hp;
+  const make = (e: HyperEligibility, hpAfter: number, revived: boolean) => ({
+    hpAfter,
+    revived,
+    event: { type: 'hyper' as const, side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter, cured: false },
+  });
+  if (hit === 0) {
+    const tough = ctx.hyper?.eligibility('toughenedItOut', c.mon);
+    const share = tough?.def.triggerConditions.minHpShare ?? 0;
+    if (tough && c.mon.hp > 1 && c.mon.hp >= max * share) {
+      // A Destiny Knot doubles the holder's chance.
+      const e = tryHyper(ctx, 'toughenedItOut', c.mon, Held.endureMultiplier(ctx, c.mon, c.side));
+      if (e) return make(e, 1, false);
+    }
+    if (c.mon.hp > 1) {
+      const e = tryHyper(ctx, 'feltABond', c.mon);
+      if (e) return make(e, 1, false);
+    }
+  }
+  const back = tryHyper(ctx, 'pushedBackUp', c.mon);
+  if (back && back.def.effect?.kind === 'revive') return make(back, Math.max(1, Math.floor(max * back.def.effect.hpShare)), true);
+  return null;
+}
+
+/** End of turn: a bond may shake off a status; a long low-HP stand (or two super-effective hits survived) digs in. */
+function hyperEndOfTurn(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  const state = battle.hyper;
+  if (c.mon.hp <= 0) {
+    state.lowHp = null;
+    return;
+  }
+  const hung = ctx.hyper?.eligibility('hungInThere', c.mon);
+  const max = calcStats(ctx.content, c.mon).hp;
+  const cond = hung?.def.triggerConditions;
+  const low = c.mon.hp <= max * (cond?.lowHpShare ?? 0.25);
+  state.lowHp = low ? { uid: c.mon.uid, turns: state.lowHp?.uid === c.mon.uid ? state.lowHp.turns + 1 : 1 } : null;
+
+  if (c.mon.status) {
+    const e = tryHyper(ctx, 'feltABond', c.mon);
+    if (e) {
+      c.mon.status = null;
+      events.push({ type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: c.mon.hp, cured: true });
+      return;
+    }
+  }
+
+  if (!hung || !cond) return;
+  const stood = (state.lowHp?.turns ?? 0) >= (cond.turns ?? Infinity);
+  const shrugged = (state.superEffective[c.mon.uid] ?? 0) >= (cond.superEffectiveHits ?? Infinity);
+  if (!stood && !shrugged) return;
+  const e = tryHyper(ctx, 'hungInThere', c.mon);
+  if (!e || e.def.effect?.kind !== 'boost') return;
+  const fx = e.def.effect;
+  const variant = !stood && shrugged && e.def.variants.wouldntStayDown ? 'wouldntStayDown' : e.variant;
+  events.push({ type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant, hpAfter: c.mon.hp, cured: false });
+  for (const [stat, stages] of Object.entries(fx.stats) as [BoostStat, number][]) applyStageChange(c, stat, stages, events);
+  const scale = fx.healAttribute ? ctx.hyper!.attributeShare(fx.healAttribute) : 1;
+  const heal = Math.min(max - c.mon.hp, Math.floor(max * fx.healShare * scale));
+  if (heal > 0) {
+    c.mon.hp += heal;
+    events.push({ type: 'heal', side: c.side, amount: heal, hpAfter: c.mon.hp });
+  }
 }
 
 function executeMove(
@@ -747,7 +866,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     events.push({ type: 'avoided', side: target.side });
     return;
   }
-  if (targetsEnemy && target.protected && !fx.breaksProtect) {
+  // Z-Moves go through Protect for a quarter of their damage (see the damage step).
+  if (targetsEnemy && target.protected && !fx.breaksProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
     events.push({ type: 'protected', side: target.side });
     return;
   }
@@ -776,7 +896,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   // Damaging move.
-  const targetTypes = getSpecies(content, target.mon.speciesId).types;
+  const targetTypes = battleTypes(content, ctx.battle, target.mon);
   const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
   const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, targetTypes));
   if (effectiveness === 0) {
@@ -801,8 +921,9 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const hitsDefense = physical || fx.targetsDefense;
       crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user)));
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
-      const userTypes = getSpecies(content, user.mon.speciesId).types;
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
+      power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
+      const stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
       if (fx.doubleBelowHalf && target.mon.hp * 2 <= targetStats.hp) power *= 2;
       if (fx.hitsSemi?.double && target.vol.semi === fx.hitsSemi.semi) power *= 2;
       if (fx.weatherBall && weather) power *= 2;
@@ -820,7 +941,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         defense,
         attackStage: physical ? user.stages.atk : user.stages.spa,
         defenseStage: fx.ignoreStages ? 0 : defenseStage,
-        stab: !move.flags.includes('typeless') && userTypes.includes(moveType),
+        stab: stab > 1,
+        stabMultiplier: stab,
         effectiveness,
         crit,
         randomFactor,
@@ -833,16 +955,21 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
         Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
+      if (target.protected && (move.flags.includes('zmove') || move.flags.includes('max'))) damage = Math.max(1, Math.floor(damage / 4));
     }
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
 
-    const { lost, lastStand, endured } = takeHp(ctx, target, damage, true);
+    const { lost, lastStand, hyper, knockedDown } = takeHp(ctx, target, damage, landed);
     dealt += lost;
     landed += 1;
-    events.push({ type: 'damage', side: target.side, amount: lost, hpAfter: target.mon.hp, effectiveness, crit });
+    // Pushed Itself Back Up: the hit knocks it down first, then it gets up.
+    events.push({ type: 'damage', side: target.side, amount: lost, hpAfter: knockedDown ? 0 : target.mon.hp, effectiveness, crit });
     if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
-    if (endured) events.push({ type: 'endure', side: target.side });
+    if (hyper) events.push(hyper);
+    if (target.side === 'player' && effectiveness > 1 && target.mon.hp > 0) {
+      ctx.battle.hyper.superEffective[target.mon.uid] = (ctx.battle.hyper.superEffective[target.mon.uid] ?? 0) + 1;
+    }
   }
   if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
   Held.afterHit(ctx, user, target, move, moveType, effectiveness, dealt, movedFirst, events as Held.HeldEvent[]);
@@ -874,7 +1001,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Secondary effects only land if the target is still standing.
   if (target.mon.hp > 0) {
     if (fx.status && rng.chance(fx.status.chance / 100)) tryInflictStatus(content, rng, target, fx.status.id, move, events, false);
-    if (fx.flinchChance && movedFirst && rng.chance(fx.flinchChance / 100)) target.flinched = true;
+    // A Dynamaxed Pokémon can't flinch.
+    if (fx.flinchChance && movedFirst && rng.chance(fx.flinchChance / 100) && !target.mon.dynamaxed) target.flinched = true;
     if (fx.confuse && rng.chance(fx.confuse.chance / 100)) tryConfuse(ctx, target, events, false);
     if (fx.bind && target.vol.bound === 0) {
       target.vol.bound = rng.int(4, 5);
@@ -888,6 +1016,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (recipient.mon.hp <= 0) continue;
     if (!rolls.has(change.chance)) rolls.set(change.chance, rng.chance(change.chance / 100));
     if (rolls.get(change.chance)) changeStage(ctx, user, recipient, change.stat, change.stages, events);
+  }
+  // Max Moves set the weather after they hit (Max Flare: sun).
+  const maxWeather = move.flags.includes('max') && dealt > 0 ? maxMoveWeather(content, move.id) : null;
+  if (maxWeather && ctx.battle.weather?.id !== maxWeather) {
+    ctx.battle.weather = { id: maxWeather, turns: Held.weatherTurns(ctx, user, maxWeather, 5) };
+    events.push({ type: 'weather', weather: maxWeather });
   }
 }
 
