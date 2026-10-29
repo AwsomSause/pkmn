@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
-import { megaOptions, ownedMegaForms, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
+import { canDynamax, gmaxFormFor, maxMoveOptions, megaOptions, ownedMegaForms, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -34,6 +34,8 @@ const ENEMY_POS = { x: 648, y: 246 };
 const PLAYER_POS = { x: 312, y: 400 };
 /** The bottom message bar, and the command window on its right. */
 const MESSAGE_Y = 396;
+/** A Dynamaxed Pokémon is drawn this much larger (a stand-in until the M9.5 effect). */
+const DYNAMAX_SCALE = 1.35;
 const COMMAND_X = 588;
 
 interface InfoBox {
@@ -92,7 +94,10 @@ export class BattleScene extends Phaser.Scene {
     preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
     // Forms they might transform into this battle (Megas for stones you own; any Mega or Primal for the enemy).
     const formsOf = (ids: string[]) => ids.flatMap((id) => content.species.get(id) ?? []);
-    const partyForms = (run?.party ?? []).flatMap((m) => [...ownedMegaForms(content, run!.inventory, m), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
+    const partyForms = (run?.party ?? []).flatMap((m) => [
+      ...[...ownedMegaForms(content, run!.inventory, m), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId),
+      ...[gmaxFormFor(content, m.speciesId) ?? []].flat(),
+    ]);
     const enemyForms = (run?.battle?.enemyTeam ?? []).flatMap((m) => [...stoneForms(content, m.speciesId, false), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
     preloadPokemon(this, formsOf(partyForms), { back: true, shiny: true, cry: true });
     preloadPokemon(this, formsOf(enemyForms), { front: true, shiny: true, cry: true });
@@ -211,15 +216,17 @@ export class BattleScene extends Phaser.Scene {
   private showSprite(side: 'player' | 'enemy', mon: PokemonInstance, cry = true): Visual {
     const species = getSpecies(services().session.content, mon.speciesId);
     if (cry) playCry(this, species);
+    // Gigantamax art is already drawn huge, so only a plain Dynamax grows.
+    const grow = mon.dynamaxed && species.form?.kind !== 'gigantamax' ? DYNAMAX_SCALE : 1;
     if (side === 'player') {
       this.playerSprite?.destroy();
-      this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, PIXEL_SCALE + 1, mon.shiny);
+      this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, (PIXEL_SCALE + 1) * grow, mon.shiny);
       this.field.add(this.playerSprite);
       this.prefetchMoves(mon);
       return this.playerSprite;
     }
     this.enemySprite?.destroy();
-    this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE, mon.shiny);
+    this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE * grow, mon.shiny);
     // The foe stands behind the player's Pokémon.
     this.field.addAt(this.enemySprite, this.fieldBase);
     this.prefetchMoves(mon);
@@ -232,12 +239,15 @@ export class BattleScene extends Phaser.Scene {
     this.fx.prefetch(mon.moves.map((m) => presentationFor(data, m.id).anim));
   }
 
-  /** A Terastallized Pokémon is drawn tinted with its Tera Type's colour (a stand-in until the M9.5 crystal effect). */
+  /**
+   * A Terastallized Pokémon is drawn tinted with its Tera Type's colour, and a
+   * Dynamaxed one larger with a red glow (stand-ins until the M9.5 effects).
+   */
   private applyTeraTint(side: 'player' | 'enemy', mon: PokemonInstance): void {
     const type = this.run.battle?.transform.teraTypes[mon.uid];
     const visual = side === 'player' ? this.playerSprite : this.enemySprite;
-    if (!type || !visual) return;
-    const color = TYPE_COLORS[type] ?? 0xffffff;
+    if (!visual || (!type && !mon.dynamaxed)) return;
+    const color = mon.dynamaxed ? 0xff3060 : (TYPE_COLORS[type!] ?? 0xffffff);
     const tint = Phaser.Display.Color.Interpolate.ColorWithColor(Phaser.Display.Color.ValueToColor(0xffffff), Phaser.Display.Color.ValueToColor(color), 100, 30);
     const value = Phaser.Display.Color.GetColor(tint.r, tint.g, tint.b);
     const parts = 'list' in visual ? (visual as Phaser.GameObjects.Container).list : [visual];
@@ -296,6 +306,9 @@ export class BattleScene extends Phaser.Scene {
     const tera = this.run.battle?.transform.teraTypes[mon.uid];
     if (tera) {
       box.teraBadge = badge(this, box.statusAt.x + (box.statusBadge ? 76 : 0), box.statusAt.y, `Tera ${tera}`, TYPE_COLORS[tera] ?? 0xffffff, 16);
+      box.container.add(box.teraBadge);
+    } else if (mon.dynamaxed) {
+      box.teraBadge = badge(this, box.statusAt.x + (box.statusBadge ? 76 : 0), box.statusAt.y, 'Dynamax', 0xff3060, 16);
       box.container.add(box.teraBadge);
     }
     if (box.xpBar) {
@@ -438,7 +451,7 @@ export class BattleScene extends Phaser.Scene {
   private showRootMenu(): void {
     this.clearMenus();
     const content = services().session.content;
-    // Transformations: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> Tera -> Z-Move -> off.
+    // Transformations: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> Tera -> Z-Move -> Dynamax -> off.
     const ctx = this.battleCtx();
     const tera = teraOption(ctx);
     const zMove = zMoveOptions(ctx).some((z) => z !== null);
@@ -446,6 +459,7 @@ export class BattleScene extends Phaser.Scene {
       ...megaOptions(ctx).map((o) => ({ kind: 'mega' as const, formId: o.formId })),
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
+      ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind && (a.kind !== 'mega' || b.kind !== 'mega' || a.formId === b.formId);
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
@@ -457,12 +471,15 @@ export class BattleScene extends Phaser.Scene {
           ? ` It will Terastallize into the ${tera![0]!.toUpperCase()}${tera!.slice(1)} type!`
           : choice?.kind === 'zmove'
             ? ' Pick a move to unleash as a Z-Move!'
-            : '';
+            : choice?.kind === 'dynamax'
+              ? ` It will ${gmaxFormFor(content, this.activeMon().speciesId) ? 'Gigantamax' : 'Dynamax'}!`
+              : '';
     this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
-    const label = (c: TransformRequest) => (c.kind === 'mega' ? 'Mega' : c.kind === 'tera' ? 'Tera' : 'Z');
+    const label = (c: TransformRequest) => ({ mega: 'Mega', tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
+    const onLabel = (c: TransformRequest) => ({ mega: 'Mega', tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
     const kinds = [...new Set(choices.map(label))];
-    if (choices.length > 0) options.push({ label: choice ? `${choice.kind === 'zmove' ? 'Z-Move' : label(choice)}: ON` : `${kinds.join('/')}: OFF` });
+    if (choices.length > 0) options.push({ label: choice ? `${onLabel(choice)}: ON` : `${kinds.join('/')}: OFF` });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -494,8 +511,12 @@ export class BattleScene extends Phaser.Scene {
     this.message.setText(`What will ${this.speciesName(mon)} do?`);
     // With Z-Move on, each move shows the Z-Move it becomes; moves without one can't be picked.
     const zMoves = this.transformChoice?.kind === 'zmove' ? zMoveOptions(this.battleCtx()) : null;
+    // Dynamaxed (or about to): every move shows the Max Move it becomes.
+    const dynamaxed = this.transformChoice?.kind === 'dynamax' || this.run.battle?.transform.dynamax[mon.uid] !== undefined;
+    const maxMoves = dynamaxed ? maxMoveOptions(this.battleCtx()) : null;
     const zLabel = (i: number, name: string) => {
       const z = zMoves?.[i];
+      if (maxMoves?.[i]) return maxMoves[i]!.name;
       return z ? (z.category === 'status' ? `Z-${name}` : z.name) : name;
     };
     const options = anyPp
@@ -519,7 +540,7 @@ export class BattleScene extends Phaser.Scene {
           this.moveInfo.setText('Your Pokémon has no PP left');
           return;
         }
-        const move = zMoves?.[i] ?? content.moves.get(slot.id)!;
+        const move = zMoves?.[i] ?? maxMoves?.[i] ?? content.moves.get(slot.id)!;
         const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
         this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
@@ -780,8 +801,14 @@ export class BattleScene extends Phaser.Scene {
           flash.destroy();
           if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
           else {
+            // Dynamax doubles HP (and its end halves it again), the same way the battle rules do.
+            const dynamaxChange = e.kind === 'dynamax' || e.kind === 'gigantamax' || e.kind === 'dynamaxEnd';
+            const before = calcStats(content, mon!).hp;
             mon!.speciesId = e.to;
-            this.showSprite(e.side, mon!);
+            if (e.kind === 'dynamaxEnd') delete mon!.dynamaxed;
+            else if (dynamaxChange) mon!.dynamaxed = true;
+            if (dynamaxChange && mon!.hp > 0) mon!.hp = Math.max(1, Math.round((mon!.hp * calcStats(content, mon!).hp) / before));
+            this.showSprite(e.side, mon!, e.kind !== 'dynamaxEnd');
           }
           this.applyTeraTint(e.side, mon!);
           await this.refreshInfoBox(box, mon!, false);

@@ -236,7 +236,7 @@ Each milestone ends with: type check, production build, unit tests, a Playwright
 
 ## 6h5. Milestone 8.5 — battle transformations
 
-**Mega Evolution built 2026-10-26**, **Terastallization and Z-Moves built 2026-10-29** (Dynamax follows as its own pull request). Rules: GAME_DESIGN.md §5f.
+**Mega Evolution built 2026-10-26**, **Terastallization, Z-Moves and Dynamax/Gigantamax built 2026-10-29**. Rules: GAME_DESIGN.md §5f.
 - **Data:** `npm run data:megas -- <images.zip>` (`tools/build-mega-stones.ts`) writes `src/data/megaStones.json` (items + draft rewards), merged into items and rewards when the game loads. Stone names and species come from Pokémon Showdown's `data/items.ts` (MIT, cached in `.cache/showdown`); designed stones for Delta and Z-Megas. 26 stones without art of their own use Meganiumite's icon. Mega Ring is hand-written in items/rewards/shop.
 - **Engine:** `core/battle/transform.ts` (rules, revert, boss mechanics); the engine calls it once per turn after switches and items and emits `transform` events (presentation cues; the battle screen flashes and swaps the sprite, cinematics are M9.5). A transformed Pokémon's `speciesId` is its new form during battle; `battle.transform.forms` remembers the old one.
 - **Terastallization (second slice, 2026-10-26):** `PokemonInstance.teraType` (optional, default its first type), `battle.transform.teraTypes`; `battleTypes`/`stabMultiplier`/`teraPower` in transform.ts are used by the engine's damage step (`DamageInput.stabMultiplier`). Tera Orb + 18 Tera Shards are hand-written items/rewards; icons from the pack.

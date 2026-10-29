@@ -163,5 +163,10 @@
   "item": "z-ring",
   "price": 10000,
   "minBadges": 3
+ },
+ {
+  "item": "dynamax-band",
+  "price": 10000,
+  "minBadges": 3
  }
 ]

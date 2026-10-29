@@ -1527,6 +1527,22 @@
   "iconAssetId": "item.z_ring"
  },
  {
+  "id": "dynamax-band",
+  "name": "Dynamax Band",
+  "description": "Key item: Dynamax once per battle (double HP and Max Moves for 3 turns).",
+  "category": "key",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "dynamax-band",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.dynamax_band"
+ },
+ {
   "id": "normalium-z",
   "name": "Normalium Z",
   "description": "Z-Crystal: turns a Normal-type move into a Z-Move (needs the Z-Ring).",
