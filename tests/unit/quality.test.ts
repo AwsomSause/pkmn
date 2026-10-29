@@ -37,7 +37,7 @@ const check = (c: Content, id: string, over: Partial<ReportInputs> = {}) => buil
 describe('support status', () => {
   it('an unsupported move is disabled, a move with a known limit is limited, others are supported', () => {
     expect(moveStatus(content, content.moves.get('acrobatics')!).status).toBe('disabled');
-    expect(moveStatus(content, content.moves.get('earthquake')!)).toMatchObject({ status: 'limited' });
+    expect(moveStatus(content, content.moves.get('surf')!)).toMatchObject({ status: 'limited' });
     expect(moveStatus(content, content.moves.get('tackle')!)).toEqual({ kind: 'move', id: 'tackle', status: 'supported', notes: [] });
   });
 

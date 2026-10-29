@@ -94,10 +94,20 @@ export const SpeciesSchema = z.object({
   /** Level-up moves, including moves the battle engine doesn't support yet (they are skipped). */
   learnset: z.array(z.object({ level: z.number().int().min(1).max(100), move: z.string() })).min(1),
   evolutions: z.array(EvolutionSchema).default([]),
+  /**
+   * The abilities it can have (npm run data:abilities): each Pokémon gets one
+   * of `normal` at random, or rarely `hidden` (core/abilities.ts). Custom forms
+   * with none listed use their base species' abilities.
+   */
+  abilities: z.object({ normal: z.array(z.string()), hidden: z.string().nullable() }).default({ normal: [], hidden: null }),
   /** File names in the asset pack: sprite "2019" → images/pokemon/2019.png, icon "7/2019", cry "19". */
   assets: z.object({ sprite: z.string(), icon: z.string(), cry: z.string() }),
 });
 export type Species = z.infer<typeof SpeciesSchema>;
+
+/** An ability a Pokémon can have. What it does in battle is in core/battle/abilities.ts. */
+export const AbilitySchema = z.object({ id: z.string().min(1), name: z.string().min(1), description: z.string() });
+export type Ability = z.infer<typeof AbilitySchema>;
 
 export const WEATHERS = ['rain', 'sun', 'sand', 'snow', 'hail'] as const;
 export const WeatherSchema = z.enum(WEATHERS);
@@ -126,7 +136,8 @@ export const MoveSchema = z.object({
   priority: z.number().int().min(-7).max(5).default(0),
   critStage: z.number().int().min(0).max(3).default(0),
   target: z.enum(['enemy', 'self']),
-  flags: z.array(z.enum(['powder', 'typeless'])).default([]),
+  /** contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them). */
+  flags: z.array(z.enum(['powder', 'typeless', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no
@@ -636,6 +647,8 @@ export const BalanceSchema = z.object({
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
   vitaminMultiplierPerStack: z.number().positive(),
   vitaminMaxStacks: z.number().int().positive(),
+  /** Abilities (M8.75 part C3): the chance a new Pokémon has its hidden ability instead of a normal one. */
+  abilities: z.object({ hiddenChance: z.number().min(0).max(1) }),
   /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
   friendship: z.object({
     max: z.number().int().positive().max(255),
@@ -813,6 +826,7 @@ export type Balance = z.infer<typeof BalanceSchema>;
 export interface Content {
   species: Map<string, Species>;
   moves: Map<string, Move>;
+  abilities: Map<string, Ability>;
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   achievements: Map<string, Achievement>;

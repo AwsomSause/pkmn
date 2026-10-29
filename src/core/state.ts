@@ -36,6 +36,12 @@ export const PokemonInstanceSchema = z.object({
   shiny: z.boolean(),
   /** How much it likes you (0–255, see core/friendship.ts). */
   friendship: z.number().int().min(0).max(255),
+  /**
+   * Which of its species' abilities it has: -1 = the hidden ability, otherwise
+   * an index into the normal ones (kept through evolution, see abilityOf).
+   * Pokémon from saves made before abilities existed get the first one.
+   */
+  abilitySlot: z.number().int().min(-1).default(0),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -59,6 +65,10 @@ export const VolatileSchema = z.object({
   locked: z.object({ moveId: z.string(), turns: z.number().int().min(0) }).nullable().default(null),
   /** Full turns it has been in battle (Fake Out works only on the first). */
   turnsOut: z.number().int().min(0).default(0),
+  /** Flash Fire took a Fire move: its own Fire moves are 1.5× as strong. */
+  flashFire: z.boolean().default(false),
+  /** Truant: it loafs around on its next turn. */
+  truant: z.boolean().default(false),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -71,6 +81,8 @@ export const freshVolatile = (): Volatile => ({
   semi: null,
   locked: null,
   turnsOut: 0,
+  flashFire: false,
+  truant: false,
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -104,6 +116,8 @@ export const BattleStateSchema = z.object({
   enemyVolatile: VolatileSchema.default(freshVolatile),
   /** The weather and how many turns it has left. */
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** Sides whose Pokémon just came in and whose entry ability (Intimidate, Drizzle) hasn't happened yet. */
+  pendingEntry: z.array(z.enum(['player', 'enemy'])).default([]),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
   /** True when the active Pokémon fainted and the player must send out another. */

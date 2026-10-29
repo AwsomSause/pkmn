@@ -139,6 +139,15 @@ export class GameSession {
     this.persistRun();
   }
 
+  /** Battle start: entry abilities (Intimidate, Drizzle), saved so they happen once. */
+  beginBattle(): Run.RunEvent[] {
+    const result = Run.beginBattle(this.content, this.requireRun());
+    if (result.events.length === 0) return [];
+    this.run = result.run;
+    this.persistRun();
+    return result.events;
+  }
+
   takeTurn(action: PlayerAction): Run.TurnResult {
     const result = Run.takeTurn(this.content, this.requireRun(), action);
     this.run = result.run;

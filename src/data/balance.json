@@ -21,6 +21,9 @@
  },
  "vitaminMultiplierPerStack": 0.1,
  "vitaminMaxStacks": 3,
+ "abilities": {
+  "hiddenChance": 0.05
+ },
  "friendship": {
   "max": 255,
   "base": 70,

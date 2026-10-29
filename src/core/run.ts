@@ -13,7 +13,7 @@
 // next region, or wins the run after the last one.
 
 import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
-import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
+import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import type { Content } from './contentSchema';
 import {
   candiesForRelease,
@@ -110,6 +110,12 @@ function nextUid(run: RunState, prefix: string): string {
   return uid;
 }
 
+/** A new Pokémon for this run; its ability comes from the run seed and its uid. */
+function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
+  const uid = nextUid(run, prefix);
+  return createPokemon(content, speciesId, level, uid, `${run.seed}:${uid}`);
+}
+
 function speciesName(content: Content, id: string): string {
   return getSpecies(content, id).name;
 }
@@ -119,7 +125,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [createPokemon(content, speciesId, content.balance.starterLevel, nextUid(run, 'p'))];
+  run.party = [newMon(content, run, speciesId, content.balance.starterLevel, 'p')];
   run.party[0]!.friendship = content.balance.friendship.starter;
   run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
@@ -239,7 +245,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
       const bonus = node.harder ? r.int(lo, hi) : 0;
       return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
     });
-    const enemy = createPokemon(content, plan.speciesId, plan.level, nextUid(run, 'e'));
+    const enemy = newMon(content, run, plan.speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
@@ -260,7 +266,10 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
-    const team = plan.members.map((m) => createPlannedPokemon(content, m, nextUid(run, 'e')));
+    const team = plan.members.map((m) => {
+      const uid = nextUid(run, 'e');
+      return createPlannedPokemon(content, m, uid, `${run.seed}:${uid}`);
+    });
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
@@ -370,29 +379,46 @@ export interface TurnResult {
   defeated: boolean;
 }
 
+/** The battle engine's view of the run's battle (the engine changes `run` in place). */
+function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rng): BattleContext {
+  const archetype = getArchetype(content, run.archetypeId);
+  const attributes = runAttributeEffects(content, run);
+  return {
+    content,
+    battle: run.battle!,
+    party: run.party,
+    inventory: run.inventory,
+    rng,
+    captureRng,
+    catchMultiplier: captureMultiplier(archetype) * attributes.catchRate,
+    healMultiplier: healingMultiplier(archetype) * attributes.healing,
+    typeModifiers: typeModifiers(archetype),
+    attributes,
+  };
+}
+
+/**
+ * Battle start: plays both first Pokémon's entry abilities (Intimidate,
+ * Drizzle). Does nothing if they already happened. Uses no random numbers.
+ */
+export function beginBattle(content: Content, current: RunState): { run: RunState; events: RunEvent[] } {
+  assertPhase(current, 'battle');
+  if ((current.battle!.pendingEntry ?? []).length === 0) return { run: current, events: [] };
+  const run = structuredClone(current);
+  const rng = new Rng(run.rng.battle);
+  const events = startBattle(battleContext(content, run, rng, new Rng(run.rng.capture)));
+  run.rng.battle = rng.state;
+  countAttributeGrowth(content, run, events);
+  return { run, events };
+}
+
 export function takeTurn(content: Content, current: RunState, action: PlayerAction): TurnResult {
   assertPhase(current, 'battle');
   const run = structuredClone(current);
   const battle = run.battle!;
-  const archetype = getArchetype(content, run.archetypeId);
-  const attributes = runAttributeEffects(content, run);
   const rng = new Rng(run.rng.battle);
   const captureRng = new Rng(run.rng.capture);
-  const engineEvents = resolveTurn(
-    {
-      content,
-      battle,
-      party: run.party,
-      inventory: run.inventory,
-      rng,
-      captureRng,
-      catchMultiplier: captureMultiplier(archetype) * attributes.catchRate,
-      healMultiplier: healingMultiplier(archetype) * attributes.healing,
-      typeModifiers: typeModifiers(archetype),
-      attributes,
-    },
-    action,
-  );
+  const engineEvents = resolveTurn(battleContext(content, run, rng, captureRng), action);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   if (engineEvents.some((e) => e.type === 'lastStand' && e.side === 'player')) run.log.charmUsedInRegion = true;
@@ -752,7 +778,7 @@ export function setLead(current: RunState, partyIndex: number): RunState {
 export function debugReplaceEnemy(content: Content, current: RunState, speciesId: string, level: number): RunState {
   assertPhase(current, 'battle');
   const run = structuredClone(current);
-  const enemy = createPokemon(content, speciesId, level, nextUid(run, 'e'));
+  const enemy = newMon(content, run, speciesId, level, 'e');
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   return run;
@@ -762,7 +788,7 @@ export function debugReplaceEnemy(content: Content, current: RunState, speciesId
 export function debugAddToParty(content: Content, current: RunState, speciesId: string, level: number): RunState {
   if (current.party.length >= content.balance.partyMax) throw new Error('Your party is full');
   const run = structuredClone(current);
-  run.party.push(createPokemon(content, speciesId, level, nextUid(run, 'p')));
+  run.party.push(newMon(content, run, speciesId, level, 'p'));
   return run;
 }
 

@@ -2,6 +2,7 @@
 
 import type { Content, GrowthRate, Species, StatBlock, StatName } from './contentSchema';
 import { STAT_NAMES } from './contentSchema';
+import { Rng, hashSeed } from './rng';
 import type { PokemonInstance } from './state';
 
 export function getSpecies(content: Content, id: string): Species {
@@ -90,11 +91,39 @@ export function movesAtLevel(content: Content, species: Species, level: number):
   return unique.slice(-4);
 }
 
+/**
+ * Which ability a new Pokémon gets (director's choice: random, hidden ones
+ * rare): its hidden ability with balance.abilities.hiddenChance, otherwise one
+ * of its normal abilities at random. The roll comes from a hash of `key` (the
+ * run seed and the Pokémon's uid), not from an RNG stream, so adding
+ * abilities changed no other roll.
+ */
+export function rollAbilitySlot(content: Content, species: Species, key: string): number {
+  const rng = new Rng(hashSeed(`ability:${key}`));
+  const hiddenRoll = rng.float();
+  if (species.abilities.hidden && hiddenRoll < content.balance.abilities.hiddenChance) return -1;
+  return species.abilities.normal.length > 1 ? rng.int(0, species.abilities.normal.length - 1) : 0;
+}
+
+/**
+ * The ability a Pokémon has now, or null if its species has none listed.
+ * After evolving it keeps its slot: the same-numbered normal ability of the
+ * new species (wrapping round), or its hidden one.
+ */
+export function abilityOf(content: Content, mon: PokemonInstance): string | null {
+  const { normal, hidden } = getSpecies(content, mon.speciesId).abilities;
+  if (mon.abilitySlot === -1 && hidden) return hidden;
+  if (normal.length === 0) return hidden;
+  return normal[Math.max(0, mon.abilitySlot) % normal.length]!;
+}
+
+/** `abilityKey` picks its ability (see rollAbilitySlot); runs pass `${seed}:${uid}`. */
 export function createPokemon(
   content: Content,
   speciesId: string,
   level: number,
   uid: string,
+  abilityKey: string = uid,
 ): PokemonInstance {
   const species = getSpecies(content, speciesId);
   // A species with no supported moves at all (Ditto, Smeargle, ...) only has Struggle until its moves are built.
@@ -113,6 +142,7 @@ export function createPokemon(
     vitamins,
     shiny: false,
     friendship: content.balance.friendship.base,
+    abilitySlot: rollAbilitySlot(content, species, abilityKey),
   };
   mon.hp = maxHp(content, mon);
   return mon;

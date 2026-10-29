@@ -75,8 +75,14 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
           return `${who(e.side)} flinched and couldn't move!`;
         case 'recharge':
           return `${who(e.side)} must recharge!`;
+        case 'truant':
+          return `${who(e.side)} is loafing around!`;
       }
       return null;
+    case 'ability':
+      return `[${who(e.side)}'s ${content.abilities.get(e.ability)?.name ?? e.ability}]`;
+    case 'cured':
+      return `${who(e.side)}'s status was cured!`;
     case 'wake':
       return `${who(e.side)} woke up!`;
     case 'thaw':

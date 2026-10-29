@@ -62,6 +62,12 @@ export interface DamageInput {
   physical: boolean;
   /** Rain or sun: 1.5 or 0.5 for Water and Fire moves (default 1). */
   weather?: number;
+  /** Replaces the ruleset's STAB multiplier (Adaptability: 2). */
+  stabMultiplier?: number;
+  /** Replaces the ruleset's critical-hit multiplier (Sniper: 2.25). */
+  critMultiplier?: number;
+  /** Abilities' final multiplier (Filter 0.75, Multiscale 0.5, Tinted Lens 2), rounded half down. */
+  final?: number;
 }
 
 /**
@@ -78,6 +84,7 @@ export function pokeRound(value: number, multiplier: number): number {
  *   base = floor(floor(floor(2 × L / 5 + 2) × Power × A / D) / 50) + 2
  *   then × weather (rain/sun, rounded half down) × crit (1.5, rounded down) × random (0.85–1.00, rounded down)
  *   × STAB (1.5, rounded half down) × type (rounded down) × burn (0.5, physical, rounded half down)
+ *   × abilities' final multiplier (rounded half down)
  * A critical hit ignores the attacker's negative attack stages and the
  * defender's positive defense stages. Minimum 1 damage unless immune.
  */
@@ -90,11 +97,12 @@ export function calcDamage(ruleset: Ruleset, input: DamageInput): number {
 
   let damage = Math.floor(Math.floor(Math.floor((2 * input.level) / 5 + 2) * input.power * a / d) / 50) + 2;
   if (input.weather !== undefined && input.weather !== 1) damage = pokeRound(damage, input.weather);
-  if (input.crit) damage = Math.floor(damage * ruleset.critMultiplier);
+  if (input.crit) damage = Math.floor(damage * (input.critMultiplier ?? ruleset.critMultiplier));
   damage = Math.floor((damage * input.randomFactor) / 100);
-  if (input.stab) damage = pokeRound(damage, ruleset.stabMultiplier);
+  if (input.stab) damage = pokeRound(damage, input.stabMultiplier ?? ruleset.stabMultiplier);
   damage = Math.floor(damage * input.effectiveness);
   if (input.burned && input.physical) damage = pokeRound(damage, ruleset.burnAttackMultiplier);
+  if (input.final !== undefined && input.final !== 1) damage = pokeRound(damage, input.final);
   return Math.max(1, damage);
 }
 
