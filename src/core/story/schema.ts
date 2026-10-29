@@ -110,6 +110,8 @@ export const PokemonHistorySchema = z.object({
   titles: z.array(z.string()),
   /** Its most important memories (limit in story.json). */
   memories: z.array(MemorySchema),
+  /** How many times each Hyper moment (story.json id) has happened to it this run. */
+  hyper: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type PokemonHistory = z.infer<typeof PokemonHistorySchema>;
 
@@ -185,6 +187,20 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statStage'), stat: BoostStatSchema, stages: z.number().int().min(-6).max(6) }),
   /** Battle scope: the Pokémon hangs on at 1 HP (the engine does it; the effect records that it was used). */
   z.object({ kind: z.literal('endure') }),
+  /** Battle scope: a knocked-out Pokémon gets back up with this share of its max HP (the engine does it). */
+  z.object({ kind: z.literal('revive'), hpShare: z.number().gt(0).max(1) }),
+  /** Battle scope: hangs on at 1 HP against a fatal hit, or shakes off a status at the end of a turn (the engine does it). */
+  z.object({ kind: z.literal('endureOrCure') }),
+  /**
+   * Battle scope: raises stat stages and heals a share of max HP (the engine does it).
+   * `healShare` is the most it heals: all of it with no `healAttribute`, otherwise scaled by that attribute (0 to its maximum).
+   */
+  z.object({
+    kind: z.literal('boost'),
+    stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
+    healShare: z.number().min(0).max(1),
+    healAttribute: z.enum(['strength', 'intelligence', 'speed', 'charisma', 'luck', 'love', 'rage', 'peace', 'good', 'evil']).nullable().default(null),
+  }),
 ]);
 export type StoryEffectSpec = z.infer<typeof StoryEffectSpecSchema>;
 
@@ -196,7 +212,45 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['loveEndure'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp'] as const;
+export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
+
+/** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
+export const HYPER_ATTRIBUTES = ['strength', 'intelligence', 'speed', 'charisma', 'luck', 'love', 'rage', 'peace', 'good', 'evil'] as const;
+
+/**
+ * When a trigger may fire. Every field is optional; each trigger reads the ones it needs
+ * (docs/story-foundation.md lists which).
+ */
+export const TriggerConditionsSchema = z.object({
+  trigger: z.enum(STORY_TRIGGERS),
+  /** The Pokémon had at least this share of its max HP before the hit. */
+  minHpShare: z.number().min(0).max(1).optional(),
+  /** At or below this share of max HP counts as badly hurt. */
+  lowHpShare: z.number().min(0).max(1).optional(),
+  /** Turns in a row at low HP. */
+  turns: z.number().int().positive().optional(),
+  /** Super-effective hits survived this battle (a variant's condition). */
+  superEffectiveHits: z.number().int().positive().optional(),
+  /** Friendship needed. */
+  minFriendship: z.number().int().min(0).max(255).optional(),
+  /** The Pokémon's history must hold at least one of these (closeCall, survivedFatal, bossBeaten, or another definition's id). */
+  needsMemory: z.array(z.string()).optional(),
+});
+
+/**
+ * A Hyper chance: `base`, plus `perPoint` for each point of the named attributes
+ * (their average when there are several), never more than `cap` times the base.
+ * `again` multiplies the base once the same Pokémon has had this moment earlier in the run.
+ */
+export const HyperChanceSchema = z.object({
+  base: z.number().min(0).max(1),
+  attributes: z.array(z.enum(HYPER_ATTRIBUTES)),
+  perPoint: z.number().min(0),
+  cap: z.number().min(1),
+  again: z.number().min(0).max(1).default(1),
+});
+export type HyperChance = z.infer<typeof HyperChanceSchema>;
 
 export const PresentationCueSpecSchema = z.object({
   /** Major cues are cinematic (count against the per-battle budget); minor ones are a line of text. */
@@ -218,9 +272,9 @@ export const StoryEventDefinitionSchema = z.object({
   /** Alternate texts; {name} is your Pokémon, {enemy} the opposing one. */
   messagePool: z.array(z.string()).min(1),
   category: z.enum(['survival', 'bond', 'emotion', 'rivalry', 'enemy', 'evolution', 'legacy', 'flavour']),
-  triggerConditions: z.object({ trigger: z.enum(STORY_TRIGGERS) }),
-  /** Extra chance after the trigger's own conditions (null: always). Rolled on the "hyper" stream. */
-  chance: z.number().min(0).max(1).nullable(),
+  triggerConditions: TriggerConditionsSchema,
+  /** Chance once the trigger's conditions hold (null: always). Rolled on the "hyper" stream. */
+  chance: HyperChanceSchema.nullable(),
   effect: StoryEffectSpecSchema.nullable(),
   /** Scope: a battle-scope effect is thrown away when the battle ends. */
   duration: z.enum(['battle', 'run', 'account']),
@@ -231,6 +285,8 @@ export const StoryEventDefinitionSchema = z.object({
   priority: PriorityTierSchema,
   /** Restrictions (species, form, trainer, region, mechanic...). Checked once those systems exist. */
   eligibilityTags: z.array(z.string()),
+  /** Named variants ("again", "wouldntStayDown"): a different title and lines for the same event. */
+  variants: z.record(z.string(), z.object({ displayName: z.string(), messagePool: z.array(z.string()).min(1) })).default({}),
 });
 export type StoryEventDefinition = z.infer<typeof StoryEventDefinitionSchema>;
 

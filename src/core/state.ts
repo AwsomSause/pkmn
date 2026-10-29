@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { StoryStateSchema } from './story/schema';
+import { freshHyperBattle } from './battle/hyper';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
@@ -162,8 +163,12 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
-  /** Battle-scope story effects already used this battle (e.g. "love-hung-on@p1"); see core/story/ledger.ts. */
+  /** Battle-scope story effects already used this battle (e.g. "toughened-it-out@p1"); see core/story/ledger.ts. */
   storyEffects: z.array(z.string()),
+  /** Hyper counters: the current low-HP stand and super-effective hits survived (core/battle/hyper.ts). */
+  hyper: z
+    .object({ lowHp: z.object({ uid: z.string(), turns: z.number().int().min(0) }).nullable(), superEffective: z.record(z.string(), z.number().int().min(0)) })
+    .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),

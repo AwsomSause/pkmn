@@ -565,7 +565,7 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('healing'), percent: z.number().positive() }),
   /** The holder gains friendship faster (Prism Scale). */
   z.object({ hook: z.literal('friendship'), percent: z.number().positive() }),
-  /** Love's chance to hang on at 1 HP is multiplied (Destiny Knot). */
+  /** The holder's Toughened It Out chance is multiplied (Destiny Knot). */
   z.object({ hook: z.literal('endure'), multiplier: z.number().positive() }),
   /** Each turn, a chance to raise a random stat (Dubious Disc). */
   z.object({ hook: z.literal('randomStat'), percent: z.number().positive() }),
@@ -1085,7 +1085,6 @@ export const BalanceSchema = z.object({
     peaceDamageTakenCut: z.number().min(0).max(1),
     goodCatch: z.number().min(0),
     evilMoney: z.number().min(0),
-    loveEndureChance: z.number().min(0).max(1),
     /** Charisma: more experience for your Pokémon. */
     charismaExpGain: z.number().min(0),
     /** Charisma: friendship grows faster. */
