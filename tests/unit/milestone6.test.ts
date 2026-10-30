@@ -72,10 +72,10 @@ describe('moves the battle engine does not support yet', () => {
   });
 
   it('stay in learnsets but are never learned', () => {
-    // Pikachu's level-up list includes unsupported moves (e.g. Nasty Plot, Feint).
-    const pikachu = content.species.get('pikachu')!;
-    expect(pikachu.learnset.some((e) => !isUsableMove(content, e.move))).toBe(true);
-    const mon = createPokemon(content, 'pikachu', 1, 'p1');
+    // Some species still list moves the engine can't run (item moves, weight moves, doubles-only ones).
+    const pikachu = [...content.species.values()].find((s) => s.learnset.some((e) => !isUsableMove(content, e.move)))!;
+    expect(pikachu).toBeDefined();
+    const mon = createPokemon(content, pikachu.id, 1, 'p1');
     for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);
     gainXp(content, mon, 1_000_000);
     for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);

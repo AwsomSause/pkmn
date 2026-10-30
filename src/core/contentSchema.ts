@@ -120,6 +120,7 @@ export const PowerRuleSchema = z.enum([
   'doubleUserFirst', 'doubleUserSecond',
   'electricTerrainDouble', 'electricTerrainBoost', 'mistyTerrainBoost', 'psychicTerrainBoost', 'needsTerrain',
   'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
+  'perHit', 'magnitude', 'sunBoost', 'doubleTargetHurt', 'doubleRandom', 'stockpile',
 ]);
 export type PowerRule = z.infer<typeof PowerRuleSchema>;
 
@@ -225,6 +226,48 @@ export const MoveSchema = z.object({
       suckerPunch: z.literal(true).optional(),
       /** A protecting move that punishes contact: a stat change, a status, or damage (King's Shield, Baneful Bunker, Spiky Shield). */
       protectContact: z.object({ stat: BoostStatSchema.optional(), stages: z.number().int().optional(), status: StatusIdSchema.optional(), hurt: z.number().positive().optional() }).optional(),
+      /** Becomes (or makes the target) a single type: Soak, Magic Powder, Camouflage (by terrain), Conversion (the first move's type). */
+      setType: z.enum(['water', 'psychic', 'terrain', 'firstMove']).optional(),
+      /** Ability tricks: Role Play, Skill Swap, Simple Beam, Worry Seed, Entrainment, Gastro Acid. */
+      abilityChange: z.enum(['rolePlay', 'skillSwap', 'simple', 'insomnia', 'entrainment', 'suppress']).optional(),
+      /** Field-wide effects for five turns. */
+      field: z.enum(['gravity', 'trickRoom', 'waterSport', 'mudSport']).optional(),
+      /** Swaps everything set up on the two sides (Court Change). */
+      courtChange: z.literal(true).optional(),
+      /** Substitute: the user pays a quarter of its max HP for a decoy that takes hits. */
+      substitute: z.literal(true).optional(),
+      /** Destiny Bond: whoever knocks the user out this turn goes down too. */
+      destinyBond: z.literal(true).optional(),
+      /** Perish Song: both Pokémon faint in three turns unless they switch out. */
+      perishSong: z.literal(true).optional(),
+      /** Yawn: the target falls asleep at the end of the next turn. */
+      yawn: z.literal(true).optional(),
+      /** Magnet Rise: the user floats for five turns. */
+      magnetRise: z.literal(true).optional(),
+      /** Smack Down / Thousand Arrows: the target is brought to the ground. */
+      smackDown: z.literal(true).optional(),
+      /** Stockpile and Swallow. */
+      stockpile: z.enum(['store', 'swallow']).optional(),
+      /** Strength Sap: heals by the target's Attack, then lowers it. */
+      strengthSap: z.literal(true).optional(),
+      /** Psycho Shift passes the user's status on; Purify cures the target and heals the user. */
+      statusTrick: z.enum(['shift', 'purify']).optional(),
+      /** Sketch: permanently learns the target's last move. */
+      sketch: z.literal(true).optional(),
+      /** Assist uses a move from a party member; Nature Power one chosen by the terrain. */
+      callFrom: z.enum(['assist', 'nature']).optional(),
+      /** 4/3 power against a type it is super effective on (Collision Course). */
+      superEffectiveBoost: z.literal(true).optional(),
+      /** Can't be used twice in a row (Blood Moon). */
+      noRepeat: z.literal(true).optional(),
+      /** Fails if the user was hit first (Focus Punch), or unless it was hit by a physical move first (Shell Trap). */
+      focus: z.enum(['unhit', 'hitPhysical']).optional(),
+      /** One of these statuses at this chance, picked at random (Tri Attack). */
+      randomStatus: z.object({ chance: z.number().min(1).max(100), ids: z.array(StatusIdSchema).min(2) }).optional(),
+      /** Priority bonus while this terrain is up (Grassy Glide). */
+      terrainPriority: z.object({ terrain: TerrainSchema, bonus: z.number().int() }).optional(),
+      /** Ignores the target's ability (Sunsteel Strike). */
+      ignoreAbility: z.literal(true).optional(),
       /** Counter and Mirror Coat (and Metal Burst for both): returns the damage the user took this turn, times this. */
       counter: z.enum(['physical', 'special', 'both']).optional(),
       /** Sets up something on a side of the field: screens, Tailwind, Safeguard on the user's side; hazards on the foe's. */

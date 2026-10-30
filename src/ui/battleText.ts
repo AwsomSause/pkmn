@@ -191,6 +191,14 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return 'All stat changes were changed!';
     case 'selfState':
       return SELF_STATE[e.state] ? SELF_STATE[e.state]!(who(e.side)) : `${who(e.side)} is ready!`;
+    case 'substituteHit':
+      return e.broke ? `${who(e.side)}'s substitute faded!` : `The substitute took damage for ${who(e.side)}!`;
+    case 'perish':
+      return `${who(e.side)}'s perish count fell to ${e.count}!`;
+    case 'fieldStart':
+      return FIELD_TEXT[e.field]?.[0] ?? 'The battlefield changed!';
+    case 'fieldEnd':
+      return FIELD_TEXT[e.field]?.[1] ?? 'The battlefield returned to normal.';
     case 'sideEffect':
       return sideEffectText(e.side, e.effect, e.on, who);
     case 'hazard':
@@ -296,6 +304,13 @@ function sideEffectText(_side: string, effect: string, on: boolean, _who: (s: 'p
   return (on ? SIDE_ON : SIDE_OFF)[effect] ?? 'The field changed.';
 }
 
+const FIELD_TEXT: Record<string, [string, string]> = {
+  gravity: ['Gravity intensified!', 'Gravity returned to normal.'],
+  trickRoom: ['The dimensions were twisted!', 'The twisted dimensions returned to normal.'],
+  waterSport: ['Fire\'s power was weakened!', 'The effects of Water Sport faded.'],
+  mudSport: ['Electricity\'s power was weakened!', 'The effects of Mud Sport faded.'],
+};
+
 const SELF_STATE: Record<string, (who: string) => string> = {
   focusEnergy: (w) => `${w} is getting pumped!`,
   laserFocus: (w) => `${w} is focused!`,
@@ -305,4 +320,13 @@ const SELF_STATE: Record<string, (who: string) => string> = {
   endure: (w) => `${w} braced itself!`,
   wish: (w) => `${w} made a wish!`,
   trapped: (w) => `${w} can no longer escape!`,
+  substitute: (w) => `${w} put in a substitute!`,
+  destinyBond: (w) => `${w} is trying to take its foe down with it!`,
+  perishSong: (w) => `${w} heard the perish song!`,
+  yawn: (w) => `${w} grew drowsy!`,
+  magnetRise: (w) => `${w} levitated with electromagnetism!`,
+  courtChange: (w) => `${w} swapped the battle effects!`,
+  abilityChanged: (w) => `${w}'s ability changed!`,
+  typeChanged: (w) => `${w}'s type changed!`,
+  sketched: (w) => `${w} sketched the move!`,
 };

@@ -112,6 +112,12 @@ export type BattleEvent =
   /** Thrash and Outrage ended and the user became confused from fatigue. */
   | { type: 'fatigue'; side: Side }
   | { type: 'weather'; weather: Weather }
+  /** A Substitute took a hit (and `broke`). */
+  | { type: 'substituteHit'; side: Side; broke: boolean }
+  /** Perish Song countdown. */
+  | { type: 'perish'; side: Side; count: number }
+  | { type: 'fieldStart'; field: string }
+  | { type: 'fieldEnd'; field: string }
   /** The user (or `side`) is now in a state: Focus Energy, Wish, trapped... */
   | { type: 'selfState'; side: Side; state: string }
   /** Disable, Encore, Torment, Taunt, Heal Block or Spite took hold. */
@@ -222,6 +228,7 @@ export function createBattle(
     weather: null,
     terrain: null,
     batonStages: null,
+    field: { gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 },
     sideEffects: { player: freshSideEffects(), enemy: freshSideEffects() },
     pendingEntry: ['player', 'enemy'],
     participants: [activeUid],
@@ -377,6 +384,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   battle.terrain ??= null;
   battle.pendingEntry ??= [];
   battle.sideEffects ??= { player: freshSideEffects(), enemy: freshSideEffects() };
+  battle.field ??= { gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 };
   battle.held ??= freshHeldState();
   // X items and Dire Hit take effect when a Pokémon is first in battle.
   enterField(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
@@ -669,8 +677,10 @@ function abilityIn(ctx: BattleContext, c: Combatant): string | null {
 }
 
 /** The target's ability as the attacker's move sees it: Mold Breaker ignores it. */
+let moveIgnoresAbility = false;
 function targetAbility(ctx: BattleContext, user: Combatant, target: Combatant): string | null {
   if (user === target) return abilityIn(ctx, target);
+  if (moveIgnoresAbility) return null;
   const own = abilityIn(ctx, user);
   return own && MOLD_BREAKERS.has(own) ? null : abilityIn(ctx, target);
 }
@@ -858,14 +868,18 @@ function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
   if (ability === 'prankster' && move.category === 'status') return move.priority + 1;
   if (ability === 'gale-wings' && move.type === 'flying' && c.mon.hp >= calcStats(ctx.content, c.mon).hp) return move.priority + 1;
   if (ability === 'triage' && (move.effects.heal || move.effects.drain)) return move.priority + 3;
+  const tp = move.effects.terrainPriority;
+  if (tp && ctx.battle.terrain?.id === tp.terrain) return move.priority + tp.bonus;
   return move.priority;
 }
 
 function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
+  // Trick Room: slower Pokémon move first within a priority.
+  const trickSign = ctx.battle.field.trickRoom > 0 ? -1 : 1;
   // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: priorityOf(ctx, player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) },
-    { priority: priorityOf(ctx, enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) },
+    { priority: priorityOf(ctx, player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) * trickSign },
+    { priority: priorityOf(ctx, enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) * trickSign },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
   return result === 'a' ? 'player' : 'enemy';
@@ -1292,7 +1306,11 @@ function executeMove(
     pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1));
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
-  if (!continuing && slot !== -1) user.vol.lastMove = move.id;
+  if (!continuing && slot !== -1) {
+    user.vol.prevMove = user.vol.lastMove;
+    user.vol.lastMove = move.id;
+  }
+  user.vol.destinyBond = false;
   if (!move.effects.protect) user.vol.protectChain = 0;
   if (slot !== -1) Held.noteMoveUsed(ctx, user, move.id);
 
@@ -1342,7 +1360,7 @@ function executeMove(
  * Moves whose power depends on the battle (Electro Ball, Hex, Eruption...). Returns the power to use,
  * or null when the move can't be used (Steel Roller with no terrain).
  */
-function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: Combatant, target: Combatant, userStats: { hp: number; spe: number }, targetStats: { hp: number; spe: number }, movedFirst: boolean): number | null {
+function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: Combatant, target: Combatant, userStats: { hp: number; spe: number }, targetStats: { hp: number; spe: number }, movedFirst: boolean, hit = 0): number | null {
   const positive = (st: Record<string, number>) => Object.values(st).reduce((n, v) => n + Math.max(0, v), 0);
   const terrain = ctx.battle.terrain?.id;
   switch (rule) {
@@ -1371,6 +1389,15 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
       const team = user.side === 'player' ? ctx.party : ctx.battle.enemyTeam;
       return 50 + 50 * Math.min(6, team.filter((m) => m.hp <= 0).length);
     }
+    case 'perHit': return base * (hit + 1);
+    case 'magnitude': {
+      const r = ctx.rng.int(1, 100);
+      return r <= 5 ? 10 : r <= 15 ? 30 : r <= 35 ? 50 : r <= 65 ? 70 : r <= 85 ? 90 : r <= 95 ? 110 : 150;
+    }
+    case 'sunBoost': return ctx.battle.weather?.id === 'sun' && weatherNow(ctx) === 'sun' ? Math.floor(base * 1.5) : base;
+    case 'doubleTargetHurt': return target.vol.tookPhysical + target.vol.tookSpecial > 0 ? base * 2 : base;
+    case 'doubleRandom': return ctx.rng.chance(0.3) ? base * 2 : base;
+    case 'stockpile': return 100 * user.vol.stockpile;
     case 'friendship': return Math.max(1, Math.min(102, Math.floor(user.mon.friendship / 2.5)));
     case 'frustration': return Math.max(1, Math.min(102, Math.floor((255 - user.mon.friendship) / 2.5)));
   }
@@ -1378,6 +1405,15 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
 
 /** What a move does once its user has acted: accuracy, then its status effect or its damage and side effects. */
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
+  moveIgnoresAbility = Boolean(move.effects.ignoreAbility);
+  try {
+    runMoveInner(ctx, user, target, move, movedFirst, events);
+  } finally {
+    moveIgnoresAbility = false;
+  }
+}
+
+function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   const { content, rng } = ctx;
   const fx = move.effects;
   const weather = weatherNow(ctx);
@@ -1490,7 +1526,17 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     }
     return;
   }
-  // Dream Eater, Sucker Punch, Counter: they only work in the right situation.
+  // Dream Eater, Sucker Punch, Counter, Focus Punch, Blood Moon...: they only work in the right situation.
+  const hitThisTurn = user.vol.tookPhysical + user.vol.tookSpecial > 0;
+  if (
+    (fx.focus === 'unhit' && hitThisTurn) ||
+    (fx.focus === 'hitPhysical' && user.vol.tookPhysical <= 0) ||
+    (fx.noRepeat && user.vol.prevMove === move.id) ||
+    (fx.powerRule === 'stockpile' && user.vol.stockpile <= 0)
+  ) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
   if (
     (fx.requiresSleepingTarget && target.mon.status?.id !== 'slp') ||
     (fx.suckerPunch && !(movedFirst && target.vol.plannedAttack)) ||
@@ -1529,6 +1575,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (userAbility === 'hustle' && move.category === 'physical') accuracy *= 0.8;
       if (foeAbility && weather && WEATHER_EVASION[foeAbility]?.includes(weather)) accuracy *= 0.8;
       if (foeAbility === 'tangled-feet' && target.vol.confusion > 0) accuracy *= 0.5;
+      if (ctx.battle.field.gravity > 0) accuracy *= 5 / 3;
       if (foeAbility === 'wonder-skin' && move.category === 'status') accuracy = Math.min(accuracy, 0.5);
     }
     accuracy = Math.min(1, accuracy);
@@ -1553,6 +1600,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Scrappy: Normal and Fighting moves hit Ghost types.
   const hitTypes = userAbility === 'scrappy' && (moveType === 'normal' || moveType === 'fighting') ? targetTypes.filter((t) => t !== 'ghost') : targetTypes;
   const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, hitTypes));
+  if (targetsEnemy && move.category === 'status' && target.vol.substitute > 0 && user !== target && !move.effects.sideMove && !move.effects.field) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
   if (targetsEnemy && abilityBlocksMove(ctx, user, target, move, moveType, effectiveness, events)) return;
 
   if (move.category === 'status') {
@@ -1605,7 +1656,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (crit) user.vol.laserFocus = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
-      if (fx.powerRule) power = powerFromRule(ctx, fx.powerRule, power, user, target, userStats, targetStats, movedFirst) ?? power;
+      if (fx.powerRule) power = powerFromRule(ctx, fx.powerRule, power, user, target, userStats, targetStats, movedFirst, hit) ?? power;
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
       let stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
       if (stab === 1 && user.vol.typeShift === moveType) stab = content.ruleset.stabMultiplier;
@@ -1621,6 +1672,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const flagBoost = userAbility ? FLAG_BOOST[userAbility] : undefined;
       if (flagBoost && move.flags.includes(flagBoost.flag)) powerMult *= flagBoost.multiplier;
       if (userAbility === 'reckless' && fx.recoil) powerMult *= 1.2;
+      if (ctx.battle.field.waterSport > 0 && moveType === 'fire') powerMult *= 1 / 3;
+      if (ctx.battle.field.mudSport > 0 && moveType === 'electric') powerMult *= 1 / 3;
       if (userAbility && TYPE_BOOST[userAbility] === moveType) powerMult *= 1.5;
       for (const a of [userAbility, abilityIn(ctx, target)]) {
         if (a && AURAS[a] === moveType) powerMult *= userAbility === 'aura-break' || abilityIn(ctx, target) === 'aura-break' ? 0.75 : 4 / 3;
@@ -1666,6 +1719,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       }
       if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
+      if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
       if (foeAbility === 'fluffy' && contact) final *= 0.5;
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
@@ -1705,6 +1759,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     const sturdy = foeAbility === 'sturdy' && target.mon.hp >= targetMax && target.mon.hp > 1 && damage >= target.mon.hp;
     if (sturdy) damage = target.mon.hp - 1;
 
+    // A Substitute takes the hit instead (sound moves go past it).
+    if (target.vol.substitute > 0 && !move.flags.includes('sound') && user !== target) {
+      target.vol.substitute = Math.max(0, target.vol.substitute - damage);
+      events.push({ type: 'substituteHit', side: target.side, broke: target.vol.substitute <= 0 });
+      return;
+    }
     const { lost, lastStand, hyper, knockedDown } = takeHp(ctx, target, damage, landed);
     dealt += lost;
     landed += 1;
@@ -1712,6 +1772,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     // Pushed Itself Back Up: the hit knocks it down first, then it gets up.
     events.push({ type: 'damage', side: target.side, amount: lost, hpAfter: knockedDown ? 0 : target.mon.hp, effectiveness, crit });
     if (sturdy) announce(target, 'sturdy', events);
+    if (target.mon.hp <= 0 && target.vol.destinyBond && user.mon.hp > 0) {
+      user.mon.hp = 0;
+      events.push({ type: 'selfKo', side: user.side });
+    }
     if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
     if (hyper) events.push(hyper);
     if (target.side === 'player' && effectiveness > 1 && target.mon.hp > 0) {
@@ -1769,6 +1833,22 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
   if (fx.recoilMaxHp) applyRecoil(ctx, user, Math.max(1, Math.floor(calcStats(content, user.mon).hp * fx.recoilMaxHp)), events);
 
+  if (landed > 0 && fx.smackDown) {
+    target.vol.smackedDown = true;
+    if (target.vol.semi === 'air') target.vol.semi = null;
+  }
+  if (landed > 0 && fx.cure && target.mon.hp > 0) {
+    const mons = fx.cure === 'party' ? (user.side === 'player' ? ctx.party : ctx.battle.enemyTeam) : [user.mon];
+    let any = false;
+    for (const m of mons) if (m.status && m.hp > 0) { m.status = null; any = true; }
+    if (any) events.push({ type: 'cured', side: user.side });
+  }
+  if (landed > 0 && fx.powerRule === 'stockpile') {
+    const n = user.vol.stockpile;
+    user.vol.stockpile = 0;
+    user.stages.def = Math.max(-6, user.stages.def - n);
+    user.stages.spd = Math.max(-6, user.stages.spd - n);
+  }
   if (landed > 0 && fx.switchOut) user.vol.pivot = { baton: fx.switchOut === 'baton' };
   if (landed > 0 && fx.resetStages) {
     for (const c of fx.resetStages === 'both' ? [user, target] : [target]) for (const k of Object.keys(c.stages) as BoostStat[]) c.stages[k] = 0;
@@ -1787,6 +1867,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   const shielded = foeAbility === 'shield-dust';
   const roll = (percent: number) => rng.chance(Math.min(100, percent * chanceMult) / 100);
   if (target.mon.hp > 0 && !sheerForce && !shielded) {
+    if (fx.randomStatus && roll(fx.randomStatus.chance)) {
+      const id = fx.randomStatus.ids[rng.int(0, fx.randomStatus.ids.length - 1)]!;
+      tryInflictStatus(ctx, user, target, id, move, events, false);
+    }
     if (fx.status && roll(fx.status.chance)) tryInflictStatus(ctx, user, target, fx.status.id, move, events, false);
     if (fx.flinchChance && movedFirst && roll(fx.flinchChance)) flinch(ctx, user, target);
     else if (!fx.flinchChance && userAbility === 'stench' && movedFirst && rng.chance(0.1)) flinch(ctx, user, target);
@@ -2062,7 +2146,21 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
     if (c.vol.disabled && --c.vol.disabled.turns <= 0) c.vol.disabled = null;
     if (c.vol.taunt > 0) c.vol.taunt -= 1;
     if (c.vol.healBlock > 0) c.vol.healBlock -= 1;
+    if (c.vol.magnetRise > 0) c.vol.magnetRise -= 1;
+    if (c.vol.yawn > 0 && --c.vol.yawn === 0 && !c.mon.status) {
+      const foe = c === player ? enemy : player;
+      tryInflictStatus(ctx, foe, c, 'slp', undefined, events, false);
+    }
+    if (c.vol.perish > 0) {
+      c.vol.perish -= 1;
+      events.push({ type: 'perish', side: c.side, count: c.vol.perish });
+      if (c.vol.perish === 0) c.mon.hp = 0;
+    }
   }
+  for (const key of ['gravity', 'trickRoom', 'waterSport', 'mudSport'] as const) {
+    if (ctx.battle.field[key] > 0 && --ctx.battle.field[key] === 0) events.push({ type: 'fieldEnd', field: key });
+  }
+  recordFaints(ctx, player, enemy, events);
 }
 
 const HAZARDS = ['spikes', 'toxicSpikes', 'stealthRock', 'stickyWeb'] as const;
@@ -2168,6 +2266,177 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   const stat5 = ['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'eva'] as const;
   if (fx.noop) {
     events.push({ type: 'fail', side: user.side });
+    return;
+  }
+  if (fx.substitute) {
+    const cost = Math.floor(calcStats(content, user.mon).hp / 4);
+    if (user.vol.substitute > 0 || user.mon.hp <= cost) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+    user.mon.hp -= cost;
+    user.vol.substitute = cost;
+    events.push({ type: 'damage', side: user.side, amount: cost, hpAfter: user.mon.hp, effectiveness: 1, crit: false });
+    events.push({ type: 'selfState', side: user.side, state: 'substitute' });
+    return;
+  }
+  if (fx.destinyBond) {
+    user.vol.destinyBond = true;
+    events.push({ type: 'selfState', side: user.side, state: 'destinyBond' });
+    return;
+  }
+  if (fx.perishSong) {
+    let any = false;
+    for (const c of [user, target]) {
+      if (c.vol.perish === 0 && abilityIn(ctx, c) !== 'soundproof') {
+        c.vol.perish = 4;
+        any = true;
+      }
+    }
+    events.push(any ? { type: 'selfState', side: user.side, state: 'perishSong' } : { type: 'fail', side: user.side });
+    return;
+  }
+  if (fx.yawn) {
+    if (target.vol.yawn > 0 || target.mon.status || !canGetStatus(ctx, user, target, 'slp')) events.push({ type: 'fail', side: user.side });
+    else {
+      target.vol.yawn = 2;
+      events.push({ type: 'selfState', side: target.side, state: 'yawn' });
+    }
+    return;
+  }
+  if (fx.magnetRise) {
+    if (user.vol.magnetRise > 0 || user.vol.regen === 'ingrain') events.push({ type: 'fail', side: user.side });
+    else {
+      user.vol.magnetRise = 5;
+      events.push({ type: 'selfState', side: user.side, state: 'magnetRise' });
+    }
+    return;
+  }
+  if (fx.field) {
+    const f = ctx.battle.field;
+    if (fx.field === 'trickRoom' && f.trickRoom > 0) {
+      f.trickRoom = 0;
+      events.push({ type: 'fieldEnd', field: 'trickRoom' });
+    } else if (f[fx.field] > 0) events.push({ type: 'fail', side: user.side });
+    else {
+      f[fx.field] = 5;
+      events.push({ type: 'fieldStart', field: fx.field });
+    }
+    return;
+  }
+  if (fx.courtChange) {
+    const se = ctx.battle.sideEffects;
+    [se.player, se.enemy] = [se.enemy, se.player];
+    events.push({ type: 'selfState', side: user.side, state: 'courtChange' });
+    return;
+  }
+  if (fx.abilityChange) {
+    const mine = abilityIn(ctx, user);
+    const theirs = abilityIn(ctx, target);
+    const fixed = (a: string | null) => !a || UNTRACEABLE.has(a) || a === 'wonder-guard';
+    const kind = fx.abilityChange;
+    const ok =
+      kind === 'rolePlay' ? !fixed(theirs) && !fixed(mine)
+      : kind === 'skillSwap' ? !fixed(theirs) && !fixed(mine)
+      : kind === 'entrainment' ? !fixed(mine) && !fixed(theirs)
+      : !fixed(theirs);
+    if (!ok) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+    if (kind === 'rolePlay') user.vol.abilityOverride = theirs;
+    else if (kind === 'skillSwap') [user.vol.abilityOverride, target.vol.abilityOverride] = [theirs, mine];
+    else if (kind === 'entrainment') target.vol.abilityOverride = mine;
+    else target.vol.abilityOverride = kind === 'simple' ? 'simple' : kind === 'insomnia' ? 'insomnia' : 'none';
+    events.push({ type: 'selfState', side: kind === 'rolePlay' ? user.side : target.side, state: 'abilityChanged' });
+    return;
+  }
+  if (fx.setType) {
+    const who = move.target === 'self' ? user : target;
+    const t = fx.setType === 'terrain'
+      ? ({ electric: 'electric', grassy: 'grass', misty: 'fairy', psychic: 'psychic' } as const)[ctx.battle.terrain?.id ?? 'none' as never] ?? 'normal'
+      : fx.setType === 'firstMove' ? content.moves.get(user.mon.moves[0]!.id)?.type ?? 'normal' : fx.setType;
+    if (who.vol.typeShift === t) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+    who.vol.typeShift = t;
+    events.push({ type: 'selfState', side: who.side, state: 'typeChanged' });
+    return;
+  }
+  if (fx.stockpile) {
+    const v = user.vol;
+    if (fx.stockpile === 'store') {
+      if (v.stockpile >= 3) {
+        events.push({ type: 'fail', side: user.side });
+        return;
+      }
+      v.stockpile += 1;
+      changeStage(ctx, user, user, 'def', 1, events);
+      changeStage(ctx, user, user, 'spd', 1, events);
+    } else {
+      const n = v.stockpile;
+      const max = calcStats(content, user.mon).hp;
+      if (n === 0 || user.vol.healBlock > 0 || user.mon.hp >= max) {
+        events.push({ type: 'fail', side: user.side });
+        return;
+      }
+      const gain = Math.min(max - user.mon.hp, Math.floor(max * (n === 1 ? 0.25 : n === 2 ? 0.5 : 1)));
+      user.mon.hp += gain;
+      events.push({ type: 'heal', side: user.side, amount: gain, hpAfter: user.mon.hp });
+      v.stockpile = 0;
+      user.stages.def = Math.max(-6, user.stages.def - n);
+      user.stages.spd = Math.max(-6, user.stages.spd - n);
+    }
+    return;
+  }
+  if (fx.strengthSap) {
+    const gain = Math.min(calcStats(content, user.mon).hp - user.mon.hp, calcStats(content, target.mon).atk);
+    if (user.vol.healBlock > 0 || gain <= 0) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+    user.mon.hp += gain;
+    events.push({ type: 'heal', side: user.side, amount: gain, hpAfter: user.mon.hp });
+    changeStage(ctx, user, target, 'atk', -1, events);
+    return;
+  }
+  if (fx.statusTrick) {
+    if (fx.statusTrick === 'shift') {
+      const st = user.mon.status;
+      if (!st || !canGetStatus(ctx, user, target, st.id)) {
+        events.push({ type: 'fail', side: user.side });
+        return;
+      }
+      user.mon.status = null;
+      events.push({ type: 'cured', side: user.side });
+      tryInflictStatus(ctx, user, target, st.id, undefined, events, false);
+    } else {
+      const max = calcStats(content, user.mon).hp;
+      if (!target.mon.status) {
+        events.push({ type: 'fail', side: user.side });
+        return;
+      }
+      target.mon.status = null;
+      events.push({ type: 'cured', side: target.side });
+      const gain = Math.min(max - user.mon.hp, Math.floor(max / 2));
+      if (gain > 0 && user.vol.healBlock === 0) {
+        user.mon.hp += gain;
+        events.push({ type: 'heal', side: user.side, amount: gain, hpAfter: user.mon.hp });
+      }
+    }
+    return;
+  }
+  if (fx.sketch) {
+    const last = target.vol.lastMove;
+    const slot = user.mon.moves.findIndex((m) => m.id === move.id);
+    const learned = last ? content.moves.get(last) : undefined;
+    if (!learned || slot < 0 || !learned.supported || learned.id === move.id || user.mon.moves.some((m) => m.id === learned.id)) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+    user.mon.moves[slot] = { id: learned.id, pp: learned.pp };
+    events.push({ type: 'selfState', side: user.side, state: 'sketched' });
     return;
   }
   if (fx.selfState) {
@@ -2466,7 +2735,8 @@ export function weatherMultiplier(weather: Weather | null, type: TypeName): numb
 /** On the ground: not a Flying type and without Levitate (and not hiding in the air or underground). */
 function isGrounded(ctx: BattleContext, c: Combatant): boolean {
   if (c.vol.semi === 'air' || c.vol.semi === 'underground' || c.vol.semi === 'underwater') return false;
-  if (abilityIn(ctx, c) === 'levitate') return false;
+  if (ctx.battle.field.gravity > 0 || c.vol.smackedDown) return true;
+  if (abilityIn(ctx, c) === 'levitate' || c.vol.magnetRise > 0) return false;
   return !getSpecies(ctx.content, c.mon.speciesId).types.includes('flying');
 }
 

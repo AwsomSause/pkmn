@@ -8703,11 +8703,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Gives target priority in the next turn."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "all-out-pummeling",
@@ -8735,11 +8735,11 @@
   "pp": 15,
   "priority": 2,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User switches with opposite teammate."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "anchor-shot",
@@ -8801,11 +8801,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Special Defense of an ally."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "assist",
@@ -8817,11 +8817,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User performs a move known by its allies at random."
+  "effects": {
+   "callFrom": "assist"
+  }
  },
  {
   "id": "assurance",
@@ -8837,9 +8837,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if opponent already took damage in the same turn."
+  "effects": {
+   "powerRule": "doubleTargetHurt"
+  }
  },
  {
   "id": "astral-barrage",
@@ -8853,9 +8853,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user attacks by sending a frightful amount of small ghosts at opposing Pokémon."
+  "effects": {}
  },
  {
   "id": "attract",
@@ -8867,11 +8865,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "If opponent is the opposite gender, it's less likely to attack."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "aura-wheel",
@@ -8979,9 +8977,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Reduces damage from Physical attacks."
+  "effects": {
+   "sideMove": "reflect"
+  }
  },
  {
   "id": "baneful-bunker",
@@ -9254,9 +9252,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cannot be used twice in a row."
+  "effects": {
+   "noRepeat": true
+  }
  },
  {
   "id": "bloom-doom",
@@ -9365,9 +9363,7 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user swings its body around violently to inflict damage on everything in its vicinity."
+  "effects": {}
  },
  {
   "id": "burn-up",
@@ -9430,11 +9426,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes user's type according to the location."
+  "effects": {
+   "setType": "terrain"
+  }
  },
  {
   "id": "captivate",
@@ -9446,11 +9442,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sharply lowers opponent's Special Attack if opposite gender."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "catastropika",
@@ -9615,11 +9611,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosts Attack and Defense of a teammate."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "collision-course",
@@ -9633,9 +9629,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosted even more if it's super-effective."
+  "effects": {
+   "superEffectiveBoost": true
+  }
  },
  {
   "id": "combat-torque",
@@ -9725,11 +9721,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes user's type to that of its first move."
+  "effects": {
+   "setType": "firstMove"
+  }
  },
  {
   "id": "conversion-2",
@@ -9839,11 +9835,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Swaps the effects on either side of the field."
+  "effects": {
+   "courtChange": true
+  }
  },
  {
   "id": "covet",
@@ -9963,11 +9959,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "If the user faints, the opponent also faints."
+  "effects": {
+   "destinyBond": true
+  }
  },
  {
   "id": "devastating-drake",
@@ -9997,9 +9993,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May poison, paralyze or put the opponent to sleep."
+  "effects": {
+   "randomStatus": {
+    "chance": 50,
+    "ids": [
+     "psn",
+     "par",
+     "slp"
+    ]
+   }
+  }
  },
  {
   "id": "disable",
@@ -10098,11 +10101,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "(no effect text)"
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "dragon-darts",
@@ -10339,9 +10342,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosted even more if it's super-effective."
+  "effects": {
+   "superEffectiveBoost": true
+  }
  },
  {
   "id": "embargo",
@@ -10421,9 +10424,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes target's ability same as user's."
+  "effects": {
+   "abilityChange": "entrainment"
+  }
  },
  {
   "id": "eruption",
@@ -10535,9 +10538,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Only hits if opponent uses Protect or Detect in the same turn."
+  "effects": {}
  },
  {
   "id": "fell-stinger",
@@ -10572,9 +10573,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May deal double damage."
+  "effects": {
+   "powerRule": "doubleRandom"
+  }
  },
  {
   "id": "fillet-away",
@@ -10680,9 +10681,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May also injure nearby Pokémon."
+  "effects": {}
  },
  {
   "id": "flatter",
@@ -10841,9 +10840,9 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If the user is hit before attacking, it flinches instead."
+  "effects": {
+   "focus": "unhit"
+  }
  },
  {
   "id": "follow-me",
@@ -10855,11 +10854,11 @@
   "pp": 20,
   "priority": 2,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "In Double Battle, the user takes all the attacks."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "foresight",
@@ -11549,9 +11548,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cancels out the effect of the opponent's Ability."
+  "effects": {
+   "abilityChange": "suppress"
+  }
  },
  {
   "id": "gear-up",
@@ -11613,9 +11612,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cannot be used twice in a row."
+  "effects": {
+   "noRepeat": true
+  }
  },
  {
   "id": "gigavolt-havoc",
@@ -11675,9 +11674,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Reduces damage from Special attacks."
+  "effects": {
+   "sideMove": "lightScreen"
+  }
  },
  {
   "id": "grass-knot",
@@ -11727,9 +11726,12 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "High priority during Grassy Terrain."
+  "effects": {
+   "terrainPriority": {
+    "terrain": "grassy",
+    "bonus": 1
+   }
+  }
  },
  {
   "id": "grassy-terrain",
@@ -11780,11 +11782,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents moves like Fly and Bounce and the Ability Levitate for 5 turns."
+  "effects": {
+   "field": "gravity"
+  }
  },
  {
   "id": "grudge",
@@ -12046,11 +12048,11 @@
   "pp": 20,
   "priority": 5,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "In Double Battles, boosts the power of the partner's move."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "hex",
@@ -12171,9 +12173,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases in harsh sunlight."
+  "effects": {
+   "powerRule": "sunBoost"
+  }
  },
  {
   "id": "hydro-vortex",
@@ -12339,11 +12341,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Allows an ally to use a move instead."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "ion-deluge",
@@ -12794,9 +12796,9 @@
   "flags": [
    "powder"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes target's type to Psychic."
+  "effects": {
+   "setType": "psychic"
+  }
  },
  {
   "id": "magic-room",
@@ -12842,11 +12844,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User becomes immune to Ground-type moves for 5 turns."
+  "effects": {
+   "magnetRise": true
+  }
  },
  {
   "id": "magnetic-flux",
@@ -12869,16 +12871,16 @@
   "name": "Magnitude",
   "type": "ground",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 30,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits with random power."
+  "effects": {
+   "powerRule": "magnitude"
+  }
  },
  {
   "id": "make-it-rain",
@@ -12950,11 +12952,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects teammates from damaging moves."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "matcha-gotcha",
@@ -12968,9 +12970,13 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage, restores HP, may burn opponent."
+  "effects": {
+   "drain": 0.5,
+   "status": {
+    "id": "brn",
+    "chance": 20
+   }
+  }
  },
  {
   "id": "max-airstream",
@@ -13553,9 +13559,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores the target's ability."
+  "effects": {
+   "ignoreAbility": true
+  }
  },
  {
   "id": "mortal-spin",
@@ -13589,11 +13595,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Weakens the power of Electric-type moves."
+  "effects": {
+   "field": "mudSport"
+  }
  },
  {
   "id": "multi-attack",
@@ -13639,11 +13645,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Uses a certain move based on the current terrain."
+  "effects": {
+   "callFrom": "nature"
+  }
  },
  {
   "id": "natures-madness",
@@ -13918,13 +13924,13 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Any Pokémon in play when this attack is used faints in 3 turns."
+  "effects": {
+   "perishSong": true
+  }
  },
  {
   "id": "photon-geyser",
@@ -13947,16 +13953,16 @@
   "name": "Pika Papow",
   "type": "electric",
   "category": "special",
-  "power": null,
-  "accuracy": null,
+  "power": 1,
+  "accuracy": 100,
   "pp": 20,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases when player's bond is stronger."
+  "effects": {
+   "powerRule": "friendship"
+  }
  },
  {
   "id": "plasma-fists",
@@ -14029,9 +14035,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage to opponent or restores HP of teammate."
+  "effects": {}
  },
  {
   "id": "poltergeist",
@@ -14287,9 +14291,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage and prevents target from healing."
+  "effects": {
+   "disrupt": "healBlock"
+  }
  },
  {
   "id": "psychic-terrain",
@@ -14319,9 +14323,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Transfers user's status condition to the opponent."
+  "effects": {
+   "statusTrick": "shift"
+  }
  },
  {
   "id": "psywave",
@@ -14387,9 +14391,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user heals the target's status condition. If the move succeeds, it also restores the user's own HP."
+  "effects": {
+   "statusTrick": "purify"
+  }
  },
  {
   "id": "quash",
@@ -14401,11 +14405,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes the target act last this turn."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "quick-guard",
@@ -14467,13 +14471,13 @@
   "pp": 20,
   "priority": 2,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "powder"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Forces attacks to hit user, not team-mates."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "raging-bull",
@@ -14750,9 +14754,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User copies the opponent's Ability."
+  "effects": {
+   "abilityChange": "rolePlay"
+  }
  },
  {
   "id": "rollout",
@@ -15116,9 +15120,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals more damage to opponent if hit by a Physical move."
+  "effects": {
+   "focus": "hitPhysical"
+  }
  },
  {
   "id": "shift-gear",
@@ -15197,9 +15201,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes target's ability to Simple."
+  "effects": {
+   "abilityChange": "simple"
+  }
  },
  {
   "id": "sinister-arrow-raid",
@@ -15229,9 +15233,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Permanently copies the opponent's last move."
+  "effects": {
+   "sketch": true
+  }
  },
  {
   "id": "skill-swap",
@@ -15245,9 +15249,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user swaps Abilities with the opponent."
+  "effects": {
+   "abilityChange": "skillSwap"
+  }
  },
  {
   "id": "skitter-smack",
@@ -15320,9 +15324,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes Flying-type Pokémon vulnerable to Ground moves."
+  "effects": {
+   "smackDown": true
+  }
  },
  {
   "id": "smart-strike",
@@ -15338,9 +15342,7 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user stabs the target with a sharp horn. This attack never misses."
+  "effects": {}
  },
  {
   "id": "smelling-salts",
@@ -15420,9 +15422,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes the target's type to water."
+  "effects": {
+   "setType": "water"
+  }
  },
  {
   "id": "sonic-boom",
@@ -15488,9 +15490,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cures all status problems in the party Pokémon."
+  "effects": {
+   "cure": "party"
+  }
  },
  {
   "id": "spectral-thief",
@@ -15654,16 +15656,16 @@
   "name": "Spit Up",
   "type": "normal",
   "category": "special",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power depends on how many times the user performed Stockpile."
+  "effects": {
+   "powerRule": "stockpile"
+  }
  },
  {
   "id": "spite",
@@ -15723,11 +15725,11 @@
   "pp": 15,
   "priority": 3,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user shines a spotlight on the target so that only the target will be attacked during the turn."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "springtide-storm",
@@ -15821,11 +15823,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Stores energy for use with Spit Up and Swallow."
+  "effects": {
+   "stockpile": "store"
+  }
  },
  {
   "id": "stoked-sparksurfer",
@@ -15905,9 +15907,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user restores its HP by the same amount as the target's Attack stat. It also lowers the target's Attack stat."
+  "effects": {
+   "strengthSap": true
+  }
  },
  {
   "id": "stuff-cheeks",
@@ -15935,11 +15937,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Uses HP to creates a decoy that takes hits."
+  "effects": {
+   "substitute": true
+  }
  },
  {
   "id": "subzero-slammer",
@@ -15989,9 +15991,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores the target's ability."
+  "effects": {
+   "ignoreAbility": true
+  }
  },
  {
   "id": "super-fang",
@@ -16086,11 +16088,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The more times the user has performed Stockpile, the more HP is recovered."
+  "effects": {
+   "stockpile": "swallow"
+  }
  },
  {
   "id": "switcheroo",
@@ -16426,9 +16428,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes Flying-type Pokémon vulnerable to Ground moves."
+  "effects": {
+   "smackDown": true
+  }
  },
  {
   "id": "thousand-waves",
@@ -16645,9 +16647,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May paralyze, burn or freeze opponent."
+  "effects": {
+   "randomStatus": {
+    "chance": 20,
+    "ids": [
+     "par",
+     "brn",
+     "frz"
+    ]
+   }
+  }
  },
  {
   "id": "trick",
@@ -16675,11 +16684,11 @@
   "pp": 5,
   "priority": -7,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Slower Pokémon move first in the turn for 5 turns."
+  "effects": {
+   "field": "trickRoom"
+  }
  },
  {
   "id": "trick-or-treat",
@@ -16735,9 +16744,13 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Attacks thrice with more power each time."
+  "effects": {
+   "hits": [
+    3,
+    3
+   ],
+   "powerRule": "perHit"
+  }
  },
  {
   "id": "triple-dive",
@@ -16772,9 +16785,13 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits thrice in one turn at increasing power."
+  "effects": {
+   "hits": [
+    3,
+    3
+   ],
+   "powerRule": "perHit"
+  }
  },
  {
   "id": "trump-card",
@@ -16867,8 +16884,8 @@
   "name": "Veevee Volley",
   "type": "normal",
   "category": "physical",
-  "power": null,
-  "accuracy": null,
+  "power": 1,
+  "accuracy": 100,
   "pp": 20,
   "priority": 0,
   "critStage": 0,
@@ -16876,9 +16893,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases when player's bond is stronger."
+  "effects": {
+   "powerRule": "friendship"
+  }
  },
  {
   "id": "venom-drench",
@@ -16961,9 +16978,7 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks last, but ignores Accuracy and Evasiveness."
+  "effects": {}
  },
  {
   "id": "volt-switch",
@@ -17027,11 +17042,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Weakens the power of Fire-type moves."
+  "effects": {
+   "field": "waterSport"
+  }
  },
  {
   "id": "water-spout",
@@ -17113,11 +17128,11 @@
   "pp": 10,
   "priority": 3,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user's team from multi-target attacks."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "wildbolt-storm",
@@ -17182,9 +17197,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes the opponent's Ability to Insomnia."
+  "effects": {
+   "abilityChange": "insomnia"
+  }
  },
  {
   "id": "wring-out",
@@ -17216,8 +17231,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Puts opponent to sleep in the next turn."
+  "effects": {
+   "yawn": true
+  }
  }
 ]

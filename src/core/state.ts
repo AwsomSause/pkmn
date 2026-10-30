@@ -140,6 +140,22 @@ export const VolatileSchema = z.object({
   plannedAttack: z.boolean().default(false),
   /** It leaves the field after this turn (U-turn, Baton Pass); `baton` passes its stat changes on. */
   pivot: z.object({ baton: z.boolean() }).nullable().default(null),
+  /** The move before the last one (Blood Moon can't be used twice in a row). */
+  prevMove: z.string().nullable().default(null),
+  /** Substitute: HP left in the decoy (0 = none). */
+  substitute: z.number().int().min(0).default(0),
+  /** Destiny Bond: whoever knocks it out this turn faints too. */
+  destinyBond: z.boolean().default(false),
+  /** Perish Song: turns until it faints (0 = not counting). */
+  perish: z.number().int().min(0).default(0),
+  /** Yawn: turns until it falls asleep (0 = not drowsy). */
+  yawn: z.number().int().min(0).default(0),
+  /** Magnet Rise: turns left floating. */
+  magnetRise: z.number().int().min(0).default(0),
+  /** Smack Down: brought to the ground. */
+  smackedDown: z.boolean().default(false),
+  /** Stockpile: times stored (0–3). */
+  stockpile: z.number().int().min(0).max(3).default(0),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -172,6 +188,14 @@ export const freshVolatile = (): Volatile => ({
   tookSpecial: 0,
   plannedAttack: false,
   pivot: null,
+  prevMove: null,
+  substitute: 0,
+  destinyBond: false,
+  perish: 0,
+  yawn: 0,
+  magnetRise: 0,
+  smackedDown: false,
+  stockpile: 0,
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -247,6 +271,8 @@ export const BattleStateSchema = z.object({
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** The terrain and how many turns it has left. */
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** Field-wide effects and their turns left. */
+  field: z.object({ gravity: z.number().int().min(0).default(0), trickRoom: z.number().int().min(0).default(0), waterSport: z.number().int().min(0).default(0), mudSport: z.number().int().min(0).default(0) }).default(() => ({ gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 })),
   /** Baton Pass: the stat changes the next Pokémon inherits. */
   batonStages: StagesSchema.nullable().default(null),
   /** Screens, Tailwind and entry hazards on each side. */
