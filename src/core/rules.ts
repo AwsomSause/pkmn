@@ -65,7 +65,7 @@ export const RunRulesDataSchema = z.object({
     once: z.object({ pool: z.string().optional(), trainer: z.string().optional(), title: z.string().optional(), bankCredits: z.number().int().optional(), text: z.string() }),
     repeat: z.object({ bankCredits: z.number().int().optional(), candies: z.number().int().optional(), text: z.string() }),
   })),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), maxWipes: z.number().int().min(1).optional(), xpScale: z.number().positive().optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 

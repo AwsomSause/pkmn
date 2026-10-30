@@ -72,7 +72,7 @@ for (let i = from; i < from + count; i++) {
         if (steps - lastProgress > STUCK_STEPS) throw new Error('STUCK');
       },
     });
-    Object.assign(rec, { phase: run.phase, encounters: run.encountersCompleted, badges: run.badges.length, region: run.regionIndex, party: run.party.length, maxLevel: Math.max(...run.party.map((p) => p.level)), by: run.log.defeatedBy, stage: run.stage?.index ?? null, wins: run.log.counters.battlesWon ?? null, money: run.money, earned: run.log.counters.moneyEarned ?? 0, steps });
+    Object.assign(rec, { phase: run.phase, encounters: run.encountersCompleted, badges: run.badges.length, region: run.regionIndex, party: run.party.length, maxLevel: Math.max(...run.party.map((p) => p.level)), by: run.log.defeatedBy, stage: run.stage?.index ?? null, wipes: run.rules.wipes, wins: run.log.counters.battlesWon ?? null, money: run.money, earned: run.log.counters.moneyEarned ?? 0, steps });
     if (run.phase !== 'over' && steps >= STEPS) rec.capped = true;
   } catch (e) {
     const msg = (e as Error).message;

@@ -59,7 +59,9 @@ describe('a run keeps the rules it started with', () => {
     const hard = start('lv', { difficultyId: 'nightmare' });
     expect(hard.rules.enemyLevelBonus).toBe(7);
     const level = (r: RunState) => toBattle(r).battle!.enemyTeam[0]!.level;
-    expect(level(hard)).toBe(level(plain) + 7);
+    // The gentle opening caps the first wild level, whatever the difficulty bonus.
+    expect(level(hard)).toBeLessThanOrEqual(content.balance.opening.maxLevel);
+    expect(level(hard)).toBeGreaterThanOrEqual(level(plain));
     const scarce = start('lv', { modifierIds: ['scarce-supplies'] });
     expect(scarce.money).toBe(Math.floor(plain.money / 2));
     expect(start('lv', { modifierIds: ['no-transformations'] }).disabledMechanics.sort()).toEqual(['dynamax', 'mega', 'tera', 'zmove']);

@@ -270,6 +270,8 @@ function restoreAfterWipe(content: Content, run: RunState): RunState | null {
   const adventure = getMode(run.rules.modeId)?.checkpoints === true;
   const block = !adventure && run.rules.deathBlock && !run.rules.deathBlockUsed && run.encountersCompleted < RUN_RULES.deathBlock.battles;
   if (!adventure && !block) return null;
+  const maxWipes = getMode(run.rules.modeId)?.maxWipes;
+  if (adventure && maxWipes !== undefined && run.rules.wipes >= maxWipes) return null;
   const back = structuredClone(run.checkpoint) as unknown as RunState;
   back.rules = { ...run.rules, wipes: run.rules.wipes + 1, deathBlockUsed: run.rules.deathBlockUsed || block };
   if (adventure) back.money = Math.floor(back.money * (1 - (getMode(run.rules.modeId)?.wipeMoneyLoss ?? 0)));
@@ -291,10 +293,10 @@ export function nextUid(run: RunState, prefix: string): string {
 }
 
 /** A new Pokémon for this run; its ability comes from the run seed and its uid. */
-export function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
+export function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e', cap = 100): PokemonInstance {
   const uid = nextUid(run, prefix);
   // Difficulty: every enemy's level (the rules were fixed when the run started).
-  const shown = prefix === 'e' ? Math.max(1, Math.min(100, level + run.rules.enemyLevelBonus)) : level;
+  const shown = prefix === 'e' ? Math.max(1, Math.min(cap, level + run.rules.enemyLevelBonus)) : level;
   const mon = createPokemon(content, speciesId, shown, uid, `${run.seed}:${uid}`);
   if (prefix === 'e') softenOpeningMoves(content, mon);
   return mon;
@@ -1137,7 +1139,8 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`, spookyEncounterChance(runPerks(content, run)));
     const opened = legendary ? { speciesId, level: plan.level } : openingWild(content, run, speciesId, plan.level, `wild:${node.id}`);
     speciesId = opened.speciesId;
-    const enemy = newMon(content, run, speciesId, opened.level, 'e');
+    // The gentle opening caps the wild level after the difficulty bonus too, so Nightmare's first fight is not a level 9 against a level 5 starter.
+    const enemy = newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : 100);
     enemy.shiny = plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
@@ -1711,7 +1714,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);

@@ -72,7 +72,7 @@
       "id": "monotype",
       "name": "Monotype",
       "status": "supported",
-      "bonus": 0.2,
+      "bonus": 0.3,
       "blurb": "Every Pokémon you keep must share a type with your starter.",
       "lockType": true,
       "group": "party"
@@ -128,7 +128,7 @@
       "id": "boss-rush",
       "name": "Boss Rush",
       "status": "supported",
-      "bonus": 0.25,
+      "bonus": 0.4,
       "blurb": "A shorter campaign: 4 stages per region, so gyms and leagues come twice as often.",
       "campaignId": "boss-rush",
       "group": "campaign"
@@ -233,6 +233,7 @@
       "checkpoints": false,
       "campaignId": "quick-route",
       "rewardScale": 0.6,
+      "xpScale": 1.35,
       "blurb": "A real run on a shorter road (3 stages per region). Achievements, unlocks and rewards count, but account rewards pay 60% because the road is shorter."
     },
     {
@@ -250,6 +251,7 @@
       "progressionEligible": false,
       "checkpoints": true,
       "wipeMoneyLoss": 0.1,
+      "maxWipes": 8,
       "blurb": "No restart on a wipe: you go back to the start of the stage. No Bank Credits, Research Points, candies, unlocks or achievements."
     },
     {
