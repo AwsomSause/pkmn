@@ -520,7 +520,7 @@ export const StoryConfigSchema = z.object({
     minRegion: z.number().int().min(0),
     list: z.array(z.object({ id: z.string(), name: z.string(), description: z.string(), counterplay: z.string(), field: z.object({ gravity: z.number().int().min(1).optional(), trickRoom: z.number().int().min(1).optional(), weather: z.enum(['rain', 'sun', 'sand', 'snow', 'hail']).optional(), terrain: z.enum(['electric', 'grassy', 'misty', 'psychic']).optional() }) })).min(1),
   }),
-  gauntlet: z.object({ money: z.number().int().positive() }),
+  gauntlet: z.object({ money: z.number().int().positive(), grandRivals: z.number().int().min(1).max(6) }),
   grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0), influenceRare: z.number().gt(1).max(2), huntClues: z.number().int().min(1).max(10), huntTitle: z.string() }),
   /** Legacy titles (Techno §6.1): earned from a Pokémon's own history; recognition only, never a stat. */
   legacyTitles: z

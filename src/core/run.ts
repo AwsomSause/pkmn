@@ -131,7 +131,7 @@ import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from 
 import { createStoryState } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
-import { gauntletRival, markGauntletFight } from './story/gauntlet';
+import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
@@ -420,6 +420,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   tellAct(content, run);
   applyGrandInfluence(content, run);
   growCrisis(content, run);
+  grandGauntlet(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);

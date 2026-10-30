@@ -3378,7 +3378,8 @@
     ]
   },
   "gauntlet": {
-    "money": 2500
+    "money": 2500,
+    "grandRivals": 4
   },
   "elitePhilosophies": [
     {
