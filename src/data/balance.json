@@ -303,7 +303,8 @@
    "poke-ball",
    "great-ball",
    "full-heal"
-  ]
+  ],
+  "gameEventWeight": 4
  },
  "attributeGrowth": [
   {

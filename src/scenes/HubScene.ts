@@ -7,6 +7,7 @@ import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
+import { activeGameEvents, durationText, gameRewardText, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
@@ -22,7 +23,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'events' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -34,6 +35,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
+  { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, their objectives and rewards (Enter)." },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -104,7 +106,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Past Runs', icon: 'item.calendar', rooms: ['history'], blurb: ROOMS[6]!.blurb },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history'], blurb: "This week's event, holiday events, and your past runs." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes and Species Mastery.' },
 ];
 
@@ -114,6 +116,7 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   lab: 'item.mystery_egg',
   attributes: 'item.exp_charm',
   mastery: 'item.master_ribbon',
+  events: 'item.calendar',
   save: 'item.map',
   back: 'item.pair_of_tickets',
 };
@@ -417,6 +420,15 @@ export class HubScene extends Phaser.Scene {
         y = this.line(y, `Steps done: ${lines.reduce((n, l) => n + stepsDone(session.content, p, l.trainerId), 0)} of ${lines.length * 5}`, 16, COLORS.textMuted);
         break;
       }
+      case 'events': {
+        y = this.line(y, 'Event Hall', 22);
+        for (const a of activeGameEvents(session.content, new Date())) {
+          const views = objectiveViews(p, a.event, a.edition);
+          y = this.line(y, `${a.event.name} (${views.filter((v) => v.done).length}/${views.length})`, 16, a.event.visualTheme.color);
+          y = this.line(y, `Ends in ${durationText(a.endsIn)}`, 14, COLORS.textMuted);
+        }
+        break;
+      }
       case 'mastery': {
         y = this.line(y, 'Species Mastery', 22);
         const families = masteryFamilies(session.content, p);
@@ -478,6 +490,9 @@ export class HubScene extends Phaser.Scene {
       case 'mastery':
         this.openMastery();
         break;
+      case 'events':
+        this.openEventHall();
+        break;
       case 'save':
         this.openSaveData();
         break;
@@ -496,6 +511,59 @@ export class HubScene extends Phaser.Scene {
     this.picker?.close();
     this.picker = null;
     if (this.submenu) this.submenu.menu.enabled = true;
+  }
+
+  /** The game events on now (objectives, rewards, time left), the next weeks' events, and rewards already earned. */
+  private openEventHall(): void {
+    const { session } = services();
+    const content = session.content;
+    const p = session.profile;
+    const now = new Date();
+    const motion = session.settings.battleAnimations;
+    const rows: PickerRow[] = [];
+    const header = (text: string, color: string, hint: string, bob = false, size = 19) =>
+      rows.push({
+        problem: null,
+        hint,
+        draw: (scene, box, w, h) => {
+          const t = scene.add.text(12, h / 2, text, textStyle(size, color, { wordWrap: { width: w - 24 } })).setOrigin(0, 0.5);
+          box.add(t);
+          if (bob && motion === 'full') scene.tweens.add({ targets: t, x: 18, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        },
+      });
+    for (const a of activeGameEvents(content, now)) {
+      const color = a.event.visualTheme.color;
+      header(`★ ${a.event.name}  ·  ends in ${durationText(a.endsIn)}`, color, `${a.event.description}  Rules: ${a.event.ruleText}`, true);
+      for (const v of objectiveViews(p, a.event, a.edition)) {
+        rows.push({
+          problem: null,
+          hint: `Reward: ${gameRewardText(content, v.objective.reward)}${v.claimed ? ' (claimed)' : ''}. Progress counts in runs started while the event is on.`,
+          draw: (scene, box, w, h) => {
+            box.add(scene.add.text(28, h / 2, `${v.done ? '✓' : '•'} ${v.objective.text}`, textStyle(16, v.done ? COLORS.good : COLORS.textLight)).setOrigin(0, 0.5));
+            const g = scene.add.graphics();
+            const bw = 140;
+            g.fillStyle(0x1d1a24, 1).fillRoundedRect(w - bw - 70, h / 2 - 5, bw, 10, 4);
+            g.fillStyle(Phaser.Display.Color.HexStringToColor(color).color, 1).fillRoundedRect(w - bw - 70, h / 2 - 5, Math.max(4, (v.current / v.objective.atLeast) * bw), 10, 4);
+            box.add(g);
+            box.add(scene.add.text(w - 12, h / 2, `${v.current}/${v.objective.atLeast}`, textStyle(15, COLORS.textMuted)).setOrigin(1, 0.5));
+          },
+        });
+      }
+      const earned = rewardEarned(p, a.event.id);
+      header(
+        earned ? `Repeat reward: ${gameRewardText(content, a.event.fallbackReward)}` : `Reward: ${gameRewardText(content, a.event.reward)}`,
+        earned ? COLORS.textMuted : COLORS.gold,
+        earned ? 'You already earned this event\'s permanent reward; finishing it again pays the repeat reward.' : 'Finish every objective this week to earn it for good.',
+        false,
+        15,
+      );
+    }
+    const upcoming = upcomingWeekly(content, now, 3);
+    if (upcoming.length > 0) header('Coming up', COLORS.textLight, 'Weekly events rotate every Monday (UTC). Each one comes back in a later week.');
+    for (const u of upcoming) header(`  ${u.event.name}  ·  in ${durationText(u.startsIn)}`, COLORS.textMuted, `${u.event.description}  Rules: ${u.event.ruleText}`);
+    const archive = [...content.gameEvents.values()].filter((e) => rewardEarned(p, e.id));
+    if (archive.length > 0) header(`Earned: ${archive.map((e) => e.name).join(', ')}`, COLORS.good, 'Event rewards you have earned for good.');
+    this.openPicker({ title: 'Event Hall', rows, columns: 1, rowHeight: 44, onSelect: () => undefined, onBack: () => this.closePicker() });
   }
 
   /** Every family you met, best rank first; Enter shows its members, goals and unlocks. */
