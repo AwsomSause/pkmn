@@ -45,12 +45,12 @@ import type { BoostStat, Content, MaxEffect, Move, TransformKind, TypeName } fro
 import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
 import type { Perks } from '../archetypes';
-import { calcStats, getSpecies } from '../pokemon';
+import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import { megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
-export type FormChangeKind = 'mega' | 'primal' | 'gigantamax' | 'tera';
+export type FormChangeKind = 'mega' | 'primal' | 'gigantamax' | 'tera' | 'ability';
 /** The mechanics that work once per battle; a Pokémon can use only one of them. */
 export type BattleMechanic = 'tera' | 'zmove' | 'dynamax';
 
@@ -458,8 +458,11 @@ function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, t
 export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
   const tera = battle.transform.teraTypes[mon.uid];
   if (tera) return [tera];
-  const shift = (battle.enemyTeam.includes(mon) ? battle.enemyVolatile : battle.playerVolatile)?.typeShift;
-  return shift ? [shift] : getSpecies(content, mon.speciesId).types;
+  const vol = battle.enemyTeam.includes(mon) ? battle.enemyVolatile : battle.playerVolatile;
+  const base: readonly TypeName[] = vol?.typeList ? (vol.typeList as TypeName[]) : vol?.typeShift ? [vol.typeShift] : getSpecies(content, mon.speciesId).types;
+  const mimic = battle.terrain && abilityOf(content, mon) === 'mimicry' ? ({ electric: 'electric', grassy: 'grass', misty: 'fairy', psychic: 'psychic' } as Record<string, TypeName>)[battle.terrain.id] : undefined;
+  if (mimic && !vol?.typeList) return [mimic];
+  return vol?.roost ? base.filter((t) => t !== 'flying') : base;
 }
 
 /** The STAB multiplier for a move of this type (1 = none), counting Terastallization. */
@@ -505,9 +508,19 @@ export function revertTransformations(content: Content, battle: BattleState, par
       megas += 1;
       continue;
     }
+    const oldMax = calcStats(content, mon).hp;
     mon.speciesId = record.from;
-    mon.hp = Math.min(mon.hp, calcStats(content, mon).hp);
+    const max = calcStats(content, mon).hp;
+    mon.hp = record.kind === 'ability' && mon.hp > 0 ? Math.max(1, Math.min(max, Math.round((mon.hp * max) / oldMax))) : Math.min(mon.hp, max);
   }
+  for (const [uid, rec] of Object.entries(battle.extra.mimic)) {
+    const mon = [...party, ...battle.enemyTeam].find((m) => m.uid === uid);
+    if (!mon) continue;
+    if (rec.kind === 'mimic') {
+      if (rec.moves[rec.slot] && mon.moves[rec.slot]) mon.moves[rec.slot] = { ...rec.moves[rec.slot]! };
+    } else mon.moves = rec.moves.map((m) => ({ ...m }));
+  }
+  battle.extra.mimic = {};
   battle.transform.forms = {};
   battle.transform.teraTypes = {};
   battle.transform.dynamax = {};

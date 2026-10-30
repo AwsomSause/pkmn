@@ -135,6 +135,13 @@ export class GameSession {
     return this.run;
   }
 
+  /** Starts the fight with a Totem. */
+  enterTotem(sideId: string): RunState {
+    this.run = Run.enterTotem(this.content, this.requireRun(), sideId);
+    this.persistRun();
+    return this.run;
+  }
+
   /** Uses a map item from the map's Items menu (Escape Rope, a bike, VS Seeker). */
   useMapAction(kind: Run.MapActionKind): string {
     const result = Run.useMapAction(this.content, this.requireRun(), kind);

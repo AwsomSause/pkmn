@@ -164,3 +164,20 @@ export function bondLines(content: Content, rival: Rival): string[] {
     return `${speciesName(content, id)} (${b.trait}, ${mood}; best: ${top[0]} ${top[1]})${habit ? ` ${habit}` : ''}`;
   });
 }
+
+/** Public reputation (Examples §8): how other trainers see a rival, from how it treats its team and how it fights. Derived, never saved. */
+export function reputation(rival: Pick<Rival, 'bonds' | 'traits' | 'encounters'>): 'respected' | 'feared' | 'disliked' | 'unknown' {
+  const bonds = Object.values(rival.bonds);
+  if (bonds.length === 0 || rival.encounters === 0) return 'unknown';
+  const avg = (k: 'trust' | 'strain') => bonds.reduce((s, b) => s + b[k], 0) / bonds.length;
+  const e = RIVAL_BONDS.effects;
+  if (avg('strain') >= e.worryStrain || avg('trust') <= e.worryTrust) return rival.traits.ambition >= 60 ? 'feared' : 'disliked';
+  return avg('trust') >= e.loyaltyTrust - 15 ? 'respected' : 'unknown';
+}
+
+/** A signature (Examples §8): once a rival has fought you twice, the habit its team shows in battle becomes its known tell. */
+export function signature(content: Content, rival: Rival): string | null {
+  if (rival.encounters < 2) return null;
+  for (const [id, b] of Object.entries(rival.bonds)) if (b.habits.tell) return `${speciesName(content, id)} ${b.habits.tell}`;
+  return null;
+}

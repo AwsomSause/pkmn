@@ -61,7 +61,12 @@ test('the battle screen uses the Aero look and pack art', async ({ page }) => {
 
   // Fight: the focused move shows Essentials' type label and category icon.
   await page.keyboard.press('Enter');
-  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges?.list.map((o: any) => o.texture.key))).toEqual(['pack.ebdx.types', 'pack.ebdx.category']);
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges?.list.map((o: any) => o.texture.key).slice(0, 2)))
+    .toEqual(['pack.ebdx.types', 'pack.ebdx.category']);
+  // Enhanced Battle UI extras: an effectiveness tag with words (damaging moves) or none (status moves).
+  const extras = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges.list.map((o: any) => o.text ?? o.texture.key));
+  expect(extras.some((k: string) => /effective|No effect|Normal damage/.test(k)) || !extras.includes('pack.ebui.effectiveness')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-moves.png' });
 
   // A status shows Essentials' status icon in the foe's databox.
@@ -98,5 +103,38 @@ test('with battle animations off the arena has no ambience', async ({ page }) =>
   await waitForMenu(page);
   await page.keyboard.press('Enter');
   await waitForMenu(page);
+  expect(errors).toEqual([]);
+});
+
+test('slice 2: the trainer VS intro can be skipped and the battle carries on', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-vs&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  // Turn the wild battle into a trainer battle at a low HP foe and restart it from turn 1.
+  await page.evaluate(() => {
+    const pkr = (window as any).__pkr;
+    const run = pkr.session.run;
+    run.battle.trainer = { classId: [...pkr.session.content.trainers.keys()][0], name: 'Joey' };
+    run.battle.enemyTeam[0].hp = 1;
+    pkr.game.scene.getScene('Battle').scene.restart();
+  });
+  await page.waitForTimeout(400);
+  // The VS screen is up (EBDX transition art on the display list) ...
+  const vsShown = await page.evaluate(() =>
+    (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.list?.some((c: any) => String(c.texture?.key).startsWith('pack.ebdx.tr.'))),
+  );
+  expect(vsShown).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-vs.png' });
+  // ... and a key press skips it straight to the challenge line.
+  await page.keyboard.press('Enter');
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').message.text), { timeout: 1500 })
+    .toMatch(/would like to battle/);
+  await waitForMenu(page);
+  // Low HP: the foe's box glows.
+  expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').enemyBox.danger))).toBe(true);
   expect(errors).toEqual([]);
 });

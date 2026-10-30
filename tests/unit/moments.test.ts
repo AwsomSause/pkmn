@@ -76,3 +76,64 @@ describe('enemy moments', () => {
     expect(run.battle!.enemyStages.def).toBe(1);
   });
 });
+
+describe('Overdrive chains', () => {
+  it('a chain moves only when its next step happens, and finishing it earns a title', async () => {
+    const { advanceChains, chainProgress } = await import('../../src/core/story/chains');
+    const { run, lead } = setup('chain-test');
+    const chain = content.story.chains.find((c) => c.id === 'perseverance-legacy')!;
+    // Out-of-order steps do nothing.
+    expect(advanceChains(content, run, chain.steps[1]!, lead.uid)).toEqual([]);
+    expect(chainProgress(run, chain.id)).toBe(0);
+    chain.steps.slice(0, -1).forEach((s) => expect(advanceChains(content, run, s, lead.uid)).toEqual([]));
+    expect(chainProgress(run, chain.id)).toBe(chain.steps.length - 1);
+    expect(advanceChains(content, run, chain.steps.at(-1)!, lead.uid)).toContain(chain.id);
+    expect(run.story.histories[lead.uid]!.titles).toContain(chain.title);
+    // Done once.
+    expect(advanceChains(content, run, chain.steps[0]!, lead.uid)).toEqual([]);
+  });
+
+  it('every chain step is a real story event or a known milestone', () => {
+    const milestones = new Set(['reunion', 'avenged', 'determination-evolution']);
+    const ids = new Set(content.story.definitions.map((d) => d.id));
+    for (const c of content.story.chains) for (const s of c.steps) expect(ids.has(s) || milestones.has(s), `${c.id}:${s}`).toBe(true);
+  });
+});
+
+describe('unusual events with no choice', () => {
+  const first = (seed: string, edit: (run: ReturnType<typeof setup>['run']) => void) => {
+    const { run } = setup(seed);
+    run.battle!.turn = 1;
+    edit(run);
+    const rngBefore = structuredClone(run.rng);
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(run.rng.battle).toEqual(rngBefore.battle);
+    return titles(cues);
+  };
+
+  it('shiny wild Pokémon are usually hinted, deterministically from the seed', () => {
+    let hinted = 0;
+    for (let n = 0; n < 20; n++) {
+      const a = first(`diff-${n}`, (run) => {
+        run.battle!.kind = 'wild';
+        run.battle!.enemyTeam[0]!.shiny = true;
+      });
+      const b = first(`diff-${n}`, (run) => {
+        run.battle!.kind = 'wild';
+        run.battle!.enemyTeam[0]!.shiny = true;
+      });
+      expect(a).toEqual(b);
+      if (a.includes('Something About It Is Different…')) hinted++;
+    }
+    expect(hinted).toBeGreaterThan(8);
+    expect(hinted).toBeLessThan(20);
+  });
+
+  it('a waiting rival is shown at a boss battle', () => {
+    const t = first('waiting', (run) => {
+      run.battle!.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
+      run.story.rivals.push({ state: 'contender' } as never);
+    });
+    expect(t).toContain("They've Been Waiting for This Battle…");
+  });
+});

@@ -26,6 +26,8 @@ export const StatusSchema = z.object({
   id: StatusIdSchema,
   /** Sleep only: turns the Pokémon will still skip. */
   turns: z.number().int().min(0).optional(),
+  /** Poison only: badly poisoned (Toxic), `turns` counts up. */
+  bad: z.boolean().optional(),
 });
 export type Status = z.infer<typeof StatusSchema>;
 
@@ -82,9 +84,15 @@ export const HeldStateSchema = z.object({
   first: z.array(z.string()).default([]),
   /** Critical-hit stages from berries and Dire Hit. */
   crit: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Items taken, knocked off or swapped away for this battle (uid → item ids) and items gained (uid → item → copies). */
+  lost: z.record(z.string(), z.array(z.string())).default({}),
+  gained: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
+  /** Embargo turns left per Pokémon uid, and Magic Room turns left. */
+  embargo: z.record(z.string(), z.number().int().min(0)).default({}),
+  magicRoom: z.number().int().min(0).default(0),
 });
 export type HeldState = z.infer<typeof HeldStateSchema>;
-export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {} });
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0 });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -161,6 +169,74 @@ export const VolatileSchema = z.object({
   smackedDown: z.boolean().default(false),
   /** Stockpile: times stored (0–3). */
   stockpile: z.number().int().min(0).max(3).default(0),
+  /** Full type override (Reflect Type, Forest's Curse, Burn Up...). */
+  typeList: z.array(z.string()).nullable().default(null),
+  /** Stats replaced for this stay (Power Trick, Speed Swap, the Splits). */
+  statOverride: z.record(z.string(), z.number()).default({}),
+  /** Charge: the next Electric move is twice as strong. */
+  charged: z.boolean().default(false),
+  /** Rage: Attack rises when hit. */
+  raging: z.boolean().default(false),
+  /** Times hit this stay (Rage Fist). */
+  timesHit: z.number().int().min(0).default(0),
+  /** Its last move failed (Stomping Tantrum). */
+  lastFailed: z.boolean().default(false),
+  /** A stat fell this turn (Lash Out). */
+  loweredThisTurn: z.boolean().default(false),
+  /** Moves used this stay (Last Resort). */
+  movesUsed: z.array(z.string()).default([]),
+  /** Rollout / Ice Ball hits in a row. */
+  rollout: z.number().int().min(0).default(0),
+  /** Nightmare: loses HP while asleep. */
+  nightmare: z.boolean().default(false),
+  /** Cursed by a Ghost's Curse. */
+  cursed: z.boolean().default(false),
+  /** Imprison: the foe can't use moves it knows. */
+  imprison: z.boolean().default(false),
+  /** Snatch: steals the foe's next self-move. */
+  snatching: z.boolean().default(false),
+  /** Magic Coat: bounces status moves this turn. */
+  coating: z.boolean().default(false),
+  /** Crafty Shield / Quick Guard / Mat Block this turn. */
+  shield: z.string().nullable().default(null),
+  /** Powder: its Fire move this turn backfires. */
+  powdered: z.boolean().default(false),
+  /** Foresight / Odor Sleuth ('ghost') or Miracle Eye ('dark'). */
+  identified: z.string().nullable().default(null),
+  /** Tar Shot: weak to Fire. */
+  tarred: z.boolean().default(false),
+  /** Telekinesis turns left. */
+  telekinesis: z.number().int().min(0).default(0),
+  /** Octolock: trapped, stats fall each turn. */
+  octolock: z.boolean().default(false),
+  /** Syrup Bomb: Speed falls for this many turns. */
+  syrup: z.number().int().min(0).default(0),
+  /** Salt Cure: loses HP each turn. */
+  saltCure: z.boolean().default(false),
+  /** Uproar turns left. */
+  uproar: z.number().int().min(0).default(0),
+  /** Bide: turns left and damage stored. */
+  bide: z.object({ turns: z.number().int(), damage: z.number().int() }).nullable().default(null),
+  /** Beak Blast: burns contact attackers this turn. */
+  beakHeat: z.boolean().default(false),
+  /** Electrify: its next move is Electric. */
+  electrified: z.boolean().default(false),
+  /** Glaive Rush: foes always hit it for double damage. */
+  exposed: z.boolean().default(false),
+  /** Mimic: the move slot that was replaced. */
+  mimicked: z.object({ slot: z.number().int(), original: z.string() }).nullable().default(null),
+  /** The move it chose this turn (Me First, Upper Hand). */
+  plannedMove: z.string().nullable().default(null),
+  /** Grudge: the move that knocks it out loses its PP. */
+  grudge: z.boolean().default(false),
+  /** Morpeko's Hunger Switch: currently in the Hangry mode. */
+  hangry: z.boolean().default(false),
+  /** Roost: Flying type lost until the turn ends. */
+  roost: z.boolean().default(false),
+  /** Throat Chop: sound moves blocked for this many turns. */
+  throat: z.number().int().min(0).default(0),
+  /** Types lost (Burn Up, Double Shock). */
+  lostTypes: z.array(z.string()).default([]),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -201,6 +277,40 @@ export const freshVolatile = (): Volatile => ({
   magnetRise: 0,
   smackedDown: false,
   stockpile: 0,
+  typeList: null,
+  statOverride: {},
+  charged: false,
+  raging: false,
+  timesHit: 0,
+  lastFailed: false,
+  loweredThisTurn: false,
+  movesUsed: [],
+  rollout: 0,
+  nightmare: false,
+  cursed: false,
+  imprison: false,
+  snatching: false,
+  coating: false,
+  shield: null,
+  powdered: false,
+  identified: null,
+  tarred: false,
+  telekinesis: 0,
+  octolock: false,
+  syrup: 0,
+  saltCure: false,
+  uproar: 0,
+  bide: null,
+  beakHeat: false,
+  electrified: false,
+  exposed: false,
+  mimicked: null,
+  plannedMove: null,
+  grudge: false,
+  hangry: false,
+  roost: false,
+  throat: 0,
+  lostTypes: [],
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -226,7 +336,7 @@ export const BattleTransformSchema = z.object({
   /** The mechanics each side has already used this battle (each works once per battle). */
   used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
   /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
-  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax']), from: z.string() })),
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax', 'ability']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
@@ -239,6 +349,20 @@ export const BattleTransformSchema = z.object({
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
 export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
+
+export const freshExtra = () => ({
+  allyFaintedTurn: { player: -9, enemy: -9 },
+  echo: { n: 0, turn: -9 },
+  fusion: { fire: -9, electric: -9 },
+  delayed: [] as { side: 'player' | 'enemy'; turns: number; userUid: string; userSide: 'player' | 'enemy'; moveId: string }[],
+  ionDeluge: false,
+  wonderRoom: 0,
+  brokenFace: [] as string[],
+  mimic: {} as Record<string, { kind: 'mimic' | 'transform'; slot: number; moves: { id: string; pp: number }[] }>,
+  fairyLock: -9,
+  passSub: { player: 0, enemy: 0 },
+  healingWish: { player: 'none' as 'none' | 'wish' | 'dance', enemy: 'none' as 'none' | 'wish' | 'dance' },
+});
 
 /** What is set up on one side of the field: screens and other turn counters, and entry hazards. */
 export const SideEffectsSchema = z.object({
@@ -278,6 +402,19 @@ export const RaidBattleSchema = z.object({
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
+/** The changing state of a Totem fight (rules in core/totem/totem.ts). */
+export const TotemBattleSchema = z.object({
+  id: z.string(),
+  /** The Totem's own uid (the ally takes the field in its place while called). */
+  uid: z.string(),
+  auraDone: z.boolean(),
+  phasesDone: z.array(z.number().int().min(0)),
+  callsUsed: z.number().int().min(0),
+  /** The ally's uid while it is on the field. */
+  allyUid: z.string().nullable(),
+});
+export type TotemBattle = z.infer<typeof TotemBattleSchema>;
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -294,11 +431,26 @@ export const BattleStateSchema = z.object({
   playerVolatile: VolatileSchema.default(freshVolatile),
   enemyVolatile: VolatileSchema.default(freshVolatile),
   /** The weather and how many turns it has left. */
-  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0), primal: z.string().optional() }).nullable().default(null),
   /** The terrain and how many turns it has left. */
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** Field-wide effects and their turns left. */
   field: z.object({ gravity: z.number().int().min(0).default(0), trickRoom: z.number().int().min(0).default(0), waterSport: z.number().int().min(0).default(0), mudSport: z.number().int().min(0).default(0) }).default(() => ({ gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 })),
+  /** Smaller battle-wide counters for the rarer moves (see core/battle/engine.ts). */
+  extra: z.object({
+    allyFaintedTurn: z.object({ player: z.number().int().default(-9), enemy: z.number().int().default(-9) }).default({ player: -9, enemy: -9 }),
+    echo: z.object({ n: z.number().int().default(0), turn: z.number().int().default(-9) }).default({ n: 0, turn: -9 }),
+    fusion: z.object({ fire: z.number().int().default(-9), electric: z.number().int().default(-9) }).default({ fire: -9, electric: -9 }),
+    delayed: z.array(z.object({ side: z.enum(['player', 'enemy']), turns: z.number().int(), userUid: z.string(), userSide: z.enum(['player', 'enemy']), moveId: z.string() })).default([]),
+    ionDeluge: z.boolean().default(false),
+    wonderRoom: z.number().int().default(0),
+    /** Pokémon whose Disguise / Ice Face is already used up. */
+    brokenFace: z.array(z.string()).default([]),
+    mimic: z.record(z.string(), z.object({ kind: z.enum(['mimic', 'transform']), slot: z.number().int(), moves: z.array(z.object({ id: z.string(), pp: z.number().int() })) })).default({}),
+    fairyLock: z.number().int().default(-9),
+    passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),
+    healingWish: z.object({ player: z.enum(['none', 'wish', 'dance']).default('none'), enemy: z.enum(['none', 'wish', 'dance']).default('none') }).default({ player: 'none', enemy: 'none' }),
+  }).default(() => freshExtra()),
   /** Baton Pass: the stat changes the next Pokémon inherits. */
   batonStages: StagesSchema.nullable().default(null),
   /** Screens, Tailwind and entry hazards on each side. */
@@ -356,6 +508,8 @@ export const BattleStateSchema = z.object({
   raid: RaidBattleSchema.optional(),
   /** Battle Drama Engine: what the trainer has already said (see core/drama). */
   drama: DramaBattleSchema.default(freshDrama),
+  /** A Totem fight: aura, ally calls and phases (core/totem/totem.ts). */
+  totem: TotemBattleSchema.optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -363,9 +517,11 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
+  /** A Totem's territory: which Totem (totems.json) lives here. */
+  totemId: z.string().optional(),
   /** A healing stop and a fishing spot work once; a shop can be visited again. */
   used: z.boolean(),
 });
@@ -557,6 +713,8 @@ export const RunStateSchema = z.object({
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
+  /** Totem record this run, the unlocks they gave and research points. */
+  totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),

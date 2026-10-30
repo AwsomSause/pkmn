@@ -24,6 +24,7 @@ import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import { emotionOf } from './emotions';
+import { advanceChains } from './chains';
 import { clearMomentFlags, detectMoments } from './moments';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
@@ -209,6 +210,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           emotions: avenged ? ['justice'] : undefined,
         });
         if (e.side === 'enemy' && by) noteFinisher(by, i);
+        if (avenged && by) advanceChains(content, run, 'avenged', by);
         break;
       }
       case 'levelUp':
@@ -216,6 +218,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         break;
       case 'transform':
         if (e.side === 'player') active.player = e.uid;
+        if (e.kind === 'ability') break;
         emit(content, run, 'transformed', {
           where,
           actors: [e.uid],
@@ -378,6 +381,7 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
       text: def.memoryRecord ? fill(def.memoryRecord.text, t.names) : undefined,
       emotions: def.emotions,
     });
+    advanceChains(content, run, def.id, t.side === 'player' ? actor : undefined);
     // Effects the engine has not already applied (it decides every Hyper moment's effect itself).
     if (!suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind)) {
       const id = isBattleEffect(def.effect) ? cooldownKey(def, actor) : `${event.id}:${def.id}`;
@@ -531,13 +535,14 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       const reunion = before.pending.find((d) => d.kind === 'reunion' && d.mon.uid === mon.uid);
       openHistory(content, run, mon.uid, mon.speciesId, starter ? 'starter' : caught ? 'caught' : 'gift');
       if (starter) emit(content, run, 'starterChosen', { actors: [mon.uid], data: { speciesId: mon.speciesId }, text: 'Chosen as your starter' });
-      else if (reunion?.kind === 'reunion')
+      else if (reunion?.kind === 'reunion') {
+        advanceChains(content, run, 'reunion', mon.uid);
         emit(content, run, 'joinedParty', {
           actors: [mon.uid],
           data: { speciesId: mon.speciesId, how: 'reunion', hallOfFame: reunion.hallOfFame },
           text: reunion.hallOfFame ? 'Never forgot you, and came back from a past run' : 'Came back from a past run to join you',
         });
-      else emit(content, run, 'joinedParty', { actors: [mon.uid], data: { speciesId: mon.speciesId, how: caught ? 'caught' : 'gift' }, text: `Joined your team as a ${name(content, mon.speciesId)}` });
+      } else emit(content, run, 'joinedParty', { actors: [mon.uid], data: { speciesId: mon.speciesId, how: caught ? 'caught' : 'gift' }, text: `Joined your team as a ${name(content, mon.speciesId)}` });
       continue;
     }
     // A battle transformation (Mega, Primal...) and its reversion are not evolutions; the battle turn tells those.
@@ -558,6 +563,7 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       }
       if (h && h.bossesBeaten > 0 && h.survivedFatal > 0) {
         h.hyper['determination-evolution'] = (h.hyper['determination-evolution'] ?? 0) + 1;
+        advanceChains(content, run, 'determination-evolution', mon.uid);
         emit(content, run, 'storyMoment', {
           actors: [mon.uid],
           data: { def: 'determination-evolution', suppressed: false },

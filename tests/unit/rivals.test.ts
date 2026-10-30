@@ -25,6 +25,7 @@ import { MemoryStorageProvider } from '../../src/save/storage';
 import catalog from '../../src/data/rivalCatalog.json';
 import { afterBattleBehavior, bondLines, bondNote, bondShift, ensureBonds, RIVAL_BONDS, simulateOffscreen } from '../../src/core/rivals/bonds';
 import { legacyNote, pokemonInfluence, substitute, trainingExchange, triangleEffect } from '../../src/core/rivals/relations';
+import { reputation, signature } from '../../src/core/rivals/bonds';
 import { content, toBattle } from './helpers';
 
 function trainerBattle(seed: string, opts: { leaderId?: string | null; faintedMate?: boolean } = {}): RunState {
@@ -95,7 +96,24 @@ describe('rivals in saves', () => {
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(10);
     expect(loaded.data.story.rivals).toEqual([]);
-    expect(CURRENT_VERSIONS.run).toBe(13);
+    expect(CURRENT_VERSIONS.run).toBe(14);
+  });
+
+  it('a version 3 settings record gains the dialogue setting', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 3, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal' } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ dialogueFrequency: 'normal', battleSpeed: 'normal' });
+  });
+
+  it('a version 12 run loads with an empty raid record', () => {
+    const storage = new MemoryStorageProvider();
+    const { raids: _r, ...run } = win(trainerBattle('save12')) as RunState & { raids?: unknown };
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 12, savedAt: '', data: run }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(12);
+    expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] });
   });
 
   it('a version 11 run keeps its rivals and gains empty bonds', () => {
@@ -617,5 +635,31 @@ describe('rival relations and memory', () => {
     expect(legacyNote(rival)).toContain('close');
     rival.memory.lastBattle.hpLeftShare = 0.9;
     expect(legacyNote(rival)).toBeNull();
+  });
+});
+
+describe('reputation and signature', () => {
+  it('reputation comes from trust, strain and ambition; a signature needs two fights and a tell', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'q', seed: 'rep', archetypeId: 'red' }), 0));
+    const rival = structuredClone(win(trainerBattle('rep')).story.rivals[0]!);
+    rival.memory.lastBattle.team = ['rattata'];
+    run.story.rivals = [rival];
+    ensureBonds(run, rival);
+    rival.encounters = 1;
+    rival.bonds.rattata!.trust = 90;
+    rival.bonds.rattata!.strain = 10;
+    expect(reputation(rival)).toBe('respected');
+    rival.bonds.rattata!.strain = 90;
+    rival.traits.ambition = 80;
+    expect(reputation(rival)).toBe('feared');
+    rival.traits.ambition = 20;
+    expect(reputation(rival)).toBe('disliked');
+    rival.encounters = 0;
+    expect(reputation(rival)).toBe('unknown');
+    rival.encounters = 1;
+    rival.bonds.rattata!.habits.tell = 'stamps before a big move';
+    expect(signature(content, rival)).toBeNull();
+    rival.encounters = 2;
+    expect(signature(content, rival)).toContain('stamps');
   });
 });
