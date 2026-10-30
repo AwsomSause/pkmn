@@ -9,6 +9,7 @@ import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
 import { standingSummary } from '../core/rivals/standing';
 import { boxCapacity } from '../core/trainerPerks';
+import { runLevelCap } from '../core/regions';
 import { runPerks } from '../core/archetypes';
 import { canCashIn, partyCapacity } from '../core/run';
 import { legacyCard } from '../core/story/legacy';
@@ -36,7 +37,7 @@ export function openPartyMenu(host: FieldMenuHost): void {
   const run = session.run!;
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: 'Choose a Pokémon to lead the next battle',
+    title: `Choose a Pokémon to lead the next battle  ·  Level cap ${runLevelCap(session.content, run)}`,
     columns: 2,
     rowHeight: 78,
     rows: partyRows(session.content, run.party, (i) => (i === 0 ? 'Already leading.' : null), (i) => (i === 0 ? 'LEAD' : undefined), () => 'Move this Pokémon to the front.'),
