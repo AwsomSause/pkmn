@@ -73,7 +73,15 @@
   "baseSize": 1,
   "extraPerStage": 1,
   "randomExtra": 1,
-  "maxSize": 6
+  "maxSize": 6,
+  "earlyCaps": [
+   1,
+   2,
+   3,
+   3,
+   4,
+   4
+  ]
  },
  "candies": {
   "perRelease": 1,

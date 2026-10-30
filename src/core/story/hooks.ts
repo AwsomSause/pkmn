@@ -14,6 +14,7 @@ import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
+import { maybeSpark } from '../rivals/manager';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import type { StoryEventDefinition, Where } from './schema';
@@ -336,6 +337,23 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const back = battle.returning ? run.story.enemyProfiles.find((p) => p.id === battle.returning) : undefined;
   if (back && (result === 'win' || result === 'lose')) recordEnemyBattle(content, back, ended, result);
   const trainer = battle.trainer;
+  // Rival Spark: a memorable win over an ordinary trainer can make them your rival.
+  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.returning) {
+    const rival = maybeSpark(run, {
+      where,
+      classId: trainer.classId,
+      name: trainer.name,
+      team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId),
+      ended,
+      hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0,
+      turns: battle.turn - 1,
+      flawless: run.party.every((m) => m.hp > 0),
+    });
+    if (rival) {
+      const title = `${content.trainers.get(trainer.classId)?.name ?? 'Trainer'} ${trainer.name}`;
+      emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rival.id, archetype: rival.archetype }, text: `${title} won't forget the loss and became your rival` });
+    }
+  }
   const role = trainer?.leaderId ? BOSS_ROLES[trainer.classId] : undefined;
   if (!trainer || !role) return;
   if (result === 'win') {

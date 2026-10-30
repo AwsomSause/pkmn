@@ -5,6 +5,7 @@
 
 import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
+import { catchSummary } from '../core/catchSummary';
 import { candiesForRelease } from '../core/encounters';
 import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
@@ -242,15 +243,8 @@ export class DecisionScene extends Phaser.Scene {
     const past = reunion !== undefined;
     const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
-    const stats = calcStats(content, caught);
-    const lines = [
-      `${species.name}${caught.shiny ? '  ★ Shiny' : ''}   Lv${caught.level}`,
-      `Type: ${species.types.map((t) => t.toUpperCase()).join(' / ')}`,
-      `HP ${caught.hp}/${stats.hp}   Atk ${stats.atk}  Def ${stats.def}  Spe ${stats.spe}`,
-      `Moves: ${caught.moves.map((m) => content.moves.get(m.id)!.name).join(', ')}`,
-    ];
-    this.add.text(400, 100, lines.join('\n'), textStyle(22, '#d8d0e0', { lineSpacing: 6, wordWrap: { width: 520 } }));
-    this.add.text(400, 250, full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`, textStyle(22, full ? '#f0c028' : '#a0e0a0'));
+    const lines = catchSummary(content, caught, run.party[0]);
+    this.add.text(400, 92, [...lines, '', full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
     const keepsake = candies * content.balance.reunion.keepsakeCandyMultiplier;
@@ -259,13 +253,13 @@ export class DecisionScene extends Phaser.Scene {
       { label: full ? 'Replace a party Pokémon' : 'Add to party' },
       ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : [{ label: `Release it (+${candyText})` }]),
     ];
-    drawPanel(this, 400, 300, 520, past ? 196 : 140);
+    drawPanel(this, 400, 345, 520, past ? 170 : 130);
     this.menu = new Menu(this, {
       x: 420,
-      y: 320,
+      y: 365,
       options,
       itemWidth: 480,
-      itemHeight: 52,
+      itemHeight: past ? 46 : 52,
       fontSize: 28,
       onSelect: (i) => {
         if (i === 0 && !full) this.resolve({ kind: 'addToParty' });

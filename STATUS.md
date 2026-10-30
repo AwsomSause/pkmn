@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 10, settings 2, meta 1. Next free run version: 11 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 11, settings 3, meta 1. Next free run version: 12 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -12,6 +12,11 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - M8.75 parts: "everything left" PR (about 270 more moves, 30 more abilities, Light Clay/Red Card/Eject Button/Mental Herb, smart boss trainers: potion + deliberate switching), friendship (B), move tiers C1–C2, 190 abilities (C3, C3b-1, C3b-2), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
 - M8.9-0 story foundation (domain events, effect ledger, cues, histories, Story Log).
 - M8.9 Hyper Phase 1 slices 1, 2, 3, 4, 6.
+- Balancing phases 1+3 (start): audit in `docs/quality/encounter-audit.md`; `availability.json` (1025 species, "suggested", unused yet). +100/region deferred to part G.
+- Untitled doc Phase A: drafts offer ≤1 attribute item; base-stat sanity test (tier weights, Mega Stone gating already existed).
+- Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
+- Untitled doc Phase B (settings): battle speed (normal/fast/quick) in settings v3. Reduced motion already existed (battleAnimations). Still open: trainer bands, new NPC classes.
+- Untitled doc Phase B (trainer bands): `trainerTeam.earlyCaps` = stage 1 has 1 Pokémon, stages 2–6 cap 2–4. NPC classes audit: 17 classes use existing sprites; no new classes yet.
 - M9 battle animations + settings; boss teams (229 bosses).
 
 ## In progress / next
@@ -22,6 +27,6 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Relationships/nemesis records exist but only rivalries and returning trainers create them.
+- Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Next: slice 2 counter-adaptation, slice 3 Chronicle screen. Relationships/nemesis records are still only created by rivalries and returning trainers.
 - Event types `traded`, `trainerEscaped`, `transformed`, `eventChoice` are defined but never emitted.
 - CI workflow exists but has never run on GitHub.

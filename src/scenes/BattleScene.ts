@@ -110,6 +110,10 @@ export class BattleScene extends Phaser.Scene {
     const { session, assets } = services();
     const run = session.run!;
     const battle = run.battle!;
+    // Presentation only: faster tweens and timers; the battle itself is unchanged.
+    const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
+    this.tweens.timeScale = speed;
+    this.time.timeScale = speed;
     playMusic(this, battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle');
     this.menu = null;
     this.picker = null;
