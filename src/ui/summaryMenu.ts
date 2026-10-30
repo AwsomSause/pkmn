@@ -8,7 +8,7 @@ import type Phaser from 'phaser';
 import type { PokemonInstance, RunState } from '../core/state';
 import type { Content } from '../core/contentSchema';
 import { genderSign } from '../core/gender';
-import { getSpecies } from '../core/pokemon';
+import { getSpecies, lookSpecies } from '../core/pokemon';
 import { services } from '../game/services';
 import { AERO, categoryIcon, typeLabel, type MotionLevel } from './aero';
 import { Picker, type PickerRow } from './partyPanel';
@@ -30,7 +30,7 @@ function infoPage(content: Content, run: RunState | null, mon: PokemonInstance, 
     problem: null,
     hint: info.ability ? `${info.ability.name}: ${info.ability.text}` : 'Its types, ability, held items and stats.',
     draw: (scene, box, w) => {
-      const icon = pokemonIcon(scene, getSpecies(content, mon.speciesId), 46, 46, 2.2);
+      const icon = pokemonIcon(scene, lookSpecies(content, mon), 46, 46, 2.2);
       box.add(icon);
       if (motion === 'full') scene.tweens.add({ targets: icon, y: 40, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: order * 150 });
       const name = scene.add.text(96, 10, `${info.name}${mon.shiny ? ' ★' : ''}`, textStyle(26));

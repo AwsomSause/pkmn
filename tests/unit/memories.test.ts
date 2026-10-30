@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { getCatalogEntry } from '../../src/core/catalog';
 import { createBattle, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { battleTypes } from '../../src/core/battle/transform';
-import { createPokemon } from '../../src/core/pokemon';
+import { createPokemon, lookSpecies } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { content } from './helpers';
 
@@ -65,5 +65,15 @@ describe('Silvally forms', () => {
     const ctx: BattleContext = { content, battle, party: [p], inventory: {}, rng: new Rng(hashSeed('m')), captureRng: new Rng(hashSeed('c')), catchMultiplier: 1 };
     const events = resolveTurn(ctx, { kind: 'move', index: 0 });
     expect(events.some((x) => x.type === 'transform' && x.to === 'silvally-water')).toBe(true);
+  });
+});
+
+describe('Silvally outside battle', () => {
+  it('looks like its type form while it holds a Memory', () => {
+    const p = createPokemon(content, 'silvally', 50, 'p1');
+    expect(lookSpecies(content, p).id).toBe('silvally');
+    p.held = { 'dragon-memory': 1 };
+    expect(lookSpecies(content, p).id).toBe('silvally-dragon');
+    expect(lookSpecies(content, createPokemon(content, 'machop', 5, 'm1')).id).toBe('machop');
   });
 });

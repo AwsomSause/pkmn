@@ -12,6 +12,16 @@ export function getSpecies(content: Content, id: string): Species {
   return species;
 }
 
+/** The species whose art shows for a Pokémon outside battle: a Silvally holding a Memory looks like its type form. */
+export function lookSpecies(content: Content, mon: Pick<PokemonInstance, 'speciesId' | 'held'>): Species {
+  if (mon.speciesId === 'silvally') {
+    const memory = Object.keys(mon.held ?? {}).find((id) => id.endsWith('-memory'));
+    const form = memory && content.species.get(`silvally-${memory.slice(0, -'-memory'.length)}`);
+    if (form) return form;
+  }
+  return getSpecies(content, mon.speciesId);
+}
+
 /**
  * Battle stats from base stats and level (modern formula with no IVs, EVs or
  * natures, per director decision D2), then vitamin stacks.
