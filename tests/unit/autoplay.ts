@@ -174,7 +174,7 @@ function smartBattleTurn(content: Content, run: RunState): TurnResult | null {
   const hpShare = mon.hp / maxHp(content, mon);
   if (forcedMoveIndex(battle, run.party) !== null) return null;
   const potion = ['hyper-potion', 'super-potion', 'potion'].find((id) => (run.inventory[id] ?? 0) > 0);
-  if (potion && hpShare < 0.35 && battle.kind !== 'wild') return takeTurn(content, run, { kind: 'item', itemId: potion, targetIndex: battle.activeIndex });
+  if (potion && hpShare < 0.35) return takeTurn(content, run, { kind: 'item', itemId: potion, targetIndex: battle.activeIndex });
   // Leave a bad matchup for a healthy teammate that does much better.
   const mine = bestScore(content, mon, enemy);
   let bestIndex = -1;
