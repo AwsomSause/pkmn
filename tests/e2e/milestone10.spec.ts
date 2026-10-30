@@ -362,6 +362,9 @@ test('slice 10: a Pokémon evolves after battle with the light-pulse sequence', 
     session.debugAddToParty('charmander', 15);
     session.run.party.unshift(session.run.party.pop());
     session.run.party[0].xp = 2534;
+    // The level cap (stage and region) would stop the experience short of level 16.
+    session.run.regionIndex = 3;
+    if (session.run.stage) session.run.stage.kind = 'rest';
     // A sure damaging move first (its learnset may start with a status move).
     session.run.party[0].moves = [{ id: 'scratch', pp: 35 }];
   });
