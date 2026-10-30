@@ -177,6 +177,33 @@
       "blurb": "Challenge Contract: healing stops on the map can't be used.",
       "noHealStops": true,
       "group": "contract-rest"
+    },
+    {
+      "id": "no-evolution",
+      "name": "Contract: No Evolution",
+      "status": "supported",
+      "bonus": 0.25,
+      "blurb": "Challenge Contract: nothing evolves, by level or by item.",
+      "noEvolution": true,
+      "group": "contract-evolution"
+    },
+    {
+      "id": "solo-run",
+      "name": "Solo Run",
+      "status": "supported",
+      "bonus": 0.4,
+      "blurb": "Your party holds only one Pokémon.",
+      "partyCap": 1,
+      "group": "party"
+    },
+    {
+      "id": "quick-route",
+      "name": "Quick Route",
+      "status": "supported",
+      "bonus": 0,
+      "blurb": "A shorter campaign (3 stages per region) for players who want the systems without the long road. It is practice: achievements and unlocks are not counted.",
+      "campaignId": "quick-route",
+      "group": "campaign"
     }
   ],
   "modes": [
