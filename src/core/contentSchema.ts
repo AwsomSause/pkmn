@@ -358,6 +358,8 @@ export const MoveSchema = z.object({
       needsStatus: StatusIdSchema.optional(),
       /** Hidden Power: the type comes from the user (a fixed roll per Pokémon, since there are no IVs). */
       hiddenPower: z.boolean().optional(),
+      /** Attract: the target falls in love and half the time can't move (there are no genders in this game). */
+      attract: z.literal(true).optional(),
       /** Springtide Storm: 30% to raise the user's Attack (Incarnate) or lower the foe's (Therian). */
       formStorm: z.boolean().optional(),
       /** Beat Up: one hit for each healthy party member, powered by that member's Attack. */
@@ -797,7 +799,9 @@ export const StarterPoolSchema = z.object({
   license: z.string().nullable().default(null),
   /** Research Points to unlock the pool. */
   researchCost: z.number().int().min(0).default(0),
-}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined, { message: 'a starter pool needs species, bosses or a filter' });
+  /** The "Mastered" set: its species are the ones you raised to Silver mastery or better (core/mastery.ts). */
+  mastered: z.boolean().default(false),
+}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
@@ -1022,6 +1026,14 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('dodgeFirst') }),
   /** Wild Pokémon's status moves aimed at the holder miss this much more often, in percent (Pure Incense). */
   z.object({ hook: z.literal('statusShield'), percent: z.number().positive().max(100) }),
+  /** The holder can't get these statuses (Lunar Wing: sleep). */
+  /** Takes no damage from these weathers (Go-Goggles: sandstorm). */
+  z.object({ hook: z.literal('weatherImmune'), weathers: z.array(WeatherSchema).min(1) }),
+  /** Once per battle, wakes the whole team at the end of a turn (Poké Flute). */
+  z.object({ hook: z.literal('wakeAll') }),
+  z.object({ hook: z.literal('statusImmune'), statuses: z.array(StatusIdSchema).min(1) }),
+  /** While held, this species takes another form in battle (Griseous Orb, Gracidea). */
+  z.object({ hook: z.literal('formHeld'), from: z.string(), to: z.string() }),
   // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
   /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
   z.object({
@@ -1057,7 +1069,7 @@ export const BattleBoostSchema = z.discriminatedUnion('kind', [
   /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
   z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
   /** Can't get this status (or confusion) during its next battle. */
-  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion']) }),
+  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion', 'infatuation']) }),
 ]);
 export type BattleBoost = z.infer<typeof BattleBoostSchema>;
 
@@ -1501,6 +1513,16 @@ export const BalanceSchema = z.object({
   vitaminMaxStacks: z.number().int().positive(),
   /** Abilities (M8.75 part C3): the chance a new Pokémon has its hidden ability instead of a normal one. */
   abilities: z.object({ hiddenChance: z.number().min(0).max(1) }),
+  /**
+   * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
+   * and the Research Points each rank pays once.
+   */
+  mastery: z.object({
+    bronzeBattles: z.number().int().min(1),
+    silverBattles: z.number().int().min(1),
+    goldBattles: z.number().int().min(1),
+    rankResearch: z.object({ bronze: z.number().int().min(0), silver: z.number().int().min(0), gold: z.number().int().min(0), master: z.number().int().min(0) }),
+  }),
   /** Battle transformations (M8.5): which bosses may use them. */
   transformations: z.object({
     /** Gym leaders use them from this gym of the run on (1 = the first gym). */
@@ -1800,6 +1822,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('meter'), key: z.enum(['ragePeace', 'goodEvil']), side: z.enum(['positive', 'negative']), atLeast: z.number().int().min(0) }),
   z.object({ kind: z.literal('item'), id: z.string() }),
   z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
+  /** A species in the party. */
+  z.object({ kind: z.literal('partySpecies'), species: z.string() }),
+  /** An event that has already been played this run. */
+  z.object({ kind: z.literal('eventSeen'), id: z.string() }),
   /** The trainer must not carry this tag (N is "pacifist": no aggressive choices). */
   z.object({ kind: z.literal('noTrainerTag'), tag: z.string() }),
 ]);
@@ -1834,6 +1860,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('gymPreview') }),
   /** Every hidden "?" stop on this stage shows what it is. */
   z.object({ kind: z.literal('revealStops') }),
+  /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
+  z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 
@@ -1935,6 +1963,8 @@ export interface Content {
   catalog: Map<string, CatalogEntry>;
   /** Every move each species can learn by TM, tutor or egg, beyond its level-up moves (learnables.json). */
   learnables: Map<string, string[]>;
+  /** Each species' egg moves (learnables.json "egg"), for Species Mastery. */
+  eggMoves: Map<string, string[]>;
   trainers: Map<string, TrainerClass>;
   /** Every gym leader, Elite Four member and champion, with their teams. */
   bosses: Map<string, Boss>;

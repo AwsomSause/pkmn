@@ -16,6 +16,7 @@ import { researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
+import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
 /** Adds to one of this run's counters (mutates `run`). */
@@ -118,6 +119,8 @@ export interface RunEndSummary {
   questSteps: QuestStepDone[];
   /** The Run Quest, when this run finished it. */
   runQuestDone: RunQuest | null;
+  /** Species Mastery ranks reached by this run (each paid once). */
+  masteryUps: MasteryRankUp[];
 }
 
 /**
@@ -162,6 +165,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     addTrainerCounters(profile, run.archetypeId, runCounters);
   }
   const questSteps = counts ? awardQuestSteps(content, profile, run.archetypeId, now) : [];
+  const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
 
   const raw = runPayout(content, run);
   // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
@@ -198,7 +202,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

@@ -1,10 +1,10 @@
 // Minigames (Blueprint section 4): every game runs through the same interface, is deterministic, pays once, and keeps its economy capped.
 
 import { describe, expect, it } from 'vitest';
-import { beginMinigame, leaveMinigame, medalFor, minigameAct, minigamePreview, minigameTick, minigameView } from '../../src/core/minigame/flow';
+import { beginMinigame, getMinigame, leaveMinigame, payout, medalFor, minigameAct, minigamePreview, minigameTick, minigameView } from '../../src/core/minigame/flow';
 import { gameModule, makeQuestion } from '../../src/core/minigame/games';
 import { MinigameFileSchema } from '../../src/core/minigame/schema';
-import { placeMinigameStop } from '../../src/core/minigame/gate';
+import { minigameDiscount, placeMinigameStop } from '../../src/core/minigame/gate';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
@@ -146,6 +146,66 @@ describe('minigame flow and economy', () => {
       expect(q.answer).toBeGreaterThanOrEqual(0);
       expect(new Set(q.options).size).toBe(q.options.length);
     }
+  });
+});
+
+describe('minigame bonus rewards', () => {
+  /** Plays a game to a perfect score by writing the finished state, then reads the payout. */
+  function gold(run: RunState, id: string, tier: number): RunState {
+    const r = beginMinigame(content, run, 'mg-test', tier);
+    r.minigame!.outcome = payout(content, r, getMinigame(content, id), tier, 10, 10);
+    return r;
+  }
+
+  it('a gold in a research game adds research points, at most the stage cap', () => {
+    const run = stopRun('mg-fx-research', 'knowledge-quiz');
+    run.minigames.attempts = {};
+    const before = run.totems.research;
+    let found = false;
+    for (let i = 0; i < 12 && !found; i++) {
+      const r = gold(stopRun(`mg-fx-r-${i}`, 'knowledge-quiz'), 'knowledge-quiz', 2);
+      if (r.totems.research > before) {
+        found = true;
+        expect(r.minigames.effects).toBe(1);
+      }
+    }
+    expect(found).toBe(true);
+  });
+
+  it('a gold in a foraging game heals the party but never revives', () => {
+    for (let i = 0; i < 12; i++) {
+      const run = stopRun(`mg-fx-heal-${i}`, 'berry-foraging');
+      run.party[0]!.hp = 1;
+      const r = gold(run, 'berry-foraging', 2);
+      if (r.party[0]!.hp > 1) return;
+    }
+    throw new Error('no heal in 12 tries');
+  });
+
+  it('a discount lasts only for the stage it was won in', () => {
+    for (let i = 0; i < 12; i++) {
+      const r = gold(stopRun(`mg-fx-disc-${i}`, 'rhythm-challenge'), 'rhythm-challenge', 2);
+      if (r.minigames.discount) {
+        expect(minigameDiscount(r)).toBeLessThan(1);
+        r.stage!.index += 1;
+        expect(minigameDiscount(r)).toBe(1);
+        return;
+      }
+    }
+    throw new Error('no discount in 12 tries');
+  });
+
+  it('gives no bonus on the easy tier and never more than the stage cap', () => {
+    const eco = content.minigames.economy;
+    let r = stopRun('mg-fx-cap', 'knowledge-quiz');
+    for (let i = 0; i < 8; i++) {
+      r.minigames.attempts = {};
+      r.stage!.map.nodes.flatMap((n) => n.sides).find((x) => x.id === 'mg-test')!.used = false;
+      r = leaveMinigame(gold(r, 'knowledge-quiz', 2));
+    }
+    expect(r.minigames.effects).toBeLessThanOrEqual(eco.effectCapPerStage);
+    const easy = gold(stopRun('mg-fx-easy', 'knowledge-quiz'), 'knowledge-quiz', 0);
+    expect(easy.minigames.effects).toBe(0);
   });
 });
 

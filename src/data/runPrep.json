@@ -91,6 +91,14 @@
    "researchCost": 100
   },
   {
+   "id": "mastered",
+   "name": "Mastered",
+   "description": "Your own champions: every species you raised to Silver mastery or better.",
+   "category": "research",
+   "mastered": true,
+   "unlockText": "raise 3 species to Silver mastery"
+  },
+  {
    "id": "rare",
    "name": "Rare",
    "description": "Rare first-stage Pokémon that grow into powerhouses.",

@@ -88,6 +88,8 @@ test('the healing spot and the shop work from the map', async ({ page }) => {
     session.run.party[0].hp = 1;
     session.run.money = 500;
     const node = session.run.stage.map.nodes.find((n: any) => n.id === session.run.stage.current);
+    // The generator may also place a "?" event stop here by chance; this test is about Heal and Shop, so keep only those.
+    node.sides = node.sides.filter((s: any) => s.kind === 'heal');
     node.sides.push({ id: 'e2e-shop', kind: 'shop', used: false });
   });
   await reopenMap(page);

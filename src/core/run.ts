@@ -44,6 +44,7 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
+import { masteredStarters, runMasteryPerks } from './mastery';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -92,11 +93,11 @@ import {
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
-import { placeMinigameStop } from './minigame/gate';
+import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
@@ -112,9 +113,12 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
+import { rivalBond } from './drama/bond';
+import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
+import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { extendEndless, spookyWild, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -135,6 +139,8 @@ export interface NewRunOptions {
   pastPokemon?: readonly PastPokemon[];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
+  /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
+  mastery?: Profile['mastery'];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -149,9 +155,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   if (wantsGenerationLock(rules)) rules.lockGeneration = pickGeneration(content, opts.seed);
   if (wantsRandomDraft(rules)) Object.assign(prep, randomDraft(content, opts.seed, prep));
   const rng = createStreams(opts.seed);
-  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
+  const mastered = masteredStarters(content, opts);
+  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep, mastered));
   // Used once here, so its own seed-derived generator needs no saved stream.
-  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices);
+  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices, mastered);
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   const run: RunState = {
     runId: opts.runId,
@@ -185,6 +192,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
+    mastery: runMasteryPerks(content, opts),
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
@@ -196,7 +204,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
     minigame: null,
-    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} },
+    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -945,6 +953,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
+    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`);
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -1107,7 +1116,7 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
+  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
 }
 
 /** Buys one of an item at the shop. */
@@ -1239,7 +1248,20 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const captureRng = new Rng(run.rng.capture);
   const hyperRng = new Rng(run.rng.hyper);
   const targetUid = currentEnemy(battle).uid;
-  const engineEvents = resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), action);
+  // Bond Engine: a willful Pokémon may refuse a reckless order, a synced one may step in (before the turn).
+  const shaped = shapeAction(content, run, action);
+  const wasForced = battle.needsSwitch;
+  const outgoing = run.party[battle.activeIndex]?.uid;
+  const enemyBefore = battle.enemyIndex;
+  const engineEvents: BattleEvent[] = [...shaped.events, ...resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), shaped.action)];
+  // A practiced pair hands over after a faint (yours, or a rival's).
+  if (wasForced && action.kind === 'switch' && outgoing) {
+    const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
+    if (combo) engineEvents.push(combo);
+  }
+  const enemyCombo_ = enemyCombo(content, run, enemyBefore);
+  if (enemyCombo_) engineEvents.push(enemyCombo_);
+  updateBondsTurn(run, engineEvents);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   run.rng.hyper = hyperRng.state;
@@ -1258,6 +1280,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
   const evolved = midBattleEvolution(content, run);
   if (evolved) events.push(evolved);
+  // Bond Engine: a Pokémon at half HP may reveal a move it was ready to learn; a feeling may take hold.
+  const rivalHere = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
+  const reveal = [revealMove(content, run, 'player', false), revealMove(content, run, 'enemy', Boolean(rivalHere) && rivalBond(rivalHere, currentEnemy(battle).speciesId).confidence >= 40)];
+  for (const r of reveal) if (r) events.push(r);
+  events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
+  if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
@@ -1534,7 +1562,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     count(run, 'regionsCleared');
     if (!run.log.charmUsedInRegion) count(run, 'regionsClearedNoCharm');
     if (run.log.starterUid && run.party.some((m) => m.uid === run.log.starterUid)) count(run, 'regionsClearedWithStarter');
-    if (run.regionIndex + 1 >= run.regionOrder.length) run.victory = true;
+    if (run.regionIndex + 1 >= run.regionOrder.length && !extendEndless(run)) run.victory = true;
   }
   run.battle = null;
   run.encountersCompleted += 1;

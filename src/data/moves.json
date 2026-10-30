@@ -8953,7 +8953,7 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "noop": true
+   "attract": true
   }
  },
  {
@@ -9554,7 +9554,14 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "noop": true
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
   }
  },
  {
