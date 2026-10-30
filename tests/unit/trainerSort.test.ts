@@ -38,7 +38,7 @@ describe('trainer sorting', () => {
 
   it('most trainers have a known game and region; evolutions follow their base', () => {
     const other = all.filter((t) => trainerGame(t, byId) === 'Other').map((t) => t.id);
-    expect(other.length).toBeLessThan(all.length * 0.1);
+    expect(other).toEqual([]);
     expect(trainerGame(byId('evolved-red')!, byId)).toBe(trainerGame(byId('red')!, byId));
     expect(trainerRegion(byId('cynthia')!, byId)).toBe('Sinnoh');
   });
