@@ -1,6 +1,8 @@
 // Trainer sorting: every key gives a stable, complete, repeatable order; game/region cover every trainer.
 
 import { describe, expect, it } from 'vitest';
+import { MemoryStorageProvider } from '../../src/save/storage';
+import { SaveManager } from '../../src/save/saveManager';
 import { createProfile } from '../../src/core/profile';
 import { GAMES, REGIONS, sortTrainers, TRAINER_SORT_KEYS, trainerGame, trainerRegion } from '../../src/core/trainerSort';
 import { content } from './helpers';
@@ -38,7 +40,7 @@ describe('trainer sorting', () => {
 
   it('most trainers have a known game and region; evolutions follow their base', () => {
     const other = all.filter((t) => trainerGame(t, byId) === 'Other').map((t) => t.id);
-    expect(other.length).toBeLessThan(all.length * 0.1);
+    expect(other).toEqual([]);
     expect(trainerGame(byId('evolved-red')!, byId)).toBe(trainerGame(byId('red')!, byId));
     expect(trainerRegion(byId('cynthia')!, byId)).toBe('Sinnoh');
   });
@@ -61,5 +63,11 @@ describe('trainer sorting', () => {
     const recent = sortTrainers(all, 'recent', p).map((t) => t.id);
     expect(recent.indexOf('acerola')).toBeLessThan(recent.indexOf('aaron'));
     expect(recent.indexOf('aaron')).toBeLessThan(recent.indexOf('adaman'));
+  });
+
+  it('migrates settings v5 to v6 with the default sort', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 5, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom' } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ trainerSort: 'default', trainerSortReverse: false, musicVolume: 0.3 });
   });
 });
