@@ -30,6 +30,7 @@ import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, 
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
+import { freshSos, rollSos } from './sos';
 import { currentEnemy, freshExtra, freshHeldState, freshSideEffects, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
@@ -481,7 +482,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (battle.totem) {
     totemAura(ctx, events);
     totemCallAlly(ctx, events);
-  }
+  } else sosCall(ctx, events);
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
@@ -755,6 +756,34 @@ function totemCallAlly(ctx: BattleContext, events: BattleEvent[]): void {
   }
   battle.enemyTeam.push(ally);
   swapInEnemy(ctx, battle.enemyTeam.length - 1, events);
+  resolveEntries(ctx, events);
+}
+
+/** Start of a turn: a wild Pokémon may call for help (core/battle/sos.ts); its friend takes the field in its place. */
+function sosCall(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  if (!content.balance.sos.enabled || battle.kind !== 'wild' || battle.raid || battle.totem || battle.doubles) return;
+  const caller = currentEnemy(battle);
+  const { player } = activeCombatants(ctx);
+  const scary = ['intimidate', 'unnerve', 'pressure'].includes(abilityIn(ctx, player) ?? '');
+  const result = rollSos({ battle, caller, maxHp: maxHp(content, caller), scary });
+  if (result.kind === 'none') return;
+  const sos = (battle.sos ??= freshSos());
+  sos.lastTurnCalled = battle.turn;
+  events.push({ type: 'raid', tone: 'info', text: `${getSpecies(content, caller.speciesId).name} called for help!` });
+  if (result.kind === 'failed') {
+    sos.lastAnswered = false;
+    events.push({ type: 'raid', tone: 'info', text: "Its help didn't appear!" });
+    return;
+  }
+  const ally = createPokemon(content, result.species, result.level, `${caller.uid}-sos`);
+  sos.answered += 1;
+  sos.lastAnswered = true;
+  sos.callerUid = caller.uid;
+  sos.allyUid = ally.uid;
+  battle.enemyTeam.push(ally);
+  swapInEnemy(ctx, battle.enemyTeam.length - 1, events);
+  events.push({ type: 'raid', tone: 'phase', text: `${getSpecies(content, ally.speciesId).name} appeared!` });
   resolveEntries(ctx, events);
 }
 

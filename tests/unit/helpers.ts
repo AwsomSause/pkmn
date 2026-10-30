@@ -18,9 +18,13 @@ export function toBattle(run: RunState, c: Content = content): RunState {
   if (run.phase !== 'map') return run;
   const choices = nextChoices(run.stage!);
   const node = choices.find((n) => !n.harder) ?? choices[0]!;
-  return chooseNode(c, run, node.id);
+  const next = chooseNode(c, run, node.id);
+  // Scripted fights in tests expect one foe: an SOS call is marked as already used (tests/unit/sos.test.ts covers calls).
+  if (next.battle) next.battle.sos = { ...freshSos(), answered: 1 };
+  return next;
 }
 
+import { freshSos } from '../../src/core/battle/sos';
 import { rewardTargetProblem } from '../../src/core/rewards';
 
 /**
