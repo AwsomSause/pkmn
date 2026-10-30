@@ -45,6 +45,7 @@ import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp,
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
+import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
@@ -142,6 +143,8 @@ export interface NewRunOptions {
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
   mastery?: Profile['mastery'];
+  /** Game event editions on right now (core/gameEvents.ts activeGameEvents): their rules apply to this run. */
+  gameEvents?: string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -188,12 +191,14 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     draft: null,
 
     box: [],
-    perkEffects: [],
+    // A game event's themed rules work like trainer perks for the whole run.
+    perkEffects: gameEventModifiers(content, opts.gameEvents ?? []),
     signatureApplied: {},
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
     mastery: runMasteryPerks(content, opts),
+    gameEvents: [...(opts.gameEvents ?? [])],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
@@ -875,6 +880,7 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
     run.pending.unshift({ kind: 'caught', mon });
   }
   run.totems.won += 1;
+  count(run, 'totemsWon');
   run.totems.done.push(def.id);
   run.totems.research += def.rewards.research;
   if (def.rewards.unlock && !run.totems.unlocks.includes(def.rewards.unlock)) run.totems.unlocks.push(def.rewards.unlock);
@@ -921,6 +927,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     run.pending.unshift({ kind: 'caught', mon: joined });
   }
   run.raids.won += 1;
+  count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
   run.raids.done.push(def.id);
   return { items, draftExtra: def.rewards.draftExtra, money };
@@ -1500,6 +1507,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
 
   if (battle.outcome === 'win') {
+    if (battle.rivalId) count(run, 'rivalBattlesWon');
     const { perBattleWon, perBossWon } = content.balance.friendship;
     const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
     const gainMultiplier = runAttributeEffects(content, run).friendship;
