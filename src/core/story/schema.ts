@@ -186,6 +186,15 @@ export const RivalSchema = z.object({
   /** The hidden score: how much this trainer wants to beat you. */
   rivalPotential: z.number().min(0),
   origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.literal('spark') }),
+  /** Where it is on the ladder from a name you remember to a contender; ally and retired are endings of its rivalry with you. */
+  state: z.enum(['recognized', 'recurring', 'active', 'nemesis', 'contender', 'ally', 'retired']).default('recognized'),
+  /** Battles with you since the Spark, and times a loss shook it. */
+  encounters: z.number().int().min(0).default(0),
+  setbacks: z.number().int().min(0).default(0),
+  /** The off-screen world: stages since you last met, stages it sits out, and the level it gained while away. */
+  away: z.number().int().min(0).default(0),
+  cooldown: z.number().int().min(0).default(0),
+  progress: z.number().int().min(0).default(0),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
@@ -212,6 +221,8 @@ export const StoryStateSchema = z.object({
   enemyProfiles: z.array(EnemyProfileSchema),
   /** Rivals born this run (src/core/rivals). */
   rivals: z.array(RivalSchema),
+  /** How rivals feel about each other: enemies, friends or training partners. */
+  rivalGraph: z.array(z.object({ a: z.string(), b: z.string(), kind: z.enum(['enemies', 'friends', 'partners']) })).default([]),
   chronicle: z.array(ChronicleEntrySchema),
   /** Ids of run-scope effects already applied: applying one again does nothing. */
   appliedEffects: z.array(z.string()),

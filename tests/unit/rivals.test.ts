@@ -7,6 +7,10 @@ import { RIVAL_CONFIG, RIVAL_PROFILES } from '../../src/core/rivals/schema';
 import { sparkGain } from '../../src/core/rivals/manager';
 import { nextChoices } from '../../src/core/map';
 import type { TrainerPlan } from '../../src/core/encounters';
+import { applyDefeat, isHostile, stateFor } from '../../src/core/rivals/outcome';
+import { evaluateUltimate, ultimateRival, ultimateScore } from '../../src/core/rivals/ultimate';
+import type { Rival } from '../../src/core/story/schema';
+import { edgeKind, simulateRivalWorld } from '../../src/core/rivals/world';
 import { rivalMods } from '../../src/core/rivals/profile';
 import { rivalChronicle } from '../../src/core/rivals/chronicle';
 import { mostUsedType, rivalReturn, rivalReturnFlag, waitingRival } from '../../src/core/rivals/adapt';
@@ -64,9 +68,14 @@ describe('rival Spark', () => {
 
   it('a run has at most maxRivals rivals, and one battle never makes two', () => {
     const first = win(trainerBattle('limit'));
+    expect(first.story.rivals).toHaveLength(1);
     const again = trainerBattle('limit-2');
-    again.story.rivals = structuredClone(first.story.rivals);
+    again.story.rivals = Array.from({ length: RIVAL_CONFIG.maxRivals }, (_, i) => ({ ...structuredClone(first.story.rivals[0]!), id: `r${i}` }));
     expect(win(again).story.rivals).toHaveLength(RIVAL_CONFIG.maxRivals);
+    // With room left, another memorable win makes a second rival; the same battle can't make it twice.
+    const room = trainerBattle('limit-3');
+    room.story.rivals = structuredClone(first.story.rivals);
+    expect(win(room).story.rivals).toHaveLength(2);
   });
 });
 
@@ -176,3 +185,137 @@ describe('personalities and battle styles', () => {
 function sparked0(seed: string): RunState {
   return win(trainerBattle(seed));
 }
+
+describe('rival outcomes and the Ultimate Rival', () => {
+  const traits = (over: Partial<Rival['traits']>): Rival['traits'] => ({ ambition: 70, pride: 50, empathy: 50, adaptability: 60, vindictiveness: 60, resilience: 60, ...over });
+  const rival = (id: string, over: Partial<Rival> = {}): Rival => ({
+    id,
+    classId: 'youngster',
+    name: id,
+    archetype: 'prodigy',
+    style: 'blitz',
+    traits: traits({}),
+    rivalPotential: 15,
+    state: 'recognized',
+    encounters: 0,
+    setbacks: 0,
+    away: 0,
+    cooldown: 0,
+    progress: 0,
+    adaptations: [],
+    origin: { eventId: 'e', where: { region: 0, stage: 0, level: 1, node: null, battle: 0, turn: null }, path: 'spark' },
+    memory: { lastBattle: { eventId: 'e', result: 'win', hpLeftShare: 0.2, turns: 4, team: ['rattata'] } },
+    ...over,
+  });
+
+  it('climbs the ladder as potential grows; nemesis needs a grudge, contender needs ambition', () => {
+    expect(stateFor({ rivalPotential: 10, traits: traits({}) })).toBe('recognized');
+    expect(stateFor({ rivalPotential: 30, traits: traits({}) })).toBe('recurring');
+    expect(stateFor({ rivalPotential: 45, traits: traits({}) })).toBe('active');
+    expect(stateFor({ rivalPotential: 65, traits: traits({ vindictiveness: 80 }) })).toBe('nemesis');
+    expect(stateFor({ rivalPotential: 65, traits: traits({ vindictiveness: 10 }) })).toBe('active');
+    expect(stateFor({ rivalPotential: 90, traits: traits({}) })).toBe('contender');
+  });
+
+  it('losing never deletes a rival: a gracious one becomes an ally, a fragile one is shaken then retires', () => {
+    const kind = rival('kind', { traits: traits({ empathy: 90, pride: 20 }), encounters: 1, rivalPotential: 20 });
+    expect(applyDefeat(kind, 12)).toBe('ally');
+    expect(isHostile(kind)).toBe(false);
+    const fragile = rival('fragile', { traits: traits({ resilience: 20, empathy: 10 }), rivalPotential: 40 });
+    expect(applyDefeat(fragile, 5)).toBe('shaken');
+    expect(fragile.rivalPotential).toBe(35);
+    applyDefeat(fragile, 5);
+    expect(applyDefeat(fragile, 5)).toBe('retired');
+    const tough = rival('tough');
+    expect(applyDefeat(tough, 12)).toBe('grew');
+    expect(tough).toMatchObject({ encounters: 1, setbacks: 0 });
+  });
+
+  it('allies never come back to fight you', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'al', seed: 'al', archetypeId: 'red' }), 0));
+    run.story.rivals = [rival('friend', { state: 'ally' })];
+    expect(waitingRival(run)).toBeNull();
+  });
+
+  it('the Ultimate Rival needs a history with you, is chosen by score, and only changes when clearly beaten', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'ul', seed: 'ul', archetypeId: 'red' }), 0));
+    run.story.rivals = [rival('a', { encounters: 0 }), rival('b', { encounters: 1, rivalPotential: 30 })];
+    expect(evaluateUltimate(run)?.id).toBe('b');
+    expect(ultimateRival(run)?.id).toBe('b');
+    // Slightly better rival: the story keeps following b.
+    run.story.rivals.push(rival('c', { encounters: 1, rivalPotential: 32 }));
+    expect(evaluateUltimate(run)).toBeNull();
+    expect(ultimateRival(run)?.id).toBe('b');
+    // b becomes an ally: the designation moves on.
+    run.story.rivals[1]!.state = 'ally';
+    expect(evaluateUltimate(run)?.id).toBe('c');
+    expect(ultimateScore(run.story.rivals[2]!, 0)).toBeGreaterThan(0);
+  });
+});
+
+describe('rival battle outcome in a real battle', () => {
+  it('beating the returning rival records the encounter, climbs, and may name the Ultimate Rival', () => {
+    const first = win(trainerBattle('fight'));
+    const again = trainerBattle('fight-2');
+    again.story.rivals = structuredClone(first.story.rivals);
+    again.battle!.rivalId = again.story.rivals[0]!.id;
+    const after = win(again);
+    const r = after.story.rivals[0]!;
+    expect(r.encounters).toBe(1);
+    expect(r.rivalPotential).toBeGreaterThan(first.story.rivals[0]!.rivalPotential);
+    expect(['recognized', 'recurring', 'active', 'nemesis', 'contender', 'ally', 'retired']).toContain(r.state);
+    // One encounter is enough history unless the rival became an ally or retired.
+    if (r.state !== 'ally' && r.state !== 'retired') expect(ultimateRival(after)?.id).toBe(r.id);
+  });
+});
+
+describe('the rivals\' world', () => {
+  function worldRun(seed: string, rivals: Rival[]): RunState {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'w', seed, archetypeId: 'red' }), 0));
+    run.story.rivals = rivals;
+    return run;
+  }
+  const sample = (id: string, over: Partial<Rival> = {}) => structuredClone({ ...(win(trainerBattle(`w-${id}`)).story.rivals[0]!), id, name: id, ...over });
+
+  it('is deterministic and runs once per stage', () => {
+    const make = () => worldRun('det', [sample('a'), sample('b')]);
+    const x = make();
+    const y = make();
+    simulateRivalWorld(content, x);
+    simulateRivalWorld(content, y);
+    expect(x.story).toEqual(y.story);
+    const snapshot = structuredClone(x.story);
+    simulateRivalWorld(content, x);
+    expect(x.story).toEqual(snapshot);
+  });
+
+  it('over many stages rivals gain progress, sit out, form feelings about each other and leave rumours', () => {
+    const run = worldRun('many', [sample('a'), sample('b'), sample('c')]);
+    for (let stage = 0; stage < 12; stage++) {
+      run.stage!.index = stage;
+      simulateRivalWorld(content, run);
+    }
+    expect(run.story.rivals.some((r) => r.progress > 0)).toBe(true);
+    expect(run.story.rivals.every((r) => r.progress <= RIVAL_CONFIG.world.progressCap)).toBe(true);
+    expect(run.story.rivalGraph.length).toBeGreaterThan(0);
+    expect(new Set(run.story.rivalGraph.map((e) => `${e.a}|${e.b}`)).size).toBe(run.story.rivalGraph.length);
+    expect(run.story.chronicle.some((c) => c.text.includes('rumour') || c.text.includes('Word is'))).toBe(true);
+    expect(run.rng).toEqual(worldRun('many', []).rng);
+  });
+
+  it('feelings come from character, and progress makes a returning rival stronger', () => {
+    const kind = (e: number, a: number) => sample('k', { traits: { ambition: a, pride: 50, empathy: e, adaptability: 50, vindictiveness: 50, resilience: 50 } });
+    expect(edgeKind(kind(80, 20), kind(70, 20))).toBe('friends');
+    expect(edgeKind(kind(10, 80), kind(10, 70))).toBe('enemies');
+    expect(edgeKind(kind(10, 20), kind(10, 70))).toBe('partners');
+    const base = sample('p');
+    expect(rivalMods({ ...base, progress: 2 }).levelBonus).toBe(rivalMods({ ...base, progress: 0 }).levelBonus + 2);
+  });
+
+  it('a rival on cooldown or away on a private goal does not take the next trainer slot', () => {
+    const run = worldRun('cd', [sample('cd', { cooldown: 1, origin: { eventId: 'e', where: { region: 0, stage: 5, level: 1, node: null, battle: 0, turn: null }, path: 'spark' } })]);
+    expect(waitingRival(run)).toBeNull();
+    run.story.rivals[0]!.cooldown = 0;
+    expect(waitingRival(run)?.id).toBe('cd');
+  });
+});

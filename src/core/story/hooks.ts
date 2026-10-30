@@ -15,6 +15,8 @@ import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { maybeSpark, sparkGain } from '../rivals/manager';
+import { applyDefeat } from '../rivals/outcome';
+import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import type { StoryEventDefinition, Where } from './schema';
@@ -342,7 +344,18 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
     rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId) };
-    rivalBack.rivalPotential += sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) });
+    if (result === 'win') {
+      const before = rivalBack.state;
+      const outcome = applyDefeat(rivalBack, sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) }));
+      const title = `${content.trainers.get(rivalBack.classId)?.name ?? 'Trainer'} ${rivalBack.name}`;
+      const say = (text: string) => emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rivalBack.id, outcome }, text });
+      if (outcome === 'ally') say(`${title} accepted your lead and became an ally`);
+      else if (outcome === 'retired') say(`${title}, worn down by defeats, stepped away from competition`);
+      else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
+      else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
+      const chosen = evaluateUltimate(run);
+      if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
+    }
   }
   // Rival Spark: a memorable win over an ordinary trainer can make them your rival.
   if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.returning && !battle.rivalId) {
@@ -370,6 +383,9 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       data: { leaderId: trainer.leaderId, role: trainer.classId, name: trainer.name },
       text: `Defeated ${role} ${trainer.name}`,
     });
+    // A milestone: the story may now follow a different rival.
+    const chosen = evaluateUltimate(run);
+    if (chosen) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: chosen.id, outcome: 'ultimate' }, text: `${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey` });
   } else if (result === 'lose') {
     emit(content, run, 'lostToBoss', {
       where,

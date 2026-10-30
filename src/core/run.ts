@@ -101,6 +101,7 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
+import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { planReunion, reunionPokemon } from './story/reunion';
@@ -250,6 +251,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.usedLeaders.push(leader.id);
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   startStageEffects(run);
+  simulateRivalWorld(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map.
   addItemStops(content, run);
   run.battle = null;
@@ -677,6 +679,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
       rivalNote = ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
+      rivalBack.away = 0;
     }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
     const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack ? perkItem(content, run, 'rival') : null;

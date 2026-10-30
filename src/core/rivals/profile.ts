@@ -18,11 +18,11 @@ export interface RivalMods {
   statBias: readonly string[];
 }
 
-export function rivalMods(rival: Pick<Rival, 'archetype' | 'style' | 'traits'>): RivalMods {
+export function rivalMods(rival: Pick<Rival, 'archetype' | 'style' | 'traits'> & { progress?: number }): RivalMods {
   const t = RIVAL_PROFILES.thresholds;
   const style = RIVAL_PROFILES.styles[rival.style];
   return {
-    levelBonus: rival.traits.vindictiveness >= t.vindictiveBonusAt ? 1 : rival.traits.vindictiveness <= t.forgivingPenaltyAt ? -1 : 0,
+    levelBonus: (rival.traits.vindictiveness >= t.vindictiveBonusAt ? 1 : rival.traits.vindictiveness <= t.forgivingPenaltyAt ? -1 : 0) + (rival.progress ?? 0),
     canAdapt: rival.traits.adaptability >= t.minAdaptability,
     adaptCap: MAX_ADAPTATIONS + (style?.extraAdaptations ?? 0),
     ai: style?.ai ?? 0,

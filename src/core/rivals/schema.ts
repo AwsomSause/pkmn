@@ -19,6 +19,14 @@ export const RivalConfigSchema = z.object({
     threshold: z.number().min(1),
   }),
   traitSpread: z.number().int().min(0).max(50),
+  states: z.object({ recurringAt: z.number(), activeAt: z.number(), nemesisAt: z.number(), nemesisMinVindictiveness: z.number(), contenderAt: z.number(), contenderMinAmbition: z.number() }),
+  outcomes: z.object({ allyAt: z.number(), allyMinEncounters: z.number().int(), allyMinEmpathy: z.number(), allyMaxPride: z.number(), discourageMaxResilience: z.number(), discourageLoss: z.number(), retireAtSetbacks: z.number().int() }),
+  world: z.object({ unseenWinBase: z.number(), progressCap: z.number().int(), unseenWinPotential: z.number(), privateGoalChance: z.number(), privateGoalMinAmbition: z.number(), fragileResilience: z.number(), toughResilience: z.number(), edgeChance: z.number(), distortedRumorChance: z.number(), friendMinEmpathy: z.number(), rivalMinAmbition: z.number() }),
+  ultimate: z.object({
+    weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),
+    minEncounters: z.number().int().min(0),
+    switchMargin: z.number().min(0),
+  }),
 });
 export type RivalConfig = z.infer<typeof RivalConfigSchema>;
 const StatSchema = z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']);
@@ -26,6 +34,7 @@ export const RivalProfilesSchema = z.object({
   note: z.string(),
   personalities: z.record(z.string(), z.object({ status: z.enum(['planned', 'limited', 'supported', 'disabled']), traits: TraitsSchema, styles: z.array(z.string()).min(1) })),
   styles: z.record(z.string(), z.object({ status: z.enum(['planned', 'limited', 'supported', 'disabled']), ai: z.number().min(0).max(1), statBias: z.array(StatSchema), extraAdaptations: z.number().int().min(0) })),
+  mechanics: z.record(z.string(), z.object({ status: z.enum(['planned', 'limited', 'supported', 'disabled']), note: z.string() })),
   thresholds: z.object({ minAdaptability: z.number(), vindictiveBonusAt: z.number(), forgivingPenaltyAt: z.number() }),
 });
 export const RIVAL_PROFILES = RivalProfilesSchema.parse(profilesJson);
