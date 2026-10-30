@@ -1739,5 +1739,140 @@
    "multiplier": 4,
    "rule": "fast"
   }
+ },
+ {
+  "id": "dream-ball",
+  "name": "Dream Ball",
+  "description": "x4 if the foe is asleep.",
+  "category": "ball",
+  "iconAssetId": "item.dream_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "dream"
+  }
+ },
+ {
+  "id": "beast-ball",
+  "name": "Beast Ball",
+  "description": "x5 on legendary and mythical Pokémon, but a poor ball for anything else.",
+  "category": "ball",
+  "iconAssetId": "item.beast_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 5,
+   "rule": "beast"
+  }
+ },
+ {
+  "id": "safari-ball",
+  "name": "Safari Ball",
+  "description": "x2 if the foe is at full HP.",
+  "category": "ball",
+  "iconAssetId": "item.safari_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 2,
+   "rule": "safari"
+  }
+ },
+ {
+  "id": "sport-ball",
+  "name": "Sport Ball",
+  "description": "x3 on Bug and Fighting types.",
+  "category": "ball",
+  "iconAssetId": "item.sport_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3,
+   "rule": "sport"
+  }
+ },
+ {
+  "id": "feather-ball",
+  "name": "Feather Ball",
+  "description": "x2 on Flying types.",
+  "category": "ball",
+  "iconAssetId": "item.feather_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 2,
+   "rule": "flyer"
+  }
+ },
+ {
+  "id": "wing-ball",
+  "name": "Wing Ball",
+  "description": "x3 on Flying types.",
+  "category": "ball",
+  "iconAssetId": "item.wing_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3,
+   "rule": "flyer"
+  }
+ },
+ {
+  "id": "jet-ball",
+  "name": "Jet Ball",
+  "description": "x4 on Flying types.",
+  "category": "ball",
+  "iconAssetId": "item.jet_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "flyer"
+  }
+ },
+ {
+  "id": "leaden-ball",
+  "name": "Leaden Ball",
+  "description": "x2.5 on Pokémon of 100 kg or more.",
+  "category": "ball",
+  "iconAssetId": "item.leaden_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 2.5,
+   "rule": "weight100"
+  }
+ },
+ {
+  "id": "gigaton-ball",
+  "name": "Gigaton Ball",
+  "description": "x5 on Pokémon of 300 kg or more.",
+  "category": "ball",
+  "iconAssetId": "item.gigaton_ball",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 5,
+   "rule": "weight300"
+  }
  }
 ]

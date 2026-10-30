@@ -901,7 +901,7 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
 }
 
 /** The ball's catch multiplier once its condition (Level, Lure, Quick Ball ...) is counted. */
-function ballBonus(ctx: BattleContext, effect: Extract<ItemEffect, { kind: 'catch' }>, enemy: PokemonInstance, species: Species): number {
+export function ballBonus(ctx: BattleContext, effect: Extract<ItemEffect, { kind: 'catch' }>, enemy: PokemonInstance, species: Species): number {
   const base = effect.multiplier;
   const mine = ctx.party[ctx.battle.activeIndex];
   const water = species.types.includes('water');
@@ -925,6 +925,13 @@ function ballBonus(ctx: BattleContext, effect: Extract<ItemEffect, { kind: 'catc
     case 'timer': return Math.min(base, 1 + (ctx.battle.turn - 1) * (1229 / 4096));
     case 'quick': return ctx.battle.turn === 1 ? base : 1;
     case 'dusk': return species.types.includes('dark') || species.types.includes('ghost') ? base : 1;
+    case 'dream': return enemy.status?.id === 'slp' ? base : 1;
+    case 'beast': return species.tags.includes('legendary') || species.tags.includes('mythical') ? base : 0.1;
+    case 'safari': return enemy.hp >= maxHp(ctx.content, enemy) ? base : 1;
+    case 'sport': return species.types.includes('bug') || species.types.includes('fighting') ? base : 1;
+    case 'flyer': return species.types.includes('flying') ? base : 1;
+    case 'weight100': return (species.weight ?? 50) >= 100 ? base : 1;
+    case 'weight300': return (species.weight ?? 50) >= 300 ? base : 1;
     default: return base;
   }
 }

@@ -1001,7 +1001,7 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('catch'),
     multiplier: z.number().positive(),
-    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk']).optional(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk', 'dream', 'beast', 'safari', 'sport', 'flyer', 'weight100', 'weight300']).optional(),
     after: z.enum(['friend', 'luxury', 'heal']).optional(),
   }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
@@ -1205,7 +1205,7 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   /** At or below `below`: moves first next turn (Custap). */
   z.object({ hook: z.literal('berryFirst'), below: z.number().positive().max(1) }),
   /** Halves one super-effective hit of this type (`any` = any hit of the type, for Chilan). */
-  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional() }),
+  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional(), /** Share of the damage that still gets through (default 0.5; Hyper Berries 0.25). */ through: z.number().positive().max(1).optional() }),
   /** Hit by a super-effective move: heal a share of max HP (Enigma). */
   z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
   /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
@@ -1849,6 +1849,8 @@ export const BalanceSchema = z.object({
     revealIntelligence: z.number().int(),
     /** Money for an event gift nobody can take (a held item with no free holder, or one you hold the most of). */
     soldGift: z.number().int().min(0),
+    /** Odds of each rarity when an event hands out "one of" a list of items (plain bag items count as common). */
+    itemRarityWeights: z.record(RaritySchema, z.number().min(0)),
     /** Rest spots (stop "rest") placed on every stage. */
     restPerStage: z.number().int().min(0),
     /** Prize money per level of the top Pokémon for an event's trainer (one with no trainer class). */

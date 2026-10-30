@@ -490,6 +490,16 @@ function effectWords(content: Content, e: EventEffect): string {
  * at once on the first Pokémon that can take them. An item nobody can take, or
  * one you already hold the most of, is sold for its worth instead.
  */
+/** One id from a gift list: the rarity is rolled first, as in drafts (balance.events.itemRarityWeights), then an item of that rarity, so a long list of uncommon items cannot outweigh a short list of common ones. */
+export function pickByRarity(content: Content, ids: readonly string[], rng: Rng): string {
+  const weights = content.balance.events.itemRarityWeights;
+  const rarityOf = (id: string) => content.catalog.get(id)?.rarity ?? content.rewards.get(id)?.rarity ?? 'common';
+  const tiers = new Map<string, string[]>();
+  for (const id of ids) tiers.set(rarityOf(id), [...(tiers.get(rarityOf(id)) ?? []), id]);
+  const tier = rng.weighted([...tiers.keys()].map((r) => ({ item: r, weight: Math.max(weights[r as keyof typeof weights] ?? 0, 0.0001) })));
+  return rng.pick(tiers.get(tier)!);
+}
+
 function giveItem(content: Content, run: RunState, id: string, times: number, rng: Rng): string {
   const name = itemName(content, id);
   if (content.items.has(id)) {
@@ -543,7 +553,7 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
     case 'item':
       return giveItem(content, run, e.id, e.count, rng);
     case 'itemFrom':
-      return giveItem(content, run, rng.pick(e.ids), e.count, rng);
+      return giveItem(content, run, pickByRarity(content, e.ids, rng), e.count, rng);
     case 'loseItem': {
       const ids = e.id
         ? (run.inventory[e.id] ?? 0) > 0 ? [e.id] : []

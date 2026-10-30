@@ -363,7 +363,7 @@ export function defenseMultiplier(ctx: HeldContext, target: Holder, moveType: Ty
     if (hook.type !== moveType || (!hook.any && effectiveness <= 1)) continue;
     eatBerry(ctx, target, itemId);
     events.push({ type: 'held', side: target.side, itemId, what: 'resist' });
-    m *= 0.5;
+    m *= hook.through ?? 0.5;
     break;
   }
   return m;
