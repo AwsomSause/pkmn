@@ -73,6 +73,7 @@ function payReward(profile: Profile, trainerId: string, reward: QuestReward, now
   profile.candies += reward.candies;
   if (reward.title && !profile.titles.includes(reward.title)) profile.titles.push(reward.title);
   if (reward.pool && !profile.unlockedPools.includes(reward.pool)) profile.unlockedPools.push(reward.pool);
+  if (reward.trainer && !profile.unlockedArchetypes.includes(reward.trainer)) profile.unlockedArchetypes.push(reward.trainer);
   if (reward.evolution) claim(profile, evolutionKey(trainerId), now);
 }
 

@@ -235,6 +235,13 @@ export class GameSession {
     return result.message;
   }
 
+  sellItem(itemId: string): string {
+    const result = Run.sellItem(this.content, this.requireRun(), itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
   leaveShop(): void {
     this.run = Run.leaveShop(this.content, this.requireRun());
     this.persistRun();

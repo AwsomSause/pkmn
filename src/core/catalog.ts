@@ -16,6 +16,7 @@ import { itemSlotLimit } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { AttributeKey, CatalogEffect, CatalogEntry, Content } from './contentSchema';
 import { changeFriendship } from './friendship';
+import { addItem } from './items';
 import { createPokemon, getSpecies, MAX_PP_UPS, maxHp, maxPp } from './pokemon';
 import { activePerks, addMapItem, mapItemCopies, perksOf } from './mapItems';
 import { discover } from './progress';
@@ -173,8 +174,14 @@ export function applyCatalog(
   };
 
   // Team and player items are counted on the run (one-time battle boosts and map items with charges aren't kept there).
-  const counted = effect.kind !== 'battleBoost' && ((effect.kind !== 'encounter' && effect.kind !== 'perk') || effect.lasts.for === 'run');
+  const counted = effect.kind !== 'battleBoost' && effect.kind !== 'bagItem' && effect.kind !== 'egg' && ((effect.kind !== 'encounter' && effect.kind !== 'perk') || effect.lasts.for === 'run');
   if (entry.stacksOn !== 'pokemon' && counted) run.passives = { ...run.passives, [entry.id]: ownedCopies(run, entry) + 1 };
+
+  // Apricorn Box: each Apricorn becomes a ball right away.
+  if (entry.id.endsWith('-apricorn') && passivePercent(content, run, 'apricornBox') > 0) {
+    addItem(run.inventory, 'great-ball', 1);
+    messages.push('The Apricorn Box turned it into a Great Ball.');
+  }
 
   switch (effect.kind) {
     case 'attributes': {
@@ -205,8 +212,12 @@ export function applyCatalog(
     }
     case 'feed': {
       const mon = target ?? run.party[0];
-      if (mon) befriend(mon, effect.friendship);
+      // Poffin Case doubles friendship from Berries; Pokéblock Case adds Charisma.
+      const doubled = effect.friendship > 0 && passivePercent(content, run, 'feedFriendship') > 0;
+      if (mon) befriend(mon, effect.friendship * (doubled ? 2 : 1));
       applyChanges(effect.changes);
+      const blocks = passivePercent(content, run, 'feedCharisma');
+      if (blocks > 0 && entry.family.startsWith('Berries')) applyChanges({ charisma: blocks });
       break;
     }
     case 'ppUp':
@@ -280,6 +291,17 @@ export function applyCatalog(
       if (effect.kind === 'encounter') applyChanges(effect.changes);
       addMapItem(content, run, entry);
       messages.push(`${entry.name}: ${entry.description}.`);
+      break;
+    }
+    case 'egg': {
+      run.itemCounters = { ...run.itemCounters, [`egg:${run.nextUid}`]: effect.stages, [`egg-shiny:${run.nextUid}`]: effect.shiny };
+      run.nextUid += 1;
+      messages.push(`${entry.name}: it hatches after ${effect.stages} stages.`);
+      break;
+    }
+    case 'bagItem': {
+      addItem(run.inventory, effect.item, effect.count);
+      messages.push(`${entry.name} went into your Bag${effect.count > 1 ? ` ×${effect.count}` : ''}.`);
       break;
     }
     case 'fossil': {

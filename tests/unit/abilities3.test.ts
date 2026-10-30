@@ -148,3 +148,35 @@ describe('last abilities', () => {
     expect(battleTypes(content, d.battle, d.player)).toEqual(['fire']);
   });
 });
+
+describe('urge and drop items in the battle bag', () => {
+  const use = (d: ReturnType<typeof duel>, itemId: string) => {
+    d.ctx.inventory[itemId] = 1;
+    return resolveTurn(d.ctx, { kind: 'item', itemId, targetIndex: 0 });
+  };
+  it('Reset Urge clears the stat changes of the Pokémon in battle', () => {
+    const d = duel({ pMove: 'tackle' });
+    d.battle.playerStages.atk = 3;
+    use(d, 'reset-urge');
+    expect(d.battle.playerStages.atk).toBe(0);
+  });
+  it('Reset Urge is refused with nothing to reset', () => {
+    const d = duel({});
+    d.ctx.inventory['reset-urge'] = 1;
+    expect(() => resolveTurn(d.ctx, { kind: 'item', itemId: 'reset-urge', targetIndex: 0 })).toThrow(/no stat changes/);
+  });
+  it('Item Urge eats the held Berry now', () => {
+    const d = duel({});
+    d.player.held = { 'oran-berry': 1 };
+    d.player.hp = Math.floor(d.player.hp / 2);
+    const before = d.player.hp;
+    use(d, 'item-urge');
+    expect(d.player.hp).toBeGreaterThan(before);
+  });
+  it('Item Drop takes the foe\'s held item', () => {
+    const d = duel({});
+    d.enemy.held = { 'oran-berry': 1 };
+    use(d, 'item-drop');
+    expect(Object.keys((d.ctx.battle.held!.lost[d.enemy.uid] ?? []))).toContain('0');
+  });
+});

@@ -9,6 +9,8 @@
 //   event:<edition>:<objective>   each objective's milestone reward, once per edition
 //   event:<id>:reward             the permanent reward, the first edition you finish every objective
 //   event:<edition>:fallback      the fallback reward for finishing again in a later edition
+// The Event Archive brings one resting holiday event back each week ("<id>@archive-<week>"), so a
+// missed reward can still be earned; a repeat pays the fallback (duplicate compensation).
 // Limitation (no server): changing the PC's clock changes which events are on.
 
 import type { ArchetypeModifier, Content, GameEvent, GameEventObjective, QuestReward } from './contentSchema';
@@ -68,16 +70,34 @@ export interface ActiveGameEvent {
   edition: string;
   /** Milliseconds until it ends. */
   endsIn: number;
+  /** Back from the Event Archive this week (outside its own dates). */
+  archive?: boolean;
 }
 
-/** Every game event on at this date: this week's weekly event and any holiday/themed event in its window. */
+const yearlyEvents = (content: Content) => [...content.gameEvents.values()].filter((e) => e.schedule.kind === 'yearly');
+
+/**
+ * The Event Archive (plan Part 4b): every week one holiday or themed event that is outside its dates
+ * comes back for the week, in turn, so a missed reward (the Spooky Set, the Hex Maniac...) is never
+ * gone for good. Its edition is "<id>@archive-<ISO week>"; the permanent reward is still paid once.
+ */
+export function archiveEventOn(content: Content, date: Date): GameEvent | null {
+  // Resting = not on for any day of this week (Monday to Sunday), so the pick holds all week.
+  const monday = Date.UTC(1970, 0, 5) + weekIndex(date) * 7 * DAY;
+  const days = Array.from({ length: 7 }, (_, i) => monthDay(new Date(monday + i * DAY)));
+  const resting = yearlyEvents(content).filter((e) => {
+    const s = e.schedule;
+    return s.kind === 'yearly' && !days.some((md) => inYearlyWindow(md, s.start, s.end));
+  });
+  return resting.length > 0 ? resting[weekIndex(date) % resting.length]! : null;
+}
+
+/** Every game event on at this date: this week's weekly event, any holiday/themed event in its window, and the Archive's pick. */
 export function activeGameEvents(content: Content, date: Date): ActiveGameEvent[] {
   const out: ActiveGameEvent[] = [];
   const weekly = weeklyEventOn(content, date);
-  if (weekly) {
-    const nextMonday = Date.UTC(1970, 0, 5) + (weekIndex(date) + 1) * 7 * DAY;
-    out.push({ event: weekly, edition: editionKey(weekly, date), endsIn: nextMonday - date.getTime() });
-  }
+  const nextMonday = Date.UTC(1970, 0, 5) + (weekIndex(date) + 1) * 7 * DAY;
+  if (weekly) out.push({ event: weekly, edition: editionKey(weekly, date), endsIn: nextMonday - date.getTime() });
   const md = monthDay(date);
   for (const event of content.gameEvents.values()) {
     const s = event.schedule;
@@ -87,7 +107,25 @@ export function activeGameEvents(content: Content, date: Date): ActiveGameEvent[
     if (end <= date.getTime()) end = Date.UTC(date.getUTCFullYear() + 1, m - 1, d + 1);
     out.push({ event, edition: editionKey(event, date), endsIn: end - date.getTime() });
   }
+  const archived = archiveEventOn(content, date);
+  if (archived) out.push({ event: archived, edition: `${archived.id}@archive-${isoWeek(date).label}`, endsIn: nextMonday - date.getTime(), archive: true });
   return out;
+}
+
+/** Milliseconds until a yearly event's next window opens (0 while it is on). */
+export function nextWindowIn(event: GameEvent, date: Date): number {
+  const s = event.schedule;
+  if (s.kind !== 'yearly') return 0;
+  if (inYearlyWindow(monthDay(date), s.start, s.end)) return 0;
+  const [m, d] = s.start.split('-').map(Number) as [number, number];
+  let start = Date.UTC(date.getUTCFullYear(), m - 1, d);
+  if (start <= date.getTime()) start = Date.UTC(date.getUTCFullYear() + 1, m - 1, d);
+  return start - date.getTime();
+}
+
+/** The holiday calendar for the Event Hall: every holiday/themed event, soonest first. */
+export function holidayCalendar(content: Content, date: Date): { event: GameEvent; startsIn: number }[] {
+  return yearlyEvents(content).map((event) => ({ event, startsIn: nextWindowIn(event, date) })).sort((a, b) => a.startsIn - b.startsIn);
 }
 
 /** The weekly events of the next few weeks (the Event Hall's "coming up"). */
@@ -152,6 +190,7 @@ function pay(profile: Profile, reward: QuestReward): void {
   profile.candies += reward.candies;
   if (reward.title && !profile.titles.includes(reward.title)) profile.titles.push(reward.title);
   if (reward.pool && !profile.unlockedPools.includes(reward.pool)) profile.unlockedPools.push(reward.pool);
+  if (reward.trainer && !profile.unlockedArchetypes.includes(reward.trainer)) profile.unlockedArchetypes.push(reward.trainer);
 }
 
 export interface GameEventPayout {
@@ -207,5 +246,6 @@ export function gameRewardText(content: Content, r: QuestReward): string {
   if (r.candies) parts.push(`${r.candies} candies`);
   if (r.title) parts.push(`title "${r.title}"`);
   if (r.pool) parts.push(`the ${content.starterPools.get(r.pool)?.name ?? r.pool} starter set`);
+  if (r.trainer) parts.push(`the trainer ${content.archetypes.get(r.trainer)?.name ?? r.trainer}`);
   return parts.join(', ') || 'nothing';
 }

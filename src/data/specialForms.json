@@ -48,8 +48,8 @@
       "note": "A rare event stop inside a run (events.json)."
     },
     "gameEvent": {
-      "status": "planned",
-      "note": "Daily, weekly, seasonal and holiday events (Phase F)."
+      "status": "limited",
+      "note": "Spooky Season and the Event Archive: Spooky stops and Spooky wild forms (gameEvents.json, tools/events/holidays.ts). Other families have no game event yet."
     },
     "npcTrade": {
       "status": "planned",
@@ -73,7 +73,7 @@
     },
     "starterSet": {
       "status": "limited",
-      "note": "Special-Form Sets in the Starter Laboratory, once the form is earned."
+      "note": "Earned special-form sets in the Starter Laboratory (runPrep.json `specialForms`): the Spooky Set, from Spooky Season. Delta and Z sets come later."
     },
     "spookyMode": {
       "status": "supported",

@@ -87,3 +87,94 @@ describe('berries and Pal Pad', () => {
     expect(catchDrop(run, stock, false)).toBeNull();
   });
 });
+
+describe('selling and the Seal Bag', () => {
+  it('sells for half the shop price, all of it with a Seal Bag, and refuses key items', async () => {
+    const { sellPrice, sellItem } = await import('../../src/core/run');
+    const run = newRun('sell');
+    const price = content.shop.find((e) => e.item === 'potion')!.price;
+    expect(sellPrice(content, run, 'potion')).toBe(Math.floor(price / 2));
+    take(run, 'seal-bag');
+    expect(sellPrice(content, run, 'potion')).toBe(price);
+    expect(sellPrice(content, run, 'mega-bracelet')).toBeNull();
+    run.phase = 'shop';
+    run.inventory.potion = 2;
+    const before = run.money;
+    const sold = sellItem(content, run, 'potion');
+    expect(sold.run.money).toBe(before + price);
+    expect(sold.run.inventory.potion).toBe(1);
+  });
+  it('urge items are drafted into the Bag', () => {
+    const run = newRun('urge-bag');
+    take(run, 'reset-urge');
+    expect(run.inventory['reset-urge']).toBe(1);
+  });
+});
+
+describe('Mystery Egg', () => {
+  it('hatches into a Pokémon after three stages, once', async () => {
+    const { hatchEggs } = await import('../../src/core/run');
+    const run = newRun('egg');
+    take(run, 'mystery-egg');
+    const before = run.pending.length;
+    hatchEggs(content, run);
+    hatchEggs(content, run);
+    expect(run.pending.length).toBe(before);
+    hatchEggs(content, run);
+    expect(run.pending.length).toBe(before + 1);
+    expect(run.pending[run.pending.length - 1]!.kind).toBe('caught');
+    hatchEggs(content, run);
+    expect(run.pending.length).toBe(before + 1);
+  });
+});
+
+describe('berry system and gadgets', () => {
+  it('every catalog item is now built', () => {
+    expect([...content.catalog.values()].filter((e) => e.status === 'pending').map((e) => e.id)).toEqual([]);
+  });
+  it('Berry Pots plant a Berry after a gym; Growth Mulch doubles it', async () => {
+    const { plantBerries } = await import('../../src/core/run');
+    const run = newRun('pots');
+    const count = () => run.party.reduce((n, m) => n + Object.values(m.held ?? {}).reduce((a, b) => a + b, 0), 0);
+    plantBerries(content, run);
+    expect(count()).toBe(0);
+    take(run, 'berry-pots');
+    plantBerries(content, run);
+    expect(count()).toBe(1);
+    take(run, 'growth-mulch');
+    run.badges.push('x');
+    plantBerries(content, run);
+    expect(count()).toBe(3);
+  });
+  it('Poffin Case doubles Berry friendship and Pokéblock Case adds Charisma', () => {
+    const base = newRun('poffin');
+    const plain = newRun('poffin');
+    take(base, 'poffin-case');
+    take(base, 'pokeblock-case');
+    const entry = getCatalogEntry(content, 'pomeg-berry');
+    const gain = (run: RunState) => {
+      const before = run.party[0]!.friendship;
+      applyCatalog(content, run, entry, run.party[0], { moneyMultiplier: 1, rng: new Rng(hashSeed('f')) });
+      return run.party[0]!.friendship - before;
+    };
+    expect(gain(base)).toBeGreaterThan(gain(plain));
+  });
+  it('Apricorn Box turns an Apricorn into a ball', () => {
+    const run = newRun('apricorn');
+    take(run, 'apricorn-box');
+    const before = run.inventory['great-ball'] ?? 0;
+    take(run, 'red-apricorn');
+    expect(run.inventory['great-ball']).toBe(before + 1);
+  });
+  it('the X-Transceiver heals the team once per stage', async () => {
+    const { mapActions, useMapAction } = await import('../../src/core/run');
+    const run = newRun('transceiver');
+    take(run, 'xtransceiver');
+    run.party[0]!.hp = 1;
+    const action = mapActions(content, run).find((a) => a.kind === 'transceiver')!;
+    expect(action.problem).toBeNull();
+    const used = useMapAction(content, run, 'transceiver').run;
+    expect(used.party[0]!.hp).toBeGreaterThan(1);
+    expect(mapActions(content, used).find((a) => a.kind === 'transceiver')!.problem).toMatch(/Already used|healthy/);
+  });
+});

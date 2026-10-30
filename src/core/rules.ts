@@ -242,9 +242,12 @@ export function extendEndless(run: Pick<RunState, 'rules' | 'regionOrder'>): boo
   return true;
 }
 
-/** Spooky mode: some wild Pokémon turn into Spooky forms (seeded by the run and the stop, so a reload gives the same one). */
-export function spookyWild(content: Content, run: Pick<RunState, 'rules' | 'seed'>, speciesId: string, key: string): string {
-  const chance = getMode(run.rules.modeId)?.spookyChance;
+/**
+ * Spooky mode, the Hex Maniac and Spooky Season: some wild Pokémon turn into Spooky forms (seeded by the run and
+ * the stop, so a reload gives the same one). `extraChance` is the trainer's and the event's spookyEncounters share.
+ */
+export function spookyWild(content: Content, run: Pick<RunState, 'rules' | 'seed'>, speciesId: string, key: string, extraChance = 0): string {
+  const chance = Math.min(1, (getMode(run.rules.modeId)?.spookyChance ?? 0) + extraChance);
   if (!chance) return speciesId;
   const rng = new Rng(hashSeed(`${run.seed}::spooky::${key}`));
   if (!rng.chance(chance)) return speciesId;

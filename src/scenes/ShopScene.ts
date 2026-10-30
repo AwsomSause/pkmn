@@ -3,7 +3,7 @@
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
 import { mapItemSummary } from '../core/mapItems';
-import { isBlackMarket, shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
+import { isBlackMarket, sellPrice, shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -24,12 +24,16 @@ export class ShopScene extends Phaser.Scene {
     preloadPokemon(this, partySpecies(), { icon: true });
   }
 
-  create(data: { notice?: string; focus?: number } = {}): void {
+  create(data: { notice?: string; focus?: number; sell?: boolean } = {}): void {
     const { session } = services();
     const run = session.run!;
     const content = session.content;
     playMusic(this, 'bgm.menu');
 
+    if (data.sell) {
+      this.createSell(data.notice);
+      return;
+    }
     // More stock unlocks with badges (shop.json minBadges).
     const stock = shopStock(content, run);
     const badgesFor = (e: (typeof content.shop)[number]) => shopBadgesNeeded(content, run, e);
@@ -56,6 +60,11 @@ export class ShopScene extends Phaser.Scene {
       };
     });
 
+    if (Object.keys(run.inventory).some((id) => run.inventory[id]! > 0 && sellPrice(content, run, id) !== null)) rows.push({
+      problem: null,
+      hint: 'Sell items from your Bag. The shop pays half the price (all of it with a Seal Bag).',
+      draw: (scene, box, w, h) => box.add(scene.add.text(16, h / 2, 'Sell items…', textStyle(22, '#f0c060')).setOrigin(0, 0.5)),
+    });
     this.picker = new Picker(this, {
       glass: true,
       title: data.notice ? `Shop  ·  ₽${run.money}  ·  ${data.notice}` : `Shop  ·  ₽${run.money}`,
@@ -64,6 +73,10 @@ export class ShopScene extends Phaser.Scene {
       rows,
       backLabel: 'leave',
       onSelect: (i) => {
+        if (i >= stock.length) {
+          this.scene.restart({ sell: true });
+          return;
+        }
         const message = session.buyItem(stock[i]!.item);
         playSfx(this, 'se.exp', 0.6);
         this.scene.restart({ notice: message.replace(/^You bought /, 'Bought '), focus: i });
@@ -72,6 +85,42 @@ export class ShopScene extends Phaser.Scene {
         session.leaveShop();
         this.scene.start(sceneForRun(session.run!), { notice: 'Thanks for shopping!' });
       },
+    });
+    onInputAction(this, (action) => this.picker?.handle(action));
+  }
+
+  /** The sell list: every Bag item the shop will buy, with what it pays. */
+  private createSell(notice?: string): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    const ids = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0 && sellPrice(content, run, id) !== null);
+    const rows: PickerRow[] = ids.map((id) => {
+      const item = content.items.get(id)!;
+      const price = sellPrice(content, run, id)!;
+      return {
+        problem: null,
+        hint: item.description,
+        draw: (scene, box, w, h) => {
+          box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
+          box.add(scene.add.text(56, h / 2, item.name, textStyle(22)).setOrigin(0, 0.5));
+          box.add(scene.add.text(w - 90, h / 2, `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
+          box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, id)}`, textStyle(18, '#a69cb4')).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.picker = new Picker(this, {
+      title: notice ? `Sell  ·  ₽${run.money}  ·  ${notice}` : `Sell  ·  ₽${run.money}`,
+      columns: 2,
+      rowHeight: 52,
+      rows,
+      backLabel: 'back',
+      onSelect: (i) => {
+        const message = session.sellItem(ids[i]!);
+        playSfx(this, 'se.exp', 0.6);
+        this.scene.restart({ sell: true, notice: message.replace(/^You sold /, 'Sold ') });
+      },
+      onBack: () => this.scene.restart({}),
     });
     onInputAction(this, (action) => this.picker?.handle(action));
   }

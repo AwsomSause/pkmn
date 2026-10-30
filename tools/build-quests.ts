@@ -20,6 +20,16 @@ const step = (goal: string, story: string, requirement: Json, reward: Json): Jso
 
 /** Hand-written lines: [goal, story, requirement, reward] for steps 1–5. */
 const CUSTOM: Record<string, { name: string; steps: Json[] }> = {
+  'hex-maniac': {
+    name: 'The Hex Diaries',
+    steps: [
+      step('Defeat or catch 20 Ghost-types as Hex Maniac', '"They whisper my name. Fu fu fu."', total('defeatedOrCaught.ghost', 20), { researchPoints: 50, title: 'Hex Apprentice' }),
+      step('Find 6 clues at Spooky stops as Hex Maniac', '"Every clue is a little curse undone."', total('eventClues', 6), { researchPoints: 75, candies: 10 }),
+      step('Win 3 boss battles with a Ghost-type leading', '"My ghosts never miss a show."', total('bossWinsLead.ghost', 3), { candies: 10, bankCredits: 300 }),
+      step('Beat 2 event bosses as Hex Maniac', '"Even the Pumpkin King bows to me."', total('eventBossesWon', 2), { researchPoints: 150, title: 'Curse Collector' }),
+      step('Clear a region as Hex Maniac', '"The whole region is haunted now. Lovely."', total('regionsCleared', 1), { researchPoints: 300, bankCredits: 500, title: 'Queen of Hexes' }),
+    ],
+  },
   red: {
     name: 'The Silent Champion',
     steps: [

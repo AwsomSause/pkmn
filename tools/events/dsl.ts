@@ -14,6 +14,8 @@ export interface EventOpts {
   pokemon?: string;
   tint?: string;
   effect?: string;
+  /** Only in runs started while this game event (gameEvents.json) is on. */
+  gameEvent?: string;
 }
 
 export function ev(id: string, name: string, group: string, o: EventOpts, intro: string, choices: Json[]): Json {

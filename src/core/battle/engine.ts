@@ -25,7 +25,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -764,9 +764,27 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
     return null;
   }
+  if (item.effect.kind === 'itemDrop') {
+    const foe = currentEnemy(ctx.battle);
+    return Object.keys(Held.effectiveHeld(ctx, foe)).length > 0 ? null : `${getSpecies(ctx.content, foe.speciesId).name} isn't holding anything.`;
+  }
   const target = targetIndex === undefined ? undefined : ctx.party[targetIndex];
   if (!target) return 'Choose a Pokémon to use it on.';
+  if (item.effect.kind === 'urge') return urgeProblem(ctx, item.effect.what, target, targetIndex!);
   return itemUseProblem(ctx.content, item, target);
+}
+
+const isBerryItem = (content: Content, id: string) => content.catalog.get(id)?.family.startsWith('Berries') === true;
+
+/** Ability, Item and Reset Urge: only the Pokémon in battle, and only when there is something to trigger. */
+function urgeProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>, what: 'ability' | 'item' | 'reset', mon: PokemonInstance, index: number): string | null {
+  const name = getSpecies(ctx.content, mon.speciesId).name;
+  if (mon.hp <= 0) return `${name} has fainted.`;
+  if (index !== ctx.battle.activeIndex) return `${name} isn't in battle.`;
+  if (what === 'reset') return Object.values(ctx.battle.playerStages).some((v) => v !== 0) ? null : `${name} has no stat changes.`;
+  if (what === 'ability') return mon.abilitySlot === -1 && !ctx.battle.playerVolatile.abilityOverride ? `${name} has no ability to trigger.` : null;
+  const held = Held.effectiveHeld(ctx, mon);
+  return Object.keys(held).some((id) => isBerryItem(ctx.content, id) || ctx.content.catalog.get(id)?.family.includes('Herb')) ? null : `${name} isn't holding a Berry or Herb.`;
 }
 
 function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number | undefined, events: BattleEvent[]): void {
@@ -789,7 +807,36 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
     if (roll.caught) battle.outcome = 'caught';
     return;
   }
+  if (item.effect.kind === 'itemDrop') {
+    const foe = currentEnemy(battle);
+    const id = Object.keys(Held.effectiveHeld(ctx, foe))[0]!;
+    Held.takeItem(ctx, foe, id);
+    events.push({ type: 'item', itemId, targetUid: foe.uid, message: `${getSpecies(content, foe.speciesId).name} dropped its ${content.catalog.get(id)?.name ?? id}!`, hpAfter: foe.hp });
+    return;
+  }
   const target = ctx.party[targetIndex!]!;
+  if (item.effect.kind === 'urge') {
+    const { player, enemy } = activeCombatants(ctx);
+    const name = getSpecies(content, target.speciesId).name;
+    let message = '';
+    if (item.effect.what === 'reset') {
+      for (const k of Object.keys(player.stages) as (keyof Stages)[]) player.stages[k] = 0;
+      message = `${name}'s stat changes were reset!`;
+    } else if (item.effect.what === 'ability') {
+      entryAbility(ctx, player, enemy, events);
+      message = `${name}'s ability was triggered!`;
+    } else {
+      const held = Held.effectiveHeld(ctx, target);
+      const herb = Object.keys(held).find((id) => content.catalog.get(id)?.family.includes('Herb') && !isBerryItem(content, id));
+      if (!Held.forceEatBerry(ctx, player, events as Held.HeldEvent[]) && herb) {
+        Held.whiteHerb(ctx, player, events as Held.HeldEvent[]);
+        Held.usePowerHerb(ctx, player, events as Held.HeldEvent[]);
+      }
+      message = `${name} used its held item!`;
+    }
+    events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
+    return;
+  }
   const message = applyItemToPokemon(content, item, target, { healMultiplier: ctx.healMultiplier ?? 1 });
   events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
 }
@@ -1435,6 +1482,8 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
       userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
+      effectiveness,
+      turnsOut: user.vol.turnsOut,
       moveIsZ: move.flags.includes('zmove'),
       moveIsSpread: isSpreadMove(move.id),
       partyIndex: ctx.party.findIndex((p) => p.uid === user.mon.uid),
@@ -1456,6 +1505,8 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       attackerIsBoss: isBossClass(ctx.battle.trainer?.classId),
       weather: weatherName,
       targetIsMega: getSpecies(ctx.content, target.mon.speciesId).form?.kind === 'mega',
+      effectiveness,
+      targetTurnsOut: target.vol.turnsOut,
     });
   }
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
@@ -1932,7 +1983,7 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'doubleTargetHurt': return target.vol.tookPhysical + target.vol.tookSpecial > 0 ? base * 2 : base;
     case 'doubleRandom': return ctx.rng.chance(0.3) ? base * 2 : base;
     case 'stockpile': return 100 * user.vol.stockpile;
-    case 'friendship': return Math.max(1, Math.min(102, Math.floor((user.side === 'player' && (ctx.perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled') ? 0 : user.mon.friendship) / 2.5)));
+    case 'friendship': return Math.max(1, Math.min(102, Math.floor((user.side === 'player' ? ((ctx.perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled') ? 0 : bonusFriendship(ctx.perks, user.mon.friendship)) : user.mon.friendship) / 2.5)));
     case 'rageFist': return Math.min(350, 50 + 50 * user.vol.timesHit);
     case 'stompingTantrum': return user.vol.lastFailed ? base * 2 : base;
     case 'lashOut': return user.vol.loweredThisTurn ? base * 2 : base;
@@ -2365,7 +2416,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       const physical = fx.attackFrom === 'best' || fx.autoCategory || (fx.teraBlast && ctx.battle.transform.teraTypes[user.mon.uid]) ? userStats.atk >= userStats.spa : move.category === 'physical';
       const hitsDefense = (physical || fx.targetsDefense) !== (ctx.battle.extra.wonderRoom > 0);
       const userStatus = user.mon.status?.id;
-      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0)) + (user.side === 'player' ? critChanceBonusPerk(ctx.perks) : 0));
+      crit = rng.chance(Math.min(1, critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0)) * (user.side === 'player' ? critChancePerk(ctx.perks) : 1) + (user.side === 'player' ? critChanceBonusPerk(ctx.perks) : 0)));
       if (fx.alwaysCrit || user.vol.laserFocus) crit = true;
       if (userAbility === 'merciless' && target.mon.status?.id === 'psn') crit = true;
       if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor' || ctx.battle.sideEffects[target.side].luckyChant > 0) crit = false;
