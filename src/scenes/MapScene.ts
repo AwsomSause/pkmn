@@ -7,7 +7,7 @@
 import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
-import { mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
+import { fishingOffer, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
@@ -15,7 +15,7 @@ import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
-import { Picker } from '../ui/partyPanel';
+import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, drawPanel, focusFrame } from '../ui/widgets';
@@ -40,7 +40,9 @@ const HARDER_COLOR = 0x9048c8;
 const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   heal: { color: 0xe06890, glyph: '+' },
   shop: { color: 0x4878d0, glyph: '$' },
+  fish: { color: 0x30a0b8, glyph: '~' },
 };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish' };
 
 /** Something the cursor can land on. */
 type Option =
@@ -69,6 +71,12 @@ export class MapScene extends Phaser.Scene {
     const { session } = services();
     this.previews = session.run?.phase === 'map' ? mapPreviews(session.content, session.run) : {};
     const shown = Object.values(this.previews).flatMap((p) => p.team.flatMap((m) => session.content.species.get(m.speciesId) ?? []));
+    // Fishing spots beside the current node: their Pokémon are shown in the picker.
+    const run = session.run;
+    const here = run?.phase === 'map' && run.stage?.current ? run.stage.map.nodes.find((n) => n.id === run.stage!.current) : undefined;
+    for (const side of here?.sides ?? []) {
+      if (side.kind === 'fish' && !side.used) shown.push(...fishingOffer(session.content, run!, side.id).flatMap((o) => session.content.species.get(o.speciesId) ?? []));
+    }
     preloadPokemon(this, [...partySpecies(), ...shown], { icon: true });
   }
 
@@ -245,8 +253,8 @@ export class MapScene extends Phaser.Scene {
     const buttons: { option: Option; label: string; color: number }[] = [];
     const currentNode = stage.current ? findNode(stage.map, stage.current) : null;
     for (const side of currentNode?.sides ?? []) {
-      if (side.kind === 'heal' && side.used) continue;
-      buttons.push({ option: { kind: 'side', side }, label: side.kind === 'heal' ? 'Heal' : 'Shop', color: SIDE_STYLE[side.kind].color });
+      if (side.kind !== 'shop' && side.used) continue;
+      buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel });
@@ -337,11 +345,12 @@ export class MapScene extends Phaser.Scene {
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
-        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : 'shop'));
+        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : 'shop'));
         const seen = this.previewText(n);
         return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
+        if (option.side.kind === 'fish') return 'Fishing spot: pick a Water Pokémon to battle and catch (once, no reward draft).';
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';
       case 'party':
         return 'Choose which Pokémon leads the next battle.';
@@ -384,6 +393,10 @@ export class MapScene extends Phaser.Scene {
         break;
       }
       case 'side': {
+        if (option.side.kind === 'fish') {
+          this.openFishing(option.side.id);
+          break;
+        }
         const message = session.visitSide(option.side.id);
         if (option.side.kind === 'heal') {
           playSfx(this, 'se.level_up', 0.6);
@@ -471,6 +484,44 @@ export class MapScene extends Phaser.Scene {
       rows.push({ action: null, itemId, title: content.catalog.get(itemId)!.name, text, problem: text });
     }
     return rows;
+  }
+
+  /** A fishing spot: pick one of the Pokémon on the line, then battle it. */
+  private openFishing(sideId: string): void {
+    const { session } = services();
+    const content = session.content;
+    const offer = fishingOffer(content, session.run!, sideId);
+    const picker: Picker = new Picker(this, {
+      title: 'Something is biting! Which one?',
+      columns: 1,
+      rowHeight: 64,
+      rows: offer.map((o) => {
+        const species = content.species.get(o.speciesId)!;
+        const row = speciesRow(species);
+        return {
+          ...row,
+          hint: `${row.hint}  ·  Lv${o.level}`,
+          draw: (scene, box, w, h) => {
+            row.draw(scene, box, w, h);
+            box.add(scene.add.text(w - 16, h / 2, `Lv${o.level}`, textStyle(22)).setOrigin(1, 0.5));
+          },
+        };
+      }),
+      onSelect: (i) => {
+        picker.close();
+        this.picker = null;
+        this.busy = true;
+        playSfx(this, 'ui.select');
+        const run = session.fish(sideId, i);
+        this.cameras.main.fadeOut(250);
+        this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   private openItems(): void {

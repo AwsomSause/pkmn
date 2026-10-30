@@ -120,6 +120,13 @@ export class GameSession {
     return this.run;
   }
 
+  /** Fishes up one of a fishing spot's Pokémon and starts the battle. */
+  fish(sideId: string, index: number): RunState {
+    this.run = Run.fish(this.content, this.requireRun(), sideId, index);
+    this.persistRun();
+    return this.run;
+  }
+
   /** Uses a map item from the map's Items menu (Escape Rope, a bike, VS Seeker). */
   useMapAction(kind: Run.MapActionKind): string {
     const result = Run.useMapAction(this.content, this.requireRun(), kind);
