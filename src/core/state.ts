@@ -374,6 +374,8 @@ export const BattleTransformSchema = z.object({
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
   teraTypes: z.record(z.string(), TypeNameSchema).default({}),
+  /** An extra type a boss member carries this battle (Meteor's Prophecy), by uid. */
+  bonusTypes: z.record(z.string(), TypeNameSchema).default({}),
   /** uid -> turns left for a Dynamaxed Pokémon. */
   dynamax: z.record(z.string(), z.number().int().min(0)).default({}),
   /** uid -> the once-per-battle mechanic it used (Tera, Z-Move or Dynamax; one per Pokémon). */
@@ -381,7 +383,7 @@ export const BattleTransformSchema = z.object({
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, bonusTypes: {}, dynamax: {}, mechanics: {} });
 
 export const freshExtra = () => ({
   allyFaintedTurn: { player: -9, enemy: -9 },

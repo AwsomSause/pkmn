@@ -476,7 +476,9 @@ export function battleTypes(content: Content, battle: BattleState, mon: PokemonI
   if (abilityOf(content, mon) === 'multitype' && !vol?.typeList) {
     for (const id of Object.keys(effectiveHeld({ battle }, mon))) if (PLATE_TYPE[id]) return [PLATE_TYPE[id]];
   }
-  return vol?.roost ? base.filter((t) => t !== 'flying') : base;
+  const bonus = battle.transform.bonusTypes[mon.uid];
+  const typed = bonus && !vol?.typeList && !base.includes(bonus) ? [...base, bonus] : base;
+  return vol?.roost ? typed.filter((t) => t !== 'flying') : typed;
 }
 
 /** The STAB multiplier for a move of this type (1 = none), counting Terastallization. */
