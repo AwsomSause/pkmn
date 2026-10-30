@@ -59,11 +59,11 @@ describe('story foundation: random streams', () => {
   // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix, natures, Silvally Memories), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': '37e04e9b4fad6216',
-    'STORY2/0': '89acd72c47454687',
-    'STORY4/0': 'c685f89d623505af',
-    'STORY5/0': 'b5789715d2478e69',
-    'STORY6/0': '7b7515ae10df9c5d',
-    'STORY7/0': '349ab492b7f5a7e1',
+    'STORY2/0': '2d63435877621182',
+    'STORY4/0': '723fa1f26d1cf54d',
+    'STORY5/0': '46e9cc623a94d750',
+    'STORY6/0': 'c7062ed148176f46',
+    'STORY7/0': 'b54ccadfcac4022d',
     'STORY8/0': '65a2b5b1a05765e7',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
