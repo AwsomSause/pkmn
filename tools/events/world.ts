@@ -80,3 +80,22 @@ export const LEGEND_EVENTS: Json[] = [
       ch('Bow and leave', out('It watches you go. You feel it will remember.', rp(40), good(2))),
     ]),
 ];
+
+// Form Research (Untitled doc §8, "Research Quest"): three clues, then a research battle with a regional form.
+const F = 'Form Research';
+const fclue = (id: string, name: string, intro: string, tint: string): Json =>
+  ev(id, name, F, { rarity: 'uncommon', minStage: 3, requires: [{ kind: 'flag', key: 'form-clue', atLeast: 0, atMost: 2 }], cast: [], effect: 'sparkle', tint }, intro, [
+    ch('Take notes', out('You write it down. The pattern is getting clearer.', flag('form-clue'), rp(15))),
+    ch('Not now', leave()),
+  ]);
+
+export const FORM_RESEARCH_EVENTS: Json[] = [
+  fclue('form-clue-fur', 'Odd Fur in the Grass', 'A tuft of fur that matches no Pokémon you know. The colour is wrong for this region.', '#2a2430'),
+  fclue('form-clue-tracks', 'Tracks That Do Not Belong', 'Footprints lead away from the road, shaped like a Pokémon from somewhere far from here.', '#24302a'),
+  fclue('form-clue-sketch', 'A Traveller\'s Sketch', 'A weathered field sketch pinned to a signpost shows a familiar Pokémon in an unfamiliar coat.', '#302a24'),
+  ev('form-research-battle', 'The Research Battle', F, { rarity: 'rare', minStage: 4, requires: [{ kind: 'flag', key: 'form-clue', atLeast: 3 }], cast: [], effect: 'glint', tint: '#1f2430' },
+    'Every clue points to the same hollow. Something with a strange coat waits there, ready to be studied.', [
+      ch('Begin the research battle', fight('It meets you head on.', wild({ species: ['rattata-alola', 'vulpix-alola', 'meowth-galar', 'growlithe-hisui', 'ponyta-galar', 'zigzagoon-galar', 'sneasel-hisui', 'wooper-paldea'], lv: 3, win: [rp(80), flag('form-met')] }))),
+      ch('Leave it be', out('You note the spot and move on. The notes are worth something.', rp(30))),
+    ]),
+];

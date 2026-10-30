@@ -22264,6 +22264,215 @@
    ]
   },
   {
+   "id": "form-clue-fur",
+   "name": "Odd Fur in the Grass",
+   "group": "Form Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2430",
+    "effect": "sparkle"
+   },
+   "intro": "A tuft of fur that matches no Pokémon you know. The colour is wrong for this region.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "form-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "form-clue-tracks",
+   "name": "Tracks That Do Not Belong",
+   "group": "Form Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#24302a",
+    "effect": "sparkle"
+   },
+   "intro": "Footprints lead away from the road, shaped like a Pokémon from somewhere far from here.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "form-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "form-clue-sketch",
+   "name": "A Traveller's Sketch",
+   "group": "Form Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#302a24",
+    "effect": "sparkle"
+   },
+   "intro": "A weathered field sketch pinned to a signpost shows a familiar Pokémon in an unfamiliar coat.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "form-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "form-research-battle",
+   "name": "The Research Battle",
+   "group": "Form Research",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-clue",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1f2430",
+    "effect": "glint"
+   },
+   "intro": "Every clue points to the same hollow. Something with a strange coat waits there, ready to be studied.",
+   "choices": [
+    {
+     "label": "Begin the research battle",
+     "success": {
+      "text": "It meets you head on.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "rattata-alola",
+        "vulpix-alola",
+        "meowth-galar",
+        "growlithe-hisui",
+        "ponyta-galar",
+        "zigzagoon-galar",
+        "sneasel-hisui",
+        "wooper-paldea"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "flag",
+         "key": "form-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it be",
+     "success": {
+      "text": "You note the spot and move on. The notes are worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "relic-shrine",
    "name": "The Relic Shrine",
    "group": "Relics",
