@@ -1332,7 +1332,7 @@
    "name": "Rival-to-Rival Pokémon Influence",
    "group": "",
    "text": "A rival's Pokémon can learn from an encounter with another rival's Pokémon. This can affect confidence, battle preferences, and future interactions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unseen-defeat",
@@ -1353,14 +1353,14 @@
    "name": "The Training Exchange",
    "group": "",
    "text": "Two rivals exchange training methods, producing new strategies or a shift in their philosophies.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rivalry-triangle",
    "name": "The Rivalry Triangle",
    "group": "",
    "text": "Three rivals compete for different reasons. Defeating one may help another, but not necessarily improve your relationship with either.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-rival",
@@ -1472,14 +1472,14 @@
    "name": "The Rival's Substitute",
    "group": "",
    "text": "If their ace is unavailable, a rival may use a different Pokémon, revealing how well the rest of their team has developed.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "legacy-encounter",
    "name": "The Legacy Encounter",
    "group": "",
    "text": "A rival remembers a defining earlier battle and deliberately recreates, reverses, or rejects its circumstances.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rivalry-handoff",

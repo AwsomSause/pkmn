@@ -52,5 +52,14 @@
   "distortedRumorChance": 0.25,
   "friendMinEmpathy": 55,
   "rivalMinAmbition": 60
+ },
+ "relations": {
+  "exchangeChance": 0.4,
+  "exchangeShift": 6,
+  "influenceConfidence": 4,
+  "triangleGain": 3,
+  "triangleMinVindictiveness": 55,
+  "substituteStrain": 60,
+  "legacyCloseNote": true
  }
 }

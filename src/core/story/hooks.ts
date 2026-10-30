@@ -19,6 +19,7 @@ import { maybeSpark, sparkGain } from '../rivals/manager';
 import { advanceArc } from '../rivals/arcs';
 import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
+import { triangleEffect } from '../rivals/relations';
 import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
@@ -420,6 +421,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
       advanceArc(content, run, rivalBack);
       afterBattleBehavior(content, run, rivalBack, false);
+      triangleEffect(run, rivalBack);
       const chosen = evaluateUltimate(run);
       if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
     }
