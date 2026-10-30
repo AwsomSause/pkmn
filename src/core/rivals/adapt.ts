@@ -10,6 +10,7 @@ import { getSpecies } from '../pokemon';
 import type { RunState } from '../state';
 import { revisedTeam, type RematchEffect } from '../story/returns';
 import type { EnemyProfile, Rival } from '../story/schema';
+import { isHostile } from './outcome';
 import { rivalMods } from './profile';
 
 /** The story flag holding the region a rival last came back in. */
@@ -19,6 +20,7 @@ export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
 export function waitingRival(run: RunState): Rival | null {
   return (
     run.story.rivals.find((r) => {
+      if (!isHostile(r)) return false;
       const last = run.story.flags[rivalReturnFlag(r.id)];
       if (typeof last === 'number' && last >= run.regionIndex) return false;
       const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;

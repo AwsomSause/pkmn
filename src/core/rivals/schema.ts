@@ -19,6 +19,13 @@ export const RivalConfigSchema = z.object({
     threshold: z.number().min(1),
   }),
   traitSpread: z.number().int().min(0).max(50),
+  states: z.object({ recurringAt: z.number(), activeAt: z.number(), nemesisAt: z.number(), nemesisMinVindictiveness: z.number(), contenderAt: z.number(), contenderMinAmbition: z.number() }),
+  outcomes: z.object({ allyAt: z.number(), allyMinEncounters: z.number().int(), allyMinEmpathy: z.number(), allyMaxPride: z.number(), discourageMaxResilience: z.number(), discourageLoss: z.number(), retireAtSetbacks: z.number().int() }),
+  ultimate: z.object({
+    weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),
+    minEncounters: z.number().int().min(0),
+    switchMargin: z.number().min(0),
+  }),
 });
 export type RivalConfig = z.infer<typeof RivalConfigSchema>;
 const StatSchema = z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']);

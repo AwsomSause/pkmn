@@ -16,7 +16,8 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Off-screen events (§6; the doc says 40 but skips #19) | 39 | DATA |
 | Character arcs (§7: 36 long-form + 10 Overdrive) | 46 | DATA |
 | Advanced mechanics (§8) | 24 | DATA |
-| Main doc: promotion/setback, Ultimate Rival, rival graph, offscreen sim, scheduler, legacy layer, Chronicle | slices 4–6 | TODO |
+| Main doc slice 4: ladder, ally/retire/shaken outcomes, Ultimate Rival score + milestone evaluation | DONE (rival promotions at gyms/tournaments wait for the world sim) |
+| Main doc slices 5–6: rival graph, offscreen sim, scheduler, legacy layer | TODO |
 | Bond Engine (Examples §4, §9: Trainer–Pokémon bond dimensions, habits) | — | TODO |
 
 ## Other guides (see how-to-execute-guides.md for the order)

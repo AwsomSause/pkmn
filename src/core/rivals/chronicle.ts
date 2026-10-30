@@ -4,6 +4,7 @@ import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import catalog from '../../data/rivalCatalog.json';
 import { RIVAL_CONFIG } from './schema';
+import { ultimateRival } from './ultimate';
 
 export interface RivalLine {
   /** "Youngster Joey, The Prodigy". */
@@ -12,6 +13,10 @@ export interface RivalLine {
   summary: string;
   /** What it remembers of your last battle, and what it has learned. */
   memory: string;
+  /** The ladder rung: "Nemesis", "Ally"... */
+  state: string;
+  /** True for the rival the story follows. */
+  ultimate: boolean;
 }
 
 export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
@@ -26,6 +31,8 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
     return {
       title: `${className} ${r.name}, ${personality?.name ?? r.archetype}`,
       summary: `Fights as ${style?.name ?? r.style}. Strongest trait: ${topTrait[0]} (${topTrait[1]}).`,
+      state: r.state[0]!.toUpperCase() + r.state.slice(1),
+      ultimate: ultimateRival(run)?.id === r.id,
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
     };
   });
