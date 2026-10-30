@@ -103,5 +103,75 @@
   "spiritomb",
   "gible",
   "garchomp"
+ ],
+ "oak-classic": [
+  "bulbasaur",
+  "charmander",
+  "squirtle"
+ ],
+ "n-classic": [
+  "snivy",
+  "tepig",
+  "oshawott"
+ ],
+ "mr-fuji-gen-3": [
+  "clefairy",
+  "jigglypuff",
+  "chansey"
+ ],
+ "marley": [
+  "sneasel",
+  "vulpix",
+  "eevee"
+ ],
+ "may-ruby-sapphire": [
+  "treecko",
+  "torchic",
+  "mudkip"
+ ],
+ "nate": [
+  "snivy",
+  "tepig",
+  "oshawott"
+ ],
+ "nemona-v": [
+  "sprigatito",
+  "fuecoco",
+  "quaxly"
+ ],
+ "noland": [
+  "porygon",
+  "ditto",
+  "smeargle"
+ ],
+ "may-emerald": [
+  "treecko",
+  "torchic",
+  "mudkip"
+ ],
+ "nanu": [
+  "meowth",
+  "persian",
+  "umbreon"
+ ],
+ "leon-masters": [
+  "charmander",
+  "dracovish",
+  "charizard"
+ ],
+ "lucas-gen-4-platinum": [
+  "turtwig",
+  "chimchar",
+  "piplup"
+ ],
+ "lucas": [
+  "turtwig",
+  "chimchar",
+  "piplup"
+ ],
+ "lyra": [
+  "chikorita",
+  "cyndaquil",
+  "totodile"
  ]
 }

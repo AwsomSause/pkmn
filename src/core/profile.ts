@@ -1,5 +1,6 @@
 // The permanent player profile (survives between runs).
 
+import { archiveRivals } from './rivals/legacy';
 import type { Content } from './contentSchema';
 import { applyRunToProfile, type RunEndSummary } from './progress';
 import { archiveParty } from './story/reunion';
@@ -33,6 +34,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     lastPrep: null,
     finalizedRunIds: [],
     pastPokemon: [],
+    rivalArchive: [],
     claims: {},
     trainerCounters: {},
     trainerBest: {},
@@ -68,6 +70,7 @@ export function finalizeRun(
   next.stats.bestEncounters = Math.max(next.stats.bestEncounters, run.encountersCompleted);
   const summary = applyRunToProfile(content, next, run, now);
   archiveParty(content, next, run);
+  archiveRivals(next, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }

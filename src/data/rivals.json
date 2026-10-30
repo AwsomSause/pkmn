@@ -61,5 +61,36 @@
   "triangleMinVindictiveness": 55,
   "substituteStrain": 60,
   "legacyCloseNote": true
+ },
+ "scheduler": {
+  "intervals": {
+   "recognized": 999,
+   "recurring": 3,
+   "active": 2,
+   "nemesis": 4,
+   "contender": 2
+  },
+  "minGap": 2,
+  "anyGap": 1
+ },
+ "legacy": {
+  "chance": 0.4,
+  "minEncounters": 2,
+  "states": [
+   "active",
+   "nemesis",
+   "contender"
+  ],
+  "archiveMax": 20,
+  "traitBlend": 0.6
+ },
+ "alliance": {
+  "chance": 0.3
+ },
+ "identity": {
+  "mentorChance": 0.35,
+  "mentorMinAdaptability": 55,
+  "grudgeSetbacks": 2,
+  "grudgeMaxEmpathy": 40
  }
 }
