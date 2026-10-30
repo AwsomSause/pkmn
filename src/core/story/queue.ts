@@ -49,6 +49,8 @@ export interface PresentationCue {
   major: boolean;
   cutIn: boolean;
   shake: boolean;
+  /** The story moments (story.json ids) shown in this cue, for presentation hooks. */
+  ids?: string[];
 }
 
 export interface QueueResult {
@@ -89,6 +91,7 @@ export function resolveQueue(triggers: StoryTrigger[], majorBudgetLeft: number):
     if (same) {
       same.title = `${same.title} · ${t.title}`;
       same.messages.push(t.message);
+      (same.ids ??= []).push(t.defId);
       continue;
     }
     const major = t.cue.major && budget > 0;
@@ -107,6 +110,7 @@ export function resolveQueue(triggers: StoryTrigger[], majorBudgetLeft: number):
       major,
       cutIn: major && t.cue.cutIn,
       shake: major && t.cue.shake,
+      ids: [t.defId],
     });
   }
   cues.sort((a, b) => a.at - b.at);

@@ -122,3 +122,12 @@ export const FORM_RESEARCH_EVENTS: Json[] = [
       ch('Leave it be', out('You note the spot and move on. The notes are worth something.', rp(30))),
     ]),
 ];
+
+// Secret route (Untitled doc §8, "Secret route"): a hidden path that only opens after the Form Research battle.
+export const SECRET_ROUTE_EVENTS: Json[] = [
+  ev('secret-route-path', 'A Hidden Path', F, { rarity: 'rare', minStage: 5, requires: [{ kind: 'flag', key: 'form-met', atLeast: 1, atMost: 1 }], cast: [], effect: 'fog', tint: '#1b2a2a' },
+    'Behind the hollow you studied, a gap in the rock opens onto a path no map shows. The grass here grows in odd colours.', [
+      ch('Take the hidden path', fight('Something rare watches from the tall grass.', wild({ species: ['tauros-paldea-combat-breed', 'mr-mime-galar', 'stunfisk-galar', 'yamask-galar', 'darumaka-galar', 'qwilfish-hisui'], lv: 4, win: [rp(120), flag('secret-met')] }))),
+      ch('Mark it on your map', out('You note the way for later. The research is worth something.', rp(40))),
+    ]),
+];

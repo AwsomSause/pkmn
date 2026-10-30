@@ -68,12 +68,12 @@
       "note": "Raid and Totem rewards that offer a catch."
     },
     "secretRoute": {
-      "status": "planned",
-      "note": "Map detours (Phase D2)."
+      "status": "limited",
+      "note": "A hidden path event that opens after the Form Research battle and offers rarer regional forms (events.json, tools/events/world.ts). It is a map event, not a separate map node."
     },
     "starterSet": {
       "status": "limited",
-      "note": "Earned special-form sets in the Starter Laboratory (runPrep.json `specialForms`): the Spooky Set, from Spooky Season. Delta and Z sets come later."
+      "note": "Earned special-form sets in the Starter Laboratory (runPrep.json `specialForms`): the Spooky Set (from Spooky Season), plus the Delta Set (finish Delta Research Week) and the Z-Form Set (finish the Champion's Gauntlet), which open for purchase once their event is finished."
     },
     "spookyMode": {
       "status": "supported",

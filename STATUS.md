@@ -38,6 +38,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - M10 visual slice 5: Aero look off the battle screen. Reward cards are glass with a rarity rim, deal in, lift on focus and fly off when picked; shop, bag, party, decision, briefing and run-end panels are glass; those screens get a moving Aero sky. The run-end screen ignores mashed keys for 0.45 s.
 - Bond screen (map **Bonds** button): each party Pokémon's trait, mood (Wary/Steady/Devoted) and its seven bond values as animated bars, with a hint on what the mood means.
 - M10 visual slice 6: Aero map. Glass header/footer and pill buttons, the stage's type ambience over slowly drifting scenery, glowing open paths with travelling lights, breathing halos on nodes you can reach, ✓ on visited nodes, a glowing boss column, "Risk: high / boss" in the info line, and a token that hops to the node you pick.
+- M10 visual slice 10: evolution sequence (light pulses, rays, burst into the new form; after battle and mid-battle) and signature charge-ups (catalog 21): two-turn moves, raid telegraphs and a boss gathering everything show a wind-up aura with a pill saying what the charge does.
 - M10 visual slice 9: map → Summary: per Pokémon an Info & stats page (types, ability, held items, six stats with base-stat bars, EBUI gender/stat art) and a Moves & story page (type/category art, power/accuracy/PP, record, titles, top memories).
 - M10 visual slice 8c: transformation cinematics (`battleFx/cinematics.ts`): Mega/Primal crystal shatter (EBDX Primega), Dynamax/Gigantamax Max storm, Terastal crystal sky, Z-Power with the Z-Move's name (Raid Battles art). Skippable; reduced = a short glow; off = instant. Z/Max attacks add the signature burst on top of their borrowed animation.
 - M10 visual slice 8: moves play the director's Essentials pack animation first (212 moves + 11 status/weather, `npm run data:pack-anims`), then PokeRogue's, then one of 26 animation families in the type colour. Per-move report: `npm run report:anims` → `docs/quality/MOVE_ANIMATIONS.md`. Z/Max attacks have no pack animation (limited).
@@ -70,6 +71,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6f: move menu says why a move is blocked (`core/battle/moveBlock.ts`).
 - Catalog slice 6g: `npm run report:qa` prints the catalog coverage per area (#145).
 - Catalog slice 6h: input buffering across scene changes (`core/inputBuffer.ts`, `ui/input.ts`).
+- Catalog slice 6i: visual snapshot e2e (`tests/e2e/visualSnapshots.spec.ts`), screenshots in test-results/visual/.
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
@@ -83,7 +85,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
 - M9: Grand Region, final boss, ending, deploy.
-- M10 visuals (guide 9, Visual Bible V1–V5): next slices = event frames, league/run-end, level-up/evolution, perf pass.
+- M10 visuals (guide 9, Visual Bible V1–V5): next slices = event choice frames, league/run-end, level-up/evolution, perf pass.
 
 ## Biggest known gaps
 - 87 move rows are unsupported on purpose: Z-Moves, Max Moves and G-Max Moves only run through the Z/Dynamax systems. Every other move and every ability works. Known limits: Keldeo's Resolution gives the Fighting boost but no Resolute form (no sprite); Hidden Power's type is a fixed roll per Pokémon (director decision D2: no IVs); Illusion changes the sprite and name on screen only. The item catalog has no pending entries.
@@ -125,3 +127,5 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Duplicate compensation (Untitled doc §8.3, Phase D): `core/unlocks.ts` `grantUnlocks` is used by event, quest and mode rewards; a starter set, trainer or title the account already owns pays 8 Research Points (runRules.json `duplicateCompensation`) instead of nothing. Special-form route `npcTrade` is now limited-but-working (regional forms at the Trade Post). Still planned: egg, researchQuest, secretRoute; Delta/Z sets.
 - Egg-born special forms (Phase D): the Nursery also sells a Regional Egg (pricier) that hatches a seeded regional first-stage form, built on the Egg list from PR #172. Special-form route `egg` is limited. Still planned: researchQuest, secretRoute, Delta/Z sets.
 - Form Research clue chain (Phase D research quest route): three clue stops (`form-clue-*`, flag `ev:form-clue`), then a rare research battle against a regional form. Route `researchQuest` is limited (regional only). Still planned: secretRoute, Delta/Z sets.
+- Secret route (Phase D): the Hidden Path event opens after the Form Research battle (flag `ev:form-met`) and offers rarer regional forms. Route `secretRoute` is limited (an event, not a new map node). Left in Phase D: Delta/Z sets.
+- Delta Set and Z-Form Set (Phase D): two earned special-form starter sets in `runPrep.json`. Finishing Delta Research Week / the Champion's Gauntlet (weekly rotation or Event Archive) opens each for purchase in the Starter Laboratory. Phase D is now complete as far as the data allows (routes egg, researchQuest, secretRoute, npcTrade are limited, not absent).
