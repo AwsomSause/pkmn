@@ -8,13 +8,14 @@ import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
-import { advanceArc } from './arcs';
+import { advanceArc, startTriggeredArc } from './arcs';
 import { simulateOffscreen } from './bonds';
 import { mostUsedType } from './adapt';
 import { formAlliances, grudgeType, mentorType, pokemonInfluence, trainingExchange } from './relations';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 import { rivalSponsorRoll } from './standing';
+import { rivalTransfers } from './transfer';
 
 type Edge = RunState['story']['rivalGraph'][number];
 
@@ -46,6 +47,7 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       // Background simulation: one bond event per stage, with its cause on record.
       const ev = simulateOffscreen(content, run, r, `${run.regionIndex}.${stage}`);
       if (ev?.visibility === 'rumor') rumor ??= `${title(content, r)}: ${ev.text}`;
+      startTriggeredArc(content, run, r);
     }
     if (!isHostile(r)) continue;
     const backed = rivalSponsorRoll(content, run, r, `${run.regionIndex}.${stage}`);
@@ -101,6 +103,8 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       rumor ??= `${title(content, a)} and ${title(content, b)} traded training methods`;
     }
   }
+  const moved = rivalTransfers(content, run, `${run.regionIndex}.${stage}`);
+  if (moved) rumor ??= moved;
   // Alliances against the common threat, mentors and grudges that change a team's identity (Examples §8).
   const sk = `${run.regionIndex}.${stage}`;
   for (const [a, b] of formAlliances(run, sk)) rumor ??= `${title(content, a)} and ${title(content, b)} have joined forces against you`;

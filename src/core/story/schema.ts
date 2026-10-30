@@ -229,6 +229,8 @@ export const RivalSchema = z.object({
   identity: z.object({ type: z.string(), source: z.enum(['mentor', 'grudge']), by: z.string() }).optional(),
   /** Who backs it (a sponsor id, +1 level on return) and which faction it belongs to (rivalWorld.json). */
   sponsor: z.string().optional(),
+  /** Arcs it has finished, so a bond or Overdrive arc never repeats. */
+  arcsDone: z.array(z.string()).optional(),
   faction: z.string().optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
