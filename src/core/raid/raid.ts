@@ -23,9 +23,19 @@ export function tiersForRegion(content: Content, regionIndex: number): number[] 
   return lists[Math.min(regionIndex, lists.length - 1)]!;
 }
 
+/** The highest raid tier a den can have: the open tiers, or one above the best tier won before (earlier runs or this one). */
+export function highestOpenTier(content: Content, run: Partial<Pick<RunState, 'raids'>>): number {
+  const raids = run.raids;
+  if (!raids) return 6;
+  return Math.min(6, Math.max(content.raids.openTiers, raids.unlockedTier + 1, raids.bestTier + 1));
+}
+
 /** Which raid sits in a den: a seeded pick among the raids of the allowed tiers (stable for a given run, stage and den). */
-export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'>, key: string): RaidDef {
-  const tiers = tiersForRegion(content, run.regionIndex);
+export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'> & Partial<Pick<RunState, 'raids'>>, key: string): RaidDef {
+  const open = highestOpenTier(content, run);
+  const region = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
+  // A region whose tiers are all still closed gets the highest open tier instead.
+  const tiers = region.length > 0 ? region : [Math.max(...content.raids.raids.filter((r) => !r.grand && r.tier <= open).map((r) => r.tier))];
   const pool = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand);
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
   return rng.pick(pool.length > 0 ? pool : content.raids.raids);
