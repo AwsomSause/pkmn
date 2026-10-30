@@ -55,11 +55,11 @@ describe('story foundation: random streams', () => {
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2 to 3b-3b (held, map, shop, money, map-movement, map-stop and draft items in drafts, bosses
-  // holding items) and M8.75 part C3 (every Pokémon has an ability), which change
+  // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': '4316a6d325200b9d',
-    'STORY2/0': '289336f1e73c4f84',
+    'STORY2/0': 'b24024620b22c4cd',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
     'STORY6/0': '6efa1ccc1d950f44',
