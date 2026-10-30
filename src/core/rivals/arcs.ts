@@ -52,3 +52,40 @@ export function advanceArc(content: Content, run: RunState, rival: Rival, tick =
   }
   return null;
 }
+
+type Arc = (typeof RIVAL_ARCS.arcs)[number];
+const inRange = (v: number, [lo, hi]: readonly [number, number]) => v >= lo && v <= hi;
+
+/** Does this arc's trigger fit the rival's Pokémon bonds and character right now? */
+export function triggerFits(rival: Rival, arc: Arc): boolean {
+  const t = arc.trigger;
+  if (!t) return false;
+  const bonds = Object.values(rival.bonds);
+  if (bonds.length === 0) return false;
+  if (t.minProgress !== undefined && rival.progress < t.minProgress) return false;
+  if (t.minSetbacks !== undefined && rival.setbacks < t.minSetbacks) return false;
+  for (const [k, range] of Object.entries(t.rival ?? {})) if (!inRange(rival.traits[k as keyof Traits], range)) return false;
+  if (t.gap) {
+    const values = bonds.map((b) => (b as unknown as Record<string, number>)[t.gap!.dim]!);
+    if (Math.max(...values) - Math.min(...values) < t.gap.min) return false;
+  }
+  if (!t.bond) return true;
+  return bonds.some((b) => (!t.traits || t.traits.includes(b.trait)) && Object.entries(t.bond!).every(([k, range]) => inRange((b as unknown as Record<string, number>)[k]!, range)));
+}
+
+/** The first bond or Overdrive arc whose trigger fits and that this rival has not lived yet. */
+export function triggeredArc(rival: Rival): Arc | undefined {
+  const done = new Set([...(rival.arcsDone ?? []), ...(rival.arc ? [rival.arc.id] : [])]);
+  return RIVAL_ARCS.arcs.find((a) => a.trigger && !done.has(a.id) && triggerFits(rival, a));
+}
+
+/** When a rival has no arc (or has finished one) and its bonds fit a bond or Overdrive arc, that arc begins. */
+export function startTriggeredArc(content: Content, run: RunState, rival: Rival): Arc | null {
+  if (rival.arc && !rival.arc.resolution) return null;
+  const arc = triggeredArc(rival);
+  if (!arc) return null;
+  if (rival.arc) rival.arcsDone = [...(rival.arcsDone ?? []), rival.arc.id];
+  rival.arc = { id: arc.id, stage: 0, ticks: 0, resolution: null };
+  emit(content, run, 'rivalryFormed', { data: { rival: rival.id, outcome: 'arc-start' }, text: `${nameOf(content, rival)} ${arc.beginning.replace(/\.$/, '').replace(/^[A-Z]/, (c) => c.toLowerCase())}` });
+  return arc;
+}

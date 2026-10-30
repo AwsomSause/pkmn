@@ -113,6 +113,17 @@ export const RivalArcsSchema = z.object({
   good: z.record(z.string(), z.number()),
   bad: z.record(z.string(), z.number()),
   goodBase: z.number().min(0).max(1),
-  arcs: z.array(z.object({ id: z.string(), personalities: z.array(z.string()), styles: z.array(z.string()), paths: z.array(z.string()), beginning: z.string(), resolution: z.string() })).min(1),
+  arcs: z.array(z.object({
+    id: z.string(), personalities: z.array(z.string()), styles: z.array(z.string()), paths: z.array(z.string()), beginning: z.string(), resolution: z.string(),
+    /** Bond/Overdrive arcs: begin when a rival's Pokémon bonds (and its character) fit. `bond` = ranges one Pokémon must meet; `gap` = two Pokémon differ. */
+    trigger: z.object({
+      bond: z.record(z.string(), z.tuple([z.number(), z.number()])).optional(),
+      gap: z.object({ dim: z.string(), min: z.number() }).optional(),
+      rival: z.record(z.string(), z.tuple([z.number(), z.number()])).optional(),
+      traits: z.array(z.string()).optional(),
+      minProgress: z.number().int().optional(),
+      minSetbacks: z.number().int().optional(),
+    }).optional(),
+  })).min(1),
 });
 export const RIVAL_ARCS = RivalArcsSchema.parse(arcsJson);
