@@ -233,7 +233,8 @@ Every trainer in Trainers.md becomes a playable trainer with all its pros and co
 - [x] Batch 4 (Drake to Ginter, 20 trainers).
 - [x] Batch 5 (Glacia to Ingo, 20 trainers).
 - [x] Batch 6 (Iono to Kurt, 20 trainers).
-- [ ] Batch 7 (Lana to Lysandre; the Raids thread does M–Z) and the rest (the other 120 trainers), then the signature mechanics (Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
+- [x] Signature mechanics: Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy.
+- [ ] Lana to Lysandre, M to Z and Beautiful Parasite (Raids thread); the two Lusamines are the last unbuilt trainers.
 - Known limits: a few clauses have no effect yet and are listed per trainer in `docs/plans/trainers-coverage.md` (burns never wear off; Mega Evolution has no cost). "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
 
 ## Milestone 10 — Visuals and presentation (planned)

@@ -25,7 +25,7 @@ import type { BoostStat, Content, ItemEffect, Move, PowerRule, Semi, SideMove, S
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, poisonDamagePerk, evasionPerk, isUltraBeast, moveFlagsOf, moveStyleOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, hypeMeterOf, isUltraBeast, moveStyleOf, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -272,6 +272,9 @@ export function createBattle(
   return {
     kind,
     turn: 1,
+    hype: 0,
+    hypeTurns: 0,
+    hypeLoaded: false,
     activeIndex,
     enemyTeam,
     enemyIndex: 0,
@@ -632,7 +635,24 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!battle.outcome && battle.enemyIndex !== enemyBefore) warnRage(ctx, currentEnemy(battle), events);
   battle.turn += 1;
   if (raidTimeout && !battle.outcome) battle.outcome = 'lose';
+  applyHype(ctx, events);
   return events;
+}
+
+/** Encore!: after a turn, critical hits build Hype, a miss or failed move costs some, and full Hype starts the damage boost. */
+export function applyHype(ctx: BattleContext, events: BattleEvent[]): void {
+  const meter = hypeMeterOf(ctx.perks);
+  if (!meter) return;
+  const { battle } = ctx;
+  if (battle.hypeTurns > 0) battle.hypeTurns -= 1;
+  for (const e of events) {
+    if (e.type === 'damage' && e.side === 'enemy' && e.crit) battle.hype += 1;
+    else if ((e.type === 'miss' || e.type === 'fail') && e.side === 'player') battle.hype = Math.max(0, battle.hype - meter.missPenalty);
+    if (battle.hype >= meter.needed) {
+      battle.hype = 0;
+      battle.hypeTurns = meter.turns;
+    }
+  }
 }
 
 /**
@@ -1604,6 +1624,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
       userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
+      hypeActive: ctx.battle.hypeTurns > 0,
       effectiveness,
       targetStatused: target.mon.status !== null && target.mon.status !== undefined,
       turnsOut: user.vol.turnsOut,

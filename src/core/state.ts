@@ -490,6 +490,10 @@ export const BattleStateSchema = z.object({
   /** The ball that caught the wild Pokémon (Friend, Luxury and Heal Ball change it afterwards). */
   ball: z.string().optional(),
   turn: z.number().int().min(1),
+  /** Encore! Hype (core/battle/engine.ts applyHype): the meter, turns of boost left, and whether the run's Hype was loaded in. */
+  hype: z.number().int().min(0).default(0),
+  hypeTurns: z.number().int().min(0).default(0),
+  hypeLoaded: z.boolean().default(false),
   /** Index into run.party of the Pokémon currently fighting. */
   activeIndex: z.number().int().min(0),
   /** The opposing team (one Pokémon for wild battles). */
@@ -684,7 +688,15 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
     kind: z.literal('signature'),
     mechanicId: z.string(),
     title: z.string(),
-    options: z.array(z.object({ label: z.string(), description: z.string(), effects: z.array(ArchetypeModifierSchema) })).min(2),
+    options: z.array(z.object({
+      label: z.string(),
+      description: z.string(),
+      effects: z.array(ArchetypeModifierSchema),
+      /** Items and party levels the option hands out at once. */
+      grant: z.object({ items: z.record(z.string(), z.number().int().positive()).optional(), partyLevels: z.number().int().positive().optional() }).optional(),
+      /** The effects run out: after `battles` more battles of the `until` kind. */
+      temp: z.object({ battles: z.number().int().min(1), until: z.enum(['battle', 'boss', 'wild']) }).optional(),
+    })).min(2),
   }),
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
@@ -843,6 +855,10 @@ export const RunStateSchema = z.object({
   /** Modifiers the run's signature choices added to the trainer's (core/signature.ts). */
   perkEffects: z.array(ArchetypeModifierSchema).default([]),
   /** Effects of the last temporary signature choice per mechanic, so the next choice can replace them. */
+  /** Encore! Hype carried between battles (reset after a boss battle). */
+  hype: z.number().int().min(0).default(0),
+  /** Signature effects that run out: they leave `perkEffects` after `battles` more battles (of the `until` kind). */
+  tempEffects: z.array(z.object({ effects: z.array(ArchetypeModifierSchema), battles: z.number().int().min(1), until: z.enum(['battle', 'boss', 'wild']) })).default([]),
   signatureApplied: z.record(z.string(), z.array(ArchetypeModifierSchema)).default({}),
   /** Mode, difficulty, modifiers and their reward multiplier (core/rules.ts). */
   rules: RunRulesSchema,
