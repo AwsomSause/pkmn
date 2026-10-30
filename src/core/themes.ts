@@ -17,7 +17,7 @@ const sharesType = (types: readonly TypeName[], other: readonly TypeName[]) => t
 
 const wildCache = new WeakMap<Content, Species[]>();
 
-const baseStatTotal = (s: Species) => Object.values(s.baseStats).reduce((a, b) => a + b, 0);
+export const baseStatTotal = (s: Species) => Object.values(s.baseStats).reduce((a, b) => a + b, 0);
 
 /**
  * Whether a species can be met in the wild (and drawn for ordinary trainers' teams before

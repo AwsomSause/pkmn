@@ -18,8 +18,10 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - Untitled doc Phase B (settings): battle speed (normal/fast/quick) in settings v3. Reduced motion already existed (battleAnimations). Still open: trainer bands, new NPC classes.
 - Untitled doc Phase B (trainer bands): `trainerTeam.earlyCaps` = stage 1 has 1 Pokémon, stages 2–6 cap 2–4. NPC classes audit: 17 classes use existing sprites; no new classes yet.
 - M9 battle animations + settings; boss teams (229 bosses).
+- Starter Sets slice 1 (plan `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md`): Starter Laboratory has 70 sets in 10 categories (all regions, 18 types, roles, player trainers, 10 villainous teams, 9 Leagues, 7 spin-off games). Pools can list evolved species, bosses or a type/region filter (`core/runPrep.ts eligibleSpecies`).
 
 ## In progress / next
+- Starter sets / quests / mastery / events plan (signed off 2026-10-30): next trainer identity, then "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).

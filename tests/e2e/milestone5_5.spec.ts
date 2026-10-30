@@ -64,11 +64,14 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await expect.poll(async () => (await profile(page)).licenses).toEqual(['type-specialist']);
   await waitForScene(page, 'Hub');
 
-  // Starter Laboratory: unlock Johto (the second pool). The Hub reopens on the Bank in the Unlocks menu.
+  // Starter Laboratory: Regions (the second category), then unlock Johto (its first set). The Hub reopens on the Bank in the Unlocks menu.
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
-  await page.keyboard.press('ArrowDown');
+  await page.screenshot({ path: 'test-results/m55-lab-categories.png' });
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(300);
   await page.screenshot({ path: 'test-results/m55-lab.png' });
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await profile(page)).unlockedPools).toEqual(['johto']);

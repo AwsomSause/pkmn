@@ -171,6 +171,16 @@ Known limits: a frame that shows two copies of the same Pokémon shows one; colo
 - [x] Green's archetype uses the boss pack's Green portrait
 - [x] Teams rebuilt on the full species data (M6): every signature Pokémon is in the game
 
+## Starter Sets, Trainer Quests, Mastery, Events (director request, 2026-10-30)
+Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's answers at its end override the text above them).
+- [x] Slice 1: Starter Laboratory sets by category: 9 regions (+ All of Kanto), 18 types, 4 roles, 9 player-trainer sets, 10 villainous teams, 9 Pokémon Leagues (Elite Four + champions), 7 spin-off games. Mixed unlocks: Research Points, achievements, or earned-only (type sets: 2 boss wins with that type leading).
+- [ ] Trainer identity fields; "?" event stops + every run event + event items (item slice 4b); trainer quests + claim ledger; species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+
+### Known limits in slice 1
+- Regional forms still count as ordinary first stages (as in the wild); the special-form rule is Untitled-doc Phase D.
+- The Preparation Desk cycles through every unlocked set one by one; no category step there yet.
+- No challenge sets with reward multipliers yet (needs a payout rule), and no Mastered set (comes with species mastery).
+
 ## Milestone 10 — Visuals and presentation (planned)
 
 A milestone purely for looks: a shared visual style, redesigned screens, transitions and animations, and a final layout pass. No gameplay changes. See IMPLEMENTATION_PLAN.md §5.
