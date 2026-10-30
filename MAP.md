@@ -19,6 +19,7 @@ Update this file when you add, move or delete a folder or a key file.
 | `package.json` | npm scripts: `dev`, `check`, `test`, `test:e2e`, `data:*` builders, `report:*`. |
 | `.github/workflows/ci.yml` | CI: typecheck, unit, build, `report:check`, Playwright. |
 | `.claude/rules/` | Short rules; path-scoped ones auto-load when you touch matching files. |
+| `.claude/agents/` | Project subagents. `explore.md`: cheap read-only search on Haiku. |
 
 ## `src/` — the game
 

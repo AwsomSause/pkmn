@@ -15,6 +15,7 @@ Everything loaded early is re-sent on every turn for the rest of the session. Ke
 
 ## Subagents
 - Push wide, verbose work into a subagent so only its summary lands here: reading long logs or CI output, repo-wide greps across many files, long git history, surveying a big doc. Ask it for a short answer with file:line references.
+- For read-only searches, use the project's `explore` agent (`.claude/agents/explore.md`, runs on Haiku, can't edit files). It's much cheaper than a general-purpose agent. If it isn't listed in your session, fall back to the built-in `Explore` agent with `model: haiku`.
 - Don't use subagents for small, targeted lookups you can do with one grep.
 
 ## Git (several threads share `main`)
