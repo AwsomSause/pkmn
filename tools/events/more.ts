@@ -5,7 +5,7 @@
 import {
   $, BALLS, BERRIES, FOSSILS, HEALING, HELD, RARE_HELD, SNACKS, STONES, TREASURE, TYPE_ITEMS, VITAMINS,
   any, att, attr, better, ch, cure, ev, evil, ferry, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, isPeace, isRage,
-  item, join, egg, leave, lose, lv, money, out, party, peace, ptype, rage, reveal, rp, status, stopHere, trainer, wild, type Json,
+  item, join, egg, leave, lose, lv, money, out, party, peace, ptype, rage, reveal, rp, status, stopHere, trade, trainer, wild, type Json,
 } from './dsl.ts';
 
 const PR = 'PokeRogue-style encounters';
@@ -70,9 +70,21 @@ export const MORE_EVENTS: Json[] = [
     ch('Battle it', fight('It attacks with a flourish!', wild({ species: ['oricorio'], lv: 2 })), { requires: [fierce] }),
   ]),
   ev('global-trade', 'Global Trade Station', PR, { rarity: 'uncommon', minStage: 2, cast: ['trainer.worker_m'], effect: 'glint', tint: '#102838' }, 'A trading booth links to trainers around the world.', [
-    ch('Trade for a surprise', out('A Pokémon from far away arrives!', join({ lv: 1, shiny: 2 })), { requires: [party(2)] }),
+    ch('Trade a Pokémon from this generation for a surprise', out('A Pokémon from far away arrives!', trade('a Generation 1 Pokémon', { generation: 1 }), join({ lv: 1, shiny: 2 }))),
     ch('Trade an item', out('Someone sends a held item back.', lose(), any(...HELD))),
     ch('Just browse', out('You learn about faraway Pokémon.', rp(10))),
+  ]),
+  ev('pikachu-collector', 'The Pikachu Collector', PR, { rarity: 'uncommon', minStage: 2, cast: ['trainer.worker_m'], effect: 'hearts' }, '"I only collect Pikachu and Eevee. Bring me one and I will swap you something rare."', [
+    ch('Trade a Pikachu or Eevee', out('He cradles it and hands over a rare Pokémon.', trade('a Pikachu or an Eevee', { species: ['pikachu', 'eevee'] }), join({ species: ['porygon', 'lapras', 'aerodactyl'], lv: 3 }))),
+    ch('Not today', leave()),
+  ]),
+  ev('heavyweight-swap', 'The Heavyweight Swap', PR, { rarity: 'common', minStage: 2, cast: ['trainer.hiker'], effect: 'shake' }, '"My cart needs a big strong Pokémon, 100 kg or more. I will trade you a sturdy Steel-type for it."', [
+    ch('Trade a Pokémon of 100 kg or more', out('The cart rolls on. A sturdy partner joins you.', trade('a Pokémon of 100 kg or more', { minWeight: 100 }), join({ types: ['steel'], lv: 2 }))),
+    ch('Not today', leave()),
+  ]),
+  ev('water-fan-swap', 'The Water Fan', PR, { rarity: 'common', minStage: 2, cast: ['trainer.fisherman'], effect: 'rain' }, '"Water is life! Trade me a Water-type and I will find you a Dragon."', [
+    ch('Trade a Water-type', out('He beams and sends a Dragon your way.', trade('a Water-type', { type: 'water' }), join({ types: ['dragon'], lv: 2 }))),
+    ch('Not today', leave()),
   ]),
   ev('fun-and-games', 'Fun and Games!', PR, { rarity: 'uncommon', cast: ['trainer.guitarist'], pokemon: 'wobbuffet', effect: 'rattle', tint: '#302018' }, 'A carnival game: knock out the Wobbuffet in three turns to win!', [
     ch('Play (₽300)', fight('Wobbuffet stands its ground!', wild({ species: ['wobbuffet'], lv: 0, win: [any(...TREASURE), $(1000)] }), $(-300)), { requires: [money(300)] }),

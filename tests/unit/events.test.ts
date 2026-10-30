@@ -216,3 +216,31 @@ describe('choice cards: cost and kind of risk (Visual Bible event screens)', () 
     expect(view.choices[0]!.cost).toBe('−₽400');
   });
 });
+
+describe('trade events', () => {
+  const choiceOf = (run: RunState, id: string) => eventView(content, run, 'test-event').choices[0]!;
+
+  it('stay locked, with the requirement in words, until a fitting Pokémon is in the party', () => {
+    const run = atEvent(newRun('trade-lock'), 'water-fan-swap');
+    run.party = [createPokemon(content, 'charmander', 5, 'a'), createPokemon(content, 'bulbasaur', 5, 'b')];
+    expect(choiceOf(run, 'water-fan-swap').locked).toBe('Needs a Water-type in your party');
+    expect(() => chooseEvent(content, run, 'test-event', 0)).toThrow(/Water-type/);
+    expect(choiceOf(run, 'water-fan-swap').cost).toBe('trade away a Water-type');
+  });
+
+  it('take the lowest-level fitting Pokémon and give one back', () => {
+    const run = atEvent(newRun('trade-go'), 'water-fan-swap');
+    run.party = [createPokemon(content, 'squirtle', 12, 'a'), createPokemon(content, 'charmander', 5, 'b'), createPokemon(content, 'psyduck', 7, 'c')];
+    expect(choiceOf(run, 'water-fan-swap').locked).toBeNull();
+    const result = chooseEvent(content, run, 'test-event', 0);
+    expect(result.run.party.map((m) => m.speciesId)).toEqual(['squirtle', 'charmander']);
+    expect(result.run.pending.some((p) => p.kind === 'caught')).toBe(true);
+    expect(result.changes[0]).toBe('Traded away Psyduck');
+  });
+
+  it('never trade away the last Pokémon', () => {
+    const run = atEvent(newRun('trade-last'), 'water-fan-swap');
+    run.party = [createPokemon(content, 'squirtle', 5, 'a')];
+    expect(choiceOf(run, 'water-fan-swap').locked).toBe('Needs 2 Pokémon in your party');
+  });
+});

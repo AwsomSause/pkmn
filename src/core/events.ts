@@ -14,7 +14,7 @@ import { eventChanceScale } from './rules';
 import { getArchetype, runPerks } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
 import { createBattle } from './battle/engine';
-import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TypeName } from './contentSchema';
+import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TradeWant, TypeName } from './contentSchema';
 import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
@@ -98,6 +98,36 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
     case 'focus':
       return regionFocus(run, run.regionIndex) === c.focus;
   }
+}
+
+/** The party Pokémon a trade partner would accept, lowest level first. */
+export function tradeCandidates(content: Content, run: RunState, want: TradeWant): RunState['party'] {
+  return run.party
+    .filter((m) => {
+      const sp = content.species.get(m.speciesId);
+      if (!sp) return false;
+      return (
+        (want.species.length === 0 || want.species.includes(m.speciesId)) &&
+        (!want.type || sp.types.includes(want.type)) &&
+        (!want.tag || sp.tags.includes(want.tag)) &&
+        (!want.stage || sp.evolutionStage === want.stage) &&
+        (!want.minWeight || (sp.weight ?? 50) >= want.minWeight) &&
+        (!want.maxWeight || (sp.weight ?? 50) <= want.maxWeight) &&
+        (!want.generation || sp.generation === want.generation) &&
+        (!want.minLevel || m.level >= want.minLevel)
+      );
+    })
+    .sort((a, b) => a.level - b.level);
+}
+
+/** Why a choice's trade cannot happen yet, in words (null when it can or the choice has no trade). */
+function tradeMissing(content: Content, run: RunState, choice: EventChoice): string | null {
+  for (const e of choice.success.effects) {
+    if (e.kind !== 'tradeAway') continue;
+    if (run.party.length < 2) return 'Needs 2 Pokémon in your party';
+    if (tradeCandidates(content, run, e.want).length === 0) return `Needs ${e.want.label} in your party`;
+  }
+  return null;
 }
 
 /** A requirement in words, for a locked choice. */
@@ -301,7 +331,7 @@ function outcomeWords(content: Content, o: EventOutcome): string {
   return parts.filter(Boolean).join(', ') || 'nothing';
 }
 
-const HARMFUL = new Set(['damage', 'status', 'loseItem']);
+const HARMFUL = new Set(['damage', 'status', 'loseItem', 'tradeAway']);
 function harmful(e: EventEffect): boolean {
   return HARMFUL.has(e.kind) || (e.kind === 'money' && e.amount < 0) || (e.kind === 'crisis' && e.amount > 0);
 }
@@ -328,10 +358,11 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
   const event = content.events.get(side.eventId!)!;
   const insight = hasPerk(content, run, 'eventInsight');
   const choices = event.choices.map((c) => {
-    const missing = c.requires.find((r) => !conditionMet(content, run, r));
+    const unmet = c.requires.find((r) => !conditionMet(content, run, r));
+    const missing = unmet ? conditionText(content, unmet) : tradeMissing(content, run, c);
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing ? conditionText(content, missing) : null, chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
+    return { label: c.label, locked: missing, chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }
@@ -356,6 +387,8 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   if (!choice) throw new Error(`No choice ${choiceIndex}`);
   const missing = choice.requires.find((r) => !conditionMet(content, current, r));
   if (missing) throw new Error(conditionText(content, missing));
+  const noTrade = tradeMissing(content, current, choice);
+  if (noTrade) throw new Error(noTrade);
   const run = structuredClone(current);
   const runSide = run.stage!.map.nodes.find((n) => n.id === node.id)!.sides.find((s) => s.id === sideId)!;
   runSide.used = true;
@@ -425,6 +458,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return `one of ${e.ids.map((id) => itemName(content, id)).join(' / ')}`;
     case 'loseItem':
       return e.id ? `use a ${itemName(content, e.id)}` : 'lose an item';
+    case 'tradeAway':
+      return `trade away ${e.want.label}`;
     case 'heal':
       return e.share >= 1 ? 'full heal' : `heal ${Math.round(e.share * 100)}%`;
     case 'damage':
@@ -564,6 +599,12 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       run.inventory[id]! -= 1;
       if (run.inventory[id] === 0) delete run.inventory[id];
       return `Lost a ${itemName(content, id)}`;
+    }
+    case 'tradeAway': {
+      const mon = tradeCandidates(content, run, e.want)[0];
+      if (!mon || run.party.length < 2) return '';
+      run.party.splice(run.party.indexOf(mon), 1);
+      return `Traded away ${content.species.get(mon.speciesId)?.name ?? mon.speciesId}`;
     }
     case 'heal': {
       if (e.share >= 1) healParty(content, run);
