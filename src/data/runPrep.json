@@ -4923,6 +4923,975 @@
     "atLeast": 1320
    },
    "unlockText": "Defeat 1320 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-npc-youngster-joey",
+   "name": "Youngster Joey’s Team",
+   "description": "The Youngster’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "rattata",
+    "spearow",
+    "ekans",
+    "nidoran-m",
+    "meowth"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 3
+   },
+   "unlockText": "Win 3 battles"
+  },
+  {
+   "id": "trainer-npc-lass-janice",
+   "name": "Lass Janice’s Team",
+   "description": "The Lass’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "pidgey",
+    "clefairy",
+    "jigglypuff",
+    "oddish",
+    "eevee"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 8
+   },
+   "unlockText": "Defeat 8 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-bug-catcher-wade",
+   "name": "Bug Catcher Wade’s Team",
+   "description": "The Bug Catcher’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "caterpie",
+    "weedle",
+    "paras",
+    "venonat",
+    "scyther"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 2
+   },
+   "unlockText": "Catch 2 Pokémon"
+  },
+  {
+   "id": "trainer-npc-camper-liam",
+   "name": "Camper Liam’s Team",
+   "description": "The Camper’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "sandshrew",
+    "geodude",
+    "diglett",
+    "cubone",
+    "rhyhorn"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "runsFinished",
+    "atLeast": 1
+   },
+   "unlockText": "Finish a run"
+  },
+  {
+   "id": "trainer-npc-picnicker-gina",
+   "name": "Picnicker Gina’s Team",
+   "description": "The Picnicker’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "bulbasaur",
+    "oddish",
+    "bellsprout",
+    "exeggcute",
+    "tangela"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 2
+   },
+   "unlockText": "Use 2 healing stops"
+  },
+  {
+   "id": "trainer-npc-hiker-anthony",
+   "name": "Hiker Anthony’s Team",
+   "description": "The Hiker’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "geodude",
+    "onix",
+    "machop",
+    "rhyhorn",
+    "sandshrew"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 8
+   },
+   "unlockText": "Win 8 battles"
+  },
+  {
+   "id": "trainer-npc-fisherman-elliot",
+   "name": "Fisherman Elliot’s Team",
+   "description": "The Fisherman’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "magikarp",
+    "poliwag",
+    "krabby",
+    "horsea",
+    "goldeen"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 1
+   },
+   "unlockText": "Evolve a Pokémon"
+  },
+  {
+   "id": "trainer-npc-bird-keeper-perry",
+   "name": "Bird Keeper Perry’s Team",
+   "description": "The Bird Keeper’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "pidgey",
+    "spearow",
+    "doduo",
+    "farfetchd",
+    "hoothoot"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "eventsCompleted",
+    "atLeast": 2
+   },
+   "unlockText": "Complete 2 map events"
+  },
+  {
+   "id": "trainer-npc-black-belt-kenji",
+   "name": "Black Belt Kenji’s Team",
+   "description": "The Black Belt’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "mankey",
+    "machop",
+    "tyrogue",
+    "hitmonlee",
+    "hitmonchan"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 6
+   },
+   "unlockText": "Catch 6 Pokémon"
+  },
+  {
+   "id": "trainer-npc-biker-ryder",
+   "name": "Biker Ryder’s Team",
+   "description": "The Biker’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "koffing",
+    "grimer",
+    "ekans",
+    "zubat",
+    "houndour"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "moneyEarned",
+    "atLeast": 1500
+   },
+   "unlockText": "Earn ₽1500"
+  },
+  {
+   "id": "trainer-npc-burglar-quinn",
+   "name": "Burglar Quinn’s Team",
+   "description": "The Burglar’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "growlithe",
+    "vulpix",
+    "ponyta",
+    "magmar",
+    "charmander"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 25
+   },
+   "unlockText": "Defeat 25 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-channeler-hester",
+   "name": "Channeler Hester’s Team",
+   "description": "The Channeler’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "gastly",
+    "misdreavus",
+    "shuppet",
+    "duskull",
+    "drifloon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 15
+   },
+   "unlockText": "Win 15 battles"
+  },
+  {
+   "id": "trainer-npc-cooltrainer-marcus",
+   "name": "Cooltrainer Marcus’s Team",
+   "description": "The Cooltrainer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "dratini",
+    "bagon",
+    "gible",
+    "larvitar",
+    "charmander"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "candiesEarned",
+    "atLeast": 5
+   },
+   "unlockText": "Earn 5 candies"
+  },
+  {
+   "id": "trainer-npc-cooltrainer-selene",
+   "name": "Cooltrainer Selene’s Team",
+   "description": "The Cooltrainer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "abra",
+    "ralts",
+    "slowpoke",
+    "natu",
+    "espeon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 3
+   },
+   "unlockText": "Evolve 3 Pokémon"
+  },
+  {
+   "id": "trainer-npc-crush-girl-tamsin",
+   "name": "Crush Girl Tamsin’s Team",
+   "description": "The Crush Girl’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "makuhita",
+    "meditite",
+    "machop",
+    "riolu",
+    "mankey"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "eventsCompleted",
+    "atLeast": 6
+   },
+   "unlockText": "Complete 6 map events"
+  },
+  {
+   "id": "trainer-npc-crush-kin-ivan-and-mira",
+   "name": "Crush Kin Ivan and Mira’s Team",
+   "description": "The Crush Kin’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "tyrogue",
+    "timburr",
+    "mankey",
+    "makuhita",
+    "machop"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 25
+   },
+   "unlockText": "Win 25 battles"
+  },
+  {
+   "id": "trainer-npc-cue-ball-dutch",
+   "name": "Cue Ball Dutch’s Team",
+   "description": "The Cue Ball’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "machop",
+    "mankey",
+    "makuhita",
+    "meditite",
+    "riolu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "runsFinished",
+    "atLeast": 3
+   },
+   "unlockText": "Finish 3 runs"
+  },
+  {
+   "id": "trainer-npc-engineer-baxter",
+   "name": "Engineer Baxter’s Team",
+   "description": "The Engineer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "magnemite",
+    "voltorb",
+    "electabuzz",
+    "elekid",
+    "pikachu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 15
+   },
+   "unlockText": "Catch 15 Pokémon"
+  },
+  {
+   "id": "trainer-npc-gambler-lucky",
+   "name": "Gambler Lucky’s Team",
+   "description": "The Gambler’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "meowth",
+    "snubbull",
+    "eevee",
+    "lickitung",
+    "chansey"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 60
+   },
+   "unlockText": "Defeat 60 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-gentleman-alfred",
+   "name": "Gentleman Alfred’s Team",
+   "description": "The Gentleman’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "growlithe",
+    "meowth",
+    "snubbull",
+    "eevee",
+    "houndour"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "regionsCleared",
+    "atLeast": 1
+   },
+   "unlockText": "Clear a region"
+  },
+  {
+   "id": "trainer-npc-juggler-pierre",
+   "name": "Juggler Pierre’s Team",
+   "description": "The Juggler’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "drowzee",
+    "abra",
+    "voltorb",
+    "mr-mime",
+    "natu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 6
+   },
+   "unlockText": "Win 6 battles"
+  },
+  {
+   "id": "trainer-npc-lady-cordelia",
+   "name": "Lady Cordelia’s Team",
+   "description": "The Lady’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "clefairy",
+    "togepi",
+    "snubbull",
+    "jigglypuff",
+    "cleffa"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 16
+   },
+   "unlockText": "Defeat 16 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-painter-vera",
+   "name": "Painter Vera’s Team",
+   "description": "The Painter’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "smoochum",
+    "bellsprout",
+    "oddish",
+    "ditto",
+    "mime-jr"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 4
+   },
+   "unlockText": "Catch 4 Pokémon"
+  },
+  {
+   "id": "trainer-npc-pok-maniac-rex",
+   "name": "Poké Maniac Rex’s Team",
+   "description": "The Poké Maniac’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "cubone",
+    "omanyte",
+    "kabuto",
+    "aerodactyl",
+    "lileep"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "runsFinished",
+    "atLeast": 2
+   },
+   "unlockText": "Finish a run"
+  },
+  {
+   "id": "trainer-npc-pok-mon-breeder-delia",
+   "name": "Pokémon Breeder Delia’s Team",
+   "description": "The Pokémon Breeder’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "togepi",
+    "pichu",
+    "cleffa",
+    "igglybuff",
+    "azurill"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 4
+   },
+   "unlockText": "Use 4 healing stops"
+  },
+  {
+   "id": "trainer-npc-pok-mon-ranger-hal",
+   "name": "Pokémon Ranger Hal’s Team",
+   "description": "The Pokémon Ranger’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "bulbasaur",
+    "bellsprout",
+    "oddish",
+    "pikachu",
+    "growlithe"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 16
+   },
+   "unlockText": "Win 16 battles"
+  },
+  {
+   "id": "trainer-npc-pok-mon-ranger-willa",
+   "name": "Pokémon Ranger Willa’s Team",
+   "description": "The Pokémon Ranger’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "pidgey",
+    "taillow",
+    "starly",
+    "hoothoot",
+    "spearow"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 2
+   },
+   "unlockText": "Evolve a Pokémon"
+  },
+  {
+   "id": "trainer-npc-psychic-edmund",
+   "name": "Psychic Edmund’s Team",
+   "description": "The Psychic’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "abra",
+    "drowzee",
+    "slowpoke",
+    "natu",
+    "ralts"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "eventsCompleted",
+    "atLeast": 4
+   },
+   "unlockText": "Complete 4 map events"
+  },
+  {
+   "id": "trainer-npc-psychic-lorna",
+   "name": "Psychic Lorna’s Team",
+   "description": "The Psychic’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "ralts",
+    "abra",
+    "mime-jr",
+    "wynaut",
+    "espeon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 12
+   },
+   "unlockText": "Catch 12 Pokémon"
+  },
+  {
+   "id": "trainer-npc-rocker-axel",
+   "name": "Rocker Axel’s Team",
+   "description": "The Rocker’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "voltorb",
+    "magnemite",
+    "elekid",
+    "pikachu",
+    "shinx"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "moneyEarned",
+    "atLeast": 3000
+   },
+   "unlockText": "Earn ₽3000"
+  },
+  {
+   "id": "trainer-npc-ruin-maniac-hadrian",
+   "name": "Ruin Maniac Hadrian’s Team",
+   "description": "The Ruin Maniac’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "sandshrew",
+    "geodude",
+    "cubone",
+    "baltoy",
+    "trapinch"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 50
+   },
+   "unlockText": "Defeat 50 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-sailor-murphy",
+   "name": "Sailor Murphy’s Team",
+   "description": "The Sailor’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "tentacool",
+    "krabby",
+    "shellder",
+    "wingull",
+    "horsea"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 30
+   },
+   "unlockText": "Win 30 battles"
+  },
+  {
+   "id": "trainer-npc-scientist-dr-orson",
+   "name": "Scientist Dr. Orson’s Team",
+   "description": "The Scientist’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "magnemite",
+    "porygon",
+    "grimer",
+    "voltorb",
+    "ditto"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "candiesEarned",
+    "atLeast": 10
+   },
+   "unlockText": "Earn 10 candies"
+  },
+  {
+   "id": "trainer-npc-sis-and-bro-amy-and-tim",
+   "name": "Sis and Bro Amy and Tim’s Team",
+   "description": "The Sis and Bro’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "poliwag",
+    "horsea",
+    "tentacool",
+    "staryu",
+    "psyduck"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 6
+   },
+   "unlockText": "Evolve 6 Pokémon"
+  },
+  {
+   "id": "trainer-npc-super-nerd-miles",
+   "name": "Super Nerd Miles’s Team",
+   "description": "The Super Nerd’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "grimer",
+    "koffing",
+    "magnemite",
+    "voltorb",
+    "porygon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "eventsCompleted",
+    "atLeast": 12
+   },
+   "unlockText": "Complete 12 map events"
+  },
+  {
+   "id": "trainer-npc-swimmer-kai",
+   "name": "Swimmer Kai’s Team",
+   "description": "The Swimmer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "tentacool",
+    "staryu",
+    "horsea",
+    "goldeen",
+    "psyduck"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 50
+   },
+   "unlockText": "Win 50 battles"
+  },
+  {
+   "id": "trainer-npc-swimmer-marina",
+   "name": "Swimmer Marina’s Team",
+   "description": "The Swimmer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "staryu",
+    "shellder",
+    "goldeen",
+    "wooper",
+    "azurill"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "runsFinished",
+    "atLeast": 6
+   },
+   "unlockText": "Finish 6 runs"
+  },
+  {
+   "id": "trainer-npc-swimmer-finn",
+   "name": "Swimmer Finn’s Team",
+   "description": "The Swimmer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "krabby",
+    "poliwag",
+    "slowpoke",
+    "totodile",
+    "mudkip"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 30
+   },
+   "unlockText": "Catch 30 Pokémon"
+  },
+  {
+   "id": "trainer-npc-swimmer-coral",
+   "name": "Swimmer Coral’s Team",
+   "description": "The Swimmer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "seel",
+    "lapras",
+    "horsea",
+    "lotad",
+    "marill"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 120
+   },
+   "unlockText": "Defeat 120 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-tamer-garrett",
+   "name": "Tamer Garrett’s Team",
+   "description": "The Tamer’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "growlithe",
+    "sandshrew",
+    "rhyhorn",
+    "mankey",
+    "houndour"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "regionsCleared",
+    "atLeast": 2
+   },
+   "unlockText": "Clear a region"
+  },
+  {
+   "id": "trainer-npc-team-rocket-grunt-boris",
+   "name": "Team Rocket Grunt Boris’s Team",
+   "description": "The Team Rocket Grunt’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "rattata",
+    "zubat",
+    "koffing",
+    "ekans",
+    "houndour"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 9
+   },
+   "unlockText": "Win 9 battles"
+  },
+  {
+   "id": "trainer-npc-team-rocket-grunt-jessa",
+   "name": "Team Rocket Grunt Jessa’s Team",
+   "description": "The Team Rocket Grunt’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "ekans",
+    "grimer",
+    "zubat",
+    "meowth",
+    "koffing"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 24
+   },
+   "unlockText": "Defeat 24 wild Pokémon"
+  },
+  {
+   "id": "trainer-npc-tuber-pip",
+   "name": "Tuber Pip’s Team",
+   "description": "The Tuber’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "psyduck",
+    "poliwag",
+    "goldeen",
+    "marill",
+    "wooper"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 6
+   },
+   "unlockText": "Catch 6 Pokémon"
+  },
+  {
+   "id": "trainer-npc-tuber-dot",
+   "name": "Tuber Dot’s Team",
+   "description": "The Tuber’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "marill",
+    "psyduck",
+    "azurill",
+    "lotad",
+    "goldeen"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "runsFinished",
+    "atLeast": 3
+   },
+   "unlockText": "Finish a run"
+  },
+  {
+   "id": "trainer-npc-tuber-rudy",
+   "name": "Tuber Rudy’s Team",
+   "description": "The Tuber’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "wooper",
+    "poliwag",
+    "tentacool",
+    "krabby",
+    "magikarp"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 6
+   },
+   "unlockText": "Use 6 healing stops"
+  },
+  {
+   "id": "trainer-npc-tuber-sunny",
+   "name": "Tuber Sunny’s Team",
+   "description": "The Tuber’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "staryu",
+    "lotad",
+    "marill",
+    "horsea",
+    "wingull"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "battlesWon",
+    "atLeast": 24
+   },
+   "unlockText": "Win 24 battles"
+  },
+  {
+   "id": "trainer-npc-twins-nia-and-mia",
+   "name": "Twins Nia and Mia’s Team",
+   "description": "The Twins’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "clefairy",
+    "cleffa",
+    "togepi",
+    "jigglypuff",
+    "pichu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 3
+   },
+   "unlockText": "Evolve a Pokémon"
+  },
+  {
+   "id": "trainer-npc-young-couple-dan-and-eri",
+   "name": "Young Couple Dan and Eri’s Team",
+   "description": "The Young Couple’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "eevee",
+    "vulpix",
+    "growlithe",
+    "pichu",
+    "meowth"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "eventsCompleted",
+    "atLeast": 6
+   },
+   "unlockText": "Complete 6 map events"
+  },
+  {
+   "id": "trainer-npc-beauty-bianca",
+   "name": "Beauty Bianca’s Team",
+   "description": "The Beauty’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "staryu",
+    "goldeen",
+    "seel",
+    "horsea",
+    "marill"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 18
+   },
+   "unlockText": "Catch 18 Pokémon"
+  },
+  {
+   "id": "trainer-npc-aroma-lady-rosalind",
+   "name": "Aroma Lady Rosalind’s Team",
+   "description": "The Aroma Lady’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "oddish",
+    "bellsprout",
+    "hoppip",
+    "budew",
+    "bulbasaur"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "moneyEarned",
+    "atLeast": 4500
+   },
+   "unlockText": "Earn ₽4500"
+  },
+  {
+   "id": "trainer-npc-cool-couple-leon-and-sky",
+   "name": "Cool Couple Leon and Sky’s Team",
+   "description": "The Cool Couple’s everyday team, as first stages.",
+   "category": "trainer",
+   "species": [
+    "eevee",
+    "ponyta",
+    "vulpix",
+    "growlithe",
+    "pikachu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "wildDefeated",
+    "atLeast": 75
+   },
+   "unlockText": "Defeat 75 wild Pokémon"
   }
  ],
  "draftRules": [
