@@ -7,6 +7,7 @@ import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
+import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
@@ -21,7 +22,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -32,9 +33,26 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'attributes', label: 'Attributes', blurb: 'Your permanent attributes, what they do, and how they grow (Enter for details).' },
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
+  { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
+
+const RANK_COLOR: Record<MasteryRank, string> = {
+  none: COLORS.textMuted,
+  seen: COLORS.textMuted,
+  caught: COLORS.textLight,
+  bronze: '#d08a4a',
+  silver: '#c8d4e0',
+  gold: COLORS.gold,
+  master: '#ff7ad9',
+};
+
+/** Families with at least one member met, best rank first, then by Pokédex number. */
+function masteryFamilies(content: ReturnType<typeof services>['session']['content'], p: ReturnType<typeof services>['session']['profile']): string[] {
+  const families = [...new Set(Object.keys(p.mastery ?? {}).filter((id) => content.species.has(id)).map((id) => familyId(content, id)))];
+  return families.sort((a, b) => rankIndex(familyRank(content, p, b)) - rankIndex(familyRank(content, p, a)) || content.species.get(a)!.dex - content.species.get(b)!.dex);
+}
 
 const STATUS_LABEL: Record<TrainerStatus, string> = {
   unlocked: 'Unlocked',
@@ -87,7 +105,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Past Runs', icon: 'item.calendar', rooms: ['history'], blurb: ROOMS[6]!.blurb },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes'], blurb: 'Achievements, the Bank, the Starter Laboratory and your Attributes.' },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes and Species Mastery.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -95,6 +113,7 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   bank: 'item.coin_case',
   lab: 'item.mystery_egg',
   attributes: 'item.exp_charm',
+  mastery: 'item.master_ribbon',
   save: 'item.map',
   back: 'item.pair_of_tickets',
 };
@@ -398,6 +417,16 @@ export class HubScene extends Phaser.Scene {
         y = this.line(y, `Steps done: ${lines.reduce((n, l) => n + stepsDone(session.content, p, l.trainerId), 0)} of ${lines.length * 5}`, 16, COLORS.textMuted);
         break;
       }
+      case 'mastery': {
+        y = this.line(y, 'Species Mastery', 22);
+        const families = masteryFamilies(session.content, p);
+        y = this.line(y, `${families.length} families met`, 16);
+        for (const rank of ['bronze', 'silver', 'gold', 'master'] as const) {
+          const n = families.filter((f) => familyRank(session.content, p, f) === rank).length;
+          if (n > 0) y = this.line(y, `${RANK_NAMES[rank]}: ${n}`, 16, RANK_COLOR[rank]);
+        }
+        break;
+      }
       case 'history': {
         y = this.line(y, 'Past Runs', 22);
         const runs = p.runHistory.slice(0, 4);
@@ -446,6 +475,9 @@ export class HubScene extends Phaser.Scene {
       case 'quests':
         this.openQuests();
         break;
+      case 'mastery':
+        this.openMastery();
+        break;
       case 'save':
         this.openSaveData();
         break;
@@ -464,6 +496,141 @@ export class HubScene extends Phaser.Scene {
     this.picker?.close();
     this.picker = null;
     if (this.submenu) this.submenu.menu.enabled = true;
+  }
+
+  /** Every family you met, best rank first; Enter shows its members, goals and unlocks. */
+  private openMastery(): void {
+    const { session } = services();
+    const content = session.content;
+    const p = session.profile;
+    const motion = session.settings.battleAnimations;
+    const families = masteryFamilies(content, p);
+    if (families.length === 0) {
+      playSfx(this, 'ui.error', 0.5);
+      this.restart('Meet Pokémon in a run to start their mastery.', 'mastery');
+      return;
+    }
+    const rows: PickerRow[] = families.map((f) => {
+      const rank = familyRank(content, p, f);
+      const members = familyMembers(content, f).filter((id) => p.mastery[id]);
+      const goal = members.map((id) => nextGoal(content, id, p.mastery[id])).find(Boolean);
+      return {
+        problem: null,
+        hint: goal ? `Next: ${RANK_NAMES[goal.rank]}: ${goal.parts.map((g) => `${g.text} (${g.current}/${g.target})`).join(', ')}` : 'Mastered!',
+        draw: (scene, box, w, h) => {
+          const species = content.species.get(f)!;
+          box.add(pokemonIcon(scene, species, 30, h / 2 + 2, 0.9));
+          box.add(scene.add.text(64, 8, species.name, textStyle(19)));
+          box.add(scene.add.text(64, 32, familyMembers(content, f).map((id) => content.species.get(id)!.name).slice(0, 3).join(' → '), textStyle(13, COLORS.textMuted)));
+          const medal = scene.add.text(w - 14, h / 2, RANK_NAMES[rank], textStyle(18, RANK_COLOR[rank])).setOrigin(1, 0.5);
+          box.add(medal);
+          // A gentle bob for ranked families (none when motion is reduced or off).
+          if (motion === 'full' && atLeast(rank, 'bronze')) scene.tweens.add({ targets: medal, y: h / 2 - 3, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        },
+      };
+    });
+    this.openPicker({
+      title: `Species Mastery  ·  ${families.length} families`,
+      rows,
+      columns: 2,
+      rowHeight: 58,
+      onSelect: (i) => this.openMasteryFamily(families[i]!),
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openMasteryFamily(family: string): void {
+    const { session } = services();
+    const content = session.content;
+    const p = session.profile;
+    const rank = familyRank(content, p, family);
+    const perk = familyPerk(content, p, family);
+    const options = eggMoveOptions(content, family);
+    const usable = options.filter((o) => o.active).map((o) => o.id);
+    const moveName = (id: string) => content.moves.get(id)?.name ?? id;
+    const abilityName = (slot: number) => {
+      const a = content.species.get(family)!.abilities;
+      const id = slot === -1 ? a.hidden : a.normal[slot];
+      return id ? (content.abilities.get(id)?.name ?? id) : '—';
+    };
+    type Row = PickerRow & { act?: () => void };
+    const rows: Row[] = [];
+    // Battle-only forms (Mega, Gigantamax) are listed only once you have met them.
+    const shown = familyMembers(content, family).filter((id) => {
+      const form = content.species.get(id)!.form;
+      return !form || form.kind === 'regional' || form.kind === 'alternate' || p.mastery[id];
+    });
+    for (const id of shown) {
+      const rec = p.mastery[id];
+      const r = speciesRank(content, id, rec);
+      const goal = nextGoal(content, id, rec);
+      rows.push({
+        problem: null,
+        hint: rec ? `Runs met ${rec.seen}, joined ${rec.caught}, battles ${rec.battles}, boss wins ${rec.bossWins}, evolved ${rec.evolved}, flawless ${rec.flawless}, regions ${rec.regions}` : 'Not met yet.',
+        draw: (scene, box, w, h) => {
+          box.add(pokemonIcon(scene, content.species.get(id)!, 28, h / 2 + 2, 0.85));
+          box.add(scene.add.text(60, 6, `${content.species.get(id)!.name}  ·  ${RANK_NAMES[r]}`, textStyle(18, RANK_COLOR[r])));
+          box.add(scene.add.text(60, 30, goal ? `Next ${RANK_NAMES[goal.rank]}: ${goal.parts.map((g) => `${g.text} ${g.current}/${g.target}`).join(', ')}` : 'Master rank reached', textStyle(13, COLORS.textMuted, { wordWrap: { width: w - 70 } })));
+        },
+      });
+    }
+    const unlock = (min: 'bronze' | 'silver' | 'gold' | 'master', label: string, value: string, act?: () => void) => {
+      const open = atLeast(rank, min);
+      rows.push({
+        problem: null,
+        act: open ? act : undefined,
+        hint: open ? (act ? 'Enter: change your pick.' : 'Unlocked.') : `Unlocks at ${RANK_NAMES[min]} rank.`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, h / 2, `${RANK_NAMES[min]}: ${label}`, textStyle(17, open ? COLORS.textLight : COLORS.textMuted)).setOrigin(0, 0.5));
+          box.add(scene.add.text(w - 12, h / 2, open ? value : '🔒', textStyle(16, open ? RANK_COLOR[min] : COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      });
+    };
+    const cycleEgg = (slot: number) => () => {
+      const picks = [...(perk?.eggMoves ?? [])];
+      const others = picks.filter((_, i) => i !== slot);
+      const choices = usable.filter((id) => !others.includes(id));
+      if (choices.length === 0) return;
+      picks[slot] = choices[(choices.indexOf(picks[slot] ?? '') + 1) % choices.length]!;
+      session.setMasteryPicks(family, { eggMoves: picks });
+    };
+    unlock('bronze', 'first egg move', perk?.eggMoves[0] ? moveName(perk.eggMoves[0]) : 'none usable yet', usable.length > 1 ? cycleEgg(0) : undefined);
+    const choices = abilityChoices(content, p, family);
+    unlock('silver', 'Hidden Ability', perk?.abilitySlot !== null && perk?.abilitySlot !== undefined ? abilityName(perk.abilitySlot) : abilityName(-1));
+    unlock('gold', 'second egg move', perk?.eggMoves[1] ? moveName(perk.eggMoves[1]) : 'none usable yet', usable.length > 2 ? cycleEgg(1) : undefined);
+    unlock('gold', 'choose its ability', perk?.abilitySlot !== null && perk?.abilitySlot !== undefined ? abilityName(perk.abilitySlot) : '—', choices.length > 1 ? () => {
+      const at = choices.indexOf(perk?.abilitySlot ?? choices[0]!);
+      session.setMasteryPicks(family, { abilitySlot: choices[(at + 1) % choices.length]! });
+    } : undefined);
+    unlock('master', 'signature move starts awakened', 'its strongest move');
+    const inactive = options.filter((o) => !o.active);
+    if (inactive.length > 0) {
+      rows.push({
+        problem: null,
+        hint: `Found, not active yet: ${inactive.map((o) => moveName(o.id)).join(', ')}.`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, h / 2, `${inactive.length} egg move${inactive.length === 1 ? '' : 's'} found, not active yet`, textStyle(15, COLORS.textMuted)).setOrigin(0, 0.5));
+        },
+      });
+    }
+    this.closePicker();
+    this.openPicker({
+      title: `${content.species.get(family)!.name} family  ·  ${RANK_NAMES[rank]}`,
+      rows,
+      columns: 1,
+      rowHeight: 54,
+      onSelect: (i) => {
+        const act = rows[i]!.act;
+        if (!act) return;
+        act();
+        playSfx(this, 'ui.select', 0.5);
+        this.openMasteryFamily(family);
+      },
+      onBack: () => {
+        this.closePicker();
+        this.openMastery();
+      },
+    });
   }
 
   /** Every trainer's quest line; Enter shows its five steps. */
@@ -638,7 +805,7 @@ export class HubScene extends Phaser.Scene {
     const pools = [...content.starterPools.values()].filter((pool) => pool.category === category);
     const rows: PickerRow[] = pools.map((pool) => {
       const status = poolStatus(content, p, pool);
-      const species = eligibleSpecies(content, pool);
+      const species = eligibleSpecies(content, pool, masteredStarters(content, p));
       const problem = status === 'unlocked' ? null : poolProblem(content, p, pool);
       return {
         problem: null,

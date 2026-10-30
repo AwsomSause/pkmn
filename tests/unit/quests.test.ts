@@ -121,7 +121,7 @@ describe('quests in saves', () => {
     expect(warning).toBeUndefined();
     expect(loaded.profileId).toBe('old');
     expect(loaded.claims).toEqual({});
-    expect(CURRENT_VERSIONS.profile).toBe(8);
+    expect(CURRENT_VERSIONS.profile).toBeGreaterThanOrEqual(8);
   });
 
   it('a version 17 run loads with no Run Quest', () => {

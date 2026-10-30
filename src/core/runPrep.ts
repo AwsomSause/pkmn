@@ -8,6 +8,7 @@ import { getArchetype } from './archetypes';
 import { attributesLine, readAttributes } from './attributes';
 import type { Archetype, Content, DraftRule, License, PrepToken, Species, StarterPool, TypeName } from './contentSchema';
 import { requirementProgress } from './progress';
+import { masteredStarters } from './mastery';
 import type { Rng } from './rng';
 import { baseStatTotal, isNative, isWildEligible, wildEligibleSpecies } from './themes';
 import type { LoadoutPreset, Profile, RunPrep } from './state';
@@ -41,7 +42,9 @@ const eligibleCache = new WeakMap<StarterPool, string[]>();
  * its filter matches. A pool never offers a legendary, a Mega or a Pokémon too
  * strong for the wild.
  */
-export function eligibleSpecies(content: Content, pool: StarterPool): string[] {
+export function eligibleSpecies(content: Content, pool: StarterPool, mastered: readonly string[] = []): string[] {
+  // The "Mastered" set holds your Silver-ranked species, so it changes with the profile and isn't cached.
+  if (pool.mastered) return [...new Set(mastered.map((id) => firstStage(content, id)).filter((s): s is Species => !!s && isStarterEligible(content, s)).map((s) => s.id))];
   const cached = eligibleCache.get(pool);
   if (cached) return cached;
   const ids = new Set<string>();
@@ -77,6 +80,7 @@ export function eligibleSpecies(content: Content, pool: StarterPool): string[] {
 export type PoolStatus = 'unlocked' | 'buyable' | 'needsLicense' | 'locked' | 'comingLater';
 
 export function poolStatus(content: Content, profile: Profile, pool: StarterPool): PoolStatus {
+  if (pool.mastered) return eligibleSpecies(content, pool, masteredStarters(content, profile)).length < content.balance.starterChoices ? 'locked' : 'unlocked';
   if (eligibleSpecies(content, pool).length < content.balance.starterChoices) return 'comingLater';
   if (pool.unlockedByDefault || profile.unlockedPools.includes(pool.id)) return 'unlocked';
   if (pool.license && !profile.licenses.includes(pool.license)) return 'needsLicense';
@@ -245,11 +249,11 @@ export interface StarterDraft {
  * can't satisfy never rerolls forever: the draft fills the rest at random and
  * says so in `note`.
  */
-export function draftStarters(content: Content, rng: Rng, prep: RunPrep): StarterDraft {
+export function draftStarters(content: Content, rng: Rng, prep: RunPrep, mastered: readonly string[] = []): StarterDraft {
   const n = content.balance.starterChoices;
   const pool = content.starterPools.get(prep.poolId);
   if (!pool) throw new Error(`Unknown starter pool "${prep.poolId}"`);
-  const eligible = eligibleSpecies(content, pool);
+  const eligible = eligibleSpecies(content, pool, mastered);
   if (eligible.length < n) throw new Error(`Starter pool "${pool.id}" has ${eligible.length} eligible species but ${n} are needed`);
   const shuffled = rng.shuffle(eligible);
   const rule = content.draftRules.get(prep.draftRuleId) ?? standardRule(content);
@@ -284,10 +288,10 @@ export function draftStarters(content: Content, rng: Rng, prep: RunPrep): Starte
  * last slot with balance.signatureStarterChance. It runs on its own RNG
  * stream, so the draft itself rolls exactly as for any other trainer.
  */
-export function withSignatureStarter(content: Content, rng: Rng, archetype: Archetype, prep: RunPrep, choices: string[]): string[] {
+export function withSignatureStarter(content: Content, rng: Rng, archetype: Archetype, prep: RunPrep, choices: string[], mastered: readonly string[] = []): string[] {
   const pool = content.starterPools.get(prep.poolId);
   if (!pool || archetype.signatureSpecies.length === 0) return choices;
-  const eligible = new Set(eligibleSpecies(content, pool));
+  const eligible = new Set(eligibleSpecies(content, pool, mastered));
   const rule = content.draftRules.get(prep.draftRuleId);
   const focus = rule?.kind === 'typeFocus' ? prep.typeFocus : null;
   const candidates = [...new Set(archetype.signatureSpecies.map((id) => firstStage(content, id)?.id))].filter(

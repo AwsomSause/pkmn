@@ -4,6 +4,7 @@
 // decided by the battle engine; this file only tells their story).
 
 import type { Side } from '../battle/engine';
+import { applyMastery } from '../mastery';
 import type { Content } from '../contentSchema';
 import { CHAMPION_CLASS, ELITE_FOUR_CLASS, GYM_LEADER_CLASS } from '../encounters';
 import { maxHp } from '../pokemon';
@@ -536,6 +537,8 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       const caught = before.pending.some((d) => d.kind === 'caught' && d.mon.uid === mon.uid);
       const reunion = before.pending.find((d) => d.kind === 'reunion' && d.mon.uid === mon.uid);
       openHistory(content, run, mon.uid, mon.speciesId, starter ? 'starter' : caught ? 'caught' : 'gift');
+      // Species Mastery unlocks (egg moves, ability, an awakened move) for a Pokémon that just joined.
+      applyMastery(content, run, mon);
       if (starter) emit(content, run, 'starterChosen', { actors: [mon.uid], data: { speciesId: mon.speciesId }, text: 'Chosen as your starter' });
       else if (reunion?.kind === 'reunion') {
         advanceChains(content, run, 'reunion', mon.uid);
