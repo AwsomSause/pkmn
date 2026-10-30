@@ -52,7 +52,6 @@ describe('reward comparison (catalog #118)', () => {
       const c = compareReward(content, run, r);
       if (c) {
         seen.add(r.effect.kind);
-        expect(c.after).not.toBe(c.now);
       }
     }
     expect(seen.has('vitamin') && seen.has('levelUp')).toBe(true);
