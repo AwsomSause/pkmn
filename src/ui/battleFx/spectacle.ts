@@ -10,7 +10,8 @@
 // entirely when battle animations are off. It never touches battle state.
 
 import type Phaser from 'phaser';
-import type { MotionLevel } from '../aero';
+import { paintGlass, type MotionLevel } from '../aero';
+import { textStyle } from '../theme';
 
 export type IntroKind = 'wild' | 'wild-dark' | 'trainer' | 'rival' | 'boss';
 
@@ -191,4 +192,78 @@ export function hop(scene: Phaser.Scene, target: Phaser.GameObjects.GameObject, 
       },
     }),
   );
+}
+
+/** A glass plate with a title and a line under it, shared by the title card and the stamps. */
+function plate(scene: Phaser.Scene, x: number, y: number, w: number, h: number, title: string, sub: string, rim: number, titleSize: number): Phaser.GameObjects.Container {
+  const c = scene.add.container(x, y);
+  c.add(paintGlass(scene.add.graphics(), -w / 2, -h / 2, w, h, { rim, tint: 0x0b1f3a, radius: 24 }));
+  c.add(scene.add.text(0, sub ? -14 : 0, title, textStyle(titleSize, '#ffffff', { stroke: '#10203a', strokeThickness: 6 })).setOrigin(0.5));
+  if (sub) c.add(scene.add.text(0, 26, sub, textStyle(20, '#cfefff')).setOrigin(0.5));
+  return c;
+}
+
+/**
+ * A boss or rival title card: a glass banner that swoops in from the left,
+ * bounces, holds, then leaves to the right (any key skips).
+ */
+export function titleCard(scene: Phaser.Scene, title: string, sub: string, rim: number, motion: MotionLevel): Beat {
+  if (motion === 'off') return noBeat();
+  const W = scene.scale.width;
+  const card = plate(scene, W / 2, 150, 600, 96, title, sub, rim, 40).setDepth(950);
+  if (motion === 'reduced') {
+    card.setAlpha(0);
+    scene.tweens.add({ targets: card, alpha: 1, duration: 150, yoyo: true, hold: 900 });
+    return beat(scene, [card], 1250);
+  }
+  card.x = -W / 2;
+  scene.tweens.add({ targets: card, x: W / 2, duration: 420, ease: 'Back.easeOut' });
+  scene.tweens.add({ targets: card, x: W * 1.6, duration: 260, delay: 1500, ease: 'Cubic.easeIn' });
+  return beat(scene, [card], 1800);
+}
+
+/**
+ * A celebratory stamp ("VICTORY!", "BADGE GET!"): it slams down from large
+ * with a bounce, sparkles burst out, it holds and fades (any key skips).
+ */
+export function stamp(scene: Phaser.Scene, title: string, sub: string, rim: number, motion: MotionLevel): Beat {
+  if (motion === 'off') return noBeat();
+  const W = scene.scale.width;
+  const objs: Phaser.GameObjects.GameObject[] = [];
+  const card = plate(scene, W / 2, 190, 460, 110, title, sub, rim, 48).setDepth(960);
+  objs.push(card);
+  if (motion === 'reduced') {
+    card.setAlpha(0);
+    scene.tweens.add({ targets: card, alpha: 1, duration: 150, yoyo: true, hold: 900 });
+    return beat(scene, objs, 1250);
+  }
+  card.setScale(2.2).setAlpha(0);
+  scene.tweens.add({ targets: card, scale: 1, alpha: 1, duration: 380, ease: 'Bounce.easeOut' });
+  if (scene.textures.exists('pack.ebdx.tr.shine2')) {
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      const star = scene.add.image(W / 2, 190, 'pack.ebdx.tr.shine2').setScale(0.35).setDepth(961).setBlendMode('ADD').setTint(rim);
+      objs.push(star);
+      scene.tweens.add({ targets: star, x: W / 2 + Math.cos(a) * 300, y: 190 + Math.sin(a) * 130, scale: 0, duration: 700, delay: 260, ease: 'Cubic.easeOut' });
+    }
+  }
+  scene.tweens.add({ targets: card, alpha: 0, y: 160, duration: 220, delay: 1350 });
+  return beat(scene, objs, 1600);
+}
+
+/** Two glass shutters close over the screen when the battle ends. */
+export function exitWipe(scene: Phaser.Scene, motion: MotionLevel): Promise<void> {
+  if (motion === 'off') return Promise.resolve();
+  const W = scene.scale.width;
+  const H = scene.scale.height;
+  if (motion === 'reduced') {
+    const veil = scene.add.rectangle(0, 0, W, H, 0x000000, 0).setOrigin(0).setDepth(2000);
+    return new Promise((resolve) => scene.tweens.add({ targets: veil, alpha: 1, duration: 200, onComplete: () => resolve() }));
+  }
+  const top = paintGlass(scene.add.graphics(), 0, 0, W, H / 2 + 4, { radius: 0, glow: false, alpha: 1 }).setDepth(2000).setY(-H / 2);
+  const bottom = paintGlass(scene.add.graphics(), 0, H / 2 - 4, W, H / 2 + 4, { radius: 0, glow: false, alpha: 1 }).setDepth(2000).setY(H / 2);
+  return new Promise((resolve) => {
+    scene.tweens.add({ targets: top, y: 0, duration: 260, ease: 'Bounce.easeOut' });
+    scene.tweens.add({ targets: bottom, y: 0, duration: 260, ease: 'Bounce.easeOut', onComplete: () => scene.time.delayedCall(120, () => resolve()) });
+  });
 }

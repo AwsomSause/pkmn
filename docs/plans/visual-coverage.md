@@ -34,7 +34,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
 | Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
 | Held item / ability badges when supported | TODO | slice 5 (party/detail info panel, Enhanced Battle UI `info_*` art) |
-| Boss phase indicator | TODO | slice 4 |
+| Boss phase indicator | PART | raids/totems show phase in the header (other thread); visual banner: slice 6 with effect families |
 | Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
 | Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
 | Move flag icons (Enhanced Battle UI, 18) | PART | 9 shown (slice 3): every flag our move data has (contact, sound, bite, powder, pulse, punch, Z, Max) + high crit. Slicing, wind, dance, bomb, no-protect, thaw, electrocute, minimize, no-mirror: our data has no such flag yet |
@@ -45,7 +45,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Catch: throw arc, shakes, burst, success/fail cue | BUILT | M2 arc/shakes + DBK burst on success (slice 2) |
 | Shiny reveal sparkle (once) | BUILT | `shinySparkle` |
 | Battle intro transition (EBDX transitions) | BUILT | `battleFx/spectacle.ts`: wild streak + ball wipe (indoor streaks in dark arenas), VS screens for trainers / rivals (Evil) / bosses (Skull); skippable (slice 2) |
-| Exit transition / victory beat | PART | victory hop (slice 2); exit wipe: slice 4 |
+| Exit transition / victory beat | BUILT | hop (slice 2); glass-shutter exit wipe on every battle exit (slice 4) |
 | Animation profiles fast / standard / showcase | PART | battle speed normal/fast/quick exists (settings v3); showcase: slice 4 |
 | Reduced motion, reduced flash, shake option, skip | BUILT | battleAnimations + effectIntensity + skip |
 | Reduce particles option | PART | ambience off when animations off/reduced |
@@ -55,17 +55,17 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 ## V3 — signature moments (BR 4, VB 4.7–4.8, CR 6 gyms/E4/champion)
 | Item | Status | Where / note |
 |---|---|---|
-| Trainer reaction cue from real events | TODO | slice 4 (portrait + speech bubble) |
+| Trainer reaction cue from real events | TODO | slice 5: speech bubble for Battle Drama lines (Drama Engine thread owns the lines) |
 | Moment hierarchy: line → callout → bond/Hyper → signature/phase | PART | Hyper moments exist; slice 4 |
-| Boss intro title/role card + field transition + music | TODO | slice 4 |
-| Champion framing, ace indicator, unique motif | TODO | slice 4 |
-| Phase-change banner with written rule | TODO | slice 4 (needs boss phases in core; else documented gap) |
-| Ace entry beat | TODO | slice 4 |
-| Victory pose / particles / Chronicle stamp | PART | hop (slice 2); stamp + particles: slice 4 |
+| Boss intro title/role card + field transition + music | PART | Skull VS screen + title card "Gym Leader Brock · Rock specialist" (slice 4); boss music: needs tracks (Raid Battles pack BGM later) |
+| Champion framing, ace indicator, unique motif | PART | role rims (gym gold, Elite violet, champion pale gold) + ACE beat (slice 4); unique champion arena: slice 10 |
+| Phase-change banner with written rule | TODO | slice 6 (raid/totem phases now exist in core) |
+| Ace entry beat | BUILT | last Pokémon of a trainer team: burst + ACE! stamp (slice 4) |
+| Victory pose / particles / Chronicle stamp | BUILT | hop + VICTORY!/BADGE GET!/CHAMPION! stamps with sparkles (slice 4) |
 | Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
 | Evolution sequence | PART | burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
 | Rival callouts from real memory | PART | rival note line exists; bubble: slice 4 |
-| Gym leader intro and defeat sequence, gym motif | TODO | slice 4 |
+| Gym leader intro and defeat sequence, gym motif | PART | intro card, badge stamp (slice 4); per-gym motif = type ambience of the leader's type |
 
 ## Effect pipeline (BR 3, VB 4.4, VB 7, CR 5.3)
 | Item | Status | Where / note |

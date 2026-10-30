@@ -25,6 +25,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M10 visual slice 1 (Aero battle): glass message bar, databoxes and command window (`src/ui/aero.ts`), glossy type-tinted buttons (opt-in `glass` on `Menu`), Essentials type/category/status art, arena ambience from EBDX scenery (`battleFx/ambience.ts`), bouncy send-out + idle breathing. Respects battleAnimations (reduced = still, off = none). Provenance: `docs/quality/asset-provenance.md`. Hub/TrainerSelect untouched.
 - M10 visual slice 2: EBDX intro wipe (wild) and VS screens (trainer/rival/boss), skippable; ambience preset for all 18 types (+ second-type accents); DBK burst reveal for transformations, evolution and catches (replaces full-screen flashes); low-HP glow; victory hop. Tracker: `docs/plans/visual-coverage.md`.
 - M10 visual slice 3: move panel shows Enhanced Battle UI flag icons and an effectiveness tag with words (vs the foe's visible types); EBDX Mega/Dynamax symbol in databoxes.
+- M10 visual slice 4: boss/rival title cards, ACE! beat for a trainer's last Pokémon, VICTORY!/BADGE GET!/CHAMPION! stamps, glass-shutter exit wipe, foe databox rim by role.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 
@@ -40,7 +41,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
 - M9: Grand Region, final boss, ending, deploy.
-- M10 visuals (guide 9, Visual Bible V1–V5): next slices = boss/rival spectacle, effect families, then map/reward/shop/decision/run-end screens.
+- M10 visuals (guide 9, Visual Bible V1–V5): next slices = trainer speech bubbles, phase banners, effect families, then map/reward/shop/decision/run-end screens.
 
 ## Biggest known gaps
 - 87 move rows are unsupported on purpose: Z-Moves, Max Moves and G-Max Moves only run through the Z/Dynamax systems. Every other move and every ability works. Known limits: Hidden Power's type is a fixed roll per Pokémon (director decision D2: no IVs); Shields Down gives the status immunity but Minior has no separate Core form; Illusion changes the sprite and name on screen only. 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
