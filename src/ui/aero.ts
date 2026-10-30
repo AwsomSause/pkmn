@@ -150,3 +150,26 @@ export function statusIcon(scene: Phaser.Scene, x: number, y: number, status: st
   if (row === undefined || !ensureRowFrames(scene, 'pack.ebdx.status', 16)) return null;
   return scene.add.image(x, y, 'pack.ebdx.status', String(row)).setOrigin(0, 0).setScale(scale);
 }
+
+/** Enhanced Battle UI flag icon for each move flag (and a high critical-hit ratio). */
+export const FLAG_ICONS: Record<string, string> = {
+  contact: 'Contact', sound: 'Sound', bite: 'Biting', powder: 'Powder', pulse: 'Pulse', punch: 'Punching',
+  highCrit: 'HighCriticalHitRate', zmove: 'ZMove', max: 'DynamaxMove',
+};
+
+/** Words for a type-chart multiplier, so the hint never relies on colour alone. */
+export function effectivenessWord(multiplier: number): { frame: number; text: string } {
+  if (multiplier === 0) return { frame: 1, text: 'No effect' };
+  if (multiplier < 1) return { frame: 2, text: 'Not very effective' };
+  if (multiplier > 1) return { frame: 3, text: 'Super effective' };
+  return { frame: 4, text: 'Normal damage' };
+}
+
+/** One of the five effectiveness tags (64×76 art pixels each), or null if the art is missing. */
+export function effectivenessIcon(scene: Phaser.Scene, x: number, y: number, frame: number, scale = 0.45): Phaser.GameObjects.Image | null {
+  const key = 'pack.ebui.effectiveness';
+  if (!scene.textures.exists(key)) return null;
+  const texture = scene.textures.get(key);
+  if (!texture.has('e0')) for (let i = 0; i < 5; i++) texture.add(`e${i}`, 0, i * 64, 0, 64, 76);
+  return scene.add.image(x, y, key, `e${frame}`).setOrigin(0, 0.5).setScale(scale);
+}

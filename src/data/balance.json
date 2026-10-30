@@ -128,6 +128,8 @@
  "dualTypeWeight": 3,
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
+ "legendaryWildChance": 0.02,
+ "legendaryMinRegion": 1,
  "evolution": {
   "trainerItemLevel": 30,
   "trainerBabyLevel": 15
@@ -246,6 +248,20 @@
   "evilMoney": 1.0,
   "luckEpicWeight": 1.5,
   "luckDraftVariety": 1.0
+ },
+ "events": {
+  "perStage": [3, 5],
+  "hiddenShare": 0.34,
+  "rarityWeights": { "common": 60, "uncommon": 25, "rare": 12, "epic": 3 },
+  "themeWeight": 2,
+  "checkBase": 40,
+  "checkMin": 5,
+  "checkMax": 95,
+  "revealIntelligence": 50,
+  "soldGift": 500,
+  "restPerStage": 2,
+  "trainerMoneyPerLevel": 24,
+  "explorerItems": ["potion", "super-potion", "poke-ball", "great-ball", "full-heal"]
  },
  "attributeGrowth": [
   {

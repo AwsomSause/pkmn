@@ -176,15 +176,28 @@ Known limits: a frame that shows two copies of the same Pokémon shows one; colo
 Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's answers at its end override the text above them).
 - [x] Slice 1: Starter Laboratory sets by category: 9 regions (+ All of Kanto), 18 types, 4 roles, 9 player-trainer sets, 10 villainous teams, 9 Pokémon Leagues (Elite Four + champions), 7 spin-off games. Mixed unlocks: Research Points, achievements, or earned-only (type sets: 2 boss wins with that type leading).
 - [x] Slice 2: trainer identity: signature types, species and set for all 9 trainers; signature Pokémon in the starter draw; Cynthia, Oak and N passives.
-- [ ] "?" event stops + every run event + event items (item slice 4b); trainer quests + claim ledger; species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+- [x] Slice 3: "?" event stops: 170 events (every event and map stop in Kice's plan, one per type, rest spots, 30 key-item/ticket events, Lost Property and other key sources). Choices can need money, items, party types, attributes or a trainer tag (N won't make aggressive choices); attribute checks; battles with prizes; Pokémon joining; gym scouting. Event items (slice 4b): Silph Scope, Inquiry Mail, Bridge Mail V, Explorer Kit, Prop Case, Tidal Bell, Clear Bell and all keys/tickets. Animated scene (bouncy cards, cast, ambient effects; calm when animations are reduced). Tests: `tests/unit/events.test.ts`, `tests/e2e/events.spec.ts`.
+- [ ] Doubled events (PokeRogue-style), trainer quests + claim ledger; species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+
+### Known limits in slice 3
+- Scanner (trade at a shop) still needs the shop; Room 6's event trades it on the spot for an Epic item instead.
+- Event trainers without a trainer class use the event's first cast member as their sprite and pay ₽24 per level (`balance.events.trainerMoneyPerLevel`).
+- Each event appears at most once per run, except rest spots; key-item events need the key at the start of a stage.
 
 ### Known limits in slice 2
-- N's "aggressive event choices unavailable" waits for the event stops (tag `pacifist`). Oak previews every wild stop rather than one per stage (information only, no roll).
+- N's aggressive event choices are locked by the `pacifist` tag. Oak previews every wild stop rather than one per stage (information only, no roll).
 
 ### Known limits in slice 1
 - Regional forms still count as ordinary first stages (as in the wild); the special-form rule is Untitled-doc Phase D.
 - The Preparation Desk cycles through every unlocked set one by one; no category step there yet.
 - No challenge sets with reward multipliers yet (needs a payout rule), and no Mastered set (comes with species mastery).
+
+## Trainers.md perks (director request, 2026-10-30; in progress)
+
+Every trainer in Trainers.md becomes a playable trainer with all its pros and cons, 20 per PR. List: `docs/plans/trainers-coverage.md`.
+- [x] Batch 1 (Aaron to Bianca, 20 trainers) and the shared perk system (`core/trainerPerks.ts`).
+- [ ] Batches 2–11 (the other 200 trainers), then the signature mechanics (Rival's Answer, Distortion Protocol, Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy).
+- Known limits: "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
 
 ## Milestone 10 — Visuals and presentation (planned)
 

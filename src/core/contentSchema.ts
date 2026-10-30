@@ -6,6 +6,7 @@ import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
+import type { ExpeditionFile } from './expedition/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -461,6 +462,7 @@ export const METER_ATTRIBUTES = ['ragePeace', 'goodEvil'] as const;
 export const ATTRIBUTE_KEYS = [...PLAIN_ATTRIBUTES, ...METER_ATTRIBUTES] as const;
 export const AttributeKeySchema = z.enum(ATTRIBUTE_KEYS);
 export type AttributeKey = z.infer<typeof AttributeKeySchema>;
+export const PlainAttributeSchema = z.enum(PLAIN_ATTRIBUTES);
 
 // ---------- permanent progression (GAME_DESIGN.md §14) ----------
 
@@ -485,6 +487,7 @@ export const BASE_COUNTER_NAMES = [
   'encountersCompleted',
   'moneySpent',
   'healStopsUsed',
+  'eventsCompleted',
   /** Caught Pokémon added to the party (or swapped in), and caught Pokémon turned into candies. */
   'caughtKept',
   'caughtToCandies',
@@ -553,8 +556,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('captureMultiplier'), value: z.number().positive() }),
   /** HP restored by healing items (Potion, Super Potion...). */
   z.object({ kind: z.literal('healingMultiplier'), value: z.number().positive() }),
-  /** Shop price of the listed items. */
-  z.object({ kind: z.literal('priceMultiplier'), items: z.array(z.string()).min(1), value: z.number().positive() }),
+  /** Shop price of the listed items, or of a whole group (Poké Balls, everything else, everything). */
+  z.object({ kind: z.literal('priceMultiplier'), items: z.array(z.string()).min(1).optional(), group: z.enum(['balls', 'otherItems', 'all']).optional(), value: z.number().positive() }),
   /** Shop stock unlocks this many badges sooner (positive) or later (negative). */
   z.object({ kind: z.literal('shopUnlockOffset'), value: z.number().int() }),
   /** Damage dealt by your Pokémon of this type. */
@@ -567,6 +570,62 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('researchMultiplier'), value: z.number().positive() }),
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
+  /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), value: z.number().positive() }),
+  /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
+  z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
+  /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
+  z.object({ kind: z.literal('statMultiplier'), stat: z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Experience for a group of Pokémon: of a type, not of a type, fast (base Speed 90+) or slow (base Speed 60-), or the starter. */
+  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), value: z.number().positive() }),
+  /** Experience from ordinary (non-boss) battles only. */
+  z.object({ kind: z.literal('ordinaryXpMultiplier'), value: z.number().positive() }),
+  /** A Mega Evolved Pokémon with at least this much friendship stays Mega after the battle (Alain). */
+  z.object({ kind: z.literal('permanentMega'), minFriendship: z.number().int().min(0) }),
+  /** At most this many Pokémon in the party can be in a permanent Mega form. */
+  z.object({ kind: z.literal('megaPartyLimit'), max: z.number().int().min(0) }),
+  /** Damage multiplier for non-Mega Pokémon while a Mega Pokémon is in the party. */
+  z.object({ kind: z.literal('nonMegaDamageMultiplier'), value: z.number().positive() }),
+  /** Your starter knows its species' strongest same-type move from the start (Ash). */
+  z.object({ kind: z.literal('starterSignatureMove') }),
+  /** Friendship-based bonuses (Return, friendship Hyper moments) are switched off. */
+  z.object({ kind: z.literal('friendshipBonusesDisabled') }),
+  /** Your Pokémon below this share of their HP (0-1) deal more damage. */
+  z.object({ kind: z.literal('lowHpDamageMultiplier'), below: z.number().positive().max(1), value: z.number().positive() }),
+  /** Damage dealt to gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossDamageMultiplier'), value: z.number().positive() }),
+  /** Damage taken from gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Damage dealt to foes of a higher or lower level than your attacker. */
+  z.object({ kind: z.literal('levelGapDamageMultiplier'), foe: z.enum(['higher', 'lower']), value: z.number().positive() }),
+  /** Chance (0-1) that a fatal hit leaves your Pokémon (of `type`) at 1 HP, once per Pokémon per battle. */
+  z.object({ kind: z.literal('survivalChance'), type: TypeNameSchema.optional(), chance: z.number().positive().max(1) }),
+  /** How long statuses your Pokémon inflict last (sleep, confusion). */
+  z.object({ kind: z.literal('statusDurationMultiplier'), value: z.number().positive() }),
+  /** Extra turns of sleep or confusion on foes you inflict it on. */
+  z.object({ kind: z.literal('statusDurationBonus'), turns: z.number().int().positive() }),
+  /** Chance of your Pokémon's (of `type`) moves inflicting a status. */
+  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Extra turns of weather your side sets up. */
+  z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
+  /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
+  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: z.enum(['rain', 'sun']), side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Multiplier on how often a group of wild Pokémon is offered. */
+  z.object({ kind: z.literal('encounterWeightMultiplier'), group: z.enum(['legendary', 'rare']), value: z.number().positive() }),
+  /** Chance of your Hyper moments. */
+  z.object({ kind: z.literal('hyperChanceMultiplier'), value: z.number().positive() }),
+  /** Pokémon evolve this many levels later (positive) or sooner. */
+  z.object({ kind: z.literal('evolutionLevelOffset'), value: z.number().int() }),
+  /** Your starting Pokémon begin the run this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('startingLevelOffset'), value: z.number().int() }),
+  /** At the start of each region after the first, every party Pokémon changes by this many levels. */
+  z.object({ kind: z.literal('regionLevelOffset'), value: z.number().int() }),
+  /** Rivals are this many levels above you. */
+  z.object({ kind: z.literal('rivalLevelOffset'), value: z.number().int() }),
+  /** Start the run with this much of a run attribute (e.g. Luck). */
+  z.object({ kind: z.literal('startingAttribute'), key: z.string(), value: z.number().int() }),
+  /** At most this many Pokémon can be released per run. */
+  z.object({ kind: z.literal('releaseLimit'), value: z.number().int().min(0) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -989,7 +1048,19 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   /** Each stage gets a fishing spot; fishing shows `choices` Pokémon to pick from, the last one stronger with `rare` (Rods). */
   z.object({ perk: z.literal('fishing'), choices: z.number().int().min(1).max(3), rare: z.boolean() }),
   /** An extra stop beside a node: somewhere on the stage when it starts (Wave, Tropic and Harbor Mail), or at the next node the player moves to (Bridge Mail). */
-  z.object({ perk: z.literal('extraStop'), kind: z.enum(['heal', 'shop', 'fish']), where: z.enum(['stage', 'nextNode']) }),
+  z.object({ perk: z.literal('extraStop'), kind: z.enum(['heal', 'shop', 'fish', 'event']), where: z.enum(['stage', 'nextNode']) }),
+  /** Every hidden "?" stop shows what it is (Silph Scope). */
+  z.object({ perk: z.literal('revealEvents') }),
+  /** The next event shows each choice's odds and outcome before you choose (Inquiry Mail). */
+  z.object({ perk: z.literal('eventInsight') }),
+  /** Key items and tickets: holding one opens its event stop (events.json `keyItem`). */
+  z.object({ perk: z.literal('eventKey') }),
+  /** Tidal Bell, Clear Bell: this legendary is chosen whenever an event could offer it. */
+  z.object({ perk: z.literal('favorSpecies'), species: z.string() }),
+  /** Prop Case: Contest stops give double Charisma. */
+  z.object({ perk: z.literal('doubleContest') }),
+  /** Explorer Kit: every finished event stop gives one more item. */
+  z.object({ perk: z.literal('eventBonus') }),
   /** The next trainer's reward draft uses the gym leader's odds (Bridge Mail S). */
   z.object({ perk: z.literal('betterDraft') }),
   // ---------- draft items (slice 3b-3b) ----------
@@ -1293,6 +1364,9 @@ export const TrainerAiSchema = z.object({
   switchRatio: z.number().positive().max(1),
 });
 
+export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
+export type EventRarity = (typeof EVENT_RARITIES)[number];
+
 export const BalanceSchema = z.object({
   trainerAi: TrainerAiSchema,
   partyMax: z.number().int().positive(),
@@ -1429,6 +1503,28 @@ export const BalanceSchema = z.object({
    * How permanent attributes grow (D10): every `per` of a lifetime counter (or of
    * distinct species) adds `amount`. Negative amounts move a meter toward its other end.
    */
+  /** Map events ("?" stops): how many per stage, how many hidden, and how checks and rarities work. */
+  events: z.object({
+    perStage: z.tuple([z.number().int().min(0), z.number().int().min(0)]),
+    hiddenShare: z.number().min(0).max(1),
+    rarityWeights: z.record(z.enum(EVENT_RARITIES), z.number().min(0)),
+    /** Events of the stage's theme types are this many times as likely. */
+    themeWeight: z.number().min(1),
+    /** Check chance: base% + 1% per attribute point, between min% and max%. */
+    checkBase: z.number(),
+    checkMin: z.number(),
+    checkMax: z.number(),
+    /** Intelligence at or above this reveals one hidden stop per stage. */
+    revealIntelligence: z.number().int(),
+    /** Money for an event gift nobody can take (a held item with no free holder, or one you hold the most of). */
+    soldGift: z.number().int().min(0),
+    /** Rest spots (stop "rest") placed on every stage. */
+    restPerStage: z.number().int().min(0),
+    /** Prize money per level of the top Pokémon for an event's trainer (one with no trainer class). */
+    trainerMoneyPerLevel: z.number().int().min(0),
+    /** Items the Explorer Kit can turn up. */
+    explorerItems: z.array(z.string()).min(1),
+  }),
   attributeGrowth: z.array(
     z.object({
       attribute: AttributeKeySchema,
@@ -1481,6 +1577,10 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
+  legendaryWildChance: z.number().min(0).max(1),
+  /** The first region index (0 = first) where such encounters can appear. */
+  legendaryMinRegion: z.number().int().min(0),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
@@ -1578,6 +1678,135 @@ export const MaxMoveDataSchema = z.object({
 });
 export type MaxMoveData = z.infer<typeof MaxMoveDataSchema>;
 
+// ---------- map events ("?" stops; plans/events-and-map-stops-plan) ----------
+
+/** The one signature animation each event scene plays. */
+export const EVENT_EFFECTS = ['none', 'rattle', 'spin', 'flicker', 'glint', 'shake', 'float', 'net', 'rain', 'sparkle', 'fog', 'fire', 'snow', 'hearts'] as const;
+
+/** Something an event or one of its choices needs; a locked choice stays visible with its requirement. */
+export const EventConditionSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('money'), atLeast: z.number().int().positive() }),
+  z.object({ kind: z.literal('partySize'), atLeast: z.number().int().min(1).max(6) }),
+  z.object({ kind: z.literal('attribute'), key: AttributeKeySchema, atLeast: z.number().int() }),
+  /** A meter leaning one way: Rage (positive ragePeace) / Peace (negative), Good (positive goodEvil) / Evil (negative). */
+  z.object({ kind: z.literal('meter'), key: z.enum(['ragePeace', 'goodEvil']), side: z.enum(['positive', 'negative']), atLeast: z.number().int().min(0) }),
+  z.object({ kind: z.literal('item'), id: z.string() }),
+  z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
+  /** The trainer must not carry this tag (N is "pacifist": no aggressive choices). */
+  z.object({ kind: z.literal('noTrainerTag'), tag: z.string() }),
+]);
+export type EventCondition = z.infer<typeof EventConditionSchema>;
+
+/** One thing an outcome does. `share` is a fraction of max HP. */
+export const EventEffectSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('money'), amount: z.number().int() }),
+  z.object({ kind: z.literal('item'), id: z.string(), count: z.number().int().positive().default(1) }),
+  /** One of these items, picked by the event's roll. */
+  z.object({ kind: z.literal('itemFrom'), ids: z.array(z.string()).min(1), count: z.number().int().positive().default(1) }),
+  /** A random item from the Bag is lost (never a key item). */
+  z.object({ kind: z.literal('loseItem'), id: z.string().optional() }),
+  /** A healing spot, shop or fishing spot opens beside this node. */
+  z.object({ kind: z.literal('addStop'), stop: z.enum(['heal', 'shop', 'fish']) }),
+  /** A ferry: jump to a node next to the gym (SS Ticket). */
+  z.object({ kind: z.literal('skipAhead') }),
+  z.object({ kind: z.literal('heal'), share: z.number().min(0).max(1) }),
+  z.object({ kind: z.literal('damage'), share: z.number().min(0).max(1) }),
+  z.object({ kind: z.literal('cure') }),
+  z.object({ kind: z.literal('status'), status: z.enum(['poison', 'burn', 'paralysis', 'sleep']) }),
+  z.object({ kind: z.literal('friendship'), amount: z.number().int(), who: z.enum(['lead', 'party']).default('party') }),
+  z.object({ kind: z.literal('attribute'), key: AttributeKeySchema, amount: z.number().int() }),
+  /** Research Points, paid at the end of the run. */
+  z.object({ kind: z.literal('research'), amount: z.number().int().positive() }),
+  z.object({ kind: z.literal('levels'), amount: z.number().int().positive(), who: z.enum(['lead', 'party']).default('lead') }),
+  /** A Pokémon joins (or goes to storage when the party is full): a listed species, or one of the types, or the stage's theme. */
+  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1) }),
+  /** The next reward draft uses the gym leader's odds and offers `extra` more choices. */
+  z.object({ kind: z.literal('betterDraft'), extra: z.number().int().min(0).default(0) }),
+  /** The map shows this stage's gym leader's whole team. */
+  z.object({ kind: z.literal('gymPreview') }),
+  /** Every hidden "?" stop on this stage shows what it is. */
+  z.object({ kind: z.literal('revealStops') }),
+]);
+export type EventEffect = z.infer<typeof EventEffectSchema>;
+
+/** A battle an outcome starts; `win` effects apply only if you win it. Wild Pokémon can be caught. */
+export const EventBattleSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('wild'),
+    species: z.array(z.string()).default([]),
+    types: z.array(TypeNameSchema).default([]),
+    levelBonus: z.number().int().default(0),
+    shinyMultiplier: z.number().min(1).default(1),
+    win: z.array(EventEffectSchema).default([]),
+  }),
+  z.object({
+    kind: z.literal('trainer'),
+    /** A trainer class from trainers.json, or a boss id (its signature team). */
+    classId: z.string().optional(),
+    bossId: z.string().optional(),
+    name: z.string(),
+    size: z.number().int().min(1).max(6).default(2),
+    types: z.array(TypeNameSchema).default([]),
+    levelBonus: z.number().int().default(0),
+    win: z.array(EventEffectSchema).default([]),
+  }),
+]);
+export type EventBattle = z.infer<typeof EventBattleSchema>;
+
+export const EventOutcomeSchema = z.object({
+  text: z.string(),
+  effects: z.array(EventEffectSchema).default([]),
+  battle: EventBattleSchema.optional(),
+});
+export type EventOutcome = z.infer<typeof EventOutcomeSchema>;
+
+export const EventChoiceSchema = z.object({
+  label: z.string().min(1),
+  requires: z.array(EventConditionSchema).default([]),
+  /** An attribute check: success chance = base% + 1% per point, clamped (balance.events). */
+  check: PlainAttributeSchema.optional(),
+  /** A plain chance of success (0–1), for luck rolls without an attribute. */
+  chance: z.number().min(0).max(1).optional(),
+  success: EventOutcomeSchema,
+  /** What happens when the check or chance fails (needed when there is one). */
+  failure: EventOutcomeSchema.optional(),
+});
+export type EventChoice = z.infer<typeof EventChoiceSchema>;
+
+export const EventSceneSchema = z.object({
+  /** Asset ids of the people in the scene ("trainer.hiker", "boss.giovanni"). */
+  cast: z.array(z.string()).max(3).default([]),
+  /** A Pokémon shown in the scene. */
+  pokemon: z.string().optional(),
+  /** Backdrop tint as "#rrggbb". */
+  tint: z.string().regex(/^#[0-9a-f]{6}$/i).optional(),
+  effect: z.enum(EVENT_EFFECTS).default('none'),
+});
+
+export const EventDefSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  /** Catalog group, e.g. "Merchants and deals". */
+  group: z.string(),
+  /** The map stop it shows as (each has its own icon): event, merchant, shrine, treasure... */
+  stop: z.string().default('event'),
+  rarity: z.enum(EVENT_RARITIES).default('common'),
+  /** Stages themed with these types see it more often. */
+  types: z.array(TypeNameSchema).default([]),
+  /** Not before this stage of the run (1 = the first). */
+  minStage: z.number().int().min(1).default(1),
+  /** It only appears when these hold (e.g. an item it needs). */
+  requires: z.array(EventConditionSchema).default([]),
+  /** Only appears when the player holds this key item; it is used up. */
+  keyItem: z.string().optional(),
+  scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
+  intro: z.string(),
+  choices: z.array(EventChoiceSchema).min(1).max(4),
+}).refine((e) => e.choices.every((c) => (c.check === undefined && c.chance === undefined) || c.failure), { message: 'a choice with a check or chance needs a failure outcome' });
+export type EventDef = z.infer<typeof EventDefSchema>;
+
+export const EventsFileSchema = z.object({ events: z.array(EventDefSchema).min(1) });
+
 export interface Content {
   species: Map<string, Species>;
   moves: Map<string, Move>;
@@ -1609,8 +1838,12 @@ export interface Content {
   story: StoryConfig;
   /** Raid bosses and den placement (raids.json, core/raid). */
   raids: RaidFile;
+  /** Map events (events.json, core/events.ts). */
+  events: Map<string, EventDef>;
   /** Totem Pokémon (totems.json, core/totem). */
   totems: TotemFile;
+  /** Mega-Expeditions (expeditions.json, core/expedition). */
+  expeditions: ExpeditionFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

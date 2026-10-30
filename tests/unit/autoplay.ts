@@ -27,6 +27,8 @@ export interface AutoplayOptions {
 /** Picks the next action for `run` and plays it. */
 export function step(content: Content, run: RunState): { run: RunState; turn: TurnResult | null } {
   switch (run.phase) {
+    case 'expedition':
+      throw new Error('Autoplay does not enter expeditions');
     case 'starter':
       return { run: chooseStarter(content, run, 0), turn: null };
     case 'map':
@@ -55,6 +57,7 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
     case 'decision': {
       const d = run.pending[0]!;
       if (d.kind === 'learnMove') return { run: resolveDecision(content, run, { kind: 'forgetMove', moveIndex: 0 }).run, turn: null };
+      if (d.kind === 'mentorship') return { run: resolveDecision(content, run, { kind: 'mentor', accept: false }).run, turn: null };
       if (d.kind !== 'caught') return { run: resolveDecision(content, run, { kind: 'skipMove' }).run, turn: null };
       const choice = run.party.length < content.balance.partyMax ? { kind: 'addToParty' as const } : { kind: 'release' as const };
       return { run: resolveDecision(content, run, choice).run, turn: null };

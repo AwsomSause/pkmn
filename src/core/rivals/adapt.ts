@@ -3,6 +3,7 @@
 // It remembers its team, comes back stronger, and swaps ONE member for a Pokémon from the
 // planned team that resists the type of attack you use most; the player is told which.
 
+import { rivalLevelOffset } from '../trainerPerks';
 import { typeEffectiveness } from '../battle/damage';
 import type { Content, TypeName } from '../contentSchema';
 import type { TrainerPlan } from '../encounters';
@@ -73,7 +74,7 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
   };
   const mods = rivalMods(rival);
   // Personality: vindictive rivals return stronger. Style: how sharp its move choice is.
-  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) }), ai: Math.max(plan.ai, mods.ai) };
+  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) + rivalLevelOffset(content.archetypes.get(run.archetypeId)?.modifiers) }), ai: Math.max(plan.ai, mods.ai) };
   const type = mostUsedType(content, run);
   const seen = bondNote(rival);
   if (!type || !mods.canAdapt || rival.adaptations.length >= mods.adaptCap) return { plan: revised, note: seen };

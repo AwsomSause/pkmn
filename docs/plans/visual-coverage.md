@@ -33,12 +33,12 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Layer 3 sprites: idle breathing, entry | BUILT | slice 1 |
 | Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
 | Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
-| Held item / ability badges when supported | TODO | slice 3 (Enhanced Battle UI info panel) |
+| Held item / ability badges when supported | TODO | slice 5 (party/detail info panel, Enhanced Battle UI `info_*` art) |
 | Boss phase indicator | TODO | slice 4 |
 | Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
 | Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
-| Move flag icons (Enhanced Battle UI, 18) | TODO | slice 3 |
-| Effectiveness hint on moves (from what the player can see) | TODO | slice 3 |
+| Move flag icons (Enhanced Battle UI, 18) | PART | 9 shown (slice 3): every flag our move data has (contact, sound, bite, powder, pulse, punch, Z, Max) + high crit. Slicing, wind, dance, bomb, no-protect, thaw, electrocute, minimize, no-mirror: our data has no such flag yet |
+| Effectiveness hint on moves (from what the player can see) | BUILT | EBUI tag + words vs the foe's visible (or Tera) types (slice 3); abilities like Levitate aren't counted |
 | Layer 7 cinematic accents (portrait, banner, reveal, stamp) | PART | Hyper moment banner exists; slice 4 |
 | HP drains smoothly; damage number; crit emphasis | BUILT | M9 |
 | Low-HP subtle danger pulse on panel | BUILT | slice 2 (`dangerGlow`, ≤25 % HP) |
@@ -62,7 +62,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Phase-change banner with written rule | TODO | slice 4 (needs boss phases in core; else documented gap) |
 | Ace entry beat | TODO | slice 4 |
 | Victory pose / particles / Chronicle stamp | PART | hop (slice 2); stamp + particles: slice 4 |
-| Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); Mega/Primal orb icons: slice 3 |
+| Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
 | Evolution sequence | PART | burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
 | Rival callouts from real memory | PART | rival note line exists; bubble: slice 4 |
 | Gym leader intro and defeat sequence, gym motif | TODO | slice 4 |

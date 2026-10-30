@@ -70,7 +70,19 @@ describe('story foundation: random streams', () => {
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.
   // Love 0 only, and not STORY3: on main, Love's old endure was rolled on the battle stream once Love grew
   // above 0 (STORY3 reaches Love 3), and that roll is gone now that Toughened It Out rolls on the hyper stream.
-  const noHyper = buildContent({ ...structuredClone(RAW_CONTENT), story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] } });
+  // Map events' items (keys, tickets, Silph Scope…) joined the reward draft later, so they and the events
+  // that mention them are left out too.
+  const EVENT_PERKS = ['eventKey', 'revealEvents', 'eventInsight', 'eventBonus', 'doubleContest', 'favorSpecies'];
+  type RawEntry = { id: string; effect?: { kind: string; perks?: { perk: string; kind?: string }[] } };
+  const eventItem = (e: RawEntry) => e.effect?.kind === 'perk' && (e.effect.perks ?? []).some((p) => EVENT_PERKS.includes(p.perk) || (p.perk === 'extraStop' && p.kind === 'event'));
+  const catalog = RAW_CONTENT.itemCatalog as RawEntry[];
+  const eventItemIds = catalog.filter(eventItem).map((e) => `"${e.id}"`);
+  const noHyper = buildContent({
+    ...structuredClone(RAW_CONTENT),
+    story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
+    itemCatalog: catalog.filter((e) => !eventItem(e)),
+    events: { events: (RAW_CONTENT.events as { events: unknown[] }).events.filter((e) => !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
+  });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {
       const [seed, love] = key.split('/');

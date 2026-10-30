@@ -99,3 +99,41 @@ describe('Overdrive chains', () => {
     for (const c of content.story.chains) for (const s of c.steps) expect(ids.has(s) || milestones.has(s), `${c.id}:${s}`).toBe(true);
   });
 });
+
+describe('unusual events with no choice', () => {
+  const first = (seed: string, edit: (run: ReturnType<typeof setup>['run']) => void) => {
+    const { run } = setup(seed);
+    run.battle!.turn = 1;
+    edit(run);
+    const rngBefore = structuredClone(run.rng);
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(run.rng.battle).toEqual(rngBefore.battle);
+    return titles(cues);
+  };
+
+  it('shiny wild Pokémon are usually hinted, deterministically from the seed', () => {
+    let hinted = 0;
+    for (let n = 0; n < 20; n++) {
+      const a = first(`diff-${n}`, (run) => {
+        run.battle!.kind = 'wild';
+        run.battle!.enemyTeam[0]!.shiny = true;
+      });
+      const b = first(`diff-${n}`, (run) => {
+        run.battle!.kind = 'wild';
+        run.battle!.enemyTeam[0]!.shiny = true;
+      });
+      expect(a).toEqual(b);
+      if (a.includes('Something About It Is Different…')) hinted++;
+    }
+    expect(hinted).toBeGreaterThan(8);
+    expect(hinted).toBeLessThan(20);
+  });
+
+  it('a waiting rival is shown at a boss battle', () => {
+    const t = first('waiting', (run) => {
+      run.battle!.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
+      run.story.rivals.push({ state: 'contender' } as never);
+    });
+    expect(t).toContain("They've Been Waiting for This Battle…");
+  });
+});

@@ -25,6 +25,7 @@ import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openH
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import { emotionOf } from './emotions';
 import { advanceChains } from './chains';
+import { graduateMentorships } from './mentorship';
 import { clearMomentFlags, detectMoments } from './moments';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
@@ -204,7 +205,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         emit(content, run, 'knockout', {
           where,
           actors: by ? [e.uid, by] : [e.uid],
-          data: { side: e.side, moveId: move, speciesId: mon(e.uid)?.speciesId ?? null },
+          data: { side: e.side, moveId: move, speciesId: mon(e.uid)?.speciesId ?? null, bySpeciesId: mon(by)?.speciesId ?? null },
           text: e.side === 'player' ? `Fainted to ${speciesOf(by)}` : avenged ? `Avenged a fallen teammate by knocking out ${speciesOf(e.uid)}` : `Knocked out ${speciesOf(e.uid)}`,
           importance: avenged ? content.story.importance.closeCall : undefined,
           emotions: avenged ? ['justice'] : undefined,
@@ -555,6 +556,7 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       });
       // Determination Evolution: the evolution rules are unchanged; an exceptional story (a boss beaten
       // after surviving a fatal hit) only earns it a named memory and its own record.
+      graduateMentorships(content, run, mon.uid);
       const h = run.story.histories[mon.uid];
       const beyond = content.story.definitions.find((d) => d.id === 'evolved-beyond');
       if (h && beyond && h.bossesBeaten >= 3 && !h.hyper[beyond.id]) {

@@ -7,6 +7,8 @@ import { createPokemon, getSpecies, maxHp } from './pokemon';
 import type { Rng } from './rng';
 import type { LevelBreakdown, PokemonInstance } from './state';
 import { getBoss, levelCap, type BossRole } from './regions';
+import { isUsableMove } from './pokemon';
+import { isLegendaryLike } from './trainerPerks';
 import { pickThemeSpecies, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
@@ -237,4 +239,20 @@ export function rollShiny(content: Content, rng: Rng, multiplier = 1): boolean {
 export function candiesForRelease(content: Content, level: number): number {
   const c = content.balance.candies;
   return c.perRelease + Math.floor(level / c.perLevels);
+}
+
+/**
+ * A Legendary, Mythical or Ultra Beast for a wild encounter, or null. The chance comes from
+ * balance.json times the trainer's perk; the roll uses a generator of its own so the
+ * encounter stream (and every later battle) is unchanged.
+ */
+export function rollLegendaryWild(content: Content, rng: Rng, regionIndex: number, perkMultiplier: number): string | null {
+  const cfg = content.balance;
+  if (regionIndex < cfg.legendaryMinRegion) return null;
+  const chance = Math.min(1, cfg.legendaryWildChance * perkMultiplier);
+  if (!rng.chance(chance)) return null;
+  const pool = [...content.species.values()]
+    .filter((s) => isLegendaryLike(s) && (!s.form || s.form.kind === 'regional' || s.form.kind === 'alternate') && s.learnset.some((e) => isUsableMove(content, e.move)))
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return pool.length === 0 ? null : pool[rng.int(0, pool.length - 1)]!.id;
 }

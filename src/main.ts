@@ -8,6 +8,7 @@ import { LocalStorageProvider, MemoryStorageProvider, type StorageProvider } fro
 import { BattleScene } from './scenes/BattleScene';
 import { BootScene } from './scenes/BootScene';
 import { BriefingScene } from './scenes/BriefingScene';
+import { ExpeditionScene } from './scenes/ExpeditionScene';
 import { DecisionScene } from './scenes/DecisionScene';
 import { GameOverScene } from './scenes/GameOverScene';
 import { HubScene } from './scenes/HubScene';
@@ -16,6 +17,7 @@ import { MapScene } from './scenes/MapScene';
 import { RewardScene } from './scenes/RewardScene';
 import { RunPrepScene } from './scenes/RunPrepScene';
 import { ShopScene } from './scenes/ShopScene';
+import { EventScene } from './scenes/EventScene';
 import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
 import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
@@ -66,7 +68,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, BattleScene, DecisionScene, RewardScene, GameOverScene],
+    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, GameOverScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {

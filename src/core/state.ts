@@ -56,6 +56,8 @@ export const PokemonInstanceSchema = z.object({
   held: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
+  /** Max HP bonus in percent from the trainer's HP perks (core/trainerPerks.ts syncHpPerks keeps it current). */
+  perkHp: z.number().int().optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
@@ -420,6 +422,32 @@ export const TotemBattleSchema = z.object({
 });
 export type TotemBattle = z.infer<typeof TotemBattleSchema>;
 
+/** A Mega-Expedition in progress (rules in core/expedition). */
+export const ExpeditionStateSchema = z.object({
+  id: z.string(),
+  nodes: z.array(z.object({ id: z.string(), layer: z.number().int().min(0), kind: z.string(), next: z.array(z.string()), done: z.boolean() })),
+  /** The last node finished (null before the first). */
+  current: z.string().nullable(),
+  /** The node being fought or decided now. */
+  node: z.string().nullable(),
+  status: z.enum(['choice', 'route', 'battle', 'done']),
+  /** A pending choice: recruit/draft/rest/mystery options. `left` = picks still to make (draft). */
+  choice: z.object({ kind: z.enum(['draft', 'combined', 'recruit', 'rest', 'mystery']), title: z.string(), options: z.array(z.object({ label: z.string(), detail: z.string(), speciesId: z.string().optional() })), left: z.number().int().min(1) }).nullable(),
+  /** The player's own party while rentals or a draft are used. */
+  stash: z.array(PokemonInstanceSchema).nullable(),
+  /** Pokémon that belong to the expedition only (rentals, recruits): they leave when it ends. */
+  tempUids: z.array(z.string()),
+  /** Rewards held until extraction; lost (mostly) on failure. */
+  loot: z.object({ money: z.number().int().min(0), items: z.record(z.string(), z.number().int().min(0)), energy: z.number().int().min(0), research: z.number().int().min(0) }),
+  /** Items lent for the expedition (a Mega Ring, Mega Stones): stones become permanent on success. */
+  tempItems: z.array(z.string()),
+  level: z.number().int().min(2),
+  /** Set when a fight ends: the expedition reads it the next time it is shown. */
+  battleResult: z.enum(['win', 'lose']).nullable(),
+  log: z.array(z.string()),
+});
+export type ExpeditionState = z.infer<typeof ExpeditionStateSchema>;
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -512,10 +540,14 @@ export const BattleStateSchema = z.object({
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
   raid: RaidBattleSchema.optional(),
+  /** A battle an event started: no reward draft after it, and `win` effects if you win (events.json). */
+  event: z.object({ eventId: z.string(), choiceIndex: z.number().int().min(0), sideId: z.string(), success: z.boolean() }).optional(),
   /** Battle Drama Engine: what the trainer has already said (see core/drama). */
   drama: DramaBattleSchema.default(freshDrama),
   /** A Totem fight: aura, ally calls and phases (core/totem/totem.ts). */
   totem: TotemBattleSchema.optional(),
+  /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
+  expedition: z.boolean().optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -523,13 +555,19 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
   totemId: z.string().optional(),
-  /** A healing stop and a fishing spot work once; a shop can be visited again. */
+  /** An expedition gate: which expedition (expeditions.json) starts here. */
+  expeditionId: z.string().optional(),
+  /** A healing stop, a fishing spot and an event work once; a shop can be visited again. */
   used: z.boolean(),
+  /** An event stop's event (events.json). */
+  eventId: z.string().optional(),
+  /** A hidden event shows as "?" until the player reaches its node (or Intelligence or a Silph Scope reveals it). */
+  hidden: z.boolean().optional(),
 });
 export type SideStop = z.infer<typeof SideStopSchema>;
 
@@ -592,6 +630,8 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
   /** A Pokémon from a past run wants to join (story slice 5, core/story/reunion.ts); `hallOfFame`: it won a past run with you. */
   z.object({ kind: z.literal('reunion'), mon: PokemonInstanceSchema, hallOfFame: z.boolean() }),
+  /** A veteran offers to mentor a younger teammate (core/story/mentorship.ts). */
+  z.object({ kind: z.literal('mentorship'), mentorUid: z.string(), proteUid: z.string(), path: z.enum(['guardian', 'striker', 'strategist', 'survivor', 'challenger', 'bonded']) }),
   /** A PP Up or PP Max: pick which move gets the extra PP. */
   z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
 ]);
@@ -613,7 +653,7 @@ export type RunPrep = z.infer<typeof RunPrepSchema>;
 export const LoadoutPresetSchema = RunPrepSchema.extend({ name: z.string(), archetypeId: z.string() });
 export type LoadoutPreset = z.infer<typeof LoadoutPresetSchema>;
 
-export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over']);
+export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over', 'expedition']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
 /** A Pokémon kept from a finished run, that may come back in a later one (core/story/reunion.ts). */
@@ -672,7 +712,7 @@ export const RunStateSchema = z.object({
   /** Decisions to make after a battle, oldest first. */
   pending: z.array(PendingDecisionSchema),
   /** Where the run goes once all pending decisions are made. */
-  afterDecisions: z.enum(['reward', 'map']),
+  afterDecisions: z.enum(['reward', 'map', 'expedition']),
   /** The current stage and its map (null only for saves from before stage maps existed). */
   stage: StageStateSchema.nullable(),
   /** Themes and bosses (gym leaders, Elite Four, champions) already used this run (they never repeat, D6). */
@@ -720,6 +760,9 @@ export const RunStateSchema = z.object({
   story: StoryStateSchema,
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
   /** Totem record this run, the unlocks they gave and research points. */
+  /** The expedition in progress, and the ones finished or unlocked this run. */
+  expedition: ExpeditionStateSchema.nullable().default(null),
+  expeditions: z.object({ completed: z.array(z.string()), failed: z.array(z.string()), unlocked: z.array(z.string()), last: z.array(z.string()).default([]) }).default(() => ({ completed: [], failed: [], unlocked: [], last: [] })),
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */

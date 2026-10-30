@@ -6,6 +6,8 @@ import { z } from 'zod';
 import {
   AbilitySchema,
   AchievementSchema,
+  ATTRIBUTE_KEYS,
+  EventsFileSchema,
   RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
@@ -59,8 +61,12 @@ import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
 import raidsJson from './raids.json';
 import totemsJson from './totems.json';
+import expeditionsJson from './expeditions.json';
+import { ExpeditionFileSchema } from '../core/expedition/schema';
 import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
+import eventsJson from './events.json';
+import { isGiftable } from '../core/events';
 
 export class ContentError extends Error {
   constructor(public readonly problems: string[]) {
@@ -91,7 +97,9 @@ export interface RawContent {
   balance: unknown;
   story: unknown;
   raids: unknown;
+  events: unknown;
   totems: unknown;
+  expeditions: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -136,7 +144,9 @@ export const RAW_CONTENT: RawContent = {
   balance: balanceJson,
   story: storyJson,
   raids: raidsJson,
+  events: eventsJson,
   totems: totemsJson,
+  expeditions: expeditionsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -185,9 +195,11 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
+  const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
+  const expeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !raids || !totems || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!eventsFile || !story || !raids || !totems || !expeditions || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -217,7 +229,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     balance,
     story,
     raids,
+    events: toMap(eventsFile.events, 'events.json', problems),
     totems,
+    expeditions,
     zMoves,
     maxMoves,
   };
@@ -274,6 +288,20 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (t.phases.some((p, i) => i > 0 && p.atHp >= t.phases[i - 1]!.atHp)) problems.push(`totems.json "${t.id}" phases must go down in HP`);
     if (t.tier === 'early' && (t.phases.length > 0 || (t.ally && t.ally.maxCalls > 1))) problems.push(`totems.json "${t.id}": early Totems have one aura and at most one weak ally call`);
   }
+  const megaSpecies = new Set([...content.items.values()].flatMap((i) => (i.effect.kind === 'megaStone' ? Object.keys(i.effect.forms) : [])));
+  const expIds = new Set(expeditions.expeditions.map((e) => e.id));
+  for (const e of expeditions.expeditions) {
+    for (const id of e.rentals) if (!content.species.has(id)) problems.push(`expeditions.json "${e.id}" has unknown rental "${id}"`);
+    for (const r of [...e.cache, ...e.rewards.items]) if (!content.items.has(r.item)) problems.push(`expeditions.json "${e.id}" gives unknown item "${r.item}"`);
+    if (e.rewards.researchBonusItem && !content.items.has(e.rewards.researchBonusItem)) problems.push(`expeditions.json "${e.id}" bonus item is unknown`);
+    if (e.unlocks && !expIds.has(e.unlocks)) problems.push(`expeditions.json "${e.id}" unlocks unknown expedition "${e.unlocks}"`);
+    const fin = e.finale;
+    if (fin.kind === 'megaBoss') for (const id of fin.species) if (!megaSpecies.has(id)) problems.push(`expeditions.json "${e.id}" finale ${id} has no Mega Stone`);
+    if (fin.kind === 'raid' && !raids.raids.some((r) => r.id === fin.raidId)) problems.push(`expeditions.json "${e.id}" finale raid is unknown`);
+    if (fin.kind === 'totem' && !totems.totems.some((t) => t.id === fin.totemId)) problems.push(`expeditions.json "${e.id}" finale Totem is unknown`);
+    if (e.partyMode === 'rental' && e.nodeWeights.recruit) problems.push(`expeditions.json "${e.id}": a rental expedition cannot have recruit nodes`);
+  }
+  for (const ev of expeditions.mysteryEvents) for (const o of ev.options) if (o.effect.item && !content.items.has(o.effect.item)) problems.push(`expeditions.json event "${ev.id}" gives unknown item`);
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {
     for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);
@@ -390,12 +418,43 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (!a.unlockedByDefault && !a.unlock) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
     for (const id of Object.keys(a.startingItems)) if (!content.items.has(id)) problems.push(`trainer "${a.id}" starts with unknown item "${id}"`);
     for (const m of a.modifiers) {
-      if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
+      if (m.kind === 'startingAttribute' && !(ATTRIBUTE_KEYS as readonly string[]).includes(m.key)) problems.push(`trainer "${a.id}" starts with unknown attribute "${m.key}"`);
+      if (m.kind === 'priceMultiplier' && !m.items && !m.group) problems.push(`trainer "${a.id}" has a price perk with no items or group`);
+      if (m.kind === 'priceMultiplier') for (const id of m.items ?? []) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
     for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
     if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
+  // Map events: every id they mention must exist.
+  const knownItem = (id: string) => content.items.has(id) || content.catalog.has(id);
+  for (const e of content.events.values()) {
+    const where = `event "${e.id}"`;
+    const effects = e.choices.flatMap((c) => [c.success, ...(c.failure ? [c.failure] : [])]).flatMap((o) => [...o.effects, ...(o.battle?.win ?? [])]);
+    for (const f of effects) {
+      if (f.kind === 'item' && !knownItem(f.id)) problems.push(`${where} gives unknown item "${f.id}"`);
+      if (f.kind === 'loseItem' && f.id && !knownItem(f.id)) problems.push(`${where} uses unknown item "${f.id}"`);
+      if (f.kind === 'itemFrom') for (const id of f.ids) if (!knownItem(id)) problems.push(`${where} gives unknown item "${id}"`);
+      if (f.kind === 'join') for (const id of f.species) if (!content.species.has(id)) problems.push(`${where} offers unknown species "${id}"`);
+    }
+    for (const c of e.choices) {
+      for (const o of [c.success, c.failure]) {
+        const b = o?.battle;
+        if (b?.kind === 'wild') for (const id of b.species) if (!content.species.has(id)) problems.push(`${where} battles unknown species "${id}"`);
+        if (b?.kind === 'trainer' && b.bossId && !content.bosses.has(b.bossId)) problems.push(`${where} battles unknown boss "${b.bossId}"`);
+        if (b?.kind === 'trainer' && b.classId && !content.trainers.has(b.classId)) problems.push(`${where} battles unknown trainer class "${b.classId}"`);
+      }
+      for (const r of [...c.requires, ...e.requires]) if (r.kind === 'item' && !knownItem(r.id)) problems.push(`${where} needs unknown item "${r.id}"`);
+    }
+    if (e.keyItem && !knownItem(e.keyItem)) problems.push(`${where} needs unknown key item "${e.keyItem}"`);
+    if (e.scene.pokemon && !content.species.has(e.scene.pokemon)) problems.push(`${where} shows unknown species "${e.scene.pokemon}"`);
+  }
+  for (const id of balance.events.explorerItems) if (!isGiftable(content, id)) problems.push(`balance.events.explorerItems has "${id}", which isn't a working item`);
+  for (const entry of content.catalog.values()) {
+    if (entry.effect?.kind !== 'perk') continue;
+    for (const p of entry.effect.perks) if (p.perk === 'favorSpecies' && !content.species.has(p.species)) problems.push(`item "${entry.id}" favours unknown species "${p.species}"`);
+    if (entry.effect.perks.some((p) => p.perk === 'eventKey') && ![...content.events.values()].some((e) => e.keyItem === entry.id)) problems.push(`key item "${entry.id}" opens no event`);
+  }
   // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
   const checkLicense = (id: string | null, where: string) => {
     if (id !== null && !content.licenses.has(id)) problems.push(`${where} needs unknown license "${id}"`);

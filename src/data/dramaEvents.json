@@ -1,0 +1,391 @@
+{
+ "note": "Battle Drama Engine slice 2: the rare-event library (guide §5 and Phase 6). 'planned' events need systems that do not exist yet. Checks live in core/drama/events.ts. Placeholders: {name} enemy Pokémon, {foe} yours, {foeMove} your repeated move.",
+ "events": [
+  {
+   "id": "lastSecondResolve",
+   "name": "Last-Second Resolve",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 2,
+   "chance": 100,
+   "records": false,
+   "requires": "Enemy Pokémon has a Hyper moment (existing story rules apply the effect)",
+   "lines": [
+    "{name} holds on... and so do I!",
+    "Steady, {name}. Not yet."
+   ]
+  },
+  {
+   "id": "refusal",
+   "name": "The Refusal",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs bond/autonomy data and an established refusal mechanic",
+   "lines": []
+  },
+  {
+   "id": "newMove",
+   "name": "The New Move",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs enemy move-learning during a battle",
+   "lines": []
+  },
+  {
+   "id": "tacticalRevelation",
+   "name": "The Tactical Revelation",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "You really used the same move 3 times in this battle",
+   "lines": [
+    "You keep leaning on {foeMove}. I see the pattern now.",
+    "That is the third {foeMove}. I know what you are doing."
+   ],
+   "classes": [
+    "gym",
+    "rival",
+    "boss"
+   ],
+   "remember": "Last time you leaned on {foeMove}. Not happening again."
+  },
+  {
+   "id": "comebackCall",
+   "name": "The Comeback Call",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 2,
+   "chance": 100,
+   "records": false,
+   "requires": "Enemy Pokémon falls below the low-HP line for the first time",
+   "lines": [
+    "Don't give up, {name}! I believe in you!",
+    "Get up, {name}! We're not done!"
+   ],
+   "voices": [
+    "gentle",
+    "cheerful"
+   ]
+  },
+  {
+   "id": "aceReveal",
+   "name": "The Ace Reveal",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "Final Pokémon of a team of 3+ is sent out",
+   "lines": [
+    "This is my ace. {name}, show them everything!",
+    "I saved the best for last. Go, {name}!"
+   ],
+   "classes": [
+    "gym",
+    "rival",
+    "boss"
+   ]
+  },
+  {
+   "id": "unplannedCombination",
+   "name": "The Unplanned Combination",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs team chemistry data from the bond engine",
+   "lines": []
+  },
+  {
+   "id": "failedTechnique",
+   "name": "The Failed Technique",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 2,
+   "chance": 100,
+   "records": true,
+   "requires": "A signature move of the enemy misses",
+   "lines": [
+    "It missed! We still need more practice.",
+    "Not yet... we'll get it right next time."
+   ],
+   "classes": [
+    "gym",
+    "rival",
+    "boss"
+   ],
+   "remember": "I have been practicing that move since we last met."
+  },
+  {
+   "id": "overdriveBreakthrough",
+   "name": "The Overdrive Breakthrough",
+   "status": "planned",
+   "severity": "climactic",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Owned by the Overdrive/Hyper thread",
+   "lines": []
+  },
+  {
+   "id": "overdriveMisfire",
+   "name": "The Overdrive Misfire",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Owned by the Overdrive/Hyper thread",
+   "lines": []
+  },
+  {
+   "id": "veteransAdjustment",
+   "name": "The Veteran's Adjustment",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "Turn 4+, the enemy has lost a Pokémon and you have not lost one",
+   "lines": [
+    "Hm. My opening plan is not working. Time to change it.",
+    "All right, new approach."
+   ],
+   "classes": [
+    "gym",
+    "boss"
+   ]
+  },
+  {
+   "id": "desperateSwitch",
+   "name": "The Desperate Switch",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "The trainer swaps out a Pokémon that did not faint",
+   "lines": [
+    "Come back! Someone else has a better answer!",
+    "Hold on, {name}. I have a different idea."
+   ]
+  },
+  {
+   "id": "rivalInterruption",
+   "name": "The Rival Interruption",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs a second rival present (world sim witness events)",
+   "lines": []
+  },
+  {
+   "id": "unfinishedGrudge",
+   "name": "The Unfinished Grudge",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "Rival lost to you last time and sends out its ace",
+   "lines": [
+    "I have not forgotten how you beat us. Not for a second.",
+    "Last time you won. This time {name} remembers."
+   ],
+   "classes": [
+    "rival"
+   ]
+  },
+  {
+   "id": "mercyMoment",
+   "name": "The Mercy Moment",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "Kind trainer; your Pokémon is nearly down",
+   "lines": [
+    "I won't press that. You've fought hard.",
+    "...Let's end this fairly, you and I."
+   ],
+   "voices": [
+    "gentle"
+   ]
+  },
+  {
+   "id": "breakingPoint",
+   "name": "The Breaking Point",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "Enemy lost half its team and you lost none",
+   "lines": [
+    "This can't be happening!",
+    "No... no, I can't lose like this!"
+   ],
+   "voices": [
+    "brash",
+    "cheerful"
+   ]
+  },
+  {
+   "id": "calmBeforeFinish",
+   "name": "The Calm Before the Finish",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "Last enemy Pokémon is out on turn 3+ and the trainer is calm or grim",
+   "lines": [
+    "...",
+    "(The trainer says nothing and watches closely.)"
+   ],
+   "voices": [
+    "calm",
+    "grim"
+   ]
+  },
+  {
+   "id": "takesInitiative",
+   "name": "The Pokémon Takes Initiative",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs autonomy/synchronization data",
+   "lines": []
+  },
+  {
+   "id": "rematchReversal",
+   "name": "The Rematch Reversal",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": false,
+   "requires": "Rival has a recorded adaptation from the rematch counter-pick",
+   "lines": [
+    "Last time that plan cost me. This time I do the opposite.",
+    "You beat my old strategy. So I changed it."
+   ],
+   "classes": [
+    "rival"
+   ]
+  },
+  {
+   "id": "unexpectedRespect",
+   "name": "The Unexpected Respect",
+   "status": "limited",
+   "severity": "major",
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "The enemy's ace falls",
+   "lines": [
+    "Impressive. That Pokémon is truly strong.",
+    "I have to respect that."
+   ],
+   "voices": [
+    "gentle",
+    "calm",
+    "cheerful"
+   ]
+  },
+  {
+   "id": "pokemonRecognition",
+   "name": "Pokémon Recognition",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs Pokémon-to-Pokémon history across battles",
+   "lines": []
+  },
+  {
+   "id": "emotionalTurningPoint",
+   "name": "The Emotional Turning Point",
+   "status": "planned",
+   "severity": "major",
+   "cooldownBattles": 5,
+   "chance": 0,
+   "records": false,
+   "requires": "Needs Seven Emotions for enemy Pokémon",
+   "lines": []
+  },
+  {
+   "id": "midBattleEvolution",
+   "name": "The Breakthrough Evolution",
+   "status": "limited",
+   "severity": "climactic",
+   "cooldownBattles": 0,
+   "chance": 100,
+   "records": true,
+   "requires": "A rival's training Pokémon (brought in a stage below its final form, already at its evolution level) evolves at a turn boundary after turn 3 or at half HP",
+   "lines": [
+    "{name}... you've evolved! I knew you could!",
+    "This is what all our training was for! Show them, {name}!"
+   ],
+   "classes": [
+    "rival"
+   ],
+   "remember": "You remember the battle where {foeMove} evolved, don't you? It has only grown since."
+  }
+ ],
+ "declarations": {
+  "warning": [
+   "Brace yourself! Here comes the big one!"
+  ],
+  "signature": [
+   "Our strongest move. Right now: {move}!"
+  ],
+  "promise": [
+   "I told you we'd master this together. {move}!"
+  ],
+  "desperateGamble": [
+   "Everything we've got: {move}, GO!"
+  ],
+  "tacticalCall": [
+   "They're wide open! Use {move}!"
+  ],
+  "showman": [
+   "Ladies and gentlemen, don't blink! {move}!"
+  ],
+  "quietThreat": [
+   "End this. {move}."
+  ],
+  "personalCallback": [
+   "Remember the move that beat us last time? We fixed it. {move}!"
+  ]
+ },
+ "aftermath": {
+  "hit": [
+   "Yes! Just like we practiced!",
+   "That's the power of our training!"
+  ],
+  "miss": [
+   "Missed... stay calm, {name}.",
+   "It slipped away. Next time."
+  ],
+  "ko": [
+   "That is how it's done!",
+   "One strike. As planned."
+  ]
+ }
+}

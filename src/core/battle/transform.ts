@@ -44,8 +44,10 @@
 import type { BoostStat, Content, MaxEffect, Move, TransformKind, TypeName } from '../contentSchema';
 import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
+import type { Perks } from '../archetypes';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import { effectiveHeld } from './held';
+import { megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
@@ -504,12 +506,20 @@ function changeForm(ctx: TransformContext, side: Side, mon: PokemonInstance, kin
  * evolutions and the after-battle screens). HP is kept, capped at the
  * original form's maximum.
  */
-export function revertTransformations(content: Content, battle: BattleState, party: PokemonInstance[]): void {
+export function revertTransformations(content: Content, battle: BattleState, party: PokemonInstance[], perks?: Perks): void {
+  // A trainer perk (Alain): a bonded Mega stays Mega, up to the party limit.
+  const keepAt = permanentMegaFriendship(perks);
+  const limit = megaPartyLimit(perks) ?? Infinity;
+  let megas = party.filter((p) => getSpecies(content, p.speciesId).form?.kind === 'mega' && !battle.transform.forms[p.uid]).length;
   for (const mon of party) endDynamax(content, battle, 'player', mon);
   for (const mon of battle.enemyTeam) endDynamax(content, battle, 'enemy', mon);
   for (const mon of [...party, ...battle.enemyTeam]) {
     const record = battle.transform.forms[mon.uid];
     if (!record) continue;
+    if (record.kind === 'mega' && keepAt !== null && party.includes(mon) && mon.friendship >= keepAt && megas < limit) {
+      megas += 1;
+      continue;
+    }
     const oldMax = calcStats(content, mon).hp;
     mon.speciesId = record.from;
     const max = calcStats(content, mon).hp;
