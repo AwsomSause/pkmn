@@ -1956,5 +1956,50 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.revive"
+ },
+ {
+  "id": "exp-candy-s",
+  "name": "Exp. Candy S",
+  "description": "A Pokémon of your choice gains 1 level.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "effect": {
+   "kind": "levelUp",
+   "levels": 1
+  },
+  "stacking": "instant",
+  "scope": "pokemon",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.exp_candy_s"
+ },
+ {
+  "id": "exp-candy-m",
+  "name": "Exp. Candy M",
+  "description": "A Pokémon of your choice gains 2 levels.",
+  "category": "consumable",
+  "rarity": "rare",
+  "effect": {
+   "kind": "levelUp",
+   "levels": 2
+  },
+  "stacking": "instant",
+  "scope": "pokemon",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.exp_candy_m"
+ },
+ {
+  "id": "exp-candy-l",
+  "name": "Exp. Candy L",
+  "description": "A Pokémon of your choice gains 3 levels.",
+  "category": "consumable",
+  "rarity": "epic",
+  "effect": {
+   "kind": "levelUp",
+   "levels": 3
+  },
+  "stacking": "instant",
+  "scope": "pokemon",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.exp_candy_l"
  }
 ]

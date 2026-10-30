@@ -225,3 +225,22 @@ describe('bosses hold items', () => {
     }
   });
 });
+
+describe('Terrain Seeds', () => {
+  const turn = (seed: string, terrain: 'electric' | 'grassy' | null, items?: Record<string, number>) => {
+    const { battle, ctx } = setup(mon('blissey', 30, 'p', ['splash'], items), mon('chansey', 30, 'e', ['splash']));
+    if (terrain) battle.terrain = { id: terrain, turns: 5 };
+    const events = resolveTurn(ctx, { kind: 'move', index: 0 });
+    return { events, battle };
+  };
+
+  it('raises Defense once when its terrain is up, then is used up', () => {
+    const { events } = turn('seed', 'electric', { 'electric-seed': 1 });
+    expect(held(events, 'electric-seed').some((e) => e.type === 'held' && e.what === 'stat')).toBe(true);
+  });
+
+  it('does nothing under another terrain or none', () => {
+    expect(held(turn('seed', 'grassy', { 'electric-seed': 1 }).events, 'electric-seed')).toHaveLength(0);
+    expect(held(turn('seed', null, { 'electric-seed': 1 }).events, 'electric-seed')).toHaveLength(0);
+  });
+});
