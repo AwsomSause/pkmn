@@ -55,11 +55,12 @@ describe('custom species and forms', () => {
     }
   });
 
-  it('first-stage Deltas, Z-Forms and Spooky forms can be met in the wild; Megas and battle forms cannot', () => {
+  it('Deltas, Z-Forms and Spooky forms are event-only: not in the wild pool, like Megas and battle forms', () => {
     const wild = new Set(wildEligibleSpecies(content).map((s) => s.id));
-    expect(wild.has('bulbasaur-delta')).toBe(true);
-    expect(wild.has('abra-z')).toBe(true);
-    expect(wild.has('litwick-spooky')).toBe(true);
+    expect(wild.has('bulbasaur-delta')).toBe(false);
+    expect(wild.has('abra-z')).toBe(false);
+    expect(wild.has('litwick-spooky')).toBe(false);
+    expect(wild.has('bulbasaur')).toBe(true);
     expect(wild.has('venusaur-delta-mega')).toBe(false);
     expect(wild.has('excadrill-z-mega')).toBe(false);
     expect(wild.has('typhlosion-delta-mega-active')).toBe(false);
