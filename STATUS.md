@@ -88,7 +88,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
-- M9: Grand Region, final boss, ending, deploy.
+- M9: Grand Region, final boss, deploy. Ending credits built (`core/credits.ts`, `CreditsScene`, "Roll the credits" on the victory screen); no Grand Region decision needed.
 - M10 visuals (guide 9, Visual Bible V1–V5): next slices = event choice frames, league/run-end, level-up/evolution, perf pass.
 
 ## Biggest known gaps

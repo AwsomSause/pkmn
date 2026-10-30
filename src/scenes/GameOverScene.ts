@@ -104,11 +104,15 @@ export class GameOverScene extends Phaser.Scene {
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,
       y: 486,
-      options: [{ label: 'Back to the Hub' }, ...(run ? [{ label: 'Retry this seed' }] : [])],
+      options: [{ label: 'Back to the Hub' }, ...(run ? [{ label: 'Retry this seed' }] : []), ...(won ? [{ label: 'Roll the credits' }] : [])],
       itemHeight: 25,
       fontSize: 22,
       color: COLORS.textLight,
       onSelect: (i) => {
+        if (won && i === (run ? 2 : 1)) {
+          this.scene.start('Credits');
+          return;
+        }
         if (i === 1 && run) {
           // Same seed, trainer, preparation and rules. Daily seeds pay their account rewards once, so a retry pays nothing.
           const { note: _note, ...prep } = run.prep;
