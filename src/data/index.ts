@@ -510,6 +510,17 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       if (r.trainer && !content.archetypes.has(r.trainer)) problems.push(`${where} gives unknown trainer "${r.trainer}"`);
     }
     if (new Set(ge.objectives.map((o) => o.id)).size !== ge.objectives.length) problems.push(`${where} has two objectives with the same id`);
+    // Stable claim keys: "event:<edition>:<objective>" must never collide with the reward keys, and an edition splits at "@".
+    if (/[@:]/.test(ge.id)) problems.push(`${where} has "@" or ":" in its id, which would break its edition and claim keys`);
+    for (const o of ge.objectives) if (o.id === 'reward' || o.id === 'fallback') problems.push(`${where} has an objective named "${o.id}", which collides with a reward claim key`);
+    if (ge.schedule.kind === 'yearly') {
+      // A window edge must be a real calendar day (02-29 is allowed; the window just skips it in other years).
+      const daysIn = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      for (const md of [ge.schedule.start, ge.schedule.end]) {
+        const [m, d] = md.split('-').map(Number) as [number, number];
+        if (d > daysIn[m - 1]!) problems.push(`${where} has a window edge on ${md}, which is not a calendar day`);
+      }
+    }
     if ((ge.schedule.kind === 'weeklyRotation') !== (ge.seedRule === 'isoWeek')) problems.push(`${where}: weekly events use the ISO week, yearly ones the year`);
   }
   for (const e of content.events.values()) if (e.gameEvent && !content.gameEvents.has(e.gameEvent)) problems.push(`map event "${e.id}" belongs to unknown game event "${e.gameEvent}"`);

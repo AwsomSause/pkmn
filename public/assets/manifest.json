@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T16:22:07.686Z",
+  "generatedAt": "2026-10-30T16:37:51.085Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -368,6 +368,20 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/dbk/pulse.png"
+    },
+    {
+      "id": "pack.ebui.gender",
+      "kind": "spritesheet",
+      "category": "ui",
+      "path": "images/packs/ebui/info_gender.png",
+      "frameSize": 22
+    },
+    {
+      "id": "pack.ebui.statArrows",
+      "kind": "spritesheet",
+      "category": "ui",
+      "path": "images/packs/ebui/info_stats.png",
+      "frameSize": 18
     },
     {
       "id": "cine.primega.mega",
