@@ -23,7 +23,8 @@ import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
-import { getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
+import { dailyClaimKey, dailySeed, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
+import { isClaimed } from '../core/quests';
 
 export interface RunPrepData {
   archetypeId: string;
@@ -233,7 +234,17 @@ export class RunPrepScene extends Phaser.Scene {
 
   private start(): void {
     const { session } = services();
-    session.newRun(this.archetypeId, this.seed ?? undefined, undefined, this.prep, this.rules);
+    let seed = this.seed ?? undefined;
+    let rules = this.rules;
+    if (getMode(rules.modeId)?.dailySeed) {
+      // Daily Run: the date is the seed; the day's account rewards pay once.
+      const today = new Date().toISOString();
+      seed = dailySeed(today);
+      const key = dailyClaimKey(today);
+      rules = { ...rules, noRewards: isClaimed(session.profile, key) };
+      if (!rules.noRewards) session.claimOnce(key);
+    }
+    session.newRun(this.archetypeId, seed, undefined, this.prep, rules);
     this.scene.start('StarterSelect');
   }
 

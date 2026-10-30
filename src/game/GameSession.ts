@@ -16,6 +16,7 @@ import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
 import * as Mini from '../core/minigame/flow';
+import { claim } from '../core/quests';
 import * as Run from '../core/run';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
@@ -343,6 +344,14 @@ export class GameSession {
     this.profile = buyLicense(this.content, this.profile, licenseId);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
+  }
+
+  /** Records a claim-ledger key (the Daily Run's reward for the day). */
+  claimOnce(key: string): void {
+    const profile = structuredClone(this.profile);
+    if (!claim(profile, key, new Date().toISOString())) return;
+    this.profile = profile;
+    this.checkSave(this.saves.saveProfile(this.profile));
   }
 
   savePreset(slot: number, preset: LoadoutPreset): void {

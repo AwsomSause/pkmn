@@ -160,3 +160,5 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
 
 - Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.
+
+- Untitled Phase E2: Daily Run, Endless, Spooky modes done (rules.ts dailySeed/extendEndless/spookyWild). No modifier or mode is left as planned.

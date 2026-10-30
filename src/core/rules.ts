@@ -8,6 +8,7 @@ import { getSpecies } from './pokemon';
 import { hashSeed, Rng } from './rng';
 import { poolTypes } from './runPrep';
 import type { RunRules, RunState } from './state';
+import { specialFamily } from './specialForms';
 import { wildEligibleSpecies } from './themes';
 
 const Status = z.enum(['supported', 'planned']);
@@ -44,7 +45,7 @@ export const RunRulesDataSchema = z.object({
       noDuplicates: z.boolean().optional(),
     }),
   ),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), spookyChance: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 
@@ -53,6 +54,8 @@ export interface RulesChoice {
   difficultyId: string;
   modifierIds: readonly string[];
   deathBlock: boolean;
+  /** Set when the account rewards were already paid (a second Daily Run on the same day). */
+  noRewards?: boolean;
 }
 export const STANDARD_CHOICE: RulesChoice = { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false };
 
@@ -84,7 +87,7 @@ export function rulesProblem(choice: RulesChoice): string | null {
  */
 export function rewardMultiplier(choice: RulesChoice): number {
   const mode = getMode(choice.modeId);
-  if (!mode?.progressionEligible) return 0;
+  if (!mode?.progressionEligible || choice.noRewards) return 0;
   const difficulty = getDifficulty(choice.difficultyId)?.multiplier ?? 1;
   const bonus = choice.modifierIds.reduce((sum, id) => sum + (getModifier(id)?.bonus ?? 0), 0);
   const capped = Math.min(RUN_RULES.multiplierCap, difficulty * (1 + bonus));
@@ -103,11 +106,12 @@ export function makeRules(choice: RulesChoice): RunRules {
     modifierIds: [...choice.modifierIds],
     deathBlock: choice.deathBlock,
     deathBlockUsed: false,
-    progressionEligible: getMode(choice.modeId)!.progressionEligible,
+    progressionEligible: getMode(choice.modeId)!.progressionEligible && !choice.noRewards,
     rewardMultiplier: rewardMultiplier(choice),
     enemyLevelBonus: getDifficulty(choice.difficultyId)!.enemyLevelBonus + choice.modifierIds.reduce((n, id) => n + (getModifier(id)?.enemyLevel ?? 0), 0),
     lockType: null,
     lockGeneration: null,
+    loops: 0,
     wipes: 0,
   };
 }
@@ -215,4 +219,35 @@ export function randomDraft(content: Content, seed: string, prep: { poolId: stri
   const rule = rules[rng.int(0, rules.length - 1)]!;
   const types = rule.kind === 'typeFocus' ? poolTypes(content, content.starterPools.get(prep.poolId)!) : [];
   return { draftRuleId: rule.id, typeFocus: types.length > 0 ? types[rng.int(0, types.length - 1)]! : null };
+}
+
+// ---------- Daily Run, Endless, Spooky ----------
+
+/** The Daily Run seed: the UTC date, so everyone gets the same run on the same day. */
+export const dailySeed = (isoDate: string): string => `daily-${isoDate.slice(0, 10)}`;
+/** The claim-ledger key that says the day's account rewards were paid. */
+export const dailyClaimKey = (isoDate: string): string => `daily:${isoDate.slice(0, 10)}`;
+
+/**
+ * Endless: when the last champion falls, add another lap of the regions instead of winning (mutates `run`).
+ * Returns false in any other mode. Enemies get stronger every lap.
+ */
+export function extendEndless(run: Pick<RunState, 'rules' | 'regionOrder'>): boolean {
+  const bonus = getMode(run.rules.modeId)?.loopLevelBonus;
+  if (!bonus) return false;
+  const lap = run.regionOrder.length / (run.rules.loops + 1);
+  run.regionOrder.push(...run.regionOrder.slice(0, lap));
+  run.rules.loops += 1;
+  run.rules.enemyLevelBonus += bonus;
+  return true;
+}
+
+/** Spooky mode: some wild Pokémon turn into Spooky forms (seeded by the run and the stop, so a reload gives the same one). */
+export function spookyWild(content: Content, run: Pick<RunState, 'rules' | 'seed'>, speciesId: string, key: string): string {
+  const chance = getMode(run.rules.modeId)?.spookyChance;
+  if (!chance) return speciesId;
+  const rng = new Rng(hashSeed(`${run.seed}::spooky::${key}`));
+  if (!rng.chance(chance)) return speciesId;
+  const forms = [...content.species.values()].filter((s) => specialFamily(s) === 'spooky');
+  return forms.length > 0 ? forms[rng.int(0, forms.length - 1)]!.id : speciesId;
 }
