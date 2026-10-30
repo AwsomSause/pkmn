@@ -71,7 +71,9 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       const enemy = currentEnemy(battle);
       // A Pokémon in the middle of a two-turn move, or locked by a Choice item, can't throw a ball.
       const midMove = forcedMoveIndex(battle, run.party) !== null;
-      if (!midMove && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2 && itemProblem({ content, battle, party: run.party, inventory: run.inventory }, 'poke-ball') === null) {
+      const ownShare = run.party[battle.activeIndex]!.hp / maxHp(content, run.party[battle.activeIndex]!);
+      // The smart player stops throwing balls once its own Pokémon is in trouble (it used to faint to a level 2 wild while throwing).
+      if (!midMove && !(smart && ownShare < 0.4) && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2 && itemProblem({ content, battle, party: run.party, inventory: run.inventory }, 'poke-ball') === null) {
         const turn = takeTurn(content, run, { kind: 'item', itemId: 'poke-ball' });
         return { run: turn.run, turn };
       }
