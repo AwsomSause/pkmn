@@ -124,6 +124,15 @@ export class GameSession {
     return this.run;
   }
 
+  /** A rival may cut in on a stop; returns the run with the battle started, or null. */
+  rivalChallenge(sideId: string): RunState | null {
+    const run = Run.rivalChallenge(this.content, this.requireRun(), sideId);
+    if (!run) return null;
+    this.run = run;
+    this.persistRun();
+    return run;
+  }
+
   chooseNode(nodeId: string): RunState {
     this.run = Run.chooseNode(this.content, this.requireRun(), nodeId);
     this.persistRun();

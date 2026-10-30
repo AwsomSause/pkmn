@@ -15,6 +15,7 @@ import { formAlliances, grudgeType, mentorType, pokemonInfluence, trainingExchan
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 import { rivalSponsorRoll } from './standing';
+import { rivalTransfers } from './transfer';
 
 type Edge = RunState['story']['rivalGraph'][number];
 
@@ -102,6 +103,8 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       rumor ??= `${title(content, a)} and ${title(content, b)} traded training methods`;
     }
   }
+  const moved = rivalTransfers(content, run, `${run.regionIndex}.${stage}`);
+  if (moved) rumor ??= moved;
   // Alliances against the common threat, mentors and grudges that change a team's identity (Examples §8).
   const sk = `${run.regionIndex}.${stage}`;
   for (const [a, b] of formAlliances(run, sk)) rumor ??= `${title(content, a)} and ${title(content, b)} have joined forces against you`;

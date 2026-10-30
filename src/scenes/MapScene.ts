@@ -519,6 +519,14 @@ export class MapScene extends Phaser.Scene {
         break;
       }
       case 'side': {
+        const cut = session.rivalChallenge(option.side.id);
+        if (cut) {
+          this.busy = true;
+          playSfx(this, 'ui.select');
+          this.cameras.main.fadeOut(250);
+          this.time.delayedCall(260, () => this.scene.start(sceneForRun(cut)));
+          break;
+        }
         if (option.side.kind === 'fish') {
           this.openFishing(option.side.id);
           break;
