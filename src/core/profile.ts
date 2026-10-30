@@ -21,6 +21,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     best: {},
     speciesSeen: [],
     speciesCaught: [],
+    speciesShiny: [],
     achievements: {},
     titles: [],
     activeTitle: null,

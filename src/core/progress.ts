@@ -32,6 +32,13 @@ export function count(run: RunState, counter: string, amount = 1): void {
   run.log.counters[counter] = (run.log.counters[counter] ?? 0) + amount;
 }
 
+/** Counts a shiny found and remembers its species for the Research Room (mutates `run`). */
+export function countShiny(run: RunState, speciesId: string): void {
+  count(run, 'shiniesFound');
+  const list = (run.log.speciesShiny ??= []);
+  if (!list.includes(speciesId)) list.push(speciesId);
+}
+
 /** Remembers species met or caught this run (mutates `run`). */
 export function discover(run: RunState, speciesId: string, caught: boolean): void {
   if (!run.log.speciesSeen.includes(speciesId)) run.log.speciesSeen.push(speciesId);
@@ -257,6 +264,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     newSpeciesCaught = run.log.speciesCaught.filter((id) => !profile.speciesCaught.includes(id));
     profile.speciesSeen.push(...newSpeciesSeen);
     profile.speciesCaught.push(...newSpeciesCaught);
+    for (const id of run.log.speciesShiny ?? []) if (!(profile.speciesShiny ??= []).includes(id)) profile.speciesShiny.push(id);
     researchPoints = Math.round(
       (research.perSpeciesSeen * newSpeciesSeen.length +
         research.perSpeciesCaught * newSpeciesCaught.length +

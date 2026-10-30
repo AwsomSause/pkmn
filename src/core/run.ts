@@ -54,7 +54,7 @@ import { layEgg, tickEggs } from './eggs';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
-import { count, discover } from './progress';
+import { count, countShiny, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
@@ -228,7 +228,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
     nextUid: 1,
-    log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
+    log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
@@ -880,7 +880,7 @@ export function fish(content: Content, current: RunState, sideId: string, index:
   fishingSpot(run, sideId).side.used = true;
   const enemy = createPokemon(content, pick.speciesId, pick.level, nextUid(run, 'e'));
   enemy.shiny = pick.shiny;
-  if (pick.shiny) count(run, 'shiniesFound');
+  if (pick.shiny) countShiny(run, pick.speciesId);
   run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   run.battle.fishing = true;
   discover(run, enemy.speciesId, false);
@@ -1110,7 +1110,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     speciesId = opened.speciesId;
     const enemy = newMon(content, run, speciesId, opened.level, 'e');
     enemy.shiny = plan.shiny;
-    if (plan.shiny) count(run, 'shiniesFound');
+    if (plan.shiny) countShiny(run, speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
     const setup = wildBattleSetup(content, run, mods);
@@ -1125,7 +1125,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const second = planWild(content, archetype, theme, scale, 0, pairRng, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
       const partner = newMon(content, run, lockSpecies(content, run, second.speciesId, `wild2:${node.id}`), Math.min(second.level, enemy.level + 2), 'e');
       partner.shiny = second.shiny;
-      if (partner.shiny) count(run, 'shiniesFound');
+      if (partner.shiny) countShiny(run, partner.speciesId);
       run.battle.enemyTeam.push(partner);
       run.battle.levelInfo = [...(run.battle.levelInfo ?? []), second.levelInfo];
       makeDoubles(run.battle, run.party);
