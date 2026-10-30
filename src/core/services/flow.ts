@@ -11,7 +11,7 @@ import { runLevelCap } from '../regions';
 import { evolveFully } from '../evolution';
 import { addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
-import { applyCatalog, getCatalogEntry } from '../catalog';
+import { applyCatalog, catalogTargetProblem, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
 import { isHostile } from '../rivals/outcome';
 import { changeFriendship } from '../friendship';
@@ -137,6 +137,12 @@ function marketLots(content: Content, run: RunState, sideId: string): [Item, num
   return rng.shuffle(locked).slice(0, 3).map((e) => [content.items.get(e.item)!, Math.round(price(run, e.price) * C.marketMarkup)]);
 }
 
+/** The berry growing at a garden stop: a held berry from the item catalog, fixed by the seed. */
+function gardenBerry(content: Content, run: RunState, sideId: string) {
+  const pool = [...content.catalog.values()].filter((e) => e.status === 'supported' && e.family.startsWith('Berries') && e.stacksOn === 'pokemon' && e.effect?.kind === 'held').sort((a, b) => a.id.localeCompare(b.id));
+  return pool.length === 0 ? null : pool[new Rng(hashSeed(`${run.seed}::garden::${sideId}`)).int(0, pool.length - 1)]!;
+}
+
 function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
   const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
   const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
@@ -237,6 +243,12 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       const lots = marketLots(content, run, sideId);
       for (const [it, cost] of lots) add(`buy:${it.id}`, it.name, `${it.description}. Sold at ${C.marketMarkup}x the shop price.`, cost, side.used ? 'The dealer has packed up.' : null);
       if (lots.length === 0) add('none', 'Nothing off the books', 'Your badges already open everything the shop sells.', 0, 'Nothing to sell you.');
+      break;
+    }
+    case 'garden': {
+      const berry = gardenBerry(content, run, sideId);
+      if (!berry) break;
+      for (const m of run.party) add(`berry:${m.uid}`, `Give ${berry.name} to ${monName(content, m)}`, `${berry.description}.`, price(run, C.gardenPrice), side.used ? 'The garden has been picked.' : catalogTargetProblem(content, run, berry, m));
       break;
     }
     case 'relic':
@@ -348,6 +360,12 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'buy': {
       addItem(run.inventory, uid!, 1);
       message = `You slip the dealer your money and take the ${content.items.get(uid!)?.name ?? uid}.`;
+      break;
+    }
+    case 'berry': {
+      const berry = gardenBerry(content, run, sideId)!;
+      applyCatalog(content, run, berry, mon!, { moneyMultiplier: 1, rng: new Rng(hashSeed(`${run.seed}::garden-use::${sideId}`)) });
+      message = `${monName(content, mon!)} now holds the ${berry.name}.`;
       break;
     }
     case 'class': {
