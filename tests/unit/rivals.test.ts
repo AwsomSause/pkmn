@@ -11,6 +11,8 @@ import type { TrainerPlan } from '../../src/core/encounters';
 import { applyDefeat, isHostile, stateFor } from '../../src/core/rivals/outcome';
 import { evaluateUltimate, ultimateRival, ultimateScore } from '../../src/core/rivals/ultimate';
 import type { Rival } from '../../src/core/story/schema';
+import { advanceArc, arcOf, goodChance } from '../../src/core/rivals/arcs';
+import { RIVAL_ARCS } from '../../src/core/rivals/schema';
 import { edgeKind, simulateRivalWorld } from '../../src/core/rivals/world';
 import { rivalMods } from '../../src/core/rivals/profile';
 import { rivalChronicle } from '../../src/core/rivals/chronicle';
@@ -200,6 +202,7 @@ describe('rival outcomes and the Ultimate Rival', () => {
     state: 'recognized',
     encounters: 0,
     setbacks: 0,
+    arc: null,
     away: 0,
     cooldown: 0,
     progress: 0,
@@ -372,5 +375,50 @@ describe('rival paths', () => {
     const humiliated = RIVAL_PATHS.paths.find((p) => p.id === 'public-humiliation')!;
     expect(humiliated.potentialBonus).toBeGreaterThan(0);
     expect(RIVAL_PATHS.paths.at(-1)!.id).toBe('unexpected-nemesis');
+  });
+});
+
+describe('rival character arcs', () => {
+  const kindRival = (over: Partial<Rival> = {}): Rival => structuredClone({ ...(win(trainerBattle('arc')).story.rivals[0]!), arc: { id: 'prodigy-learns-humility', stage: 0, ticks: 0, resolution: null }, encounters: 0, ...over });
+
+  it('every arc of the data is in the catalog, and a prodigy gets the humility arc', () => {
+    for (const a of RIVAL_ARCS.arcs) expect(catalog.arcs.map((c) => c.id), a.id).toContain(a.id);
+    const seen = new Set<string | undefined>();
+    for (let i = 0; i < 200; i++) {
+      const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'a', seed: `arcs-${i}`, archetypeId: 'red' }), 0));
+      const rival = maybeSpark(run, { where: { region: 0, stage: 0, level: 1, node: null, battle: 1, turn: null }, classId: 'youngster', name: 'J', team: ['rattata'], ended: { id: `arcs-${i}#1`, seq: 1, type: 'battleEnded', where: { region: 0, stage: 0, level: 1, node: null, battle: 1, turn: null }, actors: [], data: {} }, hpLeftShare: 0.2, turns: 6, flawless: true });
+      if (rival?.archetype === 'prodigy') seen.add(rival.arc?.id);
+    }
+    expect([...seen]).toEqual(['prodigy-learns-humility']);
+  });
+
+  it('turns after the first fight, resolves after three, once, nudging traits', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'a', seed: 'arc-run', archetypeId: 'red' }), 0));
+    const rival = kindRival();
+    expect(arcOf(rival)!.id).toBe('prodigy-learns-humility');
+    expect(advanceArc(content, run, rival)).toBeNull();
+    rival.encounters = 1;
+    expect(advanceArc(content, run, rival)).toBe('turned');
+    expect(advanceArc(content, run, rival)).toBeNull();
+    rival.encounters = 3;
+    const before = { ...rival.traits };
+    expect(advanceArc(content, run, rival)).toBe('resolved');
+    expect(rival.arc!.resolution).not.toBeNull();
+    expect(rival.traits).not.toEqual(before);
+    expect(advanceArc(content, run, rival)).toBeNull();
+    // Same seed, same ending.
+    const again = kindRival({ encounters: 3, arc: { id: 'prodigy-learns-humility', stage: 1, ticks: 0, resolution: null } });
+    advanceArc(content, run, again);
+    expect(again.arc!.resolution).toBe(rival.arc!.resolution);
+  });
+
+  it('arcs also move with the stages even if you never meet the rival, and empathetic resilient rivals usually grow', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'a', seed: 'arc-tick', archetypeId: 'red' }), 0));
+    const rival = kindRival();
+    const results = [];
+    for (let i = 0; i < RIVAL_ARCS.resolveTicks; i++) results.push(advanceArc(content, run, rival, true));
+    expect(results).toContain('turned');
+    expect(results).toContain('resolved');
+    expect(goodChance(kindRival({ traits: { ambition: 50, pride: 50, empathy: 90, adaptability: 50, vindictiveness: 50, resilience: 90 } }))).toBeGreaterThan(goodChance(kindRival({ traits: { ambition: 50, pride: 50, empathy: 10, adaptability: 50, vindictiveness: 50, resilience: 10 } })));
   });
 });

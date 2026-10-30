@@ -191,6 +191,8 @@ export const RivalSchema = z.object({
   /** Battles with you since the Spark, and times a loss shook it. */
   encounters: z.number().int().min(0).default(0),
   setbacks: z.number().int().min(0).default(0),
+  /** Its character arc: which one, how far it has turned, stages lived through, and how it ended. */
+  arc: z.object({ id: z.string(), stage: z.number().int().min(0).max(2), ticks: z.number().int().min(0), resolution: z.enum(['good', 'bad']).nullable() }).nullable().default(null),
   /** The off-screen world: stages since you last met, stages it sits out, and the level it gained while away. */
   away: z.number().int().min(0).default(0),
   cooldown: z.number().int().min(0).default(0),

@@ -66,6 +66,9 @@ for (const e of sections.styles!) e.status = profiles.styles[e.id]?.status ?? e.
 const paths = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalPaths.json'), 'utf8')) as { paths: { id: string }[] };
 const pathIds = new Set(paths.paths.map((x) => x.id));
 for (const e of sections.paths!) if (pathIds.has(e.id)) e.status = 'limited';
+const arcs = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalArcs.json'), 'utf8')) as { arcs: { id: string }[] };
+const arcIds = new Set(arcs.arcs.map((x) => x.id));
+for (const e of sections.arcs!) if (arcIds.has(e.id)) e.status = 'limited';
 for (const e of sections.mechanics!) e.status = profiles.mechanics[e.id]?.status ?? e.status;
 writeFileSync(join(root, 'src', 'data', 'rivalCatalog.json'), JSON.stringify({ source: 'A Living Rivalry Engine - Examples, Possibilities, and Guidence.md', ...sections }, null, 1) + '\n');
 console.log(Object.entries(sections).map(([k, v]) => `${k}: ${v.length}`).join(', '));

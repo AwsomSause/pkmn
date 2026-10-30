@@ -1,0 +1,291 @@
+{
+ "note": "Character arcs for rivals (Examples \u00a77 A-D). An arc is assigned at birth from personality, style or path, turns after the first fight (or 3 stages), and resolves after 3 fights (or 8 stages): well if the rival is empathetic and resilient, badly otherwise. The arcs about Pok\u00e9mon bonds and Overdrive wait for those systems.",
+ "turnEncounters": 1,
+ "turnTicks": 3,
+ "resolveEncounters": 3,
+ "resolveTicks": 8,
+ "good": {
+  "pride": -8,
+  "empathy": 8,
+  "resilience": 6,
+  "vindictiveness": -6
+ },
+ "bad": {
+  "vindictiveness": 8,
+  "empathy": -6,
+  "resilience": -4
+ },
+ "goodBase": 0.35,
+ "arcs": [
+  {
+   "id": "prodigy-learns-humility",
+   "personalities": [
+    "prodigy"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Expects to win naturally.",
+   "resolution": "Learns to respect preparation, collaboration, and opponents."
+  },
+  {
+   "id": "underdog-finds-their-method",
+   "personalities": [
+    "underdog"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Tries to copy stronger trainers.",
+   "resolution": "Develops a style that fits their own strengths."
+  },
+  {
+   "id": "perfectionist-accepts-failure",
+   "personalities": [
+    "perfectionist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Treats every mistake as unacceptable.",
+   "resolution": "Learns to adapt rather than endlessly repeat the same routine."
+  },
+  {
+   "id": "loner-learns-to-trust",
+   "personalities": [
+    "loner"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Avoids help and emotional attachment.",
+   "resolution": "Builds a reliable support network without losing independence."
+  },
+  {
+   "id": "showboat-finds-meaning",
+   "personalities": [
+    "showboat"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Cares about recognition.",
+   "resolution": "Learns to value the relationship behind the performance."
+  },
+  {
+   "id": "burnout-rediscovers-joy",
+   "personalities": [
+    "burnout"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Battles out of obligation.",
+   "resolution": "Finds a new reason to compete\u2014or chooses a different life."
+  },
+  {
+   "id": "reluctant-champion",
+   "personalities": [
+    "reluctant-battler"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Doesn't want the responsibilities of success.",
+   "resolution": "Decides what kind of Champion they actually want to become."
+  },
+  {
+   "id": "late-bloomer-emerges",
+   "personalities": [],
+   "styles": [],
+   "paths": [
+    "late-bloomer"
+   ],
+   "beginning": "Is dismissed as unremarkable.",
+   "resolution": "Achieves success through patience and self-knowledge."
+  },
+  {
+   "id": "copycat-becomes-original",
+   "personalities": [],
+   "styles": [
+    "mirror-match"
+   ],
+   "paths": [],
+   "beginning": "Copies the player's team and techniques.",
+   "resolution": "Develops an independent identity and may surpass their inspiration."
+  },
+  {
+   "id": "obsession-spiral",
+   "personalities": [
+    "obsessive"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Defines success around beating one opponent.",
+   "resolution": "Learns to pursue personal goals\u2014or becomes consumed by obsession."
+  },
+  {
+   "id": "fall-from-grace",
+   "personalities": [],
+   "styles": [],
+   "paths": [
+    "fallen-prodigy"
+   ],
+   "beginning": "Loses status after a major defeat.",
+   "resolution": "Rebuilds honestly or resorts to desperate shortcuts."
+  },
+  {
+   "id": "champion-s-shadow",
+   "personalities": [],
+   "styles": [],
+   "paths": [
+    "family-legacy"
+   ],
+   "beginning": "Lives under a famous predecessor's reputation.",
+   "resolution": "Establishes their own legacy or remains trapped in comparison."
+  },
+  {
+   "id": "broken-promise",
+   "personalities": [
+    "former-antagonist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "A betrayal damages a central relationship.",
+   "resolution": "Reconciliation, permanent separation, or a new understanding."
+  },
+  {
+   "id": "power-at-any-cost",
+   "personalities": [],
+   "styles": [
+    "overdrive-specialist"
+   ],
+   "paths": [],
+   "beginning": "Pursues Hyper/Overdrive without sufficient control.",
+   "resolution": "Learns restraint or suffers increasingly serious setbacks."
+  },
+  {
+   "id": "fear-of-winning",
+   "personalities": [
+    "self-saboteur"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Self-sabotages when success becomes possible.",
+   "resolution": "Confronts the insecurity driving the behavior."
+  },
+  {
+   "id": "rival-who-cheats",
+   "personalities": [
+    "chaos-agent"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Justifies unfair tactics to keep up.",
+   "resolution": "Takes responsibility, hides the truth, or doubles down."
+  },
+  {
+   "id": "cold-strategist",
+   "personalities": [
+    "pragmatist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Treats Pok\u00e9mon as interchangeable tools.",
+   "resolution": "Learns to respect individual needs\u2014or embraces an increasingly ruthless approach."
+  },
+  {
+   "id": "fallen-idealist",
+   "personalities": [
+    "fallen-idealist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Loses faith after witnessing unfairness.",
+   "resolution": "Rebuilds their principles or decides that winning matters more than fairness."
+  },
+  {
+   "id": "friends-become-rivals",
+   "personalities": [
+    "people-pleaser"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "A supportive relationship turns competitive.",
+   "resolution": "Healthy competition, resentment, or reconciliation."
+  },
+  {
+   "id": "rivals-become-friends",
+   "personalities": [
+    "secret-softie"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Mutual hostility gradually softens.",
+   "resolution": "Cooperation, friendship, or an alliance that remains competitive."
+  },
+  {
+   "id": "rival-s-rival",
+   "personalities": [
+    "social-climber"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Another trainer competes for the same person, goal, or title.",
+   "resolution": "A three-way rivalry, alliance, or change in priorities."
+  },
+  {
+   "id": "mentor-s-disappointment",
+   "personalities": [
+    "traditionalist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "A respected mentor loses faith in the rival.",
+   "resolution": "Earned reconciliation or independence from the mentor's expectations."
+  },
+  {
+   "id": "regional-reformer",
+   "personalities": [
+    "idealist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Wants to change how the League operates.",
+   "resolution": "Wins institutional influence, compromises their ideals, or becomes disillusioned."
+  },
+  {
+   "id": "unlikely-protector",
+   "personalities": [],
+   "styles": [
+    "protector"
+   ],
+   "paths": [],
+   "beginning": "Initially prioritizes personal ambition.",
+   "resolution": "Takes responsibility for another trainer, community, or team."
+  },
+  {
+   "id": "rival-who-leaves",
+   "personalities": [
+    "escapist"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Abandons the current competition.",
+   "resolution": "Returns with a different philosophy or never comes back."
+  },
+  {
+   "id": "rival-who-surpasses-you",
+   "personalities": [
+    "natural-talent"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "Gradually becomes stronger and more independent.",
+   "resolution": "Forces the player to respond, accepts a new relationship, or moves on."
+  },
+  {
+   "id": "unfinished-rivalry",
+   "personalities": [
+    "perpetual-runner-up"
+   ],
+   "styles": [],
+   "paths": [],
+   "beginning": "A major conflict is never properly resolved.",
+   "resolution": "Reopens later, possibly in another region or during a world event."
+  }
+ ]
+}

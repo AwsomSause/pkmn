@@ -2,6 +2,7 @@
 // Run state only; account-wide rival state is a separate layer (not built yet).
 
 import { z } from 'zod';
+import arcsJson from '../../data/rivalArcs.json';
 import pathsJson from '../../data/rivalPaths.json';
 import profilesJson from '../../data/rivalProfiles.json';
 import rivalsJson from '../../data/rivals.json';
@@ -68,3 +69,16 @@ export const RivalPathsSchema = z.object({
   ).min(1),
 });
 export const RIVAL_PATHS = RivalPathsSchema.parse(pathsJson);
+
+export const RivalArcsSchema = z.object({
+  note: z.string(),
+  turnEncounters: z.number().int(),
+  turnTicks: z.number().int(),
+  resolveEncounters: z.number().int(),
+  resolveTicks: z.number().int(),
+  good: z.record(z.string(), z.number()),
+  bad: z.record(z.string(), z.number()),
+  goodBase: z.number().min(0).max(1),
+  arcs: z.array(z.object({ id: z.string(), personalities: z.array(z.string()), styles: z.array(z.string()), paths: z.array(z.string()), beginning: z.string(), resolution: z.string() })).min(1),
+});
+export const RIVAL_ARCS = RivalArcsSchema.parse(arcsJson);
