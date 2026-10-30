@@ -15,6 +15,7 @@ import type { InputAction } from './input';
 import { itemVisual, pokemonIcon } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './theme';
 import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
+import { AERO, drawGlass, paintGlass } from './aero';
 
 const DEPTH = 100;
 
@@ -37,6 +38,8 @@ export interface PickerConfig {
   /** Leave out to make the choice mandatory (e.g. sending out a Pokémon after a faint). */
   onBack?: () => void;
   backLabel?: string;
+  /** Opt-in Aero look (glass panels, glossy rows). Hub screens leave it off. */
+  glass?: boolean;
 }
 
 const LIST_TOP = 82;
@@ -57,12 +60,18 @@ export class Picker {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
-    this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32));
-    // A title band across the top, like a Pokémon menu header.
-    const band = scene.add.graphics();
-    band.fillStyle(0x18141d, 0.9).fillRect(36, 26, GAME_WIDTH - 72, 42);
-    band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
-    this.root.add(band);
+    const glass = config.glass === true;
+    if (glass) {
+      this.root.add(drawGlass(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { radius: 26 }));
+      this.root.add(drawGlass(scene, 36, 24, GAME_WIDTH - 72, 46, { tint: AERO.sky, rim: AERO.rim, glow: false, radius: 20 }));
+    } else {
+      this.root.add(drawPanel(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32));
+      // A title band across the top, like a Pokémon menu header.
+      const band = scene.add.graphics();
+      band.fillStyle(0x18141d, 0.9).fillRect(36, 26, GAME_WIDTH - 72, 42);
+      band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
+      this.root.add(band);
+    }
     this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
@@ -76,11 +85,13 @@ export class Picker {
       const x = 48 + (i % config.columns) * (colW + 16);
       const y = LIST_TOP + Math.floor(i / config.columns) * (config.rowHeight + 10);
       const box = scene.add.container(x, y);
-      const bg = paintWindow(scene.add.graphics(), 0, 0, colW, config.rowHeight, {
-        thin: true,
-        fill: row.problem ? 0x2a2630 : COLORS.panel,
-        border: row.problem ? 0x4a4352 : COLORS.borderMuted,
-      });
+      const bg = glass
+        ? paintGlass(scene.add.graphics(), 0, 0, colW, config.rowHeight, { rim: row.problem ? 0x5a6a80 : 0x9fd8f0, alpha: row.problem ? 0.55 : 0.9, glow: false, radius: 14 })
+        : paintWindow(scene.add.graphics(), 0, 0, colW, config.rowHeight, {
+            thin: true,
+            fill: row.problem ? 0x2a2630 : COLORS.panel,
+            border: row.problem ? 0x4a4352 : COLORS.borderMuted,
+          });
       box.add(bg);
       row.draw(scene, box, colW, config.rowHeight);
       const hl = focusFrame(scene, 0, 0, colW, config.rowHeight);
@@ -98,7 +109,11 @@ export class Picker {
     });
 
     // The message box along the bottom, like the games' text window.
-    this.root.add(paintWindow(scene.add.graphics(), 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { thin: true, fill: 0x18141d, border: COLORS.borderMuted }));
+    this.root.add(
+      glass
+        ? drawGlass(scene, 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 16 })
+        : paintWindow(scene.add.graphics(), 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { thin: true, fill: 0x18141d, border: COLORS.borderMuted }),
+    );
     this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
     this.root.add(this.footer);
     if (config.rows.length === 0) {

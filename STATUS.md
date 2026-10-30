@@ -30,6 +30,8 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 10, run
 - M10 visual slice 2: EBDX intro wipe (wild) and VS screens (trainer/rival/boss), skippable; ambience preset for all 18 types (+ second-type accents); DBK burst reveal for transformations, evolution and catches (replaces full-screen flashes); low-HP glow; victory hop. Tracker: `docs/plans/visual-coverage.md`.
 - M10 visual slice 3: move panel shows Enhanced Battle UI flag icons and an effectiveness tag with words (vs the foe's visible types); EBDX Mega/Dynamax symbol in databoxes.
 - M10 visual slice 4: boss/rival title cards, ACE! beat for a trainer's last Pokémon, VICTORY!/BADGE GET!/CHAMPION! stamps, glass-shutter exit wipe, foe databox rim by role.
+- M10 visual slice 5: Aero look off the battle screen. Reward cards are glass with a rarity rim, deal in, lift on focus and fly off when picked; shop, bag, party, decision, briefing and run-end panels are glass; those screens get a moving Aero sky. The run-end screen ignores mashed keys for 0.45 s.
+- Bond screen (map **Bonds** button): each party Pokémon's trait, mood (Wary/Steady/Devoted) and its seven bond values as animated bars, with a hint on what the mood means.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 
@@ -69,3 +71,4 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 10, run
 - CI workflow exists but has never run on GitHub.
 
 - Berries and Pal Pad: Razz (1.5x catch), Nanab (foe loses first turn), Pinap (catch drops a cheap item), Pal Pad (+5 levels on first catch each stage) work. Shields Down now turns Minior into `minior-core` at or below half HP (the pack has no Core sprite, so it reuses Meteor's). Still pending: berry system (pouch, pots, mulches, cases), seal-bag (needs a selling feature), urge/drop items (need in-battle bag), mystery egg, some gadgets.
+- Trainers.md perks, Z-to-M thread: batch Z1 (Tate & Liza to Zinnia, 20 trainers) with new kinds critChanceBonus, bossMoneyMultiplier, catchMoneyMultiplier, moveFlagDamage, unusualDamageMultiplier, afterKoDamageMultiplier and a `legendary` filter. The other perks thread goes A to L; this one takes M to Z backwards. Limits are in `docs/plans/trainers-coverage.md`.

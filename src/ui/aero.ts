@@ -6,7 +6,7 @@
 // call these helpers change.
 
 import type Phaser from 'phaser';
-import { mixColor } from './theme';
+import { COLORS, mixColor } from './theme';
 
 export const AERO = {
   /** Deep glass behind text. */
@@ -224,4 +224,21 @@ export function aeroBackdrop(scene: Phaser.Scene, motion: MotionLevel, tint: num
     }
   }
   return root;
+}
+
+/**
+ * Drop-in glass version of widgets' drawPanel (same arguments): darker glass
+ * for information panes, the trim colour carried into the rim.
+ */
+export function glassPanel(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  opts: { fill?: number; border?: number; alpha?: number; thin?: boolean } = {},
+): Phaser.GameObjects.Graphics {
+  const info = opts.fill !== undefined && opts.fill !== COLORS.panel;
+  const rim = opts.border !== undefined && opts.border !== COLORS.border && opts.border !== COLORS.borderMuted ? mixColor(opts.border, 0xffffff, 0.25) : info ? AERO.sky : AERO.rim;
+  return drawGlass(scene, x, y, w, h, { tint: info ? AERO.glassLow : AERO.glass, rim, alpha: opts.alpha ?? 0.92, glow: !info && !opts.thin, radius: 18 });
 }

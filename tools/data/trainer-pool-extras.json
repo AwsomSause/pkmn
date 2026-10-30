@@ -1,1 +1,72 @@
-{"bill":["abra","magnemite","eevee"]}
+{
+ "bill": [
+  "abra",
+  "magnemite",
+  "eevee"
+ ],
+ "todd-snap": [
+  "pikachu",
+  "bulbasaur",
+  "charmander"
+ ],
+ "serena": [
+  "fennekin",
+  "froakie",
+  "chespin"
+ ],
+ "shauna": [
+  "chespin",
+  "fennekin",
+  "froakie"
+ ],
+ "spr-hgss-ethan": [
+  "cyndaquil",
+  "totodile",
+  "chikorita"
+ ],
+ "spr-pt-barry": [
+  "chimchar",
+  "piplup",
+  "turtwig"
+ ],
+ "spr-pt-dawn": [
+  "piplup",
+  "turtwig",
+  "chimchar"
+ ],
+ "spr-pt-looker": [
+  "growlithe",
+  "houndour",
+  "mightyena"
+ ],
+ "spr-pt-lucas": [
+  "turtwig",
+  "chimchar",
+  "piplup"
+ ],
+ "selene": [
+  "rowlet",
+  "litten",
+  "popplio"
+ ],
+ "sonia": [
+  "yamper",
+  "wooloo",
+  "rookidee"
+ ],
+ "sycamore": [
+  "bulbasaur",
+  "charmander",
+  "squirtle"
+ ],
+ "sordward-shielbert": [
+  "steelix",
+  "klink",
+  "mawile"
+ ],
+ "spr-hgss-silver": [
+  "totodile",
+  "sneasel",
+  "gastly"
+ ]
+}

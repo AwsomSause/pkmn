@@ -143,6 +143,7 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   expect(await page.evaluate(() => localStorage.getItem('pkr.run'))).toBeNull();
   const stats = await page.evaluate(() => (window as any).__pkr.session.profile.stats);
   expect(stats.runsEnded).toBe(1);
+  await page.waitForTimeout(500); // the run-end screen ignores keys for its first moment
   await page.keyboard.press('Enter');
   await waitForScene(page, 'Hub');
 });

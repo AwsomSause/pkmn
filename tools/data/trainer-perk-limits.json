@@ -13,5 +13,14 @@
  "harmony": "Friendship bonuses are 20% stronger: Return power and friendship-gated Hyper moments count friendship 20% higher.",
  "hilda": "Fire-types and physical attackers: two separate boosts, so a Fire-type using a physical move gets both.",
  "ingo": "Double battles grant 20% more rewards has no effect: the game has no double battles yet. Single battles grant 10% less EXP applies to every battle (all battles are single).",
- "green-classic": "Starters start one level lower (never below level 1)."
+ "green-classic": "Starters start one level lower (never below level 1).",
+ "tate-liza-gen-6": "Double battles grant 20% more rewards has no effect: the game has no double battles. Single battles grant 10% less EXP applies to every battle.",
+ "team-rocket": "Stolen Pokémon and illicit captures grant 25% more rewards is read as: the prize money after catching a wild Pokémon is 25% higher.",
+ "thorton": "Unusual means a type pairing held by 6 or fewer species or an ability held by 12 or fewer; common means an ability held by 60 or more.",
+ "tierno": "Dance moves are listed by name (Swords Dance, Dragon Dance, Quiver Dance and the other dances); sound moves use the data's sound flag.",
+ "todd-snap": "Newly documented species advance Field Research milestones (Perfect Shot) is not built: that mechanic belongs to Champion Oak for now.",
+ "trevor": "Pokédex rewards increase by 20% is read as: Research Points at the end of a run are 20% higher.",
+ "volo": "Legendary, Mythical and Ultra Beast Pokémon deal the bonus damage.",
+ "wally": "After defeating an enemy is read as: once your side has defeated an enemy in the same trainer battle. It has no effect in wild battles.",
+ "spr-pt-looker": "Hidden items and bonus rewards 20% more often: only the reward-draft part (rare and epic rewards) is built; there are no hidden item spots."
 }
