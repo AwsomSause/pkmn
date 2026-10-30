@@ -2,6 +2,7 @@
 
 import { installTouchControls } from './ui/touchControls';
 import Phaser from 'phaser';
+import { regionIdentity } from './core/presentation/regionIdentity';
 import { getContent } from './data';
 import { installDebugPanel } from './debug/debugPanel';
 import { GameSession } from './game/GameSession';
@@ -86,7 +87,11 @@ function start(): void {
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') scene.cameras.main.fadeIn(220, 14, 11, 18);
-            if (aeroScenery.has(scene.scene.key)) aeroBackdrop(scene, session.settings.battleAnimations);
+            if (aeroScenery.has(scene.scene.key)) {
+              // Each region tints the sky its own way (catalog 62).
+              const run = session.run;
+              aeroBackdrop(scene, session.settings.battleAnimations, regionIdentity(run ? run.regionOrder[run.regionIndex] : undefined).sky);
+            }
             else if (!ownScenery.has(scene.scene.key)) {
               drawBackdrop(scene);
               new ArenaBackdrop(scene, { dim: 0.68 });

@@ -26,7 +26,8 @@ import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx } from '../ui/audio';
-import { setAmbience, setMusicState, playMotif, stopProceduralAudio } from '../ui/procAudio';
+import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
+import { regionIdentity } from '../core/presentation/regionIdentity';
 import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
@@ -874,6 +875,7 @@ export class BattleScene extends Phaser.Scene {
     const foe = currentEnemy(battle);
     const me = this.activeMon();
     const share = (m: PokemonInstance) => m.hp / Math.max(1, calcStats(services().session.content, m).hp);
+    setRegionKey(regionIdentity(this.run.regionOrder[this.run.regionIndex]).key);
     setMusicState(this, musicState({
       boss: Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId))),
       lastFoe: battle.enemyIndex >= battle.enemyTeam.length - 1 && battle.enemyTeam.length > 1,
