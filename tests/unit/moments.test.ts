@@ -14,7 +14,7 @@ function setup(seed: string) {
   return { run, lead: run.party[0]! };
 }
 const hit = (amount: number, hpAfter: number, effectiveness = 1): RunEvent => ({ type: 'damage', side: 'player', amount, hpAfter, effectiveness, crit: false } as RunEvent);
-const titles = (cues: ReturnType<typeof recordBattleTurn>) => cues.map((c) => c.title);
+const titles = (cues: ReturnType<typeof recordBattleTurn>) => cues.flatMap((c) => c.title.split(' · '));
 
 describe('data', () => {
   it('every moment trigger has a definition with the right effect', () => {

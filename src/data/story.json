@@ -2342,6 +2342,117 @@
       "eligibilityTags": [],
       "emotions": [],
       "variants": {}
+    },
+    {
+      "id": "grand-omen",
+      "displayName": "A Shadow Over the Region",
+      "messagePool": [
+        "A storm gathers where no storm should be…",
+        "The Pokémon here keep looking at the sky…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "grandOmen"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Felt a vast storm watching the region"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7f9fff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "grand-shadow",
+      "displayName": "The Storm Sovereign's Influence",
+      "messagePool": [
+        "{enemy} is wrapped in the Storm Sovereign's power!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "grandShadow"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Faced {enemy} empowered by the Storm Sovereign"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff4f6a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "grand-grudge",
+      "displayName": "It Stood Against the Same Power",
+      "messagePool": [
+        "{name} stood against this power before, and will not back down!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "grandGrudge"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 95,
+        "text": "Stood against the same power that once forced it to retreat"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd54f",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -2504,5 +2615,12 @@
         "victory": true
       }
     }
-  ]
+  ],
+  "grandEnemy": {
+    "name": "The Storm Sovereign",
+    "title": "Stood Against the Storm",
+    "contactFrom": 0.25,
+    "escalationFrom": 0.4,
+    "grudgeAfter": 1
+  }
 }
