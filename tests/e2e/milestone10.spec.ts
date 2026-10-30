@@ -191,6 +191,17 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   await attackUntil('VICTORY!');
   expect(await showsText(page, 'VICTORY!')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-victory.png' });
+  // Catalog 91: the boss victory card with its Chronicle stamp follows the stamp.
+  const victoryTexts = () =>
+    page.evaluate(() => {
+      const out: string[] = [];
+      const walk = (o: any) => (typeof o.text === 'string' && out.push(o.text), o.list?.forEach(walk));
+      (window as any).__pkr.game.scene.getScene('Battle').children.list.filter((o: any) => o.name === 'boss-victory').forEach(walk);
+      return out;
+    });
+  await expect.poll(async () => (await victoryTexts()).includes('Gym Leader Brock defeated!'), { timeout: 8000, intervals: [100] }).toBe(true);
+  expect((await victoryTexts()).some((t) => t.startsWith('Chronicle · Turn'))).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-boss-victory.png' });
   expect(errors).toEqual([]);
 });
 

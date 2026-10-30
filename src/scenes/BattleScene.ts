@@ -31,7 +31,8 @@ import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
-import { itemVisual, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
+import { itemVisual, pokemonIcon, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
+import { bossVictory } from '../ui/battleFx/victoryLook';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
@@ -44,7 +45,7 @@ import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
-import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
+import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
@@ -1228,6 +1229,8 @@ export class BattleScene extends Phaser.Scene {
     const { session } = services();
     const before = structuredClone(session.run!);
     const trainer = this.trainerTitle();
+    // Who the boss was, read before the turn ends the battle (catalog 91 victory card).
+    const bossWin = this.boss() ? { boss: this.boss()!, art: this.trainerArt(), turn: before.battle?.turn ?? 1, active: before.battle?.activeIndex ?? 0 } : null;
     let result: TurnResult;
     try {
       result = session.takeTurn(action);
@@ -1241,7 +1244,7 @@ export class BattleScene extends Phaser.Scene {
     await this.playEvents(result.events, before, trainer, result.cues, result.drama);
 
     if (result.end) {
-      await this.finish(result, trainer);
+      await this.finish(result, trainer, bossWin);
       return;
     }
     if (result.raidFailed) {
@@ -1265,12 +1268,22 @@ export class BattleScene extends Phaser.Scene {
     this.nextPrompt();
   }
 
-  private async finish(result: TurnResult, trainer: string | null): Promise<void> {
+  private async finish(result: TurnResult, trainer: string | null, bossWin: { boss: BossInfo; art: { assetId: string; label: string } | null; turn: number; active: number } | null = null): Promise<void> {
     const content = services().session.content;
     const end = result.end!;
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
     if (end.outcome === 'win' && trainer) {
       await this.playBeat(stamp(this, 'VICTORY!', trainer, this.foeRim(), this.motion));
+      if (bossWin) {
+        const party = result.run.party;
+        const v = bossVictory(content, bossWin.boss, party, bossWin.turn, party[bossWin.active] ?? null);
+        const art = bossWin.art;
+        await this.playBeat(
+          bossVictoryCard(this, v, TYPE_COLORS[v.accentType] ?? ROLE_RIMS[bossWin.boss.role], this.motion, art ? (x, y) => trainerVisual(this, art.assetId, art.label, x, y, 2.5) : null, (i, x, y) =>
+            pokemonIcon(this, getSpecies(content, v.lineup[i]!.speciesId), x, y, 1.6),
+          ),
+        );
+      }
       await this.say(`You defeated ${trainer}!`);
     }
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
