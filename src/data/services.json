@@ -121,6 +121,15 @@
       "blurb": "Pay for a crash course: one Pokémon gains levels, up to the level cap. Moves it cannot fit are skipped."
     },
     {
+      "id": "market",
+      "name": "Black Market",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Shop stock your badges have not opened yet, at double the price. Three seeded items; buy one."
+    },
+    {
       "id": "relic",
       "name": "Relic Shrine",
       "status": "supported",
@@ -182,6 +191,7 @@
     "eggPrice": 450,
     "fossilPrice": 650,
     "schoolPrice": 500,
-    "schoolLevels": 2
+    "schoolLevels": 2,
+    "marketMarkup": 2
   }
 }
