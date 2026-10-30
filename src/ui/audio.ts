@@ -4,12 +4,20 @@
 import type Phaser from 'phaser';
 import { pokemonAssetIds } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
+import { sfxAllowed, SFX_WINDOW_MS, type SfxPlay } from '../core/audioBudget';
 import { services } from '../game/services';
 import { loadAssets } from './lazyAssets';
+
+let recentSfx: SfxPlay[] = [];
 
 export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1): void {
   const { session, assets } = services();
   if (!assets.has(id) || session.settings.muted) return;
+  // Many hits in a row: cap how many play at once and skip an immediate repeat.
+  const now = performance.now();
+  recentSfx = recentSfx.filter((p) => now - p.at < SFX_WINDOW_MS);
+  if (!sfxAllowed(recentSfx, id, now)) return;
+  recentSfx.push({ id, at: now });
   try {
     scene.sound.play(id, { volume: session.settings.sfxVolume * volumeScale });
   } catch {
@@ -47,4 +55,10 @@ export function stopMusic(): void {
     currentMusic.sound.destroy();
     currentMusic = null;
   }
+}
+
+/** Applies the music volume setting to the track that is playing now. */
+export function refreshMusicVolume(): void {
+  const sound = currentMusic?.sound as (Phaser.Sound.BaseSound & { setVolume?: (v: number) => void }) | undefined;
+  sound?.setVolume?.(services().session.settings.musicVolume);
 }

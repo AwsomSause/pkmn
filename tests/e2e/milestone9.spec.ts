@@ -92,9 +92,11 @@ test('when a pack animation can\'t load, the PokeRogue one plays instead', async
 test('animation settings cycle on the title screen and turn animations off', async ({ page }) => {
   await page.goto('/?seed=m9-settings');
   await waitForScene(page, 'MainMenu');
-  // Continue (disabled), Hub (focused), Sound, Animations, Effects.
+  // Continue (disabled), Hub (focused), Settings; then the Settings page: Sound, Music, Effects volume, Animations.
   await page.keyboard.press('ArrowDown');
-  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'MainMenu');
+  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'MainMenu');
   expect(await page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('reduced');
@@ -106,8 +108,8 @@ test('animation settings cycle on the title screen and turn animations off', asy
   // With animations off, no animation file is ever requested.
   const animRequests: string[] = [];
   page.on('request', (r) => r.url().includes('/battle-anims/') && animRequests.push(r.url()));
-  await page.keyboard.press('ArrowUp');
-  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Escape'); // back to the main page
+  await waitForScene(page, 'MainMenu');
   await startBattle(page);
   await waitForMenu(page);
   await page.keyboard.press('Enter');
