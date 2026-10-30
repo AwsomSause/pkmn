@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T21:49:57.634Z",
+  "generatedAt": "2026-10-30T22:12:00.940Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -890,6 +890,90 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/raid_adventure_tera.mp3",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.fade_down",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/fade_down.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.fade_up",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/fade_up.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stripes",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stripes.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stairs",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stairs.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stairs2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stairs2.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.tiles",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/tiles.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.ripple",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/ripple.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.spread",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/spread.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.swirl",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/swirl.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.hex",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/hex.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.computer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/computer.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.computer_close",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/computer_close.png",
       "lazy": true
     },
     {
@@ -78628,6 +78712,234 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/hyper-chilan-berry.png"
+    },
+    {
+      "id": "item.gen5/adamant-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/adamant-mint.png"
+    },
+    {
+      "id": "item.gen5/bold-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bold-mint.png"
+    },
+    {
+      "id": "item.gen5/brave-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/brave-mint.png"
+    },
+    {
+      "id": "item.gen5/calm-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/calm-mint.png"
+    },
+    {
+      "id": "item.gen5/careful-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/careful-mint.png"
+    },
+    {
+      "id": "item.gen5/gentle-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gentle-mint.png"
+    },
+    {
+      "id": "item.gen5/hasty-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hasty-mint.png"
+    },
+    {
+      "id": "item.gen5/impish-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/impish-mint.png"
+    },
+    {
+      "id": "item.gen5/jolly-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/jolly-mint.png"
+    },
+    {
+      "id": "item.gen5/lax-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lax-mint.png"
+    },
+    {
+      "id": "item.gen5/lonely-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lonely-mint.png"
+    },
+    {
+      "id": "item.gen5/mild-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/mild-mint.png"
+    },
+    {
+      "id": "item.gen5/modest-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/modest-mint.png"
+    },
+    {
+      "id": "item.gen5/naive-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/naive-mint.png"
+    },
+    {
+      "id": "item.gen5/naughty-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/naughty-mint.png"
+    },
+    {
+      "id": "item.gen5/quiet-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/quiet-mint.png"
+    },
+    {
+      "id": "item.gen5/rash-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rash-mint.png"
+    },
+    {
+      "id": "item.gen5/relaxed-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/relaxed-mint.png"
+    },
+    {
+      "id": "item.gen5/sassy-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sassy-mint.png"
+    },
+    {
+      "id": "item.gen5/serious-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/serious-mint.png"
+    },
+    {
+      "id": "item.gen5/timid-mint",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/timid-mint.png"
+    },
+    {
+      "id": "item.gen5/fighting-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fighting-memory.png"
+    },
+    {
+      "id": "item.gen5/flying-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flying-memory.png"
+    },
+    {
+      "id": "item.gen5/poison-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poison-memory.png"
+    },
+    {
+      "id": "item.gen5/ground-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ground-memory.png"
+    },
+    {
+      "id": "item.gen5/rock-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rock-memory.png"
+    },
+    {
+      "id": "item.gen5/bug-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bug-memory.png"
+    },
+    {
+      "id": "item.gen5/ghost-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ghost-memory.png"
+    },
+    {
+      "id": "item.gen5/steel-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/steel-memory.png"
+    },
+    {
+      "id": "item.gen5/fire-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fire-memory.png"
+    },
+    {
+      "id": "item.gen5/water-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/water-memory.png"
+    },
+    {
+      "id": "item.gen5/grass-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grass-memory.png"
+    },
+    {
+      "id": "item.gen5/electric-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/electric-memory.png"
+    },
+    {
+      "id": "item.gen5/psychic-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/psychic-memory.png"
+    },
+    {
+      "id": "item.gen5/ice-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ice-memory.png"
+    },
+    {
+      "id": "item.gen5/dragon-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-memory.png"
+    },
+    {
+      "id": "item.gen5/dark-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dark-memory.png"
+    },
+    {
+      "id": "item.gen5/fairy-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fairy-memory.png"
     },
     {
       "id": "bg.arena.plains",
