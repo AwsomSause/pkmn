@@ -135,6 +135,11 @@ export function runQuestProgress(content: Content, run: RunState): RequirementPr
   return { current: Math.min(current, q.atLeast), target: q.atLeast, met: current >= q.atLeast };
 }
 
+/** The trainer whose quest line a run counts for: an evolved trainer counts for its base trainer. */
+export function questTrainer(content: Content, archetypeId: string): string {
+  return content.archetypes.get(archetypeId)?.evolvedFrom ?? archetypeId;
+}
+
 /** The trainer's line name, for screens. */
 export function questLineName(content: Content, trainerId: string): string {
   return content.questLines.get(trainerId)?.name ?? `${getArchetype(content, trainerId).name}'s quest`;

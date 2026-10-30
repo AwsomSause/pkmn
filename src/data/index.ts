@@ -434,7 +434,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   for (const a of content.archetypes.values()) {
     checkRequirement(a.unlock, `trainer "${a.id}"`);
-    if (!a.unlockedByDefault && !a.unlock) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
+    if (!a.unlockedByDefault && !a.unlock && !a.evolvedFrom) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
     for (const id of Object.keys(a.startingItems)) if (!content.items.has(id)) problems.push(`trainer "${a.id}" starts with unknown item "${id}"`);
     for (const m of a.modifiers) {
       if (m.kind === 'startingAttribute' && !(ATTRIBUTE_KEYS as readonly string[]).includes(m.key)) problems.push(`trainer "${a.id}" starts with unknown attribute "${m.key}"`);
@@ -487,7 +487,14 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       if (step.reward.evolution && i !== line.steps.length - 1) problems.push(`${where} step ${i + 1}: only the last step unlocks a Trainer Evolution`);
     });
   }
-  for (const a of content.archetypes.values()) if (a.available !== false && !lineTrainers.has(a.id)) problems.push(`trainer "${a.id}" has no quest line`);
+  for (const a of content.archetypes.values()) if (a.available !== false && !a.evolvedFrom && !lineTrainers.has(a.id)) problems.push(`trainer "${a.id}" has no quest line`);
+  // Trainer Evolutions: the base trainer exists and its quest line ends in the evolution unlock.
+  for (const a of content.archetypes.values()) {
+    if (!a.evolvedFrom) continue;
+    const line = quests.lines.find((l) => l.trainerId === a.evolvedFrom);
+    if (!content.archetypes.has(a.evolvedFrom)) problems.push(`evolved trainer "${a.id}": unknown base trainer "${a.evolvedFrom}"`);
+    else if (!line?.steps.at(-1)?.reward.evolution) problems.push(`evolved trainer "${a.id}": "${a.evolvedFrom}"'s quest line doesn't unlock a Trainer Evolution`);
+  }
   // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
   const checkLicense = (id: string | null, where: string) => {
     if (id !== null && !content.licenses.has(id)) problems.push(`${where} needs unknown license "${id}"`);

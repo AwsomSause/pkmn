@@ -6,7 +6,7 @@ import Phaser from 'phaser';
 import { getArchetype } from '../core/archetypes';
 import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
-import { runQuestOf, stepsDone } from '../core/quests';
+import { questTrainer, runQuestOf, stepsDone } from '../core/quests';
 import { itemsText } from '../core/runPrep';
 import { getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -56,8 +56,8 @@ export class BriefingScene extends Phaser.Scene {
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
     const quest = runQuestOf(content, run);
     if (quest) line('Run Quest', `${quest.text} (+${quest.researchPoints} Research Points)`);
-    const questLine = content.questLines.get(run.archetypeId);
-    const done = stepsDone(content, session.profile, run.archetypeId);
+    const questLine = content.questLines.get(questTrainer(content, run.archetypeId));
+    const done = stepsDone(content, session.profile, questTrainer(content, run.archetypeId));
     if (questLine && done < questLine.steps.length) line('Trainer quest', `${questLine.name}, step ${done + 1}/5: ${questLine.steps[done]!.goal}`);
     line('Seed', `${run.seed}   (the same seed replays the same run)`);
 
