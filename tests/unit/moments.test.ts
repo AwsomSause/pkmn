@@ -137,3 +137,46 @@ describe('unusual events with no choice', () => {
     expect(t).toContain("They've Been Waiting for This Battle…");
   });
 });
+
+describe('Emotional Overdrives', () => {
+  const tag = async (run: ReturnType<typeof setup>['run'], uid: string, emotion: 'kindness' | 'integrity' | 'determination') => {
+    const { emit } = await import('../../src/core/story/record');
+    emit(content, run, 'storyMoment', { actors: [uid], data: { def: 'x', suppressed: false }, importance: 90, text: 'test', emotions: [emotion] });
+  };
+
+  it('Kindness: a protective burst when a teammate is nearly down, once per battle', async () => {
+    const { run, lead } = setup('eo-kind');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const buddy = createPokemon(content, 'rattata', 10, 'buddy');
+    buddy.hp = 1;
+    run.party.push(buddy);
+    await tag(run, lead.uid, 'kindness');
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(titles(cues)).toContain('Kindness Overdrive');
+    expect(run.battle!.playerStages.def).toBe(1);
+    recordBattleTurn(content, structuredClone(run), run, []);
+    expect(run.battle!.playerStages.def).toBe(1);
+  });
+
+  it('Integrity: shakes off a status it just got', async () => {
+    const { run, lead } = setup('eo-integrity');
+    await tag(run, lead.uid, 'integrity');
+    lead.status = 'psn' as never;
+    const cues = recordBattleTurn(content, structuredClone(run), run, [{ type: 'status', side: 'player', status: 'psn' } as RunEvent]);
+    expect(titles(cues)).toContain('Integrity Overdrive');
+    expect(lead.status).toBeNull();
+  });
+
+  it('Determination plus a hurt friend is the rare dual-emotion moment', async () => {
+    const { run, lead } = setup('eo-dual');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const buddy = createPokemon(content, 'rattata', 10, 'buddy');
+    buddy.hp = 1;
+    run.party.push(buddy);
+    await tag(run, lead.uid, 'determination');
+    lead.hp = 1;
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(titles(cues)).toContain('Determination and Kindness');
+    expect(lead.hp).toBeGreaterThan(1);
+  });
+});
