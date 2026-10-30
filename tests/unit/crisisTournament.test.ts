@@ -120,3 +120,38 @@ describe('Rival Gauntlet', () => {
     expect(g.gauntletWon(content, run, 'b')).toBeNull();
   });
 });
+
+describe('Champion defense', () => {
+  it('remembers the newest won run team and offers the defense only then', async () => {
+    const { createRun: make } = await import('../../src/core/run');
+    const { championTeam } = await import('../../src/core/story/championDefense');
+    const rec = (victory: boolean, speciesId: string) => ({ victory, party: [{ speciesId, level: 60, shiny: false }] }) as never;
+    const none = make(content, { runId: 'cd-0', seed: 'cd-0', archetypeId: 'red', runHistory: [rec(false, 'pikachu')] });
+    expect(championTeam(none.story)).toEqual([]);
+    expect(eligibleEvents(content, { ...none, regionIndex: 3 }).map((e) => e.id)).not.toContain('champion-defense');
+    const won = make(content, { runId: 'cd-1', seed: 'cd-1', archetypeId: 'red', runHistory: [rec(false, 'rattata'), rec(true, 'pikachu'), rec(true, 'charmander')] });
+    expect(championTeam(won.story)).toEqual([{ speciesId: 'pikachu', level: 60 }]);
+    expect(eligibleEvents(content, { ...won, regionIndex: 3 }).map((e) => e.id)).toContain('champion-defense');
+  });
+});
+
+describe('Rival feud', () => {
+  it('needs two hostile feuding rivals, backing one allies it and angers the other, and each feud settles once', async () => {
+    const f = await import('../../src/core/story/feud');
+    const run = fresh('feud');
+    const classId = [...content.trainers.keys()][0]!;
+    const rival = (id: string, rivalPotential: number) => ({ id, name: id, classId, state: 'recurring', rivalPotential, progress: 0, encounters: 1, cooldown: 0 }) as never;
+    run.story.rivals.push(rival('a', 30), rival('b', 50));
+    expect(f.openFeud(run)).toBeNull();
+    run.story.rivalGraph.push({ a: 'a', b: 'b', kind: 'enemies' });
+    expect(f.openFeud(run)!.map((r) => r.id)).toEqual(['b', 'a']);
+    expect(eligibleEvents(content, run).map((e) => e.id)).toContain('rival-feud');
+    expect(f.settleFeud(content, run, 'second')).toContain('is your ally');
+    const [a, b] = [run.story.rivals[0]!, run.story.rivals[1]!];
+    expect(a.state).toBe('ally');
+    expect(b.rivalPotential).toBe(60);
+    expect(f.openFeud(run)).toBeNull();
+    expect(f.settleFeud(content, run, 'exploit')).toBe('');
+    expect(eligibleEvents(content, run).map((e) => e.id)).not.toContain('rival-feud');
+  });
+});

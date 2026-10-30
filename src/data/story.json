@@ -3135,7 +3135,9 @@
     "contactFrom": 0.25,
     "escalationFrom": 0.4,
     "grudgeAfter": 1,
-    "influenceRare": 1.25
+    "influenceRare": 1.25,
+    "huntClues": 3,
+    "huntTitle": "Storm Hunter"
   },
   "rarity": {
     "momentChance": 0.3,

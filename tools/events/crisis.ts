@@ -2,7 +2,7 @@
 // Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
 // The bracket: an entry stop, then one round per stage (always placed until played), then the final.
 
-import { $, any, ch, ev, fight, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+import { $, any, ch, ev, fight, fr, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
 
 const D = 'Regional Crisis';
 const T = 'Rival Tournament';
@@ -54,5 +54,41 @@ export const GAUNTLET_EVENTS: Json[] = [
     'A hand-painted sign on the wall: "Everyone you have ever beaten wants a word." Rivals you have crossed paths with are lining up, each with the team they have trained since.', [
       ch('Take on the gauntlet', out('Word spreads fast. One rival will meet you on each of the next stops, in order of how dangerous they are. Beat them all for a big purse.', { kind: 'gauntlet', rivals: 3 })),
       ch('Not today', leave()),
+    ]),
+];
+
+const clue = (id: string, name: string, intro: string, tint: string, look: string): Json =>
+  ev(id, name, 'Grand-Enemy Hunt', { rarity: 'uncommon', minStage: 3, requires: [{ kind: 'hunt', atLeast: 0, atMost: 2 }], cast: [], effect: 'fog', tint }, intro, [
+    ch(look, out('You piece it together. It is a little more than a rumour now.', { kind: 'hunt' }, rp(20))),
+    ch('Leave it', leave()),
+  ]);
+
+export const HUNT_EVENTS: Json[] = [
+  clue('hunt-clue-scorch', 'Scorch Marks in a Perfect Circle', 'The grass is burned in a ring, as wide as a house. Nothing living would do this. Something very large landed here.', '#2a1d18', 'Study the marks'),
+  clue('hunt-clue-witness', 'A Shaken Witness', 'A ranger sits on a stump with a blanket over her shoulders. "It was in the clouds. It looked at me. It was not afraid of me."', '#1d2230', 'Hear her out'),
+  clue('hunt-clue-feather', 'A Feather That Hums', 'A single feather lies on the road. It hums faintly, and every Pokémon you own turns to look at it.', '#1a2630', 'Take the feather'),
+  ev('hunt-lair', 'Where the Storm Rests', 'Grand-Enemy Hunt', { rarity: 'rare', minStage: 4, requires: [{ kind: 'hunt', atLeast: 3 }], cast: ['trainer.psychic_m'], effect: 'glint', tint: '#14141f' },
+    'Everything you have gathered points to one place. A figure in a storm-grey coat steps out and bows. "You have been looking for us. Then show us what you know."', [
+      ch('Face the herald', fight('Lightning splits the sky as the herald sends out its team.', trainer('Storm Herald', { size: 4, lv: 3, win: [$(1500), any(...TREASURE), rp(80), { kind: 'hunt', finish: true }] }))),
+      ch('Not yet', leave()),
+    ]),
+];
+
+export const CHAMPION_EVENTS: Json[] = [
+  ev('champion-defense', 'The Champion Who Came Before', 'Hall of Fame', { rarity: 'rare', minStage: 6, requires: [{ kind: 'championGhost' }], cast: ['trainer.psychic_m'], effect: 'sparkle', tint: '#2a2410' },
+    'A banner bears the name of a champion team you built in another life. Today the Hall has rebuilt that team and put it on the field. It is not a replay of how you won, just the same Pokémon at the same strength, fighting as hard as they know how.', [
+      ch('Defend your name', fight('The old champions walk out.', trainer('Hall of Fame Team', { size: 6, ghost: true, win: [$(3000), any(...TREASURE), rp(100), good(2)] }))),
+      ch('Salute and walk on', out('You tip your cap to the old team and leave them to their stage.', rp(10))),
+    ]),
+];
+
+const feud = (choice: string): Json => ({ kind: 'feud', choice });
+export const FEUD_EVENTS: Json[] = [
+  ev('rival-feud', 'Two Rivals, One Argument', 'Rival Feud', { rarity: 'uncommon', minStage: 3, requires: [{ kind: 'feud' }], cast: ['trainer.psychic_m'], effect: 'glint', tint: '#2a1d1d' },
+    'Two trainers you have both met are in the middle of the road, shouting. Each sees you and demands you take a side. A crowd is already gathering.', [
+      ch('Back the stronger rival', out('You stand beside them. The crowd goes quiet.', feud('first'), fr(3, 'party'))),
+      ch('Back the underdog', out('You stand beside them. The crowd goes quiet.', feud('second'), fr(3, 'party'))),
+      ch('Stay out of it', out('You walk through the crowd without a word.', feud('stay-out'), rp(10))),
+      ch('Work the crowd (risky)', out('While everyone is watching them, you collect a fair amount from the distracted crowd.', feud('exploit'), $(800)), { chance: 0.7, fail: out('Someone spots you. You leave in a hurry with nothing, and both rivals saw it.', feud('exploit')) }),
     ]),
 ];
