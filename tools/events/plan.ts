@@ -2,7 +2,7 @@
 // in its order: the twelve approved events, the 96 drafts in nine groups, one
 // event per type, the draft map stops and the rest spots.
 
-import { $, BALLS, BERRIES, FOSSILS, HEALING, HELD, STONES, TREASURE, VITAMINS, any, att, better, ch, cure, ev, evil, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, item, join, leave, lose, lv, money, out, party, peace, ptype, rage, isRage, isPeace, reveal, rp, status, trainer, wild, attr, type Json } from './dsl.ts';
+import { $, BALLS, BERRIES, FOSSILS, HEALING, HELD, STONES, TREASURE, VITAMINS, any, att, better, ch, cure, ev, evil, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, item, join, egg, eggMove, leave, lose, lv, money, out, party, peace, ptype, rage, isRage, isPeace, reveal, rp, status, trainer, wild, attr, type Json } from './dsl.ts';
 
 const A = 'Approved events';
 const M = 'Merchants and deals';
@@ -228,7 +228,7 @@ export const PLAN_EVENTS: Json[] = [
     ch('Walk on', leave()),
   ]),
   ev('egg-nest', 'Egg Nest', W, { effect: 'sparkle' }, 'An unguarded nest holds one egg.', [
-    ch('Take the egg', out('It hatches right away into a baby!', join({ lv: -5 }), evil(5))),
+    ch('Take the egg', out('You tuck the Egg into your bag. It feels warm.', egg({ lv: -5, left: 3 }), evil(5))),
     ch('Wait for the parent', fight('The parent is furious!', wild({ lv: 3, win: [good(5), item('oval-stone')] })), { requires: [fierce] }),
     ch('Leave it', out('You walk on, feeling good.', good(5))),
   ]),
@@ -324,7 +324,7 @@ export const PLAN_EVENTS: Json[] = [
   ]),
   ev('daycare-couple', 'Daycare Couple', H, { stop: 'daycare', effect: 'hearts' }, 'An old couple at a fence. "We\'ll raise one for you!"', [
     ch('Leave a Pokémon', out('It\'s grown while you were away!', lv(3)), { requires: [party(2)] }),
-    ch('Ask about eggs', out('They found an Egg! It hatches in your arms.', join({ lv: -6 }))),
+    ch('Ask about eggs', out('They found an Egg! Keep it warm and it will hatch.', egg({ lv: -6, left: 2 }))),
   ]),
   ev('lost-child', 'Lost Child', H, { effect: 'hearts' }, 'Two preschoolers are crying.', [
     ch('Help them home', out('Their parent rewards you warmly.', good(10), attr('love', 5), $(700))),
@@ -411,7 +411,7 @@ export const PLAN_EVENTS: Json[] = [
     ch('Show your rage', out('A true dragon\'s spirit!', item('dragon-fang')), { requires: [isRage(30)] }),
   ]),
   ev('expert-breeder', 'Expert Breeder', R, { cast: ['trainer.aroma_lady'], effect: 'hearts' }, '"I can teach your Pokémon an egg move."', [
-    ch('Teach your lead', out('A new trick from its parents!', fr(10, 'lead'), lv(1))),
+    ch('Teach your lead', out('A new trick from its parents!', eggMove(), fr(10, 'lead'))),
     ch('Leave', leave()),
   ]),
 

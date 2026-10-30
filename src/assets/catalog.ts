@@ -81,6 +81,12 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'pack.ebdx.status', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/status.png' },
   { id: 'pack.ebdx.symMega', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/symMega.png' },
   { id: 'pack.ebdx.symDynamax', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/symDynamax.png' },
+  // Egg hatching (EBDX): the Egg, its crack frames, the hatch backdrop and shines.
+  { id: 'pack.ebdx.egg', kind: 'image', category: 'ui', path: 'images/packs/ebdx/hatch/egg.png', lazy: true },
+  { id: 'pack.ebdx.eggCracks', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebdx/hatch/cracks.png', frameSize: 80, lazy: true },
+  ...['hatchbg', 'line', 'overlay', 'shine6', 'shine7'].map(
+    (name): AssetEntry => ({ id: `pack.ebdx.hatch.${name}`, kind: 'image', category: 'ui', path: `images/packs/ebdx/hatch/${name}.png`, lazy: true }),
+  ),
   // Enhanced Battle UI: move flag icons and the effectiveness tags (unknown, immune, weak, super, normal).
   { id: 'pack.ebui.effectiveness', kind: 'image', category: 'ui', path: 'images/packs/ebui/move_effectiveness.png' },
   ...['Contact', 'Sound', 'Biting', 'Powder', 'Pulse', 'Punching', 'HighCriticalHitRate', 'ZMove', 'DynamaxMove'].map(
@@ -113,6 +119,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'se.faint', kind: 'audio', category: 'sound', path: 'audio/se/faint.wav' },
   { id: 'se.level_up', kind: 'audio', category: 'sound', path: 'audio/se/level_up.wav' },
   { id: 'se.exp', kind: 'audio', category: 'sound', path: 'audio/se/exp.wav' },
+  { id: 'se.egg_get', kind: 'audio', category: 'sound', path: 'audio/se/egg_get.ogg' },
   { id: 'ui.select', kind: 'audio', category: 'sound', path: 'audio/ui/select.wav' },
   { id: 'ui.error', kind: 'audio', category: 'sound', path: 'audio/ui/error.wav' },
   { id: 'font.main', kind: 'font', category: 'font', path: 'fonts/pokemon-emerald-pro.ttf' },

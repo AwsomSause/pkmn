@@ -22,6 +22,8 @@ import { addItem } from './items';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, discover } from './progress';
+import { eggStatus, layEgg } from './eggs';
+import { eggMoveOptions, familyId, teachEggMove } from './mastery';
 import { getCampaign, runLevelCap } from './regions';
 import { hashSeed, Rng } from './rng';
 import { continueAfterDecisions, healParty, newMon } from './run';
@@ -340,6 +342,10 @@ function effectWords(content: Content, e: EventEffect): string {
       return `${e.who === 'lead' ? 'lead' : 'party'} +${e.amount} level${e.amount === 1 ? '' : 's'}`;
     case 'join':
       return 'a Pokémon joins';
+    case 'egg':
+      return 'you get an Egg';
+    case 'eggMove':
+      return 'your lead learns an egg move';
     case 'betterDraft':
       return `better next reward${e.extra ? ` (+${e.extra} choice)` : ''}`;
     case 'gymPreview':
@@ -476,6 +482,20 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       count(run, 'pokemonCaught');
       run.pending.push({ kind: 'caught', mon });
       return `${content.species.get(mon.speciesId)?.name ?? mon.speciesId} wants to join you!`;
+    }
+    case 'egg': {
+      const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
+      const speciesId = pickSpecies(content, run, e.species, e.types, rng);
+      const level = Math.max(1, eventLevel(content, run, node, rng) + e.levelBonus);
+      const made = layEgg(content, run, speciesId, { level, left: e.left, unit: e.unit, source: 'Event', shinyMultiplier: runAttributeEffects(content, run).shinyChance * e.shinyMultiplier }, rng);
+      return `You got an Egg! ${eggStatus(made)}.`;
+    }
+    case 'eggMove': {
+      const lead = run.party.find((m) => m.hp > 0);
+      if (!lead) return '';
+      const id = eggMoveOptions(content, familyId(content, lead.speciesId)).find((o) => o.active && !lead.moves.some((m) => m.id === o.id))?.id;
+      if (!id || !teachEggMove(content, lead, id, [])) return '';
+      return `${content.species.get(lead.speciesId)?.name ?? lead.speciesId} learned the egg move ${content.moves.get(id)!.name}!`;
     }
     case 'formChange': {
       const mon = run.party.find((m) => m.speciesId === e.from);

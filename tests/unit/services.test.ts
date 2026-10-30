@@ -230,7 +230,7 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     run.money = 5000;
     const before = run.money;
     const out = useService(content, run, 'svc-test', 'egg');
-    expect(Object.keys(out.run.itemCounters ?? {}).some((k) => k.startsWith('egg:'))).toBe(true);
+    expect(out.run.eggs).toHaveLength(1);
     expect(out.run.money).toBeLessThan(before);
     expect(() => useService(content, out.run, 'svc-test', 'egg')).toThrow();
   });

@@ -36,7 +36,10 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/t
 import { Menu } from '../ui/widgets';
 import { glassPanel as drawPanel } from '../ui/aero';
 import { sceneForRun } from './routing';
-import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
+
+/** The EBDX art the Egg hatch uses (loaded only when an Egg is hatching). */
+const HATCH_ASSETS = ['pack.ebdx.egg', 'pack.ebdx.eggCracks', 'pack.ebdx.hatch.hatchbg', 'pack.ebdx.hatch.line', 'pack.ebdx.hatch.overlay', 'pack.ebdx.hatch.shine6', 'pack.ebdx.hatch.shine7', 'se.egg_get'];
 
 function describeMove(content: Content, id: string): string {
   const m = content.moves.get(id)!;
@@ -50,6 +53,8 @@ export class DecisionScene extends Phaser.Scene {
   private confirmMenu: Menu | null = null;
   private confirmLayer: Phaser.GameObjects.Container | null = null;
   private done = false;
+  /** The Egg hatch is playing; input waits until the Pokémon is shown. */
+  private hatching = false;
 
   constructor() {
     super('Decision');
@@ -59,6 +64,7 @@ export class DecisionScene extends Phaser.Scene {
     const { session } = services();
     const caught = (session.run?.pending ?? []).flatMap((d) => (d.kind === 'caught' || d.kind === 'reunion' ? (session.content.species.get(d.mon.speciesId) ?? []) : []));
     preloadPokemon(this, [...partySpecies(), ...caught], { front: true, shiny: true, icon: true });
+    if (session.run?.pending.some((d) => d.kind === 'caught' && d.mon.hatched)) queueAssets(this, HATCH_ASSETS);
   }
 
   create(): void {
@@ -74,6 +80,7 @@ export class DecisionScene extends Phaser.Scene {
 
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);
+    else if (decision.kind === 'caught' && decision.mon.hatched) this.playHatch(decision.mon);
     else if (decision.kind === 'caught') this.buildCaught(decision.mon);
     else if (decision.kind === 'reunion') this.buildCaught(decision.mon, decision.hallOfFame);
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
@@ -83,7 +90,7 @@ export class DecisionScene extends Phaser.Scene {
   }
 
   private handleInput(action: InputAction): void {
-    if (this.done) return;
+    if (this.done || this.hatching) return;
     if (this.confirmMenu) this.confirmMenu.handle(action);
     else if (this.picker) this.picker.handle(action);
     else this.menu?.handle(action);
@@ -292,6 +299,90 @@ export class DecisionScene extends Phaser.Scene {
   // ---------- a caught Pokémon ----------
 
   /** A caught Pokémon, or one from a past run that wants to join (`reunion` set: true if it won a past run with you). */
+  /**
+   * The Egg hatches (EBDX art): it wobbles and cracks a little more each time, bursts in a white
+   * flash and shines, then the usual join screen shows the Pokémon. Motion "off" skips straight to it.
+   */
+  private playHatch(mon: PokemonInstance): void {
+    const motion = services().session.settings.battleAnimations;
+    const has = (id: string) => this.textures.exists(id);
+    if (motion === 'off' || !has('pack.ebdx.egg')) {
+      this.buildCaught(mon);
+      return;
+    }
+    this.hatching = true;
+    const cx = GAME_WIDTH / 2;
+    const cy = GAME_HEIGHT / 2 + 10;
+    const layer = this.add.container(0, 0).setDepth(200);
+    layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0a1830).setOrigin(0));
+    if (has('pack.ebdx.hatch.hatchbg')) layer.add(this.add.image(cx, GAME_HEIGHT / 2, 'pack.ebdx.hatch.hatchbg').setDisplaySize(GAME_WIDTH, GAME_HEIGHT));
+    if (has('pack.ebdx.hatch.line')) {
+      const line = this.add.tileSprite(cx, cy + 96, GAME_WIDTH, 38, 'pack.ebdx.hatch.line').setAlpha(0.8);
+      layer.add(line);
+      this.tweens.add({ targets: line, tilePositionX: 512, duration: 4000, repeat: -1 });
+    }
+    const shadow = this.add.ellipse(cx, cy + 70, 120, 22, 0x000000, 0.3);
+    const egg = this.add.image(cx, cy, 'pack.ebdx.egg').setScale(4.6);
+    const cracks = has('pack.ebdx.eggCracks') ? this.add.image(cx, cy, 'pack.ebdx.eggCracks', 0).setScale(4.6) : null;
+    const caption = this.add.text(cx, 64, 'Oh?', textStyle(32, COLORS.textLight)).setOrigin(0.5).setAlpha(0);
+    layer.add([shadow, egg, ...(cracks ? [cracks] : []), caption]);
+    if (has('pack.ebdx.hatch.overlay')) layer.add(this.add.image(cx, GAME_HEIGHT / 2, 'pack.ebdx.hatch.overlay').setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setAlpha(0.5));
+    this.tweens.add({ targets: caption, alpha: 1, y: 80, duration: 400, ease: 'Back.easeOut' });
+    // Idle bob while it gathers itself.
+    this.tweens.add({ targets: [egg, cracks].filter(Boolean), y: cy - 10, duration: 420, yoyo: true, repeat: 1, ease: 'Sine.easeInOut' });
+    const sparkle = (n: number) => {
+      if (!has('pack.ebdx.hatch.shine6')) return;
+      for (let i = 0; i < n; i++) {
+        const a = (Math.PI * 2 * i) / n + Math.random() * 0.4;
+        const s = this.add.image(cx, cy - 60, 'pack.ebdx.hatch.shine6').setScale(1.5).setBlendMode(Phaser.BlendModes.ADD).setDepth(201);
+        this.tweens.add({ targets: s, x: cx + Math.cos(a) * 170, y: cy - 60 + Math.sin(a) * 140, scale: 0.3, alpha: 0, angle: 180, duration: 700, ease: 'Cubic.easeOut', onComplete: () => s.destroy() });
+      }
+    };
+    // Three wobbles, each a little wilder, each leaving more cracks.
+    const wobble = (i: number) => {
+      if (i >= 3) return burst();
+      const swing = 10 + i * 6;
+      this.tweens.chain({
+        targets: [egg, cracks].filter(Boolean),
+        tweens: [
+          { angle: -swing, duration: 110 - i * 15, ease: 'Sine.easeOut' },
+          { angle: swing, duration: 180 - i * 25, ease: 'Sine.easeInOut', yoyo: true, repeat: 1 },
+          { angle: 0, duration: 120, ease: 'Back.easeOut' },
+        ],
+        onComplete: () => {
+          cracks?.setFrame(Math.min(4, i + 2));
+          this.cameras.main.shake(90, 0.004 + i * 0.002);
+          sparkle(4 + i * 2);
+          this.time.delayedCall(260 + (2 - i) * 120, () => wobble(i + 1));
+        },
+      });
+    };
+    const burst = () => {
+      const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0).setDepth(210);
+      this.tweens.add({ targets: [egg, cracks].filter(Boolean), scaleX: 5.4, scaleY: 3.8, duration: 140, yoyo: true, ease: 'Quad.easeOut' });
+      this.tweens.add({
+        targets: flash,
+        alpha: 1,
+        duration: 260,
+        delay: 120,
+        onComplete: () => {
+          layer.destroy();
+          this.cameras.main.setBackgroundColor(0x000000);
+          playSfx(this, 'se.egg_get');
+          this.hatching = false;
+          this.buildCaught(mon);
+          if (has('pack.ebdx.hatch.shine7')) {
+            const ring = this.add.image(200, 220, 'pack.ebdx.hatch.shine7').setBlendMode(Phaser.BlendModes.ADD).setDepth(205).setScale(1.2);
+            this.tweens.add({ targets: ring, scale: 4.5, alpha: 0, angle: 90, duration: 900, ease: 'Cubic.easeOut', onComplete: () => ring.destroy() });
+          }
+          sparkle(10);
+          this.tweens.add({ targets: flash, alpha: 0, duration: 520, ease: 'Sine.easeIn', onComplete: () => flash.destroy() });
+        },
+      });
+    };
+    this.time.delayedCall(900, () => wobble(0));
+  }
+
   private buildCaught(caught: PokemonInstance, reunion?: boolean): void {
     const { session } = services();
     const content = session.content;
@@ -309,7 +400,7 @@ export class DecisionScene extends Phaser.Scene {
     spot.fillStyle(0x4a3f5c, 0.9).fillEllipse(200, 298, 200, 32);
     fitHeight(this, pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny), 240);
     const past = reunion !== undefined;
-    const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
+    const title = !past ? (caught.hatched ? `${species.name} hatched from the Egg!` : `You caught ${species.name}!`) : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
     const lines = [...catchSummary(content, caught, run.party[0]), masteryPreview(content, services().session.profile, run, caught)];
     this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${partyMax}).` : `Party: ${run.party.length}/${partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));

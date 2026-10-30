@@ -58,6 +58,8 @@ export const PokemonInstanceSchema = z.object({
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
   /** Max HP bonus in percent from the trainer's HP perks (core/trainerPerks.ts syncHpPerks keeps it current). */
   perkHp: z.number().int().optional(),
+  /** Hatched from an Egg this run (core/eggs.ts; Elm's perk gives these more experience). */
+  hatched: z.boolean().optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
@@ -789,6 +791,22 @@ export const MasteryPerkSchema = z.object({
 });
 export type MasteryPerk = z.infer<typeof MasteryPerkSchema>;
 
+/** An Egg the player carries (core/eggs.ts). It hatches when `left` battles (or stages) have passed. */
+export const EggSchema = z.object({
+  uid: z.string(),
+  /** The first stage of its line; what hatches. */
+  speciesId: z.string(),
+  level: z.number().int().min(1).max(100),
+  left: z.number().int().min(0),
+  unit: z.enum(['battle', 'stage']),
+  /** Rolled when the Egg was found, so reloading never changes it. */
+  shiny: z.boolean(),
+  eggMoves: z.array(z.string()),
+  /** Where it came from, for the party screen ("Egg Nest", "Mystery Egg"). */
+  source: z.string(),
+});
+export type Egg = z.infer<typeof EggSchema>;
+
 export const RunStateSchema = z.object({
   runId: z.string(),
   seed: z.string(),
@@ -830,6 +848,8 @@ export const RunStateSchema = z.object({
   battle: BattleStateSchema.nullable(),
   /** Decisions to make after a battle, oldest first. */
   pending: z.array(PendingDecisionSchema),
+  /** Eggs waiting to hatch (core/eggs.ts). */
+  eggs: z.array(EggSchema).default([]),
   /** Where the run goes once all pending decisions are made. */
   afterDecisions: z.enum(['reward', 'map', 'expedition']),
   /** The current stage and its map (null only for saves from before stage maps existed). */

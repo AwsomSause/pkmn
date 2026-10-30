@@ -5,7 +5,7 @@
 import {
   $, BALLS, BERRIES, FOSSILS, HEALING, HELD, RARE_HELD, SNACKS, STONES, TREASURE, TYPE_ITEMS, VITAMINS,
   any, att, attr, better, ch, cure, ev, evil, ferry, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, isPeace, isRage,
-  item, join, leave, lose, lv, money, out, party, peace, ptype, rage, reveal, rp, status, stopHere, trainer, wild, type Json,
+  item, join, egg, leave, lose, lv, money, out, party, peace, ptype, rage, reveal, rp, status, stopHere, trainer, wild, type Json,
 } from './dsl.ts';
 
 const PR = 'PokeRogue-style encounters';
@@ -241,7 +241,7 @@ export const MORE_EVENTS: Json[] = [
   ]),
   ev('nesting-ground', 'Nesting Ground', W, { rarity: 'uncommon', effect: 'hearts', tint: '#283018' }, 'Parent Pokémon guard their eggs. One egg rolls toward you.', [
     ch('Return the egg', out('The parents thank you.', good(3), fr(3), any(...BERRIES))),
-    ch('Keep the egg', out('It hatches right away!', join({ lv: -3, shiny: 3 }), evil(5)), { requires: [fierce] }),
+    ch('Keep the egg', out('It wriggles in your bag. It will hatch soon!', egg({ lv: -3, shiny: 3, left: 2 }), evil(5)), { requires: [fierce] }),
   ]),
   ev('lightning-storm', 'Lightning Storm', W, { rarity: 'uncommon', types: ['electric'], effect: 'rain', tint: '#181830' }, 'Thunder cracks. Electric Pokémon dance in the storm.', [
     ch('Run through the storm', fight('An Electric-type zaps you!', wild({ types: ['electric'], lv: 1 }))),
@@ -349,7 +349,7 @@ export const MORE_EVENTS: Json[] = [
   ]),
   ev('pokemon-daycare-visit', 'Daycare Drop-In', H, { rarity: 'uncommon', cast: ['trainer.hiker'], effect: 'hearts', tint: '#283018' }, 'The daycare man waves. "Leave one with us a while?"', [
     ch('Leave the lead for a bit', out('It comes back stronger.', lv(2), fr(5, 'lead'))),
-    ch('Ask about eggs', out('"Here, this one was left behind."', join({ lv: -3, shiny: 2 }))),
+    ch('Ask about eggs', out('"Here, this one was left behind."', egg({ lv: -3, shiny: 2, left: 3 }))),
   ]),
   ev('stray-kitten', 'Stray Kitten', H, { rarity: 'common', pokemon: 'skitty', effect: 'hearts' }, 'A hungry little cat Pokémon mews at you.', [
     ch('Feed it', out('It purrs and joins you.', lose(), join({ species: ['skitty', 'meowth', 'purrloin', 'espurr', 'litleo', 'sprigatito'], lv: -1 }))),

@@ -49,6 +49,7 @@ import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
+import { layEgg, tickEggs } from './eggs';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -185,6 +186,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     starterChoices,
     prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
+    eggs: [],
     money: Math.floor(resources.money * scale),
     inventory,
     candies: 0,
@@ -367,23 +369,24 @@ export function plantBerries(content: Content, run: RunState): void {
   }
 }
 
-/** Mystery Eggs: each new stage brings every egg closer; one that is ready hatches into a first-stage Pokémon (a generator of its own, so no other roll changes). */
+/**
+ * A new stage: every stage Egg (core/eggs.ts) gets one closer and ready ones hatch. Mystery Eggs from saves
+ * made before Eggs had their own list (`egg:<n>` item counters) become Eggs first, so none is lost.
+ */
 export function hatchEggs(content: Content, run: RunState): void {
   for (const key of Object.keys(run.itemCounters ?? {}).filter((k) => k.startsWith('egg:'))) {
     const left = run.itemCounters![key]!;
+    const shiny = run.itemCounters![`egg-shiny:${key.slice(4)}`] ?? 1;
+    const { [key]: _gone, [`egg-shiny:${key.slice(4)}`]: _shine, ...rest } = run.itemCounters!;
+    run.itemCounters = rest;
     if (left <= 0) continue;
-    run.itemCounters = { ...run.itemCounters, [key]: left - 1 };
-    if (left - 1 > 0) continue;
     const rng = new Rng(hashSeed(`${run.seed}::egg::${key}`));
-    const pool = wildEligibleSpecies(content);
-    const species = rng.pick(pool);
+    const species = rng.pick(wildEligibleSpecies(content).filter((s) => s.evolutionStage === 1));
     const levels = run.party.map((m) => m.level);
-    const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length))));
-    const mon = newMon(content, run, species.id, Math.max(1, level - 5), 'p');
-    mon.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * (run.itemCounters![`egg-shiny:${key.slice(4)}`] ?? 1));
-    discover(run, mon.speciesId, true);
-    run.pending.push({ kind: 'caught', mon });
+    const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)) - 5));
+    layEgg(content, run, species.id, { level, left, unit: 'stage', source: 'Mystery Egg', shinyMultiplier: runAttributeEffects(content, run).shinyChance * shiny }, rng);
   }
+  tickEggs(content, run, 'stage');
 }
 
 /** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
@@ -1648,7 +1651,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
       // Macho Brace: more EXP for its holder.
       const monSpecies = getSpecies(content, mon.speciesId);
-      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId) });
+      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId), isHatched: mon.hatched === true });
       const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const squirt = mon === run.party[0] && (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 1 + (perksOf(activePerks(content, run), 'squirt')[0]?.perk.percent ?? 5) / 100 : 1;
       const amount = Math.floor((participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100)) * squirt);
@@ -1873,6 +1876,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.encountersCompleted += 1;
   count(run, 'encountersCompleted');
   run.log.battlesWon += 1;
+  // Eggs: one more battle (won or caught) for every battle Egg (stage Eggs count at each new stage).
+  if (!run.victory) tickEggs(content, run, 'battle');
   // A Pokémon from a past run comes to meet you (after any caught Pokémon's decision).
   const reunion = run.reunion;
   if (reunion && !reunion.done && !run.victory && run.encountersCompleted >= reunion.afterEncounters) {
