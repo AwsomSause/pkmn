@@ -1388,7 +1388,7 @@
    "name": "The Signature Technique",
    "group": "",
    "text": "Repeated use of a particular combination may lead a rival to develop a recognizable tactical signature.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "team-identity-shift",
@@ -1416,7 +1416,7 @@
    "name": "The Public Reputation System",
    "group": "",
    "text": "Other trainers react to the rival's known victories, losses, sportsmanship, and treatment of Pokémon.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rivalry-rumor-mill",
@@ -1430,7 +1430,7 @@
    "name": "The Conflicting Account",
    "group": "",
    "text": "Two characters describe the same incident differently, encouraging the player to investigate before making assumptions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-s-private-goal",

@@ -22,6 +22,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Starter Sets slice 1 (plan `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md`): Starter Laboratory has 70 sets in 10 categories (all regions, 18 types, roles, player trainers, 10 villainous teams, 9 Leagues, 7 spin-off games). Pools can list evolved species, bosses or a type/region filter (`core/runPrep.ts eligibleSpecies`).
 - Trainer identity (plan Part 2a): signature types/species/set on `archetypes.json`; a signature Pokémon may take the last starter slot (50%, own seed, never forced); Cynthia (sees gym teams), Oak (+50% Research Points, sees wild Pokémon, −15% money) and N (+50% friendship) are playable.
 - M10 visual slice 1 (Aero battle): glass message bar, databoxes and command window (`src/ui/aero.ts`), glossy type-tinted buttons (opt-in `glass` on `Menu`), Essentials type/category/status art, arena ambience from EBDX scenery (`battleFx/ambience.ts`), bouncy send-out + idle breathing. Respects battleAnimations (reduced = still, off = none). Provenance: `docs/quality/asset-provenance.md`. Hub/TrainerSelect untouched.
+- M10 visual slice 2: EBDX intro wipe (wild) and VS screens (trainer/rival/boss), skippable; ambience preset for all 18 types (+ second-type accents); DBK burst reveal for transformations, evolution and catches (replaces full-screen flashes); low-HP glow; victory hop. Tracker: `docs/plans/visual-coverage.md`.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 
@@ -31,11 +32,11 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
 - M9: Grand Region, final boss, ending, deploy.
-- M10 visuals (guide 9, Visual Bible V1–V5): next slices = battle intro transitions + DBK burst/shine for transformations, EBUI move flag icons + effectiveness hint, boss/rival spectacle, then map/reward/shop/decision/run-end screens.
+- M10 visuals (guide 9, Visual Bible V1–V5): next slices = EBUI move flag icons + info panel + effectiveness hint, boss/rival spectacle, effect families, then map/reward/shop/decision/run-end screens.
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Rival relations (`rivals/relations.ts`): training exchange, enemy Pokémon sparring, rivalry triangle, tired-ace substitute, close-battle memory (5 more mechanics "limited"; 8 left).
+- Rival relations (`rivals/relations.ts`): training exchange, enemy Pokémon sparring, rivalry triangle, tired-ace substitute, close-battle memory (5 more mechanics "limited"); reputation, signature and conflicting rumours add 3 more (5 mechanics left).
 - Rival bonds (run save v12): each rival Pokémon has 8 bond dimensions, a trait and habits; one of 39 off-screen events runs per rival each stage (`rivalBonds.json`, `rivals/bonds.ts`, built by `tools/build-rival-bonds.mjs`); bonds change the return level and show up as a pre-battle line and on the Story screen. Hyper/Overdrive and the 9 bond arcs wait.
 - Rival arcs: 27 of 46 run (`rivalArcs.json`, `rivals/arcs.ts`); bond and Overdrive arcs wait for those systems.
 - Rival paths: 13 of 30 run as rival origins (`rivalPaths.json`); the rest need sponsors, mentors, factions, debts, family or disasters.
