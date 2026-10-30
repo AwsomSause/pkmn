@@ -300,15 +300,17 @@ Design: the Hyper section of the Electric plan doc (Kice ticked all 10 Phase 1 i
 
 - [x] Slice 1: Toughened It Out (replaces Love's endure), Felt a Bond, Pushed Itself Back Up, Hung In There (with "Again" and "Wouldn't Stay Down"); run save v10
 - [x] Slice 2: The Enemy Is Getting Riled Up (telegraphed a turn ahead with a banner and a badge; calmed by a status, a super-effective hit or a move that lowers its attacks; Evil makes it uncontrollable)
-- [ ] Slice 3: The Two Pokémon Feel a Heated Rivalry
+- [x] Slice 3: The Two Pokémon Feel a Heated Rivalry (your Pokémon that fought the same species in 3 battles: +10% damage against it, Rage can make it reckless for +20% and −1 Defense; Friendly Competition between teammates who trade finishing blows)
 - [ ] Slice 4: This Trainer Will Return (rematch pool)
 - [ ] Slice 5: A Past Pokémon Wants to Join Your Party (archive across runs)
 - [ ] Slice 6: The Seven Emotions as event tags; run history and event logging screen
 
-### Known limits in slices 1 and 2
+### Known limits in slices 1 to 3
 
 - "Our Hearts Beat as One" (Felt a Bond after a Champion win) is not in yet: histories count boss wins but not which boss. Rescues don't exist yet, so Felt a Bond reads close calls, survived knockouts and boss wins.
 - A "Peace-tagged move" (the doc's third counter) is read as any move that lowers the foe's Attack or Sp. Atk, since moves have no Peace tag yet.
+- A Heated Rivalry is with an opposing species, not one individual Pokémon: wild Pokémon are new every battle, and trainers don't come back yet (slice 4). Your rival evolving counts as a new species. Opposing Pokémon have no rivals of their own.
+- Rivalry records share the run's limit of 12 open relationships; past that a rivalry still works in battle but isn't recorded. Friendly Competition needs the record, so it stops forming once the limit is reached.
 
 ## Milestone 9 — Grand Region, ending, deploy
 

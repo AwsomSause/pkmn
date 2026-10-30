@@ -21,6 +21,8 @@ function hyper(triggers: StoryTriggerKind[], evil = 0): HyperContext {
     rng: new Rng(hashSeed('rage-test')),
     eligibility: (trigger) => (triggers.includes(trigger) ? { def: def(trigger), chance: 1, variant: null } : null),
     attributeShare: (a) => (a === 'evil' ? evil : 0),
+    rivalBattles: () => 0,
+    friendlyRivals: () => [],
   };
 }
 

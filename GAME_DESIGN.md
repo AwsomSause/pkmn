@@ -193,7 +193,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 | Charisma | Shop prices −0.5%, experience +1%, friendship gains +1% | half price, double experience, double friendship gains |
 | Luck | Uncommon reward weight +0.5%, rare +1%, epic +1.5%, shiny chance +1%, more varied drafts | rare ×2, epic ×2.5, shinies ×2, no repeated item families |
 | Love | Hyper moments (M8.9): +0.1 percentage point per point to Toughened It Out (15% base), Felt a Bond (10%, averaged with Charisma) and Pushed Itself Back Up (3%, averaged with Luck); never more than double the base | Toughened It Out 25% |
-| Rage | Damage dealt +2%, damage taken +1% | +200% / +100% |
+| Rage | Damage dealt +2%, damage taken +1%; a Pokémon meeting its rival turns reckless (+20% damage against it instead of +10%, −1 Defense) with a chance equal to your Rage share | +200% / +100% / always reckless |
 | Peace | Healing +2%, damage taken −0.5%; Hung In There also heals up to 10% of max HP | +200% / half damage taken |
 | Good | Catching +2% easier | ×3 catch rate |
 | Evil | Prize money +1%; a riled-up foe's rage is uncontrollable (it also lowers its own Defense) with a chance equal to your Evil share | +100% / always uncontrollable |

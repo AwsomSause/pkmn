@@ -196,6 +196,9 @@ export const BattleStateSchema = z.object({
           z.object({ hits: z.number().int().min(0), state: z.enum(['calm', 'warned', 'spent']), uncontrollable: z.boolean(), denied: z.boolean() }),
         )
         .default({}),
+      met: z.record(z.string(), z.array(z.string())).default({}),
+      rivals: z.record(z.string(), z.enum(['calm', 'reckless'])).default({}),
+      outdo: z.array(z.string()).default([]),
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),

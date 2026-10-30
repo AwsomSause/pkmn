@@ -31,6 +31,10 @@ export interface HyperContext {
   eligibility(trigger: StoryTriggerKind, mon: PokemonInstance): HyperEligibility | null;
   /** An attribute's value as a share of its maximum (0–1). */
   attributeShare(attribute: HyperAttribute): number;
+  /** Earlier battles this run in which your Pokémon fought this opposing species. */
+  rivalBattles(uid: string, speciesId: string): number;
+  /** Teammates (uids) your Pokémon has a Friendly Competition with. */
+  friendlyRivals(uid: string): string[];
 }
 
 /** Hyper counters for the battle (saved with it). */
@@ -41,6 +45,12 @@ export interface HyperBattleState {
   superEffective: Record<string, number>;
   /** "The Enemy Is Getting Riled Up": each opposing Pokémon's build-up (by uid). */
   rage: Record<string, EnemyRage>;
+  /** Heated Rivalry: the opposing species each of your Pokémon (by uid) has faced this battle. */
+  met: Record<string, string[]>;
+  /** Rivals that recognised each other this battle ("uid|speciesId"), and whether yours turned reckless. */
+  rivals: Record<string, 'calm' | 'reckless'>;
+  /** Friendly Competition: your Pokémon that saw a teammate rival land a finishing blow (they hit harder). */
+  outdo: string[];
 }
 
 /**
@@ -57,7 +67,7 @@ export interface EnemyRage {
 }
 
 export function freshHyperBattle(): HyperBattleState {
-  return { lowHp: null, superEffective: {}, rage: {} };
+  return { lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [] };
 }
 
 /** Rolls an eligible moment (no roll when it is certain). */

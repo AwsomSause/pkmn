@@ -401,6 +401,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
 
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false });
   const playerC = player();
+  // Two rivals on the field recognise each other (Heated Rivalry).
+  if (!battle.outcome) meetRival(ctx, playerC, enemy, events);
 
   // 2. Moves.
   if (action.kind === 'move') {
@@ -850,8 +852,9 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[]): boo
 function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean): number {
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
-  if (!mods && !attrs) return damage;
-  let multiplier = 1;
+  const rivalry = rivalryMultiplier(ctx, user, target);
+  if (!mods && !attrs && rivalry === 1) return damage;
+  let multiplier = rivalry;
   if (user.side === 'player') {
     if (mods) for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
     if (attrs) multiplier *= (physical ? attrs.physicalDamage : attrs.specialDamage) * attrs.damageDealt;
@@ -1026,6 +1029,73 @@ function unleashRage(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]
   events.push({ type: 'hyper', side: 'enemy', uid: enemy.mon.uid, defId: def.id, variant: rage.uncontrollable ? 'unleashedUncontrollable' : 'unleashed', hpAfter: enemy.mon.hp, cured: false });
   for (const [stat, stages] of Object.entries(def.effect.stats) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
   if (rage.uncontrollable) for (const [stat, stages] of Object.entries(def.effect.uncontrollable) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
+}
+
+// ---------- The Two Pokémon Feel a Heated Rivalry ----------
+
+function rivalryDef(ctx: BattleContext, trigger: 'heatedRivalry' | 'friendlyCompetition') {
+  const def = ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === trigger);
+  return def?.effect?.kind === 'rivalry' ? { def, effect: def.effect } : null;
+}
+
+/**
+ * Your Pokémon meets an opposing species it has fought in enough battles (counting this one):
+ * they recognise each other once per battle, and your Rage may make yours reckless (it hits
+ * even harder but lowers its own Defense). The rivalry's damage bonus lasts the battle.
+ */
+function meetRival(ctx: BattleContext, p: Combatant, e: Combatant, events: BattleEvent[]): void {
+  if (!ctx.hyper || p.mon.hp <= 0 || e.mon.hp <= 0) return;
+  const h = ctx.battle.hyper;
+  const met = (h.met ??= {});
+  const seen = (met[p.mon.uid] ??= []);
+  if (!seen.includes(e.mon.speciesId)) seen.push(e.mon.speciesId);
+  const key = `${p.mon.uid}|${e.mon.speciesId}`;
+  const rivals = (h.rivals ??= {});
+  const found = rivalryDef(ctx, 'heatedRivalry');
+  if (rivals[key] || !found || !ctx.hyper.eligibility('heatedRivalry', p.mon)) return;
+  const need = found.def.triggerConditions.battles ?? Infinity;
+  const battles = ctx.hyper.rivalBattles(p.mon.uid, e.mon.speciesId) + 1;
+  if (battles < need) return;
+  // Rage makes it reckless more often (rolled only when Rage is above 0, and not after another moment this turn).
+  const rage = found.def.variants.reckless && !ctx.hyperUsed ? ctx.hyper.attributeShare('rage') : 0;
+  const reckless = rage > 0 && ctx.hyper.rng.chance(rage);
+  rivals[key] = reckless ? 'reckless' : 'calm';
+  events.push({ type: 'hyper', side: 'player', uid: p.mon.uid, defId: found.def.id, variant: battles > need ? 'again' : null, hpAfter: p.mon.hp, cured: false });
+  if (!reckless) return;
+  ctx.hyperUsed = true;
+  events.push({ type: 'hyper', side: 'player', uid: p.mon.uid, defId: found.def.id, variant: 'reckless', hpAfter: p.mon.hp, cured: false });
+  for (const [stat, stages] of Object.entries(found.effect.reckless) as [BoostStat, number][]) applyStageChange(ctx, p, stat, stages, events);
+}
+
+/** A teammate rival saw your Pokémon land a finishing blow: it won't be outdone for the rest of the battle. */
+function friendlyFinish(ctx: BattleContext, finisher: PokemonInstance, events: BattleEvent[]): void {
+  if (!ctx.hyper) return;
+  const found = rivalryDef(ctx, 'friendlyCompetition');
+  if (!found) return;
+  const outdo = (ctx.battle.hyper.outdo ??= []);
+  for (const uid of ctx.hyper.friendlyRivals(finisher.uid)) {
+    const mon = ctx.party.find((m) => m.uid === uid);
+    if (!mon || mon.hp <= 0 || outdo.includes(uid)) continue;
+    outdo.push(uid);
+    events.push({ type: 'hyper', side: 'player', uid, defId: found.def.id, variant: 'outdo', hpAfter: mon.hp, cured: false });
+  }
+}
+
+/** The rivalry damage bonuses for your Pokémon's hit. */
+function rivalryMultiplier(ctx: BattleContext, user: Combatant, target: Combatant): number {
+  const h = ctx.battle.hyper;
+  if (!ctx.hyper || user.side !== 'player' || !h) return 1;
+  let multiplier = 1;
+  const state = h.rivals?.[`${user.mon.uid}|${target.mon.speciesId}`];
+  if (state) {
+    const found = rivalryDef(ctx, 'heatedRivalry');
+    if (found) multiplier *= 1 + (state === 'reckless' ? found.effect.recklessDamage : found.effect.damage);
+  }
+  if (h.outdo?.includes(user.mon.uid)) {
+    const found = rivalryDef(ctx, 'friendlyCompetition');
+    if (found) multiplier *= 1 + found.effect.damage;
+  }
+  return multiplier;
 }
 
 /** End of turn: a bond may shake off a status; a long low-HP stand (or two super-effective hits survived) digs in. */
@@ -1807,6 +1877,7 @@ function recordFaints(ctx: BattleContext, player: Combatant, enemy: Combatant, e
     if (events.some((e) => e.type === 'faint' && e.uid === c.mon.uid)) continue;
     const participants = c.side === 'enemy' ? ctx.battle.participants.filter((uid) => ctx.party.some((p) => p.uid === uid && p.hp > 0)) : [];
     events.push({ type: 'faint', side: c.side, uid: c.mon.uid, participants });
+    if (c.side === 'enemy' && player.mon.uid === ctx.party[ctx.battle.activeIndex]?.uid) friendlyFinish(ctx, player.mon, events);
   }
 }
 

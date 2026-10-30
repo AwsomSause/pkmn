@@ -17,6 +17,8 @@ export const HYPER_EFFECTS: Record<StoryTriggerKind, StoryEffectSpec['kind']> = 
   pushedBackUp: 'revive',
   hungInThere: 'boost',
   enemyRiledUp: 'rage',
+  heatedRivalry: 'rivalry',
+  friendlyCompetition: 'rivalry',
 };
 
 /** Memories a trigger can ask for besides other Hyper moments (see PokemonHistory). */
@@ -78,5 +80,23 @@ export function buildHyperContext(content: Content, run: RunState, rng: Rng): Hy
     attributeShare(attribute) {
       return Math.min(1, attributePoints(attrs, attribute) / content.balance.attributeMax);
     },
+    rivalBattles(uid, speciesId) {
+      return run.story.histories[uid]?.foes[speciesId] ?? 0;
+    },
+    friendlyRivals(uid) {
+      return friendlyRivalsOf(run, uid);
+    },
   };
+}
+
+/** The teammates a Pokémon has a Friendly Competition with (open rivalries between two of your Pokémon still in the party). */
+export function friendlyRivalsOf(run: RunState, uid: string): string[] {
+  const inParty = new Set(run.party.map((m) => m.uid));
+  const out: string[] = [];
+  for (const r of run.story.relationships) {
+    if (!r.open || r.kind !== 'rivalry' || r.a.kind !== 'pokemon' || r.b.kind !== 'pokemon') continue;
+    const other = r.a.id === uid ? r.b.id : r.b.id === uid ? r.a.id : null;
+    if (other && inParty.has(other) && !out.includes(other)) out.push(other);
+  }
+  return out;
 }
