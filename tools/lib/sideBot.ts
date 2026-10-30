@@ -67,7 +67,7 @@ export function sideBot(m: SideMods, content: Content, seen: Set<string>, findin
     const node = run.stage.map.nodes.find((n) => n.id === run.stage!.current)!;
     for (const side of node.sides) {
       const key = `${run.stage.index}:${node.id}:${side.id}`;
-      if (run.phase !== 'map' || run.stage?.current !== node.id) break;
+      if (run.phase !== 'map' || !run.stage || run.stage.current !== node.id) break;
       if (seen.has(key)) continue;
       seen.add(key);
       try {
