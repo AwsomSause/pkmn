@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  timeout: 60_000,
+  // The long fights and the CI runner (about twice as slow as a laptop) need more than 60 s.
+  timeout: 120_000,
   // Dot output keeps logs short; failures still print in full.
   reporter: 'dot',
   use: {

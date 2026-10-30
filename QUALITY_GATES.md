@@ -18,7 +18,7 @@ What has to pass before a slice of work counts as done, which checks run by them
 | 10 | Docs and known limits updated | STATUS.md, CHECKLIST.md, SYSTEMS_AUDIT.md, this page | No |
 | 11 | Balance looked at when numbers change | `npm run report:balance -- --write`, then compare `docs/quality/BALANCE_REPORT.md` in the diff | No (it reports, it doesn't fail) |
 
-**CI is not running yet.** `.github/workflows/ci.yml` runs gates 1 to 5 on every pull request and every push to `main`, but GitHub has recorded no workflow run on this repository, ever (checked again on 2026-10-30; the workflow is listed as active). Until GitHub Actions is switched on (repository Settings → Actions → General → "Allow all actions and reusable workflows"), the gates only run when someone runs `npm run check` and `npm run test:e2e`.
+**CI is switched on (2026-10-30).** `.github/workflows/ci.yml` runs gates 1 to 5 on every pull request and every push to `main`, and can be started by hand from the Actions tab (Run workflow). Until 2026-10-30 GitHub had recorded no workflow run on this repository, ever.
 
 Never claim a gate passed unless it ran and you read the result.
 
