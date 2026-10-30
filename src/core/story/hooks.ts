@@ -23,6 +23,7 @@ import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
 import { triangleEffect } from '../rivals/relations';
 import { evaluateUltimate } from '../rivals/ultimate';
+import { applyAnomaly } from './anomaly';
 import { eliteReward } from './elite';
 import { gauntletWon } from './gauntlet';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
@@ -58,6 +59,7 @@ export function recordRouteChosen(content: Content, run: RunState, nodeId: strin
 /** A battle has just been set up (mutates `run`). */
 export function recordBattleStarted(content: Content, run: RunState): void {
   const battle = run.battle!;
+  applyAnomaly(content, run);
   run.story.majorCuesThisBattle = 0;
   const lead = run.party[battle.activeIndex]!;
   noteFought(run, lead.uid);

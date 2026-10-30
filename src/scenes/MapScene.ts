@@ -16,6 +16,7 @@ import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
 import { minigamePreview } from '../core/minigame/flow';
 import { ROUTE_LABELS, routeKind } from '../core/campaign/director';
+import { anomalyLine, stageAnomaly } from '../core/story/anomaly';
 import { fishingOffer, raidPreview, totemPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { blindMap } from '../core/rules';
@@ -477,7 +478,8 @@ export class MapScene extends Phaser.Scene {
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : 'shop'));
         const seen = this.previewText(n);
         const route = routeKind(services().session.run!, n);
-        return `${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
+        const anomaly = stageAnomaly(services().session.content, services().session.run!);
+        return `${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         if (option.side.kind === 'service') {

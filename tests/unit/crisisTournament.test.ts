@@ -235,3 +235,45 @@ describe('Elite Four identity', () => {
     expect((lead.vitamins[stat] ?? 0)).toBe(before + 1);
   });
 });
+
+describe('Field anomalies', () => {
+  it('are seeded per stage, never on the first stage, only from the minimum region, and set a real field when a battle starts', async () => {
+    const { stageAnomaly, applyAnomaly, anomalyLine } = await import('../../src/core/story/anomaly');
+    const run = fresh('anomaly');
+    run.regionIndex = content.story.anomalies.minRegion;
+    const seen = new Set<string>();
+    let count = 0;
+    for (let seedN = 0; seedN < 60; seedN++) {
+      for (let stage = 1; stage < 4; stage++) {
+        const r = { ...run, seed: `an-${seedN}`, stage: { ...run.stage!, index: stage } };
+        const a = stageAnomaly(content, r);
+        expect(stageAnomaly(content, r)?.id).toBe(a?.id);
+        if (a) {
+          seen.add(a.id);
+          count++;
+          expect(anomalyLine(a)).toContain('Counterplay');
+        }
+      }
+    }
+    expect(count / 180).toBeGreaterThan(0.1);
+    expect(count / 180).toBeLessThan(0.3);
+    expect(seen.size).toBe(content.story.anomalies.list.length);
+    expect(stageAnomaly(content, { ...run, stage: { ...run.stage!, index: 0 } })).toBeNull();
+    expect(stageAnomaly(content, { ...run, regionIndex: 0 })).toBeNull();
+
+    // A battle in an anomalous stage starts with its field.
+    let found = false;
+    for (let seedN = 0; seedN < 200 && !found; seedN++) {
+      const r = structuredClone({ ...run, seed: `fx-${seedN}` });
+      r.stage!.index = 1;
+      const a = stageAnomaly(content, r);
+      if (!a) continue;
+      r.battle = { field: { gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 }, weather: null, terrain: null } as never;
+      applyAnomaly(content, r);
+      const b = r.battle as unknown as { field: Record<string, number>; weather: unknown; terrain: unknown };
+      expect((b.field.gravity ?? 0) + (b.field.trickRoom ?? 0) > 0 || b.weather !== null || b.terrain !== null).toBe(true);
+      found = true;
+    }
+    expect(found).toBe(true);
+  });
+});

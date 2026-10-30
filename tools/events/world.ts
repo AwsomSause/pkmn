@@ -1,7 +1,7 @@
 // World events (catalog 28, 73, 74, 75, 99): run milestones, rare sites, a wild foe that remembers you,
 // callbacks to what you did earlier, and a three-clue legendary route.
 
-import { $, any, ch, cure, ev, egg, eggMove, fight, flag, fr, good, heal, hurt, item, join, leave, lv, out, rp, trainer, TREASURE, VITAMINS, wild, type Json } from './dsl.ts';
+import { $, any, ch, cure, ev, egg, eggMove, fight, flag, ferry, fr, stopHere, good, heal, hurt, item, join, leave, lv, out, rp, trainer, TREASURE, VITAMINS, wild, type Json } from './dsl.ts';
 
 const M = 'Run Milestones';
 const S = 'World Sites';
@@ -120,5 +120,15 @@ export const FORM_RESEARCH_EVENTS: Json[] = [
     'Every clue points to the same hollow. Something with a strange coat waits there, ready to be studied.', [
       ch('Begin the research battle', fight('It meets you head on.', wild({ species: ['rattata-alola', 'vulpix-alola', 'meowth-galar', 'growlithe-hisui', 'ponyta-galar', 'zigzagoon-galar', 'sneasel-hisui', 'wooper-paldea'], lv: 3, win: [rp(80), flag('form-met')] }))),
       ch('Leave it be', out('You note the spot and move on. The notes are worth something.', rp(30))),
+    ]),
+];
+
+// Route state mutations (catalog 68): an optional action changes the route you are on.
+export const ROUTE_EVENTS: Json[] = [
+  ev('route-detour', 'A Hand-Painted Detour Sign', 'Routes', { rarity: 'uncommon', minStage: 2, cast: [], effect: 'none', tint: '#2a2a20' },
+    'A sign points down a side trail: "Shortcut. Probably safe." Another, in different handwriting: "Clinic ahead. Rest awhile."', [
+      ch('Take the shortcut (risky)', out('The trail cuts straight through. You arrive close to the end of the route.', ferry()), { chance: 0.6, fail: out('The trail is washed out. You lose time and a few supplies.', { kind: 'loseItem' }) }),
+      ch('Follow the clinic sign', out('A volunteer has set up a healing stop beside the road.', stopHere('heal'))),
+      ch('Stay on the main road', leave()),
     ]),
 ];
