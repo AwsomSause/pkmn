@@ -225,7 +225,11 @@ export class BattleScene extends Phaser.Scene {
     const boss = this.boss();
     if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
-    return cls ? { assetId: cls.spriteAssetId, label: cls.name } : null;
+    if (cls) return { assetId: cls.spriteAssetId, label: cls.name };
+    // A map event's trainer is drawn with the event's first cast member.
+    const eventId = this.run.battle?.event?.eventId;
+    const cast = eventId ? content.events.get(eventId)?.scene.cast[0] : undefined;
+    return cast ? { assetId: cast, label: trainer.name } : null;
   }
 
   private names(trainer: string | null): Names {
@@ -843,6 +847,7 @@ export class BattleScene extends Phaser.Scene {
     if (end.outcome === 'win' && trainer) await this.say(`You defeated ${trainer}!`);
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
+    for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;

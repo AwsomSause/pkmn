@@ -9,6 +9,7 @@
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
 import { getArchetype, researchMultiplier } from './archetypes';
+import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
 import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
@@ -143,7 +144,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
         research.perSpeciesCaught * newSpeciesCaught.length +
         research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
         researchMultiplier(getArchetype(content, run.archetypeId)),
-    );
+    ) + eventResearch(run);
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
   }
