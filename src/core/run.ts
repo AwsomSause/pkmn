@@ -35,6 +35,7 @@ import {
   planChampion,
   planEliteFour,
   planGymLeader,
+  planFirstRival,
   planTrainer,
   planWild,
   type TrainerPlan,
@@ -57,6 +58,7 @@ import { count, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
+import { expShareUnlocked, FIRST_RIVAL_FLAG } from './firstRival';
 import {
   activeMods,
   addBridgeStops,
@@ -1138,8 +1140,14 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const c = run.log.counters;
       if (((c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + 1) % 3 === 0) plan = { ...plan, members: plan.members.map((m) => ({ ...m, level: m.level + bossLevels })) };
     }
+    // The first rival: the first ordinary trainer of balance.rival.stage is scripted (one starter-line Pokémon).
+    const firstRival = node.kind === 'trainer' && !rematch && stageNumber === content.balance.rival.stage && run.story.flags[FIRST_RIVAL_FLAG] === undefined;
+    if (firstRival) {
+      plan = planFirstRival(content, run.seed);
+      run.story.flags[FIRST_RIVAL_FLAG] = 'fighting';
+    }
     // A trainer that vowed to return takes the place of the first ordinary trainer of a later stage.
-    const rule = node.kind === 'trainer' && !rematch ? rematchRule(content) : null;
+    const rule = node.kind === 'trainer' && !rematch && !firstRival ? rematchRule(content) : null;
     const back = rule ? waitingTrainer(run) : null;
     if (rule && back) {
       plan = revisedTeam(content, run, back, plan, rule.effect);
@@ -1165,7 +1173,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       rivalBack.away = 0;
     }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -1186,6 +1194,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    if (firstRival) run.battle.firstRival = true;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
     if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
@@ -1664,7 +1673,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
     if (!defeated) continue;
     const baseExp = getSpecies(content, defeated.speciesId).baseExp;
     // Exp. Share: party members that didn't battle get its percent of the EXP.
-    const share = Math.max(passivePercent(content, run, 'expShare'), content.balance.difficulty.benchXpPercent);
+    const share = expShareUnlocked(content, run) ? Math.max(passivePercent(content, run, 'expShare'), content.balance.difficulty.benchXpPercent) : 0;
     const sharers = share > 0 ? run.party.filter((p) => p.hp > 0 && !participants.includes(p.uid)).map((p) => p.uid) : [];
     const leadLevel = run.party[0]?.level ?? 0;
     for (const uid of [...participants, ...sharers]) {
@@ -1834,6 +1843,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
   let extraChoices = raidWin?.draftExtra ?? 0;
+  if (battle.firstRival) run.story.flags[FIRST_RIVAL_FLAG] = 'met';
   // RSVP Mail: beating the rival gives the gym leader's odds and one more choice.
   if (outcome === 'win' && battle.rival) {
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };

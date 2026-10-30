@@ -111,6 +111,7 @@ describe('friendship gains and losses', () => {
     let run = toBattle(newRun('level'));
     run = debugReplaceEnemy(content, run, 'magikarp', 15);
     run.party[0] = createPokemon(content, run.party[0]!.speciesId, 30, run.party[0]!.uid);
+    run.stage!.index = 5; // the stage level cap must allow level 30
     run.party[0]!.xp -= 1; // one experience point short of level 30
     run.party[0]!.level = 29;
     const before = run.party[0]!.friendship;

@@ -271,5 +271,21 @@
    "Belle",
    "Gretel"
   ]
+ },
+ {
+  "id": "rival",
+  "name": "Rival",
+  "spriteAssetId": "trainer.blue",
+  "moneyPerLevel": 40,
+  "types": [
+   "normal"
+  ],
+  "names": [
+   "Blue",
+   "Gary",
+   "Silver",
+   "Barry",
+   "Hop"
+  ]
  }
 ]

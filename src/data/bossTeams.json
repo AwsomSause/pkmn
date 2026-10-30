@@ -46,7 +46,7 @@
  "misty": {
   "gym": [
    {"level":11,"ai":0.15,"members":["psyduck / water-sport bubble tail-whip water-gun","staryu / harden water-gun rapid-spin psywave"]},
-   {"level":16,"ai":0.19,"members":["lapras / sing mist ice-shard life-dew","wooper / tail-whip mud-sport mud-shot slam","staryu / harden water-gun rapid-spin psywave"]},
+   {"level":16,"ai":0.19,"members":["wooper / tail-whip mud-sport mud-shot slam","eevee / double-kick baby-doll-eyes swift quick-attack","staryu / harden water-gun rapid-spin psywave"]},
    {"level":21,"ai":0.22,"members":["eevee / baby-doll-eyes swift quick-attack refresh","lapras / ice-shard life-dew confuse-ray water-pulse","goldeen / quick-attack horn-attack water-pulse flail","staryu / psywave camouflage recover swift"]},
    {"level":26,"ai":0.26,"members":["psyduck / water-pulse hypnosis fury-swipes screech","gyarados / twister waterfall ice-fang dragon-tail","eevee / quick-attack refresh mimic bite","prinplup / bubble-beam bide swagger roost","staryu / recover swift psybeam bubble-beam"]},
    {"level":32,"ai":0.3,"members":["psyduck / psybeam zen-headbutt aqua-tail soak","gyarados / ice-fang dragon-tail crunch aqua-tail","lapras / life-dew confuse-ray water-pulse body-slam","lanturn / confuse-ray spark bubble-beam flail","quagsire / amnesia aqua-tail yawn rain-dance","starmie / surf cosmic-power psywave confuse-ray"]},
@@ -397,8 +397,8 @@
  },
  "lorelei": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["arctovish / powder-snow water-gun protect","lapras / water-gun growl sing mist"]},
-   {"level":16,"ai":0.19,"members":["jynx / powder-snow lovely-kiss confusion covet","mamoswine / ancient-power mud-slap bulldoze ice-shard","lapras / sing mist ice-shard life-dew"]},
+   {"level":11,"ai":0.15,"members":["snorunt / astonish powder-snow leer double-team","sneasel / scratch taunt quick-attack swift"]},
+   {"level":16,"ai":0.19,"members":["jynx / powder-snow lovely-kiss confusion covet","mamoswine / ancient-power mud-slap bulldoze ice-shard","vanillite / icicle-spear icy-wind mist uproar"]},
    {"level":21,"ai":0.22,"members":["slowpoke / growl water-gun confusion disable","shellder / withdraw icicle-spear supersonic ice-shard","jynx / screech double-slap sing heart-stamp","lapras / ice-shard life-dew confuse-ray water-pulse"]},
    {"level":26,"ai":0.26,"members":["jynx / double-slap sing heart-stamp ice-punch","shellder / supersonic ice-shard protect leer","seel / ice-shard aqua-ring rest aurora-beam","bergmite / sharpen ice-fang iron-defense take-down","lapras / life-dew confuse-ray water-pulse body-slam"]},
    {"level":32,"ai":0.3,"members":["cloyster / razor-shell spikes spike-cannon icicle-crash","jynx / ice-punch fake-tears mean-look wake-up-slap","mamoswine / double-hit hail high-horsepower icy-wind","slowpoke / headbutt zen-headbutt rest surf","glaceon / ice-beam mimic ice-shard ice-fang","lapras / life-dew confuse-ray water-pulse body-slam"]},
@@ -705,7 +705,7 @@
  },
  "leaf": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["duraludon / metal-claw leer rock-smash","bulbasaur / tackle growl leech-seed vine-whip"]},
+   {"level":11,"ai":0.15,"members":["exeggcute / barrage absorb hypnosis reflect","bulbasaur / tackle growl leech-seed vine-whip"]},
    {"level":16,"ai":0.19,"members":["vulpix / quick-attack roar spite incinerate","swirlix / fairy-wind play-nice fake-tears round","ivysaur / growl leech-seed vine-whip poison-powder"]},
    {"level":21,"ai":0.22,"members":["vulpix / incinerate confuse-ray will-o-wisp feint-attack","eevee / baby-doll-eyes swift quick-attack refresh","varoom / assurance sludge gyro-ball headbutt","ivysaur / sleep-powder take-down seed-bomb razor-leaf"]},
    {"level":26,"ai":0.26,"members":["clefairy / calm-mind follow-me wake-up-slap stored-power","vulpix / confuse-ray will-o-wisp feint-attack flame-burst","eevee / quick-attack refresh mimic bite","dratini / dragon-rage dragon-tail agility slam","ivysaur / seed-bomb razor-leaf sweet-scent growth"]},
@@ -969,7 +969,7 @@
  },
  "bugsy": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["heracross / bullet-seed endure rock-smash horn-attack","scyther / silver-wind pursuit aerial-ace focus-energy"]},
+   {"level":11,"ai":0.15,"members":["spinarak / absorb scary-face infestation constrict","yanma / gust quick-attack silver-wind double-team"]},
    {"level":16,"ai":0.19,"members":["yanma / double-team aerial-ace air-cutter sonic-boom","spinarak / scary-face infestation constrict night-shade","scyther / pursuit aerial-ace focus-energy false-swipe"]},
    {"level":21,"ai":0.22,"members":["yanma / aerial-ace air-cutter sonic-boom detect","shuckle / struggle-bug wrap safeguard rock-throw","spinarak / constrict night-shade shadow-sneak leech-life","scyther / pursuit aerial-ace focus-energy false-swipe"]},
    {"level":26,"ai":0.26,"members":["heracross / chip-away slash counter brick-break","yanma / aerial-ace air-cutter sonic-boom detect","shuckle / struggle-bug wrap safeguard rock-throw","pinsir / harden vital-throw brick-break double-hit","scyther / false-swipe fury-cutter wing-attack agility"]},
@@ -1013,7 +1013,7 @@
  },
  "whitney": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["clefairy / encore sing baby-doll-eyes double-slap","miltank / tackle growl defense-curl stomp"]},
+   {"level":11,"ai":0.15,"members":["clefairy / encore sing baby-doll-eyes double-slap","dunsparce / rage defense-curl mud-slap rollout"]},
    {"level":16,"ai":0.19,"members":["jigglypuff / disarming-voice stockpile swallow spit-up","girafarig / astonish confusion odor-sleuth stomp","miltank / growl defense-curl stomp milk-drink"]},
    {"level":21,"ai":0.22,"members":["chansey / defense-curl draining-kiss bestow soft-boiled","girafarig / odor-sleuth stomp assurance agility","snorlax / amnesia bite yawn headbutt","miltank / stomp milk-drink bide rollout"]},
    {"level":26,"ai":0.26,"members":["jigglypuff / round rollout double-slap rest","teddiursa / payback feint-attack sweet-scent play-nice","girafarig / stomp assurance agility psybeam","rufflet / twister scary-face aerial-ace roost","miltank / milk-drink bide rollout headbutt"]},
@@ -1189,7 +1189,7 @@
  },
  "pryce": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","mamoswine / powder-snow ancient-power mud-slap bulldoze"]},
+   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","snover / leer powder-snow leafage razor-leaf"]},
    {"level":16,"ai":0.19,"members":["spheal / rollout encore water-pulse ice-ball","jynx / powder-snow lovely-kiss confusion covet","mamoswine / ancient-power mud-slap bulldoze ice-shard"]},
    {"level":21,"ai":0.22,"members":["shellder / withdraw icicle-spear supersonic ice-shard","eevee / baby-doll-eyes swift quick-attack refresh","seel / charm icy-wind encore ice-shard","mamoswine / icicle-crash ice-fang mud-bomb double-hit"]},
    {"level":26,"ai":0.26,"members":["spheal / brine body-slam aurora-beam liquidation","eevee / quick-attack refresh mimic bite","shellder / supersonic ice-shard protect leer","cubchoo / fury-swipes endure frost-breath brine","mamoswine / mud-bomb double-hit hail high-horsepower"]},
@@ -1541,7 +1541,7 @@
  },
  "kurt": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["snom / powder-snow struggle-bug","heracross / bullet-seed endure rock-smash horn-attack"]},
+   {"level":11,"ai":0.15,"members":["snom / powder-snow struggle-bug","durant / sand-attack vise-grip fury-cutter bite"]},
    {"level":16,"ai":0.19,"members":["shuckle / rollout encore struggle-bug wrap","pineco / tackle self-destruct bug-bite take-down","heracross / horn-attack aerial-ace fury-attack chip-away"]},
    {"level":21,"ai":0.22,"members":["ledian / mach-punch light-screen reflect roost","spinarak / constrict night-shade shadow-sneak leech-life","scyther / pursuit aerial-ace focus-energy false-swipe","heracross / aerial-ace fury-attack chip-away slash"]},
    {"level":26,"ai":0.26,"members":["scyther / false-swipe fury-cutter wing-attack agility","ledian / roost struggle-bug swift silver-wind","shuckle / struggle-bug wrap safeguard rock-throw","ariados / night-shade shadow-sneak leech-life fury-swipes","heracross / chip-away slash counter brick-break"]},
@@ -1673,7 +1673,7 @@
  },
  "roxanne": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["shuckle / bide rollout encore struggle-bug","nosepass / tackle harden rock-throw block"]},
+   {"level":11,"ai":0.15,"members":["archen / leer wing-attack rock-throw double-team","nosepass / tackle harden rock-throw block"]},
    {"level":16,"ai":0.19,"members":["nosepass / harden rock-throw block thunder-wave","lileep / astonish constrict acid ingrain","cranidos / rock-smash rock-polish pursuit take-down"]},
    {"level":21,"ai":0.22,"members":["anorith / mud-sport water-gun smack-down metal-claw","geodude / rollout iron-defense smack-down harden","aerodactyl / roar scary-face agility rock-throw","nosepass / block thunder-wave iron-defense spark"]},
    {"level":26,"ai":0.26,"members":["graveler / rock-slide harden bulldoze self-destruct","anorith / metal-claw bug-bite fury-cutter ancient-power","kabuto / absorb leer mud-shot sand-attack","corsola / refresh recover bubble-beam lucky-chant","nosepass / iron-defense spark rock-blast rock-slide"]},
@@ -1849,7 +1849,7 @@
  },
  "norman": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["kangaskhan / pound growl leer fake-out","slakoth / scratch yawn encore slack-off"]},
+   {"level":11,"ai":0.15,"members":["spinda / tackle copycat","slakoth / scratch yawn encore slack-off"]},
    {"level":16,"ai":0.19,"members":["kangaskhan / fake-out tail-whip bite stomp","staravia / quick-attack wing-attack double-team air-slash","slakoth / scratch encore slack-off rest"]},
    {"level":21,"ai":0.22,"members":["spinda / feint-attack psybeam uproar hypnosis","zangoose / hone-claws aerial-ace pursuit slash","linoone / headbutt hone-claws odor-sleuth mud-sport","vigoroth / encore uproar fury-swipes endure"]},
    {"level":26,"ai":0.26,"members":["linoone / hone-claws odor-sleuth mud-sport fury-swipes","zangoose / power-trip revenge embargo crush-claw","spinda / uproar hypnosis body-slam dizzy-punch","watchog / crunch hypnosis super-fang after-you","vigoroth / encore uproar fury-swipes endure"]},
@@ -2641,7 +2641,7 @@
  },
  "noland": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["litleo / leer ember work-up headbutt","pinsir / vise-grip bind focus-energy"]},
+   {"level":11,"ai":0.15,"members":["litleo / leer ember work-up headbutt","kricketune / fury-cutter tackle aerial-ace absorb"]},
    {"level":16,"ai":0.19,"members":["grovyle / absorb quick-attack fury-cutter mega-drain","toedscool / stun-spore supersonic tackle mega-drain","pinsir / bind focus-energy seismic-toss bug-bite"]},
    {"level":21,"ai":0.22,"members":["rhyhorn / tail-whip stomp fury-attack smack-down","grovyle / fury-cutter mega-drain pursuit assurance","clauncher / vise-grip bubble flail bubble-beam","pinsir / seismic-toss bug-bite revenge harden"]},
    {"level":26,"ai":0.26,"members":["dugtrio / bulldoze fury-swipes sucker-punch dig","feebas / splash tackle","rhyhorn / fury-attack smack-down scary-face rock-blast","stonjourner / rock-polish rock-tomb gravity stomp","pinsir / harden vital-throw brick-break double-hit"]},
@@ -2817,7 +2817,7 @@
  },
  "maylene": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["crabrawler / bubble vise-grip rock-smash leer","lucario / laser-focus bite feint force-palm"]},
+   {"level":11,"ai":0.15,"members":["crabrawler / bubble vise-grip rock-smash leer","mienfoo / pound meditate detect fake-out"]},
    {"level":16,"ai":0.19,"members":["machop / karate-chop bullet-punch low-sweep foresight","combusken / sand-attack focus-energy flame-charge peck","lucario / feint force-palm iron-defense power-up-punch"]},
    {"level":21,"ai":0.22,"members":["croagunk / pursuit low-kick feint-attack revenge","meditite / hidden-power feint psybeam swagger","farfetchd-galar / leer fury-cutter rock-smash brutal-swing","lucario / power-up-punch aura-sphere mach-punch work-up"]},
    {"level":26,"ai":0.26,"members":["kirlia / draining-kiss magical-leaf psybeam life-dew","machop / revenge brick-break mach-punch seismic-toss","breloom / worry-seed headbutt feint counter","meditite / mind-reader force-palm calm-mind zen-headbutt","lucario / aura-sphere mach-punch work-up metal-sound"]},
@@ -3390,7 +3390,7 @@
  "barry": {
   "gym": [
    {"level":11,"ai":0.15,"members":["starly / gust tackle quick-attack wing-attack","piplup / growl water-gun bubble water-sport"]},
-   {"level":16,"ai":0.19,"members":["snorlax / lick screech bulldoze amnesia","prinplup / water-sport aerial-ace charm peck","bramblin / rollout absorb rapid-spin bullet-seed"]},
+   {"level":16,"ai":0.19,"members":["roselia / stun-spore poison-powder mega-drain leech-seed","prinplup / water-sport aerial-ace charm peck","bramblin / rollout absorb rapid-spin bullet-seed"]},
    {"level":21,"ai":0.22,"members":["buizel / bite water-pulse swift aqua-jet","snorlax / amnesia bite yawn headbutt","staravia / double-team air-slash endeavor roost","prinplup / charm peck water-pulse bubble-beam"]},
    {"level":26,"ai":0.26,"members":["floatzel / bite water-pulse swift aqua-jet","snorlax / covet chip-away rest belly-drum","staravia / endeavor roost whirlwind aerial-ace","heracross / chip-away slash counter brick-break","prinplup / bubble-beam bide swagger roost"]},
    {"level":32,"ai":0.3,"members":["heracross / brick-break pin-missile feint take-down","staravia / roost whirlwind aerial-ace double-edge","snorlax / snore zen-headbutt sleep-talk block","roselia / venoshock giga-drain toxic-spikes sweet-scent","floatzel / water-pulse swift aqua-jet double-hit","prinplup / bide swagger roost fury-attack"]},
@@ -3961,7 +3961,7 @@
  },
  "clay": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["mamoswine / powder-snow ancient-power mud-slap bulldoze","drilbur / mud-sport scratch rapid-spin mud-slap"]},
+   {"level":11,"ai":0.15,"members":["gligar / sand-attack harden knock-off aerial-ace","drilbur / mud-sport scratch rapid-spin mud-slap"]},
    {"level":16,"ai":0.19,"members":["sandile / bite sand-tomb torment assurance","tympole / bide focus-energy low-kick rock-throw","drilbur / mud-slap fury-swipes metal-claw hone-claws"]},
    {"level":21,"ai":0.22,"members":["tympole / focus-energy low-kick rock-throw wake-up-slap","sandshrew / fury-cutter magnitude bulldoze swift","sandile / sand-tomb torment assurance mud-slap","drilbur / mud-slap fury-swipes metal-claw hone-claws"]},
    {"level":26,"ai":0.26,"members":["sandslash / fury-cutter bulldoze swift fury-swipes","sandygast / sand-tomb mega-drain sand-attack bulldoze","palpitoad / bubble-beam mud-shot aqua-ring uproar","golett / iron-defense stomping-tantrum mega-punch magnitude","drilbur / hone-claws crush-claw dig slash"]},
@@ -4049,7 +4049,7 @@
  },
  "brycen": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["cryogonal / bind ice-shard sharpen rapid-spin","cubchoo / powder-snow growl bide icy-wind"]},
+   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","cubchoo / powder-snow growl bide icy-wind"]},
    {"level":16,"ai":0.19,"members":["vanillite / icicle-spear icy-wind mist uproar","seel / charm icy-wind encore ice-shard","cubchoo / icy-wind play-nice fury-swipes endure"]},
    {"level":21,"ai":0.22,"members":["cryogonal / icy-wind mist haze ancient-power","eevee / baby-doll-eyes swift quick-attack refresh","mamoswine / icicle-crash ice-fang mud-bomb double-hit","cubchoo / fury-swipes endure frost-breath brine"]},
    {"level":26,"ai":0.26,"members":["spheal / brine body-slam aurora-beam liquidation","cryogonal / mist haze ancient-power aurora-beam","eevee / quick-attack refresh mimic bite","vanillite / uproar taunt avalanche mirror-shot","cubchoo / fury-swipes endure frost-breath brine"]},
@@ -4137,7 +4137,7 @@
  },
  "iris": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["lapras / water-gun growl sing mist","axew / leer bite assurance dragon-rage"]},
+   {"level":11,"ai":0.15,"members":["aron / mud-slap headbutt metal-claw rock-tomb","axew / leer bite assurance dragon-rage"]},
    {"level":16,"ai":0.19,"members":["druddigon / bite hone-claws scary-face metal-claw","applin / withdraw astonish","axew / bite assurance dragon-rage false-swipe"]},
    {"level":21,"ai":0.22,"members":["aron / headbutt metal-claw rock-tomb roar","archen / double-team scary-face pluck ancient-power","bagon / leer ember headbutt dragon-breath","axew / false-swipe dual-chop scary-face slash"]},
    {"level":26,"ai":0.26,"members":["druddigon / scary-face metal-claw dragon-rage slash","aron / iron-defense iron-head protect take-down","lapras / life-dew confuse-ray water-pulse body-slam","dratini / dragon-rage dragon-tail agility slam","axew / slash dragon-claw crunch taunt"]},
@@ -5105,7 +5105,7 @@
  },
  "viola": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["scyther / silver-wind pursuit aerial-ace focus-energy","spewpa / harden protect"]},
+   {"level":11,"ai":0.15,"members":["larvesta / ember string-shot absorb","spewpa / harden protect"]},
    {"level":16,"ai":0.19,"members":["scyther / pursuit aerial-ace focus-energy false-swipe","surskit / quick-attack sweet-scent soak water-sport","vivillon / magic-powder sleep-powder struggle-bug light-screen"]},
    {"level":21,"ai":0.22,"members":["surskit / sweet-scent soak water-sport bubble-beam","scyther / pursuit aerial-ace focus-energy false-swipe","pinsir / seismic-toss bug-bite revenge harden","vivillon / struggle-bug light-screen psybeam supersonic"]},
    {"level":26,"ai":0.26,"members":["scyther / false-swipe fury-cutter wing-attack agility","masquerain / water-sport gust air-cutter scary-face","larvesta / absorb struggle-bug flame-charge leech-life","ninjask / screech double-team fury-swipes mind-reader","vivillon / light-screen psybeam supersonic draining-kiss"]},
@@ -5193,7 +5193,7 @@
  },
  "korrina": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["pawmi / growl thunder-shock quick-attack charge","lucario / laser-focus bite feint force-palm"]},
+   {"level":11,"ai":0.15,"members":["pawmi / growl thunder-shock quick-attack charge","machop / bide focus-energy karate-chop bullet-punch"]},
    {"level":16,"ai":0.19,"members":["machop / karate-chop bullet-punch low-sweep foresight","sawk / bide focus-energy double-kick low-sweep","lucario / feint force-palm iron-defense power-up-punch"]},
    {"level":21,"ai":0.22,"members":["hawlucha / detect wing-attack aerial-ace encore","mienfoo / fake-out fury-swipes double-slap swift","machop / double-hit knock-off revenge brick-break","lucario / power-up-punch aura-sphere mach-punch work-up"]},
    {"level":26,"ai":0.26,"members":["hawlucha / encore roost fling submission","pancham / comet-punch low-sweep circle-throw slash","machop / revenge brick-break mach-punch seismic-toss","mienfoo / fake-out fury-swipes double-slap swift","lucario / aura-sphere mach-punch work-up metal-sound"]},
@@ -5413,7 +5413,7 @@
  },
  "wulfric": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["cryogonal / bind ice-shard sharpen rapid-spin","bergmite / powder-snow ice-shard icy-wind bite"]},
+   {"level":11,"ai":0.15,"members":["snover / leer powder-snow leafage razor-leaf","bergmite / powder-snow ice-shard icy-wind bite"]},
    {"level":16,"ai":0.19,"members":["amaura / rock-throw thunder-wave icy-wind take-down","mamoswine / ancient-power mud-slap bulldoze ice-shard","bergmite / icy-wind bite protect curse"]},
    {"level":21,"ai":0.22,"members":["amaura / take-down mist ancient-power aurora-beam","mamoswine / icicle-crash ice-fang mud-bomb double-hit","snover / mist icicle-crash ice-shard swagger","bergmite / protect curse rapid-spin sharpen"]},
    {"level":26,"ai":0.26,"members":["mamoswine / mud-bomb double-hit hail high-horsepower","snover / icicle-crash ice-shard swagger energy-ball","amaura / mist ancient-power aurora-beam round","sneasel / feint-attack icy-wind fury-swipes poison-jab","bergmite / sharpen ice-fang iron-defense take-down"]},
@@ -6073,7 +6073,7 @@
  },
  "ash": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["lucario / laser-focus bite feint force-palm","pikachu / play-nice double-kick quick-attack thunder-wave"]},
+   {"level":11,"ai":0.15,"members":["froakie / bubble water-gun quick-attack lick","pikachu / play-nice double-kick quick-attack thunder-wave"]},
    {"level":16,"ai":0.19,"members":["grovyle / absorb quick-attack fury-cutter mega-drain","electabuzz / thunder-shock spark swift shock-wave","pikachu / thunder-wave electro-ball double-team nuzzle"]},
    {"level":21,"ai":0.22,"members":["monferno / nasty-plot fury-swipes flamethrower flame-wheel","grovyle / fury-cutter mega-drain pursuit assurance","dratini / leer thunder-wave twister dragon-rage","pikachu / electro-ball double-team nuzzle swift"]},
    {"level":26,"ai":0.26,"members":["fletchinder / peck flail flame-charge agility","grovyle / pursuit assurance x-scissor giga-drain","lucario / aura-sphere mach-punch work-up metal-sound","dondozo / rest sleep-talk dive noble-roar","pikachu / swift spark feint slam"]},
@@ -6777,7 +6777,7 @@
  },
  "hau": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["miltank / tackle growl defense-curl stomp","popplio / growl disarming-voice baby-doll-eyes aqua-jet"]},
+   {"level":11,"ai":0.15,"members":["carvanha / bite poison-fang rage focus-energy","popplio / growl disarming-voice baby-doll-eyes aqua-jet"]},
    {"level":16,"ai":0.19,"members":["pikachu / thunder-wave electro-ball double-team nuzzle","tauros / rage horn-attack assurance scary-face","popplio / disarming-voice baby-doll-eyes aqua-jet icy-wind"]},
    {"level":21,"ai":0.22,"members":["pikachu / electro-ball double-team nuzzle swift","tauros / pursuit payback stomp work-up","crabrawler / leer pursuit bubble-beam protect","brionne / disarming-voice baby-doll-eyes aqua-jet icy-wind"]},
    {"level":26,"ai":0.26,"members":["eevee / quick-attack refresh mimic bite","pikachu / swift spark feint slam","tauros / pursuit payback stomp work-up","crabrawler / power-up-punch brick-break dizzy-punch slam","brionne / icy-wind sing encore bubble-beam"]},
@@ -6821,7 +6821,7 @@
  },
  "gladion": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["tauros / tackle tail-whip rage","lucario / laser-focus bite feint force-palm"]},
+   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","emolga / thunder-shock quick-attack tail-whip nuzzle"]},
    {"level":16,"ai":0.19,"members":["zorua / pursuit hone-claws fury-swipes fake-tears","zubat / hypnosis astonish leech-life bite","lucario / feint force-palm iron-defense power-up-punch"]},
    {"level":21,"ai":0.22,"members":["eevee / baby-doll-eyes swift quick-attack refresh","sneasel / taunt quick-attack swift feint-attack","bouffalant / rage fury-attack horn-attack scary-face","lucario / power-up-punch aura-sphere mach-punch work-up"]},
    {"level":26,"ai":0.26,"members":["zorua / scary-face torment taunt knock-off","eevee / quick-attack refresh mimic bite","golbat / wing-attack swift confuse-ray cross-poison","snorlax / covet chip-away rest belly-drum","lucario / aura-sphere mach-punch work-up metal-sound"]},
@@ -6953,7 +6953,7 @@
  },
  "guzma": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["wimpod / struggle-bug sand-attack defense-curl","heracross / bullet-seed endure rock-smash horn-attack"]},
+   {"level":11,"ai":0.15,"members":["wimpod / struggle-bug sand-attack defense-curl","grubbin / vise-grip mud-slap string-shot bug-bite"]},
    {"level":16,"ai":0.19,"members":["spinarak / scary-face infestation constrict night-shade","grubbin / mud-slap string-shot bug-bite bite","wimpod / struggle-bug sand-attack defense-curl"]},
    {"level":21,"ai":0.22,"members":["charjabug / bug-bite bite acrobatics spark","spinarak / constrict night-shade shadow-sneak leech-life","spidops / assurance feint bug-bite block","wimpod / struggle-bug sand-attack defense-curl"]},
    {"level":26,"ai":0.26,"members":["scyther / false-swipe fury-cutter wing-attack agility","charjabug / bug-bite bite acrobatics spark","pinsir / harden vital-throw brick-break double-hit","heracross / chip-away slash counter brick-break","wimpod / struggle-bug sand-attack defense-curl"]},
@@ -7569,8 +7569,8 @@
  },
  "melony": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["snom / powder-snow struggle-bug","lapras / water-gun growl sing mist"]},
-   {"level":16,"ai":0.19,"members":["mr-mime-galar / baton-pass ice-shard confusion ally-switch","arctovish / powder-snow water-gun protect icy-wind","lapras / sing mist ice-shard life-dew"]},
+   {"level":11,"ai":0.15,"members":["snom / powder-snow struggle-bug","crabrawler / bubble vise-grip rock-smash leer"]},
+   {"level":16,"ai":0.19,"members":["mr-mime-galar / baton-pass ice-shard confusion ally-switch","arctovish / powder-snow water-gun protect icy-wind","delibird / present"]},
    {"level":21,"ai":0.22,"members":["eiscue / tackle mist weather-ball icy-wind","mr-mime-galar / ice-shard confusion ally-switch icy-wind","eevee / baby-doll-eyes swift quick-attack refresh","lapras / ice-shard life-dew confuse-ray water-pulse"]},
    {"level":26,"ai":0.26,"members":["snom / powder-snow struggle-bug","mr-mime-galar / confusion ally-switch icy-wind double-kick","darumaka / facade uproar work-up fire-punch","eevee / quick-attack refresh mimic bite","lapras / life-dew confuse-ray water-pulse body-slam"]},
    {"level":32,"ai":0.3,"members":["mr-mime-galar / icy-wind double-kick psybeam hypnosis","darumaka / fire-punch taunt thrash belly-drum","eiscue / weather-ball icy-wind headbutt amnesia","frosmoth / aurora-beam hail snowscape bug-buzz","crabominable / brick-break dizzy-punch slam avalanche","lapras / life-dew confuse-ray water-pulse body-slam"]},
@@ -7657,8 +7657,8 @@
  },
  "raihan": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["skrelp / smokescreen feint-attack water-gun acid","duraludon / metal-claw leer rock-smash"]},
-   {"level":16,"ai":0.19,"members":["silicobra / sand-attack minimize brutal-swing bulldoze","druddigon / bite hone-claws scary-face metal-claw","duraludon / metal-claw leer rock-smash hone-claws"]},
+   {"level":11,"ai":0.15,"members":["skrelp / smokescreen feint-attack water-gun acid","dratini / wrap leer thunder-wave twister"]},
+   {"level":16,"ai":0.19,"members":["silicobra / sand-attack minimize brutal-swing bulldoze","druddigon / bite hone-claws scary-face metal-claw","tatsugiri / water-gun splash harden helping-hand"]},
    {"level":21,"ai":0.22,"members":["silicobra / minimize brutal-swing bulldoze headbutt","trapinch / mud-slap bulldoze sand-tomb rock-slide","noibat / wing-attack bite agility screech","duraludon / leer rock-smash hone-claws metal-sound"]},
    {"level":26,"ai":0.26,"members":["silicobra / brutal-swing bulldoze headbutt glare","boldore / mud-slap rock-blast iron-defense smack-down","trapinch / mud-slap bulldoze sand-tomb rock-slide","goomy / protect bide dragon-breath flail","duraludon / rock-smash hone-claws metal-sound breaking-swipe"]},
    {"level":32,"ai":0.3,"members":["boldore / iron-defense smack-down stealth-rock rock-slide","trapinch / sand-tomb rock-slide dig crunch","silicobra / bulldoze headbutt glare dig","turtonator / endure iron-defense flamethrower body-slam","dreepy / astonish infestation quick-attack bite","duraludon / hone-claws metal-sound breaking-swipe dragon-tail"]},
@@ -8185,7 +8185,7 @@
  },
  "the-royal": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["pawmi / growl thunder-shock quick-attack charge","hawlucha / hone-claws karate-chop detect wing-attack"]},
+   {"level":11,"ai":0.15,"members":["timburr / pound focus-energy bide low-kick","croagunk / mud-slap rock-smash poison-sting taunt"]},
    {"level":16,"ai":0.19,"members":["clobbopus / leer feint bind detect","ralts / double-team teleport lucky-chant draining-kiss","hawlucha / karate-chop detect wing-attack aerial-ace"]},
    {"level":21,"ai":0.22,"members":["machop / double-hit knock-off revenge brick-break","timburr / bide low-kick rock-throw wake-up-slap","hawlucha / detect wing-attack aerial-ace encore","hitmonlee / sucker-punch jump-kick feint focus-energy"]},
    {"level":26,"ai":0.26,"members":["clobbopus / bind detect brick-break bulk-up","machop / revenge brick-break mach-punch seismic-toss","kirlia / draining-kiss magical-leaf psybeam life-dew","poliwhirl / double-slap rain-dance mud-shot bubble-beam","hawlucha / encore roost fling submission"]},
@@ -8229,8 +8229,8 @@
  },
  "ballguy": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["dunsparce / rage defense-curl mud-slap rollout","snorlax / last-resort tackle defense-curl lick"]},
-   {"level":16,"ai":0.19,"members":["kangaskhan / fake-out tail-whip bite stomp","porygon / sharpen thunder-shock psybeam spark","snorlax / lick screech bulldoze amnesia"]},
+   {"level":11,"ai":0.15,"members":["dunsparce / rage defense-curl mud-slap rollout","lechonk / tackle tail-whip disarming-voice echoed-voice"]},
+   {"level":16,"ai":0.19,"members":["kangaskhan / fake-out tail-whip bite stomp","porygon / sharpen thunder-shock psybeam spark","lechonk / disarming-voice echoed-voice mud-shot covet"]},
    {"level":21,"ai":0.22,"members":["kangaskhan / bite stomp focus-energy rage","teddiursa / bulldoze payback feint-attack sweet-scent","porygon / spark thunder-wave barrier magnet-rise","snorlax / amnesia bite yawn headbutt"]},
    {"level":26,"ai":0.26,"members":["kangaskhan / rage headbutt mega-punch double-hit","lickitung / stomp disable double-edge bind","teddiursa / payback feint-attack sweet-scent play-nice","helioptile / charge quick-attack razor-wind parabolic-charge","snorlax / covet chip-away rest belly-drum"]},
    {"level":32,"ai":0.3,"members":["lickilicky / disable double-edge rollout slam","porygon2 / recover recycle thunderbolt signal-beam","ursaring / sweet-scent play-nice play-rough slash","kangaskhan / headbutt mega-punch double-hit chip-away","staravia / roost whirlwind aerial-ace double-edge","snorlax / snore zen-headbutt sleep-talk block"]},
@@ -8273,7 +8273,7 @@
  },
  "katy": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["heracross / bullet-seed endure rock-smash horn-attack","teddiursa / lick fake-tears fury-swipes bulldoze"]},
+   {"level":11,"ai":0.15,"members":["pineco / protect tackle self-destruct bug-bite","teddiursa / lick fake-tears fury-swipes bulldoze"]},
    {"level":16,"ai":0.19,"members":["nymble / astonish assurance double-kick screech","pineco / tackle self-destruct bug-bite take-down","teddiursa / fake-tears fury-swipes bulldoze payback"]},
    {"level":21,"ai":0.22,"members":["pineco / take-down rapid-spin autotomize rollout","heracross / aerial-ace fury-attack chip-away slash","yanma / aerial-ace air-cutter sonic-boom detect","teddiursa / bulldoze payback feint-attack sweet-scent"]},
    {"level":26,"ai":0.26,"members":["pineco / rollout natural-gift bide curse","heracross / chip-away slash counter brick-break","teddiursa / payback feint-attack sweet-scent play-nice","spidops / feint bug-bite block counter","joltik / electroweb bug-bite screech electro-ball"]},
@@ -8449,7 +8449,7 @@
  },
  "larry": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["flamigo / peck copycat double-kick detect","starly / gust tackle quick-attack wing-attack"]},
+   {"level":11,"ai":0.15,"members":["komala / stockpile spit-up swallow rapid-spin","starly / gust tackle quick-attack wing-attack"]},
    {"level":16,"ai":0.19,"members":["dunsparce / mud-slap rollout spite yawn","komala / spit-up swallow rapid-spin yawn","staravia / quick-attack wing-attack double-team air-slash"]},
    {"level":21,"ai":0.22,"members":["flamigo / wing-attack focus-energy low-kick feint","swablu / mist safeguard round dragon-breath","furret / defense-curl quick-attack fury-swipes helping-hand","staravia / double-team air-slash endeavor roost"]},
    {"level":26,"ai":0.26,"members":["komala / rapid-spin yawn slam flail","dunsparce / glare screech body-slam ancient-power","oinkologne / covet dig headbutt take-down","aerodactyl / scary-face agility rock-throw ancient-power","staravia / endeavor roost whirlwind aerial-ace"]},
@@ -8493,7 +8493,7 @@
  },
  "ryme": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["shuppet / astonish screech night-shade knock-off","toxtricity / leer noble-roar charge shock-wave"]},
+   {"level":11,"ai":0.15,"members":["shuppet / astonish screech night-shade knock-off","mankey / low-kick mud-slap taunt focus-energy"]},
    {"level":16,"ai":0.19,"members":["mimikyu / copycat shadow-sneak double-team baby-doll-eyes","shuppet / night-shade knock-off spite shadow-sneak","toxtricity / charge shock-wave scary-face taunt"]},
    {"level":21,"ai":0.22,"members":["shuppet / spite shadow-sneak pain-split curse","greavard / bite roar headbutt dig","dhelmise / mega-drain wrap switcheroo gyro-ball","toxtricity / shock-wave scary-face taunt venoshock"]},
    {"level":26,"ai":0.26,"members":["mimikyu / double-team baby-doll-eyes mimic feint-attack","greavard / roar headbutt dig rest","shuppet / pain-split curse hex feint-attack","pumpkaboo / leech-seed trick-or-treat shadow-sneak bullet-seed","toxtricity / scary-face taunt venoshock screech"]},
@@ -8669,7 +8669,7 @@
  },
  "poppy": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["duraludon / metal-claw leer rock-smash","tinkatink / fairy-wind baby-doll-eyes metal-claw covet"]},
+   {"level":11,"ai":0.15,"members":["orthworm / tackle wrap harden mud-slap","tinkatink / fairy-wind baby-doll-eyes metal-claw covet"]},
    {"level":16,"ai":0.19,"members":["bronzor / confuse-ray imprison hypnosis psywave","prinplup / water-sport aerial-ace charm peck","tinkatink / baby-doll-eyes metal-claw covet rock-smash"]},
    {"level":21,"ai":0.22,"members":["cufant / rollout rock-smash bulldoze stomp","bronzor / imprison hypnosis psywave hex","magnemite / thunder-wave magnet-bomb spark metal-sound","tinkatink / covet rock-smash draining-kiss sweet-kiss"]},
    {"level":26,"ai":0.26,"members":["magnemite / spark metal-sound electro-ball light-screen","corvisquire / hone-claws fury-attack pluck taunt","bronzor / psywave hex iron-defense safeguard","cufant / rock-smash bulldoze stomp iron-defense","tinkatuff / rock-smash draining-kiss sweet-kiss brutal-swing"]},
@@ -8889,7 +8889,7 @@
  },
  "penny": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","magmar / ember leer tackle smog"]},
+   {"level":11,"ai":0.15,"members":["eevee / sand-attack growl covet double-kick","applin / withdraw astonish"]},
    {"level":16,"ai":0.19,"members":["eevee / double-kick baby-doll-eyes swift quick-attack","crocalor / lick round bite yawn","charcadet / astonish clear-smog fire-spin will-o-wisp"]},
    {"level":21,"ai":0.22,"members":["eevee / baby-doll-eyes swift quick-attack refresh","luxio / leer charge bite spark","crocalor / round bite yawn incinerate","litwick / fire-spin will-o-wisp night-shade flame-burst"]},
    {"level":26,"ai":0.26,"members":["eevee / quick-attack refresh mimic bite","ivysaur / seed-bomb razor-leaf sweet-scent growth","finizen / aqua-jet double-hit dive charm","lokix / double-kick screech endure bug-bite","pincurchin / charge fury-attack spark bubble-beam"]},
@@ -9153,8 +9153,8 @@
  },
  "drayton": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["bagon / rage bite leer","duraludon / metal-claw leer rock-smash"]},
-   {"level":16,"ai":0.19,"members":["skrelp / water-gun acid tail-whip bubble","trapinch / feint-attack mud-slap bulldoze sand-tomb","duraludon / metal-claw leer rock-smash hone-claws"]},
+   {"level":11,"ai":0.15,"members":["bagon / rage bite leer","applin / withdraw astonish"]},
+   {"level":16,"ai":0.19,"members":["skrelp / water-gun acid tail-whip bubble","trapinch / feint-attack mud-slap bulldoze sand-tomb","turtonator / protect incinerate flail endure"]},
    {"level":21,"ai":0.22,"members":["skrelp / acid tail-whip bubble camouflage","trapinch / mud-slap bulldoze sand-tomb rock-slide","goomy / acid-armor protect bide dragon-breath","duraludon / leer rock-smash hone-claws metal-sound"]},
    {"level":26,"ai":0.26,"members":["grovyle / pursuit assurance x-scissor giga-drain","axew / slash dragon-claw crunch taunt","trapinch / mud-slap bulldoze sand-tomb rock-slide","jangmo-o / dragon-tail scary-face headbutt work-up","duraludon / rock-smash hone-claws metal-sound breaking-swipe"]},
    {"level":32,"ai":0.3,"members":["grovyle / x-scissor giga-drain leaf-blade agility","axew / crunch taunt dragon-dance breaking-swipe","trapinch / sand-tomb rock-slide dig crunch","skrelp / camouflage poison-tail double-team water-pulse","gabite / slash sandstorm earth-power take-down","archaludon / hone-claws metal-sound breaking-swipe dragon-tail"]},
@@ -9329,8 +9329,8 @@
  },
  "cogita": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["snorlax / last-resort tackle defense-curl lick","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
-   {"level":16,"ai":0.19,"members":["snorlax / lick screech bulldoze amnesia","mamoswine / ancient-power mud-slap bulldoze ice-shard","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
+   {"level":11,"ai":0.15,"members":["bronzor / confusion confuse-ray imprison hypnosis","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
+   {"level":16,"ai":0.19,"members":["mamoswine / ancient-power mud-slap bulldoze ice-shard","bronzor / confuse-ray imprison hypnosis psywave","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
    {"level":21,"ai":0.22,"members":["bronzor / imprison hypnosis psywave hex","snorlax / amnesia bite yawn headbutt","mamoswine / icicle-crash ice-fang mud-bomb double-hit","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
    {"level":26,"ai":0.26,"members":["bronzor / psywave hex iron-defense safeguard","mamoswine / mud-bomb double-hit hail high-horsepower","snorlax / covet chip-away rest belly-drum","lucario / aura-sphere mach-punch work-up metal-sound","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
    {"level":32,"ai":0.3,"members":["mamoswine / double-hit hail high-horsepower icy-wind","bronzor / safeguard feint-attack gyro-ball extrasensory","snorlax / snore zen-headbutt sleep-talk block","metang / bullet-punch pursuit miracle-eye zen-headbutt","dolliv / flail mega-drain grassy-terrain seed-bomb","wobbuffet / counter mirror-coat safeguard destiny-bond"]},
@@ -9462,7 +9462,7 @@
  "brigette": {
   "gym": [
    {"level":11,"ai":0.15,"members":["seel / water-sport water-gun charm icy-wind","eevee / sand-attack growl covet double-kick"]},
-   {"level":16,"ai":0.19,"members":["snorlax / lick screech bulldoze amnesia","pikachu / thunder-wave electro-ball double-team nuzzle","eevee / double-kick baby-doll-eyes swift quick-attack"]},
+   {"level":16,"ai":0.19,"members":["pikachu / thunder-wave electro-ball double-team nuzzle","patrat / bide detect sand-attack crunch","eevee / double-kick baby-doll-eyes swift quick-attack"]},
    {"level":21,"ai":0.22,"members":["pikachu / electro-ball double-team nuzzle swift","snorlax / amnesia bite yawn headbutt","lapras / ice-shard life-dew confuse-ray water-pulse","eevee / baby-doll-eyes swift quick-attack refresh"]},
    {"level":26,"ai":0.26,"members":["lapras / life-dew confuse-ray water-pulse body-slam","snorlax / covet chip-away rest belly-drum","pikachu / swift spark feint slam","prinplup / bubble-beam bide swagger roost","eevee / quick-attack refresh mimic bite"]},
    {"level":32,"ai":0.3,"members":["lapras / life-dew confuse-ray water-pulse body-slam","pikachu / feint slam thunderbolt iron-tail","snorlax / snore zen-headbutt sleep-talk block","palpitoad / mud-shot aqua-ring uproar echoed-voice","cryogonal / haze ancient-power aurora-beam confuse-ray","eevee / refresh mimic bite copycat"]},
@@ -9549,7 +9549,7 @@
  },
  "riley": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["durant / sand-attack vise-grip fury-cutter bite","lucario / laser-focus bite feint force-palm"]},
+   {"level":11,"ai":0.15,"members":["durant / sand-attack vise-grip fury-cutter bite","mawile / fairy-wind bite taunt fake-tears"]},
    {"level":16,"ai":0.19,"members":["sneasel / taunt quick-attack swift feint-attack","gimmighoul / astonish tackle","lucario / feint force-palm iron-defense power-up-punch"]},
    {"level":21,"ai":0.22,"members":["magnemite / thunder-wave magnet-bomb spark metal-sound","kirlia / lucky-chant draining-kiss magical-leaf psybeam","klefki / spikes metal-sound crafty-shield draining-kiss","lucario / power-up-punch aura-sphere mach-punch work-up"]},
    {"level":26,"ai":0.26,"members":["sneasel / feint-attack icy-wind fury-swipes poison-jab","magnemite / spark metal-sound electro-ball light-screen","kirlia / draining-kiss magical-leaf psybeam life-dew","onix / curse gyro-ball stealth-rock rock-polish","lucario / aura-sphere mach-punch work-up metal-sound"]},
@@ -9682,7 +9682,7 @@
  "toddsnap": {
   "gym": [
    {"level":11,"ai":0.15,"members":["phantump / tackle astonish branch-poke confuse-ray","pikachu / play-nice double-kick quick-attack thunder-wave"]},
-   {"level":16,"ai":0.19,"members":["snorlax / lick screech bulldoze amnesia","cetoddle / growl echoed-voice ice-shard rest","pikachu / thunder-wave electro-ball double-team nuzzle"]},
+   {"level":16,"ai":0.19,"members":["charmeleon / smokescreen dragon-breath metal-claw leer","cetoddle / growl echoed-voice ice-shard rest","pikachu / thunder-wave electro-ball double-team nuzzle"]},
    {"level":21,"ai":0.22,"members":["lapras / ice-shard life-dew confuse-ray water-pulse","charmeleon / metal-claw leer fury-swipes rage","aipom / baton-pass tickle mud-bomb fury-swipes","pikachu / electro-ball double-team nuzzle swift"]},
    {"level":26,"ai":0.26,"members":["bulbasaur / take-down razor-leaf sweet-scent growth","lapras / life-dew confuse-ray water-pulse body-slam","magikarp / splash tackle","eevee / quick-attack refresh mimic bite","pikachu / swift spark feint slam"]},
    {"level":32,"ai":0.3,"members":["snorlax / snore zen-headbutt sleep-talk block","lapras / life-dew confuse-ray water-pulse body-slam","charmeleon / fire-fang scary-face dragon-rage flame-burst","bulbasaur / growth double-edge worry-seed seed-bomb","magikarp / splash tackle flail","pikachu / feint slam thunderbolt iron-tail"]},
@@ -9813,7 +9813,7 @@
  },
  "canari": {
   "gym": [
-   {"level":11,"ai":0.15,"members":["voltorb / thunder-shock eerie-impulse sonic-boom spark","electabuzz / charge quick-attack thunder-shock spark"]},
+   {"level":11,"ai":0.15,"members":["voltorb / thunder-shock eerie-impulse sonic-boom spark","rotom / confuse-ray charge-beam thunder-wave double-team"]},
    {"level":16,"ai":0.19,"members":["rotom / charge-beam thunder-wave double-team trick","voltorb / sonic-boom spark screech rollout","electabuzz / thunder-shock spark swift shock-wave"]},
    {"level":21,"ai":0.22,"members":["eevee / baby-doll-eyes swift quick-attack refresh","dedenne / nuzzle thunder-shock charm parabolic-charge","voltorb / spark screech rollout charge-beam","electabuzz / swift shock-wave thunder-wave low-kick"]},
    {"level":26,"ai":0.26,"members":["voltorb / charge-beam electro-ball self-destruct light-screen","rotom / trick uproar shock-wave shadow-ball","dedenne / thunder-shock charm parabolic-charge thunder-wave","helioptile / charge quick-attack razor-wind parabolic-charge","electabuzz / thunder-wave low-kick thunder-punch electro-ball"]},

@@ -65,6 +65,7 @@ interface Balance {
   eliteFourTeam: TeamConfig;
   campaigns: { id: string; stagesPerRegion: number; columns: number }[];
   difficulty: { baseLevel: number; curve: number; capMargin: number; levelCapStep: number; maxLevel: number; gymBonus: number; aceBonus: number; eliteFourBonus: number; championBonus: number };
+  levelBst: { base: number; perLevel: number };
 }
 
 interface BossMember { species: string; moves: string[]; training?: Partial<Record<Stat, number>> }
@@ -337,10 +338,13 @@ function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>, variety = 
   const level = spec.level;
   const members: SpeciesRow[] = [];
   const families = new Set<string>();
+  let lastResort = false;
   const add = (id: string | undefined): boolean => {
     const at = id ? formAt(id, level) : undefined;
     const s = at && spec.strength >= 0.5 ? evolveUp(at, level) : at;
     if (!s || families.has(family(s)) || members.length >= spec.size) return false;
+    // A boss may be a little stronger than the regular limit for its level, never a lot (a level 9 Heracross is not a first gym).
+    if (!lastResort && bst(s) > balance.levelBst.base + balance.levelBst.perLevel * level + 100) return false;
     // Skip Pokémon that know no move the game supports yet at this level (e.g. Smeargle, whose only move is Sketch).
     if (pickMoves(s, level, spec.strength).length === 0) return false;
     families.add(family(s));
@@ -366,6 +370,7 @@ function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>, variety = 
   // The ace goes last.
   if (!add(aceId)) for (const { s } of pool) if (add(s.id)) break;
   // Last resort (the boss's Pokémon aren't in the game data yet): the strongest fully evolved Pokémon.
+  lastResort = true;
   if (members.length < spec.size) for (const s of [...fullyEvolved].sort((x, y) => bst(y) - bst(x))) add(s.id);
   return {
     level,

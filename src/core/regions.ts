@@ -44,8 +44,21 @@ export function levelCap(content: Content, regionIndex: number): number {
 }
 
 /** The level cap for the region the run is in now. */
-export function runLevelCap(content: Content, run: Pick<RunState, 'regionIndex'>): number {
-  return levelCap(content, run.regionIndex);
+export function runLevelCap(content: Content, run: Pick<RunState, 'regionIndex'> & Partial<Pick<RunState, 'stage' | 'campaignId'>>): number {
+  const region = levelCap(content, run.regionIndex);
+  if (!run.stage || run.stage.kind !== 'stage' || !run.campaignId) return region;
+  return Math.min(region, stageLevelCap(content, getCampaign(content, run.campaignId), run.regionIndex, run.stage.index));
+}
+
+/** What the party may reach in a stage: the level of that stage's last wild enemy plus balance.difficulty.stageCapMargin. */
+export function stageLevelCap(content: Content, campaign: Campaign, regionIndex: number, stageIndex: number): number {
+  const cfg = content.balance.difficulty;
+  const cap = levelCap(content, regionIndex);
+  const start = regionIndex === 0 ? cfg.baseLevel : levelCap(content, regionIndex - 1);
+  const end = Math.max(start, cap - cfg.capMargin);
+  const total = campaign.stagesPerRegion * campaign.columns - 1;
+  const t = Math.min(1, ((stageIndex + 1) * campaign.columns - 1) / Math.max(1, total));
+  return Math.min(cap, Math.round(start + (end - start) * Math.pow(t, cfg.curve)) + cfg.stageCapMargin);
 }
 
 /** Picks someone not used yet: from `local` first, then from everyone, then (if all are used) anyone. */
