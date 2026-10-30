@@ -39,12 +39,12 @@ describe('Pokémon stats and experience', () => {
   });
 
   it('level-ups add HP and learn new moves while slots are free', () => {
-    const mon = createPokemon(content, 'bulbasaur', 7, 'p1'); // tackle, growl
+    const mon = createPokemon(content, 'bulbasaur', 6, 'p1'); // tackle, growl, plus an early vine-whip so it is not Normal-only
     const hpBefore = calcStats(content, mon).hp;
     mon.hp = 10;
-    const result = gainXp(content, mon, xpForLevel('medium-slow', 8) - mon.xp);
-    expect(result.newLevel).toBe(8);
-    expect(result.learnedMoves).toEqual(['vine-whip']);
+    const result = gainXp(content, mon, xpForLevel('medium-slow', 7) - mon.xp);
+    expect(result.newLevel).toBe(7);
+    expect(result.learnedMoves).toEqual(['leech-seed']);
     expect(mon.hp).toBe(10 + (calcStats(content, mon).hp - hpBefore));
   });
 

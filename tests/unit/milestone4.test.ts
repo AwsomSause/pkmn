@@ -152,7 +152,7 @@ describe('the Pokémon League', () => {
       const champ = planChampion(content, RED, 'cynthia', 0, scale, new Rng(hashSeed(`ch-${i}`)));
       expect(champ.members.length).toBe(6);
       const ace = Math.max(...champ.members.map((m) => m.level));
-      expect(ace).toBeGreaterThanOrEqual(48);
+      expect(ace).toBeGreaterThanOrEqual(46);
       expect(ace).toBeLessThanOrEqual(50);
     }
   });

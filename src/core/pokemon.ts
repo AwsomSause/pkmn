@@ -100,13 +100,25 @@ export function movesAtLevel(content: Content, species: Species, level: number):
   const usable = usableLearnset(content, species);
   const learned = usable.filter((entry) => entry.level <= level).map((entry) => entry.move);
   const unique = [...new Set(learned)];
-  if (unique.length === 0 && usable[0]) return [usable[0].move];
-  const four = unique.slice(-4);
+  const four = unique.length === 0 && usable[0] ? [usable[0].move] : unique.slice(-4);
   // A Pokémon that can attack always knows an attacking move: the oldest move makes room for the latest one it has learned.
   const attacks = (id: string) => (content.moves.get(id)?.power ?? 0) > 0;
   if (!four.some(attacks)) {
-    const latest = [...unique].reverse().find(attacks);
-    if (latest) return [...four.slice(1), latest];
+    // The latest attack it has learned, else its earliest attack at any level (a level-2 Jigglypuff would otherwise have only Sing),
+    // else Tackle as a stand-in (Metapod, Kakuna, Abra, Magikarp and Smeargle have none). Ditto keeps Transform.
+    const attack = [...unique].reverse().find(attacks) ?? usable.find((entry) => attacks(entry.move))?.move ?? (species.id === 'ditto' ? undefined : 'tackle');
+    if (attack) return four.length >= 4 ? [...four.slice(1), attack] : [...four, attack];
+  }
+  // Early on, a Pokémon whose only attacks are Normal-type (Magnemite with just Tackle) also gets its earliest other-type attack,
+  // so a Ghost-type foe cannot make a fight unwinnable.
+  if (level <= content.balance.opening.softMovesUntilLevel + 5) {
+    const only = (id: string) => content.moves.get(id)?.type;
+    const offTypeAttack = usable.find((entry) => attacks(entry.move) && only(entry.move) !== 'normal')?.move;
+    if (offTypeAttack && !four.includes(offTypeAttack) && four.some(attacks) && four.filter(attacks).every((id) => only(id) === 'normal')) {
+      if (four.length < 4) return [...four, offTypeAttack];
+      const drop = four.findIndex((id) => !attacks(id));
+      return four.map((id, i) => (i === (drop >= 0 ? drop : 0) ? offTypeAttack : id));
+    }
   }
   return four;
 }
