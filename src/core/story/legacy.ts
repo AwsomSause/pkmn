@@ -5,6 +5,7 @@
 
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
+import { recordGrandLegacy } from './grandEnemy';
 import { emit } from './record';
 import type { PokemonHistory } from './schema';
 
@@ -100,6 +101,7 @@ export function runEpitaph(content: Content, run: RunState): string | null {
 
 /** Writes the epitaph into the chronicle when a run ends. */
 export function recordEpitaph(content: Content, run: RunState): void {
+  recordGrandLegacy(content, run);
   awardLegacyTitles(content, run);
   const text = runEpitaph(content, run);
   if (text) emit(content, run, 'storyMoment', { actors: [], data: { def: 'run-epitaph', suppressed: false }, importance: 95, text: `Epitaph: ${text}` });
