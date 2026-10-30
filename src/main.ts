@@ -1,5 +1,6 @@
 // Entry point: validates game data, opens the save system and starts Phaser.
 
+import { installTouchControls } from './ui/touchControls';
 import Phaser from 'phaser';
 import { getContent } from './data';
 import { installDebugPanel } from './debug/debugPanel';
@@ -64,6 +65,7 @@ function start(): void {
     return;
   }
 
+  installTouchControls();
   const game = new Phaser.Game({
     type: Phaser.AUTO,
     parent: 'game',
