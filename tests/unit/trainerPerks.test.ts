@@ -3,17 +3,19 @@
 import { describe, expect, it } from 'vitest';
 import { getArchetype } from '../../src/core/archetypes';
 import { calcStats } from '../../src/core/pokemon';
-import { chooseStarter, createRun, releaseLimitReached, shopPrice } from '../../src/core/run';
+import { chooseStarter, createRun, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
+import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
+import { createBattle } from '../../src/core/battle/engine';
 import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
-  survivalChance, syncHpPerks, xpPerk,
+  survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
 } from '../../src/core/trainerPerks';
 import { autoplay, gameplayFingerprint } from './autoplay';
 import { content } from './helpers';
 
 const perks = (id: string) => getArchetype(content, id).modifiers;
-const hit = { userTypes: ['bug'] as const, physical: true, hpShare: 1, userLevel: 20, targetLevel: 20, targetIsBoss: false, weather: null, moveType: 'bug' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false };
+const hit = { userTypes: ['bug'] as const, physical: true, hpShare: 1, userLevel: 20, targetLevel: 20, targetIsBoss: false, weather: null, moveType: 'bug' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
 
 describe('trainer perks, batch 1', () => {
   it('imports the 20 trainers with pros and cons from Trainers.md', () => {
@@ -116,6 +118,91 @@ describe('trainer perks, batch 1', () => {
     const ids = content.archetypes.size > 0 ? [...content.archetypes.keys()].slice(9, 29) : [];
     for (const id of ids) {
       const play = () => autoplay({ seed: `perk-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 120_000);
+});
+
+describe('trainer perks, batch 2', () => {
+  it('Bill and Brigette have a PC, a smaller party and their other perks', () => {
+    expect(boxCapacity(perks('bill'))).toBe(6);
+    expect(boxCapacity(perks('brigette'))).toBe(6);
+    expect(boxCapacity(perks('red'))).toBe(0);
+    expect(partyLimit(6, perks('bill'))).toBe(5);
+    expect(itemSlotLimit(8, perks('bill'))).toBe(7);
+    expect(catchLevelOffset(perks('brigette'))).toBe(1);
+    expect(wildWeightPerk(perks('bill'), ['normal'], true)).toBeCloseTo(1.1);
+    expect(wildWeightPerk(perks('bill'), ['normal'], false)).toBe(1);
+  });
+
+  it('the PC stores and returns Pokémon, within its limits', () => {
+    let run = createRun(content, { runId: 't', seed: 'pc', archetypeId: 'bill' });
+    run = chooseStarter(content, run, 0);
+    expect(partyCapacity(content, run)).toBe(5);
+    expect(() => depositToBox(content, run, 0)).toThrow(/at least one/);
+    run.party.push({ ...run.party[0]!, uid: 'p99' });
+    run = depositToBox(content, run, 1);
+    expect(run.box).toHaveLength(1);
+    run = withdrawFromBox(content, run, 0);
+    expect(run.party).toHaveLength(2);
+    expect(run.box).toHaveLength(0);
+    const plain = chooseStarter(content, createRun(content, { runId: 't', seed: 'pc', archetypeId: 'red' }), 0);
+    plain.party.push({ ...plain.party[0]!, uid: 'p98' });
+    expect(() => depositToBox(content, plain, 1)).toThrow(/PC is full/);
+  });
+
+  it('Blaine, Brassius and the other conditional perks', () => {
+    expect(burnDamagePerk(perks('blaine'))).toBeCloseTo(1.25);
+    expect(ppCostExtra(perks('blaine'), 'fire')).toBe(2);
+    expect(ppCostExtra(perks('blaine'), 'water')).toBe(0);
+    expect(rivalTeamTypes(perks('blaine'))).toEqual(['water']);
+    expect(wildWeightPerk(perks('blaine'), ['fire'], false)).toBeCloseTo(0.7);
+    expect(statPerk(perks('blaine'), 'atk', ['fire'], { burned: true })).toBeCloseTo(1.2);
+    expect(statPerk(perks('blaine'), 'atk', ['fire'])).toBe(1);
+    expect(weatherHealPercent(perks('brassius'), ['grass'], 'sun')).toBe(5);
+    expect(weatherHealPercent(perks('brassius'), ['grass'], 'rain')).toBe(0);
+    expect(damageTakenPerk(perks('brassius'), { targetTypes: ['grass'], moveType: 'fire', attackerIsLegendary: false, attackerIsBoss: false, weather: null })).toBeCloseTo(1.15);
+    expect(damageTakenPerk(perks('calem'), { targetTypes: ['fire'], moveType: 'fire', attackerIsLegendary: false, attackerIsBoss: false, weather: null, targetIsMega: true })).toBeCloseTo(1.1);
+    expect(inThreeStageLine(content, 'charmander')).toBe(true);
+    expect(inThreeStageLine(content, 'charizard')).toBe(true);
+    expect(inThreeStageLine(content, 'pikachu')).toBe(false);
+    expect(inThreeStageLine(content, 'farfetchd')).toBe(false);
+    expect(statPerk(perks('blue-gen-3-champion'), 'atk', ['fire'], { threeStageLine: true })).toBeCloseTo(1.1);
+    expect(rivalCounterBonus(perks('blue-gen-3-champion'))).toBe(1);
+  });
+
+  it('Blue (Gen 7) hits harder with the first Pokémon, Brendan favours the starter', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+    expect(damageDealtPerk(perks('blue-gen-7'), base)).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('blue-gen-7'), { ...base, firstInBattle: false })).toBeCloseTo(0.9);
+    expect(damageDealtPerk(perks('brendan-emerald'), { ...base, isStarter: true })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('brendan-emerald'), base)).toBe(1);
+    expect(xpPerk(perks('brendan-emerald'), { types: ['normal'], baseSpeed: 50, isStarter: false, isBossBattle: false })).toBeCloseTo(0.9);
+  });
+
+  it("Blue (Gen 3) offers Rival's Answer after a rival battle and each pick lasts the run", () => {
+    let run = chooseStarter(content, createRun(content, { runId: 't', seed: 'ra', archetypeId: 'blue-gen-3-champion' }), 0);
+    const foe = { ...run.party[0]!, uid: 'e1', speciesId: 'charizard', level: 30 };
+    const battle = createBattle('trainer', [foe], 0, run.party[0]!.uid, { classId: 'youngster', name: 'Rival', leaderId: null });
+    battle.outcome = 'win';
+    expect(signatureDecisions(content, run, battle)).toHaveLength(0);
+    battle.rivalId = 'r1';
+    const decisions = signatureDecisions(content, run, battle);
+    expect(decisions).toHaveLength(1);
+    run.pending = decisions;
+    const message = chooseSignatureOption(run, 0);
+    expect(message).toMatch(/Fire/);
+    expect(run.perkEffects).toEqual([{ kind: 'damageVsTypeMultiplier', foeType: 'fire', value: 1.1 }]);
+    const first = damageDealtPerk([...perks('blue-gen-3-champion'), ...run.perkEffects], { userTypes: ['normal'], physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal', userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['fire'] });
+    expect(first).toBeCloseTo(1.15 * 1.1);
+    const plain = chooseStarter(content, createRun(content, { runId: 't', seed: 'ra', archetypeId: 'red' }), 0);
+    expect(signatureDecisions(content, plain, battle)).toHaveLength(0);
+  });
+
+  it('every batch-2 trainer plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of [...content.archetypes.keys()].slice(29, 49)) {
+      const play = () => autoplay({ seed: `perk2-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
       const a = play();
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }

@@ -11,6 +11,8 @@
 // is a free re-roll of the draft (director, answer 5).
 // Battle, map and event items are "pending" and never offered until built.
 
+import { runPerks } from './archetypes';
+import { itemSlotLimit } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { AttributeKey, CatalogEffect, CatalogEntry, Content } from './contentSchema';
 import { changeFriendship } from './friendship';
@@ -90,6 +92,8 @@ export function catalogTargetProblem(content: Content, run: RunState, entry: Cat
       return teachableMoves(content, mon, effect.type).length > 0 ? null : `That Pokémon can't learn a new ${capitalize(effect.type)} move.`;
     case 'held': {
       const copies = mon.held?.[entry.id] ?? 0;
+      // A trainer perk (Bill) can shrink how many different items one Pokémon holds.
+      if (copies === 0 && Object.keys(mon.held ?? {}).length >= itemSlotLimit(content.balance.heldItemSlots, runPerks(content, run))) return 'That Pokémon has no free item slot.';
       return entry.max !== null && copies >= entry.max ? `That Pokémon already holds ${copies === 1 ? 'one' : 'the most'}.` : null;
     }
     case 'battleBoost': {

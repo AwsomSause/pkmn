@@ -7,6 +7,8 @@
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
+import { runPerks } from '../core/archetypes';
+import { boxCapacity } from '../core/trainerPerks';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
 import { minigamePreview } from '../core/minigame/flow';
@@ -17,7 +19,7 @@ import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
-import { openBagMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
@@ -62,7 +64,8 @@ type Option =
   | { kind: 'party' }
   | { kind: 'bag' }
   | { kind: 'items' }
-  | { kind: 'story' };
+  | { kind: 'story' }
+  | { kind: 'box' };
 
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
@@ -270,6 +273,7 @@ export class MapScene extends Phaser.Scene {
       buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
+    if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
@@ -380,6 +384,8 @@ export class MapScene extends Phaser.Scene {
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
       case 'story':
         return 'Read the story of your run so far, with the feelings each moment left.';
+      case 'box':
+        return 'Store spare Pokémon in the PC, or bring them back into the party.';
     }
   }
 
@@ -463,6 +469,9 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'story':
         openStoryMenu(this.fieldHost());
+        break;
+      case 'box':
+        openBoxMenu(this.fieldHost());
         break;
     }
   }

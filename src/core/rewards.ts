@@ -16,7 +16,7 @@
 // item already at its max is a free re-roll of the draft (director, answer 5).
 
 import { noRevives } from './rules';
-import { getArchetype, moneyMultiplier } from './archetypes';
+import { moneyMultiplier, runArchetype } from './archetypes';
 import { evolutionLevelOffset } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
@@ -192,7 +192,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
-      for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(getArchetype(content, run.archetypeId).modifiers))) {
+      for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
         count(run, 'evolutions');
         messages.push(`${nameOf(content, evo.from)} evolved into ${nameOf(content, evo.to)}!`);
         for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);

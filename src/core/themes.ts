@@ -81,8 +81,9 @@ export function typesPool(content: Content, types: readonly TypeName[], regionId
 }
 
 /** Picks a species from the theme, preferring ones that share a type with `prefer` (e.g. a trainer's speciality). */
-export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[], regionId?: string): string {
-  return pickFromPool(content, themePool(content, theme, regionId), rng, prefer);
+export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[], regionId?: string, weightMod?: (speciesId: string) => number): string {
+  const pool = themePool(content, theme, regionId);
+  return pickFromPool(content, weightMod ? pool.map((p) => ({ ...p, weight: p.weight * weightMod(p.speciesId) })) : pool, rng, prefer);
 }
 
 export function pickTypeSpecies(content: Content, types: readonly TypeName[], rng: Rng): string {

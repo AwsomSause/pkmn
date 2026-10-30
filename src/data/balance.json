@@ -130,6 +130,8 @@
  "wildMaxBaseStats": 560,
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
+ "heldItemSlots": 8,
+ "rareEncounterBst": 480,
  "evolution": {
   "trainerItemLevel": 30,
   "trainerBabyLevel": 15

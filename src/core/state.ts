@@ -4,7 +4,7 @@
 
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
+import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { StoryStateSchema } from './story/schema';
 import { freshHyperBattle } from './battle/hyper';
@@ -646,6 +646,13 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('mentorship'), mentorUid: z.string(), proteUid: z.string(), path: z.enum(['guardian', 'striker', 'strategist', 'survivor', 'challenger', 'bonded']) }),
   /** A PP Up or PP Max: pick which move gets the extra PP. */
   z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
+  /** A trainer's signature mechanic: pick one of the options (core/signature.ts). */
+  z.object({
+    kind: z.literal('signature'),
+    mechanicId: z.string(),
+    title: z.string(),
+    options: z.array(z.object({ label: z.string(), description: z.string(), effects: z.array(ArchetypeModifierSchema) })).min(2),
+  }),
 ]);
 export type PendingDecision = z.infer<typeof PendingDecisionSchema>;
 
@@ -771,6 +778,10 @@ export const RunStateSchema = z.object({
   draftCarry: z.array(z.string()).optional(),
   /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
   disabledMechanics: z.array(TransformKindSchema).default([]),
+  /** Spare Pokémon in the PC (trainers with box space; core/box.ts). */
+  box: z.array(PokemonInstanceSchema).default([]),
+  /** Modifiers the run's signature choices added to the trainer's (core/signature.ts). */
+  perkEffects: z.array(ArchetypeModifierSchema).default([]),
   /** Mode, difficulty, modifiers and their reward multiplier (core/rules.ts). */
   rules: RunRulesSchema,
   /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */

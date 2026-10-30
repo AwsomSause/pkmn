@@ -7,8 +7,10 @@ import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
 import { catchSummary } from '../core/catchSummary';
 import { candiesForRelease } from '../core/encounters';
-import { releaseLimitReached } from '../core/run';
-import { joinProblem, partyCap } from '../core/rules';
+import { partyCapacity, releaseLimitReached } from '../core/run';
+import { runPerks } from '../core/archetypes';
+import { boxCapacity } from '../core/trainerPerks';
+import { joinProblem } from '../core/rules';
 import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
@@ -73,6 +75,7 @@ export class DecisionScene extends Phaser.Scene {
     else if (decision.kind === 'caught') this.buildCaught(decision.mon);
     else if (decision.kind === 'reunion') this.buildCaught(decision.mon, decision.hallOfFame);
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
+    else if (decision.kind === 'signature') this.buildSignature(decision.title, decision.options);
     else if (decision.kind === 'mentorship') this.buildMentorship(decision.mentorUid, decision.proteUid, decision.path);
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
@@ -172,6 +175,22 @@ export class DecisionScene extends Phaser.Scene {
         const old = content.moves.get(mon.moves[i]!.id)!;
         this.confirm(`${name} will forget ${old.name} and learn ${newMove.name}. OK?`, () => this.resolve({ kind: 'forgetMove', moveIndex: i }));
       },
+    });
+  }
+
+  // ---------- a trainer's signature mechanic (core/signature.ts) ----------
+
+  private buildSignature(title: string, options: { label: string; description: string }[]): void {
+    this.add.text(GAME_WIDTH / 2, 60, title, textStyle(34, COLORS.textLight, { align: 'center', wordWrap: { width: 800 } })).setOrigin(0.5, 0);
+    drawPanel(this, 220, 170, 520, 70 * options.length + 30);
+    this.menu = new Menu(this, {
+      x: 236,
+      y: 184,
+      options: options.map((o) => ({ label: o.label, detail: o.description })),
+      itemHeight: 70,
+      itemWidth: 488,
+      fontSize: 26,
+      onSelect: (i) => this.resolve({ kind: 'signature', optionIndex: i }),
     });
   }
 
@@ -277,8 +296,9 @@ export class DecisionScene extends Phaser.Scene {
     const run = session.run!;
     const species = getSpecies(content, caught.speciesId);
     const candies = candiesForRelease(content, caught.level);
-    const cap = partyCap(content, run.rules);
-    const full = run.party.length >= cap;
+    const partyMax = partyCapacity(content, run);
+    const full = run.party.length >= partyMax;
+    const boxRoom = !reunion && run.box.length < boxCapacity(runPerks(content, run));
     const blocked = joinProblem(content, run, caught.speciesId);
 
     // A soft spotlight for the new Pokémon to stand on.
@@ -290,16 +310,17 @@ export class DecisionScene extends Phaser.Scene {
     const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
     const lines = catchSummary(content, caught, run.party[0]);
-    this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${cap}).` : `Party: ${run.party.length}/${cap}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
+    this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${partyMax}).` : `Party: ${run.party.length}/${partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
     const keepsake = candies * content.balance.reunion.keepsakeCandyMultiplier;
     const keepsakeText = `${keepsake} cand${keepsake === 1 ? 'y' : 'ies'}`;
     const options = [
       { label: blocked ? "Can't join" : full ? 'Replace a party Pokémon' : 'Add to party', disabled: blocked !== null && !past },
+      ...(boxRoom ? [{ label: `Send to the PC (${run.box.length}/${boxCapacity(runPerks(content, run))})` }] : []),
       ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : releaseLimitReached(content, session.run!) && !blocked ? [] : [{ label: `Release it (+${candyText})` }]),
     ];
-    drawPanel(this, 400, 345, 520, past ? 170 : 130);
+    drawPanel(this, 400, 345, 520, past ? 170 : 130 + (boxRoom ? 52 : 0));
     this.menu = new Menu(this, {
       x: 420,
       y: 365,
@@ -311,6 +332,7 @@ export class DecisionScene extends Phaser.Scene {
         if (i === 0 && blocked && !past) return;
         if (i === 0 && !full) this.resolve({ kind: 'addToParty' });
         else if (i === 0) this.openReplace(caught);
+        else if (boxRoom && i === 1) this.resolve({ kind: 'sendToBox' });
         else if (past && i === 1) this.resolve({ kind: 'keepsake' });
         else if (past) this.resolve({ kind: 'release' });
         else
