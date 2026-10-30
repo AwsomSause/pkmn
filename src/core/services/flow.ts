@@ -9,7 +9,7 @@ import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, partyCapacity, requireStage } from '../run';
 import { runLevelCap } from '../regions';
 import { evolveFully } from '../evolution';
-import { addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
+import { abilityOf, addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
@@ -143,6 +143,21 @@ function gardenBerry(content: Content, run: RunState, sideId: string) {
   return pool.length === 0 ? null : pool[new Rng(hashSeed(`${run.seed}::garden::${sideId}`)).int(0, pool.length - 1)]!;
 }
 
+/** Three rare-ish Pokémon roaming the preserve, fixed by the seed. */
+function safariLots(content: Content, run: RunState, sideId: string): string[] {
+  const pool = wildEligibleSpecies(content).filter((sp) => baseStatTotal(sp) >= 400 && baseStatTotal(sp) <= 540).map((sp) => sp.id).sort();
+  return new Rng(hashSeed(`${run.seed}::safari::${sideId}`)).shuffle(pool).slice(0, 3);
+}
+
+/** Other abilities a Pokémon could have: slot number and ability id (-1 is the hidden one). */
+function abilityAlternatives(content: Content, mon: PokemonInstance): { slot: number; id: string }[] {
+  const { normal, hidden } = getSpecies(content, mon.speciesId).abilities;
+  const alts = normal.map((id, slot) => ({ slot, id }));
+  if (hidden) alts.push({ slot: -1, id: hidden });
+  const now = abilityOf(content, mon);
+  return alts.filter((a, i) => a.id !== now && alts.findIndex((b) => b.id === a.id) === i);
+}
+
 function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
   const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
   const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
@@ -251,6 +266,12 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       for (const m of run.party) add(`berry:${m.uid}`, `Give ${berry.name} to ${monName(content, m)}`, `${berry.description}.`, price(run, C.gardenPrice), side.used ? 'The garden has been picked.' : catalogTargetProblem(content, run, berry, m));
       break;
     }
+    case 'safari':
+      for (const id of safariLots(content, run, sideId)) add(`safari:${id}`, `Chase ${getSpecies(content, id).name}`, `${Math.round(C.safariCatch * 100)}% to catch; it runs off if you miss. It joins the party, or the PC if full.`, price(run, C.safariEntry), side.used ? 'The preserve has closed for you.' : null);
+      break;
+    case 'researcher':
+      for (const m of run.party) for (const a of abilityAlternatives(content, m)) add(`ability:${m.uid}:${a.slot}`, `${monName(content, m)}: ${content.abilities.get(a.id)?.name ?? a.id}`, `${content.abilities.get(a.id)?.description ?? 'Switch ability.'}${a.slot === -1 ? ' (hidden ability)' : ''}`, price(run, a.slot === -1 ? C.abilityHidden : C.abilitySwap), side.used ? 'The researcher has finished for today.' : null);
+      break;
     case 'relic':
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
       break;
@@ -366,6 +387,31 @@ export function useService(content: Content, current: RunState, sideId: string, 
       const berry = gardenBerry(content, run, sideId)!;
       applyCatalog(content, run, berry, mon!, { moneyMultiplier: 1, rng: new Rng(hashSeed(`${run.seed}::garden-use::${sideId}`)) });
       message = `${monName(content, mon!)} now holds the ${berry.name}.`;
+      break;
+    }
+    case 'safari': {
+      if (!safariLots(content, current, sideId).includes(uid!)) throw new Error('That Pokémon is not in the preserve');
+      const caught = new Rng(hashSeed(`${run.seed}::safari-catch::${sideId}:${uid}`)).float() < C.safariCatch;
+      if (!caught) {
+        message = `${getSpecies(content, uid!).name} ran off into the tall grass.`;
+        break;
+      }
+      const levels = run.party.map((m) => m.level);
+      const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length))));
+      const born = createPokemon(content, uid!, level, `p${run.nextUid}`, `${run.seed}:p${run.nextUid}`);
+      run.nextUid += 1;
+      discover(run, born.speciesId, true);
+      const toParty = run.party.length < partyCapacity(content, run);
+      (toParty ? run.party : run.box).push(born);
+      message = `You caught ${getSpecies(content, born.speciesId).name}! It ${toParty ? 'joins your party' : 'waits in the PC'}.`;
+      break;
+    }
+    case 'ability': {
+      const slot = Number(arg);
+      const alt = abilityAlternatives(content, mon!).find((a) => a.slot === slot);
+      if (!alt) throw new Error('That ability is not available');
+      mon!.abilitySlot = slot;
+      message = `${monName(content, mon!)} now has ${content.abilities.get(alt.id)?.name ?? alt.id}.`;
       break;
     }
     case 'class': {

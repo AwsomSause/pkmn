@@ -139,6 +139,24 @@
       "blurb": "A berry grows here, picked by the seed. Pay a little to hand it to one Pokémon as its held berry."
     },
     {
+      "id": "safari",
+      "name": "Safari Preserve",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Pay to enter and try for one of three rare Pokémon. The catch is a seeded roll, so reloading changes nothing."
+    },
+    {
+      "id": "researcher",
+      "name": "Ability Researcher",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Switch one Pokémon to another ability its species can have. The hidden one costs more."
+    },
+    {
       "id": "relic",
       "name": "Relic Shrine",
       "status": "supported",
@@ -202,6 +220,10 @@
     "schoolPrice": 500,
     "schoolLevels": 2,
     "marketMarkup": 2,
-    "gardenPrice": 100
+    "gardenPrice": 100,
+    "safariEntry": 350,
+    "safariCatch": 0.6,
+    "abilitySwap": 300,
+    "abilityHidden": 700
   }
 }

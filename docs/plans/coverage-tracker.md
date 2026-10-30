@@ -218,3 +218,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D2 (§19), slice 6: Training School done (+2 levels for one Pokémon, once per stop, level cap respected). Left: Ability Researcher, Safari, Black Market, Garden.
 - Untitled Phase D2 (§19), slice 7: Black Market done (three seeded shop items your badges haven't opened, at 2x; one buy). Left: Ability Researcher, Safari, Garden.
 - Untitled Phase D2 (§19), slice 8: Berry Garden done (one seeded held berry per stop, paid, given to one Pokémon). Left: Ability Researcher, Safari.
+- Untitled Phase D2 (§19), slice 9: Safari Preserve and Ability Researcher done. Every §19 building is now built.

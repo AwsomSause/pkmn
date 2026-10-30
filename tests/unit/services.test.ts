@@ -247,6 +247,28 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(Object.keys(out.run.party.find((m) => m.uid === opt.id.split(':')[1])!.held ?? {})).toHaveLength(1);
     expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
   });
+  it('the safari offers three seeded Pokémon and the catch result is fixed by the seed', () => {
+    const a = stopRun('safari');
+    a.money = 9000;
+    const view = serviceView(content, a, 'svc-test');
+    expect(view.options).toHaveLength(3);
+    const opt = view.options[0]!;
+    const out = useService(content, a, 'svc-test', opt.id);
+    const again = useService(content, structuredClone(a), 'svc-test', opt.id);
+    expect(out.message).toBe(again.message);
+    expect(out.run.money).toBeLessThan(9000);
+    expect(() => useService(content, out.run, 'svc-test', view.options[1]!.id)).toThrow();
+  });
+  it('the ability researcher switches a Pokémon to another of its abilities, once', () => {
+    const run = stopRun('researcher');
+    run.money = 9000;
+    const lead = run.party.find((m) => serviceView(content, run, 'svc-test').options.some((o) => o.id.startsWith(`ability:${m.uid}:`)))!;
+    const opt = serviceView(content, run, 'svc-test').options.find((o) => o.id.startsWith(`ability:${lead.uid}:`))!;
+    const slot = Number(opt.id.split(':')[2]);
+    const out = useService(content, run, 'svc-test', opt.id);
+    expect(out.run.party.find((m) => m.uid === lead.uid)!.abilitySlot).toBe(slot);
+    expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
