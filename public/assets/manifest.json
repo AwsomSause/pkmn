@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T22:44:30.679Z",
+  "generatedAt": "2026-10-30T22:50:48.017Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -71514,6 +71514,686 @@
       "category": "pokemon",
       "path": "images/pokemon/back/shiny/custom/whimsicott-z-mega.png",
       "atlasPath": "images/pokemon/back/shiny/custom/whimsicott-z-mega.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-fighting",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-fighting.png",
+      "atlasPath": "images/pokemon/custom/silvally-fighting.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-fighting",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-fighting.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-fighting.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-fighting",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-fighting.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-fighting.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-fighting",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-fighting.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-fighting.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-fighting",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-fighting.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-fighting.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-flying",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-flying.png",
+      "atlasPath": "images/pokemon/custom/silvally-flying.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-flying",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-flying.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-flying.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-flying",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-flying.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-flying.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-flying",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-flying.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-flying.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-flying",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-flying.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-flying.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-poison",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-poison.png",
+      "atlasPath": "images/pokemon/custom/silvally-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-poison",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-poison.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-poison",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-poison.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-poison",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-poison.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-poison",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-poison.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-ground",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-ground.png",
+      "atlasPath": "images/pokemon/custom/silvally-ground.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-ground",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-ground.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-ground.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-ground",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-ground.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-ground.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-ground",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-ground.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-ground.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-ground",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-ground.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-ground.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-rock",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-rock.png",
+      "atlasPath": "images/pokemon/custom/silvally-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-rock",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-rock.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-rock",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-rock.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-rock",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-rock.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-rock",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-rock.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-bug",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-bug.png",
+      "atlasPath": "images/pokemon/custom/silvally-bug.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-bug",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-bug.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-bug.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-bug",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-bug.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-bug.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-bug",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-bug.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-bug.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-bug",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-bug.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-bug.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-ghost",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-ghost.png",
+      "atlasPath": "images/pokemon/custom/silvally-ghost.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-ghost",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-ghost.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-ghost.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-ghost",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-ghost.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-ghost.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-ghost",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-ghost.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-ghost.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-ghost",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-ghost.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-ghost.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-steel",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-steel.png",
+      "atlasPath": "images/pokemon/custom/silvally-steel.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-steel",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-steel.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-steel.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-steel",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-steel.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-steel.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-steel",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-steel.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-steel.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-steel",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-steel.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-steel.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-fire",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-fire.png",
+      "atlasPath": "images/pokemon/custom/silvally-fire.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-fire",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-fire.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-fire.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-fire",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-fire.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-fire.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-fire",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-fire.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-fire.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-fire",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-fire.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-fire.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-water",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-water.png",
+      "atlasPath": "images/pokemon/custom/silvally-water.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-water",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-water.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-water.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-water",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-water.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-water.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-water",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-water.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-water.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-water",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-water.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-water.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-grass",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-grass.png",
+      "atlasPath": "images/pokemon/custom/silvally-grass.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-grass",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-grass.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-grass.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-grass",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-grass.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-grass.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-grass",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-grass.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-grass.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-grass",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-grass.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-grass.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-electric",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-electric.png",
+      "atlasPath": "images/pokemon/custom/silvally-electric.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-electric",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-electric.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-electric.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-electric",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-electric.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-electric.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-electric",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-electric.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-electric.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-electric",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-electric.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-electric.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-psychic",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-psychic.png",
+      "atlasPath": "images/pokemon/custom/silvally-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-psychic",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-psychic.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-psychic",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-psychic.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-psychic",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-psychic.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-psychic",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-psychic.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-ice",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-ice.png",
+      "atlasPath": "images/pokemon/custom/silvally-ice.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-ice",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-ice.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-ice.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-ice",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-ice.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-ice.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-ice",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-ice.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-ice.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-ice",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-ice.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-ice.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-dragon",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-dragon.png",
+      "atlasPath": "images/pokemon/custom/silvally-dragon.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-dragon",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-dragon.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-dragon.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-dragon",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-dragon.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-dragon.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-dragon",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-dragon.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-dragon.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-dragon",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-dragon.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-dragon.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-dark",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-dark.png",
+      "atlasPath": "images/pokemon/custom/silvally-dark.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-dark",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-dark.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-dark.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-dark",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-dark.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-dark.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-dark",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-dark.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-dark.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-dark",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-dark.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-dark.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/silvally-fairy",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/silvally-fairy.png",
+      "atlasPath": "images/pokemon/custom/silvally-fairy.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/silvally-fairy",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/silvally-fairy.png",
+      "atlasPath": "images/pokemon/back/custom/silvally-fairy.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/silvally-fairy",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/silvally-fairy.png",
+      "atlasPath": "images/pokemon/shiny/custom/silvally-fairy.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/silvally-fairy",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/silvally-fairy.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/silvally-fairy.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.silvally-fairy",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/silvally-fairy.png",
+      "atlasPath": "images/pokemon/icons/custom/silvally-fairy.json",
       "lazy": true
     },
     {
