@@ -253,5 +253,50 @@
   "item": "fast-ball",
   "price": 800,
   "minBadges": 3
+ },
+ {
+  "item": "dream-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "beast-ball",
+  "price": 1500,
+  "minBadges": 6
+ },
+ {
+  "item": "safari-ball",
+  "price": 600,
+  "minBadges": 2
+ },
+ {
+  "item": "sport-ball",
+  "price": 800,
+  "minBadges": 2
+ },
+ {
+  "item": "feather-ball",
+  "price": 500,
+  "minBadges": 1
+ },
+ {
+  "item": "wing-ball",
+  "price": 700,
+  "minBadges": 2
+ },
+ {
+  "item": "jet-ball",
+  "price": 900,
+  "minBadges": 3
+ },
+ {
+  "item": "leaden-ball",
+  "price": 700,
+  "minBadges": 2
+ },
+ {
+  "item": "gigaton-ball",
+  "price": 900,
+  "minBadges": 4
  }
 ]

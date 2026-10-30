@@ -225,7 +225,7 @@
   "name": "HP Up",
   "description": "A Pokémon of your choice: max HP +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "hp"
@@ -240,7 +240,7 @@
   "name": "Protein",
   "description": "A Pokémon of your choice: Attack +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "atk"
@@ -255,7 +255,7 @@
   "name": "Iron",
   "description": "A Pokémon of your choice: Defense +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "def"
@@ -270,7 +270,7 @@
   "name": "Calcium",
   "description": "A Pokémon of your choice: Sp. Atk +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "spa"
@@ -285,7 +285,7 @@
   "name": "Zinc",
   "description": "A Pokémon of your choice: Sp. Def +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "spd"
@@ -300,7 +300,7 @@
   "name": "Carbos",
   "description": "A Pokémon of your choice: Speed +10% (up to 3 times per Pokémon).",
   "category": "stat-buff",
-  "rarity": "uncommon",
+  "rarity": "common",
   "effect": {
    "kind": "vitamin",
    "stat": "spe"

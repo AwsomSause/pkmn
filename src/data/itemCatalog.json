@@ -646,7 +646,7 @@
   "name": "HP Up",
   "family": "Vitamins, Wings and level items",
   "description": "Max HP +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -659,7 +659,7 @@
   "name": "Protein",
   "family": "Vitamins, Wings and level items",
   "description": "Attack +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -672,7 +672,7 @@
   "name": "Iron",
   "family": "Vitamins, Wings and level items",
   "description": "Defense +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -685,7 +685,7 @@
   "name": "Calcium",
   "family": "Vitamins, Wings and level items",
   "description": "Sp. Atk +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -698,7 +698,7 @@
   "name": "Zinc",
   "family": "Vitamins, Wings and level items",
   "description": "Sp. Def +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -711,7 +711,7 @@
   "name": "Carbos",
   "family": "Vitamins, Wings and level items",
   "description": "Speed +10%",
-  "rarity": "uncommon",
+  "rarity": "common",
   "stacksOn": "pokemon",
   "max": 3,
   "how": "use",
@@ -13401,6 +13401,381 @@
    "changes": {
     "charisma": 2
    }
+  }
+ },
+ {
+  "id": "hyper-occa-berry",
+  "name": "Hyper Occa Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Fire hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-occa-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fire",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-passho-berry",
+  "name": "Hyper Passho Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Water hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-passho-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "water",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-wacan-berry",
+  "name": "Hyper Wacan Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Electric hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-wacan-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "electric",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-rindo-berry",
+  "name": "Hyper Rindo Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Grass hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-rindo-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "grass",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-yache-berry",
+  "name": "Hyper Yache Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Ice hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-yache-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ice",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-chople-berry",
+  "name": "Hyper Chople Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Fighting hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-chople-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fighting",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-kebia-berry",
+  "name": "Hyper Kebia Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Poison hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-kebia-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "poison",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-shuca-berry",
+  "name": "Hyper Shuca Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Ground hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-shuca-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ground",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-coba-berry",
+  "name": "Hyper Coba Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Flying hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-coba-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "flying",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-payapa-berry",
+  "name": "Hyper Payapa Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Psychic hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-payapa-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "psychic",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-tanga-berry",
+  "name": "Hyper Tanga Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Bug hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-tanga-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "bug",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-charti-berry",
+  "name": "Hyper Charti Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Rock hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-charti-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "rock",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-kasib-berry",
+  "name": "Hyper Kasib Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Ghost hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-kasib-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "ghost",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-haban-berry",
+  "name": "Hyper Haban Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Dragon hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-haban-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "dragon",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-colbur-berry",
+  "name": "Hyper Colbur Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Dark hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-colbur-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "dark",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-babiri-berry",
+  "name": "Hyper Babiri Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Steel hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-babiri-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "steel",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-chilan-berry",
+  "name": "Hyper Chilan Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one Normal hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-chilan-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "normal",
+     "any": true,
+     "through": 0.25
+    }
+   ]
   }
  }
 ]
