@@ -2,7 +2,10 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle, type BattleEvent } from '../../src/core/battle/engine';
-import { DRAMA, DIALOGUE_CATEGORIES, VOICES, battleClass, deriveDramaEvents, openingDrama, planDrama, voiceFor } from '../../src/core/drama';
+import { CHECKS } from '../../src/core/drama/events';
+import { midBattleEvolution, trainingForm, withTrainingEvolution } from '../../src/core/drama/evolution';
+import { calcStats } from '../../src/core/pokemon';
+import { DRAMA, DRAMA_LIBRARY, freshDrama, DIALOGUE_CATEGORIES, VOICES, battleClass, deriveDramaEvents, openingDrama, planDrama, voiceFor } from '../../src/core/drama';
 import { createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
@@ -110,7 +113,7 @@ describe('voices, pacing and determinism', () => {
     }
     expect(seen[0]).toEqual([]);
     expect(seen[1]).toEqual([]);
-    expect(seen[2]).toEqual(['taunt']);
+    expect(seen[2]).toEqual(['event']); // a boss sees the pattern: The Tactical Revelation
   });
 });
 
@@ -126,12 +129,145 @@ describe('saves and rivals', () => {
   it('a returning rival calls back to its real last battle only', () => {
     const run = trainerRun();
     run.battle!.rivalId = 'r1';
-    const rival = { id: 'r1', encounters: 1, traits: { ambition: 50, pride: 10, empathy: 10, adaptability: 10, vindictiveness: 90, resilience: 50 }, memory: { lastBattle: { eventId: 'x', result: 'win', hpLeftShare: 1, turns: 3, team: [] } } };
+    const rival = { id: 'r1', encounters: 1, adaptations: [], traits: { ambition: 50, pride: 10, empathy: 10, adaptability: 10, vindictiveness: 90, resilience: 50 }, memory: { lastBattle: { eventId: 'x', result: 'win', hpLeftShare: 1, turns: 3, team: [] } } };
     run.story.rivals.push(rival as never);
     expect(openingDrama(content, run)[0]!.category).toBe('callbackWon');
     const fresh = trainerRun();
     fresh.battle!.rivalId = 'r2';
     fresh.story.rivals.push({ ...rival, id: 'r2', encounters: 0 } as never);
     expect(openingDrama(content, fresh)[0]!.category).toBe('opening');
+  });
+});
+
+const dmg = (side: 'player' | 'enemy', amount = 10, hpAfter = 20): BattleEvent => ({ type: 'damage', side, amount, hpAfter, effectiveness: 1, crit: false });
+const miss = (side: 'player' | 'enemy'): BattleEvent => ({ type: 'miss', side });
+
+describe('signature attacks (Phase 4)', () => {
+  it('a boss declares a strong move once, then reacts to how it went', () => {
+    const run = trainerRun('Lance', 0.9);
+    const hit = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'hyper-beam'), dmg('player')]);
+    expect(hit.map((l) => l.category)).toContain('signature');
+    expect(hit.find((l) => l.category === 'signature')!.cue?.moveId).toBe('hyper-beam');
+    run.battle!.turn = 4;
+    run.battle!.drama.lastLineTurn = -99;
+    expect(planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'hyper-beam'), dmg('player')]).map((l) => l.category)).not.toContain('signature');
+  });
+  it('an ordinary trainer with a team does not announce its strong move', () => {
+    const run = trainerRun();
+    run.battle!.enemyTeam.push(createPokemon(content, 'rattata', 5, 'e2'));
+    const lines = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'hyper-beam'), dmg('player')]);
+    expect(lines.map((l) => l.category)).not.toContain('signature');
+  });
+  it('a miss gets a miss reaction, not a celebration', () => {
+    const run = trainerRun('Lance', 0.9);
+    const lines = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'hyper-beam'), miss('enemy')]);
+    expect(lines.some((l) => l.category === 'aftermath' || l.cue?.event === 'failedTechnique')).toBe(true);
+  });
+});
+
+describe('event library (Phase 6)', () => {
+  it('has all 20 guide events and 13 listed library kinds, planned ones have no check', () => {
+    expect(DRAMA_LIBRARY.events.length).toBeGreaterThanOrEqual(20);
+    for (const def of DRAMA_LIBRARY.events) {
+      if (def.status === 'planned') expect(CHECKS[def.id], def.id).toBeUndefined();
+      else expect(CHECKS[def.id], def.id).toBeDefined();
+      expect(def.requires.length).toBeGreaterThan(0);
+      if (def.status !== 'planned') expect(def.lines.length).toBeGreaterThan(0);
+    }
+  });
+  it('only one big moment per turn, and a calm trainer goes quiet after the calm moment', () => {
+    const run = trainerRun('Cyrus', 0.9);
+    run.battle!.enemyTeam.push(createPokemon(content, 'rattata', 5, 'e2'));
+    run.battle!.enemyIndex = 1;
+    run.battle!.turn = 4;
+    run.battle!.trainer = { classId: 'youngster', name: 'Calmy', leaderId: null };
+    const lines = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'tackle'), dmg('player')]);
+    expect(lines.filter((l) => l.tier === 'major').length).toBeLessThanOrEqual(1);
+  });
+  it('cooldown: an event does not repeat in the next battle', () => {
+    const run = trainerRun('Lance', 0.9);
+    run.battle!.enemyTeam.push(createPokemon(content, 'rattata', 5, 'e2'), createPokemon(content, 'rattata', 5, 'e3'));
+    run.battle!.enemyIndex = 2;
+    const send: BattleEvent = { type: 'switchIn', side: 'enemy', uid: 'e3', speciesId: 'rattata', level: 5 };
+    const first = planDrama(content, run, structuredClone(run.battle!), [send]);
+    expect(first.some((l) => l.cue?.event === 'aceReveal')).toBe(true);
+    expect(run.story.chronicle.some((c) => c.text.includes('The Ace Reveal'))).toBe(true);
+  });
+  it('a rival remembers a real earlier moment at its next battle, and not without one', () => {
+    const run = trainerRun('Gary');
+    run.battle!.rivalId = 'r1';
+    run.battle!.ai = 0.9;
+    const rival = { id: 'r1', encounters: 1, adaptations: [], traits: { ambition: 50, pride: 10, empathy: 10, adaptability: 10, vindictiveness: 10, resilience: 50 }, memory: { lastBattle: { eventId: 'x', result: 'win', hpLeftShare: 1, turns: 3, team: [] } } };
+    run.story.rivals.push(rival as never);
+    run.encountersCompleted = 5;
+    run.story.flags['drama:rival:r1:tacticalRevelation'] = '3|Thunderbolt';
+    const lines = openingDrama(content, run);
+    expect(lines.some((l) => l.text.includes('Thunderbolt'))).toBe(true);
+    const none = trainerRun('Gary');
+    none.battle!.rivalId = 'r1';
+    none.story.rivals.push(rival as never);
+    expect(openingDrama(content, none).some((l) => l.text.includes('Thunderbolt'))).toBe(false);
+  });
+});
+
+describe('mid-battle evolution (Phase 5)', () => {
+  function evoRun(level = 40) {
+    const run = trainerRun('Gary');
+    const ace = createPokemon(content, 'charmeleon', level, 'ace');
+    run.battle!.enemyTeam = [ace];
+    run.battle!.enemyIndex = 0;
+    run.battle!.rivalId = 'r1';
+    run.battle!.drama.evolvable.push('ace');
+    run.battle!.turn = 3;
+    return { run, ace };
+  }
+  it('finds the stage below a final form and only trains an ace already at its evolution level', () => {
+    expect(trainingForm(content, 'charizard')).toMatchObject({ from: 'charmeleon' });
+    const members = [{ speciesId: 'rattata', level: 40 }, { speciesId: 'charizard', level: 40 }] as never;
+    const out = withTrainingEvolution(content, members);
+    expect(out.index).toBe(1);
+    expect(out.members[1]!.speciesId).toBe('charmeleon');
+    expect(withTrainingEvolution(content, [{ speciesId: 'rattata', level: 30 }, { speciesId: 'charizard', level: 30 }] as never).index).toBe(-1);
+    expect(withTrainingEvolution(content, [{ speciesId: 'charizard', level: 50 }] as never).index).toBe(-1);
+  });
+  it('evolves at the turn boundary, keeping status and damage taken, once', () => {
+    const { run, ace } = evoRun();
+    ace.status = { id: 'brn' } as never;
+    ace.hp = Math.floor(ace.hp / 2);
+    const hpBefore = ace.hp;
+    const ev = midBattleEvolution(content, run);
+    expect(ev).toMatchObject({ type: 'evolved', side: 'enemy', from: 'charmeleon', to: 'charizard' });
+    expect(ace.speciesId).toBe('charizard');
+    expect(ace.status).toMatchObject({ id: 'brn' });
+    expect(ace.hp).toBeGreaterThan(hpBefore);
+    expect(ace.hp).toBeLessThan(calcStats(content, ace).hp);
+    expect(midBattleEvolution(content, run)).toBeNull();
+    expect(run.story.chronicle.some((c) => c.type === 'evolved')).toBe(true);
+  });
+  it('does not evolve early, when not allowed, when fainted or after the battle ended', () => {
+    const early = evoRun();
+    early.run.battle!.turn = 1;
+    expect(midBattleEvolution(content, early.run)).toBeNull();
+    const notAllowed = evoRun();
+    notAllowed.run.battle!.drama.evolvable = [];
+    expect(midBattleEvolution(content, notAllowed.run)).toBeNull();
+    const fainted = evoRun();
+    fainted.ace.hp = 0;
+    expect(midBattleEvolution(content, fainted.run)).toBeNull();
+    const over = evoRun();
+    over.run.battle!.outcome = 'win';
+    expect(midBattleEvolution(content, over.run)).toBeNull();
+  });
+  it('the trainer reacts, the rival remembers it later, and a replay says nothing twice', () => {
+    const { run } = evoRun();
+    run.story.rivals.push({ id: 'r1', encounters: 1, adaptations: [], traits: { ambition: 50, pride: 10, empathy: 10, adaptability: 10, vindictiveness: 10, resilience: 50 }, memory: { lastBattle: { eventId: 'x', result: 'win', hpLeftShare: 1, turns: 3, team: [] } } } as never);
+    const ev = midBattleEvolution(content, run)!;
+    const prior = structuredClone(run.battle!);
+    const lines = planDrama(content, run, prior, [ev]);
+    expect(lines.some((l) => l.cue?.event === 'midBattleEvolution')).toBe(true);
+    expect(planDrama(content, run, prior, [ev])).toHaveLength(0);
+    run.encountersCompleted += 1;
+    run.battle!.drama = freshDrama();
+    expect(openingDrama(content, run).some((l) => l.text.includes('Charizard'))).toBe(true);
   });
 });

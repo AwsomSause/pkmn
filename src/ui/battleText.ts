@@ -260,6 +260,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} learned ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
     case 'wantsMove':
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
+    case 'evolved':
+      return `What? The ${foe} ${species(e.from)} is evolving!\nIt evolved into ${species(e.to)}!`;
     case 'transform': {
       const before = e.side === 'player' ? species(e.from) : `The ${foe} ${species(e.from)}`;
       if (e.kind === 'tera') return `${before} Terastallized into the ${e.teraType![0]!.toUpperCase()}${e.teraType!.slice(1)} type!`;

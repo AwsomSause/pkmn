@@ -158,6 +158,8 @@ export type BattleEvent =
   /** `uid` and `participants` let the run award experience for this faint. */
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
+  /** A trainer's Pokémon evolved between turns (core/drama/evolution.ts). */
+  | { type: 'evolved'; side: Side; uid: string; from: string; to: string; hpAfter: number }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
   | { type: 'ball'; itemId: string; shakes: number; caught: boolean }

@@ -12,7 +12,8 @@ import type { RunState, BattleState } from '../state';
 import { currentEnemy } from '../state';
 import { calcStats } from '../pokemon';
 import type { Rival } from '../story/schema';
-import { DRAMA, VOICES, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
+import { DRAMA, VOICES, pickIndex, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
+import { libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 
 export * from './schema';
 
@@ -35,20 +36,15 @@ export interface DramaLine {
   at: number;
   speaker: string;
   text: string;
-  category: DialogueCategory;
+  category: DialogueCategory | 'event' | 'signature' | 'aftermath';
   tier: Tier;
   voice: Voice;
   eventId: string;
+  /** Library event id, or the declaration style of a signature attack (the screen may highlight it). */
+  cue?: { event?: string; style?: string; moveId?: string };
 }
 
 export type BattleClass = 'ordinary' | 'gym' | 'rival' | 'boss';
-
-/** Hash text into a small non-negative integer (FNV-1a). Not a gameplay random stream. */
-export function pickIndex(text: string, size: number): number {
-  let h = 2166136261;
-  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
-  return (h >>> 0) % size;
-}
 
 export function battleClass(battle: BattleState): BattleClass {
   if (battle.rival || battle.rivalId) return 'rival';
@@ -122,69 +118,81 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
   const turn = prior?.turn ?? battle.turn;
   const key = battleKey(run);
   const enemy = currentEnemy(battle);
-  const enemyName = content.species.get(enemy.speciesId)?.name ?? 'Pokémon';
+  const name = (id: string | undefined) => (id ? (content.species.get(id)?.name ?? 'Pokémon') : 'Pokémon');
   const foeMon = run.party[battle.activeIndex];
-  const foeName = foeMon ? (content.species.get(foeMon.speciesId)?.name ?? 'Pokémon') : 'your Pokémon';
+  const dramaEvents = deriveDramaEvents(content, run, prior, events);
 
   // The trainer notes the moves you actually used (visible), and your repeats.
-  const habit: string[] = [];
-  events.forEach((e, i) => {
-    if (e.type === 'move' && e.side === 'player') {
-      const n = (state.playerMoves[e.moveId] ?? 0) + 1;
-      state.playerMoves[e.moveId] = n;
-      if (n === 3) habit.push(`${key}:t${turn}:e${i}:playerHabit`);
-    }
-  });
+  let habit: { at: number; moveId: string; id: string } | null = null as { at: number; moveId: string; id: string } | null;
+  for (const [i, e] of events.entries()) {
+    if (e.type !== 'move' || e.side !== 'player') continue;
+    const n = (state.playerMoves[e.moveId] ?? 0) + 1;
+    state.playerMoves[e.moveId] = n;
+    if (n === 3) habit = { at: i, moveId: e.moveId, id: `${key}:t${turn}:e${i}:playerHabit` };
+  }
 
-  const candidates: { ev: DramaEvent; category: DialogueCategory; tier: Tier }[] = [];
-  for (const ev of deriveDramaEvents(content, run, prior, events)) {
+  const ctx: PlanCtx = { content, run, battle, prior, events, drama: dramaEvents, rival, voice, cls, turn, key, enemy, foeMon, habit, enemyName: name(enemy.speciesId), foeName: name(foeMon?.speciesId) };
+  const candidates: Candidate[] = [];
+  for (const ev of dramaEvents) {
     if (state.seen.includes(ev.id)) continue;
     state.seen.push(ev.id);
     const c = classify(content, battle, state, ev, rival);
     if (c) candidates.push({ ev, ...c });
   }
-  for (const id of habit) {
-    if (state.seen.includes(id)) continue;
-    state.seen.push(id);
-    const at = Number(id.split(':e')[1]!.split(':')[0]);
-    candidates.push({ ev: { id, kind: 'playerHabit', turn, at, data: {} }, category: 'taunt', tier: 'tactical' });
+  const habitFresh = habit && !state.seen.includes(habit.id) ? habit : null;
+  if (habitFresh) {
+    state.seen.push(habitFresh.id);
+    candidates.push({ ev: { id: habitFresh.id, kind: 'playerHabit', turn, at: habitFresh.at, data: {} }, category: 'taunt', tier: 'tactical' });
+  }
+  candidates.push(...signatureCandidates(ctx), ...libraryCandidates(ctx));
+  if (!prior) {
+    const back = memoryCallback(ctx);
+    if (back) candidates.push(back);
   }
 
   const lines: DramaLine[] = [];
   const budget = Math.floor(DRAMA.config.budget[cls] * factor);
-  candidates.sort((a, b) => RANK(b.tier) - RANK(a.tier) || a.ev.at - b.ev.at);
+  // Library events come first at equal weight; the rest in the order they happened.
+  candidates.sort((a, b) => RANK(b.tier) - RANK(a.tier) || Number(!!b.def) - Number(!!a.def) || a.ev.at - b.ev.at);
+  const opening = candidates.some((c) => c.ev.kind === 'battleStart');
   let thisTurn = 0;
   for (const c of candidates) {
     const climactic = c.tier === 'climactic';
-    if (factor === 0 && !climactic) continue;
+    if (factor === 0) continue;
     if (!climactic) {
+      if (state.seen.includes('quiet')) continue;
       if (state.lines >= budget) continue;
-      if (thisTurn >= 1 + (c.tier === 'major' ? 1 : 0)) continue;
+      if (thisTurn >= (opening ? 2 : 1)) continue;
       if (c.tier !== 'major' && turn - state.lastLineTurn < DRAMA.config.minGapTurns) continue;
-      if (c.tier === 'ambient' && thisTurn > 0) continue;
     }
-    if (factor === 0 && climactic) continue;
-    const pool = DRAMA.lines[c.category][voice];
-    const fresh = pool.map((_, i) => `${c.category}/${voice}/${i}`).filter((id) => !state.recent.includes(id));
+    const pool = c.pool ?? DRAMA.lines[c.category as DialogueCategory][voice];
+    const prefix = c.def ? `event/${c.def.id}` : (c.category as string);
+    const fresh = pool.map((_, i) => `${prefix}/${c.pool ? '' : voice + '/'}${i}`).filter((id) => !state.recent.includes(id));
     if (fresh.length === 0) continue;
     const id = fresh[pickIndex(`${key}|${c.ev.id}`, fresh.length)]!;
-    const text = pool[Number(id.split('/')[2])]!
-      .replaceAll('{name}', enemyName)
-      .replaceAll('{foe}', foeName)
-      .replaceAll('{move}', c.ev.data.moveId ? (content.moves.get(c.ev.data.moveId)?.name ?? 'this') : 'this')
-      .replaceAll('{trainer}', speaker);
+    const text = fill(pool[Number(id.split('/').pop())]!, {
+      name: ctx.enemyName,
+      foe: ctx.foeName,
+      move: c.ev.data.moveId ? (content.moves.get(c.ev.data.moveId)?.name ?? 'this') : 'this',
+      foeMove: c.vars?.foeMove ?? 'that move',
+      trainer: speaker,
+    });
     state.recent.push(id);
     if (state.recent.length > DRAMA.config.recentLines) state.recent.shift();
     state.lastTurn[c.category] = turn;
     state.lines += 1;
     state.lastLineTurn = turn;
     thisTurn += 1;
-    lines.push({ at: c.ev.at, speaker, text, category: c.category, tier: c.tier, voice, eventId: c.ev.id });
+    if (c.def) recordLibraryEvent(ctx, c);
+    if (c.def?.id === 'calmBeforeFinish') state.seen.push('quiet');
+    lines.push({ at: c.ev.at, speaker, text, category: c.category, tier: c.tier, voice, eventId: c.ev.id, cue: c.cue });
   }
   return lines.sort((a, b) => a.at - b.at);
 }
 
-/** Which dialogue category and weight a drama event gets (null: stay quiet). */
+export const fill = (text: string, vars: Record<string, string>): string => text.replace(/\{(\w+)\}/g, (m, k: string) => vars[k] ?? m);
+
+/** Which dialogue category and weight a drama event gets (null: stay quiet). Signature moves are handled in events.ts. */
 function classify(content: Content, battle: BattleState, state: BattleState['drama'], ev: DramaEvent, rival: Rival | undefined): { category: DialogueCategory; tier: Tier } | null {
   const enemy = currentEnemy(battle);
   switch (ev.kind) {
@@ -195,11 +203,9 @@ function classify(content: Content, battle: BattleState, state: BattleState['dra
       }
       return { category: 'opening', tier: 'tactical' };
     }
-    case 'enemyMove': {
-      const move = ev.data.moveId ? content.moves.get(ev.data.moveId) : undefined;
-      if (move && (move.power ?? 0) >= DRAMA.config.declarationMoveBpMin) return { category: 'declaration', tier: 'tactical' };
+    case 'enemyMove':
+      // Strong signature moves get a declaration (events.ts); everything else is a quiet command.
       return { category: 'command', tier: 'ambient' };
-    }
     case 'enemyCrit':
       return { category: 'reactionCrit', tier: 'ambient' };
     case 'enemyHurt': {
