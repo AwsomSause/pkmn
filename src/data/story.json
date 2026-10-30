@@ -2447,5 +2447,62 @@
     "mentorBattles": 6,
     "levelGap": 8,
     "graduateGap": 1
-  }
+  },
+  "legacyTitles": [
+    {
+      "title": "Iron Will",
+      "needs": {
+        "survivedFatal": 2
+      }
+    },
+    {
+      "title": "Boss Slayer",
+      "needs": {
+        "bossesBeaten": 3
+      }
+    },
+    {
+      "title": "Rival Breaker",
+      "needs": {
+        "anyMoment": [
+          "heated-rivalry",
+          "student-surpassed"
+        ]
+      }
+    },
+    {
+      "title": "Guardian",
+      "needs": {
+        "anyMoment": [
+          "came-to-aid",
+          "wont-let-friend-fight",
+          "more-than-teammates"
+        ]
+      }
+    },
+    {
+      "title": "Veteran",
+      "needs": {
+        "battles": 25
+      }
+    },
+    {
+      "title": "Tested by Fire",
+      "needs": {
+        "closeCalls": 5
+      }
+    },
+    {
+      "title": "Grown on the Road",
+      "needs": {
+        "evolutions": 2
+      }
+    },
+    {
+      "title": "Hall of Fame",
+      "needs": {
+        "victory": true
+      }
+    }
+  ]
 }

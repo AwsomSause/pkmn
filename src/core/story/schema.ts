@@ -452,6 +452,25 @@ export type StoryChain = z.infer<typeof StoryChainSchema>;
 export const StoryConfigSchema = z.object({
   /** Protégé system: battles a veteran needs, the level gap to a protégé, and the gap at which it graduates. */
   mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
+  /** Legacy titles (Techno §6.1): earned from a Pokémon's own history; recognition only, never a stat. */
+  legacyTitles: z
+    .array(
+      z.object({
+        title: z.string(),
+        needs: z.object({
+          survivedFatal: z.number().int().positive().optional(),
+          bossesBeaten: z.number().int().positive().optional(),
+          closeCalls: z.number().int().positive().optional(),
+          battles: z.number().int().positive().optional(),
+          evolutions: z.number().int().positive().optional(),
+          /** Has had at least one of these story events (ids from `definitions`). */
+          anyMoment: z.array(z.string()).optional(),
+          /** The run was won with it in the party. */
+          victory: z.boolean().optional(),
+        }),
+      }),
+    )
+    .default([]),
   /** Overdrive chains (blueprint §6). */
   chains: z.array(StoryChainSchema).default([]),
   limits: z.object({

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T13:43:53.028Z",
+  "generatedAt": "2026-10-30T13:48:36.810Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -70200,6 +70200,120 @@
       "path": "images/bosses/tabitha.png"
     },
     {
+      "id": "boss.olympia",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/olympia.png"
+    },
+    {
+      "id": "boss.opal",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/opal.png"
+    },
+    {
+      "id": "boss.ortega",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/ortega.png"
+    },
+    {
+      "id": "boss.palmer",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/palmer.png"
+    },
+    {
+      "id": "boss.peonia",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/peonia.png"
+    },
+    {
+      "id": "boss.peony",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/peony.png"
+    },
+    {
+      "id": "boss.phoebe-gen6",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/phoebe-gen6.png"
+    },
+    {
+      "id": "boss.piers",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/piers.png"
+    },
+    {
+      "id": "boss.plumeria",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/plumeria.png"
+    },
+    {
+      "id": "boss.pryce",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/pryce.png"
+    },
+    {
+      "id": "boss.raihan",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/raihan.png"
+    },
+    {
+      "id": "boss.red",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/red.png"
+    },
+    {
+      "id": "boss.rei",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/rei.png"
+    },
+    {
+      "id": "boss.riley",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/riley.png"
+    },
+    {
+      "id": "boss.rosa",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/rosa.png"
+    },
+    {
+      "id": "boss.rowan",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/rowan.png"
+    },
+    {
+      "id": "boss.roxanne-gen6",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/roxanne-gen6.png"
+    },
+    {
+      "id": "boss.roxie-masters",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/roxie-masters.png"
+    },
+    {
+      "id": "boss.ryuki",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/ryuki.png"
+    },
+    {
       "id": "trainer.hex_maniac",
       "kind": "atlas",
       "category": "trainer",
@@ -70379,12 +70493,6 @@
       "path": "images/bosses/lance.png"
     },
     {
-      "id": "boss.red",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/red.png"
-    },
-    {
       "id": "boss.blue-gen7",
       "kind": "image",
       "category": "trainer",
@@ -70413,12 +70521,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/jasmine.png"
-    },
-    {
-      "id": "boss.pryce",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/pryce.png"
     },
     {
       "id": "trainer.will",
@@ -70464,12 +70566,6 @@
       "path": "images/bosses/kurt.png"
     },
     {
-      "id": "boss.roxanne-gen6",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/roxanne-gen6.png"
-    },
-    {
       "id": "boss.norman",
       "kind": "image",
       "category": "trainer",
@@ -70486,12 +70582,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/juan.png"
-    },
-    {
-      "id": "boss.phoebe-gen6",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/phoebe-gen6.png"
     },
     {
       "id": "boss.glacia",
@@ -70576,12 +70666,6 @@
       "path": "images/bosses/cynthia-masters4.png"
     },
     {
-      "id": "boss.palmer",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/palmer.png"
-    },
-    {
       "id": "boss.Spr_Pt_Barry",
       "kind": "image",
       "category": "trainer",
@@ -70624,12 +70708,6 @@
       "path": "images/bosses/Spr_Pt_Looker.png"
     },
     {
-      "id": "boss.rowan",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/rowan.png"
-    },
-    {
       "id": "boss.marley",
       "kind": "image",
       "category": "trainer",
@@ -70661,12 +70739,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/iris-gen5bw2.png"
-    },
-    {
-      "id": "boss.roxie-masters",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/roxie-masters.png"
     },
     {
       "id": "boss.marlon",
@@ -70713,12 +70785,6 @@
       "path": "images/bosses/nate.png"
     },
     {
-      "id": "boss.rosa",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/rosa.png"
-    },
-    {
       "id": "boss.hugh",
       "kind": "image",
       "category": "trainer",
@@ -70761,12 +70827,6 @@
       "category": "trainer",
       "path": "images/trainer/ramos.png",
       "atlasPath": "images/trainer/ramos.json"
-    },
-    {
-      "id": "boss.olympia",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/olympia.png"
     },
     {
       "id": "trainer.malva",
@@ -70916,18 +70976,6 @@
       "path": "images/bosses/guzma.png"
     },
     {
-      "id": "boss.plumeria",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/plumeria.png"
-    },
-    {
-      "id": "boss.ryuki",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/ryuki.png"
-    },
-    {
       "id": "boss.mina",
       "kind": "image",
       "category": "trainer",
@@ -70952,12 +71000,6 @@
       "path": "images/bosses/kabu.png"
     },
     {
-      "id": "boss.opal",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/opal.png"
-    },
-    {
       "id": "trainer.gordie",
       "kind": "atlas",
       "category": "trainer",
@@ -70969,18 +71011,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/melony.png"
-    },
-    {
-      "id": "boss.piers",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/piers.png"
-    },
-    {
-      "id": "boss.raihan",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/raihan.png"
     },
     {
       "id": "boss.marnie-masters4",
@@ -71011,18 +71041,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/klara.png"
-    },
-    {
-      "id": "boss.peony",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/peony.png"
-    },
-    {
-      "id": "boss.peonia",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/peonia.png"
     },
     {
       "id": "trainer.mustard",
@@ -71165,12 +71183,6 @@
       "path": "images/bosses/lisia.png"
     },
     {
-      "id": "boss.riley",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/riley.png"
-    },
-    {
       "id": "trainer.mira",
       "kind": "atlas",
       "category": "trainer",
@@ -71190,22 +71202,10 @@
       "path": "images/bosses/toddsnap.png"
     },
     {
-      "id": "boss.ortega",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/ortega.png"
-    },
-    {
       "id": "boss.matt",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/matt.png"
-    },
-    {
-      "id": "boss.rei",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/rei.png"
     },
     {
       "id": "boss.harmony",

@@ -27,6 +27,7 @@ import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import { emotionOf } from './emotions';
 import { advanceChains } from './chains';
 import { graduateMentorships } from './mentorship';
+import { awardLegacyTitles, recordEpitaph } from './legacy';
 import { clearMomentFlags, detectMoments } from './moments';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
@@ -250,6 +251,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   const cues = resolveTriggers(content, run, triggers, where);
   if (battle.outcome) {
     recordBattleEnd(content, run, where);
+    awardLegacyTitles(content, run);
     clearMomentFlags(run);
   }
   return cues;
@@ -604,6 +606,7 @@ function recordRunEnded(content: Content, run: RunState): void {
     : by
       ? `The journey ended against ${by.trainer ? `${by.trainer}'s ` : ''}${name(content, by.speciesId)}`
       : 'The journey ended';
+  recordEpitaph(content, run);
   emit(content, run, 'runEnded', {
     actors: run.party.map((m) => m.uid),
     data: { victory: run.victory, regionsCleared: run.regionsCleared.length, badges: run.badges.length },
