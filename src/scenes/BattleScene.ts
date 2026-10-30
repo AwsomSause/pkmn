@@ -18,12 +18,15 @@ import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
 import { noBattleItems } from '../core/rules';
 import type { PresentationCue } from '../core/story/queue';
-import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
+import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
+import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx } from '../ui/audio';
+import { setAmbience, setMusicState, playMotif, stopProceduralAudio } from '../ui/procAudio';
+import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
@@ -180,6 +183,7 @@ export class BattleScene extends Phaser.Scene {
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
     playMusic(this, this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? (battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle'));
+    this.startProceduralAudio(battle);
     this.menu = null;
     this.picker = null;
     this.advance = null;
@@ -852,7 +856,32 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Shows the right prompt for the current state: forced switch or the action menu. */
+  /** Layers, motif and arena bed on top of the base track (catalog #126-130). Presentation only. */
+  private startProceduralAudio(battle: BattleState): void {
+    const { session } = services();
+    const types = battle.trainer && isBossClass(battle.trainer.classId) ? session.content.species.get(currentEnemy(battle).speciesId)?.types : this.run.stage ? getTheme(session.content, this.run.stage.themeId).types : undefined;
+    setAmbience(this, ambienceFor(types?.[0]));
+    if (battle.trainer && (isBossClass(battle.trainer.classId) || battle.trainer.classId === 'rival')) playMotif(this, battle.trainer.leaderId ?? battle.trainer.classId);
+    this.refreshMusicState();
+    this.events.once('shutdown', () => stopProceduralAudio());
+  }
+
+  private refreshMusicState(): void {
+    const battle = this.run.battle;
+    if (!battle) return;
+    const foe = currentEnemy(battle);
+    const me = this.activeMon();
+    const share = (m: PokemonInstance) => m.hp / Math.max(1, calcStats(services().session.content, m).hp);
+    setMusicState(this, musicState({
+      boss: Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId))),
+      lastFoe: battle.enemyIndex >= battle.enemyTeam.length - 1 && battle.enemyTeam.length > 1,
+      playerHpShare: share(me),
+      enemyHpShare: share(foe),
+    }));
+  }
+
   private nextPrompt(): void {
+    this.refreshMusicState();
     if (this.duo) {
       if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
       else {
