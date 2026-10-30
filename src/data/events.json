@@ -20670,6 +20670,11 @@
        {
         "kind": "money",
         "amount": 300
+       },
+       {
+        "kind": "flag",
+        "key": "ignored-crisis",
+        "amount": 1
        }
       ]
      }
@@ -20772,6 +20777,11 @@
        {
         "kind": "money",
         "amount": 300
+       },
+       {
+        "kind": "flag",
+        "key": "ignored-crisis",
+        "amount": 1
        }
       ]
      }
@@ -20874,6 +20884,11 @@
        {
         "kind": "money",
         "amount": 300
+       },
+       {
+        "kind": "flag",
+        "key": "ignored-crisis",
+        "amount": 1
        }
       ]
      }
@@ -20976,6 +20991,11 @@
        {
         "kind": "money",
         "amount": 300
+       },
+       {
+        "kind": "flag",
+        "key": "ignored-crisis",
+        "amount": 1
        }
       ]
      }
@@ -21129,6 +21149,1114 @@
        },
        {
         "kind": "cure"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "milestone-dawn",
+   "name": "A Checkpoint at Dawn",
+   "group": "Run Milestones",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2430",
+    "effect": "sparkle"
+   },
+   "intro": "A pale sun rises over a clearing. This is a good place to decide how the next stretch will go.",
+   "choices": [
+    {
+     "label": "Rest and recover",
+     "success": {
+      "text": "You stop, breathe, and take care of everyone. Nobody goes on hurt.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the risky shortcut",
+     "chance": 0.5,
+     "success": {
+      "text": "The shortcut pays off: a rare find waits at the end.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was a bad idea. Everyone is scraped up.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spend time with the team",
+     "success": {
+      "text": "You sit with each Pokémon in turn. The bond between you grows.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for a rival",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "A rival has been following your trail. \"About time!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Challenger",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "protein",
+          "calcium",
+          "carbos",
+          "hp-up",
+          "iron",
+          "zinc"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "milestone-crossroads",
+   "name": "The Crossroads",
+   "group": "Run Milestones",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#242a30",
+    "effect": "sparkle"
+   },
+   "intro": "Four roads meet at a worn stone. There is no hurry, but there is a choice.",
+   "choices": [
+    {
+     "label": "Rest and recover",
+     "success": {
+      "text": "You stop, breathe, and take care of everyone. Nobody goes on hurt.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the risky shortcut",
+     "chance": 0.5,
+     "success": {
+      "text": "The shortcut pays off: a rare find waits at the end.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was a bad idea. Everyone is scraped up.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spend time with the team",
+     "success": {
+      "text": "You sit with each Pokémon in turn. The bond between you grows.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for a rival",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "A rival has been following your trail. \"About time!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Challenger",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "protein",
+          "calcium",
+          "carbos",
+          "hp-up",
+          "iron",
+          "zinc"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "milestone-summit",
+   "name": "A Quiet Summit",
+   "group": "Run Milestones",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a2a",
+    "effect": "sparkle"
+   },
+   "intro": "You are at the top of a long climb. The whole region is laid out below you.",
+   "choices": [
+    {
+     "label": "Rest and recover",
+     "success": {
+      "text": "You stop, breathe, and take care of everyone. Nobody goes on hurt.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the risky shortcut",
+     "chance": 0.5,
+     "success": {
+      "text": "The shortcut pays off: a rare find waits at the end.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was a bad idea. Everyone is scraped up.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spend time with the team",
+     "success": {
+      "text": "You sit with each Pokémon in turn. The bond between you grows.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for a rival",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "A rival has been following your trail. \"About time!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Challenger",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "protein",
+          "calcium",
+          "carbos",
+          "hp-up",
+          "iron",
+          "zinc"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "milestone-embers",
+   "name": "Embers of the Last Camp",
+   "group": "Run Milestones",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#30241d",
+    "effect": "sparkle"
+   },
+   "intro": "Someone else camped here before you. The fire is still warm.",
+   "choices": [
+    {
+     "label": "Rest and recover",
+     "success": {
+      "text": "You stop, breathe, and take care of everyone. Nobody goes on hurt.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the risky shortcut",
+     "chance": 0.5,
+     "success": {
+      "text": "The shortcut pays off: a rare find waits at the end.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was a bad idea. Everyone is scraped up.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spend time with the team",
+     "success": {
+      "text": "You sit with each Pokémon in turn. The bond between you grows.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for a rival",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "A rival has been following your trail. \"About time!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Challenger",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "protein",
+          "calcium",
+          "carbos",
+          "hp-up",
+          "iron",
+          "zinc"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "site-shrine",
+   "name": "An Ancient Shrine",
+   "group": "World Sites",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a20",
+    "effect": "glint"
+   },
+   "intro": "Moss-covered steps lead up to a shrine that no map shows. Fresh offerings sit on the altar, and nobody is around.",
+   "choices": [
+    {
+     "label": "Leave an offering",
+     "success": {
+      "text": "The air warms. Something old accepts it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Search the altar",
+     "success": {
+      "text": "Under the altar: an old keepsake.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave quietly",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "site-lab",
+   "name": "An Abandoned Lab",
+   "group": "World Sites",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#20242a",
+    "effect": "glint"
+   },
+   "intro": "A hatch in a hillside opens onto a lab that was left in a hurry. The lights still flicker.",
+   "choices": [
+    {
+     "label": "Read the research notes",
+     "success": {
+      "text": "Pages of notes on a species nobody has written about.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Check the incubators",
+     "success": {
+      "text": "One incubator is still running.",
+      "effects": [
+       {
+        "kind": "egg",
+        "species": [],
+        "types": [],
+        "levelBonus": 2,
+        "shinyMultiplier": 1,
+        "left": 3,
+        "unit": "battle"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the gear",
+     "success": {
+      "text": "Useful equipment, left behind.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "site-grove",
+   "name": "A Hidden Grove",
+   "group": "World Sites",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#1a2d1a",
+    "effect": "glint"
+   },
+   "intro": "You push through a wall of branches and find a grove where the light is green and the air is full of quiet cries.",
+   "choices": [
+    {
+     "label": "Rest among the trees",
+     "success": {
+      "text": "Every injury eases.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the cries",
+     "success": {
+      "text": "A young Pokémon, lost and unafraid, falls in step with you.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "site-crater",
+   "name": "A Meteor Crater",
+   "group": "World Sites",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2020",
+    "effect": "glint"
+   },
+   "intro": "A wide crater, still warm at its center. Glittering shards are scattered across the ground.",
+   "choices": [
+    {
+     "label": "Collect the shards",
+     "success": {
+      "text": "You pick up what you can carry.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "comet-shard",
+        "count": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Study the rock",
+     "success": {
+      "text": "The stone is not from here. A researcher would pay to see this.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "eggMove"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-foe-returns",
+   "name": "It Remembers You",
+   "group": "World Callbacks",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "oldFoe"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d1d",
+    "effect": "fog"
+   },
+   "intro": "A familiar cry rings out from the tall grass. A wild Pokémon that beat your team earlier is back, and it is not backing down this time.",
+   "choices": [
+    {
+     "label": "Face it again",
+     "success": {
+      "text": "It charges the moment it sees you.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "recall": true,
+       "species": [],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 40
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Slip away",
+     "success": {
+      "text": "You circle around it. It watches you go.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "merchant-remembers",
+   "name": "You Walked Past Us",
+   "group": "World Callbacks",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "ignored-crisis"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2420",
+    "effect": "none"
+   },
+   "intro": "A merchant from a town you hurried past blocks the road. \"We asked for help. You kept walking.\"",
+   "choices": [
+    {
+     "label": "Apologize and pay (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "She accepts, a little coldly. \"Thank you for coming back.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say you were busy",
+     "success": {
+      "text": "She steps aside. \"Of course.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "circuit-fans",
+   "name": "Autograph Seekers",
+   "group": "World Callbacks",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "won-circuit"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2038",
+    "effect": "sparkle"
+   },
+   "intro": "A group of kids recognizes you from the Rival Circuit final. They have drawn your team on a banner.",
+   "choices": [
+    {
+     "label": "Sign the banner",
+     "success": {
+      "text": "They cheer. A parent slips you a thank-you gift.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "money",
+        "amount": 600
+       }
+      ]
+     }
+    },
+    {
+     "label": "Show them a few moves",
+     "success": {
+      "text": "They are thrilled. So are your Pokémon.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "legend-clue-tracks",
+   "name": "Strange Tracks",
+   "group": "Legendary Route",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "legend-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2430",
+    "effect": "fog"
+   },
+   "intro": "Tracks in the snow, too wide to be anything you know. They end at a sheer rock face.",
+   "choices": [
+    {
+     "label": "Follow the trail",
+     "success": {
+      "text": "One more piece falls into place.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "legend-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "legend-clue-song",
+   "name": "A Song on the Wind",
+   "group": "Legendary Route",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "legend-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#242a38",
+    "effect": "fog"
+   },
+   "intro": "A song with no singer drifts down from the peaks. Your Pokémon stop to listen.",
+   "choices": [
+    {
+     "label": "Follow the trail",
+     "success": {
+      "text": "One more piece falls into place.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "legend-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "legend-clue-scales",
+   "name": "A Shed Feather",
+   "group": "Legendary Route",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "legend-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a20",
+    "effect": "fog"
+   },
+   "intro": "A single feather the length of your arm lies on a ledge, crackling with static.",
+   "choices": [
+    {
+     "label": "Follow the trail",
+     "success": {
+      "text": "One more piece falls into place.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "legend-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "legend-encounter",
+   "name": "The Legend Appears",
+   "group": "Legendary Route",
+   "rarity": "rare",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "legend-clue",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#14141f",
+    "effect": "glint"
+   },
+   "intro": "You have followed every clue. The clouds part, and something enormous looks down at you.",
+   "choices": [
+    {
+     "label": "Face the legend",
+     "success": {
+      "text": "It does not move. It is waiting to see what you do.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "zapdos",
+        "articuno",
+        "moltres"
+       ],
+       "types": [],
+       "levelBonus": 5,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 150
+        },
+        {
+         "kind": "flag",
+         "key": "legend-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Bow and leave",
+     "success": {
+      "text": "It watches you go. You feel it will remember.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
        }
       ]
      }
@@ -21901,6 +23029,11 @@
          "kind": "attribute",
          "key": "goodEvil",
          "amount": 2
+        },
+        {
+         "kind": "flag",
+         "key": "won-circuit",
+         "amount": 1
         }
        ]
       }
