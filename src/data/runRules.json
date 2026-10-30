@@ -216,15 +216,25 @@
     },
     {
       "id": "quick-route",
-      "name": "Quick Route",
-      "status": "supported",
+      "name": "Quick Route (old practice option)",
+      "status": "planned",
       "bonus": 0,
-      "blurb": "A shorter campaign (3 stages per region) for players who want the systems without the long road. It is practice: achievements and unlocks are not counted.",
+      "blurb": "Retired: Quick Route is now a mode. Runs saved with this option still load.",
       "campaignId": "quick-route",
       "group": "campaign"
     }
   ],
   "modes": [
+    {
+      "id": "quick-route",
+      "name": "Quick Route",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "campaignId": "quick-route",
+      "rewardScale": 0.6,
+      "blurb": "A real run on a shorter road (3 stages per region). Achievements, unlocks and rewards count, but account rewards pay 60% because the road is shorter."
+    },
     {
       "id": "standard",
       "name": "Standard",

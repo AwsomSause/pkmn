@@ -65,6 +65,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 4: wild Pokémon first impressions (7 behaviours, `core/wildBehavior.ts`, narrative only, own hashed seed), territorial warning, two rescue events and a 3-link chain via `eventSeen` (`tools/events/wild.ts`, 353 events).
 - Research Room shows lifetime shinies found and distinct shiny species (`profile.speciesShiny`, defaulted so old saves load; `countShiny` in progress.ts).
 - Catalog slice 5a: Quick Route (shorter practice campaign), Solo Run (party of 1) and Contract: No Evolution (`noEvolution` in `rules.ts`) on the Preparation Desk.
+- Quick Route is now a real mode (`modes.quick-route`): its own short campaign, counts for account progress, rewards scaled x0.6 (`rewardScale`). The old modifier is retired so older saves still load.
 - Catalog slice 6b: Shadow Pokémon arc as a 4-link event chain (sighting, sanctuary, stabilize, purified; `tools/events/wild.ts`, 378 events).
 - Catalog slice 6c: Boss Remix contract on the Preparation Desk (`bossRemix` in `rules.ts`, `remixMembers` in `encounters.ts`; map previews match the fight).
 - Catalog slice 6d: debug Story Log header with seed, rule version, claims and event counts (`debug/debugPanel.ts`).
@@ -76,6 +77,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6j: start-up load budget (`npm run report:perf`, in `npm run check`).
 - Catalog slice 6k: Move Mastery (`core/moveMastery.ts`, `profile.moveUses`; no save version bump, the field is optional).
 - Catalog slice 6l: Research notes in the Research Room (`core/researchNotes.ts`, 15 Research Points each, information only).
+- Catalog slice 6m: run-end stamps on the game-over screen (`runStamps`, cosmetic).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
