@@ -40,6 +40,7 @@ export const DOMAIN_EVENT_TYPES = [
   'eventChoice',
   'rewardTaken',
   'storyMoment',
+  'rivalryFormed',
   'runEnded',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
@@ -112,6 +113,10 @@ export const PokemonHistorySchema = z.object({
   memories: z.array(MemorySchema),
   /** How many times each Hyper moment (story.json id) has happened to it this run. */
   hyper: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Battles it has fought each opposing species in this run (Heated Rivalry). */
+  foes: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Times it and each teammate (by uid) took turns landing finishing blows (Friendly Competition). */
+  finishTrades: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type PokemonHistory = z.infer<typeof PokemonHistorySchema>;
 
@@ -204,6 +209,16 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
     stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
     uncontrollable: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
   }),
+  /**
+   * Battle scope, your side: extra damage against its rival (a share, 0.1 = +10%), the bigger
+   * share when it is reckless, and the stat stages recklessness costs (the engine does it).
+   */
+  z.object({
+    kind: z.literal('rivalry'),
+    damage: z.number().min(0).max(1),
+    recklessDamage: z.number().min(0).max(1),
+    reckless: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
+  }),
   z.object({
     kind: z.literal('boost'),
     stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
@@ -221,7 +236,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -245,6 +260,10 @@ export const TriggerConditionsSchema = z.object({
   minFriendship: z.number().int().min(0).max(255).optional(),
   /** Hits (moves that damaged it) an opposing Pokémon must take. */
   hits: z.number().int().positive().optional(),
+  /** Battles two Pokémon must have fought each other (counting this one). */
+  battles: z.number().int().positive().optional(),
+  /** Times two teammates must take turns landing finishing blows. */
+  trades: z.number().int().positive().optional(),
   /** The Pokémon's history must hold at least one of these (closeCall, survivedFatal, bossBeaten, or another definition's id). */
   needsMemory: z.array(z.string()).optional(),
 });

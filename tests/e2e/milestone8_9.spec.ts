@@ -115,3 +115,41 @@ test('The Enemy Is Getting Riled Up: a banner a turn ahead and a "Riled up!" bad
   expect(await page.evaluate(() => (window as any).__pkr.session.run.battle?.enemyStages.atk)).toBe(1);
   expect(errors).toEqual([]);
 });
+
+test('The Two Pokémon Feel a Heated Rivalry: a banner when your Pokémon meets a species for the third battle', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/?debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.newRun('red', 'e2e-rivalry-1');
+    session.chooseStarter(0);
+    const stage = session.run.stage;
+    const first = stage.map.nodes.filter((n: any) => n.column === 1).find((n: any) => !n.harder) ?? stage.map.nodes.find((n: any) => n.column === 1);
+    session.chooseNode(first.id);
+    session.debugReplaceEnemy('snorlax', 20);
+    session.run.battle.enemyTeam[0].moves = [{ id: 'growl', pp: 40 }];
+    // Two earlier battles against Snorlax.
+    session.run.story.histories[session.run.party[0].uid].foes = { snorlax: 2 };
+    game.scene.getScenes(true)[0].scene.start('Battle');
+  });
+  await waitForScene(page, 'Battle');
+  await page.waitForTimeout(1500);
+  const texts = () =>
+    page.evaluate(() => {
+      const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+      return (window as any).__pkr.game.scene.getScene('Battle').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text);
+    });
+  const rivals = () => page.evaluate(() => (window as any).__pkr.session.run.battle?.hyper.rivals ?? {});
+  for (let i = 0; i < 20 && Object.keys(await rivals()).length === 0; i++) {
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(400);
+  }
+  expect(Object.values(await rivals())).toEqual(['calm']);
+  await expect.poll(async () => (await texts()).includes('The Two Pokémon Feel a Heated Rivalry!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await page.screenshot({ path: 'test-results/m89-heated-rivalry.png' });
+  expect(await page.evaluate(() => (window as any).__pkr.session.run.story.relationships.filter((r: any) => r.kind === 'rivalry').length)).toBe(1);
+  expect(errors).toEqual([]);
+});

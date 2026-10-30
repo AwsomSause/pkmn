@@ -49,6 +49,7 @@
     "eventChoice": 30,
     "rewardTaken": 0,
     "storyMoment": 60,
+    "rivalryFormed": 55,
     "runEnded": 90
   },
   "definitions": [
@@ -320,6 +321,102 @@
           "messagePool": [
             "The foe's {name} calmed down!",
             "{enemy} broke the foe's {name}'s rage!"
+          ],
+          "major": false
+        }
+      }
+    },
+    {
+      "id": "heated-rivalry",
+      "displayName": "The Two Pokémon Feel a Heated Rivalry!",
+      "messagePool": [
+        "{name} and the foe's {enemy} have met too many times! They feel a heated rivalry!",
+        "{name} glares at the foe's {enemy}. This rivalry is getting heated!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "heatedRivalry",
+        "battles": 3
+      },
+      "chance": null,
+      "effect": {
+        "kind": "rivalry",
+        "damage": 0.1,
+        "recklessDamage": 0.2,
+        "reckless": {
+          "def": -1
+        }
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": null,
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff8a3c",
+        "sound": "se.hit_strong",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "variants": {
+        "again": {
+          "displayName": "It Recognizes Its Rival!",
+          "messagePool": [
+            "{name} recognizes its rival, the foe's {enemy}!",
+            "{name} won't lose to the foe's {enemy} again!"
+          ],
+          "major": false
+        },
+        "reckless": {
+          "displayName": "Reckless Rivalry!",
+          "messagePool": [
+            "{name} is so set on beating the foe's {enemy} that it's getting reckless!"
+          ],
+          "major": false
+        }
+      }
+    },
+    {
+      "id": "friendly-competition",
+      "displayName": "Friendly Competition!",
+      "messagePool": [
+        "{name} and {other} keep trading finishing blows! A friendly competition has begun!",
+        "{name} and {other} are competing for battle honors!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "friendlyCompetition",
+        "trades": 3
+      },
+      "chance": null,
+      "effect": {
+        "kind": "rivalry",
+        "damage": 0.1,
+        "recklessDamage": 0.1,
+        "reckless": {}
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": null,
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd23c",
+        "sound": "se.level_up",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "variants": {
+        "outdo": {
+          "displayName": "It Won't Be Outdone!",
+          "messagePool": [
+            "{name} saw {other} land the finishing blow. It won't be outdone!"
           ],
           "major": false
         }

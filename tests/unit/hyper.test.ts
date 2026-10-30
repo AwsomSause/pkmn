@@ -24,6 +24,8 @@ function certain(triggers: StoryTriggerKind[], peace = 0): HyperContext {
     rng: new Rng(hashSeed('hyper-test')),
     eligibility: (trigger) => (triggers.includes(trigger) ? { def: def(trigger), chance: 1, variant: null } : null),
     attributeShare: (a) => (a === 'peace' ? peace : 0),
+    rivalBattles: () => 0,
+    friendlyRivals: () => [],
   };
 }
 
@@ -297,7 +299,7 @@ describe('Hyper moments in a run', () => {
     if (loaded.status !== 'ok') throw new Error(loaded.status);
     expect(loaded.migratedFrom).toBe(9);
     expect(loaded.data.battle!.storyEffects).toEqual(['toughened-it-out@p9']);
-    expect(loaded.data.battle!.hyper).toEqual({ lowHp: null, superEffective: {}, rage: {} });
+    expect(loaded.data.battle!.hyper).toEqual({ lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [] });
     for (const h of Object.values(loaded.data.story.histories)) expect(h.hyper).toEqual({});
   });
 });

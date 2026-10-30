@@ -11,10 +11,10 @@ import { withStream } from '../rng';
 import type { RunEvent } from '../run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../state';
 import { applyStoryEffect, isBattleEffect } from './effects';
-import { HYPER_EFFECTS } from './hyper';
+import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
-import { battleIndex, emit, noteFought, noteLowHpTurn, openHistory, whereNow } from './record';
+import { battleIndex, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, whereNow } from './record';
 import type { StoryEventDefinition, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
@@ -79,6 +79,29 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   };
   const triggers: StoryTrigger[] = [];
 
+  /** Friendly Competition: two teammates take turns landing finishing blows (counted across the run). */
+  const noteFinisher = (by: string, at: number) => {
+    const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'friendlyCompetition');
+    if (!def) return;
+    const last = run.story.flags.lastFinisher;
+    run.story.flags.lastFinisher = by;
+    const a = run.story.histories[by];
+    const b = typeof last === 'string' && last !== by && run.party.some((m) => m.uid === last) ? run.story.histories[last] : undefined;
+    if (!a || !b || !run.party.some((m) => m.uid === by)) return;
+    const trades = (a.finishTrades[b.uid] ?? 0) + 1;
+    a.finishTrades[b.uid] = trades;
+    b.finishTrades[a.uid] = trades;
+    if (trades < (def.triggerConditions.trades ?? Infinity) || friendlyRivalsOf(run, by).includes(b.uid)) return;
+    const cause = emit(content, run, 'rivalryFormed', {
+      where,
+      actors: [a.uid, b.uid],
+      data: { kind: 'friendly' },
+      text: `Started a friendly competition with ${speciesOf(b.uid)}`,
+    });
+    if (!openRelationship(content, run, 'rivalry', { kind: 'pokemon', id: a.uid }, { kind: 'pokemon', id: b.uid }, cause)) return;
+    triggers.push({ ...makeTrigger(run, def, at, triggers.length, { name: speciesOf(a.uid), other: speciesOf(b.uid) }, null, a.uid), combat: false });
+  };
+
   events.forEach((e, i) => {
     switch (e.type) {
       case 'move':
@@ -129,7 +152,23 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           emit(content, run, 'survivedFatal', { where, actors: [e.uid], data: { cause: def.id, enemy: mon(active.enemy)?.speciesId ?? null } });
         }
         const move = lastMove.enemy ? content.moves.get(lastMove.enemy)?.name ?? lastMove.enemy : 'attack';
-        triggers.push(makeTrigger(run, def, i, triggers.length, { name: speciesOf(e.uid), enemy: speciesOf(active.enemy), move }, e.variant, e.uid));
+        const t = makeTrigger(run, def, i, triggers.length, { name: speciesOf(e.uid), enemy: speciesOf(active.enemy), other: speciesOf(active.player), move }, e.variant, e.uid);
+        if (def.effect?.kind !== 'rivalry') {
+          triggers.push(t);
+          break;
+        }
+        // Rivalry lines change no HP or status, so they never compete with a knockout save in the queue.
+        triggers.push({ ...t, combat: false });
+        const foe = mon(active.enemy);
+        if (def.triggerConditions.trigger === 'heatedRivalry' && e.variant === null && foe) {
+          const cause = emit(content, run, 'rivalryFormed', {
+            where,
+            actors: [e.uid],
+            data: { kind: 'heated', speciesId: foe.speciesId },
+            text: `Formed a heated rivalry with ${name(content, foe.speciesId)}`,
+          });
+          openRelationship(content, run, 'rivalry', { kind: 'pokemon', id: e.uid }, { kind: 'enemy', id: `species:${foe.speciesId}` }, cause);
+        }
         break;
       }
       case 'lastStand':
@@ -151,6 +190,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           data: { side: e.side, moveId: move, speciesId: mon(e.uid)?.speciesId ?? null },
           text: e.side === 'player' ? `Fainted to ${speciesOf(by)}` : `Knocked out ${speciesOf(e.uid)}`,
         });
+        if (e.side === 'enemy' && by) noteFinisher(by, i);
         break;
       }
       case 'levelUp':
@@ -244,6 +284,11 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const totalHp = run.party.reduce((sum, m) => sum + maxHp(content, m), 0);
   const hpLeft = run.party.reduce((sum, m) => sum + m.hp, 0);
   const result = battle.outcome!;
+  // Heated Rivalry counts the battles each of your Pokémon fought each opposing species.
+  for (const [uid, species] of Object.entries(battle.hyper.met ?? {})) {
+    const history = run.story.histories[uid];
+    if (history) for (const id of species) history.foes[id] = (history.foes[id] ?? 0) + 1;
+  }
   emit(content, run, 'battleEnded', {
     where,
     actors: fought,
