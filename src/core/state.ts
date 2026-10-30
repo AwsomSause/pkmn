@@ -1057,6 +1057,8 @@ export const ProfileSchema = z.object({
   pastPokemon: z.array(PastPokemonSchema),
   /** The claim ledger: every one-time reward paid, by key ("quest:misty:3"), so nothing pays twice. */
   claims: z.record(z.string(), z.object({ at: z.string() })),
+  /** Move Mastery (core/moveMastery.ts): how often each damaging move was used in trainer fights, over all finished runs. */
+  moveUses: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Counters summed over the runs played as each trainer, and their best single run (for quest lines). */
   trainerCounters: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
