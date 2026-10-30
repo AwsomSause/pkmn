@@ -12,7 +12,7 @@ import { getArchetype, researchMultiplier } from './archetypes';
 import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
-import { scaleReward } from './rules';
+import { researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
@@ -155,7 +155,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
         research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
         researchMultiplier(getArchetype(content, run.archetypeId)),
     ) + eventResearch(run);
-    researchPoints = scaleReward(researchPoints, run.rules);
+    researchPoints = scaleReward(Math.round(researchPoints * researchScale(run.rules)), run.rules);
     if (runQuestDone) researchPoints += runQuest.researchPoints;
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);

@@ -668,6 +668,10 @@ export const RunRulesSchema = z.object({
   rewardMultiplier: z.number().min(0),
   /** Added to every enemy's level. */
   enemyLevelBonus: z.number().int(),
+  /** Monotype: the type everything must share (set when the starter is chosen). */
+  lockType: z.string().nullable().default(null),
+  /** Single Region Dex: the generation the run draws from. */
+  lockGeneration: z.number().int().min(1).max(9).nullable().default(null),
   /** Times a wipe sent the run back to its checkpoint. */
   wipes: z.number().int().min(0),
 });

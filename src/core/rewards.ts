@@ -15,6 +15,7 @@
 // Catalog items (core/catalog.ts) work like any other reward; a team or player
 // item already at its max is a free re-roll of the draft (director, answer 5).
 
+import { noRevives } from './rules';
 import { getArchetype, moneyMultiplier } from './archetypes';
 import { evolutionLevelOffset } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
@@ -40,6 +41,7 @@ export class RewardConfigError extends Error {
 
 export function isRewardEligible(content: Content, run: RunState, reward: Reward): boolean {
   if (reward.scope === 'pokemon' && run.party.length === 0) return false;
+  if (reward.effect.kind === 'addItem' && noRevives(run.rules) && content.items.get(reward.effect.item)?.category === 'revive') return false;
   if (reward.effect.kind === 'catalog') {
     const entry = getCatalogEntry(content, reward.effect.entry);
     return isFreeReroll(run, entry) || isCatalogUseful(content, run, entry);

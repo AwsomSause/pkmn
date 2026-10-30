@@ -56,7 +56,8 @@
     "tera",
     "zmove",
     "dynamax"
-   ]
+   ],
+   "group": "rules"
   },
   {
    "id": "scarce-supplies",
@@ -64,77 +65,100 @@
    "status": "supported",
    "bonus": 0.15,
    "blurb": "You start with half the money and half the items.",
-   "startScale": 0.5
+   "startScale": 0.5,
+   "group": "economy"
   },
   {
    "id": "monotype",
    "name": "Monotype",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.2,
-   "blurb": "Your party follows one type."
+   "blurb": "Every Pok\u00e9mon you keep must share a type with your starter.",
+   "lockType": true,
+   "group": "party"
   },
   {
    "id": "single-region-dex",
    "name": "Single Region Dex",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.1,
-   "blurb": "Only species from one region."
+   "blurb": "Wild and trainer Pok\u00e9mon come only from one randomly chosen generation.",
+   "lockGeneration": true,
+   "group": "dex"
   },
   {
    "id": "rich-route",
    "name": "Rich Route",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.05,
-   "blurb": "More money, stronger trainers."
+   "blurb": "25% more money from battles, but every enemy is 2 levels higher.",
+   "battleMoney": 1.25,
+   "enemyLevel": 2,
+   "group": "economy"
   },
   {
    "id": "blind-research",
    "name": "Blind Research",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.1,
-   "blurb": "Encounters hidden until reached."
+   "blurb": "The map hides each stage's theme until you arrive. Research Points x1.5.",
+   "researchScale": 1.5,
+   "blind": true,
+   "group": "info"
   },
   {
    "id": "no-revives",
    "name": "No Revives",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.1,
-   "blurb": "Revive items never appear."
+   "blurb": "Revive items never appear in rewards or shops.",
+   "noRevives": true,
+   "group": "supplies"
   },
   {
    "id": "random-draft",
    "name": "Random Draft",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.05,
-   "blurb": "Draft rules are random."
+   "blurb": "Your draft rule is picked at random (from the ones with no license).",
+   "randomDraft": true,
+   "group": "draft"
   },
   {
    "id": "boss-rush",
    "name": "Boss Rush",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.25,
-   "blurb": "Shorter campaign, more bosses."
+   "blurb": "A shorter campaign: 4 stages per region, so gyms and leagues come twice as often.",
+   "campaignId": "boss-rush",
+   "group": "campaign"
   },
   {
    "id": "variant-hunt",
    "name": "Variant Hunt",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.1,
-   "blurb": "Special-form events are likelier."
+   "blurb": "Event stops are 50% more common. Ordinary forms are unchanged and shiny odds do not change.",
+   "eventChance": 1.5,
+   "group": "events"
   },
   {
    "id": "limited-party",
    "name": "Limited Party",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.2,
-   "blurb": "Party size is capped."
+   "blurb": "Your party holds at most 4 Pok\u00e9mon.",
+   "partyCap": 4,
+   "group": "party"
   },
   {
    "id": "no-duplicate-species",
    "name": "No Duplicate Species",
-   "status": "planned",
+   "status": "supported",
    "bonus": 0.1,
-   "blurb": "One of each species line."
+   "blurb": "Only one Pok\u00e9mon of each evolution line in your party.",
+   "noDuplicates": true,
+   "group": "party"
   }
  ],
  "modes": [
