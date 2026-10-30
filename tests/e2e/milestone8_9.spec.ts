@@ -17,6 +17,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('Toughened It Out shows as a story moment, the Story Log shows it, and the run-end screen lists the moments', async ({ page }) => {
+  test.setTimeout(180_000); // plays a whole lost run; slow when the whole suite runs at once
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
