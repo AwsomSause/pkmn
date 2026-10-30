@@ -216,6 +216,8 @@ export const BattleStateSchema = z.object({
   rematch: z.boolean().optional(),
   /** "This Trainer Will Return": the enemy profile id of a trainer back for its rematch. */
   returning: z.string().optional(),
+  /** An RSVP Mail rival: beating it gives a better reward draft. */
+  rival: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
 });

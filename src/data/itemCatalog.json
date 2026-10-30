@@ -9995,16 +9995,25 @@
   "id": "rsvp-mail",
   "name": "RSVP Mail",
   "family": "Mail",
-  "description": "Next stage: one trainer battle is a rival with a better reward",
+  "description": "Next stage: the first trainer battle is a rival (3 levels higher) with a better reward",
   "rarity": "rare",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "rsvp-mail",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "rival",
+     "levelBonus": 3
+    }
+   ]
+  }
  },
  {
   "id": "orange-mail",

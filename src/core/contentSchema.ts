@@ -750,6 +750,8 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   z.object({ perk: z.literal('lockOne') }),
   /** The best reward you skip in the next draft comes back in the one after (Favored Mail). */
   z.object({ perk: z.literal('favored') }),
+  /** The first ordinary trainer of the stage is a rival: its team is stronger, and beating it gives a draft with gym odds and one more choice (RSVP Mail). */
+  z.object({ perk: z.literal('rival'), levelBonus: z.number().int().min(0) }),
   /** TMs offer this many more moves to pick from (TM Case). */
   z.object({ perk: z.literal('tmChoices'), extra: z.number().int().positive() }),
 ]);
