@@ -35,7 +35,10 @@ const ATTRIBUTE_COLOR: Record<string, number> = {
   love: 0xf08098,
 };
 
-const CARD_H = 132;
+const BOTTOM_Y = 356;
+const BOTTOM_H = 168;
+const DIALOGUE_W = 476;
+const OPTIONS_X = 516;
 
 interface Card {
   box: Phaser.GameObjects.Container;
@@ -51,6 +54,9 @@ export class EventScene extends Phaser.Scene {
   private result: EventResult | null = null;
   private calm = false;
   private moneyText: Phaser.GameObjects.Text | null = null;
+  private detailOdds: Phaser.GameObjects.Text | null = null;
+  private detailRisk: Phaser.GameObjects.Text | null = null;
+  private detailCost: Phaser.GameObjects.Text | null = null;
 
   constructor() {
     super('Event');
@@ -81,13 +87,13 @@ export class EventScene extends Phaser.Scene {
     this.illustrationFrame(view.event.group, view.event.rarity, rim, scene.cast.length === 0 && !scene.pokemon);
     this.moneyPill(run.money);
 
-    // Title ribbon drops in with a bounce.
-    const title = this.add.container(GAME_WIDTH / 2, -40);
+    // HUB-style header tab (glass, rimmed in the rarity colour) slides in from the left.
+    const title = this.add.container(-440, 14);
     const band = this.add.graphics();
-    paintGlass(band, -260, -24, 520, 48, { rim, radius: 24 });
+    paintGlass(band, 0, 0, 420, 44, { rim, radius: 22 });
     title.add(band);
-    title.add(this.add.text(0, 0, view.event.name, textStyle(28, COLORS.textLight)).setOrigin(0.5));
-    this.tweens.add({ targets: title, y: 42, duration: this.calm ? 1 : 650, ease: 'Bounce.easeOut' });
+    title.add(this.add.text(20, 22, view.event.name, textStyle(24, COLORS.textLight, { wordWrap: { width: 384 }, maxLines: 1 })).setOrigin(0, 0.5));
+    this.tweens.add({ targets: title, x: 24, duration: this.calm ? 1 : 600, ease: 'Back.easeOut' });
 
     // The cast slides in from the right, then bobs; a Pokémon hops in from the left.
     const castIds = scene.cast.filter((id) => services().assets.has(id));
@@ -109,42 +115,43 @@ export class EventScene extends Phaser.Scene {
     }
     if (!this.calm) this.ambient(scene.effect);
 
-    // The intro text types itself out.
+    // PokeRogue-style bottom row: a dialogue box (the intro types itself out, the focused option's
+    // details sit underneath) on the left and a vertical option list on the right.
     const panel = this.add.graphics();
-    paintGlass(panel, 36, 300, GAME_WIDTH - 72, 64, { tint: AERO.glassLow, glow: false, alpha: 0.95 });
-    const intro = this.add.text(52, 332, '', textStyle(17, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
+    paintGlass(panel, 24, BOTTOM_Y, DIALOGUE_W, BOTTOM_H, { tint: AERO.glassLow, glow: false, alpha: 0.95, radius: 18 });
+    const intro = this.add.text(42, BOTTOM_Y + 14, '', textStyle(16, COLORS.textLight, { wordWrap: { width: DIALOGUE_W - 36 }, lineSpacing: 4 })).setOrigin(0, 0);
     this.typeOut(intro, view.event.intro);
+    const rule = this.add.graphics();
+    rule.lineStyle(1, AERO.rim, 0.35).lineBetween(42, BOTTOM_Y + 100, 24 + DIALOGUE_W - 18, BOTTOM_Y + 100);
+    this.detailOdds = this.add.text(42, BOTTOM_Y + 106, '', textStyle(13, '#f8e8a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0);
+    this.detailRisk = this.add.text(42, BOTTOM_Y + 124, '', textStyle(12, '#bfe9ff', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 2 })).setOrigin(0, 0).setName('event-risk');
+    this.detailCost = this.add.text(42, BOTTOM_Y + 154, '', textStyle(12, '#ffb0a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0).setName('event-cost');
 
-    // Choice cards pop in one after another.
     const n = view.choices.length;
-    const w = Math.min(210, (GAME_WIDTH - 72 - (n - 1) * 14) / n);
-    const left = (GAME_WIDTH - (n * w + (n - 1) * 14)) / 2;
+    const rowH = Math.min(46, Math.floor((BOTTOM_H - 8) / Math.max(1, n)));
+    const w = GAME_WIDTH - 24 - OPTIONS_X;
+    const top = BOTTOM_Y + (BOTTOM_H - n * rowH) / 2;
     view.choices.forEach((c, i) => {
-      const x = left + i * (w + 14) + w / 2;
-      const baseY = 444;
-      const box = this.add.container(x, baseY);
+      const baseY = top + i * rowH + rowH / 2;
+      const box = this.add.container(OPTIONS_X + w / 2, baseY);
       const g = this.add.graphics();
       const color = c.attribute ? (ATTRIBUTE_COLOR[c.attribute] ?? AERO.rim) : AERO.rim;
-      paintGlass(g, -w / 2, -CARD_H / 2, w, CARD_H, { tint: c.locked ? 0x2a2a36 : AERO.glass, rim: c.locked ? 0x5a5a6a : color, radius: 16, alpha: c.locked ? 0.75 : 0.92 });
+      paintGlass(g, -w / 2, -rowH / 2 + 2, w, rowH - 4, { tint: c.locked ? 0x2a2a36 : AERO.glass, rim: c.locked ? 0x5a5a6a : color, radius: 14, alpha: c.locked ? 0.75 : 0.92, glow: false });
       box.add(g);
-      box.add(this.add.text(0, -56, c.label, textStyle(16, c.locked ? COLORS.textMuted : COLORS.textLight, { align: 'center', wordWrap: { width: w - 16 }, maxLines: 3 })).setOrigin(0.5, 0));
-      const odds = c.locked
-        ? `🔒 ${c.locked}`
-        : c.chance !== null
-          ? `${c.attribute ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]}: ` : ''}${Math.round(c.chance * 100)}%`
-          : '';
-      if (odds) box.add(this.add.text(0, 2, odds, textStyle(13, c.locked ? COLORS.bad : '#f8e8a0', { align: 'center', wordWrap: { width: w - 12 } })).setOrigin(0.5, 0));
-      if (!c.locked) box.add(this.add.text(0, 20, c.risk, textStyle(11, '#bfe9ff', { align: 'center', wordWrap: { width: w - 14 }, maxLines: 2 })).setOrigin(0.5, 0).setName('event-risk'));
-      if (c.cost && !c.locked) box.add(this.add.text(0, 48, `Costs ${c.cost}`, textStyle(11, '#ffb0a0', { align: 'center', wordWrap: { width: w - 14 }, maxLines: 1 })).setOrigin(0.5, 0).setName('event-cost'));
-      if (c.preview) box.add(this.add.text(0, CARD_H / 2 + 4, c.preview, textStyle(11, COLORS.textMuted, { align: 'center', wordWrap: { width: w } })).setOrigin(0.5, 0));
+      const tag = c.locked ? '🔒' : c.chance !== null ? `${Math.round(c.chance * 100)}%` : '';
+      box.add(this.add.text(-w / 2 + 34, 0, c.label, textStyle(15, c.locked ? COLORS.textMuted : COLORS.textLight, { wordWrap: { width: w - 112 }, maxLines: 2 })).setOrigin(0, 0.5));
+      if (tag) box.add(this.add.text(w / 2 - 14, 0, tag, textStyle(14, c.locked ? COLORS.bad : '#f8e8a0')).setOrigin(1, 0.5));
+      const arrow = this.add.text(-w / 2 + 14, 0, '▶', textStyle(14, '#ffffff')).setOrigin(0.5).setVisible(false);
+      box.add(arrow);
       const frame = this.add.graphics().setVisible(false);
-      frame.lineStyle(6, AERO.neon, 0.25).strokeRoundedRect(-w / 2 - 6, -CARD_H / 2 - 6, w + 12, CARD_H + 12, 22);
-      frame.lineStyle(3, 0xffffff, 0.95).strokeRoundedRect(-w / 2 - 3, -CARD_H / 2 - 3, w + 6, CARD_H + 6, 19);
+      frame.lineStyle(6, AERO.neon, 0.25).strokeRoundedRect(-w / 2 - 3, -rowH / 2 - 1, w + 6, rowH + 2, 17);
+      frame.lineStyle(2, 0xffffff, 0.95).strokeRoundedRect(-w / 2, -rowH / 2 + 2, w, rowH - 4, 14);
       box.add(frame);
       box.setData('frame', frame);
+      box.setData('arrow', arrow);
       box.setScale(this.calm ? 1 : 0);
-      this.tweens.add({ targets: box, scale: 1, duration: 380, delay: 500 + i * 110, ease: 'Back.easeOut' });
-      const zone = this.add.zone(0, 0, w, CARD_H).setInteractive({ useHandCursor: true });
+      this.tweens.add({ targets: box, scale: 1, duration: 380, delay: 400 + i * 100, ease: 'Back.easeOut' });
+      const zone = this.add.zone(0, 0, w, rowH).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => this.focus(i));
       zone.on('pointerdown', () => {
         this.focus(i);
@@ -177,15 +184,31 @@ export class EventScene extends Phaser.Scene {
     this.cards.forEach((c, j) => {
       const on = j === i;
       (c.box.getData('frame') as Phaser.GameObjects.Graphics).setVisible(on);
+      (c.box.getData('arrow') as Phaser.GameObjects.Text).setVisible(on);
       this.tweens.killTweensOf(c.box);
+      const x = OPTIONS_X + (GAME_WIDTH - 24 - OPTIONS_X) / 2 + (on ? -8 : 0);
       if (this.calm) {
-        c.box.y = c.baseY - (on ? 8 : 0);
+        c.box.x = x;
         c.box.setScale(1);
         return;
       }
-      this.tweens.add({ targets: c.box, y: c.baseY - (on ? 14 : 0), scale: on ? 1.06 : 1, angle: 0, duration: 260, ease: 'Back.easeOut' });
-      if (on) this.tweens.add({ targets: c.box, angle: { from: -1.5, to: 1.5 }, duration: 900, yoyo: true, repeat: -1, delay: 260, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: c.box, x, scale: on ? 1.02 : 1, duration: 220, ease: 'Back.easeOut' });
     });
+    this.showDetail(this.cards[i]?.view);
+  }
+
+  /** The focused option's odds, risk and cost fill the lower half of the dialogue box. */
+  private showDetail(c: ChoiceView | undefined): void {
+    if (!c) return;
+    const odds = c.locked
+      ? `🔒 ${c.locked}`
+      : c.chance !== null
+        ? `${c.attribute ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]}: ` : ''}${Math.round(c.chance * 100)}%`
+        : '';
+    this.detailOdds?.setText(odds).setColor(c.locked ? COLORS.bad : '#f8e8a0');
+    if (!c.locked) this.detailRisk?.setText(c.preview ? `${c.risk}\n${c.preview}` : c.risk);
+    else this.detailRisk?.setText(c.preview ?? '');
+    this.detailCost?.setText(c.cost && !c.locked ? `Costs ${c.cost}` : '');
   }
 
   private confirm(): void {
@@ -204,8 +227,11 @@ export class EventScene extends Phaser.Scene {
     // The picked card squashes and flies up; the rest drop away.
     this.cards.forEach((c, j) => {
       this.tweens.killTweensOf(c.box);
-      if (j === this.index) this.tweens.add({ targets: c.box, y: c.baseY - 140, scaleX: 1.2, scaleY: 0.85, alpha: 0, duration: this.calm ? 1 : 420, ease: 'Back.easeIn' });
-      else this.tweens.add({ targets: c.box, y: c.baseY + 160, alpha: 0, duration: this.calm ? 1 : 360, delay: j * 40, ease: 'Quad.easeIn' });
+      if (j === this.index) this.tweens.add({ targets: c.box, x: c.box.x + 40, scaleX: 1.1, scaleY: 0.85, alpha: 0, duration: this.calm ? 1 : 420, ease: 'Back.easeIn' });
+      else this.tweens.add({ targets: c.box, x: c.box.x + 240, alpha: 0, duration: this.calm ? 1 : 360, delay: j * 40, ease: 'Quad.easeIn' });
+    });
+    [this.detailOdds, this.detailRisk, this.detailCost].forEach((t) => {
+      if (t) this.tweens.add({ targets: t, alpha: 0, duration: this.calm ? 1 : 240 });
     });
     this.time.delayedCall(this.calm ? 10 : 380, () => this.showOutcome());
   }
