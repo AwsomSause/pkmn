@@ -226,6 +226,7 @@ Rules in GAME_DESIGN.md §5f; build notes in IMPLEMENTATION_PLAN.md §6h5.
 - [x] Terastallization: Tera Orb (draft + shop), Tera Type per Pokémon, 18 Tera Shards, STAB and 60-power rules, boss aces, battle menu option, badge and tint, unit and browser tests
 - [x] Z-Moves: Z-Ring (draft + shop), 18 type Z-Crystals, Z-power from Showdown data, status Z bonuses, Protect, battle menu option, drawn icons, unit and browser tests (species-exclusive Z-Moves and boss Z-Moves still to come)
 - [x] Dynamax / Gigantamax: Dynamax Band (draft + shop), double HP for 3 turns, Max Moves and Max Guard from Showdown data, 33 G-Max Moves, weather and stat effects, battle menu option, unit and browser tests (terrain and most G-Max side effects still to come)
+- [x] PokeRogue-style limits (director 2026-10-29): Mega and Gigantamax forms by themselves in every battle; Tera, Z-Moves and Dynamax once per battle
 - [ ] Regional forms as a mechanic (if still wanted)
 
 ## Milestone 8.6 — Systems audit and quality gates ✅
