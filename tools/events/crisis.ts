@@ -2,7 +2,7 @@
 // Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
 // The bracket: an entry stop, then one round per stage (always placed until played), then the final.
 
-import { $, any, ch, cure, ev, eggMove, fight, fr, gym, good, heal, peace, reveal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+import { $, any, ch, cure, ev, eggMove, fight, flag, fr, gym, good, heal, peace, reveal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
 
 const D = 'Regional Crisis';
 const T = 'Rival Tournament';
@@ -17,7 +17,7 @@ const report = (id: string, name: string, intro: string, tint: string, help: str
   ev(id, name, D, { rarity: 'uncommon', minStage: 2, requires: [crisis(2)], cast: ['trainer.psychic_m'], effect: 'glint', tint }, intro, [
     ch(help, out('You pitch in at once. People remember it, and some of them promise to stand with you.', eff.crisis(-2), eff.aid(1), good(2), rp(15))),
     ch(prep, out('You gather what the region needs most. The trouble eases a little.', eff.crisis(-1), eff.aid(1), any(...VITAMINS)), { requires: [money(200)], fail: leave() }),
-    ch('Ignore it and keep moving', out('You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.', eff.crisis(1), $(300))),
+    ch('Ignore it and keep moving', out('You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.', eff.crisis(1), $(300), flag('ignored-crisis'))),
   ]);
 
 export const CRISIS_EVENTS: Json[] = [
@@ -46,7 +46,7 @@ export const TOURNAMENT_EVENTS: Json[] = [
     ]),
   entry('tournament-quarter', 1, 'Circuit: Quarterfinal', 'Your first match. A lively crowd fills the stands.', 'Circuit Trainer', 3, 0, [$(500), eff.round(2)], 'Play the quarterfinal'),
   entry('tournament-semi', 2, 'Circuit: Semifinal', 'The field has thinned. Your opponent has clearly studied your last match.', 'Circuit Ace', 4, 1, [$(900), eff.round(3), rp(20)], 'Play the semifinal'),
-  entry('tournament-final', 3, 'Circuit: The Final', 'The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.', 'Circuit Champion', 5, 2, [$(2000), any(...TREASURE), rp(60), eff.round(9), good(2)], 'Play the final'),
+  entry('tournament-final', 3, 'Circuit: The Final', 'The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.', 'Circuit Champion', 5, 2, [$(2000), any(...TREASURE), rp(60), eff.round(9), good(2), flag('won-circuit')], 'Play the final'),
 ];
 
 export const GAUNTLET_EVENTS: Json[] = [
