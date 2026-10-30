@@ -186,6 +186,8 @@ export const RivalSchema = z.object({
   /** The hidden score: how much this trainer wants to beat you. */
   rivalPotential: z.number().min(0),
   origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.literal('spark') }),
+  /** What it has learned about you, one telegraphed change per return. */
+  adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
   memory: z.object({
     lastBattle: z.object({
