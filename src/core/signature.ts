@@ -6,9 +6,10 @@
 
 import type { ArchetypeModifier, Content, StatName, TypeName } from './contentSchema';
 import { getSpecies } from './pokemon';
+import { isBossClass } from './trainerPerks';
 import type { BattleState, PendingDecision, RunState } from './state';
 
-export type SignatureTrigger = 'rivalBattle';
+export type SignatureTrigger = 'rivalBattle' | 'bossBattle';
 
 export interface SignatureOption {
   label: string;
@@ -20,6 +21,8 @@ interface SignatureDef {
   id: string;
   name: string;
   trigger: SignatureTrigger;
+  /** A temporary rule: the next choice replaces this one's effects. */
+  temporary?: boolean;
   title: string;
   options(content: Content, run: RunState, battle: BattleState): SignatureOption[];
 }
@@ -54,6 +57,20 @@ const DEFS: SignatureDef[] = [
       ];
     },
   },
+  {
+    id: 'distortion-protocol',
+    name: 'Distortion Protocol',
+    trigger: 'bossBattle',
+    temporary: true,
+    title: 'Distortion Protocol: choose the next rule alteration',
+    options() {
+      return [
+        { label: 'Overclock', description: 'Your team has +15% Speed. The next Elite Four member is 2 levels higher.', effects: [{ kind: 'statMultiplier', stat: 'spe', value: 1.15 }, { kind: 'eliteLevelOffset', value: 2 }] },
+        { label: 'Suppress', description: 'Foes cannot heal. The next Elite Four member is 3 levels higher.', effects: [{ kind: 'enemyHealingBlocked' }, { kind: 'eliteLevelOffset', value: 3 }] },
+        { label: 'Reckless trade', description: 'Healing is 25% weaker but your Pokémon deal 15% more damage. The next Elite Four member is 2 levels higher.', effects: [{ kind: 'healingMultiplier', value: 0.75 }, { kind: 'damageMultiplier', value: 1.15 }, { kind: 'eliteLevelOffset', value: 2 }] },
+      ];
+    },
+  },
 ];
 
 export function signatureDef(id: string | null | undefined): SignatureDef | undefined {
@@ -66,6 +83,7 @@ export function signatureDecisions(content: Content, run: RunState, battle: Batt
   const def = signatureDef(archetype?.signatureMechanic);
   if (!def || battle.outcome !== 'win') return [];
   if (def.trigger === 'rivalBattle' && !battle.rivalId && !battle.rival) return [];
+  if (def.trigger === 'bossBattle' && !isBossClass(battle.trainer?.classId)) return [];
   return [{ kind: 'signature', mechanicId: def.id, title: def.title, options: def.options(content, run, battle) }];
 }
 
@@ -75,6 +93,12 @@ export function chooseSignatureOption(run: RunState, optionIndex: number): strin
   if (!decision || decision.kind !== 'signature') throw new Error('No signature choice is waiting');
   const option = decision.options[optionIndex];
   if (!option) throw new Error(`Invalid signature choice ${optionIndex}`);
+  const def = signatureDef(decision.mechanicId);
+  if (def?.temporary) {
+    const old = run.signatureApplied[def.id] ?? [];
+    run.perkEffects = run.perkEffects.filter((m) => !old.some((o) => JSON.stringify(o) === JSON.stringify(m)));
+    run.signatureApplied[def.id] = option.effects;
+  }
   run.perkEffects.push(...option.effects);
   return `${option.label}: ${option.description}`;
 }

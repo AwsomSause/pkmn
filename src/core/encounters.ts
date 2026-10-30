@@ -8,7 +8,7 @@ import type { Rng } from './rng';
 import type { LevelBreakdown, PokemonInstance } from './state';
 import { getBoss, levelCap, type BossRole } from './regions';
 import { isUsableMove } from './pokemon';
-import { isLegendaryLike, wildWeightPerk } from './trainerPerks';
+import { eliteLevelOffset, isLegendaryLike, wildWeightPerk } from './trainerPerks';
 import { baseStatTotal, pickThemeSpecies, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
@@ -232,7 +232,7 @@ export function planGymLeader(content: Content, archetype: Archetype, leaderId: 
 
 /** An Elite Four member's team for region `regionIndex` (0-based). Teams get harder every region. */
 export function planEliteFour(content: Content, archetype: Archetype, memberId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus, ELITE_FOUR_CLASS, rng);
+  return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus + eliteLevelOffset(archetype.modifiers), ELITE_FOUR_CLASS, rng);
 }
 
 /** The champion's team for region `regionIndex` (0-based): the hardest battle of the region. */

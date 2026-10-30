@@ -24,7 +24,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -1396,8 +1396,10 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       userIsMega: getSpecies(ctx.content, user.mon.speciesId).form?.kind === 'mega',
       partyHasMega: ctx.party.some((p) => getSpecies(ctx.content, p.speciesId).form?.kind === 'mega'),
       firstInBattle: ctx.battle.participants[0] === user.mon.uid,
+      firstAttack: ctx.battle.held?.playerAttacks === 1,
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
+      userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
     });
   }
   if (target.side === 'player') {
@@ -1739,6 +1741,7 @@ function executeMove(
     pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1) - (user.side === 'player' ? ppCostExtra(ctx.perks, move.type) : 0));
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
+  if (user.side === 'player' && !continuing) Held.countPlayerAttack(ctx.battle);
   if (!continuing && slot !== -1) {
     user.vol.prevMove = user.vol.lastMove;
     user.vol.lastMove = move.id;
@@ -2407,7 +2410,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
       if (foeAbility === 'punk-rock' && move.flags.includes('sound')) final *= 0.5;
-      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) } : content.ruleset;
+      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) * critDamagePerk(ctx.perks, user.side) } : content.ruleset;
       damage = calcDamage(ruleset, {
         level: user.mon.level,
         power,
@@ -2517,7 +2520,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     } else {
       const userMax = calcStats(content, user.mon).hp;
       const heal = Math.min(userMax - user.mon.hp, amount);
-      if (heal > 0) {
+      if (heal > 0 && !(user.side === 'enemy' && enemyHealingBlocked(ctx.perks))) {
         user.mon.hp += heal;
         events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
       }
@@ -3121,7 +3124,7 @@ function specialMoveType(ctx: BattleContext, user: Combatant, move: Move, _weath
 function healMon(ctx: BattleContext, c: Combatant, fraction: number, events: BattleEvent[]): boolean {
   const max = calcStats(ctx.content, c.mon).hp;
   const gain = Math.min(max - c.mon.hp, Math.max(1, Math.floor(max * fraction)));
-  if (gain <= 0 || c.mon.hp <= 0 || c.vol.healBlock > 0) {
+  if (gain <= 0 || c.mon.hp <= 0 || c.vol.healBlock > 0 || (c.side === 'enemy' && enemyHealingBlocked(ctx.perks))) {
     events.push({ type: 'fail', side: c.side });
     return false;
   }
@@ -3960,7 +3963,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
       return;
     }
   }
-  if (fx.heal && user.vol.healBlock > 0) {
+  if (fx.heal && (user.vol.healBlock > 0 || (user.side === 'enemy' && enemyHealingBlocked(ctx.perks)))) {
     events.push({ type: 'fail', side: user.side });
     return;
   }

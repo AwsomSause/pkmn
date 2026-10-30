@@ -90,9 +90,11 @@ export const HeldStateSchema = z.object({
   /** Embargo turns left per Pokémon uid, and Magic Room turns left. */
   embargo: z.record(z.string(), z.number().int().min(0)).default({}),
   magicRoom: z.number().int().min(0).default(0),
+  /** Attacks your side has made this battle (First Attack perks). */
+  playerAttacks: z.number().int().min(0).default(0),
 });
 export type HeldState = z.infer<typeof HeldStateSchema>;
-export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0 });
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0, playerAttacks: 0 });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -782,6 +784,8 @@ export const RunStateSchema = z.object({
   box: z.array(PokemonInstanceSchema).default([]),
   /** Modifiers the run's signature choices added to the trainer's (core/signature.ts). */
   perkEffects: z.array(ArchetypeModifierSchema).default([]),
+  /** Effects of the last temporary signature choice per mechanic, so the next choice can replace them. */
+  signatureApplied: z.record(z.string(), z.array(ArchetypeModifierSchema)).default({}),
   /** Mode, difficulty, modifiers and their reward multiplier (core/rules.ts). */
   rules: RunRulesSchema,
   /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */

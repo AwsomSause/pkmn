@@ -708,6 +708,26 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
   /** Mega Evolved Pokémon of yours take more damage. */
   z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Your side's first attack in a battle deals `first`× damage, every later attack `later`×. */
+  z.object({ kind: z.literal('firstAttackDamage'), first: z.number().positive(), later: z.number().positive() }),
+  /** Damage dealt by your Pokémon that are holding an item (holding: true) or not holding one (false). */
+  z.object({ kind: z.literal('heldItemDamageMultiplier'), holding: z.boolean(), value: z.number().positive() }),
+  /** Held-item bonuses on your Pokémon (stats, damage boosts, healing, draining) are this much stronger. */
+  z.object({ kind: z.literal('heldEffectMultiplier'), value: z.number().positive() }),
+  /** After each won battle, every conscious party Pokémon recovers this share of its max HP. */
+  z.object({ kind: z.literal('postBattleHeal'), percent: z.number().positive() }),
+  /** Rare and epic rewards turn up this much more often in reward drafts. */
+  z.object({ kind: z.literal('rareItemWeight'), value: z.number().positive() }),
+  /** Critical-hit damage: your Pokémon's crits (side player) or the crits they take (side enemy). */
+  z.object({ kind: z.literal('critDamageMultiplier'), side: z.enum(['player', 'enemy']), value: z.number().positive() }),
+  /** Damage dealt by your Mega Evolved Pokémon. */
+  z.object({ kind: z.literal('megaDamageMultiplier'), value: z.number().positive() }),
+  /** Elite Four members are this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
+  /** Foes can't heal with moves, drains or healing effects. */
+  z.object({ kind: z.literal('enemyHealingBlocked') }),
+  /** Mega Evolution happens this many turns later than normal. */
+  z.object({ kind: z.literal('megaDelay'), turns: z.number().int().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];

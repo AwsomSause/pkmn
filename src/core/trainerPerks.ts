@@ -58,6 +58,10 @@ export interface DamageDealtInfo {
   isStarter: boolean;
   /** The types of the Pokémon being hit. */
   targetTypes: readonly TypeName[];
+  /** The attacker is holding at least one item. */
+  userHoldsItem?: boolean;
+  /** This is the first attack your side makes in the battle (false when unknown). */
+  firstAttack?: boolean;
 }
 
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
@@ -70,6 +74,9 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'damageVsTypeMultiplier', (m) => i.targetTypes.includes(m.foeType));
   v *= product(perks, 'starterDamageMultiplier', (m) => m.starter === i.isStarter);
   for (const m of of(perks, 'battleOrderDamage')) v *= i.firstInBattle ? m.first : m.later;
+  for (const m of of(perks, 'firstAttackDamage')) v *= i.firstAttack ? m.first : m.later;
+  v *= product(perks, 'heldItemDamageMultiplier', (m) => m.holding === Boolean(i.userHoldsItem));
+  if (i.userIsMega) v *= product(perks, 'megaDamageMultiplier');
   if (i.partyHasMega && !i.userIsMega) v *= product(perks, 'nonMegaDamageMultiplier');
   const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
   if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'player' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
@@ -296,4 +303,36 @@ export function inThreeStageLine(content: Content, speciesId: string): boolean {
   };
   const sp = getSpecies(content, speciesId);
   return sp.evolutionStage - 1 + longest(speciesId) >= 3;
+}
+
+/** Scales a held-item bonus (a multiplier above 1) by the trainer's held-effect strength. */
+export function scaleHeldBonus(perks: Perks | undefined, multiplier: number): number {
+  const k = product(perks, 'heldEffectMultiplier');
+  return k === 1 ? multiplier : 1 + (multiplier - 1) * k;
+}
+
+/** Share of max HP every conscious party Pokémon recovers after a won battle (0 to 1). */
+export function postBattleHealShare(perks: Perks | undefined): number {
+  return sum(perks, 'postBattleHeal', (m) => m.percent) / 100;
+}
+
+export function rareItemWeightPerk(perks: Perks | undefined): number {
+  return product(perks, 'rareItemWeight');
+}
+
+/** Multiplier on the critical-hit damage multiplier: crits you deal (player) or take (enemy). */
+export function critDamagePerk(perks: Perks | undefined, side: 'player' | 'enemy'): number {
+  return product(perks, 'critDamageMultiplier', (m) => m.side === side);
+}
+
+export function megaDelayTurns(perks: Perks | undefined): number {
+  return sum(perks, 'megaDelay', (m) => m.turns);
+}
+
+export function eliteLevelOffset(perks: Perks | undefined): number {
+  return sum(perks, 'eliteLevelOffset', (m) => m.value);
+}
+
+export function enemyHealingBlocked(perks: Perks | undefined): boolean {
+  return of(perks, 'enemyHealingBlocked').length > 0;
 }

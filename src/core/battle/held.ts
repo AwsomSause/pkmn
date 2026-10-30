@@ -16,7 +16,7 @@
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
 import type { Perks } from '../archetypes';
 import { calcStats, getSpecies } from '../pokemon';
-import { inThreeStageLine, statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
+import { inThreeStageLine, scaleHeldBonus, statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { freshHeldState } from '../state';
 import type { BattleState, HeldState, PokemonInstance, Stages, Volatile } from '../state';
@@ -205,7 +205,7 @@ export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems
   for (const { hook } of hooks(hooksOf(ctx, mon, side), 'stat')) {
     if (hook.stat !== stat && hook.stat !== 'all') continue;
     if (hook.canEvolve && getSpecies(ctx.content, mon.speciesId).evolutions.length === 0) continue;
-    m *= hook.multiplier;
+    m *= side === 'player' ? scaleHeldBonus(ctx.perks, hook.multiplier) : hook.multiplier;
   }
   return m;
 }
@@ -302,7 +302,7 @@ export function attackMultiplier(
     events.push({ type: 'held', side: user.side, itemId, what: 'gem' });
     break;
   }
-  return m;
+  return user.side === 'player' ? scaleHeldBonus(ctx.perks, m) : m;
 }
 
 /** Remembers the holder's move for Metronome and Choice items. */
@@ -389,8 +389,9 @@ export function endureMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>
   return hooks(hooksOf(ctx, mon, side), 'endure').reduce((m, h) => m * h.hook.multiplier, 1);
 }
 
-export function drainMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): number {
-  return hooks(hooksOf(ctx, mon, side), 'drain').reduce((m, h) => m * (1 + h.hook.percent / 100), 1);
+export function drainMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems' | 'perks'>, mon: PokemonInstance, side: Side): number {
+  const m = hooks(hooksOf(ctx, mon, side), 'drain').reduce((m, h) => m * (1 + h.hook.percent / 100), 1);
+  return side === 'player' ? scaleHeldBonus(ctx.perks, m) : m;
 }
 
 export function bindMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): number {
@@ -398,8 +399,9 @@ export function bindMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, 
 }
 
 /** Healing the holder gets (Oval Stone). */
-export function healingMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): number {
-  return hooks(hooksOf(ctx, mon, side), 'healing').reduce((m, h) => m * (1 + h.hook.percent / 100), 1);
+export function healingMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems' | 'perks'>, mon: PokemonInstance, side: Side): number {
+  const m = hooks(hooksOf(ctx, mon, side), 'healing').reduce((m, h) => m * (1 + h.hook.percent / 100), 1);
+  return side === 'player' ? scaleHeldBonus(ctx.perks, m) : m;
 }
 
 /** How long weather the holder starts lasts (Heat Rock and friends), or `base`. */
@@ -744,6 +746,11 @@ function countDownBoosts(ctx: HeldContext, holder: Holder, events: HeldEvent[]):
 }
 
 /** After a battle: "next battle" immunities are used up. */
+/** Counts one attack by the player's side (First Attack perks). */
+export function countPlayerAttack(battle: BattleState): void {
+  stateOf(battle).playerAttacks += 1;
+}
+
 export function endBattle(mon: PokemonInstance): void {
   if (mon.boosts?.some((b) => b.kind === 'immune')) mon.boosts = mon.boosts.filter((b) => b.kind !== 'immune');
 }
