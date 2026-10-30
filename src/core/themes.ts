@@ -3,6 +3,7 @@
 // wild Pokémon appear, which trainer classes show up, and which gym leader
 // waits at the end. Themes and gym leaders never repeat within a run (D6).
 
+import { isSpecialForm } from './specialForms';
 import type { Boss, Content, Species, Theme, TrainerClass, TypeName } from './contentSchema';
 import { isUsableMove } from './pokemon';
 import type { Rng } from './rng';
@@ -28,6 +29,8 @@ export const baseStatTotal = (s: Species) => Object.values(s.baseStats).reduce((
 export function isWildEligible(content: Content, s: Species): boolean {
   if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
   if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
+  // Special forms (Delta, Z, Spooky, regional) are event-only discoveries.
+  if (isSpecialForm(s)) return false;
   if (baseStatTotal(s) > content.balance.wildMaxBaseStats) return false;
   return s.learnset.some((e) => isUsableMove(content, e.move));
 }

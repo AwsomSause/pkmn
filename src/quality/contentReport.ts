@@ -10,6 +10,9 @@
 import type { Content } from '../core/contentSchema';
 import { generateLeagueMap, generateStageMap, validateLeagueMap, validateStageMap } from '../core/map';
 import { usableLearnset } from '../core/pokemon';
+import { isSpecialForm } from '../core/specialForms';
+import { eligibleSpecies } from '../core/runPrep';
+import { wildEligibleSpecies } from '../core/themes';
 import { hashSeed, Rng } from '../core/rng';
 import type { StageMap } from '../core/state';
 import { buildCatalog, filesOf, pokemonEntries } from '../assets/catalog';
@@ -124,6 +127,11 @@ export function buildContentReport(content: Content, inputs: ReportInputs): Cont
     'Level-up learnset entries skipped because the move is unsupported (species learn fewer moves than in the main games).',
     species.flatMap((s) => s.learnset.filter((e) => !content.moves.get(e.move)?.supported).map((e) => `${s.id}@${e.level}:${e.move}`)),
   );
+  // Special forms (Untitled doc §8) must only come from approved routes: never from ordinary wild, trainer or starter pools.
+  const leaks = new Set<string>();
+  for (const sp of wildEligibleSpecies(content)) if (isSpecialForm(sp)) leaks.add(`${sp.id} (wild/trainer pool)`);
+  for (const pool of content.starterPools.values()) for (const id of eligibleSpecies(content, pool)) if (isSpecialForm(content.species.get(id)!)) leaks.add(`${id} (starter pool ${pool.id})`);
+  add('special-form-leaks', 'Special forms in ordinary pools', 'Delta, Z, Spooky or regional forms that an ordinary wild, trainer or starter pool can hand out. Should be zero: they are event-only.', [...leaks]);
   add('species-no-usable-moves', 'Species with no usable moves', 'Species and forms with no supported level-up move at all (they could only use Struggle).', species.filter((s) => usableLearnset(content, s).length === 0).map((s) => s.id));
   add(
     'meetable-species-no-usable-moves',
