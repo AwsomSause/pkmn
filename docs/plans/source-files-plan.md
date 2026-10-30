@@ -41,7 +41,7 @@ Order below is the recommended order to use them.
 ### 4. `Untitled document.md` (64 KB): progression, economy, modes and content expansion
 - **What:** a full proposal (marked "for director review"): item rarity and reward economy overhaul, a full catch comparison screen, fixed base stats, permanent vs run attributes, a common-NPC early game, special forms only from events, Starter Sets, more run prep, trainer signature Pokémon, settings, difficulty with reward multipliers, an optional Death-Block, a non-roguelike Adventure mode, game modes, daily/weekly/holiday events, per-Pokémon unlocks, more buildings, a permanent rewards catalog, data contracts and a roadmap.
 - **Fit:** touches many decisions already made (D1–D16). Several items may conflict (for example fixed base stats, attribute split).
-- **Plan:** don't build from it directly. First compare each of its 25 sections with GAME_DESIGN.md and list conflicts for Kice to decide. Quick, low-risk wins after that: the catch comparison screen and difficulty settings.
+- **Plan:** top priority (decision 1 below); it wins conflicts with earlier decisions. Build in its §23 roadmap order, one slice at a time, and note each overridden earlier decision in GAME_DESIGN.md §12.
 
 ### 5. `Trainers.md` (32 KB): 220 trainer perks
 - **What:** pros and cons for about 220 named trainers (for example "Aaron: Bug-types deal 20% more damage and gain 15% more EXP; take 10% more damage").
@@ -87,14 +87,14 @@ Order below is the recommended order to use them.
 This follows the current to-do list (screenshot), then adds the new docs.
 
 1. Finish what's open: story slice 5 (A Past Pokémon Wants to Join), item effects 3b–4, features catch-up, transformation leftovers. Use AAI (`Battle_Personalities`, `Mega/ZMove/Dynamax_Intelligence`) for smarter trainers and bosses using transformations.
-2. Rivals (item 1), with trainer battle lines from the Drama Engine (item 2).
-3. Encounter Director and balance simulation (item 3). This also gives the tool to balance Trainers.md perks (item 5).
-4. Visual battle slice (item 8), using Enhanced Battle UI as layout reference.
-5. Totems → raids → expeditions (item 6), using SOS and Raid Battles code as reference.
-6. Review `Untitled document.md` against GAME_DESIGN with Kice before building any of it.
+2. `Untitled document.md` (item 4, top priority per decision 1), following its own roadmap (§23). Start with the reward economy (§3), the catch comparison screen (§4) and fixed base stats (§5).
+3. Encounter Director and balance simulation (item 3), seeded from the spreadsheet. This also gives the tool to balance Trainers.md perks (item 5).
+4. Rivals (item 1), with trainer battle lines from the Drama Engine (item 2).
+5. Visual battle slice (item 8), using Enhanced Battle UI as layout reference and Essentials graphics where they fill gaps.
+6. Totems → raids → expeditions (item 6), using SOS and Raid Battles code as reference.
 
-## Decisions Kice needs to make
+## Director decisions (Kice, 2026-10-30)
 
-- `Untitled document.md`: which of its 25 proposals to adopt where they conflict with D1–D16 (especially fixed base stats and the attribute split).
-- Whether Essentials-pack graphics may be imported at all, or only used as reference. (Repo is private per D4; provenance is still required.)
-- Whether the spreadsheet's invented levels are acceptable as the starting encounter levels.
+1. **`Untitled document.md` comes first.** Its proposals win where they conflict with earlier decisions (D1–D16), including fixed base stats and the permanent/run attribute split. Update GAME_DESIGN.md when a slice changes an earlier decision.
+2. **Essentials-pack graphics may be imported, and this is recommended.** Prefer them for gaps (battlebacks, transitions, trainer sprites, UI). Keep a provenance entry for each imported file; the repo stays private (D4).
+3. **The spreadsheet's levels are meant to be used** as the starting encounter levels and difficulty. Tune them later with the balance simulation.
