@@ -77,7 +77,12 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       }
       const mon = run.party[battle.activeIndex]!;
       if (smart) {
-        const smartTurn = smartBattleTurn(content, run);
+        let smartTurn: TurnResult | null = null;
+        try {
+          smartTurn = smartBattleTurn(content, run);
+        } catch {
+          smartTurn = null; // e.g. trapped: the plain player below attacks instead
+        }
         if (smartTurn) return { run: smartTurn.run, turn: smartTurn };
       }
       const damaging = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);

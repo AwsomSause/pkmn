@@ -165,7 +165,7 @@ describe('run flow', () => {
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 40, run.party[0]!.uid);
       const enemy = currentEnemy(run.battle!);
       const archetype = getArchetype(content, archetypeId);
-      const expectedXp = xpForDefeat(getSpecies(content, enemy.speciesId).baseExp, enemy.level, 40, xpMultiplier(archetype));
+      const expectedXp = xpForDefeat(getSpecies(content, enemy.speciesId).baseExp, enemy.level, 40, xpMultiplier(archetype) * content.balance.difficulty.xpScale);
       const expectedMoney = Math.floor(content.balance.money.wildPerEnemyLevel * enemy.level * moneyMultiplier(archetype));
       let result;
       const xpBefore = run.party[0]!.xp;
