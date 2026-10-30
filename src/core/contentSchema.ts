@@ -2,6 +2,7 @@
 // The JSON files in src/data are checked against these when the game starts,
 // so a typo in a data file shows a clear error instead of a strange bug.
 
+import { NATURE_IDS } from './natures';
 import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
@@ -1387,6 +1388,8 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('feed'), friendship: z.number().int(), changes: AttributeChangesSchema }),
   /** Raises the max PP of one move the player picks (each up is +20%, at most 3 per move). */
   z.object({ kind: z.literal('ppUp'), ups: z.number().int().min(1).max(3) }),
+  /** Changes one Pokémon's nature (Mints). */
+  z.object({ kind: z.literal('nature'), nature: z.enum(NATURE_IDS) }),
   /** Care for one Pokémon: heal HP, revive, cure status, restore one move's PP; friendship and attribute side effects. */
   z.object({
     kind: z.literal('care'),

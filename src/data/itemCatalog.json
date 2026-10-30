@@ -13777,5 +13777,341 @@
     }
    ]
   }
+ },
+ {
+  "id": "adamant-mint",
+  "name": "Adamant Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Adamant: +Attack, −Sp. Atk",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "adamant-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "adamant"
+  }
+ },
+ {
+  "id": "bold-mint",
+  "name": "Bold Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Bold: +Defense, −Attack",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "bold-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "bold"
+  }
+ },
+ {
+  "id": "brave-mint",
+  "name": "Brave Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Brave: +Attack, −Speed",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "brave-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "brave"
+  }
+ },
+ {
+  "id": "calm-mint",
+  "name": "Calm Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Calm: +Sp. Def, −Attack",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "calm-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "calm"
+  }
+ },
+ {
+  "id": "careful-mint",
+  "name": "Careful Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Careful: +Sp. Def, −Sp. Atk",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "careful-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "careful"
+  }
+ },
+ {
+  "id": "gentle-mint",
+  "name": "Gentle Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Gentle: +Sp. Def, −Defense",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "gentle-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "gentle"
+  }
+ },
+ {
+  "id": "hasty-mint",
+  "name": "Hasty Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Hasty: +Speed, −Defense",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "hasty-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "hasty"
+  }
+ },
+ {
+  "id": "impish-mint",
+  "name": "Impish Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Impish: +Defense, −Sp. Atk",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "impish-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "impish"
+  }
+ },
+ {
+  "id": "jolly-mint",
+  "name": "Jolly Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Jolly: +Speed, −Sp. Atk",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "jolly-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "jolly"
+  }
+ },
+ {
+  "id": "lax-mint",
+  "name": "Lax Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Lax: +Defense, −Sp. Def",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "lax-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "lax"
+  }
+ },
+ {
+  "id": "lonely-mint",
+  "name": "Lonely Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Lonely: +Attack, −Defense",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "lonely-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "lonely"
+  }
+ },
+ {
+  "id": "mild-mint",
+  "name": "Mild Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Mild: +Sp. Atk, −Defense",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "mild-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "mild"
+  }
+ },
+ {
+  "id": "modest-mint",
+  "name": "Modest Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Modest: +Sp. Atk, −Attack",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "modest-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "modest"
+  }
+ },
+ {
+  "id": "naive-mint",
+  "name": "Naive Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Naive: +Speed, −Sp. Def",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "naive-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "naive"
+  }
+ },
+ {
+  "id": "naughty-mint",
+  "name": "Naughty Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Naughty: +Attack, −Sp. Def",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "naughty-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "naughty"
+  }
+ },
+ {
+  "id": "quiet-mint",
+  "name": "Quiet Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Quiet: +Sp. Atk, −Speed",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "quiet-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "quiet"
+  }
+ },
+ {
+  "id": "rash-mint",
+  "name": "Rash Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Rash: +Sp. Atk, −Sp. Def",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "rash-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "rash"
+  }
+ },
+ {
+  "id": "relaxed-mint",
+  "name": "Relaxed Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Relaxed: +Defense, −Speed",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "relaxed-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "relaxed"
+  }
+ },
+ {
+  "id": "sassy-mint",
+  "name": "Sassy Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Sassy: +Sp. Def, −Speed",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "sassy-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "sassy"
+  }
+ },
+ {
+  "id": "serious-mint",
+  "name": "Serious Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Serious",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "serious-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "serious"
+  }
+ },
+ {
+  "id": "timid-mint",
+  "name": "Timid Mint",
+  "family": "Natures and Mints",
+  "description": "Changes a Pokémon's nature to Timid: +Speed, −Attack",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "timid-mint",
+  "status": "supported",
+  "effect": {
+   "kind": "nature",
+   "nature": "timid"
+  }
  }
 ]

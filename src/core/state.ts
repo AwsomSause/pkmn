@@ -2,6 +2,7 @@
 // and the permanent profile. These schemas double as save-file validators,
 // so the game refuses to load a save that doesn't match.
 
+import { NATURE_IDS } from './natures';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
@@ -54,6 +55,8 @@ export const PokemonInstanceSchema = z.object({
    * Pokémon from saves made before abilities existed get the first one.
    */
   abilitySlot: z.number().int().min(-1).default(0),
+  /** Its nature (core/natures.ts). Missing in saves from before natures: neutral. */
+  nature: z.enum(NATURE_IDS).optional(),
   /** Held items (catalog id → copies). A Pokémon can hold many items, each up to its catalog max (director, Q1). */
   held: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */

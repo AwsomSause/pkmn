@@ -1,6 +1,7 @@
 // What the Pokémon summary (summaryMenu.ts) shows, worked out without Phaser so
 // it can be tested: types, ability, held items, stats, moves, its story this run.
 
+import { natureEffectText, natureName } from '../core/natures';
 import { abilityStatus } from '../core/battle/abilities';
 import type { Content, StatName } from '../core/contentSchema';
 import { abilityOf, calcStats, getSpecies, maxPp } from '../core/pokemon';
@@ -17,6 +18,8 @@ export interface SummaryInfo {
   level: number;
   types: string[];
   ability: { name: string; text: string } | null;
+  /** E.g. "Adamant (+Attack, −Sp. Atk)"; null for a Pokémon from before natures. */
+  nature: string | null;
   held: { id: string; name: string; icon: string | null; count: number }[];
   stats: { key: StatName; label: string; value: number; base: number; boosted: boolean }[];
   moves: { id: string; name: string; type: string; category: string; power: string; accuracy: string; pp: string; text: string }[];
@@ -42,6 +45,7 @@ export function summaryInfo(content: Content, run: RunState | null, mon: Pokemon
     name: species.name,
     level: mon.level,
     types: [...species.types],
+    nature: mon.nature ? `${natureName(mon.nature)} (${natureEffectText(mon.nature)})` : null,
     ability: ability ? { name: ability.name, text: `${ability.description}${abilityStatus(ability.id) === 'pending' ? ' (not working in battle yet)' : ''}` } : null,
     held: Object.entries(mon.held ?? {}).map(([id, count]) => ({ id, name: content.catalog.get(id)?.name ?? id, icon: content.items.get(id)?.iconAssetId ?? null, count })),
     stats: (Object.keys(STAT_LABELS) as StatName[]).map((key) => ({ key, label: STAT_LABELS[key], value: stats[key], base: species.baseStats[key], boosted: (mon.vitamins[key] ?? 0) > 0 || (mon.statBoosts?.[key] ?? 0) > 0 })),

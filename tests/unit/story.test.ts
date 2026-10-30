@@ -56,15 +56,15 @@ describe('story foundation: random streams', () => {
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2 to 3b-3b (held, map, shop, money, map-movement, map-stop and draft items in drafts, bosses
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
-  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
+  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix, natures), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': 'dc2f633d8a219776',
-    'STORY2/0': 'cdfb5542e9d8527e',
+    'STORY1/0': '37e04e9b4fad6216',
+    'STORY2/0': '89acd72c47454687',
     'STORY4/0': 'c685f89d623505af',
-    'STORY5/0': '6a85ea01a36017c5',
-    'STORY6/0': 'ac1b660e8ff2ac8f',
+    'STORY5/0': 'b5789715d2478e69',
+    'STORY6/0': '7b7515ae10df9c5d',
     'STORY7/0': '349ab492b7f5a7e1',
-    'STORY8/0': '446665af1ea23450',
+    'STORY8/0': '65a2b5b1a05765e7',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.

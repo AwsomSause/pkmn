@@ -1,5 +1,6 @@
 // Individual Pokémon: creating them, their stats, experience and level-ups.
 
+import { natureMultiplier, rollNature } from './natures';
 import type { Content, GrowthRate, Species, StatBlock, StatName } from './contentSchema';
 import { STAT_NAMES } from './contentSchema';
 import { Rng, hashSeed } from './rng';
@@ -26,7 +27,7 @@ export function calcStats(content: Content, mon: PokemonInstance): StatBlock {
     const raw =
       stat === 'hp'
         ? Math.floor((2 * base * mon.level) / 100) + mon.level + 10
-        : Math.floor((2 * base * mon.level) / 100) + 5;
+        : Math.floor(((Math.floor((2 * base * mon.level) / 100) + 5) * Math.round(natureMultiplier(mon.nature, stat) * 100)) / 100);
     const stacks = mon.vitamins[stat] ?? 0;
     const boost = ((mon.statBoosts?.[stat] ?? 0) + (stat === 'hp' ? mon.perkHp ?? 0 : 0)) / 100;
     stats[stat] = Math.floor(raw * (1 + perStack * stacks + boost));
@@ -175,6 +176,7 @@ export function createPokemon(
     shiny: false,
     friendship: content.balance.friendship.base,
     abilitySlot: rollAbilitySlot(content, species, abilityKey),
+    nature: rollNature(abilityKey),
   };
   mon.hp = maxHp(content, mon);
   return mon;
