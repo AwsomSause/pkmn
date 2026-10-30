@@ -177,6 +177,14 @@ describe('game session save/load', () => {
   });
 });
 
+describe('dialogue frequency setting', () => {
+  it('settings saved at v3 load with normal dialogue', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 3, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'fast' } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ battleSpeed: 'fast', dialogueFrequency: 'normal' });
+  });
+});
+
 describe('battle speed setting', () => {
   it('settings saved before v3 load with normal speed', () => {
     const storage = new MemoryStorageProvider();
