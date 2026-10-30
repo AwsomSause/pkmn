@@ -2128,6 +2128,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
   /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
+  /** An NPC trainer joins your roster for good (unlocked when the run ends; the run records it in `itemCounters["recruit:<id>"]`). */
+  z.object({ kind: z.literal('recruit'), trainer: z.string().min(1) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;

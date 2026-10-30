@@ -18649,7 +18649,7 @@
    ]
   },
   {
-   "trainerId": "npc-pok-maniac-rex",
+   "trainerId": "npc-poke-maniac-rex",
    "name": "Poké Maniac Rex's Rock Path",
    "steps": [
     {
@@ -18675,7 +18675,7 @@
      },
      "reward": {
       "researchPoints": 75,
-      "pool": "trainer-npc-pok-maniac-rex"
+      "pool": "trainer-npc-poke-maniac-rex"
      }
     },
     {
@@ -18721,7 +18721,7 @@
    ]
   },
   {
-   "trainerId": "npc-pok-mon-breeder-delia",
+   "trainerId": "npc-pokemon-breeder-delia",
    "name": "Pokémon Breeder Delia's Normal Path",
    "steps": [
     {
@@ -18747,7 +18747,7 @@
      },
      "reward": {
       "researchPoints": 75,
-      "pool": "trainer-npc-pok-mon-breeder-delia"
+      "pool": "trainer-npc-pokemon-breeder-delia"
      }
     },
     {
@@ -18793,7 +18793,7 @@
    ]
   },
   {
-   "trainerId": "npc-pok-mon-ranger-hal",
+   "trainerId": "npc-pokemon-ranger-hal",
    "name": "Pokémon Ranger Hal's Grass Path",
    "steps": [
     {
@@ -18819,7 +18819,7 @@
      },
      "reward": {
       "researchPoints": 75,
-      "pool": "trainer-npc-pok-mon-ranger-hal"
+      "pool": "trainer-npc-pokemon-ranger-hal"
      }
     },
     {
@@ -18865,7 +18865,7 @@
    ]
   },
   {
-   "trainerId": "npc-pok-mon-ranger-willa",
+   "trainerId": "npc-pokemon-ranger-willa",
    "name": "Pokémon Ranger Willa's Flying Path",
    "steps": [
     {
@@ -18891,7 +18891,7 @@
      },
      "reward": {
       "researchPoints": 75,
-      "pool": "trainer-npc-pok-mon-ranger-willa"
+      "pool": "trainer-npc-pokemon-ranger-willa"
      }
     },
     {

@@ -477,6 +477,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return `${e.rivals} rivals will come for you`;
     case 'tournament':
       return e.round === 9 ? 'tournament over' : 'tournament round';
+    case 'recruit':
+      return `${content.archetypes.get(e.trainer)?.name ?? e.trainer} will join your roster after this run`;
     case 'count':
       return e.counter === 'eventClues' ? (e.amount === 1 ? 'a clue' : `${e.amount} clues`) : e.counter === 'eventBossesWon' ? 'an event boss beaten' : 'the event finale won';
   }
@@ -655,6 +657,9 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
     case 'gauntlet':
       return startGauntlet(content, run, e.rivals) > 0 ? effectWords(content, e) : 'no rivals to face yet';
+    case 'recruit':
+      run.itemCounters = { ...run.itemCounters, [`recruit:${e.trainer}`]: 1 };
+      return effectWords(content, e);
     case 'count':
       count(run, e.counter, e.amount);
       return effectWords(content, e);
