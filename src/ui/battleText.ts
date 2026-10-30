@@ -183,6 +183,14 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} is hurt by the bind!`;
     case 'bindEnd':
       return `${who(e.side)} was freed!`;
+    case 'blocked':
+      return `${who(e.side)} can't use that move right now!`;
+    case 'disrupted':
+      return `${who(e.side)} was hit by ${e.kind === 'healBlock' ? 'Heal Block' : e.kind[0]!.toUpperCase() + e.kind.slice(1)}!`;
+    case 'statsReset':
+      return 'All stat changes were changed!';
+    case 'selfState':
+      return SELF_STATE[e.state] ? SELF_STATE[e.state]!(who(e.side)) : `${who(e.side)} is ready!`;
     case 'sideEffect':
       return sideEffectText(e.side, e.effect, e.on, who);
     case 'hazard':
@@ -287,3 +295,14 @@ const SIDE_OFF: Record<string, string> = {
 function sideEffectText(_side: string, effect: string, on: boolean, _who: (s: 'player' | 'enemy') => string): string {
   return (on ? SIDE_ON : SIDE_OFF)[effect] ?? 'The field changed.';
 }
+
+const SELF_STATE: Record<string, (who: string) => string> = {
+  focusEnergy: (w) => `${w} is getting pumped!`,
+  laserFocus: (w) => `${w} is focused!`,
+  lockOn: (w) => `${w} took aim!`,
+  ingrain: (w) => `${w} planted its roots!`,
+  aquaRing: (w) => `${w} surrounded itself with a veil of water!`,
+  endure: (w) => `${w} braced itself!`,
+  wish: (w) => `${w} made a wish!`,
+  trapped: (w) => `${w} can no longer escape!`,
+};

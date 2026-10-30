@@ -8755,9 +8755,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user entangles the target with its anchor chain while attacking. The target becomes unable to flee."
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "aqua-ring",
@@ -8769,11 +8769,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Restores a little HP each turn."
+  "effects": {
+   "selfState": "aquaRing"
+  }
  },
  {
   "id": "aromatherapy",
@@ -8785,11 +8785,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cures all status problems in your party."
+  "effects": {
+   "cure": "party"
+  }
  },
  {
   "id": "aromatic-mist",
@@ -8957,10 +8957,15 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse opponent. If it misses, the user loses HP."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "crashOnMiss": true,
+   "confuse": {
+    "chance": 30
+   }
+  }
  },
  {
   "id": "baddy-bad",
@@ -8988,11 +8993,14 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user and poisons opponent on contact."
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "status": "psn"
+   }
+  }
  },
  {
   "id": "barb-barrage",
@@ -9020,11 +9028,11 @@
   "pp": 40,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User switches out and gives stat changes to the incoming Pokémon."
+  "effects": {
+   "switchOut": "baton"
+  }
  },
  {
   "id": "beak-blast",
@@ -9230,9 +9238,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot flee or switch."
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "blood-moon",
@@ -9280,9 +9288,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The higher the user's Defense, the stronger the attack."
+  "effects": {
+   "attackFrom": "def"
+  }
  },
  {
   "id": "bolt-beak",
@@ -9387,11 +9395,14 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "(no effect text)"
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "status": "brn"
+   }
+  }
  },
  {
   "id": "burning-jealousy",
@@ -9485,11 +9496,11 @@
   "pp": 40,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The Pokémon congratulates you on your special day. No battle effect."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "charge",
@@ -9517,11 +9528,12 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Switches out and summons a snowstorm lasting 5 turns."
+  "effects": {
+   "switchOut": "switch",
+   "weather": "snow"
+  }
  },
  {
   "id": "circle-throw",
@@ -9537,9 +9549,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
+  "effects": {
+   "forceSwitch": true
+  }
  },
  {
   "id": "clangorous-soul",
@@ -9589,9 +9601,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes all of the target's stat changes."
+  "effects": {
+   "resetStages": "target"
+  }
  },
  {
   "id": "coaching",
@@ -9655,10 +9667,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals more damage to the opponent that last inflicted damage on it."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "counter": "both"
+  }
  },
  {
   "id": "constrict",
@@ -9745,9 +9759,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Copies opponent's last move."
+  "effects": {
+   "callMove": "copycat"
+  }
  },
  {
   "id": "core-enforcer",
@@ -9802,7 +9816,7 @@
   "name": "Counter",
   "type": "fighting",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 20,
   "priority": -5,
@@ -9811,9 +9825,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "When hit by a Physical Attack, user strikes back with 2x power."
+  "effects": {
+   "counter": "physical"
+  }
  },
  {
   "id": "court-change",
@@ -9999,9 +10013,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent can't use its last attack for a few turns."
+  "effects": {
+   "disrupt": "disable"
+  }
  },
  {
   "id": "doodle",
@@ -10171,9 +10185,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
+  "effects": {
+   "forceSwitch": true
+  }
  },
  {
   "id": "dream-eater",
@@ -10187,9 +10201,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half the HP inflicted on a sleeping opponent."
+  "effects": {
+   "requiresSleepingTarget": true,
+   "drain": 0.5
+  }
  },
  {
   "id": "dual-wingbeat",
@@ -10356,9 +10371,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Forces opponent to keep using its last move for 3 turns."
+  "effects": {
+   "disrupt": "encore"
+  }
  },
  {
   "id": "endeavor",
@@ -10388,11 +10403,11 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always left with at least 1 HP, but may fail if used consecutively."
+  "effects": {
+   "selfState": "endure"
+  }
  },
  {
   "id": "entrainment",
@@ -10438,9 +10453,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User can't move on the next turn."
+  "effects": {
+   "recharge": true
+  }
  },
  {
   "id": "expanding-force",
@@ -10538,9 +10553,12 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Drastically raises user's Attack if target is KO'd."
+  "effects": {
+   "koBoost": {
+    "stat": "atk",
+    "stages": 3
+   }
+  }
  },
  {
   "id": "fickle-beam",
@@ -10722,9 +10740,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
+  "effects": {
+   "switchOut": "switch"
+  }
  },
  {
   "id": "floral-healing",
@@ -10770,9 +10788,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Never misses; always results in a critical hit."
+  "effects": {
+   "alwaysCrit": true
+  }
  },
  {
   "id": "flying-press",
@@ -10802,11 +10820,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Increases critical hit ratio."
+  "effects": {
+   "selfState": "focusEnergy"
+  }
  },
  {
   "id": "focus-punch",
@@ -10889,9 +10907,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Uses the opponent's Attack stat."
+  "effects": {
+   "attackFrom": "targetAtk"
+  }
  },
  {
   "id": "freeze-dry",
@@ -10921,9 +10939,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Resets all stat changes."
+  "effects": {
+   "resetStages": "both"
+  }
  },
  {
   "id": "frustration",
@@ -11812,9 +11830,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User and opponent swap Defense and Special Defense."
+  "effects": {
+   "stageTrick": "swapDefense"
+  }
  },
  {
   "id": "guardian-of-alola",
@@ -11860,11 +11878,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Doubles prize money from trainer battles."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "hard-press",
@@ -11892,11 +11910,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Resets all stat changes."
+  "effects": {
+   "resetStages": "both"
+  }
  },
  {
   "id": "heal-bell",
@@ -11908,13 +11926,13 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Heals the user's party's status conditions."
+  "effects": {
+   "cure": "party"
+  }
  },
  {
   "id": "heal-block",
@@ -11928,9 +11946,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents the opponent from restoring HP for 5 turns."
+  "effects": {
+   "disrupt": "healBlock"
+  }
  },
  {
   "id": "heal-pulse",
@@ -11978,9 +11996,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Stat changes are swapped with the opponent."
+  "effects": {
+   "stageTrick": "swapAll"
+  }
  },
  {
   "id": "heat-crash",
@@ -12096,9 +12114,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If it misses, the user loses half their HP."
+  "effects": {
+   "crashOnMiss": true
+  }
  },
  {
   "id": "hold-hands",
@@ -12110,11 +12128,11 @@
   "pp": 40,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Makes the user and an ally very happy."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "howl",
@@ -12305,11 +12323,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User restores HP each turn. User cannot escape/switch."
+  "effects": {
+   "selfState": "ingrain"
+  }
  },
  {
   "id": "instruct",
@@ -12374,9 +12392,9 @@
    "bite",
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents user and opponent from switching out."
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "judgment",
@@ -12408,9 +12426,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If it misses, the user loses half their HP."
+  "effects": {
+   "crashOnMiss": true
+  }
  },
  {
   "id": "jungle-healing",
@@ -12422,11 +12440,12 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Restores team's HP and cures status conditions."
+  "effects": {
+   "cure": "party",
+   "heal": 0.25
+  }
  },
  {
   "id": "kings-shield",
@@ -12438,11 +12457,15 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user and lowers opponent's Attack on contact."
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "stat": "atk",
+    "stages": -1
+   }
+  }
  },
  {
   "id": "knock-off",
@@ -12472,11 +12495,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's next attack is guaranteed to result in a critical hit."
+  "effects": {
+   "selfState": "laserFocus"
+  }
  },
  {
   "id": "lash-out",
@@ -12572,11 +12595,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User and teammates recover HP."
+  "effects": {
+   "heal": 0.25
+  }
  },
  {
   "id": "light-screen",
@@ -12620,11 +12643,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's next attack is guaranteed to hit."
+  "effects": {
+   "selfState": "lockOn"
+  }
  },
  {
   "id": "low-kick",
@@ -12693,11 +12716,12 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Heals user's status conditions and recovers HP."
+  "effects": {
+   "cure": "self",
+   "heal": 0.25
+  }
  },
  {
   "id": "lunar-dance",
@@ -13280,9 +13304,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot flee or switch."
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "memento",
@@ -13321,16 +13345,16 @@
   "name": "Metal Burst",
   "type": "steel",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage equal to 1.5x opponent's attack."
+  "effects": {
+   "counter": "both"
+  }
  },
  {
   "id": "meteor-beam",
@@ -13344,9 +13368,18 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn."
+  "effects": {
+   "charge": {
+    "boosts": [
+     {
+      "stat": "spa",
+      "stages": 1,
+      "target": "self",
+      "chance": 100
+     }
+    ]
+   }
+  }
  },
  {
   "id": "metronome",
@@ -13358,11 +13391,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User performs almost any move in the game at random."
+  "effects": {
+   "callMove": "metronome"
+  }
  },
  {
   "id": "mimic",
@@ -13392,9 +13425,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User receives recoil damage."
+  "effects": {
+   "recoilMaxHp": 0.5
+  }
  },
  {
   "id": "mind-reader",
@@ -13406,11 +13439,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's next attack is guaranteed to hit."
+  "effects": {
+   "selfState": "lockOn"
+  }
  },
  {
   "id": "miracle-eye",
@@ -13433,16 +13466,16 @@
   "name": "Mirror Coat",
   "type": "psychic",
   "category": "special",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 20,
   "priority": -5,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "When hit by a Special Attack, user strikes back with 2x power."
+  "effects": {
+   "counter": "special"
+  }
  },
  {
   "id": "mirror-move",
@@ -13456,9 +13489,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User performs the opponent's last move."
+  "effects": {
+   "callMove": "mirrorMove"
+  }
  },
  {
   "id": "mist",
@@ -13721,11 +13754,15 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user and sharply lowers Defence on contact."
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "stat": "def",
+    "stages": -2
+   }
+  }
  },
  {
   "id": "oceanic-operetta",
@@ -13803,9 +13840,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user's and opponent's HP becomes the average of both."
+  "effects": {
+   "painSplit": true
+  }
  },
  {
   "id": "parting-shot",
@@ -13821,9 +13858,23 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Attack and Special Attack then switches out."
+  "effects": {
+   "switchOut": "switch",
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    },
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "pay-day",
@@ -13837,9 +13888,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Money is earned after the battle."
+  "effects": {}
  },
  {
   "id": "payback",
@@ -13889,9 +13938,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Uses Attack or Special Attack stat, whichever is higher."
+  "effects": {
+   "attackFrom": "best"
+  }
  },
  {
   "id": "pika-papow",
@@ -14012,9 +14061,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 1-10 times in a row."
+  "effects": {
+   "hits": [
+    10,
+    10
+   ]
+  }
  },
  {
   "id": "powder",
@@ -14078,9 +14130,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User and opponent swap Attack and Special Attack."
+  "effects": {
+   "stageTrick": "swapOffense"
+  }
  },
  {
   "id": "power-trick",
@@ -14202,9 +14254,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Copies the opponent's stat changes."
+  "effects": {
+   "stageTrick": "copy"
+  }
  },
  {
   "id": "psychic-fangs",
@@ -14523,11 +14575,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Cures paralysis, poison, and burns."
+  "effects": {
+   "cure": "self"
+  }
  },
  {
   "id": "relic-song",
@@ -14560,11 +14612,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User sleeps for 2 turns, but user is fully healed."
+  "effects": {
+   "rest": true
+  }
  },
  {
   "id": "retaliate",
@@ -14682,9 +14734,9 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
+  "effects": {
+   "forceSwitch": true
+  }
  },
  {
   "id": "role-play",
@@ -15107,11 +15159,15 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user and lowers opponent's Speed on contact."
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "stat": "spe",
+    "stages": -1
+   }
+  }
  },
  {
   "id": "silver-wind",
@@ -15511,9 +15567,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot escape/switch."
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "spikes",
@@ -15541,11 +15597,14 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user and inflicts damage on contact."
+  "effects": {
+   "protect": true,
+   "protectContact": {
+    "hurt": 0.125
+   }
+  }
  },
  {
   "id": "spin-out",
@@ -15586,7 +15645,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {}
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "spit-up",
@@ -15616,9 +15677,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The opponent's last move loses 2-5 PP."
+  "effects": {
+   "disrupt": "spite"
+  }
  },
  {
   "id": "splash",
@@ -15630,11 +15691,11 @@
   "pp": 40,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Doesn't do ANYTHING."
+  "effects": {
+   "noop": true
+  }
  },
  {
   "id": "splintered-stormshards",
@@ -15712,9 +15773,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User loses 50% of its HP."
+  "effects": {
+   "recoilMaxHp": 0.5
+  }
  },
  {
   "id": "steel-roller",
@@ -15910,9 +15971,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks first, but only works if opponent is readying an attack."
+  "effects": {
+   "suckerPunch": true
+  }
  },
  {
   "id": "sunsteel-strike",
@@ -15981,9 +16042,13 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Always results in a critical hit and ignores stat changes."
+  "effects": {
+   "alwaysCrit": true,
+   "hits": [
+    3,
+    3
+   ]
+  }
  },
  {
   "id": "swagger",
@@ -16120,11 +16185,25 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Heals user's status conditions and raises its stats."
+  "effects": {
+   "cure": "self",
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "tar-shot",
@@ -16154,9 +16233,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent can only use moves that attack."
+  "effects": {
+   "disrupt": "taunt"
+  }
  },
  {
   "id": "tearful-look",
@@ -16277,11 +16356,11 @@
   "pp": 20,
   "priority": -6,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Allows user to flee wild battles; also warps player to last PokéCenter."
+  "effects": {
+   "switchOut": "switch"
+  }
  },
  {
   "id": "tera-blast",
@@ -16363,7 +16442,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {}
+  "effects": {
+   "trap": true
+  }
  },
  {
   "id": "throat-chop",
@@ -16411,9 +16492,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Strikes before a target's move."
+  "effects": {
+   "suckerPunch": true
+  }
  },
  {
   "id": "tidy-up",
@@ -16457,9 +16538,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Reverses stat changes of opponent."
+  "effects": {
+   "stageTrick": "invert"
+  }
  },
  {
   "id": "torment",
@@ -16473,9 +16554,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot use the same move in a row."
+  "effects": {
+   "disrupt": "torment"
+  }
  },
  {
   "id": "toxic",
@@ -16743,9 +16824,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "User switches out immediately after attacking."
+  "effects": {
+   "switchOut": "switch"
+  }
  },
  {
   "id": "upper-hand",
@@ -16895,10 +16976,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must switch out after attacking."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "switchOut": "switch"
+  }
  },
  {
   "id": "wake-up-slap",
@@ -16978,9 +17061,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
+  "effects": {
+   "forceSwitch": true
+  }
  },
  {
   "id": "wicked-blow",
@@ -16997,9 +17080,9 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Always results in a critical hit and ignores stat changes."
+  "effects": {
+   "alwaysCrit": true
+  }
  },
  {
   "id": "wicked-torque",
@@ -17065,11 +17148,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user recovers HP in the following turn."
+  "effects": {
+   "wish": true
+  }
  },
  {
   "id": "wonder-room",

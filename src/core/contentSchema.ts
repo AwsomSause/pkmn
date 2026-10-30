@@ -185,6 +185,48 @@ export const MoveSchema = z.object({
       endeavor: z.literal(true).optional(),
       /** How the move's power is worked out from the battle (see powerFromRule in the engine). */
       powerRule: PowerRuleSchema.optional(),
+      /** Does nothing at all (Splash, Celebrate). */
+      noop: z.literal(true).optional(),
+      /** Status move: puts the user in a state (Focus Energy, Laser Focus, Lock-On, Ingrain, Aqua Ring, Endure). */
+      selfState: z.enum(['focusEnergy', 'laserFocus', 'lockOn', 'ingrain', 'aquaRing', 'endure']).optional(),
+      /** Rest: sleeps for two turns and heals fully. */
+      rest: z.literal(true).optional(),
+      /** Wish: heals half the user's max HP at the end of the next turn. */
+      wish: z.literal(true).optional(),
+      /** Pain Split: both sides end up with the average of their HP. */
+      painSplit: z.literal(true).optional(),
+      /** Haze / Freezy Frost reset every stat change; Clear Smog resets the target's after its hit. */
+      resetStages: z.enum(['both', 'target']).optional(),
+      /** Psych Up copies the target's stat changes; Topsy-Turvy flips the target's; the swaps trade stages. */
+      stageTrick: z.enum(['copy', 'invert', 'swapAll', 'swapDefense', 'swapOffense']).optional(),
+      /** Cures status in the whole party (Heal Bell) or just the user (Refresh). */
+      cure: z.enum(['party', 'self']).optional(),
+      /** The user leaves the field after the turn (U-turn, Baton Pass: also passes its stat changes). */
+      switchOut: z.enum(['switch', 'baton']).optional(),
+      /** Drags the target out (Roar, Dragon Tail): a trainer sends another Pokémon, the player's is swapped for a random one. */
+      forceSwitch: z.literal(true).optional(),
+      /** The target can't be switched out (Mean Look, Block). */
+      trap: z.literal(true).optional(),
+      /** The user is hurt for half its max HP if the move misses or has no effect (Jump Kick). */
+      crashOnMiss: z.literal(true).optional(),
+      /** Always a critical hit. */
+      alwaysCrit: z.literal(true).optional(),
+      /** If the move knocks the target out, the user's stat rises (Fell Stinger). */
+      koBoost: z.object({ stat: BoostStatSchema, stages: z.number().int() }).optional(),
+      /** Takes hold of the target's last move or its moves (Disable, Encore, Torment, Taunt, Heal Block, Spite). */
+      disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite']).optional(),
+      /** Uses another move: a random one (Metronome), the target's last (Mirror Move), or the last one used by anyone (Copycat). */
+      callMove: z.enum(['metronome', 'mirrorMove', 'copycat']).optional(),
+      /** Which stat the attack uses: the target's Attack (Foul Play), the user's Defense (Body Press), or the higher of Atk and Sp. Atk (Photon Geyser). */
+      attackFrom: z.enum(['targetAtk', 'def', 'best']).optional(),
+      /** Only works on a sleeping target (Dream Eater). */
+      requiresSleepingTarget: z.literal(true).optional(),
+      /** Fails unless the target chose an attack and the user moved first (Sucker Punch, Thunderclap). */
+      suckerPunch: z.literal(true).optional(),
+      /** A protecting move that punishes contact: a stat change, a status, or damage (King's Shield, Baneful Bunker, Spiky Shield). */
+      protectContact: z.object({ stat: BoostStatSchema.optional(), stages: z.number().int().optional(), status: StatusIdSchema.optional(), hurt: z.number().positive().optional() }).optional(),
+      /** Counter and Mirror Coat (and Metal Burst for both): returns the damage the user took this turn, times this. */
+      counter: z.enum(['physical', 'special', 'both']).optional(),
       /** Sets up something on a side of the field: screens, Tailwind, Safeguard on the user's side; hazards on the foe's. */
       sideMove: SideMoveSchema.optional(),
       /** Clears entry hazards: from the user's side (Rapid Spin) or both sides (Defog, Tidy Up). */

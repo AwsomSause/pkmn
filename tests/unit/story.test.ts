@@ -58,13 +58,13 @@ describe('story foundation: random streams', () => {
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '4316a6d325200b9d',
-    'STORY2/0': 'b24024620b22c4cd',
+    'STORY1/0': '1260b7008391176b',
+    'STORY2/0': '76eacdacb832a87a',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
-    'STORY6/0': '6efa1ccc1d950f44',
-    'STORY7/0': 'ca30e9f7e65c56eb',
-    'STORY8/0': '9c19185effaefb06',
+    'STORY6/0': 'ab62f3f3d26fcf70',
+    'STORY7/0': '5b4977f428ca64bd',
+    'STORY8/0': '96f296d09a87b1f1',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.
