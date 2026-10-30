@@ -716,6 +716,8 @@ export const RunPrepSchema = z.object({
   tokenId: z.string().nullable(),
   /** The Research Directive (plan Part 5): a type to study this run for bonus Research Points, or none. */
   directive: TypeNameSchema.nullable(),
+  /** The Field License (Untitled doc §10): one exploration hint for the run, or none. */
+  license: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 
