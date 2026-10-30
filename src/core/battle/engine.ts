@@ -17,13 +17,14 @@
 // when switching out (Regenerator).
 
 import { freshDrama } from '../drama/schema';
-import type { TypeModifiers } from '../archetypes';
+import type { Perks, TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
 import { TYPE_NAMES } from '../contentSchema';
 import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
+import { statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -200,6 +201,8 @@ export interface BattleContext {
   healMultiplier?: number;
   /** The trainer's type-based damage multipliers for the player's side. */
   typeModifiers?: TypeModifiers;
+  /** The trainer's perks (Trainers.md): see core/trainerPerks.ts. */
+  perks?: Perks;
   /** The player's attributes (damage, Speed, damage taken). */
   attributes?: AttributeEffects;
   /** The player's team items (run.passives): the Plates help every team member. */
@@ -1040,7 +1043,7 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
   if (weather) {
     if (ctx.battle.weather?.id === weather) return;
     announce(c, ability, events);
-    if (setWeather(ctx, weather, 5)) events.push({ type: 'weather', weather });
+    if (setWeather(ctx, weather, Held.weatherTurns(ctx, c, weather, 5))) events.push({ type: 'weather', weather });
     return;
   }
   const terrain = TERRAIN_SETTERS[ability];
@@ -1075,7 +1078,7 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
       events.push({ type: 'terrain', terrain: 'electric' });
     } else if (sets.weather && ctx.battle.weather?.id !== 'sun') {
       announce(c, ability, events);
-      setWeather(ctx, 'sun', 5);
+      setWeather(ctx, 'sun', Held.weatherTurns(ctx, c, 'sun', 5));
       events.push({ type: 'weather', weather: 'sun' });
     }
     return;
@@ -1322,19 +1325,43 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move
  * by them) and the attributes (Strength, Intelligence, Rage, Peace). A hit
  * always does at least 1 damage.
  */
-function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean): number {
+function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean, moveType: TypeName): number {
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
+  const perks = ctx.perks;
   const rivalry = rivalryMultiplier(ctx, user, target);
-  if (!mods && !attrs && rivalry === 1) return damage;
+  if (!mods && !attrs && !perks && rivalry === 1) return damage;
   let multiplier = rivalry;
+  const weather = weatherNow(ctx);
+  const weatherName = weather === 'rain' || weather === 'sun' ? weather : null;
   if (user.side === 'player') {
     if (mods) for (const t of getSpecies(ctx.content, user.mon.speciesId).types) multiplier *= mods.damageDealt[t] ?? 1;
     if (attrs) multiplier *= (physical ? attrs.physicalDamage : attrs.specialDamage) * attrs.damageDealt;
+    multiplier *= damageDealtPerk(perks, {
+      userTypes: getSpecies(ctx.content, user.mon.speciesId).types,
+      physical,
+      hpShare: user.mon.hp / Math.max(1, calcStats(ctx.content, user.mon).hp),
+      userLevel: user.mon.level,
+      targetLevel: target.mon.level,
+      targetIsBoss: isBossClass(ctx.battle.trainer?.classId),
+      weather: weatherName,
+      moveType,
+      userBaseSpeed: getSpecies(ctx.content, user.mon.speciesId).baseStats.spe,
+      userIsMega: getSpecies(ctx.content, user.mon.speciesId).form?.kind === 'mega',
+      partyHasMega: ctx.party.some((p) => getSpecies(ctx.content, p.speciesId).form?.kind === 'mega'),
+    });
   }
   if (target.side === 'player') {
-    if (mods && effectiveness > 1) for (const t of getSpecies(ctx.content, target.mon.speciesId).types) multiplier *= mods.weaknessTaken[t] ?? 1;
+    const targetTypes = getSpecies(ctx.content, target.mon.speciesId).types;
+    if (mods && effectiveness > 1) for (const t of targetTypes) multiplier *= mods.weaknessTaken[t] ?? 1;
     if (attrs) multiplier *= attrs.damageTaken;
+    multiplier *= damageTakenPerk(perks, {
+      targetTypes,
+      moveType,
+      attackerIsLegendary: isLegendaryLike(getSpecies(ctx.content, user.mon.speciesId)),
+      attackerIsBoss: isBossClass(ctx.battle.trainer?.classId),
+      weather: weatherName,
+    });
   }
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
 }
@@ -1807,6 +1834,7 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'doubleTargetHurt': return target.vol.tookPhysical + target.vol.tookSpecial > 0 ? base * 2 : base;
     case 'doubleRandom': return ctx.rng.chance(0.3) ? base * 2 : base;
     case 'stockpile': return 100 * user.vol.stockpile;
+    case 'friendship': return Math.max(1, Math.min(102, Math.floor((user.side === 'player' && (ctx.perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled') ? 0 : user.mon.friendship) / 2.5)));
     case 'rageFist': return Math.min(350, 50 + 50 * user.vol.timesHit);
     case 'stompingTantrum': return user.vol.lastFailed ? base * 2 : base;
     case 'lashOut': return user.vol.loweredThisTurn ? base * 2 : base;
@@ -2336,7 +2364,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
         weather: weatherMultiplier(userAbility === 'mega-sol' ? 'sun' : weather, moveType),
         final,
       });
-      damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
+      damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical, moveType);
       const itemMultiplier =
         terrainMultiplier(ctx, user, target, moveType) *
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
@@ -2473,7 +2501,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   // Extra effects only land if the target is still standing. Serene Grace doubles their chances; Shield Dust blocks them.
   const chanceMult = userAbility === 'serene-grace' ? 2 : 1;
   const shielded = foeAbility === 'shield-dust';
-  const roll = (percent: number) => rng.chance(Math.min(100, percent * chanceMult) / 100);
+  const perkChance = user.side === 'player' ? statusChancePerk(ctx.perks, getSpecies(ctx.content, user.mon.speciesId).types) : 1;
+  const roll = (percent: number) => rng.chance(Math.min(100, percent * chanceMult * perkChance) / 100);
   if (target.mon.hp > 0 && !sheerForce && !shielded) {
     if (fx.randomStatus && roll(fx.randomStatus.chance)) {
       const id = fx.randomStatus.ids[rng.int(0, fx.randomStatus.ids.length - 1)]!;
@@ -3917,6 +3946,7 @@ function tryConfuse(ctx: BattleContext, source: Combatant, target: Combatant, ev
     return false;
   }
   target.vol.confusion = ctx.rng.int(2, 5);
+  if (source.side === 'player' && target.side === 'enemy') target.vol.confusion = statusTurnsPerk(ctx.perks, target.vol.confusion);
   events.push({ type: 'confused', side: target.side });
   return true;
 }
@@ -3968,6 +3998,7 @@ function tryInflictStatus(
   if (status === 'slp') {
     // Sleep length (turns skipped) is rolled when it starts.
     target.mon.status.turns = rng.int(content.ruleset.sleepTurnsMin, content.ruleset.sleepTurnsMax);
+    if (source.side === 'player' && target.side === 'enemy') target.mon.status.turns = statusTurnsPerk(ctx.perks, target.mon.status.turns);
   }
   events.push({ type: 'status', side: target.side, status });
   if (status === 'psn' && source !== target && abilityIn(ctx, source) === 'poison-puppeteer') tryConfuse(ctx, source, target, events, false);

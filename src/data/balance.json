@@ -128,6 +128,8 @@
  "dualTypeWeight": 3,
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
+ "legendaryWildChance": 0.02,
+ "legendaryMinRegion": 1,
  "evolution": {
   "trainerItemLevel": 30,
   "trainerBabyLevel": 15

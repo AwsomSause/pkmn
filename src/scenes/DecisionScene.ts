@@ -7,6 +7,7 @@ import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
 import { catchSummary } from '../core/catchSummary';
 import { candiesForRelease } from '../core/encounters';
+import { releaseLimitReached } from '../core/run';
 import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
@@ -293,7 +294,7 @@ export class DecisionScene extends Phaser.Scene {
     const keepsakeText = `${keepsake} cand${keepsake === 1 ? 'y' : 'ies'}`;
     const options = [
       { label: full ? 'Replace a party Pokémon' : 'Add to party' },
-      ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : [{ label: `Release it (+${candyText})` }]),
+      ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : releaseLimitReached(content, session.run!) ? [] : [{ label: `Release it (+${candyText})` }]),
     ];
     drawPanel(this, 400, 345, 520, past ? 170 : 130);
     this.menu = new Menu(this, {
