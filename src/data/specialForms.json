@@ -8,7 +8,9 @@
         "runEvent",
         "gameEvent",
         "researchQuest",
-        "starterSet"
+        "starterSet",
+        "npcTrade",
+        "egg"
       ]
     },
     "zform": {
@@ -18,7 +20,9 @@
         "runEvent",
         "gameEvent",
         "bossReward",
-        "starterSet"
+        "starterSet",
+        "npcTrade",
+        "egg"
       ]
     },
     "spooky": {
@@ -27,7 +31,9 @@
       "routes": [
         "gameEvent",
         "spookyMode",
-        "starterSet"
+        "starterSet",
+        "npcTrade",
+        "egg"
       ]
     },
     "regional": {
@@ -53,11 +59,11 @@
     },
     "npcTrade": {
       "status": "limited",
-      "note": "The Trade Post offers a regional form about 1 trade in 4 (services.json tradeSpecialChance). Delta and Z forms are not traded."
+      "note": "The Trade Post offers a regional form about 1 trade in 4 (services.json tradeSpecialChance). Delta, Z and Spooky forms join that pool once the run has won that family's route battle (core/services/flow.ts openFormFamilies)."
     },
     "egg": {
       "status": "limited",
-      "note": "The Nursery sells a Regional Egg that hatches a regional first-stage form (core/eggs.ts layEgg). Delta, Spooky and Z forms do not come from eggs yet."
+      "note": "The Nursery sells a Regional Egg (regional first-stage form) and, after the run has won a family's route battle, a Delta, Z-Form or Spooky Egg (services.json formEgg 1200, core/eggs.ts layEgg). Z eggs hatch only forms that are their own family root."
     },
     "researchQuest": {
       "status": "limited",

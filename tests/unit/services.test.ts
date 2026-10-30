@@ -279,6 +279,39 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(specialFamily(content.species.get(egg.speciesId)!)).toBe('regional');
     expect(() => useService(content, out.run, 'svc-test', 'egg')).toThrow();
   });
+  it('Delta, Z and Spooky eggs stay locked until that route battle is won', () => {
+    for (const [family, flag, source] of [['delta', 'ev:delta-met', 'Delta Egg'], ['zform', 'ev:z-met', 'Z-Form Egg'], ['spooky', 'ev:spooky-met', 'Spooky Egg']] as const) {
+      const locked = stopRun('nursery');
+      locked.money = 9000;
+      expect(serviceView(content, locked, 'svc-test').options.map((o) => o.id)).not.toContain(`formegg:${family}`);
+      expect(() => useService(content, locked, 'svc-test', `formegg:${family}`)).toThrow();
+      const run = stopRun('nursery');
+      run.money = 9000;
+      run.story.flags[flag] = 1;
+      expect(serviceView(content, run, 'svc-test').options.map((o) => o.id)).toContain(`formegg:${family}`);
+      const out = useService(content, run, 'svc-test', `formegg:${family}`);
+      const egg = out.run.eggs[out.run.eggs.length - 1]!;
+      expect(egg.source).toBe(source);
+      expect(specialFamily(content.species.get(egg.speciesId)!)).toBe(family);
+    }
+  });
+  it('the Trade Post offers a Delta, Z or Spooky form only after that route battle', () => {
+    const run = stopRun('trade');
+    for (let i = 0; i < 300; i++) {
+      const to = tradeOffer(content, run, `t${i}`, run.party[0]!);
+      if (to) expect(['regional', null]).toContain(specialFamily(getSpecies(content, to)));
+    }
+    run.story.flags['ev:delta-met'] = 1;
+    run.story.flags['ev:z-met'] = 1;
+    run.story.flags['ev:spooky-met'] = 1;
+    const seen = new Set<string>();
+    for (let i = 0; i < 1500; i++) {
+      const to = tradeOffer(content, run, `t${i}`, run.party[0]!);
+      const fam = to ? specialFamily(getSpecies(content, to)) : null;
+      if (fam) seen.add(fam);
+    }
+    expect(seen.has('delta') || seen.has('zform') || seen.has('spooky')).toBe(true);
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
