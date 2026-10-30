@@ -58,7 +58,7 @@ Each move tries, in order: the director's Essentials pack animation (\`ess-*\`, 
 
 ## Known limits
 
-- **Z-Moves and Max/G-Max Moves** borrow a same-type animation: none of the packs (Essentials 21.1 UIE, EBDX, Deluxe Battle Kit, Enhanced Battle UI, Raid Battles) has attack animations for them. Their transformation moments have their own sequences instead.
+- **Z-Moves and Max/G-Max Moves** borrow a same-type animation: none of the packs (Essentials 21.1 UIE, EBDX, Deluxe Battle Kit, Enhanced Battle UI, Raid Battles) has attack animations for them. They add the signature family burst on top, and their transformation moments have their own cinematics (\`src/ui/battleFx/cinematics.ts\`).
 - **EBDX's 442 scripted move animations** are Ruby code, not frame data, so they are not played; their graphics are reused for effects.
 - Essentials' per-sprite colour overlay isn't carried over (darkening tones are).
 

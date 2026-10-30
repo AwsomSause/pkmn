@@ -30,6 +30,14 @@ const textureOf = (page: Page) =>
 const menuLabels = (page: Page) =>
   page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').menu?.config?.options?.map((o: any) => o.label) ?? null);
 
+/** Waits for a transformation cinematic (battleFx/cinematics.ts) to be on screen, then screenshots it. */
+async function seeCinematic(page: Page, kind: string, shot: string, after = 900) {
+  const showing = () => page.evaluate((k) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((c: any) => c.name === `cine-${k}`), kind);
+  await expect.poll(showing, { timeout: 15_000 }).toBe(true);
+  await page.waitForTimeout(after);
+  await page.screenshot({ path: `test-results/${shot}.png` });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
@@ -60,6 +68,8 @@ test('Mega Evolution happens by itself in battle', async ({ page }) => {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
+  // The EBDX crystal builds around Venusaur and shatters into the new form.
+  await seeCinematic(page, 'mega', 'm8_5-mega-crystal', 1000);
   await expect.poll(() => textureOf(page), { timeout: 15_000 }).toBe('pokemon.back.3-mega');
   await page.screenshot({ path: 'test-results/m8_5-mega-venusaur.png' });
   expect(await page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId)).toBe('venusaur-mega');
@@ -98,6 +108,7 @@ test('Terastallization from the battle menu', async ({ page }) => {
       const { session } = (window as any).__pkr;
       return session.run.battle?.transform.teraTypes[session.run.party[0].uid] ?? null;
     });
+  await seeCinematic(page, 'tera', 'm8_5-tera-cinematic', 600);
   await expect.poll(teraType, { timeout: 15_000 }).toBe('water');
   await page.waitForTimeout(2500);
   await page.screenshot({ path: 'test-results/m8_5-tera-charizard.png' });
@@ -136,6 +147,7 @@ test('Z-Move from the battle menu', async ({ page }) => {
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
   const used = () => page.evaluate(() => (window as any).__pkr.session.run.battle?.transform.used.player ?? null);
+  await seeCinematic(page, 'zmove', 'm8_5-zmove-cinematic');
   await expect.poll(used, { timeout: 15_000 }).toEqual(['zmove']);
   await page.waitForTimeout(1500);
   await page.screenshot({ path: 'test-results/m8_5-zmove-used.png' });
@@ -173,6 +185,7 @@ test('Gigantamax from the battle menu', async ({ page }) => {
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');
   const species = () => page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId);
+  await seeCinematic(page, 'gigantamax', 'm8_5-gmax-cinematic', 600);
   await expect.poll(species, { timeout: 15_000 }).toBe('charizard-gmax');
   await expect.poll(() => textureOf(page), { timeout: 15_000 }).toBe('pokemon.back.6-gigantamax');
   await page.waitForTimeout(2500);

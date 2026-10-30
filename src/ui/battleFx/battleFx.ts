@@ -229,6 +229,8 @@ export class BattleFx {
     );
     await this.current.done;
     this.current = null;
+    // Z-Moves and Max Moves borrow another move's animation; their signature burst goes on top.
+    if (family === 'signature' && !this.skipping) await this.familyFallback(userVisual, targetVisual, color, family);
   }
 
   private async commonAnim(side: Side, name: string, alt?: string): Promise<void> {
@@ -243,8 +245,8 @@ export class BattleFx {
 
   /** When no animation file can play: the move's family effect (Visual Bible §4.4) in its type colour. */
   private async familyFallback(user: Visual, target: Visual, color: string, family: FamilyId): Promise<void> {
-    const speed = { normal: 1, fast: 2, quick: 3 }[this.settings.battleSpeed];
-    const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: this.settings.effectIntensity, speed }, family);
+    // speed 1: the battle scene's clock already runs at the battle speed.
+    const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: this.settings.effectIntensity, speed: 1 }, family);
     // Skipping cuts the wait; the effect cleans itself up.
     await Promise.race([done, new Promise<void>((resolve) => { const check = () => (this.skipping ? resolve() : this.scene.time.delayedCall(50, check)); check(); })]);
   }

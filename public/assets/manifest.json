@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T15:52:37.112Z",
+  "generatedAt": "2026-10-30T16:22:07.686Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -368,6 +368,142 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/dbk/pulse.png"
+    },
+    {
+      "id": "cine.primega.mega",
+      "kind": "atlas",
+      "category": "ui",
+      "path": "images/packs/ebdx/primega/mega.png",
+      "atlasPath": "images/packs/ebdx/primega/mega.json",
+      "lazy": true
+    },
+    {
+      "id": "cine.primega.alpha",
+      "kind": "atlas",
+      "category": "ui",
+      "path": "images/packs/ebdx/primega/alpha.png",
+      "atlasPath": "images/packs/ebdx/primega/alpha.json",
+      "lazy": true
+    },
+    {
+      "id": "cine.primega.omega",
+      "kind": "atlas",
+      "category": "ui",
+      "path": "images/packs/ebdx/primega/omega.png",
+      "atlasPath": "images/packs/ebdx/primega/omega.json",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.max.bg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/max/bg.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.max.icon",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/max/icon.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.max.spiral",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/max/spiral.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.max.spiral2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/max/spiral2.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.ultra.bg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/ultra/bg.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.ultra.icon",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/ultra/icon.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.tera.bg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/tera/bg.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.tera.icon",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/tera/icon.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.tera.spiral",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/tera/spiral.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.transitions.black_bars",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/transitions/black_bars.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.transitions.impact",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/transitions/impact.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.raid.transitions.shine",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/transitions/shine.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.dbk.mega.orb_1",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/mega/orb_1.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.dbk.mega.shine",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/mega/shine.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.dbk.primal.icon_groudon",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/primal/icon_groudon.png",
+      "lazy": true
+    },
+    {
+      "id": "cine.dbk.primal.icon_kyogre",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/primal/icon_kyogre.png",
+      "lazy": true
     },
     {
       "id": "item.scanner",
