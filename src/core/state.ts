@@ -351,6 +351,8 @@ export const BattleStateSchema = z.object({
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
   raid: RaidBattleSchema.optional(),
+  /** A battle an event started: no reward draft after it, and `win` effects if you win (events.json). */
+  event: z.object({ eventId: z.string(), choiceIndex: z.number().int().min(0), sideId: z.string(), success: z.boolean() }).optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -358,11 +360,15 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'event']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
-  /** A healing stop and a fishing spot work once; a shop can be visited again. */
+  /** A healing stop, a fishing spot and an event work once; a shop can be visited again. */
   used: z.boolean(),
+  /** An event stop's event (events.json). */
+  eventId: z.string().optional(),
+  /** A hidden event shows as "?" until the player reaches its node (or Intelligence or a Silph Scope reveals it). */
+  hidden: z.boolean().optional(),
 });
 export type SideStop = z.infer<typeof SideStopSchema>;
 

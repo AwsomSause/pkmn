@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 13, settings 3, meta 1. Next free run version: 14 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 14, settings 3, meta 1. Next free run version: 15 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -19,6 +19,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Untitled doc Phase B (trainer bands): `trainerTeam.earlyCaps` = stage 1 has 1 Pokémon, stages 2–6 cap 2–4. NPC classes audit: 17 classes use existing sprites; no new classes yet.
 - M9 battle animations + settings; boss teams (229 bosses).
 - Starter Sets slice 1 (plan `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md`): Starter Laboratory has 70 sets in 10 categories (all regions, 18 types, roles, player trainers, 10 villainous teams, 9 Leagues, 7 spin-off games). Pools can list evolved species, bosses or a type/region filter (`core/runPrep.ts eligibleSpecies`).
+- Map events (plan Part 3, Kice's "Events and map stops plan"): 170 events in `events.json` (built by `npm run data:events` from `tools/events/*.ts`): every plan event, one per type, map stops, rest spots (2 per stage), and one event for each of the 30 key items/tickets. 3–5 "!"/"?" stops per stage (`core/events.ts`), animated `EventScene`. Silph Scope, Inquiry Mail, Bridge Mail V, Explorer Kit, Prop Case, Tidal/Clear Bell work. Run save v14.
 - Trainer identity (plan Part 2a): signature types/species/set on `archetypes.json`; a signature Pokémon may take the last starter slot (50%, own seed, never forced); Cynthia (sees gym teams), Oak (+50% Research Points, sees wild Pokémon, −15% money) and N (+50% friendship) are playable.
 - M10 visual slice 1 (Aero battle): glass message bar, databoxes and command window (`src/ui/aero.ts`), glossy type-tinted buttons (opt-in `glass` on `Menu`), Essentials type/category/status art, arena ambience from EBDX scenery (`battleFx/ambience.ts`), bouncy send-out + idle breathing. Respects battleAnimations (reduced = still, off = none). Provenance: `docs/quality/asset-provenance.md`. Hub/TrainerSelect untouched.
 

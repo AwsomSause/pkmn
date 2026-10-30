@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 13, settings: 3, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 14, settings: 3, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -205,6 +205,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v13 (raids): the run's raid record.
     12: (data) => ({ ...(data as Json), raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] } }),
+    // v14 (map events): event stops and event battles are new optional fields, so older runs load as they are.
+    13: (data) => data,
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.
