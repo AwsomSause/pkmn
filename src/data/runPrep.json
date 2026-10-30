@@ -1993,6 +1993,306 @@
     "atLeast": 400
    },
    "unlockText": "Defeat 400 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-carmine",
+   "name": "Carmine’s Team",
+   "description": "Pokémon from Carmine’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "carmine"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 410
+   },
+   "unlockText": "Defeat 410 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cheren",
+   "name": "Cheren’s Team",
+   "description": "Pokémon from Cheren’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cheren"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 420
+   },
+   "unlockText": "Defeat 420 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cheryl",
+   "name": "Cheryl’s Team",
+   "description": "Pokémon from Cheryl’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cheryl"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 430
+   },
+   "unlockText": "Defeat 430 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-chili",
+   "name": "Chili’s Team",
+   "description": "Pokémon from Chili’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "chili"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 440
+   },
+   "unlockText": "Defeat 440 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-chuck",
+   "name": "Chuck’s Team",
+   "description": "Pokémon from Chuck’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "chuck"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 450
+   },
+   "unlockText": "Defeat 450 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cilan",
+   "name": "Cilan’s Team",
+   "description": "Pokémon from Cilan’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cilan"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 460
+   },
+   "unlockText": "Defeat 460 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-clair",
+   "name": "Clair’s Team",
+   "description": "Pokémon from Clair’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "clair"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 470
+   },
+   "unlockText": "Defeat 470 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-clay",
+   "name": "Clay’s Team",
+   "description": "Pokémon from Clay’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "clay"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 480
+   },
+   "unlockText": "Defeat 480 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-clemont",
+   "name": "Clemont’s Team",
+   "description": "Pokémon from Clemont’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "clemont"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 490
+   },
+   "unlockText": "Defeat 490 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cogita",
+   "name": "Cogita’s Team",
+   "description": "Pokémon from Cogita’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cogita"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 500
+   },
+   "unlockText": "Defeat 500 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-colress",
+   "name": "Colress’s Team",
+   "description": "Pokémon from Colress’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "colress"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 510
+   },
+   "unlockText": "Defeat 510 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-crasher-wake",
+   "name": "Crasher Wake’s Team",
+   "description": "Pokémon from Crasher Wake’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "crasher-wake"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 520
+   },
+   "unlockText": "Defeat 520 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cress",
+   "name": "Cress’s Team",
+   "description": "Pokémon from Cress’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cress"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 530
+   },
+   "unlockText": "Defeat 530 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cynthia-gen-7",
+   "name": "Cynthia (Gen 7)’s Team",
+   "description": "Pokémon from Cynthia (Gen 7)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cynthia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 540
+   },
+   "unlockText": "Defeat 540 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cynthia-masters",
+   "name": "Cynthia (Masters)’s Team",
+   "description": "Pokémon from Cynthia (Masters)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cynthia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 550
+   },
+   "unlockText": "Defeat 550 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cynthia-masters-4",
+   "name": "Cynthia (Masters 4)’s Team",
+   "description": "Pokémon from Cynthia (Masters 4)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cynthia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 560
+   },
+   "unlockText": "Defeat 560 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-cyrus",
+   "name": "Cyrus’s Team",
+   "description": "Pokémon from Cyrus’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cyrus"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 570
+   },
+   "unlockText": "Defeat 570 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-dawn-gen-4-platinum",
+   "name": "Dawn (Gen 4 Platinum)’s Team",
+   "description": "Pokémon from Dawn (Gen 4 Platinum)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "dawn"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 580
+   },
+   "unlockText": "Defeat 580 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-dawn",
+   "name": "Dawn’s Team",
+   "description": "Pokémon from Dawn’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "dawn"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 590
+   },
+   "unlockText": "Defeat 590 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-diantha",
+   "name": "Diantha’s Team",
+   "description": "Pokémon from Diantha’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "diantha"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 600
+   },
+   "unlockText": "Defeat 600 trainers in total across your runs"
   }
  ],
  "draftRules": [

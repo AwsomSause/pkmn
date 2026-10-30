@@ -47,7 +47,7 @@ import { teraTypeOf } from '../items';
 import type { Perks } from '../archetypes';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import { effectiveHeld } from './held';
-import { megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
+import { megaDelayTurns, megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
@@ -90,6 +90,7 @@ export interface TransformContext {
   party: PokemonInstance[];
   inventory: Record<string, number>;
   disabledMechanics?: readonly TransformKind[];
+  perks?: Perks;
 }
 
 const owns = (inventory: Record<string, number>, id: string) => (inventory[id] ?? 0) > 0;
@@ -368,7 +369,7 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
     const orb = megaOn ? stoneForms(content, player.speciesId, true).find((o) => o.itemId && owns(ctx.inventory, o.itemId)) : undefined;
     const form = orb ? null : permanentForm(content, ctx.inventory, player, ctx.disabledMechanics);
     if (orb) changeForm(ctx, 'player', player, 'primal', orb, events);
-    else if (form) changeForm(ctx, 'player', player, form.kind, form.option, events);
+    else if (form && (form.kind !== 'mega' || battle.playerVolatile.turnsOut >= megaDelayTurns(ctx.perks))) changeForm(ctx, 'player', player, form.kind, form.option, events);
   }
   if (enemy.hp > 0 && !battle.transform.forms[enemy.uid] && enemyMay(enemy)) {
     const orb = stoneForms(content, enemy.speciesId, true)[0];
