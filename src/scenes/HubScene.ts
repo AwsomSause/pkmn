@@ -9,10 +9,10 @@ import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, g
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
-import { topMoves } from '../core/moveMastery';
+import { moveLore, moveRank, topMoves } from '../core/moveMastery';
 import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
-import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
+import { arenasOpen, CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
@@ -456,6 +456,8 @@ export class HubScene extends Phaser.Scene {
         y = this.line(y, `Title: ${p.activeTitle ?? 'none'}`, 16);
         y = this.line(y, `Frame: ${frame.name}`, 16, frame.color);
         y = this.line(y, `${CARD_FRAMES.filter((f) => frameOpen(p, f)).length}/${CARD_FRAMES.length} frames open`, 14, COLORS.textMuted);
+        const stamps = Object.entries(p.stamps ?? {});
+        y = this.line(y, stamps.length ? `Stamps: ${stamps.map(([n, c]) => `${n} ×${c}`).join(' · ')}` : 'Stamps: none yet', 14, COLORS.textMuted);
         break;
       }
       case 'mastery': {
@@ -671,6 +673,20 @@ export class HubScene extends Phaser.Scene {
         },
       });
     }
+    // Move pages (#107): the moves you have used most, with the lore their rank has opened.
+    for (const m of topMoves(p, 12)) {
+      const mv = session.content.moves.get(m.moveId);
+      if (!mv) continue;
+      const lore = moveLore(session.content, m.moveId, m.rank);
+      rows.push({
+        problem: null,
+        hint: lore.length ? lore.join('  ·  ') : `Use it ${10 - m.uses} more times in trainer fights to open its page.`,
+        draw: (scene, box, w) => {
+          box.add(scene.add.text(12, 6, `Move: ${mv.name}`, textStyle(19, m.rank === 'none' ? COLORS.textLight : COLORS.gold)));
+          box.add(scene.add.text(12, 32, `${m.uses} uses · ${m.rank === 'none' ? 'no rank yet' : m.rank}`, textStyle(14, COLORS.textMuted, { wordWrap: { width: w - 24 } })));
+        },
+      });
+    }
     this.openPicker({
       title: paid.length ? `Research Room  ·  +${paid.reduce((n, x) => n + x.researchPoints, 0)} Research Points (${paid.map((x) => `${x.setName} ${x.pct}%`).join(', ')})` : 'Research Room',
       rows,
@@ -694,10 +710,13 @@ export class HubScene extends Phaser.Scene {
     const { session } = services();
     const p = session.profile;
     const motion = session.settings.battleAnimations;
-    const choices: ({ kind: 'title'; title: string | null } | { kind: 'frame'; frame: CardFrame })[] = [
+    const arenaIds = services().assets.entries().map((e) => e.id).filter((id) => /^bg\.arena\.[a-z_]+$/.test(id)).sort();
+    const choices: ({ kind: 'title'; title: string | null } | { kind: 'frame'; frame: CardFrame } | { kind: 'arena'; key: string | null })[] = [
       { kind: 'title', title: null },
       ...p.titles.map((title) => ({ kind: 'title' as const, title })),
       ...CARD_FRAMES.map((frame) => ({ kind: 'frame' as const, frame })),
+      { kind: 'arena' as const, key: null },
+      ...arenaIds.map((key) => ({ kind: 'arena' as const, key })),
     ];
     const rows: PickerRow[] = choices.map((c) => {
       if (c.kind === 'title') {
@@ -708,6 +727,19 @@ export class HubScene extends Phaser.Scene {
           draw: (scene, box, w, h) => {
             box.add(scene.add.text(12, h / 2, `Title: ${c.title ?? 'none'}`, textStyle(17, on ? COLORS.gold : COLORS.textLight)).setOrigin(0, 0.5));
             if (on) box.add(scene.add.text(w - 12, h / 2, 'ON', textStyle(15, COLORS.good)).setOrigin(1, 0.5));
+          },
+        };
+      }
+      if (c.kind === 'arena') {
+        const open = c.key === null || arenasOpen(p);
+        const on = (p.menuArena ?? null) === c.key;
+        const name = c.key === null ? 'Title screen: all arenas' : `Title screen: ${c.key.replace('bg.arena.', '').replaceAll('_', ' ')}`;
+        return {
+          problem: open ? null : 'Earn a run-end stamp to open the arenas.',
+          hint: open ? 'The arena behind the title screen. Enter picks it.' : 'Locked: earn a run-end stamp (win a run, finish untouched...).',
+          draw: (scene, box, w, h) => {
+            box.add(scene.add.text(12, h / 2, name, textStyle(17, open ? (on ? COLORS.gold : COLORS.textLight) : COLORS.textMuted)).setOrigin(0, 0.5));
+            box.add(scene.add.text(w - 12, h / 2, on ? 'ON' : open ? '' : 'locked', textStyle(14, on ? COLORS.good : COLORS.textMuted)).setOrigin(1, 0.5));
           },
         };
       }
@@ -739,6 +771,9 @@ export class HubScene extends Phaser.Scene {
         if (c.kind === 'title') {
           session.setActiveTitle(c.title);
           this.restart(c.title ? `Now showing the title "${c.title}".` : 'No title on show.', 'wardrobe');
+        } else if (c.kind === 'arena') {
+          session.setMenuArena(c.key);
+          this.restart(c.key ? 'The title screen now shows that arena.' : 'The title screen cycles through all arenas.', 'wardrobe');
         } else {
           session.setCardFrame(c.frame.id);
           this.restart(`Your card now wears the ${c.frame.name} frame.`, 'wardrobe');

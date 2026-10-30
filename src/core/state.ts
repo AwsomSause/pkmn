@@ -1069,6 +1069,10 @@ export const ProfileSchema = z.object({
   claims: z.record(z.string(), z.object({ at: z.string() })),
   /** Move Mastery (core/moveMastery.ts): how often each damaging move was used in trainer fights, over all finished runs. */
   moveUses: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** Run-end stamps collected (core/recap.ts runStamps): how many runs earned each. */
+  stamps: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** The title-screen arena you chose in the Wardrobe (a bg.arena.* key), or unset to cycle through them all. */
+  menuArena: z.string().optional(),
   /** Counters summed over the runs played as each trainer, and their best single run (for quest lines). */
   trainerCounters: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),

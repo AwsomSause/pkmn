@@ -27,7 +27,7 @@ export class MainMenuScene extends Phaser.Scene {
     playMusic(this, 'bgm.menu');
 
     // A battlefield that cycles through the arenas, with a Pokémon on show.
-    new ArenaBackdrop(this, { platformAt: { x: 740, y: 330 } });
+    new ArenaBackdrop(this, { platformAt: { x: 740, y: 330 }, only: session.profile.menuArena });
     const shade = this.add.graphics().setDepth(-20);
     for (let i = 0; i < 20; i++) {
       shade.fillStyle(0x0e0b12, 0.6 * (1 - i / 20));

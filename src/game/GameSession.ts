@@ -9,7 +9,7 @@
 import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
-import { setCardFrame } from '../core/wardrobe';
+import { setCardFrame, setMenuArena } from '../core/wardrobe';
 import { buyNote } from '../core/researchNotes';
 import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
@@ -420,6 +420,12 @@ export class GameSession {
 
   setActiveTitle(title: string | null): void {
     this.profile = setActiveTitle(this.profile, title);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  setMenuArena(key: string | null): void {
+    this.profile = setMenuArena(this.profile, key);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }
