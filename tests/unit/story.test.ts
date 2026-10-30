@@ -59,7 +59,7 @@ describe('story foundation: random streams', () => {
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': 'a97e64571d1c05a2',
-    'STORY2/0': '26bfbd40146611ce',
+    'STORY2/0': 'dd0405448f18d4c0',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
     'STORY6/0': 'ab62f3f3d26fcf70',

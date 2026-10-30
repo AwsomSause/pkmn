@@ -140,6 +140,15 @@ export const UNTRACEABLE = new Set(['trace', 'multitype', 'stance-change', 'scho
 /** A contact move on it gives the attacker this ability. */
 export const SPREADS_ON_CONTACT = new Set(['mummy', 'lingering-aroma']);
 
+/** Ruin abilities: every other Pokémon's stat is 0.75× while this one is out. */
+export const RUINS: Record<string, 'atk' | 'def' | 'spa' | 'spd'> = { 'tablets-of-ruin': 'atk', 'sword-of-ruin': 'def', 'vessel-of-ruin': 'spa', 'beads-of-ruin': 'spd' };
+
+/** The foe can't switch out (Ghost types are free): Shadow Tag all, Arena Trap grounded, Magnet Pull Steel. */
+export const TRAPPERS = new Set(['shadow-tag', 'arena-trap', 'magnet-pull']);
+
+/** After a damaging hit that drops it under half HP, it raises this stat once. */
+export const HALF_HP_BOOST: Record<string, { stat: BoostStat; stages: number }> = { berserk: { stat: 'spa', stages: 1 }, 'anger-shell': { stat: 'atk', stages: 1 } };
+
 /** Abilities the battle engine runs. */
 const SUPPORTED = new Set<string>([
   ...Object.keys(PINCH),
@@ -164,6 +173,11 @@ const SUPPORTED = new Set<string>([
   ...Object.keys(ENTRY_BOOST),
   ...PRIORITY_GUARD,
   ...SPREADS_ON_CONTACT,
+  ...Object.keys(RUINS),
+  ...TRAPPERS,
+  ...Object.keys(HALF_HP_BOOST),
+  'neutralizing-gas', 'eelevate', 'guard-dog', 'color-change', 'cursed-body', 'perish-body', 'cotton-down', 'toxic-debris',
+  'piercing-drill', 'unseen-fist', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
   'cloud-nine', 'air-lock', 'trace', 'protean', 'libero', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',

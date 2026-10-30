@@ -54,6 +54,9 @@ import {
   DROP_GUARD,
   FLAG_BOOST,
   HIT_BOOST,
+  HALF_HP_BOOST,
+  RUINS,
+  TRAPPERS,
   INTIMIDATE_GUARD,
   KO_BOOST,
   MOLD_BREAKERS,
@@ -289,7 +292,7 @@ function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): nu
     if (m.category === 'status') return 0;
     const effectiveness = m.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, m.type, targetSpecies.types);
     // It knows the obvious ability immunities (Levitate, Volt Absorb, Wonder Guard).
-    if (targetAbilityId && (ABSORB[targetAbilityId]?.type === m.type || (targetAbilityId === 'levitate' && m.type === 'ground') || (targetAbilityId === 'wonder-guard' && effectiveness <= 1))) return 0;
+    if (targetAbilityId && (ABSORB[targetAbilityId]?.type === m.type || ((targetAbilityId === 'levitate' || targetAbilityId === 'eelevate') && m.type === 'ground') || (targetAbilityId === 'wonder-guard' && effectiveness <= 1))) return 0;
     // A two-turn move is worth about half as much per turn.
     const power = (m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0)) * (m.effects.charge ? 0.5 : 1);
     const ratio = m.category === 'physical' ? userStats.atk / targetStats.def : userStats.spa / targetStats.spd;
@@ -351,6 +354,14 @@ export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Par
   if (!ctx.battle.needsSwitch && !shedShell && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
   if (!ctx.battle.needsSwitch && forcedMoveId(ctx.battle.playerVolatile)) return 'Your Pokémon is in the middle of a move!';
   if (!ctx.battle.needsSwitch && !shedShell && ctx.battle.playerVolatile?.trapped) return "Your Pokémon can't be switched out!";
+  if (!ctx.battle.needsSwitch && !shedShell && active && 'content' in ctx && ctx.content) {
+    const foeMon = currentEnemy(ctx.battle);
+    const trapper = foeMon.hp > 0 ? (ctx.battle.enemyVolatile.abilityOverride ?? abilityOf(ctx.content, foeMon)) : null;
+    const types = getSpecies(ctx.content, active.speciesId).types;
+    const grounded = !types.includes('flying') && abilityOf(ctx.content, active) !== 'levitate';
+    const caught = trapper === 'shadow-tag' ? abilityOf(ctx.content, active) !== 'shadow-tag' : trapper === 'arena-trap' ? grounded : trapper === 'magnet-pull' ? types.includes('steel') : false;
+    if (trapper && TRAPPERS.has(trapper) && caught && !types.includes('ghost')) return `The foe's ${trapper.replace(/-/g, ' ')} keeps you from switching out!`;
+  }
   return null;
 }
 
@@ -673,7 +684,14 @@ function weatherNow(ctx: BattleContext): Weather | null {
 }
 
 function abilityIn(ctx: BattleContext, c: Combatant): string | null {
-  return c.vol.abilityOverride ?? abilityOf(ctx.content, c.mon);
+  const own = c.vol.abilityOverride ?? abilityOf(ctx.content, c.mon);
+  if (own === 'neutralizing-gas') return own;
+  // Neutralizing Gas on either side switches every other ability off.
+  const { battle, party, content } = ctx;
+  const mine = party[battle.activeIndex];
+  const gas = (mon: PokemonInstance | undefined, v: { abilityOverride: string | null }) => mon && mon.hp > 0 && (v.abilityOverride ?? abilityOf(content, mon)) === 'neutralizing-gas';
+  if (gas(mine, battle.playerVolatile) || gas(currentEnemy(battle), battle.enemyVolatile)) return null;
+  return own;
 }
 
 /** The target's ability as the attacker's move sees it: Mold Breaker ignores it. */
@@ -777,6 +795,11 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
       events.push({ type: 'fail', side: other.side });
       return;
     }
+    if (guard === 'guard-dog') {
+      announce(other, guard, events);
+      applyStageChange(ctx, other, 'atk', 1, events);
+      return;
+    }
     applyStageChange(ctx, other, 'atk', -1, events, c);
     if (guard === 'rattled') applyStageChange(ctx, other, 'spe', 1, events);
     return;
@@ -830,7 +853,7 @@ function abilityBlocksMove(ctx: BattleContext, user: Combatant, target: Combatan
     }
     return true;
   }
-  if (damaging && ability === 'levitate' && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
+  if (damaging && (ability === 'levitate' || ability === 'eelevate') && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
   if (damaging && ability === 'wonder-guard' && effectiveness <= 1 && !move.flags.includes('typeless')) blocked = true;
   if (ability === 'soundproof' && move.flags.includes('sound')) blocked = true;
   if (ability === 'good-as-gold' && !damaging) blocked = true;
@@ -1516,7 +1539,13 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     return;
   }
   // Z-Moves go through Protect for a quarter of their damage (see the damage step).
-  if (targetsEnemy && target.protected && !fx.breaksProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
+  const piercesProtect = move.flags.includes('contact') && (userAbility === 'unseen-fist' || userAbility === 'piercing-drill');
+  if (targetsEnemy && move.category === 'status' && user !== target && foeAbility === 'magic-bounce' && userAbility !== 'magic-bounce' && !target.protected) {
+    announce(target, 'magic-bounce', events);
+    applyStatusMove(ctx, target, user, move, events);
+    return;
+  }
+  if (targetsEnemy && target.protected && !fx.breaksProtect && !piercesProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
     events.push({ type: 'protected', side: target.side });
     const punish = PROTECT_CONTACT.get(target);
     if (punish && move.flags.includes('contact') && user.mon.hp > 0) {
@@ -1594,8 +1623,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   // The move's type: Weather Ball follows the weather; Pixilate and friends turn Normal moves into their type.
   const baseType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
   const typeChange = userAbility ? TYPE_CHANGE[userAbility] : undefined;
-  const changedType = typeChange !== undefined && baseType === 'normal' && !move.flags.includes('typeless');
-  const moveType = changedType ? typeChange : baseType;
+  const liquid = userAbility === 'liquid-voice' && move.flags.includes('sound') && !move.flags.includes('typeless');
+  const normalized = userAbility === 'normalize' && baseType !== 'normal' && !move.flags.includes('typeless');
+  const changedType = liquid || normalized || (typeChange !== undefined && baseType === 'normal' && !move.flags.includes('typeless'));
+  const moveType = liquid ? 'water' : normalized ? 'normal' : changedType ? typeChange! : baseType;
   const targetTypes = battleTypes(content, ctx.battle, target.mon);
   // Scrappy: Normal and Fighting moves hit Ghost types.
   const hitTypes = userAbility === 'scrappy' && (moveType === 'normal' || moveType === 'fighting') ? targetTypes.filter((t) => t !== 'ghost') : targetTypes;
@@ -1691,6 +1722,11 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       let attackMult = attackBoost;
       if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
       if (physical && userAbility === 'hustle') attackMult *= 1.5;
+      if (foeAbility && RUINS[foeAbility] === (physical ? 'atk' : 'spa')) attackMult *= 0.75;
+      if (userAbility === 'supreme-overlord') {
+        const fallen = ctx.party.filter((m) => m.hp <= 0).length;
+        attackMult *= 1 + 0.1 * Math.min(5, user.side === 'player' ? fallen : ctx.battle.enemyTeam.filter((m) => m.hp <= 0).length);
+      }
       if (physical && userAbility === 'guts' && userStatus) attackMult *= 1.5;
       if (physical && userAbility === 'toxic-boost' && userStatus === 'psn') attackMult *= 1.5;
       if (!physical && userAbility === 'flare-boost' && userStatus === 'brn') attackMult *= 1.5;
@@ -1708,6 +1744,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'marvel-scale' && target.mon.status) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'fur-coat') defense *= 2;
+      if (userAbility && RUINS[userAbility] === (hitsDefense ? 'def' : 'spd')) defense = Math.floor(defense * 0.75);
       if (hitsDefense && foeAbility === 'grass-pelt' && ctx.battle.terrain?.id === 'grassy') defense = Math.floor(defense * 1.5);
       // Abilities that change the final damage.
       let final = 1;
@@ -1751,7 +1788,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
         Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
-      if (target.protected && (move.flags.includes('zmove') || move.flags.includes('max'))) damage = Math.max(1, Math.floor(damage / 4));
+      if (target.protected && (move.flags.includes('zmove') || move.flags.includes('max') || userAbility === 'piercing-drill')) damage = Math.max(1, Math.floor(damage / 4));
     }
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne || target.vol.endure) damage = Math.min(damage, target.mon.hp - 1);
@@ -2003,6 +2040,43 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
       announce(target, holder, events);
       for (const change of boost.changes) applyStageChange(ctx, target, change.stat, change.stages, events);
     }
+    const half = HALF_HP_BOOST[holder];
+    const lastHit = [...events].reverse().find((e) => e.type === 'damage' && e.side === target.side);
+    const dealt = lastHit && lastHit.type === 'damage' ? lastHit.amount : 0;
+    const maxHp = calcStats(ctx.content, target.mon).hp;
+    if (half && target.mon.hp * 2 < maxHp && (target.mon.hp + dealt) * 2 >= maxHp) {
+      announce(target, holder, events);
+      applyStageChange(ctx, target, half.stat, half.stages, events);
+    }
+    if (holder === 'color-change' && !move.flags.includes('typeless') && !battleTypes(ctx.content, ctx.battle, target.mon).every((t) => t === moveType)) {
+      announce(target, holder, events);
+      target.vol.typeShift = moveType;
+      events.push({ type: 'selfState', side: target.side, state: 'typeChanged' });
+    }
+    if (holder === 'cursed-body' && user.mon.hp > 0 && rng.chance(0.3)) {
+      announce(target, holder, events);
+      disrupt(ctx, target, user, 'disable', events);
+    }
+    if (holder === 'cotton-down' && user.mon.hp > 0) {
+      announce(target, holder, events);
+      applyStageChange(ctx, user, 'spe', -1, events, target);
+    }
+    if (holder === 'toxic-debris' && move.category === 'physical' && ctx.battle.sideEffects[user.side].toxicSpikes < 2) {
+      announce(target, holder, events);
+      ctx.battle.sideEffects[user.side].toxicSpikes += 1;
+      events.push({ type: 'hazard', side: user.side, hazard: 'toxicSpikes' } as BattleEvent);
+    }
+    if (holder === 'perish-body' && contact && user.vol.perish === 0 && target.vol.perish === 0 && abilityIn(ctx, user) !== 'soundproof') {
+      announce(target, holder, events);
+      user.vol.perish = 4;
+      target.vol.perish = 4;
+      events.push({ type: 'selfState', side: target.side, state: 'perishSong' });
+    }
+    if (holder === 'wandering-spirit' && contact && userAbility && !UNTRACEABLE.has(userAbility) && userAbility !== holder) {
+      announce(target, holder, events);
+      user.vol.abilityOverride = holder;
+      target.vol.abilityOverride = userAbility;
+    }
     if (holder === 'anger-point' && crit && target.stages.atk < 6) {
       announce(target, holder, events);
       applyStageChange(ctx, target, 'atk', 12, events);
@@ -2147,6 +2221,16 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
     if (c.vol.taunt > 0) c.vol.taunt -= 1;
     if (c.vol.healBlock > 0) c.vol.healBlock -= 1;
     if (c.vol.magnetRise > 0) c.vol.magnetRise -= 1;
+    if (abilityIn(ctx, c) === 'moody') {
+      // Moody: one random stat up two stages, another down one (maxed or floored stats are skipped).
+      const stats = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
+      const up = stats.filter((st) => c.stages[st] < 6);
+      const raised = up.length ? up[ctx.rng.int(0, up.length - 1)]! : null;
+      const down = stats.filter((st) => st !== raised && c.stages[st] > -6);
+      events.push({ type: 'ability', side: c.side, ability: 'moody' });
+      if (raised) applyStageChange(ctx, c, raised, 2, events);
+      if (down.length) applyStageChange(ctx, c, down[ctx.rng.int(0, down.length - 1)]!, -1, events);
+    }
     if (c.vol.yawn > 0 && --c.vol.yawn === 0 && !c.mon.status) {
       const foe = c === player ? enemy : player;
       tryInflictStatus(ctx, foe, c, 'slp', undefined, events, false);
@@ -2736,7 +2820,7 @@ export function weatherMultiplier(weather: Weather | null, type: TypeName): numb
 function isGrounded(ctx: BattleContext, c: Combatant): boolean {
   if (c.vol.semi === 'air' || c.vol.semi === 'underground' || c.vol.semi === 'underwater') return false;
   if (ctx.battle.field.gravity > 0 || c.vol.smackedDown) return true;
-  if (abilityIn(ctx, c) === 'levitate' || c.vol.magnetRise > 0) return false;
+  if (abilityIn(ctx, c) === 'levitate' || abilityIn(ctx, c) === 'eelevate' || c.vol.magnetRise > 0) return false;
   return !getSpecies(ctx.content, c.mon.speciesId).types.includes('flying');
 }
 

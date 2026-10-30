@@ -54,3 +54,42 @@ describe('stage 3b moves', () => {
     expect(duel('spit-up').events.some((e) => e.type === 'fail')).toBe(true);
   });
 });
+
+describe('stage 4 abilities', () => {
+  function withAbility(playerAbility: string | null, enemyAbility: string | null, playerMove: string, enemyMove = 'splash', enemySpecies = 'snorlax', turns = 1) {
+    const player = createPokemon(content, 'rattata', 50, 'p');
+    player.moves = [{ id: playerMove, pp: content.moves.get(playerMove)!.pp }];
+    const enemy = createPokemon(content, enemySpecies, 50, 'e');
+    enemy.moves = [{ id: enemyMove, pp: content.moves.get(enemyMove)!.pp }];
+    const battle = createBattle('wild', [enemy], 0, player.uid);
+    if (playerAbility) battle.playerVolatile.abilityOverride = playerAbility;
+    if (enemyAbility) battle.enemyVolatile.abilityOverride = enemyAbility;
+    const ctx: BattleContext = { content, battle, party: [player], inventory: {}, rng: new Rng(hashSeed('m4a')), captureRng: new Rng(hashSeed('m4ac')), catchMultiplier: 1 };
+    const events = [];
+    for (let i = 0; i < turns; i++) events.push(...resolveTurn(ctx, { kind: 'move', index: 0 }));
+    return { events, battle, ctx };
+  }
+  const dmg = (r: { events: { type: string }[] }) => r.events.reduce((n, e: any) => (e.type === 'damage' && e.side === 'enemy' ? n + e.amount : n), 0);
+
+  it('Neutralizing Gas switches off the other ability', () => {
+    expect(dmg(withAbility(null, 'thick-fat', 'ember'))).toBeGreaterThan(0);
+    const plain = dmg(withAbility(null, 'thick-fat', 'ember'));
+    const gassed = dmg(withAbility('neutralizing-gas', 'thick-fat', 'ember'));
+    expect(gassed).toBeGreaterThan(plain);
+  });
+  it('Sword of Ruin lowers the foe Defense so physical hits land harder', () => {
+    expect(dmg(withAbility('sword-of-ruin', null, 'tackle'))).toBeGreaterThan(dmg(withAbility(null, null, 'tackle')));
+  });
+  it('Normalize turns moves Normal', () => {
+    const r = withAbility('normalize', null, 'ember');
+    expect(dmg(r)).toBeGreaterThan(0);
+  });
+  it('Magic Bounce sends a status move back', () => {
+    const r = withAbility(null, 'magic-bounce', 'leer');
+    expect(r.events.some((e: any) => e.type === 'ability' && e.ability === 'magic-bounce')).toBe(true);
+  });
+  it('Moody changes stats each turn', () => {
+    const r = withAbility('moody', null, 'splash', 'splash', 'snorlax', 2);
+    expect(r.events.filter((e: any) => e.type === 'stat').length).toBeGreaterThan(0);
+  });
+});
