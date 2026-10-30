@@ -10,7 +10,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
-  startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
@@ -558,6 +558,33 @@ describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }
   }, 240_000);
+
+  describe('batch 6 (Iono to Kurt)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+
+    it('poison damage, evasion and status-foe damage', () => {
+      expect(poisonDamagePerk(perks('janine'))).toBeCloseTo(1.15);
+      expect(poisonDamagePerk(perks('koga-lgpe'))).toBeCloseTo(1.25);
+      expect(evasionPerk(perks('juan'), ['water'])).toBeCloseTo(1.1);
+      expect(evasionPerk(perks('juan'), ['fire'])).toBe(1);
+      expect(damageDealtPerk(perks('karen'), { ...base, targetStatused: true })).toBeCloseTo(1.15);
+      expect(damageDealtPerk(perks('karen'), { ...base, targetStatused: false })).toBe(1);
+    });
+
+    it('Janine and Klara raise poison status chance, Iono every status chance', () => {
+      expect(statusChancePerk(perks('janine'), ['poison'], 'psn')).toBeCloseTo(1.2);
+      expect(statusChancePerk(perks('janine'), ['normal'], 'psn')).toBe(1);
+      expect(statusChancePerk(perks('iono'), ['normal'], 'par')).toBeCloseTo(1.15);
+    });
+
+    it('every batch-6 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of ["iono", "irida", "iris-gen-5-bw2", "jacinthe", "janine", "jasmine", "juan", "juniper", "kabu", "kahili", "karen", "katy", "kiawe", "klara", "koga-lgpe", "koga", "korrina", "kris", "kukui", "kurt"]) {
+        const play = () => autoplay({ seed: `perk6-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
 });
 
 describe('trainer perks, batch Z4 (Magnus to Olivia)', () => {
@@ -596,6 +623,45 @@ describe('trainer perks, batch Z4 (Magnus to Olivia)', () => {
   it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
     for (const id of Z4) {
       const play = () => autoplay({ seed: `perkZ4-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 300_000);
+});
+
+describe('trainer perks, batch L (Lana to Lysandre)', () => {
+  const L = ['lana', 'lance', 'leaf-gen-3', 'leon-masters', 'lillie-z', 'lisia', 'lorelei-lgpe', 'lt-surge', 'lucas-gen-4-platinum', 'lucas', 'lyra', 'lysandre'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'electric' | 'ice' | 'fire' | 'ground') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all are playable trainers', () => {
+    for (const id of L) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers: damage, stats, weaknesses', () => {
+    expect(damageDealtPerk(perks('lana'), { ...info, userTypes: ['water'], physical: false })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('lana'), { ...info, userTypes: ['water'], physical: true })).toBe(1);
+    expect(taken('lana', 'electric')).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('lance'), { ...info, userTypes: ['dragon'] })).toBeCloseTo(1.25);
+    expect(taken('lance', 'ice')).toBeCloseTo(1.15);
+    expect(statPerk(perks('lt-surge'), 'spe', ['electric'])).toBeCloseTo(1.15);
+    expect(taken('lt-surge', 'ground')).toBeCloseTo(1.25);
+    expect(statPerk(perks('lorelei-lgpe'), 'def', ['ice'])).toBeCloseTo(1.1);
+  });
+
+  it('Lucas (Platinum): starter damage and experience', () => {
+    expect(damageDealtPerk(perks('lucas-gen-4-platinum'), { ...info, isStarter: true })).toBeCloseTo(1.1);
+    expect(damageDealtPerk(perks('lucas-gen-4-platinum'), { ...info, isStarter: false })).toBe(1);
+  });
+
+  it('Leon: boss damage; Lysandre: weaker healing', () => {
+    expect(damageDealtPerk(perks('leon-masters'), { ...info, targetIsBoss: true })).toBeCloseTo(1.2);
+    expect(healingMultiplier(getArchetype(content, 'lysandre'))).toBeCloseTo(0.8);
+  });
+
+  it('every trainer of the batch plays the same way twice', () => {
+    for (const id of L) {
+      const play = () => autoplay({ seed: `perkL-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
       const a = play();
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }

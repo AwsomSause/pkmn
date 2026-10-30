@@ -2513,6 +2513,326 @@
    "value": 1.2
   }
  ],
+ "iono": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.2
+  }
+ ],
+ "irida": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.2
+  }
+ ],
+ "iris-gen-5-bw2": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "jacinthe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "type": "fairy",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "steel",
+   "value": 1.15
+  }
+ ],
+ "janine": [
+  {
+   "kind": "statusChanceMultiplier",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "poisonDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.15
+  }
+ ],
+ "jasmine": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "steel",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "steel",
+   "value": 0.9
+  }
+ ],
+ "juan": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "evasionMultiplier",
+   "value": 1.1,
+   "type": "water"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "electric",
+   "value": 1.2
+  }
+ ],
+ "juniper": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "kabu": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "burnDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "kahili": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "flying",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "flying",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.2
+  }
+ ],
+ "karen": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.25
+  },
+  {
+   "kind": "statusedFoeDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "dark",
+   "value": 0.85
+  }
+ ],
+ "katy": [
+  {
+   "kind": "groupXpMultiplier",
+   "type": "bug",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "bug",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.15
+  }
+ ],
+ "kiawe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "fire",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "klara": [
+  {
+   "kind": "statusChanceMultiplier",
+   "type": "poison",
+   "value": 1.25
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.1
+  }
+ ],
+ "koga-lgpe": [
+  {
+   "kind": "poisonDamageMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "statusDurationBonus",
+   "turns": 1
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.85
+  }
+ ],
+ "koga": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "type": "poison",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "korrina": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.2
+  }
+ ],
+ "kris": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "kukui": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.15
+  },
+  {
+   "kind": "superEffectiveDamageMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "superEffectiveTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "kurt": [
+  {
+   "kind": "priceMultiplier",
+   "group": "balls",
+   "value": 0.7
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  }
+ ],
  "olivia": [
   {
    "kind": "statMultiplier",
@@ -2931,6 +3251,199 @@
    "kind": "statMultiplier",
    "stat": "spe",
    "value": 0.9
+  }
+ ],
+ "lana": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "value": 1.2,
+   "category": "special"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "electric",
+   "value": 1.2
+  }
+ ],
+ "lance": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.1,
+   "type": "dragon"
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "dragon",
+   "value": 0.8
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "leaf-gen-3": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.15
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.15
+  }
+ ],
+ "leon-masters": [
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "lillie-z": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.15,
+   "category": "special"
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "lisia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "lorelei-lgpe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1,
+   "type": "ice"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.2
+  }
+ ],
+ "lt-surge": [
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.15,
+   "type": "electric"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.25
+  }
+ ],
+ "lucas-gen-4-platinum": [
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.2
+  },
+  {
+   "kind": "starterDamageMultiplier",
+   "starter": true,
+   "value": 1.1
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": false,
+   "value": 0.9
+  }
+ ],
+ "lucas": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "lyra": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "lysandre": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.8
   }
  ]
 }

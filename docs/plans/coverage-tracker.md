@@ -15,7 +15,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Battle styles (§3) | 32 | PART: all 32 run as AI sharpness + stat bias + adaptation cap. Style tricks (berserker rage, trapping, copying) wait for battle hooks |
 | Off-screen events (§6; the doc says 40 but skips #19) | 39 | PART: all 39 run (`rivalBonds.json`, `rivals/bonds.ts`): one per rival per stage with eligibility, character/trait weighting, a cause chain, a habit, and private/rumour/observed visibility. Limited: generic habit pools, hyper events only move a readiness number |
 | Character arcs (§7: 36 long-form + 10 Overdrive) | 46 | PART: 27 run (growth, conflict and social arcs: start, turn, good/bad ending that nudges the rival's traits); the 9 Pokémon-bond arcs and 10 Overdrive arcs wait for the bond/Overdrive systems |
-| Advanced mechanics (§8) | 24 | PART: 19 limited (public reputation, signature technique, conflicting account, independent rivalry, unseen win/defeat, cooldown, private goal, challenge refusal, missed encounter, return encounter, rumour mill, handoff, shared rival, rival-to-rival Pokémon influence, training exchange, rivalry triangle, substitute for a worn-out ace, legacy encounter); 5 planned (alliance, mentor network, team identity shift, Pokémon transfer, unscheduled challenge: each needs a system that does not exist yet, e.g. mentor NPCs, release rules, map interrupts) |
+| Advanced mechanics (§8) | 24 | PART: 22 limited (public reputation, signature technique, conflicting account, independent rivalry, unseen win/defeat, cooldown, private goal, challenge refusal, missed encounter, return encounter, rumour mill, handoff, shared rival, rival-to-rival Pokémon influence, training exchange, rivalry triangle, substitute for a worn-out ace, legacy encounter, **rival alliance** (friends who both lost to you lend one Pokémon for one battle), **mentor network** (an adaptable rival takes the type of the gym leader you just beat), **team identity shift** (mentor or grudge type always on the roster)); 2 planned (Pokémon transfer needs rival release/trade rules; unscheduled challenge needs a map interrupt system) |
 | Main doc slice 4: ladder, ally/retire/shaken outcomes, Ultimate Rival score + milestone evaluation | DONE (rival promotions at gyms/tournaments wait for the world sim) |
 | Main doc slice 5: multiple rivals (3), rival graph, off-screen world sim, rumours | DONE (limited) |
 | Main doc slice 6: scheduler (`rivals/scheduler` in `adapt.ts`: wait by ladder state, floor, pause after any rival, priority), archive on the account (`profile.rivalArchive`), legacy layer (`rivals/legacy.ts`: an archived rival's style and traits shape one new rival, once, from the seed) | DONE (limited: no absence from private goals; legacy shapes character and dialogue, it does not rebuild a full returning nemesis fight) |
@@ -36,7 +36,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: batches 1–5 of 11 (100 of 220 trainers, Aaron to Ingo); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | PART: 180 of 220 trainers built (A to Kurt by this thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -183,3 +183,5 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 | Bond screens (summary UI for the seven values), bond-based evolution/moves outside battle | TODO (UI belongs to the visual thread) |
 
 - Untitled Phase D2 (§19), slice 1: Center, Tutor, Reminder, Lab, Trade Post, Scout Tower done (services.json). Left: Specialist Mart, Dojo, Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Rival Meeting Place, Raid Observatory, Lodge.
+
+- Untitled Phase D2 (§19), slice 2: Specialist Mart, Training Dojo, Rival Meeting Place done. Left: Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Raid Observatory, Lodge.

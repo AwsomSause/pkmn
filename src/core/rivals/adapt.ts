@@ -17,6 +17,7 @@ import { bondNote, bondShift } from './bonds';
 import { isHostile } from './outcome';
 import { legacyNote, substitute } from './relations';
 import { rivalMods } from './profile';
+import { allianceHelp, identityNote } from './relations';
 import { legacyLine } from './legacy';
 import { RIVAL_CONFIG } from './schema';
 
@@ -79,8 +80,14 @@ export function rivalReturn(content: Content, run: RunState, rival: Rival, plan:
   const base = baseReturn(content, run, rival, plan, effect);
   // A worn-out ace sits out; a rival that remembers a close battle says so.
   const sub = substitute(content, run, rival, base.plan.members);
-  const members = sub ? sub.order.map((i) => base.plan.members[i]!) : base.plan.members;
-  const note = [base.note, sub?.note, legacyNote(rival), legacyLine(rival)].filter(Boolean).join(' ') || null;
+  let members = sub ? sub.order.map((i) => base.plan.members[i]!) : base.plan.members;
+  // Team identity shift (Examples §8): a mentor's or a grudge's type is always on the roster.
+  const shifted = identityNote(content, rival, withTeamTypes(content, { ...base.plan, members }, rival.identity ? [rival.identity.type as TypeName] : []));
+  members = shifted.plan.members;
+  // Alliance: a friend lends its best Pokémon for one battle.
+  const ally = allianceHelp(content, run, rival, { ...base.plan, members });
+  members = ally.plan.members;
+  const note = [base.note, sub?.note, shifted.note, ally.note, legacyNote(rival), legacyLine(rival)].filter(Boolean).join(' ') || null;
   return { plan: { ...base.plan, members }, note };
 }
 
@@ -123,7 +130,7 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
 }
 
 /** Makes sure the team has a Pokémon of each type, swapping in a species of similar strength for the last members. */
-function withTeamTypes(content: Content, plan: TrainerPlan, types: readonly TypeName[]): TrainerPlan {
+export function withTeamTypes(content: Content, plan: TrainerPlan, types: readonly TypeName[]): TrainerPlan {
   if (types.length === 0) return plan;
   let members = plan.members;
   types.forEach((type, k) => {

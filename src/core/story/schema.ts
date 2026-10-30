@@ -225,6 +225,8 @@ export const RivalSchema = z.object({
   offscreen: z.array(OffscreenEventSchema).default([]),
   /** Set when an earlier run's rival shaped this one (its name): it carries that character's traits and style. */
   legacyOf: z.string().optional(),
+  /** The team identity it has taken on (a type its roster is rebuilt around) and why: a mentor's example or a grudge against your style. */
+  identity: z.object({ type: z.string(), source: z.enum(['mentor', 'grudge']), by: z.string() }).optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */

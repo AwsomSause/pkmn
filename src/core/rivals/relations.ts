@@ -4,6 +4,8 @@
 
 import { hashSeed, Rng } from '../rng';
 import type { Content } from '../contentSchema';
+import { typeEffectiveness } from '../battle/damage';
+import type { TrainerPlan } from '../encounters';
 import { getSpecies } from '../pokemon';
 import type { RunState } from '../state';
 import type { Rival } from '../story/schema';
@@ -78,4 +80,80 @@ export function legacyNote(rival: Rival): string | null {
   const last = rival.memory.lastBattle;
   if (!RIVAL_CONFIG.relations.legacyCloseNote || rival.encounters === 0 || last.hpLeftShare > RIVAL_CONFIG.spark.closeHpShare) return null;
   return `${rival.name} has not forgotten how close your last battle was.`;
+}
+
+// ---------- alliance (Examples §8.08) ----------
+
+/** The story flag holding when two rivals allied; it becomes "ended" once the alliance has helped in a battle. */
+export const allianceFlag = (a: string, b: string): string => `alliance:${[a, b].sort().join(':')}`;
+
+/** Friends and partners who have both lost to you may join forces against the common threat: you. Returns the pairs that formed. */
+export function formAlliances(run: RunState, stageKey: string): [Rival, Rival][] {
+  const out: [Rival, Rival][] = [];
+  for (const e of run.story.rivalGraph) {
+    if (e.kind === 'enemies') continue;
+    const a = run.story.rivals.find((r) => r.id === e.a);
+    const b = run.story.rivals.find((r) => r.id === e.b);
+    const flag = allianceFlag(e.a, e.b);
+    if (!a || !b || run.story.flags[flag] !== undefined || a.encounters === 0 || b.encounters === 0) continue;
+    if (a.state === 'retired' || b.state === 'retired' || a.state === 'ally' || b.state === 'ally') continue;
+    if (new Rng(hashSeed(`${run.seed}::rival-alliance::${stageKey}::${flag}`)).float() >= RIVAL_CONFIG.alliance.chance) continue;
+    run.story.flags[flag] = stageKey;
+    out.push([a, b]);
+  }
+  return out;
+}
+
+/** An allied rival's partner lends its strongest Pokémon to the next battle (once), then the alliance ends and they compete again. */
+export function allianceHelp(content: Content, run: RunState, rival: Rival, plan: TrainerPlan): { plan: TrainerPlan; note: string | null } {
+  for (const e of run.story.rivalGraph) {
+    if (e.a !== rival.id && e.b !== rival.id) continue;
+    const flag = allianceFlag(e.a, e.b);
+    if (typeof run.story.flags[flag] !== 'string' || run.story.flags[flag] === 'ended') continue;
+    const partner = run.story.rivals.find((r) => r.id === (e.a === rival.id ? e.b : e.a));
+    const lent = partner?.memory.lastBattle.team[0];
+    run.story.flags[flag] = 'ended';
+    if (!partner || !lent || plan.members.length >= 6 || plan.members.some((m) => m.speciesId === lent)) return { plan, note: `${rival.name} and ${partner?.name ?? 'an old friend'}'s alliance ended without a loan.` };
+    const level = Math.max(...plan.members.map((m) => m.level));
+    return {
+      plan: { ...plan, members: [...plan.members, { speciesId: lent, level }] },
+      note: `${partner.name} lent ${rival.name} a ${getSpecies(content, lent).name} to face you together. After this battle they compete again.`,
+    };
+  }
+  return { plan, note: null };
+}
+
+// ---------- team identity shift (Examples §8.11) and mentor network (§8.09) ----------
+
+/** A rival that has lost to you more than once and cares little for others rebuilds its team to blunt your most-used type. Returns the type or null. */
+export function grudgeType(content: Content, run: RunState, rival: Rival, mostUsed: string | null): string | null {
+  const cfg = RIVAL_CONFIG.identity;
+  if (rival.identity || !mostUsed || rival.setbacks < cfg.grudgeSetbacks || rival.traits.empathy > cfg.grudgeMaxEmpathy) return null;
+  const defenders = Object.keys(content.typeChart).sort();
+  void run;
+  return (
+    defenders
+      .map((t) => ({ t, e: typeEffectiveness(content.typeChart, mostUsed as never, [t as never]) }))
+      .sort((x, y) => x.e - y.e || x.t.localeCompare(y.t))[0]?.t ?? null
+  );
+}
+
+/** A rival may seek advice from the gym leader you just beat: it takes on that leader's type. Returns the type or null. */
+export function mentorType(content: Content, run: RunState, rival: Rival, stageKey: string): { type: string; by: string } | null {
+  const cfg = RIVAL_CONFIG.identity;
+  const leaderId = run.usedLeaders[run.usedLeaders.length - 1];
+  const boss = leaderId ? content.bosses.get(leaderId) : undefined;
+  if (rival.identity || !boss || boss.types.length === 0 || rival.traits.adaptability < cfg.mentorMinAdaptability) return null;
+  if (new Rng(hashSeed(`${run.seed}::rival-mentor::${stageKey}::${rival.id}`)).float() >= cfg.mentorChance) return null;
+  return { type: boss.types[0]!, by: boss.name };
+}
+
+/** Says how the roster was rebuilt, if it was (the plan already includes the type). */
+export function identityNote(content: Content, rival: Rival, plan: TrainerPlan): { plan: TrainerPlan; note: string | null } {
+  const id = rival.identity;
+  if (!id || !plan.members.some((m) => getSpecies(content, m.speciesId).types.includes(id.type as never))) return { plan, note: null };
+  return {
+    plan,
+    note: id.source === 'mentor' ? `${rival.name} has been learning from ${id.by}, and the team now leans ${id.type}.` : `${rival.name} rebuilt the team around ${id.type} Pokémon to blunt your style.`,
+  };
 }
