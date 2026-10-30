@@ -24,7 +24,7 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
-import type { DramaLine } from '../core/drama';
+import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
@@ -882,6 +882,13 @@ export class BattleScene extends Phaser.Scene {
 
   /** A line of trainer dialogue: "Joey: \"Crush them!\"". */
   private async sayTrainer(line: DramaLine): Promise<void> {
+    const { session } = services();
+    const { battleAnimations, effectIntensity } = session.settings;
+    // Signature attacks and rare events get a short banner; reduced motion keeps the banner without movement, "off" skips it.
+    const title = line.category === 'signature' && line.cue?.moveId ? (session.content.moves.get(line.cue.moveId)?.name ?? null) : line.cue?.event && !line.cue.event.startsWith('memory:') ? (DRAMA_LIBRARY.events.find((e) => e.id === line.cue!.event)?.name ?? null) : null;
+    if (title && battleAnimations !== 'off') {
+      this.showMoment({ at: -1, side: 'enemy', title, messages: [], color: line.category === 'signature' ? '#ffb020' : '#7a5cff', sound: 'se.shiny', music: null, major: true, cutIn: false, shake: false }, battleAnimations === 'full' && effectIntensity > 0);
+    }
     await this.say(`${line.speaker}: “${line.text}”`);
   }
 
@@ -956,6 +963,20 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, duration: 250 });
           break;
+        case 'evolved': {
+          // The Pokémon evolves between turns: flash, then the new form and its HP.
+          if (battleAnimations !== 'off' && sprite) {
+            const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0).setDepth(40);
+            await tween(this, { targets: flash, alpha: battleAnimations === 'full' ? 0.9 : 0.4, duration: 300, yoyo: true, hold: 200 });
+            flash.destroy();
+          }
+          mon!.speciesId = e.to;
+          mon!.hp = e.hpAfter;
+          this.showSprite(e.side, mon!);
+          playSfx(this, 'se.level_up');
+          await this.refreshInfoBox(box, mon!, false);
+          break;
+        }
         case 'switchIn': {
           const incoming = this.findMon(before, e.uid);
           if (incoming) {
@@ -1077,6 +1098,11 @@ export class BattleScene extends Phaser.Scene {
       if (cue.shake && motion) this.cameras.main.shake(220, 0.006);
       const band = this.add.rectangle(GAME_WIDTH / 2, 132, GAME_WIDTH, 54, color, 0.85).setDepth(50).setAlpha(0);
       const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
+      // A bouncy pop-in (no movement when motion is reduced).
+      if (motion) {
+        title.setScale(0.5);
+        this.tweens.add({ targets: title, scale: 1, duration: 320, ease: 'Back.easeOut' });
+      }
       this.tweens.add({ targets: [band, title], alpha: 1, duration: 180, hold: 1300, yoyo: true, onComplete: () => { band.destroy(); title.destroy(); } });
       if (motion) {
         const at = cue.side === 'enemy' ? ENEMY_POS : PLAYER_POS;

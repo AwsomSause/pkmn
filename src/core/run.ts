@@ -104,6 +104,7 @@ import {
 } from './story/hooks';
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
+import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { simulateRivalWorld } from './rivals/world';
@@ -852,9 +853,12 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const rivalBack = rule && !back ? waitingRival(run) : null;
     let rivalNote: string | null = null;
+    let trainingIndex = -1;
     if (rule && rivalBack) {
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
-      plan = ret.plan;
+      const trained = withTrainingEvolution(content, ret.plan.members);
+      plan = { ...ret.plan, members: trained.members };
+      trainingIndex = trained.index;
       rivalNote = ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
@@ -879,6 +883,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
@@ -1109,9 +1114,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   }
 
   const events = awardExperience(content, run, engineEvents);
+  // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
+  const evolved = midBattleEvolution(content, run);
+  if (evolved) events.push(evolved);
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
-  const drama = planDrama(content, run, current.battle!, engineEvents, dialogue);
+  const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
     revertTransformations(content, battle, run.party);
