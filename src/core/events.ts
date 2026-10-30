@@ -20,6 +20,7 @@ import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { championTeam } from './story/championDefense';
+import { openFeud, settleFeud } from './story/feud';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
@@ -77,6 +78,8 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return crisisAid(run) >= c.atLeast;
     case 'tournament':
       return tournamentRound(run) === c.round;
+    case 'feud':
+      return openFeud(run) !== null;
     case 'championGhost':
       return championTeam(run.story).length > 0;
     case 'hunt':
@@ -131,6 +134,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs allies gathered in this region';
     case 'tournament':
       return 'Needs the tournament bracket to be at this round';
+    case 'feud':
+      return 'Needs two rivals who are feuding';
     case 'championGhost':
       return 'Needs a won run in your Hall of Fame';
     case 'hunt':
@@ -423,6 +428,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
     case 'aid':
       return 'allies gathered';
+    case 'feud':
+      return 'a feud is settled';
     case 'hunt':
       return e.finish ? 'the hunt ends' : 'a clue';
     case 'gauntlet':
@@ -591,6 +598,8 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return effectWords(content, e);
     case 'tournament':
       return setTournament(content, run, e.round);
+    case 'feud':
+      return settleFeud(content, run, e.choice);
     case 'hunt':
       return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
     case 'gauntlet':
