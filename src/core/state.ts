@@ -824,7 +824,10 @@ export const RunStateSchema = z.object({
     plays: z.record(z.string(), z.number().int()).default({}),
     attempts: z.record(z.string(), z.number().int()).default({}),
     best: z.record(z.string(), z.enum(['none', 'bronze', 'silver', 'gold'])).default({}),
-  }).default(() => ({ stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} })),
+    effects: z.number().int().default(0),
+    /** A shop discount won in a minigame, good for the stage it was won in. */
+    discount: z.object({ percent: z.number().int(), stage: z.number().int() }).nullable().default(null),
+  }).default(() => ({ stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null })),
   expeditions: z.object({ completed: z.array(z.string()), failed: z.array(z.string()), unlocked: z.array(z.string()), last: z.array(z.string()).default([]) }).default(() => ({ completed: [], failed: [], unlocked: [], last: [] })),
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),

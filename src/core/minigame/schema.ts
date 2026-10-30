@@ -9,6 +9,8 @@ export type Medal = (typeof MEDALS)[number];
 const RewardSchema = z.object({
   money: z.number().int().min(0),
   item: z.object({ item: z.string(), chance: z.number().min(0).max(1) }).nullable().default(null),
+  /** Heal the party (percent of max HP), earn Totem research points, or a shop discount (percent) for the rest of the stage. */
+  effect: z.object({ kind: z.enum(['heal', 'research', 'discount']), amount: z.number().int().min(1), chance: z.number().min(0).max(1) }).nullable().default(null),
 });
 
 export const MinigameDefSchema = z.object({
@@ -47,6 +49,8 @@ export const MinigameFileSchema = z.object({
     /** Items are only paid from this difficulty tier on (1 easy, 2 normal, 3 hard). */
     itemMinTier: z.number().int().min(1).max(3),
     itemCapPerStage: z.number().int().min(0),
+    /** Most heals, research gains and discounts that minigames can give per stage. */
+    effectCapPerStage: z.number().int().min(0).default(2),
     tierMultipliers: z.array(z.number().min(0)).length(3),
   }),
   games: z.array(MinigameDefSchema).min(1),
