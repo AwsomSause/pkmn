@@ -17,7 +17,7 @@
 
 import { noRevives } from './rules';
 import { moneyMultiplier, runArchetype } from './archetypes';
-import { evolutionLevelOffset } from './trainerPerks';
+import { evolutionLevelOffset, rareItemWeightPerk } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
@@ -104,6 +104,8 @@ export function generateDraft(
   /** Draft items: a bigger draft, rewards that must be in it (first), and rewards that must not (the rest of a draft being re-rolled). */
   opts: { size?: number; forced?: readonly string[]; exclude?: readonly string[] } = {},
 ): string[] {
+  const rareBoost = rareItemWeightPerk(runArchetype(content, run).modifiers);
+  if (rareBoost !== 1) weights = { ...weights, rare: (weights.rare ?? 0) * rareBoost, epic: (weights.epic ?? 0) * rareBoost };
   const size = opts.size ?? content.balance.draftSize;
   const forced = [...new Set(opts.forced ?? [])].filter((id) => content.rewards.has(id) && isRewardEligible(content, run, content.rewards.get(id)!)).slice(0, size);
   const skip = new Set([...forced, ...(opts.exclude ?? [])]);

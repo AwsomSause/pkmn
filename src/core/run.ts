@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -189,6 +189,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
 
     box: [],
     perkEffects: [],
+    signatureApplied: {},
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
@@ -1577,6 +1578,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     } else {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
     }
+  }
+  if (won) {
+    const share = postBattleHealShare(runArchetype(content, run).modifiers);
+    if (share > 0) for (const mon of run.party) if (mon.hp > 0) mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.ceil(maxHp(content, mon) * share));
   }
   // The Elite Four heal your party after each battle.
   if (won && classId === ELITE_FOUR_CLASS) healParty(content, run);
