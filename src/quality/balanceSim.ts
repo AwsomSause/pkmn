@@ -8,15 +8,21 @@
 //   2. Difficulty curve: a fresh party (random wild-line Pokémon at the level
 //      ordinary enemies have at that point, no items, no vitamins) against
 //      every gym, Elite Four and champion slot of a full campaign.
+//   3. The same two with a full kit: every key item (Mega Ring, Tera Orb, Z-Ring,
+//      Dynamax Band), every Mega Stone and every Z-Crystal in the Bag. Mega and
+//      Gigantamax forms happen by themselves; each battle the player also picks
+//      one of Tera, a Z-Move or Dynamax (seeded) and uses it from the second turn.
+//      Abilities and held items run in every battle: the engine applies them.
 // A real player has items, rewards, healing stops and a party they chose, so
 // read the trend (where the curve jumps), not the exact percentages.
 //
 // Read-only: nothing here changes game rules or data.
 
 import { chooseEnemyMove, createBattle, resolveTurn, type BattleContext } from '../core/battle/engine';
+import { transformProblem, type TransformRequest } from '../core/battle/transform';
 import type { Archetype, Content } from '../core/contentSchema';
 import { createPlannedPokemon, evolvedFormAt, leagueScale, levelScale, planChampion, planEliteFour, planGymLeader, type TrainerPlan } from '../core/encounters';
-import { createPokemon } from '../core/pokemon';
+import { abilityOf, createPokemon } from '../core/pokemon';
 import { hashSeed, Rng } from '../core/rng';
 import type { PokemonInstance } from '../core/state';
 import { wildEligibleSpecies } from '../core/themes';
@@ -30,17 +36,26 @@ export interface BattleOutcome {
 export const PLAYER_AI = 0.75;
 const MAX_TURNS = 300;
 
+/** The Bag of a player with everything that unlocks a battle mechanic: key items, Mega Stones and orbs, Z-Crystals. */
+export function fullKit(content: Content): Record<string, number> {
+  const bag: Record<string, number> = {};
+  for (const item of content.items.values()) if (['keyItem', 'megaStone', 'zCrystal'].includes(item.effect.kind)) bag[item.id] = 1;
+  return bag;
+}
+
+const MECHANICS: TransformRequest['kind'][] = ['tera', 'zmove', 'dynamax'];
+
 /**
  * Plays one battle to the end. The player always attacks (no items or
  * switching except to replace a fainted Pokémon), choosing its move like a
  * boss with `PLAYER_AI`. The teams are copied, never changed.
  */
-export function simulateBattle(content: Content, playerTeam: PokemonInstance[], enemyTeam: PokemonInstance[], enemyAi: number, seed: string): BattleOutcome {
+export function simulateBattle(content: Content, playerTeam: PokemonInstance[], enemyTeam: PokemonInstance[], enemyAi: number, seed: string, kit = false): BattleOutcome {
   const party = structuredClone(playerTeam);
   const battle = createBattle('trainer', structuredClone(enemyTeam), 0, party[0]!.uid, { classId: 'sim', name: 'Sim', leaderId: null });
   battle.ai = enemyAi;
   const streams = hashSeed(seed);
-  const ctx: BattleContext = { content, battle, party, inventory: {}, rng: new Rng(streams), captureRng: new Rng(hashSeed(`${seed}#capture`)), catchMultiplier: 1 };
+  const ctx: BattleContext = { content, battle, party, inventory: kit ? fullKit(content) : {}, rng: new Rng(streams), captureRng: new Rng(hashSeed(`${seed}#capture`)), catchMultiplier: 1 };
   const choices = new Rng(hashSeed(`${seed}#player`));
   while (!battle.outcome && battle.turn <= MAX_TURNS) {
     if (battle.needsSwitch) {
@@ -50,7 +65,14 @@ export function simulateBattle(content: Content, playerTeam: PokemonInstance[], 
     const active = party[battle.activeIndex]!;
     const enemy = battle.enemyTeam[battle.enemyIndex]!;
     const index = chooseEnemyMove(active, choices, { content, ai: PLAYER_AI, target: enemy, stages: battle.playerStages });
-    resolveTurn(ctx, { kind: 'move', index });
+    // With the kit the player uses one of Tera, a Z-Move or Dynamax per battle, from the second turn.
+    let transform: TransformRequest | undefined;
+    if (kit && battle.turn >= 2 && battle.transform.used.player.length === 0) {
+      const key = (kind: string) => new Rng(hashSeed(`${seed}#${kind}`)).float();
+      const order = [...MECHANICS].sort((a, b) => key(a) - key(b));
+      transform = order.map((kind) => ({ kind }) as TransformRequest).find((r) => transformProblem(ctx, r, index) === null);
+    }
+    resolveTurn(ctx, { kind: 'move', index, ...(transform ? { transform } : {}) });
   }
   const winner = battle.outcome === 'win' ? 'player' : battle.outcome === 'lose' ? 'enemy' : 'draw';
   return { winner, turns: battle.turn - 1 };
@@ -63,13 +85,15 @@ export function wildLines(content: Content, level: number): string[] {
 
 export interface SpeciesStrength {
   speciesId: string;
+  /** The ability the simulated Pokémon has (the same one in every battle). */
+  ability: string | null;
   wins: number;
   battles: number;
   winRate: number;
 }
 
 /** Each line fights `opponents` seeded random lines one on one, both at `level`. */
-export function speciesStrength(content: Content, seed: string, level = 50, opponents = 40): SpeciesStrength[] {
+export function speciesStrength(content: Content, seed: string, level = 50, opponents = 40, kit = false): SpeciesStrength[] {
   const lines = wildLines(content, level);
   const rng = new Rng(hashSeed(`${seed}#strength`));
   const mon = (id: string, uid: string) => createPokemon(content, id, level, uid);
@@ -77,10 +101,10 @@ export function speciesStrength(content: Content, seed: string, level = 50, oppo
     let wins = 0;
     for (let i = 0; i < opponents; i++) {
       const foe = rng.pick(lines);
-      const result = simulateBattle(content, [mon(id, 'p')], [mon(foe, 'e')], 1, `${seed}#${id}#${i}`);
+      const result = simulateBattle(content, [mon(id, 'p')], [mon(foe, 'e')], 1, `${seed}#${id}#${i}`, kit);
       if (result.winner === 'player') wins++;
     }
-    return { speciesId: id, wins, battles: opponents, winRate: wins / opponents };
+    return { speciesId: id, ability: abilityOf(content, mon(id, 'p')), wins, battles: opponents, winRate: wins / opponents };
   });
 }
 
@@ -112,7 +136,7 @@ function bossTeam(content: Content, plan: TrainerPlan, tag: string): PokemonInst
  * of each region, one Elite Four member and the champion. `trials` battles
  * per slot, each against a seeded random boss.
  */
-export function difficultyCurve(content: Content, seed: string, trials = 40, campaignId = 'full'): CurveRow[] {
+export function difficultyCurve(content: Content, seed: string, trials = 40, campaignId = 'full', kit = false): CurveRow[] {
   const campaign = content.campaigns.get(campaignId)!;
   const archetype: Archetype = content.archetypes.get('red') ?? [...content.archetypes.values()][0]!;
   const regions = campaign.regularRegions + (campaign.grandRegion ? 1 : 0);
@@ -130,7 +154,7 @@ export function difficultyCurve(content: Content, seed: string, trials = 40, cam
       const p = plan(rng);
       for (const m of p.members) (lo = Math.min(lo, m.level)), (hi = Math.max(hi, m.level));
       const party = randomParty(content, pool, size, playerLevel, rng, tag);
-      if (simulateBattle(content, party, bossTeam(content, p, tag), p.ai, tag).winner === 'player') wins++;
+      if (simulateBattle(content, party, bossTeam(content, p, tag), p.ai, tag, kit).winner === 'player') wins++;
     }
     rows.push({ region: region + 1, slot, playerLevel, enemyLevels: [lo, hi], partySize: size, winRate: wins / trials, battles: trials });
   };
@@ -160,10 +184,35 @@ export interface BalanceReport {
   seed: string;
   strength: SpeciesStrength[];
   curve: CurveRow[];
+  /** The same simulations with the full kit (Mega, Tera, Z-Moves, Dynamax). */
+  strengthKit: SpeciesStrength[];
+  curveKit: CurveRow[];
+}
+
+export interface AbilityRow {
+  ability: string;
+  species: number;
+  winRate: number;
+}
+
+/** Average win rate of the lines that have each ability (only abilities on at least `min` lines). */
+export function abilityStrength(strength: SpeciesStrength[], min = 4): AbilityRow[] {
+  const by = new Map<string, SpeciesStrength[]>();
+  for (const s of strength) if (s.ability) by.set(s.ability, [...(by.get(s.ability) ?? []), s]);
+  return [...by.entries()]
+    .filter(([, rows]) => rows.length >= min)
+    .map(([ability, rows]) => ({ ability, species: rows.length, winRate: rows.reduce((n, r) => n + r.winRate, 0) / rows.length }))
+    .sort((a, b) => b.winRate - a.winRate || a.ability.localeCompare(b.ability));
 }
 
 export function buildBalanceReport(content: Content, seed: string, opts: { opponents?: number; trials?: number } = {}): BalanceReport {
-  return { seed, strength: speciesStrength(content, seed, 50, opts.opponents), curve: difficultyCurve(content, seed, opts.trials) };
+  return {
+    seed,
+    strength: speciesStrength(content, seed, 50, opts.opponents),
+    curve: difficultyCurve(content, seed, opts.trials),
+    strengthKit: speciesStrength(content, seed, 50, opts.opponents, true),
+    curveKit: difficultyCurve(content, seed, opts.trials, 'full', true),
+  };
 }
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -191,6 +240,27 @@ export function balanceMarkdown(content: Content, report: BalanceReport): string
   lines.push(`A fresh party of random wild-line Pokémon at the level ordinary enemies have at that point, against a random boss, ${report.curve[0]?.battles ?? 0} battles per row. Party size: 3 at the first gym, 6 from the fourth.`, '');
   lines.push('| Region | Battle | Party level | Boss levels | Party size | Player wins |', '|---|---|---|---|---|---|');
   for (const r of report.curve) lines.push(`| ${r.region} | ${r.slot} | ${r.playerLevel} | ${r.enemyLevels[0]}–${r.enemyLevels[1]} | ${r.partySize} | ${pct(r.winRate)} |`);
+  const abilities = abilityStrength(report.strength);
+  lines.push('', '## 3. Abilities', '');
+  lines.push('Abilities run in every simulated battle. Average one-on-one win rate of the lines that have each ability (abilities on at least 4 lines). An ability far from the middle is worth a look: it may be too strong, or may not be doing anything.', '');
+  lines.push('| Strongest | Lines | Win rate | Weakest | Lines | Win rate |', '|---|---|---|---|---|---|');
+  const aTop = abilities.slice(0, 10);
+  const aBottom = abilities.slice(-10).reverse();
+  const aCell = (a: AbilityRow | undefined) => (a ? `${a.ability} | ${a.species} | ${pct(a.winRate)}` : ' |  | ');
+  for (let i = 0; i < Math.max(aTop.length, aBottom.length); i++) lines.push(`| ${aCell(aTop[i])} | ${aCell(aBottom[i])} |`);
+  lines.push('', '## 4. With Mega, Tera, Z-Moves and Dynamax', '');
+  lines.push('The same simulations, but the player owns every key item, Mega Stone and Z-Crystal. Mega Evolution and Gigantamax happen by themselves; each battle the player also uses one of Tera, a Z-Move or Dynamax (picked by the seed) from the second turn. Bosses use their own transformations in both runs (from gym 5 and in the league). A big gap between the two columns shows how much the mechanics change a fight.', '');
+  const kitById = new Map(report.strengthKit.map((r) => [r.speciesId, r]));
+  const avg = (rows: SpeciesStrength[]) => (rows.length === 0 ? 0 : rows.reduce((n, r) => n + r.winRate, 0) / rows.length);
+  lines.push(`One-on-one at level 50: average win rate ${pct(avg(report.strength))} without the kit, ${pct(avg(report.strengthKit))} with it. Lines that win 90% or more with the kit: **${report.strengthKit.filter((s) => s.winRate >= 0.9).length}** (without: ${strong.length}).`, '');
+  const gains = report.strength
+    .map((s) => ({ id: s.speciesId, plain: s.winRate, kit: kitById.get(s.speciesId)?.winRate ?? s.winRate }))
+    .sort((a, b) => b.kit - b.plain - (a.kit - a.plain) || a.id.localeCompare(b.id))
+    .slice(0, 10);
+  lines.push('Biggest gains from the kit:', '', '| Line | Without | With |', '|---|---|---|');
+  for (const g of gains) lines.push(`| ${name(g.id)} | ${pct(g.plain)} | ${pct(g.kit)} |`);
+  lines.push('', '| Region | Battle | Party level | Player wins | With the kit |', '|---|---|---|---|---|');
+  report.curve.forEach((r, i) => lines.push(`| ${r.region} | ${r.slot} | ${r.playerLevel} | ${pct(r.winRate)} | ${pct(report.curveKit[i]?.winRate ?? r.winRate)} |`));
   lines.push('');
   return lines.join('\n');
 }

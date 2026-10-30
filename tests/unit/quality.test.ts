@@ -19,7 +19,7 @@ import {
   type ReportInputs,
 } from '../../src/quality/contentReport';
 import { allStatuses, meetableSpecies, moveStatus, speciesStatus, statusSummary } from '../../src/quality/supportStatus';
-import { difficultyCurve, simulateBattle, speciesStrength } from '../../src/quality/balanceSim';
+import { abilityStrength, difficultyCurve, fullKit, simulateBattle, speciesStrength } from '../../src/quality/balanceSim';
 import type { Content } from '../../src/core/contentSchema';
 
 const everyFileExists = () => true;
@@ -154,6 +154,31 @@ describe('balance simulations', () => {
     const curve = difficultyCurve(content, 'det', 1, 'dev');
     expect(curve).toEqual(difficultyCurve(content, 'det', 1, 'dev'));
     expect(curve.map((r) => r.slot)).toEqual(['gym 1', 'gym 2', 'Elite Four', 'champion', 'gym 1', 'gym 2', 'Elite Four', 'champion']);
+  });
+
+  it('the full kit holds every key item, Mega Stone and Z-Crystal, and kit simulations are deterministic', () => {
+    const kit = fullKit(content);
+    for (const mechanic of ['mega', 'tera', 'zmove', 'dynamax']) {
+      expect([...content.items.values()].some((i) => i.effect.kind === 'keyItem' && i.effect.mechanic === mechanic && kit[i.id] === 1)).toBe(true);
+    }
+    expect([...content.items.values()].filter((i) => i.effect.kind === 'zCrystal').every((i) => kit[i.id] === 1)).toBe(true);
+    expect(speciesStrength(content, 'det', 30, 2, true)).toEqual(speciesStrength(content, 'det', 30, 2, true));
+    const a = [createPokemon(content, 'charizard', 50, 'a')];
+    const b = [createPokemon(content, 'blastoise', 50, 'b')];
+    expect(simulateBattle(content, a, b, 1, 'kit', true)).toEqual(simulateBattle(content, a, b, 1, 'kit', true));
+  });
+
+  it('abilities are reported as an average win rate per ability, only for abilities on enough lines', () => {
+    const row = (speciesId: string, ability: string | null, winRate: number) => ({ speciesId, ability, wins: 0, battles: 1, winRate });
+    const rows = abilityStrength([row('a', 'blaze', 1), row('b', 'blaze', 0.5), row('c', 'blaze', 0), row('d', 'blaze', 0.5), row('e', 'rare', 1), row('f', null, 1)]);
+    expect(rows).toEqual([{ ability: 'blaze', species: 4, winRate: 0.5 }]);
+  });
+});
+
+describe('boss teams are all different', () => {
+  it('no boss team repeats another one, even apart from training (npm run data:bosses keeps lineups distinct)', () => {
+    expect(check(content, 'duplicate-boss-teams').count).toBe(0);
+    expect(check(content, 'near-duplicate-boss-teams').count).toBe(0);
   });
 });
 

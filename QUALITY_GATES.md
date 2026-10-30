@@ -43,7 +43,7 @@ It reads the game data, the asset files on disk and the test sources. It never c
 
 | Check | Counts | Today |
 |---|---|---|
-| `unsupported-moves` | Moves the battle engine can't run (`supported: false`) | 611 |
+| `unsupported-moves` | Moves the battle engine can't run (`supported: false`) | 87 |
 | `unsupported-learnset-entries` | Level-up entries skipped because the move is unsupported | 12,549 |
 | `species-no-usable-moves` | Species and forms with no supported level-up move | 5 |
 | `meetable-species-no-usable-moves` | Of those, ones a player can own (wild, starter, by evolving) | 0 |
@@ -51,8 +51,8 @@ It reads the game data, the asset files on disk and the test sources. It never c
 | `missing-cries` | Cry files missing | 0 |
 | `missing-other-assets` | Trainer, item, arena, music, sound or font files missing | 0 |
 | `unreachable-map-nodes` | Unreachable nodes, dead ends or rule breaks in 200 generated maps per campaign, plus the league maps | 0 |
-| `duplicate-boss-teams` | Boss teams identical to an earlier one (species, moves and training) | 6 |
-| `near-duplicate-boss-teams` | Boss teams with the same species and moves as an earlier one (only training differs) | 983 |
+| `duplicate-boss-teams` | Boss teams identical to an earlier one (species, moves and training) | 0 |
+| `near-duplicate-boss-teams` | Boss teams with the same species and moves as an earlier one (only training differs) | 0 |
 | `boss-unsupported-moves` | Boss team moves the engine can't run | 0 |
 | `broken-evolutions` | Evolutions an ownable Pokémon can't complete: unknown target, wrong or unobtainable item, level above the maximum, target with no moves, or a loop | 0 |
 | `unused-balance-settings` | Settings in `balance.json` that no game code reads | 0 |
@@ -116,8 +116,10 @@ It plays real battles with the game's own engine (`src/quality/balanceSim.ts`), 
 
 1. **Species strength:** every fully evolved wild line at level 50 fights 40 random lines one on one. Lines that win 90% or more, or 10% or less, are possible outliers.
 2. **Difficulty curve:** a fresh party (random wild-line Pokémon at the level ordinary enemies have at that point, 3 Pokémon at the first gym rising to 6, no items) fights 40 random bosses in every gym, Elite Four and champion slot of a full campaign.
+3. **Abilities:** abilities run in every simulated battle (the engine applies them). The report averages the win rate of the lines that have each ability, so an ability far from the middle stands out.
+4. **With the kit:** sections 1 and 2 are run a second time with every key item (Mega Ring, Tera Orb, Z-Ring, Dynamax Band), Mega Stone and Z-Crystal in the Bag. Mega and Gigantamax happen by themselves; each battle the player also uses one of Tera, a Z-Move or Dynamax (picked by the seed) from the second turn. The report shows both columns side by side and the lines that gain most.
 
-The simulated player has no items, vitamins, healing or team choice, so real runs are easier. Use it to see where the curve jumps and which Pokémon stand out, and to compare before and after a balance change. It doesn't fail CI: balance changes are a decision, not a bug.
+The simulated player has no vitamins, healing or team choice, and only the kit run has the transformation items, so real runs are easier. Use it to see where the curve jumps and which Pokémon stand out, and to compare before and after a balance change. It doesn't fail CI: balance changes are a decision, not a bug.
 
 ## Before you open a pull request
 
