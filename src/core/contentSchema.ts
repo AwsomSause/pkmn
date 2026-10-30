@@ -773,6 +773,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
   /** Prize money from double battles. */
   z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
+  z.object({ kind: z.literal('shopRefreshMultiplier'), value: z.number().positive() }),
+  z.object({ kind: z.literal('statusLengthBonus'), status: z.enum(['brn', 'psn']), turns: z.number().int().positive() }),
   z.object({ kind: z.literal('singleBattleXpMultiplier'), value: z.number().positive() }),
   /** Pokémon hatched from Eggs start this many levels higher. */
   z.object({ kind: z.literal('hatchLevelOffset'), value: z.number().int() }),
@@ -1628,6 +1630,10 @@ export const RulesetSchema = z.object({
   burnAttackMultiplier: z.number(),
   burnResidualFraction: z.number(),
   poisonResidualFraction: z.number(),
+  /** Turns a burn lasts (0 = until cured). */
+  burnTurns: z.number().int().min(0),
+  /** Turns a poisoning lasts (0 = until cured). */
+  poisonTurns: z.number().int().min(0),
   paralysisSpeedMultiplier: z.number(),
   fullParalysisChance: z.number().min(0).max(1),
   freezeThawChance: z.number().min(0).max(1),
@@ -1658,6 +1664,8 @@ export const BalanceSchema = z.object({
   trainerAi: TrainerAiSchema,
   /** Double battles: the chance an ordinary trainer fights two at a time, from this stage number (0 = the first stage). */
   doubles: z.object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0) }).default({ chance: 0.3, fromStage: 1 }),
+  /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
+  shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

@@ -364,6 +364,11 @@
    "kind": "damageTakenMultiplier",
    "moveType": "water",
    "value": 1.2
+  },
+  {
+   "kind": "statusLengthBonus",
+   "status": "brn",
+   "turns": 2
   }
  ],
  "blaine": [
@@ -2440,6 +2445,11 @@
    "kind": "damageTakenMultiplier",
    "moveType": "psychic",
    "value": 1.2
+  },
+  {
+   "kind": "statusLengthBonus",
+   "status": "psn",
+   "turns": 1
   }
  ],
  "piers": [
@@ -2891,6 +2901,10 @@
   {
    "kind": "captureMultiplier",
    "value": 1.1
+  },
+  {
+   "kind": "shopRefreshMultiplier",
+   "value": 1.25
   }
  ],
  "olivia": [

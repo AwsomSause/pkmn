@@ -181,7 +181,7 @@ export function standardRule(content: Content): DraftRule {
 /** The choices a brand-new player gets: the full campaign, the starting pool, the standard draft, no token. */
 export function defaultPrep(content: Content): RunPrep {
   const pool = [...content.starterPools.values()].find((p) => p.unlockedByDefault)!;
-  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null, directive: null };
+  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null, directive: null, license: null };
 }
 
 export interface ResolvedPrep {

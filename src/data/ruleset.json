@@ -13,6 +13,8 @@
   "burnAttackMultiplier": 0.5,
   "burnResidualFraction": 0.0625,
   "poisonResidualFraction": 0.125,
+  "burnTurns": 5,
+  "poisonTurns": 5,
   "paralysisSpeedMultiplier": 0.5,
   "fullParalysisChance": 0.25,
   "freezeThawChance": 0.2,

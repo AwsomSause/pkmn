@@ -96,7 +96,8 @@ test('the Briefing shows the run’s attributes, and a shop Plate raises one whe
   await expect.poll(async () => (await run(page)).attributeModifiers.strength, { timeout: 5000 }).toBe(5);
   const r = await run(page);
   expect(r.inventory['fist-plate']).toBeUndefined();
-  expect(r.money).toBe(5000 - price);
+  // The shop's weekly sale may take 20% off any item, this Plate included.
+  expect([5000 - price, 5000 - Math.round(price * 0.8)]).toContain(r.money);
   await page.waitForTimeout(250);
   await page.screenshot({ path: 'test-results/m7-shop-bought.png' });
   expect(errors).toEqual([]);

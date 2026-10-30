@@ -52,6 +52,8 @@ test('a move plays its animation file, loaded on demand, without errors', async 
   await waitForMenu(page);
   // Nothing about animations is loaded at start-up, only once a battle needs it.
   expect(animRequests.length).toBeGreaterThan(0);
+  // The director's Essentials pack animations are the first choice.
+  expect(animRequests.some((u) => u.includes('/battle-anims/ess-'))).toBe(true);
 
   await page.keyboard.press('Enter'); // Fight
   await page.waitForTimeout(200);
@@ -64,6 +66,26 @@ test('a move plays its animation file, loaded on demand, without errors', async 
   await page.screenshot({ path: 'test-results/m9-move-animation.png' });
   await waitForMenu(page).catch(() => undefined);
   await page.screenshot({ path: 'test-results/m9-after-turn.png' });
+  expect(errors).toEqual([]);
+});
+
+test('when a pack animation can\'t load, the PokeRogue one plays instead', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.route('**/battle-anims/ess-*', (route) => route.abort());
+  const animRequests: string[] = [];
+  page.on('requestfinished', (r) => r.url().includes('/battle-anims/') && animRequests.push(r.url()));
+  await page.goto('/?seed=m9-anims');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter');
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.busy), { timeout: 8_000 })
+    .toBe(true);
+  expect(animRequests.some((u) => !u.includes('/battle-anims/ess-'))).toBe(true);
   expect(errors).toEqual([]);
 });
 

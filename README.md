@@ -87,6 +87,8 @@ npm run assets:manifest
 
 It writes `src/data/moveAnims.json` (how each move looks; the battle rules never read it) and the files under `public/assets/battle-anims/`, `images/battle_anims/` and `audio/battle_anims/`.
 
+The director's Essentials pack animations (played first) come from `Data/PkmnAnimations.rxdata` in "Pokemon Essentials 21.1 UIE.rar": `ruby tools/essentials/dump-animations.rb <rxdata> anims.json`, then `npm run data:pack-anims -- anims.json <Graphics/Animations> <Audio/SE/Anim>` (needs ffmpeg) and `npm run assets:manifest`. `npm run report:anims -- --write` rewrites `docs/quality/MOVE_ANIMATIONS.md`.
+
 ## Project layout
 
 ```

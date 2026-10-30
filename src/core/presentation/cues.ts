@@ -6,9 +6,10 @@
 // It never changes battle state and never draws random numbers, so the same
 // turn always gets the same cues, and turning effects off can't change results.
 
+import { moveFamily, type FamilyId } from './families';
 import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
-import { presentationFor, type MoveAnims } from './moveAnims';
+import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
 export type AnimationMode = 'full' | 'reduced' | 'off';
 
@@ -25,7 +26,7 @@ export type Cue =
   /** A marker on the user before its move: its type colour, bigger for strong or priority moves. */
   | { kind: 'telegraph'; side: Side; color: string; style: 'normal' | 'strong' | 'quick' }
   /** Play the move's animation file (with the short fallback if it can't load). */
-  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; color: string }
+  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; alt?: string; color: string; family: FamilyId }
   /** The reduced-motion stand-in for a move animation: a soft tint on the target. */
   | { kind: 'pulse'; side: Side; color: string }
   /** A hit landing: freeze, shake, flash, then the HP bar drains. */
@@ -34,7 +35,7 @@ export type Cue =
   | { kind: 'number'; side: Side; amount: number; tone: 'damage' | 'crit' | 'super' | 'weak' | 'heal'; motion: boolean }
   | { kind: 'badge'; side: Side; badge: EffectivenessBadge | 'crit' }
   /** Status and healing animations (common-burn, common-health-up …). */
-  | { kind: 'commonAnim'; side: Side; anim: string }
+  | { kind: 'commonAnim'; side: Side; anim: string; alt?: string }
   | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean };
 
 const other = (side: Side): Side => (side === 'player' ? 'enemy' : 'player');
@@ -81,7 +82,7 @@ export function planCues(
         cues.push({ kind: 'telegraph', side: e.side, color, style: look.telegraph });
         if (!connects) break;
         const target = move.target === 'self' ? e.side : other(e.side);
-        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, anim: look.anim, color });
+        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, ...animChoice(look), color, family: moveFamily(move, look) });
         else cues.push({ kind: 'pulse', side: target, color });
         break;
       }
@@ -118,14 +119,14 @@ export function planCues(
       case 'bindDamage':
       case 'seedDamage': {
         const common = e.type === 'residual' ? `status.${e.status}` : e.type === 'confusionHit' ? 'confusion' : e.type === 'bindDamage' ? 'bind' : e.type === 'seedDamage' ? 'seed' : '';
-        if (full && common) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[common] ?? '' });
+        if (full && common) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, common) });
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'damage', motion: full });
         break;
       }
       case 'drain':
       case 'heal':
         if (e.amount <= 0) break;
-        if (full && anims.common.heal) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.heal });
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, 'heal') });
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'heal', motion: full });
         break;
       case 'charge': {
@@ -134,29 +135,29 @@ export function planCues(
         break;
       }
       case 'weather':
-        if (full) cues.push({ kind: 'commonAnim', side: 'player', anim: anims.common[`weather.${e.weather}`] ?? '' });
+        if (full) cues.push({ kind: 'commonAnim', side: 'player', ...commonChoice(anims, `weather.${e.weather}`) });
         break;
       case 'weatherDamage':
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: 'damage', motion: full });
         break;
       case 'confused':
       case 'confusion':
-        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.confusion ?? '' });
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, 'confusion') });
         break;
       case 'protect':
-        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.protect ?? '' });
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, 'protect') });
         break;
       case 'bound':
-        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.bind ?? '' });
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, 'bind') });
         break;
       case 'seeded':
-        if (full) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common.seed ?? '' });
+        if (full) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, 'seed') });
         break;
       case 'status':
-        if (full && anims.common[`status.${e.status}`]) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[`status.${e.status}`]! });
+        if (full && anims.common[`status.${e.status}`]) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, `status.${e.status}`) });
         break;
       case 'cant':
-        if (full && (e.reason === 'slp' || e.reason === 'frz' || e.reason === 'par')) cues.push({ kind: 'commonAnim', side: e.side, anim: anims.common[`status.${e.reason}`] ?? '' });
+        if (full && (e.reason === 'slp' || e.reason === 'frz' || e.reason === 'par')) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, `status.${e.reason}`) });
         break;
       case 'stat':
         if (animated) cues.push({ kind: 'statArrows', side: e.side, up: e.change > 0, motion: full });
