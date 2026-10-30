@@ -2107,7 +2107,7 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** World-state callback (catalog 75): adds to a named story flag that later events can read. */
   z.object({ kind: z.literal('flag'), key: z.string().regex(/^[a-z][a-z0-9-]*$/), amount: z.number().int().default(1) }),
   /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */
-  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(2).max(3) }),
+  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(1).max(3) }),
   /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
   z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
   /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */

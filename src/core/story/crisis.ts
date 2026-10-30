@@ -7,6 +7,7 @@
 
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
+import { CHAMPION_CLASS } from '../encounters';
 import { emit } from './record';
 import { circuitRanking } from './highHype';
 
@@ -84,4 +85,18 @@ export function setTournament(content: Content, run: RunState, round: number): s
 export function tournamentEventId(run: RunState): string | null {
   const r = tournamentRound(run);
   return r >= 1 && r <= 3 ? TOURNAMENT_ROUNDS[r - 1]! : null;
+}
+
+// ---------- champion personality (catalog 90) ----------
+
+/**
+ * How a champion opens, from the run's history (never a gameplay roll): a champion who has heard of your rivals
+ * ("tests" you with a Sp. Atk opener), or one facing a team that has beaten the Grand-Enemy's reckoning ("remembers"
+ * and opens faster). Null for every other fight. Both stay inside the normal curve: one stage.
+ */
+export function championOpener(run: RunState, classId: string | undefined): 'championRespect' | 'championRecall' | null {
+  if (classId !== CHAMPION_CLASS) return null;
+  if (run.story.rivals.some((r) => r.encounters >= 3)) return 'championRespect';
+  if ((run.log.counters.rivalBattlesWon ?? 0) >= 1 || run.story.flags['ge:met']) return 'championRecall';
+  return null;
 }

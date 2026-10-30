@@ -7,6 +7,7 @@ const M = 'Run Milestones';
 const S = 'World Sites';
 const C = 'World Callbacks';
 const L = 'Legendary Route';
+const H = 'Habitats';
 
 const milestone = (id: string, name: string, intro: string, tint: string): Json =>
   ev(id, name, M, { rarity: 'common', minStage: 2, cast: [], effect: 'sparkle', tint }, intro, [
@@ -78,6 +79,28 @@ export const LEGEND_EVENTS: Json[] = [
     'You have followed every clue. The clouds part, and something enormous looks down at you.', [
       ch('Face the legend', fight('It does not move. It is waiting to see what you do.', wild({ species: ['zapdos', 'articuno', 'moltres'], lv: 5, win: [rp(150), flag('legend-met')] }))),
       ch('Bow and leave', out('It watches you go. You feel it will remember.', rp(40), good(2))),
+    ]),
+];
+
+// Pack and habitat encounters (catalog 29): a nest, a migration or a disturbed habitat changes which wild Pokémon turn up.
+const habitat = (id: string, name: string, intro: string, tint: string, yes: string, text: string, relicId: string, relicName: string, type: string, weight: number, no: string): Json =>
+  ev(id, name, H, { rarity: 'uncommon', minStage: 2, cast: [], effect: 'fog', tint }, intro, [
+    ch(yes, out(text, { kind: 'relic', id: relicId, name: relicName, effects: [{ kind: 'typeEncounterWeight', type, value: weight }] }, rp(15))),
+    ch(no, leave()),
+  ]);
+
+export const HABITAT_EVENTS: Json[] = [
+  habitat('habitat-migration', 'A Migrating Flock', 'The sky is dark with wings. A whole flock is passing over, and it will not be the last.', '#1d2430', 'Watch where they land', 'You note their route. Flying types will be seen more often from now on.', 'flock-route', 'Flock Route', 'flying', 1.6, 'Let them pass'),
+  habitat('habitat-nest', 'A Nest in the Hollow', 'A hollow tree is crowded with sleeping bug-types. A larger one, the leader, watches you with all of its eyes.', '#243020', 'Respect the nest', 'The leader lets you pass. Bug types will gather around your path.', 'nest-leader', 'Nest Leader', 'bug', 1.6, 'Back away'),
+  habitat('habitat-disturbed', 'A Disturbed Habitat', 'Something has torn up this part of the marsh. Water types are on edge and moving.', '#1a2a30', 'Settle the water', 'You calm the shallows. Water types will turn up more often now.', 'calm-shallows', 'Calm Shallows', 'water', 1.6, 'Wade past'),
+];
+
+// Unusual moves as clues (catalog 35): a wild Pokémon using something it should not know hints at the legend ahead.
+export const CLUE_EVENTS: Json[] = [
+  ev('clue-strange-move', 'It Knows Something It Should Not', L, { rarity: 'rare', minStage: 3, cast: [], effect: 'glint', tint: '#1d1d30' },
+    'A wild Pokémon is practising a move you have never seen its kind use. It stops and stares at you, as if it wants to be asked.', [
+      ch('Battle it and watch', fight('It shows you exactly what it learned.', wild({ lv: 2, win: [rp(40), flag('legend-clue')] }))),
+      ch('Take notes from afar', out('You sketch what you saw and file it away.', rp(20))),
     ]),
 ];
 
