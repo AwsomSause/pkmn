@@ -32,6 +32,7 @@ export function openPartyMenu(host: FieldMenuHost): void {
   const { session } = services();
   const run = session.run!;
   const picker: Picker = new Picker(host.scene, {
+    glass: true,
     title: 'Choose a Pokémon to lead the next battle',
     columns: 2,
     rowHeight: 78,
@@ -116,6 +117,7 @@ export function openStoryMenu(host: FieldMenuHost): void {
     };
   });
   const picker: Picker = new Picker(host.scene, {
+    glass: true,
     title: rows.length + rivalRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
     columns: 1,
     rowHeight: 40,
@@ -133,6 +135,7 @@ export function openBagMenu(host: FieldMenuHost): void {
   const allIds = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0);
   const regionId = run.regionOrder[run.regionIndex];
   const picker: Picker = new Picker(host.scene, {
+    glass: true,
     title: 'Bag',
     columns: 2,
     rowHeight: 48,
@@ -163,6 +166,7 @@ function openItemTarget(host: FieldMenuHost, itemId: string): void {
   const item = content.items.get(itemId)!;
   const regionId = run.regionOrder[run.regionIndex];
   const picker: Picker = new Picker(host.scene, {
+    glass: true,
     title: `Use the ${item.name} on which Pokémon?`,
     columns: 2,
     rowHeight: 78,
@@ -190,6 +194,7 @@ function openEvolutionChoice(host: FieldMenuHost, itemId: string, partyIndex: nu
   const content = session.content;
   const name = content.species.get(session.run!.party[partyIndex]!.speciesId)!.name;
   const picker: Picker = new Picker(host.scene, {
+    glass: true,
     title: `What should ${name} evolve into?`,
     columns: 2,
     rowHeight: 48,

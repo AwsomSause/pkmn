@@ -806,6 +806,7 @@ export class BattleScene extends Phaser.Scene {
     };
     this.clearMenus();
     this.picker = new Picker(this, {
+      glass: true,
       title: 'Bag',
       columns: 2,
       rowHeight: 48,
@@ -826,6 +827,7 @@ export class BattleScene extends Phaser.Scene {
     const item = content.items.get(itemId)!;
     this.clearMenus();
     this.picker = new Picker(this, {
+      glass: true,
       title: `Use ${item.name} on which Pokémon?`,
       columns: 2,
       rowHeight: 78,
@@ -842,6 +844,7 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.message.setText(forced ? 'Choose a Pokémon to send out.' : '');
     this.picker = new Picker(this, {
+      glass: true,
       title: forced ? 'Send out which Pokémon?' : 'Switch to which Pokémon?',
       columns: 2,
       rowHeight: 78,

@@ -121,7 +121,9 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   await page.keyboard.press('ArrowRight'); // from Trainers to New Run
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
-  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight');
+  // Brock's slot depends on where Trainer Evolutions sit, so look it up instead of counting.
+  const brockSlot = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('TrainerSelect').slots.findIndex((s: any) => s?.archetype.id === 'brock'));
+  for (let i = 0; i < brockSlot; i++) await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m5-trainer-select.png' });
   await page.keyboard.press('Enter');

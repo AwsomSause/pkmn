@@ -633,7 +633,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
   /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
-  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), value: z.number().positive() }),
   /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
   z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
   /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
@@ -773,6 +773,16 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('blackMarket'), markup: z.number().min(1) }),
   /** King N's Voice of Pokémon: a wild Pokémon you defeat asks to join with this chance (no ball needed). */
   z.object({ kind: z.literal('voiceOfPokemon'), chance: z.number().positive().max(1) }),
+  /** Added to the chance of a critical hit for your Pokémon (0.1 = 10 percentage points). */
+  z.object({ kind: z.literal('critChanceBonus'), value: z.number().positive().max(1) }),
+  /** Prize money after catching a wild Pokémon. */
+  z.object({ kind: z.literal('catchMoneyMultiplier'), value: z.number().positive() }),
+  /** Damage of moves with one of these flags (dance and sound moves, punches...). */
+  z.object({ kind: z.literal('moveFlagDamage'), flags: z.array(z.enum(['sound', 'punch', 'bite', 'pulse', 'bullet', 'slicing', 'wind', 'contact', 'dance'])).min(1), value: z.number().positive() }),
+  /** Pokémon with an unusual type pairing or ability deal `unusual`× damage; those with a very common ability deal `common`×. */
+  z.object({ kind: z.literal('unusualDamageMultiplier'), unusual: z.number().positive(), common: z.number().positive() }),
+  /** Damage dealt once your side has defeated an enemy in the same battle. */
+  z.object({ kind: z.literal('afterKoDamageMultiplier'), value: z.number().positive() }),
   /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
   z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
   /** Spooky pack (Hex Maniac, Spooky Season): this share of wild Pokémon turn into Spooky forms (added to Spooky mode's share). */

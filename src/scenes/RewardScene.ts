@@ -12,7 +12,9 @@ import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus
 import { partyRows, Picker } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, focusFrame } from '../ui/widgets';
+import { focusFrame } from '../ui/widgets';
+import { AERO, drawGlass, paintGlass, type MotionLevel } from '../ui/aero';
+import { burstReveal } from '../ui/battleFx/spectacle';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
@@ -22,6 +24,9 @@ export class RewardScene extends Phaser.Scene {
   /** A draft item waiting for the card it is used on (Cornn Berry re-roll, Lock Capsule). */
   private mode: DraftItemKind | null = null;
   private cursors: Phaser.GameObjects.Graphics[] = [];
+  /** Each reward card, so the focused one can lift and the chosen one fly off. */
+  private cards: Phaser.GameObjects.Container[] = [];
+  private cardY = 92;
   private picker: Picker | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
   private chosen = false;
@@ -44,6 +49,7 @@ export class RewardScene extends Phaser.Scene {
     this.cursors = [];
     this.picker = null;
     this.chosen = false;
+    this.cards = [];
 
     this.add.text(GAME_WIDTH / 2, 30, 'Choose one reward', textStyle(44, COLORS.textLight)).setOrigin(0.5);
     this.add
@@ -57,24 +63,33 @@ export class RewardScene extends Phaser.Scene {
     draft.forEach((rewardId, i) => {
       const reward = content.rewards.get(rewardId)!;
       const x = startX + i * (cardW + gap);
-      const y = 92;
+      const y = this.cardY;
       const rarityColor = COLORS.rarity[reward.rarity] ?? 0x808080;
-      drawPanel(this, x, y, cardW, 270, { border: rarityColor });
-      this.cursors.push(this.highlight(x, y, cardW, 270));
-      itemVisual(this, reward.iconAssetId, x + cardW / 2, y + 46, 2.5);
-      this.add.text(x + cardW / 2, y + 84, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0);
-      this.add
-        .text(x + cardW / 2, y + 118, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba))
-        .setOrigin(0.5, 0);
+      // A glass card with a rarity-coloured rim; its contents move with it (lift on focus, fly off when chosen).
+      const card = this.add.container(x + cardW / 2, y + 135);
+      const glow = this.add.graphics().setVisible(false);
+      glow.fillStyle(rarityColor, 0.28);
+      glow.fillRoundedRect(-cardW / 2 - 8, -143, cardW + 16, 286, 24);
+      card.add([glow, paintGlass(this.add.graphics(), -cardW / 2, -135, cardW, 270, { rim: rarityColor, radius: 18 })]);
+      this.cursors.push(glow);
+      card.add(itemVisual(this, reward.iconAssetId, 0, -89, 2.5));
+      card.add(this.add.text(0, -51, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
+      card.add(this.add.text(0, -17, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba)).setOrigin(0.5, 0));
       // A team or player item already at its max: picking it re-rolls the draft for free.
       const reroll = isRerollReward(content, run, reward);
-      this.add.text(x + 12, y + 144, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
-      if ((run.draftCarry ?? []).includes(rewardId)) this.add.text(x + cardW / 2, y + 236, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0);
+      card.add(this.add.text(-cardW / 2 + 12, 9, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : '#cfe0f0', { wordWrap: { width: cardW - 24 } })));
+      if ((run.draftCarry ?? []).includes(rewardId)) card.add(this.add.text(0, 101, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
+      this.cards.push(card);
+      // Cards deal in one after another with a bounce.
+      if (this.motion !== 'off') {
+        card.setAlpha(0).y += 40;
+        this.tweens.add({ targets: card, alpha: 1, y: y + 135, duration: this.motion === 'full' ? 380 : 150, delay: this.motion === 'full' ? i * 70 : 0, ease: this.motion === 'full' ? 'Back.easeOut' : 'Sine.easeOut' });
+      }
       this.clickZone(x, y, cardW, 270, i);
     });
 
     // Party strip, with buttons to manage the party and use items.
-    drawPanel(this, 40, 380, GAME_WIDTH - 80, 112, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    drawGlass(this, 40, 380, GAME_WIDTH - 80, 112, { tint: AERO.glassLow, rim: AERO.sky, glow: false });
     run.party.forEach((mon, i) => {
       const species = content.species.get(mon.speciesId)!;
       const x = 80 + i * 92;
@@ -94,7 +109,7 @@ export class RewardScene extends Phaser.Scene {
     if (locks > 0) buttons.push({ label: `Lock ×${locks}`, x: 0, y: 12, w: 100, h: 44, size: 18, act: () => this.startMode('lock', 'Choose the card to keep in the next draft too (Lock Capsule).') });
     buttons.slice(2).forEach((b, n, extra) => (b.x = GAME_WIDTH - 40 - (extra.length - n) * 112 + 12));
     buttons.forEach((b, n) => {
-      drawPanel(this, b.x, b.y, b.w, b.h, { fill: COLORS.panel });
+      drawGlass(this, b.x, b.y, b.w, b.h, { radius: 16 });
       this.add.text(b.x + b.w / 2, b.y + b.h / 2, b.label, textStyle(b.size)).setOrigin(0.5);
       this.cursors.push(this.highlight(b.x, b.y, b.w, b.h));
       this.clickZone(b.x, b.y, b.w, b.h, draft.length + n);
@@ -133,6 +148,10 @@ export class RewardScene extends Phaser.Scene {
     this.focus(0);
   }
 
+  private get motion(): MotionLevel {
+    return services().session.settings.battleAnimations;
+  }
+
   private highlight(x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
     return focusFrame(this, x, y, w, h);
   }
@@ -151,6 +170,12 @@ export class RewardScene extends Phaser.Scene {
     if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
+    // The focused card lifts a little; the others settle back.
+    this.cards.forEach((card, n) => {
+      const lift = n === i ? -10 : 0;
+      if (this.motion === 'off') card.y = this.cardY + 135 + lift;
+      else this.tweens.add({ targets: card, y: this.cardY + 135 + lift, scale: n === i && this.motion === 'full' ? 1.04 : 1, duration: 140, ease: 'Back.easeOut' });
+    });
   }
 
   private activate(i: number): void {
@@ -188,6 +213,7 @@ export class RewardScene extends Phaser.Scene {
       return;
     }
     this.picker = new Picker(this, {
+      glass: true,
       title: `Give the ${reward.name} to which Pokémon?`,
       columns: 2,
       rowHeight: 78,
@@ -222,12 +248,26 @@ export class RewardScene extends Phaser.Scene {
       return;
     }
     playSfx(this, 'se.level_up', 0.6);
-    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.75).setOrigin(0).setDepth(50);
+    // The chosen card flies up into the bag with a burst; the result shows on a glass plate.
+    const card = this.cards[draftIndex];
+    if (card && this.motion !== 'off') {
+      card.setDepth(40);
+      void burstReveal(this, card.x, card.y, 0x9fe8ff, this.motion, 45);
+      this.tweens.add({ targets: card, y: card.y - 60, scale: 0.4, alpha: 0, duration: 420, ease: 'Back.easeIn' });
+    }
+    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setDepth(50);
     const next = result.run.phase === 'map' ? 'Choose your next path…' : '';
-    this.add
-      .text(GAME_WIDTH / 2, 250, [...result.reward.messages, '', next].join('\n'), textStyle(28, COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
+    const text = this.add
+      .text(GAME_WIDTH / 2, 250, [...result.reward.messages, '', next].join('\n'), textStyle(28, COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } }))
       .setOrigin(0.5)
-      .setDepth(51);
+      .setDepth(52);
+    const plate = drawGlass(this, GAME_WIDTH / 2 - text.width / 2 - 40, 250 - text.height / 2 - 28, text.width + 80, text.height + 56, { radius: 26 }).setDepth(51);
+    if (this.motion === 'full') {
+      plate.setAlpha(0);
+      text.setScale(0.85);
+      this.tweens.add({ targets: plate, alpha: 1, duration: 200 });
+      this.tweens.add({ targets: text, scale: 1, duration: 300, ease: 'Back.easeOut' });
+    }
     this.time.delayedCall(1500, () => this.scene.start(sceneForRun(result.run)));
   }
 }
