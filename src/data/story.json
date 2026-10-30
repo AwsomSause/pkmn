@@ -1450,6 +1450,117 @@
       "eligibilityTags": [],
       "emotions": [],
       "variants": {}
+    },
+    {
+      "id": "something-different",
+      "displayName": "Something About It Is Different…",
+      "messagePool": [
+        "Something about this {enemy} is different…",
+        "This {enemy} seems unusual. Something about it is different…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "somethingDifferent"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Noticed that something about {enemy} was different"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffe27a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "waiting-for-battle",
+      "displayName": "They've Been Waiting for This Battle…",
+      "messagePool": [
+        "Your rival has been waiting for this battle…",
+        "This is the battle {name} and your rival have both been waiting for…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "waitingForBattle"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Met a waiting rival at a decisive battle"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff7fb0",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "something-watching",
+      "displayName": "Something Powerful Is Watching…",
+      "messagePool": [
+        "Something powerful is watching from the edge of the field…",
+        "A strange presence is watching this battle…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "somethingWatching"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Felt something powerful watching"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#9f7fff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
