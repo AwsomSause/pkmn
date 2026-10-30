@@ -10,6 +10,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
+  isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
 } from '../../src/core/trainerPerks';
 import { autoplay, gameplayFingerprint } from './autoplay';
@@ -271,6 +272,52 @@ describe('trainer perks, batch 2', () => {
     it('every batch-3 trainer plays battles without errors, and the same seed plays the same way', () => {
       for (const id of [...content.archetypes.keys()].slice(49, 69)) {
         const play = () => autoplay({ seed: `perk3-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
+
+  describe('batch 4 (Drake to Ginter)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+
+    it('Elio boosts and delays Z-Moves; Emmet favours spread moves', () => {
+      expect(damageDealtPerk(perks('elio-usum'), { ...base, moveIsZ: true })).toBeCloseTo(1.2);
+      expect(zMoveDelayTurns(perks('elio-usum'))).toBe(1);
+      expect(damageDealtPerk(perks('emmet'), { ...base, moveIsSpread: true })).toBeCloseTo(1.15);
+      expect(damageDealtPerk(perks('emmet'), { ...base, moveIsSpread: false })).toBeCloseTo(0.9);
+      expect(isSpreadMove('earthquake')).toBe(true);
+      expect(isSpreadMove('tackle')).toBe(false);
+    });
+
+    it('Geeta: the last Pokémon hits harder, the first one softer', () => {
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 2, partySize: 3 })).toBeCloseTo(1.25);
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 0, partySize: 3 })).toBeCloseTo(0.9);
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 1, partySize: 3 })).toBe(1);
+    });
+
+    it('Erika heals Grass-types each turn and boosts healing moves; Flannery makes burns hurt more', () => {
+      expect(turnHealPercent(perks('erika-gen-3'), ['grass'])).toBe(5);
+      expect(turnHealPercent(perks('erika-gen-3'), ['fire'])).toBe(0);
+      expect(healingMoveMultiplier(perks('erika'))).toBeCloseTo(1.15);
+      expect(burnDamageTakenPerk(perks('flannery'))).toBeCloseTo(1.25);
+    });
+
+    it('Flint raises only the burn chance; Giacomo helps status moves hit; Ghetsis pays more for bosses', () => {
+      expect(statusChancePerk(perks('flint'), ['fire'], 'brn')).toBeCloseTo(1.1);
+      expect(statusChancePerk(perks('flint'), ['fire'], 'par')).toBe(1);
+      expect(statusMoveAccuracyPerk(perks('giacomo'))).toBeCloseTo(1.15);
+      expect(bossMoneyPerk(perks('ghetsis'))).toBeCloseTo(1.2);
+    });
+
+    it("Ginter's shop has one more early entry; Elm's catches start two levels lower", () => {
+      expect(shopEarlyStockPerk(perks('ginter'))).toBe(1);
+      expect(catchLevelOffset(perks('elm'))).toBe(-2);
+    });
+
+    it('every batch-4 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of [...content.archetypes.keys()].slice(69, 89)) {
+        const play = () => autoplay({ seed: `perk4-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
         const a = play();
         expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
       }

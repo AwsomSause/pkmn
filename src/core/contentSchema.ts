@@ -655,7 +655,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** Extra turns of sleep or confusion on foes you inflict it on. */
   z.object({ kind: z.literal('statusDurationBonus'), turns: z.number().int().positive() }),
   /** Chance of your Pokémon's (of `type`) moves inflicting a status. */
-  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), status: StatusIdSchema.optional(), value: z.number().positive() }),
   /** Extra turns of weather your side sets up. */
   z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
   /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
@@ -724,6 +724,26 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('critDamageMultiplier'), side: z.enum(['player', 'enemy']), value: z.number().positive() }),
   /** Damage dealt by your Mega Evolved Pokémon. */
   z.object({ kind: z.literal('megaDamageMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by your Z-Moves. */
+  z.object({ kind: z.literal('zMoveDamageMultiplier'), value: z.number().positive() }),
+  /** Your Z-Move can only be used after this many turns of the battle. */
+  z.object({ kind: z.literal('zMoveDelay'), turns: z.number().int().positive() }),
+  /** Damage dealt by multi-target (spread: true) or single-target (false) moves. */
+  z.object({ kind: z.literal('spreadMoveDamageMultiplier'), spread: z.boolean(), value: z.number().positive() }),
+  /** Pokémon of a type recover this share of max HP at the end of every turn. */
+  z.object({ kind: z.literal('turnHeal'), type: TypeNameSchema, percent: z.number().positive() }),
+  /** HP restored by healing moves your Pokémon use. */
+  z.object({ kind: z.literal('healingMoveMultiplier'), value: z.number().positive() }),
+  /** Burn damage on your own Pokémon. */
+  z.object({ kind: z.literal('burnDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by the first or last Pokémon in your party order. */
+  z.object({ kind: z.literal('partyPositionDamage'), position: z.enum(['first', 'last']), value: z.number().positive() }),
+  /** Prize money from gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
+  /** Accuracy of your status moves. */
+  z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
+  /** This many more locked shop entries are for sale early. */
+  z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
   /** Elite Four members are this many levels higher (negative: lower). */
   z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
   /** Foes can't heal with moves, drains or healing effects. */
