@@ -2933,6 +2933,78 @@
         "bravery"
       ],
       "variants": {}
+    },
+    {
+      "id": "champion-respect",
+      "displayName": "The Champion Tests You",
+      "messagePool": [
+        "{enemy}'s trainer has heard about you, and opens with everything!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "championRespect"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spa",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 72,
+        "text": "Faced a champion who had heard about the journey"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffd54f",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "champion-recall",
+      "displayName": "The Champion Remembers",
+      "messagePool": [
+        "{enemy}'s trainer remembers every road you took, and strikes first!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "championRecall"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 72,
+        "text": "Faced a champion who remembered the journey"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff8a3d",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
     }
   ],
   "awakening": {
