@@ -7,6 +7,7 @@ import { RIVAL_CONFIG } from '../../src/core/rivals/schema';
 import { sparkGain } from '../../src/core/rivals/manager';
 import { nextChoices } from '../../src/core/map';
 import type { TrainerPlan } from '../../src/core/encounters';
+import { rivalChronicle } from '../../src/core/rivals/chronicle';
 import { mostUsedType, rivalReturn, rivalReturnFlag, waitingRival } from '../../src/core/rivals/adapt';
 import { chooseNode, chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
@@ -127,5 +128,16 @@ describe('rival return and adaptation', () => {
     expect(ret.plan.members.map((m) => m.speciesId)).toContain('geodude');
     expect(ret.plan.members).toHaveLength(2);
     expect(rivalReturn(content, run, rival, plan, { kind: 'rematch', levelBonus: 1, extraMembers: 1, perStage: 1, perRegion: 4 })).toEqual(ret);
+  });
+});
+
+describe('rival chronicle', () => {
+  it('describes each rival: who, how it fights, what it remembers', () => {
+    const run = win(trainerBattle('chron'));
+    const [line] = rivalChronicle(content, run);
+    expect(line!.title).toContain('Youngster Joey');
+    expect(line!.summary).toMatch(/^Fights \w[\w-]*\. Strongest trait: \w+ \(\d+\)\.$/);
+    expect(line!.memory).toContain('Last battle:');
+    expect(rivalChronicle(content, createRun(content, { runId: 'x', seed: 'x', archetypeId: 'red' }))).toEqual([]);
   });
 });
