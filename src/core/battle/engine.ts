@@ -16,6 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
+import { shadowDamageMultiplier } from '../shadow';
 import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
@@ -339,7 +340,7 @@ export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng, brain?: EnemyB
 }
 
 /** Rough value of a move for a clever enemy (higher is better). */
-function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
+export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
   const { content, target, stages } = brain;
   const move = content.moves.get(moveId);
   if (!move) return 0;
@@ -1603,7 +1604,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
   const perks = ctx.perks;
-  const rivalry = rivalryMultiplier(ctx, user, target) * doublesDamageMultiplier(ctx, user, target, physical, moveType);
+  const rivalry = rivalryMultiplier(ctx, user, target) * doublesDamageMultiplier(ctx, user, target, physical, moveType) * shadowDamageMultiplier(user.mon, target.mon);
   if (!mods && !attrs && !perks && rivalry === 1) return damage;
   let multiplier = rivalry;
   const weather = weatherNow(ctx);

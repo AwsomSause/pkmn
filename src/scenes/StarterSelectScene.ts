@@ -25,6 +25,7 @@ export class StarterSelectScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.chosen = false;
     const { session } = services();
     const run = session.run!;
     const content = session.content;
@@ -94,12 +95,17 @@ export class StarterSelectScene extends Phaser.Scene {
     });
   }
 
+  private chosen = false;
+
   private focus(i: number): void {
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
   }
 
   private choose(i: number): void {
+    // Mashed presses arrive before the scene switch finishes (#122): only the first counts.
+    if (this.chosen) return;
+    this.chosen = true;
     services().session.chooseStarter(i);
     this.scene.start('Briefing');
   }

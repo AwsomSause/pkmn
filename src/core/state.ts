@@ -70,6 +70,8 @@ export const PokemonInstanceSchema = z.object({
   awakened: z.array(z.string()).optional(),
   /** In battle only: Dynamaxed, so its HP is doubled (core/battle/transform.ts). */
   dynamaxed: z.literal(true).optional(),
+  /** Shadow Pokémon (catalog #76-77, core/shadow.ts): the Heart Gauge, 100 (sealed) down to 0 (purified). */
+  shadow: z.object({ heart: z.number().int().min(1).max(100) }).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 

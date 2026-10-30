@@ -29,3 +29,32 @@ describe('reward synergy (catalog #95)', () => {
     if (lvl) expect(rewardSynergy(content, run, lvl)).toContain('Lowest');
   });
 });
+
+describe('reward synergy coverage (catalog #95)', () => {
+  it('says something for every reward kind that shows on the draft', async () => {
+    const { rewardSynergy } = await import('../../src/core/rewardSynergy');
+    const { createRun, chooseStarter } = await import('../../src/core/run');
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'syn2', archetypeId: 'red' }), 0);
+    const silent = new Set<string>();
+    for (const r of content.rewards.values()) if (rewardSynergy(content, run, r) === null) silent.add(r.effect.kind);
+    expect([...silent]).toEqual([]);
+  });
+});
+
+describe('reward comparison (catalog #118)', () => {
+  it('shows now and after for vitamins, level-ups and money without changing the run', async () => {
+    const { compareReward } = await import('../../src/core/rewardCompare');
+    const { createRun, chooseStarter } = await import('../../src/core/run');
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'cmp', archetypeId: 'red' }), 0);
+    const before = JSON.stringify(run);
+    const seen = new Set<string>();
+    for (const r of content.rewards.values()) {
+      const c = compareReward(content, run, r);
+      if (c) {
+        seen.add(r.effect.kind);
+      }
+    }
+    expect(seen.has('vitamin') && seen.has('levelUp')).toBe(true);
+    expect(JSON.stringify(run)).toBe(before);
+  });
+});
