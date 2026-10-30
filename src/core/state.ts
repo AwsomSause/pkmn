@@ -285,6 +285,9 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
+  /** A smart trainer's potions and deliberate switches so far this battle. */
+  enemyItemsUsed: z.number().int().min(0).default(0),
+  enemySwitches: z.number().int().min(0).default(0),
   /** Battle-scope story effects already used this battle (e.g. "toughened-it-out@p1"); see core/story/ledger.ts. */
   storyEffects: z.array(z.string()),
   /** Hyper counters: the current low-HP stand and super-effective hits survived (core/battle/hyper.ts). */

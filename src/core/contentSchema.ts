@@ -1142,7 +1142,21 @@ export const RulesetSchema = z.object({
 });
 export type Ruleset = z.infer<typeof RulesetSchema>;
 
+export const TrainerAiSchema = z.object({
+  /** A smart trainer (a boss) heals once its Pokémon is under this share of its max HP. */
+  healBelow: z.number().min(0).max(1),
+  /** The share of max HP a trainer's potion restores. */
+  healFraction: z.number().positive().max(1),
+  /** Potions a smart trainer may use in one battle. */
+  maxItems: z.number().int().min(0),
+  /** Times a smart trainer may swap its Pokémon out on purpose in one battle. */
+  maxSwitches: z.number().int().min(0),
+  /** It swaps when its best move is worth less than this share of the best a teammate has. */
+  switchRatio: z.number().positive().max(1),
+});
+
 export const BalanceSchema = z.object({
+  trainerAi: TrainerAiSchema,
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

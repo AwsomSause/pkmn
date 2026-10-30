@@ -130,3 +130,43 @@ describe('stage 5 held items', () => {
     expect(battle.sideEffects.player.reflect).toBeGreaterThanOrEqual(7);
   });
 });
+
+describe('stage 6 smart trainers', () => {
+  function boss(enemySpecies: string, enemyMove: string, hpFrac = 1) {
+    const player = createPokemon(content, 'rattata', 50, 'p');
+    player.moves = [{ id: 'splash', pp: 40 }];
+    const a = createPokemon(content, enemySpecies, 50, 'e1');
+    a.moves = [{ id: enemyMove, pp: content.moves.get(enemyMove)!.pp }];
+    const b = createPokemon(content, 'machop', 50, 'e2');
+    b.moves = [{ id: 'karate-chop', pp: 25 }, { id: 'tackle', pp: 35 }];
+    const battle = createBattle('trainer', [a, b], 0, player.uid);
+    battle.ai = 1;
+    a.hp = Math.max(1, Math.floor(a.hp * hpFrac));
+    const ctx: BattleContext = { content, battle, party: [player], inventory: {}, rng: new Rng(hashSeed('m6')), captureRng: new Rng(hashSeed('m6c')), catchMultiplier: 1 };
+    const events = [...resolveTurn(ctx, { kind: 'move', index: 0 }), ...resolveTurn(ctx, { kind: 'move', index: 0 })];
+    return { battle, events };
+  }
+  it('a boss with a nearly-fainted Pokémon uses one potion', () => {
+    const r = boss('snorlax', 'tackle', 0.1);
+    expect(r.events.filter((e) => e.type === 'item').length).toBe(1);
+    expect(r.battle.enemyItemsUsed).toBe(1);
+  });
+  it('a boss swaps when its moves cannot hurt the player', () => {
+    const r = boss('snorlax', 'splash');
+    expect(r.battle.enemySwitches).toBe(1);
+    expect(r.battle.enemyTeam[r.battle.enemyIndex]!.uid).toBe('e2');
+  });
+  it('an ordinary trainer never does either', () => {
+    const player = createPokemon(content, 'rattata', 50, 'p');
+    player.moves = [{ id: 'splash', pp: 40 }];
+    const a = createPokemon(content, 'snorlax', 50, 'e1');
+    a.moves = [{ id: 'splash', pp: 40 }];
+    a.hp = 3;
+    const b = createPokemon(content, 'machop', 50, 'e2');
+    const battle = createBattle('trainer', [a, b], 0, player.uid);
+    const ctx: BattleContext = { content, battle, party: [player], inventory: {}, rng: new Rng(hashSeed('m6o')), captureRng: new Rng(hashSeed('m6oc')), catchMultiplier: 1 };
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(battle.enemyItemsUsed + battle.enemySwitches).toBe(0);
+  });
+});

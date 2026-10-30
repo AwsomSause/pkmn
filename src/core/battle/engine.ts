@@ -237,6 +237,8 @@ export function createBattle(
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
+    enemyItemsUsed: 0,
+    enemySwitches: 0,
     storyEffects: [],
     hyper: freshHyperBattle(),
     outcome: null,
@@ -440,6 +442,18 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     }
   }
 
+  // A smart trainer may heal or swap Pokémon on purpose instead of attacking.
+  let enemyActed = false;
+  if (!battle.outcome && battle.kind === 'trainer' && battle.ai > 0 && enemyForcedIndex < 0 && enemyChoiceIndex < 0) {
+    enemyActed = trainerAiTurn(ctx, enemy, events);
+    if (enemyActed) {
+      enemy.mon = currentEnemy(battle);
+      enemy.stages = battle.enemyStages;
+      enemy.vol = battle.enemyVolatile;
+      resolveEntries(ctx, events);
+    }
+  }
+
   // Transformations (Mega Evolution, ...) happen before any move, so they count for turn order.
   if (!battle.outcome) {
     const move = action.kind === 'move' ? action : undefined;
@@ -483,10 +497,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
         : [{ user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }, { user: playerC, target: enemy, move: playerMove, slot: action.index }];
     actions.forEach((a, index) => {
       if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
-      if (a.user.side === 'enemy' && loseFreeTurn(battle, events)) return;
+      if (a.user.side === 'enemy' && (enemyActed || loseFreeTurn(battle, events))) return;
       actWithRage(ctx, a.user, enemy, events, () => executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events));
     });
-  } else if (!loseFreeTurn(battle, events)) {
+  } else if (!enemyActed && !loseFreeTurn(battle, events)) {
     actWithRage(ctx, enemy, enemy, events, () => executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events));
   }
   recordFaints(ctx, playerC, enemy, events);
@@ -2125,6 +2139,41 @@ function forceOut(ctx: BattleContext, target: Combatant, events: BattleEvent[]):
 }
 
 /** The trainer swaps its Pokémon for the one at `index` (the two trade places so the team order stays forward-only). */
+/**
+ * A smart trainer (ai > 0): drinks a potion when its Pokémon is nearly down,
+ * or swaps to a teammate whose moves would hurt the player's Pokémon much more.
+ * Uses no random numbers, so it never changes the other rolls. Returns true when it took its turn.
+ */
+function trainerAiTurn(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]): boolean {
+  const { battle, content } = ctx;
+  const cfg = content.balance.trainerAi;
+  const mon = enemy.mon;
+  if (mon.hp <= 0 || mon.dynamaxed) return false;
+  const max = calcStats(content, mon).hp;
+  if (battle.enemyItemsUsed < cfg.maxItems && mon.hp / max < cfg.healBelow) {
+    const gain = Math.min(max - mon.hp, Math.floor(max * cfg.healFraction));
+    if (gain > 0) {
+      battle.enemyItemsUsed += 1;
+      mon.hp += gain;
+      events.push({ type: 'item', itemId: 'hyper-potion', targetUid: mon.uid, message: `The trainer used a Hyper Potion on ${getSpecies(content, mon.speciesId).name}!`, hpAfter: mon.hp });
+      return true;
+    }
+  }
+  if (battle.enemySwitches >= cfg.maxSwitches || enemy.vol.turnsOut < 1 || enemy.vol.trapped || enemy.vol.bound > 0) return false;
+  const target = ctx.party[battle.activeIndex]!;
+  const best = (m: PokemonInstance, stages: Stages) =>
+    Math.max(0, ...m.moves.filter((x) => x.pp > 0).map((x) => moveValue({ content, ai: 1, target, stages }, m, x.id)));
+  const mine = best(mon, battle.enemyStages);
+  const spares = battle.enemyTeam.map((m, i) => ({ m, i })).filter(({ m, i }) => i !== battle.enemyIndex && m.hp > 0);
+  if (!spares.length) return false;
+  const pick = spares.reduce((b, s) => (best(s.m, freshStages()) > best(b.m, freshStages()) ? s : b));
+  const theirs = best(pick.m, freshStages());
+  if (theirs <= 0 || mine >= theirs * cfg.switchRatio) return false;
+  battle.enemySwitches += 1;
+  swapInEnemy(ctx, pick.i, events);
+  return true;
+}
+
 function swapInEnemy(ctx: BattleContext, index: number, events: BattleEvent[]): void {
   const { battle } = ctx;
   const out = battle.enemyTeam[battle.enemyIndex]!;

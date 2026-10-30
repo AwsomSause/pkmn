@@ -1,7 +1,7 @@
 {
- "unsupported-moves": 494,
- "unsupported-learnset-entries": 8578,
- "species-no-usable-moves": 5,
+ "unsupported-moves": 230,
+ "unsupported-learnset-entries": 2784,
+ "species-no-usable-moves": 2,
  "meetable-species-no-usable-moves": 0,
  "missing-sprites": 0,
  "missing-cries": 0,
@@ -14,10 +14,10 @@
  "unused-balance-settings": 0,
  "untested-save-migrations": 0,
  "invalid-entries": 0,
- "supported.species": 1011,
+ "supported.species": 1022,
  "supported.form": 105,
- "supported.move": 432,
- "supported.ability": 190,
+ "supported.move": 696,
+ "supported.ability": 220,
  "supported.item": 247,
  "supported.evolution": 611
 }

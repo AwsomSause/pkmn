@@ -210,7 +210,10 @@
  "reunion": {
   "archiveSize": 30,
   "chance": 0.4,
-  "afterEncounters": [4, 12],
+  "afterEncounters": [
+   4,
+   12
+  ],
   "friendship": 120,
   "hallOfFameFriendship": 200,
   "hallOfFameWeight": 2,
@@ -308,5 +311,12 @@
    "per": 1,
    "amount": 1
   }
- ]
+ ],
+ "trainerAi": {
+  "healBelow": 0.3,
+  "healFraction": 0.5,
+  "maxItems": 1,
+  "maxSwitches": 2,
+  "switchRatio": 0.5
+ }
 }
