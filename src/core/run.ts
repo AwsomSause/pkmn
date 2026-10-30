@@ -15,7 +15,7 @@
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, shopEarlyStockPerk, thirdBossLevels, isUltraBeast } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, shopEarlyStockPerk, thirdBossLevels, isUltraBeast, fishingRareTriesPerk, bonusRewardChancePerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
@@ -841,8 +841,9 @@ export function fishingOffer(content: Content, run: RunState, sideId: string): {
   for (let i = 0; i < rod.choices; i++) {
     let speciesId = rng.weighted(pool);
     for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = rng.weighted(pool);
-    if (rod.rare && i === rod.choices - 1) {
-      for (let j = 0; j < 3; j++) {
+    const tries = (rod.rare && i === rod.choices - 1 ? 3 : 0) + fishingRareTriesPerk(archetype.modifiers);
+    if (tries > 0) {
+      for (let j = 0; j < tries; j++) {
         const other = rng.weighted(pool);
         if (bst(other) > bst(speciesId)) speciesId = other;
       }
@@ -1813,6 +1814,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     extraChoices += 1;
   }
   if (outcome === 'win' && battle.kind === 'trainer' && hasPerk(content, run, 'extraChoice')) extraChoices += 1;
+  // Looker: some wins add a reward choice (a generator of its own, so no other roll moves).
+  const bonusChance = bonusRewardChancePerk(runArchetype(content, run).modifiers);
+  if (outcome === 'win' && bonusChance > 0 && new Rng(hashSeed(`${run.seed}::bonus-reward::${run.encountersCompleted}`)).float() < bonusChance) extraChoices += 1;
   const dowsing = perkItem(content, run, 'dowsing');
   if (dowsing && !battle.fishing && !usedThisStage(run, dowsing)) {
     markUsedThisStage(run, dowsing);

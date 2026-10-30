@@ -14,7 +14,7 @@ import { bridgeEventStop } from './events';
 import type { CatalogEffect, CatalogEntry, Content, EncounterMod, Perk, Theme, TypeName } from './contentSchema';
 import { hooksOf } from './battle/held';
 import { runArchetype } from './archetypes';
-import { foodCount, hiddenItemChancePerk } from './trainerPerks';
+import { fishingRareTriesPerk, foodCount, hiddenItemChancePerk } from './trainerPerks';
 import { findNode } from './map';
 import { hashSeed, Rng } from './rng';
 import type { PokemonInstance, RunState } from './state';
@@ -452,7 +452,8 @@ export function addItemStops(content: Content, run: RunState): void {
   const stage = run.stage;
   if (!stage || stage.kind !== 'stage') return;
   const kinds: ('heal' | 'shop' | 'fish' | 'event')[] = [];
-  if (fishingRod(content, run)) kinds.push('fish');
+  // Lana fishes without a Rod: every stage has a spot (an Old Rod's single choice, with her better odds).
+  if (fishingRod(content, run) || fishingRareTriesPerk(runArchetype(content, run).modifiers) > 0) kinds.push('fish');
   for (const p of perksOf(activePerks(content, run), 'extraStop')) if (p.perk.where === 'stage') for (let i = 0; i < p.copies; i++) kinds.push(p.perk.kind);
   if (kinds.length === 0) return;
   const rng = new Rng(hashSeed(`${run.seed}::item-stops::${stageKey(run)}`));
