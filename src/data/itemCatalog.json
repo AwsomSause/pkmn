@@ -645,7 +645,7 @@
   "id": "hp-up",
   "name": "HP Up",
   "family": "Vitamins, Wings and level items",
-  "description": "Max HP +10% (already in game)",
+  "description": "Max HP +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -658,7 +658,7 @@
   "id": "protein",
   "name": "Protein",
   "family": "Vitamins, Wings and level items",
-  "description": "Attack +10% (already in game)",
+  "description": "Attack +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -671,7 +671,7 @@
   "id": "iron",
   "name": "Iron",
   "family": "Vitamins, Wings and level items",
-  "description": "Defense +10% (already in game)",
+  "description": "Defense +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -684,7 +684,7 @@
   "id": "calcium",
   "name": "Calcium",
   "family": "Vitamins, Wings and level items",
-  "description": "Sp. Atk +10% (already in game)",
+  "description": "Sp. Atk +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -697,7 +697,7 @@
   "id": "zinc",
   "name": "Zinc",
   "family": "Vitamins, Wings and level items",
-  "description": "Sp. Def +10% (already in game)",
+  "description": "Sp. Def +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -710,7 +710,7 @@
   "id": "carbos",
   "name": "Carbos",
   "family": "Vitamins, Wings and level items",
-  "description": "Speed +10% (already in game)",
+  "description": "Speed +10%",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 3,
@@ -723,7 +723,7 @@
   "id": "rare-candy",
   "name": "Rare Candy",
   "family": "Vitamins, Wings and level items",
-  "description": "+1 level (already in game)",
+  "description": "+1 level",
   "rarity": "rare",
   "stacksOn": "pokemon",
   "max": null,
@@ -1648,7 +1648,7 @@
   "id": "fist-plate",
   "name": "Fist Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 Strength (already in game)",
+  "description": "+5 Strength",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1661,7 +1661,7 @@
   "id": "mind-plate",
   "name": "Mind Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 Intelligence (already in game)",
+  "description": "+5 Intelligence",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1674,7 +1674,7 @@
   "id": "zap-plate",
   "name": "Zap Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 Speed (already in game)",
+  "description": "+5 Speed",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1687,7 +1687,7 @@
   "id": "flame-plate",
   "name": "Flame Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 toward Rage (already in game)",
+  "description": "+5 toward Rage",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1700,7 +1700,7 @@
   "id": "meadow-plate",
   "name": "Meadow Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 toward Peace (already in game)",
+  "description": "+5 toward Peace",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1713,7 +1713,7 @@
   "id": "dread-plate",
   "name": "Dread Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 toward Evil (already in game)",
+  "description": "+5 toward Evil",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -1726,7 +1726,7 @@
   "id": "pixie-plate",
   "name": "Pixie Plate",
   "family": "Plates (team-wide)",
-  "description": "+5 Good (already in game; no icon in the pack)",
+  "description": "+5 Good",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5683,7 +5683,7 @@
   "id": "power-band",
   "name": "Power Band",
   "family": "Attribute items",
-  "description": "+15 Strength (already in game)",
+  "description": "+15 Strength",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5696,7 +5696,7 @@
   "id": "wise-glasses",
   "name": "Wise Glasses",
   "family": "Attribute items",
-  "description": "+15 Intelligence (already in game)",
+  "description": "+15 Intelligence",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5709,7 +5709,7 @@
   "id": "quick-claw",
   "name": "Quick Claw",
   "family": "Attribute items",
-  "description": "+15 Speed (already in game)",
+  "description": "+15 Speed",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5722,7 +5722,7 @@
   "id": "lucky-egg",
   "name": "Lucky Egg",
   "family": "Attribute items",
-  "description": "+5 Charisma (already in game, shop)",
+  "description": "+5 Charisma",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5735,7 +5735,7 @@
   "id": "soothe-bell",
   "name": "Soothe Bell",
   "family": "Attribute items",
-  "description": "Reward: +15 Love; in the Bag it still evolves friendship Pokémon (already in game)",
+  "description": "Reward: +15 Love; in the Bag it still evolves friendship Pokémon",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5748,7 +5748,7 @@
   "id": "razor-claw",
   "name": "Razor Claw",
   "family": "Attribute items",
-  "description": "Reward: 20 toward Rage; in the Bag it still evolves Sneasel (already in game)",
+  "description": "Reward: 20 toward Rage; in the Bag it still evolves Sneasel",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5761,7 +5761,7 @@
   "id": "shell-bell",
   "name": "Shell Bell",
   "family": "Attribute items",
-  "description": "20 toward Peace (already in game)",
+  "description": "20 toward Peace",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5774,7 +5774,7 @@
   "id": "kings-rock",
   "name": "King's Rock",
   "family": "Attribute items",
-  "description": "Reward: 20 toward Good; in the Bag it still evolves Poliwhirl and Slowpoke (already in game)",
+  "description": "Reward: 20 toward Good; in the Bag it still evolves Poliwhirl and Slowpoke",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5787,7 +5787,7 @@
   "id": "blackglasses",
   "name": "Black Glasses",
   "family": "Attribute items",
-  "description": "20 toward Evil (already in game as Black Glasses)",
+  "description": "20 toward Evil",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5818,7 +5818,7 @@
   "id": "love-sweet",
   "name": "Love Sweet",
   "family": "Attribute items",
-  "description": "+5 Love (already in game)",
+  "description": "+5 Love",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5831,7 +5831,7 @@
   "id": "charm-coin",
   "name": "Charm Coin",
   "family": "Attribute items",
-  "description": "+15 Charisma (already in game)",
+  "description": "+15 Charisma",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5844,7 +5844,7 @@
   "id": "lucky-charm",
   "name": "Lucky Charm",
   "family": "Attribute items",
-  "description": "+15 Luck (already in game)",
+  "description": "+15 Luck",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
@@ -5857,7 +5857,7 @@
   "id": "shiny-charm",
   "name": "Shiny Charm",
   "family": "Attribute items",
-  "description": "+30 Luck (already in game)",
+  "description": "+30 Luck",
   "rarity": "rare",
   "stacksOn": "player",
   "max": null,
@@ -5870,7 +5870,7 @@
   "id": "last-stand-charm",
   "name": "Last Stand Charm",
   "family": "Attribute items",
-  "description": "Your last Pokémon holds on with 1 HP once (already in game)",
+  "description": "Your last Pokémon holds on with 1 HP once",
   "rarity": "rare",
   "stacksOn": "player",
   "max": null,
@@ -6189,7 +6189,7 @@
   "id": "nugget",
   "name": "Nugget",
   "family": "Valuables",
-  "description": "+₽100 (already in game)",
+  "description": "+₽100",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
@@ -6202,7 +6202,7 @@
   "id": "big-nugget",
   "name": "Big Nugget",
   "family": "Valuables",
-  "description": "+₽300 (already in game)",
+  "description": "+₽300",
   "rarity": "rare",
   "stacksOn": "player",
   "max": null,
@@ -6588,7 +6588,7 @@
   "id": "full-heal",
   "name": "Full Heal",
   "family": "Healing and status items",
-  "description": "Cures status (already in game)",
+  "description": "Cures status",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": null,
@@ -6601,7 +6601,7 @@
   "id": "revive",
   "name": "Revive",
   "family": "Healing and status items",
-  "description": "Revives at 50% HP (already in game)",
+  "description": "Revives at 50% HP",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": null,
@@ -6614,7 +6614,7 @@
   "id": "ether",
   "name": "Ether",
   "family": "Healing and status items",
-  "description": "+10 PP to each move (already in game)",
+  "description": "+10 PP to each move",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": null,
@@ -13034,6 +13034,373 @@
      "multiplier": 1.25
     }
    ]
+  }
+ },
+ {
+  "id": "electric-seed",
+  "name": "Electric Seed",
+  "family": "Battle held items",
+  "description": "Raises Defense by 1 once when Electric Terrain is up",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "electric-seed",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "terrainSeed",
+     "terrain": "electric",
+     "stat": "def",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
+  "id": "grassy-seed",
+  "name": "Grassy Seed",
+  "family": "Battle held items",
+  "description": "Raises Defense by 1 once when Grassy Terrain is up",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "grassy-seed",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "terrainSeed",
+     "terrain": "grassy",
+     "stat": "def",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
+  "id": "misty-seed",
+  "name": "Misty Seed",
+  "family": "Battle held items",
+  "description": "Raises Sp. Def by 1 once when Misty Terrain is up",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "misty-seed",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "terrainSeed",
+     "terrain": "misty",
+     "stat": "spd",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
+  "id": "psychic-seed",
+  "name": "Psychic Seed",
+  "family": "Battle held items",
+  "description": "Raises Sp. Def by 1 once when Psychic Terrain is up",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "psychic-seed",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "terrainSeed",
+     "terrain": "psychic",
+     "stat": "spd",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
+  "id": "red-canari-plush-1",
+  "name": "Red Canari Plush Lv.1",
+  "family": "Valuables",
+  "description": "+₽100",
+  "rarity": "common",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "red-canari-plush-1",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 100,
+   "changes": {}
+  }
+ },
+ {
+  "id": "red-canari-plush-2",
+  "name": "Red Canari Plush Lv.2",
+  "family": "Valuables",
+  "description": "+₽300, +1 Charisma",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "red-canari-plush-2",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 300,
+   "changes": {
+    "charisma": 1
+   }
+  }
+ },
+ {
+  "id": "red-canari-plush-3",
+  "name": "Red Canari Plush Lv.3",
+  "family": "Valuables",
+  "description": "+₽700, +2 Charisma",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "red-canari-plush-3",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 700,
+   "changes": {
+    "charisma": 2
+   }
+  }
+ },
+ {
+  "id": "blue-canari-plush-1",
+  "name": "Blue Canari Plush Lv.1",
+  "family": "Valuables",
+  "description": "+₽100",
+  "rarity": "common",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "blue-canari-plush-1",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 100,
+   "changes": {}
+  }
+ },
+ {
+  "id": "blue-canari-plush-2",
+  "name": "Blue Canari Plush Lv.2",
+  "family": "Valuables",
+  "description": "+₽300, +1 Charisma",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "blue-canari-plush-2",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 300,
+   "changes": {
+    "charisma": 1
+   }
+  }
+ },
+ {
+  "id": "blue-canari-plush-3",
+  "name": "Blue Canari Plush Lv.3",
+  "family": "Valuables",
+  "description": "+₽700, +2 Charisma",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "blue-canari-plush-3",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 700,
+   "changes": {
+    "charisma": 2
+   }
+  }
+ },
+ {
+  "id": "green-canari-plush-1",
+  "name": "Green Canari Plush Lv.1",
+  "family": "Valuables",
+  "description": "+₽100",
+  "rarity": "common",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "green-canari-plush-1",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 100,
+   "changes": {}
+  }
+ },
+ {
+  "id": "green-canari-plush-2",
+  "name": "Green Canari Plush Lv.2",
+  "family": "Valuables",
+  "description": "+₽300, +1 Charisma",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "green-canari-plush-2",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 300,
+   "changes": {
+    "charisma": 1
+   }
+  }
+ },
+ {
+  "id": "green-canari-plush-3",
+  "name": "Green Canari Plush Lv.3",
+  "family": "Valuables",
+  "description": "+₽700, +2 Charisma",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "green-canari-plush-3",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 700,
+   "changes": {
+    "charisma": 2
+   }
+  }
+ },
+ {
+  "id": "pink-canari-plush-1",
+  "name": "Pink Canari Plush Lv.1",
+  "family": "Valuables",
+  "description": "+₽100",
+  "rarity": "common",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "pink-canari-plush-1",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 100,
+   "changes": {}
+  }
+ },
+ {
+  "id": "pink-canari-plush-2",
+  "name": "Pink Canari Plush Lv.2",
+  "family": "Valuables",
+  "description": "+₽300, +1 Charisma",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "pink-canari-plush-2",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 300,
+   "changes": {
+    "charisma": 1
+   }
+  }
+ },
+ {
+  "id": "pink-canari-plush-3",
+  "name": "Pink Canari Plush Lv.3",
+  "family": "Valuables",
+  "description": "+₽700, +2 Charisma",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "pink-canari-plush-3",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 700,
+   "changes": {
+    "charisma": 2
+   }
+  }
+ },
+ {
+  "id": "gold-canari-plush-1",
+  "name": "Gold Canari Plush Lv.1",
+  "family": "Valuables",
+  "description": "+₽100",
+  "rarity": "common",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "gold-canari-plush-1",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 100,
+   "changes": {}
+  }
+ },
+ {
+  "id": "gold-canari-plush-2",
+  "name": "Gold Canari Plush Lv.2",
+  "family": "Valuables",
+  "description": "+₽300, +1 Charisma",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "gold-canari-plush-2",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 300,
+   "changes": {
+    "charisma": 1
+   }
+  }
+ },
+ {
+  "id": "gold-canari-plush-3",
+  "name": "Gold Canari Plush Lv.3",
+  "family": "Valuables",
+  "description": "+₽700, +2 Charisma",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": null,
+  "how": "use",
+  "icon": "gold-canari-plush-3",
+  "status": "supported",
+  "effect": {
+   "kind": "money",
+   "amount": 700,
+   "changes": {
+    "charisma": 2
+   }
   }
  }
 ]

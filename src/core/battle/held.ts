@@ -635,6 +635,11 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
       raiseStage(holder, stat, hook.stages, itemId, events);
     }
   }
+  for (const { itemId, hook } of hooks(all, 'terrainSeed')) {
+    if (ctx.battle.terrain?.id !== hook.terrain) continue;
+    eatBerry(ctx, holder, itemId);
+    raiseStage(holder, hook.stat, hook.stages, itemId, events);
+  }
   for (const { itemId, hook } of hooks(all, 'berrySure')) {
     if (!below(hook.below) || state.sure.includes(mon.uid)) continue;
     eatBerry(ctx, holder, itemId);

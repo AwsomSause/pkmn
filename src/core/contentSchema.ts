@@ -1210,6 +1210,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
   /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
   z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive() }),
+  /** While this terrain is up: a stat rises once, then the seed is used up (Electric, Grassy, Misty and Psychic Seed). */
+  z.object({ hook: z.literal('terrainSeed'), terrain: TerrainSchema, stat: z.enum(['def', 'spd']), stages: z.number().int().positive() }),
 ]);
 export type HeldHook = z.infer<typeof HeldHookSchema>;
 

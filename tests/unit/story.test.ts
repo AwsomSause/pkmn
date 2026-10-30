@@ -56,13 +56,13 @@ describe('story foundation: random streams', () => {
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2 to 3b-3b (held, map, shop, money, map-movement, map-stop and draft items in drafts, bosses
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
-  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer).
+  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies).
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '80ef2fe33d6d5c51',
-    'STORY2/0': '2fde4a902ddd3d1c',
+    'STORY1/0': '669dccd7b95a2adb',
+    'STORY2/0': 'd7635e211a5bedce',
     'STORY4/0': 'c9acc58934a28713',
-    'STORY5/0': 'fa01e5230e73e916',
-    'STORY6/0': 'e149f57f2e6e324d',
+    'STORY5/0': 'af6b4743054d0973',
+    'STORY6/0': 'a29e172fa0d6122f',
     'STORY7/0': '9fb9e0425e407819',
     'STORY8/0': 'b1528d834f61d683',
   };
