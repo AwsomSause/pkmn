@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 11, settings: 3, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 12, settings: 3, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -195,6 +195,13 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     10: (data) => {
       const run = data as Json;
       return { ...run, story: { ...(run.story as Json), rivals: [] } };
+    },
+    // v12 (rival bonds): each rival gets its Pokémon bonds and off-screen history.
+    11: (data) => {
+      const run = data as Json;
+      const story = run.story as Json;
+      const rivals = ((story.rivals as Json[]) ?? []).map((r) => ({ bonds: {}, offscreen: [], ...r }));
+      return { ...run, story: { ...story, rivals } };
     },
   },
   settings: {

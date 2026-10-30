@@ -69,6 +69,10 @@ for (const e of sections.paths!) if (pathIds.has(e.id)) e.status = 'limited';
 const arcs = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalArcs.json'), 'utf8')) as { arcs: { id: string }[] };
 const arcIds = new Set(arcs.arcs.map((x) => x.id));
 for (const e of sections.arcs!) if (arcIds.has(e.id)) e.status = 'limited';
+// Off-screen events run when rivalBonds.json lists an event of that name (limited: generic habits, hyperReadiness is a number only).
+const bondEvents = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalBonds.json'), 'utf8')) as { events: { name: string }[] };
+const bondNames = new Set(bondEvents.events.map((x) => x.name));
+for (const e of sections.offscreenEvents!) if (bondNames.has(e.name)) e.status = 'limited';
 for (const e of sections.mechanics!) e.status = profiles.mechanics[e.id]?.status ?? e.status;
 writeFileSync(join(root, 'src', 'data', 'rivalCatalog.json'), JSON.stringify({ source: 'A Living Rivalry Engine - Examples, Possibilities, and Guidence.md', ...sections }, null, 1) + '\n');
 console.log(Object.entries(sections).map(([k, v]) => `${k}: ${v.length}`).join(', '));

@@ -177,6 +177,23 @@ export const TRAIT_KEYS = ['ambition', 'pride', 'empathy', 'adaptability', 'vind
 export const TraitsSchema = z.object({ ambition: z.number().int().min(0).max(100), pride: z.number().int().min(0).max(100), empathy: z.number().int().min(0).max(100), adaptability: z.number().int().min(0).max(100), vindictiveness: z.number().int().min(0).max(100), resilience: z.number().int().min(0).max(100) });
 export type Traits = z.infer<typeof TraitsSchema>;
 
+const Dim = z.number().min(0).max(100);
+/** Examples §4.1: separate bond dimensions (0–100), a Pokémon trait, habits and recent events. */
+export const BondSchema = z.object({
+  trust: Dim, affection: Dim, respect: Dim, synchronization: Dim, confidence: Dim, autonomy: Dim, strain: Dim, sharedHistory: z.number().min(0),
+  hyperReadiness: Dim,
+  trait: z.string(),
+  habits: z.record(z.string(), z.string()).default({}),
+  recent: z.array(z.string()).default([]),
+});
+export type Bond = z.infer<typeof BondSchema>;
+/** An off-screen event and what caused it (Examples §11 RivalEvent). */
+export const OffscreenEventSchema = z.object({
+  id: z.string(), eventType: z.string(), pokemon: z.string(), at: z.string(), cause: z.string().nullable(),
+  visibility: z.enum(['private', 'rumor', 'observed']), text: z.string(), shown: z.boolean().default(false),
+});
+export type OffscreenEvent = z.infer<typeof OffscreenEventSchema>;
+
 export const RivalSchema = z.object({
   id: z.string(),
   /** The trainer's class id and name when the rivalry began. */
@@ -199,6 +216,9 @@ export const RivalSchema = z.object({
   away: z.number().int().min(0).default(0),
   cooldown: z.number().int().min(0).default(0),
   progress: z.number().int().min(0).default(0),
+  /** Bonds with its Pokémon, by species id, and what happened off-screen (newest last). */
+  bonds: z.record(z.string(), BondSchema).default({}),
+  offscreen: z.array(OffscreenEventSchema).default([]),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */

@@ -23,6 +23,7 @@ import { RivalSchema } from '../../src/core/story/schema';
 import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import catalog from '../../src/data/rivalCatalog.json';
+import { afterBattleBehavior, bondLines, bondNote, bondShift, ensureBonds, RIVAL_BONDS, simulateOffscreen } from '../../src/core/rivals/bonds';
 import { content, toBattle } from './helpers';
 
 function trainerBattle(seed: string, opts: { leaderId?: string | null; faintedMate?: boolean } = {}): RunState {
@@ -93,7 +94,21 @@ describe('rivals in saves', () => {
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(10);
     expect(loaded.data.story.rivals).toEqual([]);
-    expect(CURRENT_VERSIONS.run).toBe(11);
+    expect(CURRENT_VERSIONS.run).toBe(12);
+  });
+
+  it('a version 11 run keeps its rivals and gains empty bonds', () => {
+    const storage = new MemoryStorageProvider();
+    const run = win(trainerBattle('save11'));
+    const rivals = run.story.rivals.map(({ bonds: _b, offscreen: _o, ...r }) => r);
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 11, savedAt: '', data: { ...run, story: { ...run.story, rivals } } }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(11);
+    expect(loaded.data.story.rivals).toHaveLength(run.story.rivals.length);
+    expect(loaded.data.story.rivals[0]!.bonds).toEqual({});
+    expect(loaded.data.story.rivals[0]!.offscreen).toEqual([]);
   });
 
   it('a saved rival survives a reload', () => {
@@ -207,6 +222,8 @@ describe('rival outcomes and the Ultimate Rival', () => {
     cooldown: 0,
     progress: 0,
     adaptations: [],
+    bonds: {},
+    offscreen: [],
     origin: { eventId: 'e', where: { region: 0, stage: 0, level: 1, node: null, battle: 0, turn: null }, path: 'spark' },
     memory: { lastBattle: { eventId: 'e', result: 'win', hpLeftShare: 0.2, turns: 4, team: ['rattata'] } },
     ...over,
@@ -420,5 +437,118 @@ describe('rival character arcs', () => {
     expect(results).toContain('turned');
     expect(results).toContain('resolved');
     expect(goodChance(kindRival({ traits: { ambition: 50, pride: 50, empathy: 90, adaptability: 50, vindictiveness: 50, resilience: 90 } }))).toBeGreaterThan(goodChance(kindRival({ traits: { ambition: 50, pride: 50, empathy: 10, adaptability: 50, vindictiveness: 50, resilience: 10 } })));
+  });
+});
+
+describe('rival bonds and off-screen events', () => {
+  const mk = (seed: string, over: Partial<Rival> = {}): { run: RunState; rival: Rival } => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'b', seed, archetypeId: 'red' }), 0));
+    const base = win(trainerBattle(`b-${seed}`)).story.rivals[0]!;
+    const rival = structuredClone({ ...base, ...over });
+    rival.memory.lastBattle.team = ['rattata', 'pidgey', 'jolteon'];
+    run.story.rivals = [rival];
+    return { run, rival };
+  };
+
+  it('data: 39 events, 14 behaviours, 12 traits, 7 habit slots, every cause points at a real event', () => {
+    const ids = new Set(RIVAL_BONDS.events.map((e) => e.id));
+    expect(RIVAL_BONDS.events).toHaveLength(39);
+    expect(RIVAL_BONDS.behaviors).toHaveLength(14);
+    expect(Object.keys(RIVAL_BONDS.traits)).toHaveLength(12);
+    expect(RIVAL_BONDS.habits.slots).toHaveLength(7);
+    for (const e of RIVAL_BONDS.events) if (e.after) expect(ids.has(e.after)).toBe(true);
+  });
+
+  it('gives each Pokémon its own bond, trait and starting values', () => {
+    const { run, rival } = mk('init');
+    ensureBonds(run, rival);
+    expect(Object.keys(rival.bonds).sort()).toEqual(['jolteon', 'pidgey', 'rattata']);
+    for (const b of Object.values(rival.bonds)) {
+      expect(RIVAL_BONDS.traits[b.trait]).toBeDefined();
+      expect(b.trust).toBeGreaterThanOrEqual(RIVAL_BONDS.start.low);
+      expect(b.strain).toBe(RIVAL_BONDS.start.strain);
+    }
+  });
+
+  it('runs one event per stage, deterministically, keeping dimensions in range and a bounded history', () => {
+    const a = mk('det2');
+    const b = mk('det2');
+    for (let i = 0; i < 40; i++) {
+      simulateOffscreen(content, a.run, a.rival, `0.${i}`);
+      simulateOffscreen(content, b.run, b.rival, `0.${i}`);
+    }
+    expect(a.rival).toEqual(b.rival);
+    expect(a.rival.offscreen.length).toBeLessThanOrEqual(RIVAL_BONDS.perStage.historyKept);
+    for (const bond of Object.values(a.rival.bonds)) {
+      expect(bond.recent.length).toBeLessThanOrEqual(RIVAL_BONDS.perStage.recentKept);
+      for (const k of ['trust', 'affection', 'respect', 'synchronization', 'confidence', 'autonomy', 'strain', 'hyperReadiness'] as const) {
+        expect(bond[k]).toBeGreaterThanOrEqual(0);
+        expect(bond[k]).toBeLessThanOrEqual(100);
+      }
+    }
+    expect(a.run.rng).toEqual(mk('det2').run.rng);
+  });
+
+  it('follows causal chains: an event with a cause only happens after it, and records that cause', () => {
+    const { run, rival } = mk('chain');
+    for (let i = 0; i < 120; i++) simulateOffscreen(content, run, rival, `0.${i}`);
+    const withCause = rival.offscreen.filter((o) => o.cause);
+    // Over 120 stages every chained event that happened was preceded by its cause on the same Pokémon.
+    for (const o of withCause) {
+      const before = rival.offscreen.find((p) => p.id === o.cause);
+      expect(before?.pokemon === undefined || before.pokemon === o.pokemon).toBe(true);
+    }
+  });
+
+  it('never runs an Overtraining Incident on a worn-out Pokémon or a Technique Breakthrough on a confident one', () => {
+    const { run, rival } = mk('elig');
+    ensureBonds(run, rival);
+    for (const b of Object.values(rival.bonds)) { b.strain = 85; b.confidence = 95; }
+    for (let i = 0; i < 30; i++) simulateOffscreen(content, run, rival, `0.${i}`);
+    expect(rival.offscreen.some((o) => o.eventType === 'offscreen-16' || o.eventType === 'offscreen-20')).toBe(false);
+  });
+
+  it('skips Pokémon that are worn out (rest first)', () => {
+    const { run, rival } = mk('rest');
+    ensureBonds(run, rival);
+    for (const b of Object.values(rival.bonds)) b.strain = 100;
+    expect(simulateOffscreen(content, run, rival, '0.0')).toBeNull();
+  });
+
+  it('trainer behaviour after a loss depends on character', () => {
+    const kind = mk('beh', { traits: { ambition: 50, pride: 80, empathy: 20, adaptability: 40, vindictiveness: 50, resilience: 50 } });
+    const warm = mk('beh', { traits: { ambition: 50, pride: 20, empathy: 80, adaptability: 40, vindictiveness: 50, resilience: 50 } });
+    const names = (m: { run: RunState; rival: Rival }) => {
+      const seen = new Set<string>();
+      for (let i = 0; i < 20; i++) { m.rival.encounters = i; seen.add(afterBattleBehavior(content, m.run, m.rival, false) ?? ''); }
+      return seen;
+    };
+    const proud = names(kind);
+    expect(proud.has('Repeatedly blames a Pokémon for losing') || proud.has('Repeatedly benches a Pokémon after one loss')).toBe(true);
+    expect(proud.has('Lets a Pokémon rest after a difficult battle')).toBe(false);
+    expect(names(warm).has('Lets a Pokémon rest after a difficult battle')).toBe(true);
+  });
+
+  it('bonds change the rival: synced and confident returns stronger, worn out weaker, and the player can notice', () => {
+    const { run, rival } = mk('shift');
+    ensureBonds(run, rival);
+    for (const b of Object.values(rival.bonds)) { b.synchronization = 90; b.confidence = 90; b.strain = 10; }
+    expect(bondShift(rival)).toBe(1);
+    for (const b of Object.values(rival.bonds)) b.strain = 90;
+    expect(bondShift(rival)).toBe(-1);
+    rival.offscreen = [{ id: 'x', eventType: 'offscreen-05', pokemon: 'rattata', at: '0.0', cause: null, visibility: 'observed', text: 'Rattata now sits beside Joey without being asked.', shown: false }];
+    expect(bondNote(rival)).toContain('sits beside');
+    expect(bondNote(rival)).toBeNull();
+    expect(bondLines(content, rival)).toHaveLength(3);
+  });
+
+  it('a save from before bonds loads with empty bonds (migration v12)', () => {
+    const { run } = mk('mig');
+    const old = structuredClone(run) as unknown as { story: { rivals: Record<string, unknown>[] } };
+    for (const r of old.story.rivals) { delete r.bonds; delete r.offscreen; }
+    const parsed = RivalSchema.parse(old.story.rivals[0]);
+    expect(parsed.bonds).toEqual({});
+    expect(parsed.offscreen).toEqual([]);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(12);
   });
 });

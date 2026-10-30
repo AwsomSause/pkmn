@@ -9,6 +9,7 @@ import type { RunState } from '../state';
 import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
 import { advanceArc } from './arcs';
+import { simulateOffscreen } from './bonds';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 
@@ -38,6 +39,11 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
     r.away += 1;
     advanceArc(content, run, r, true);
     if (r.cooldown > 0) r.cooldown -= 1;
+    if (r.state !== 'retired') {
+      // Background simulation: one bond event per stage, with its cause on record.
+      const ev = simulateOffscreen(content, run, r, `${run.regionIndex}.${stage}`);
+      if (ev?.visibility === 'rumor') rumor ??= `${title(content, r)}: ${ev.text}`;
+    }
     if (!isHostile(r)) continue;
     const who = title(content, r);
     if (rng.float() < w.privateGoalChance && r.traits.ambition >= w.privateGoalMinAmbition) {

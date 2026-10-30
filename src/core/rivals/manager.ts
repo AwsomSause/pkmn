@@ -74,6 +74,8 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
     encounters: 0,
     setbacks: 0,
     adaptations: [],
+    bonds: {},
+    offscreen: [],
     origin: { eventId: input.ended.id, where: input.where, path: path.id },
     memory: { lastBattle: { eventId: input.ended.id, result: 'win', hpLeftShare: input.hpLeftShare, turns: input.turns, team: input.team } },
   };

@@ -3,6 +3,7 @@
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import catalog from '../../data/rivalCatalog.json';
+import { bondLines } from './bonds';
 import { RIVAL_CONFIG } from './schema';
 import { ultimateRival } from './ultimate';
 
@@ -13,6 +14,8 @@ export interface RivalLine {
   summary: string;
   /** What it remembers of your last battle, and what it has learned. */
   memory: string;
+  /** How it gets on with each of its Pokémon (bond summary). */
+  bonds: string[];
   /** The ladder rung: "Nemesis", "Ally"... */
   state: string;
   /** True for the rival the story follows. */
@@ -34,6 +37,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       state: r.state[0]!.toUpperCase() + r.state.slice(1),
       ultimate: ultimateRival(run)?.id === r.id,
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
+      bonds: bondLines(content, r),
     };
   });
 }

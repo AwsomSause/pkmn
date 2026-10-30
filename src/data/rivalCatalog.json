@@ -726,273 +726,273 @@
    "name": "Shared Meal",
    "group": "Everyday bonding",
    "text": "The trainer learns a Pokémon's food preferences. Affection rises; future scenes may reference a favorite treat.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "camp-routine",
    "name": "Camp Routine",
    "group": "Everyday bonding",
    "text": "The Pokémon develops a preferred spot or activity during rest. Repeated routines can create a recognizable habit.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "grooming-and-care",
    "name": "Grooming and Care",
    "group": "Everyday bonding",
    "text": "The trainer helps maintain the Pokémon's comfort and appearance. Trust may rise, especially for a nervous Pokémon.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "play-session",
    "name": "Play Session",
    "group": "Everyday bonding",
    "text": "A playful Pokémon becomes more confident; a reserved one may slowly begin initiating interactions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "quiet-companionship",
    "name": "Quiet Companionship",
    "group": "Everyday bonding",
    "text": "The Pokémon chooses to sit near the trainer without prompting. A small but meaningful signal of growing trust.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "preferred-sleeping-arrangement",
    "name": "Preferred Sleeping Arrangement",
    "group": "Everyday bonding",
    "text": "A Pokémon begins sleeping closer to its trainer or another team member. This can reveal attachment or a need for reassurance.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "greeting-ritual",
    "name": "Greeting Ritual",
    "group": "Everyday bonding",
    "text": "The pair develops a unique greeting, gesture, or routine that may appear in later scenes.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "comfort-after-a-bad-day",
    "name": "Comfort After a Bad Day",
    "group": "Everyday bonding",
    "text": "The Pokémon comforts a distressed trainer, reversing the usual caretaker dynamic and potentially changing the trainer's motivation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "technique-practice",
    "name": "Technique Practice",
    "group": "Training and personal development",
    "text": "The trainer and Pokémon repeat a specific technique. Success depends on aptitude, condition, instruction quality, and time invested.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "failed-drill",
    "name": "Failed Drill",
    "group": "Training and personal development",
    "text": "Repeated failure can produce frustration, adaptation, or a decision to try another teaching method.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "independent-practice",
    "name": "Independent Practice",
    "group": "Training and personal development",
    "text": "A Pokémon trains on its own initiative. High-autonomy Pokémon may develop faster when allowed to experiment.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "friendly-sparring",
    "name": "Friendly Sparring",
    "group": "Training and personal development",
    "text": "Team members practice against one another, improving coordination but potentially creating a competitive rivalry.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "tactical-review",
    "name": "Tactical Review",
    "group": "Training and personal development",
    "text": "The trainer reviews a previous battle and identifies a mistake. The next encounter may show the correction.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "move-experimentation",
    "name": "Move Experimentation",
    "group": "Training and personal development",
    "text": "The trainer tries a new move combination or tactical role. It may work, fail, or become a signature technique after repeated use.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "adaptive-exercise",
    "name": "Adaptive Exercise",
    "group": "Training and personal development",
    "text": "The trainer changes a drill to accommodate the Pokémon's personality or limitations. This can build trust and improve learning efficiency.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overtraining-incident",
    "name": "Overtraining Incident",
    "group": "Training and personal development",
    "text": "A trainer pushes too far, producing short-term progress and a longer recovery requirement.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "recovery-day",
    "name": "Recovery Day",
    "group": "Training and personal development",
    "text": "The trainer deliberately rests a Pokémon. Proper recovery can improve readiness and reduce strain.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "hyper-control-practice",
    "name": "Hyper Control Practice",
    "group": "Training and personal development",
    "text": "The Pokémon learns to enter or exit Hyper more reliably, if that is supported by the existing mechanics.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "technique-breakthrough",
    "name": "Technique Breakthrough",
    "group": "Training and personal development",
    "text": "A difficult move, combination, or control method finally clicks after a history of practice.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fearful-refusal",
    "name": "Fearful Refusal",
    "group": "Emotional and relationship events",
    "text": "A Pokémon hesitates to perform a dangerous action. The trainer can respect the hesitation, encourage it carefully, or react badly.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unwanted-separation",
    "name": "Unwanted Separation",
    "group": "Emotional and relationship events",
    "text": "A Pokémon becomes separated from the group during exploration. Reuniting them can produce relief, fear, or a new protective habit.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "jealousy",
    "name": "Jealousy",
    "group": "Emotional and relationship events",
    "text": "A Pokémon reacts to a trainer giving another partner more attention. The cause may be insecurity, competitiveness, or a genuine change in routine.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unexpected-attachment",
    "name": "Unexpected Attachment",
    "group": "Emotional and relationship events",
    "text": "A Pokémon bonds with an unlikely teammate, changing team cohesion or creating tension with another partner.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "conflict-over-tactics",
    "name": "Conflict Over Tactics",
    "group": "Emotional and relationship events",
    "text": "The Pokémon resists a battle plan that conflicts with its instincts or preferences. The trainer must adapt or insist.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "apology",
    "name": "Apology",
    "group": "Emotional and relationship events",
    "text": "The trainer acknowledges a mistake after a difficult encounter. The result depends on whether their later behavior supports the apology.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "earned-independence",
    "name": "Earned Independence",
    "group": "Emotional and relationship events",
    "text": "The trainer lets a Pokémon make a major decision. This may improve autonomy and synchronization.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "a-broken-promise",
    "name": "A Broken Promise",
    "group": "Emotional and relationship events",
    "text": "The trainer fails to follow through on a promise. Trust may decline, especially if the promise was repeated or deeply meaningful.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "protective-intervention",
    "name": "The Protective Intervention",
    "group": "Emotional and relationship events",
    "text": "A Pokémon intervenes to protect a partner despite being told to stay back. The event may reveal loyalty, impulsiveness, or a developing bond.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unspoken-reconciliation",
    "name": "The Unspoken Reconciliation",
    "group": "Emotional and relationship events",
    "text": "Two partners resume a familiar activity after a period of tension. The relationship improves subtly without an explicit conversation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "wild-pok-mon-encounter",
    "name": "Wild Pokémon Encounter",
    "group": "Social, environmental, and extraordinary events",
    "text": "A Pokémon interacts with wild members of its species. This can affect confidence, curiosity, or the trainer's understanding of its needs.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rescue-operation",
    "name": "Rescue Operation",
    "group": "Social, environmental, and extraordinary events",
    "text": "The team helps a wild Pokémon or another trainer. The event can shape the rival's values and create future allies.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "team-member-missing",
    "name": "Team Member Missing",
    "group": "Social, environmental, and extraordinary events",
    "text": "A Pokémon leaves the immediate group for a believable reason, prompting the trainer to reflect on how it has been treated.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-environmental-challenge",
    "name": "Shared Environmental Challenge",
    "group": "Social, environmental, and extraordinary events",
    "text": "The team crosses a difficult environment together. The event may strengthen teamwork or expose a weakness.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "another-trainer-s-advice",
    "name": "Another Trainer's Advice",
    "group": "Social, environmental, and extraordinary events",
    "text": "A mentor, rival, or stranger offers advice. The trainer may accept it, reject it, or misunderstand it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "public-praise",
    "name": "Public Praise",
    "group": "Social, environmental, and extraordinary events",
    "text": "A Pokémon receives recognition for a performance. This can build confidence or create pressure to keep impressing others.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "public-embarrassment",
    "name": "Public Embarrassment",
    "group": "Social, environmental, and extraordinary events",
    "text": "A failed performance is witnessed by others. The Pokémon and trainer may respond very differently to the same event.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "raid-cooperation",
    "name": "Raid Cooperation",
    "group": "Social, environmental, and extraordinary events",
    "text": "A rival's Pokémon works with unfamiliar Pokémon during a raid, potentially developing a new tactical preference or bond.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "hyper-overdrive-witness-event",
    "name": "Hyper/Overdrive Witness Event",
    "group": "Social, environmental, and extraordinary events",
    "text": "A rival witnesses another Pokémon's breakthrough and reconsiders their own training philosophy.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unexpected-act-of-compassion",
    "name": "Unexpected Act of Compassion",
    "group": "Social, environmental, and extraordinary events",
    "text": "A trainer chooses to help a struggling opponent or Pokémon despite a competing goal. The action can change how their own team sees them.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "arcs": [

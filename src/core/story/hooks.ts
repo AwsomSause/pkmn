@@ -17,6 +17,7 @@ import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { RIVAL_PATHS } from '../rivals/schema';
 import { maybeSpark, sparkGain } from '../rivals/manager';
 import { advanceArc } from '../rivals/arcs';
+import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
 import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
@@ -418,6 +419,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
       else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
       advanceArc(content, run, rivalBack);
+      afterBattleBehavior(content, run, rivalBack, false);
       const chosen = evaluateUltimate(run);
       if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
     }
