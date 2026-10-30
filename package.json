@@ -19,6 +19,7 @@
     "data:species": "node tools/import-species.ts",
     "data:bosses": "node tools/build-boss-teams.ts",
     "data:custom": "node tools/import-custom-forms.ts",
+    "data:abilities": "node tools/import-abilities.ts",
     "data:anims": "node tools/import-battle-anims.ts",
     "data:megas": "node tools/build-mega-stones.ts",
     "data:zmoves": "node tools/build-z-moves.ts",

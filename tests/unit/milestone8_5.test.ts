@@ -626,7 +626,10 @@ describe('Dynamax in battle', () => {
   });
 
   it("can't be made to flinch", () => {
-    const { ctx } = setup([mon('pidgey', 30, 'p1', 'tackle')], [mon('ambipom', 60, 'e1', 'fake-out')], BAND);
+    // Pickup, not Technician (a Technician Fake Out would knock the Pidgey out).
+    const ambipom = mon('ambipom', 60, 'e1', 'fake-out');
+    ambipom.abilitySlot = 1;
+    const { ctx } = setup([mon('pidgey', 30, 'p1', 'tackle')], [ambipom], BAND);
     const events = resolveTurn(ctx, MAX);
     expect(movesUsed(events, 'enemy')).toEqual(['fake-out']);
     expect(events.some((x) => x.type === 'cant' && x.reason === 'flinch')).toBe(false);

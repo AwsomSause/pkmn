@@ -55,14 +55,15 @@ describe('story foundation: random streams', () => {
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2, 3a, 3b-1 and 3b-2 (held, map, shop, money and map-movement items in drafts, bosses
-  // holding items), which change play on purpose.
+  // holding items) and M8.75 part C3 (every Pokémon has an ability), which change
+  // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': 'f950193295d429b9',
+    'STORY1/0': '6625d110b85fcc02',
     'STORY2/0': '289336f1e73c4f84',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
-    'STORY6/0': 'fb12816df446bfee',
-    'STORY7/0': '173c815313e80667',
+    'STORY6/0': '6efa1ccc1d950f44',
+    'STORY7/0': 'ca30e9f7e65c56eb',
     'STORY8/0': '9c19185effaefb06',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:

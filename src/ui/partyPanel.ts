@@ -5,7 +5,8 @@ import Phaser from 'phaser';
 import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
 import { friendshipHearts } from '../core/friendship';
-import { calcStats, getSpecies } from '../core/pokemon';
+import { abilityStatus } from '../core/battle/abilities';
+import { abilityOf, calcStats, getSpecies } from '../core/pokemon';
 import type { PokemonInstance } from '../core/state';
 import { playSfx } from './audio';
 import type { InputAction } from './input';
@@ -177,6 +178,17 @@ export class Picker {
   }
 }
 
+/** "Blaze: Strengthens Fire moves…", for the footer when the row is focused. */
+function abilityHint(content: Content, mon: PokemonInstance): string | undefined {
+  const id = abilityOf(content, mon);
+  const ability = id ? content.abilities.get(id) : undefined;
+  if (!ability) return undefined;
+  const later = abilityStatus(ability.id) === 'pending' ? ' (not working in battle yet)' : '';
+  return `${ability.name}: ${ability.description}${later}`;
+}
+
+/** One party row: icon, name, level, HP bar, status, ability and friendship hearts. */
+
 /** What a Pokémon holds, e.g. "Leftovers, Charcoal ×2", or '' for nothing. */
 export function heldSummary(content: Content, mon: PokemonInstance): string {
   return Object.entries(mon.held ?? {})
@@ -191,7 +203,7 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
   const extra = [holding && `Holding: ${holding}.`, boosts && `${boosts}.`].filter(Boolean).join(' ');
   return {
     problem,
-    hint: [opts.hint, extra].filter(Boolean).join('  ') || undefined,
+    hint: [opts.hint ?? abilityHint(content, mon), extra].filter(Boolean).join('  ') || undefined,
     draw: (scene, box, w) => {
       const species = getSpecies(content, mon.speciesId);
       const max = calcStats(content, mon).hp;
@@ -213,6 +225,9 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       }
       const count = Object.values(mon.held ?? {}).reduce((a, b) => a + b, 0);
       if (count) box.add(scene.add.text(tagEnd, 58, `◆ ${count} held`, textStyle(16, '#8fb8e0')));
+      const abilityId = abilityOf(content, mon);
+      const abilityName = abilityId ? content.abilities.get(abilityId)?.name : undefined;
+      if (abilityName) box.add(scene.add.text(w - 100, 60, abilityName, textStyle(14, '#a69cb4')).setOrigin(1, 0));
       const hearts = friendshipHearts(content, mon);
       box.add(scene.add.text(w - 12, 60, '♥'.repeat(hearts) + '♡'.repeat(5 - hearts), textStyle(14, hearts === 5 ? '#e04870' : '#c07890')).setOrigin(1, 0));
     },

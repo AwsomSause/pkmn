@@ -420,6 +420,13 @@ export class BattleScene extends Phaser.Scene {
       }
       await this.say(`The battle continues! (turn ${battle.turn})`);
     }
+    // Entry abilities (Intimidate, Drizzle) of the first two Pokémon.
+    const { session } = services();
+    if ((battle.pendingEntry ?? []).length > 0 && !battle.needsSwitch) {
+      const before = structuredClone(session.run!);
+      const events = session.beginBattle();
+      await this.playEvents(events, before, title);
+    }
     this.busy = false;
     this.nextPrompt();
   }
@@ -737,6 +744,7 @@ export class BattleScene extends Phaser.Scene {
           break;
         case 'wake':
         case 'thaw':
+        case 'cured':
           mon!.status = null;
           void this.refreshInfoBox(box, mon!, false);
           break;

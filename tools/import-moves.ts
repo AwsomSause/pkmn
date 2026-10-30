@@ -299,6 +299,21 @@ function readPokeApiMoves(): Map<string, Record<string, string>> {
   const [header, ...rows] = readFileSync(path, 'utf8').trim().split('\n').map((l) => l.split(','));
   return new Map(rows.map((r) => [r[1]!, Object.fromEntries(header!.map((h, i) => [h, r[i] ?? '']))]));
 }
+/** PokeAPI move flag ids by PokeAPI move id. */
+function readPokeApiFlags(): Map<string, string[]> {
+  const dir = join(import.meta.dirname, '..', '.cache', 'pokeapi');
+  const path = join(dir, 'move_flag_map.csv');
+  if (!existsSync(path)) {
+    mkdirSync(dir, { recursive: true });
+    execFileSync('curl', ['-sSfL', '-o', path, 'https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/move_flag_map.csv']);
+  }
+  const map = new Map<string, string[]>();
+  for (const line of readFileSync(path, 'utf8').trim().split('\n').slice(1)) {
+    const [moveId, flagId] = line.split(',');
+    map.set(moveId!, [...(map.get(moveId!) ?? []), flagId!]);
+  }
+  return map;
+}
 const POKEAPI_TYPES = ['', 'normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel', 'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark', 'fairy'];
 const POKEAPI_CATEGORY = ['', 'status', 'physical', 'special'] as const;
 
@@ -393,6 +408,17 @@ for (const row of list) {
 for (const move of moves) {
   const extra = EXTRA_EFFECTS[move.id];
   if (extra && move.supported !== false) Object.assign(move.effects, extra);
+}
+
+// Contact, punch, bite, pulse and sound flags from PokeAPI's move_flag_map
+// (abilities such as Static, Iron Fist and Strong Jaw look at them).
+const FLAG_IDS: Record<string, string> = { '1': 'contact', '8': 'punch', '9': 'sound', '16': 'bite', '17': 'pulse', '15': 'powder' };
+const pokeApiFlags = readPokeApiFlags();
+for (const move of moves) {
+  const apiId = pokeApi.get(move.id)?.id;
+  const fromApi = (apiId && pokeApiFlags.get(apiId)) || [];
+  const kept = move.flags.filter((f) => f === 'typeless' || (f === 'powder' && !apiId));
+  move.flags = [...new Set([...kept, ...fromApi.map((f) => FLAG_IDS[f]).filter((f): f is string => !!f)])].sort();
 }
 
 writeFileSync(movesPath, JSON.stringify(moves, null, 1) + '\n');

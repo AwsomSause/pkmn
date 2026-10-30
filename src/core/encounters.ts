@@ -124,8 +124,8 @@ export interface TrainerPlan {
 }
 
 /** Creates a planned Pokémon, with a boss's moves and training when it has them. */
-export function createPlannedPokemon(content: Content, member: PlannedMember, uid: string): PokemonInstance {
-  const mon = createPokemon(content, member.speciesId, member.level, uid);
+export function createPlannedPokemon(content: Content, member: PlannedMember, uid: string, abilityKey: string = uid): PokemonInstance {
+  const mon = createPokemon(content, member.speciesId, member.level, uid, abilityKey);
   const moves = (member.moves ?? []).filter((id) => content.moves.has(id));
   if (moves.length > 0) mon.moves = moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   for (const [stat, stacks] of Object.entries(member.training ?? {})) mon.vitamins[stat as StatName] = stacks;

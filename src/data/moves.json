@@ -11,6 +11,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
+   "contact",
    "typeless"
   ],
   "effects": {
@@ -28,7 +29,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -42,7 +45,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -56,7 +61,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -70,7 +77,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -84,7 +93,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -100,7 +111,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.25
   }
@@ -116,7 +129,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -371,7 +386,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -428,7 +446,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -645,7 +665,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -683,7 +705,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -697,7 +721,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -711,7 +737,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -727,7 +756,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -762,7 +793,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -776,7 +809,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -859,7 +894,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1001,7 +1038,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "frz",
@@ -1106,7 +1146,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1120,7 +1162,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {}
  },
  {
@@ -1134,7 +1178,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1148,7 +1194,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1162,7 +1210,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1185,7 +1236,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1208,7 +1261,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1236,7 +1291,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {}
  },
  {
@@ -1250,7 +1307,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "drain": 0.75
   }
@@ -1289,7 +1348,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1312,7 +1373,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1349,7 +1412,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1363,7 +1428,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "psn",
@@ -1421,7 +1488,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -1437,7 +1506,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1497,7 +1568,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1543,7 +1616,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -1559,7 +1634,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -1598,7 +1676,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -1636,7 +1716,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1650,7 +1732,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {}
  },
  {
@@ -1680,7 +1764,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1717,7 +1803,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1763,7 +1851,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1823,7 +1913,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -1939,7 +2031,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2019,7 +2113,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {}
  },
  {
@@ -2095,7 +2191,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -2153,7 +2251,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -2172,7 +2272,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -2207,7 +2309,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {}
  },
  {
@@ -2237,7 +2341,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2251,7 +2357,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.3333333333333333
   }
@@ -2267,7 +2375,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2304,7 +2414,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -2379,7 +2491,10 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {}
  },
  {
@@ -2503,7 +2618,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -2526,7 +2643,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -2590,7 +2709,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -2690,7 +2811,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2704,7 +2827,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2718,7 +2843,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "psn",
@@ -2737,7 +2864,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -2760,7 +2889,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -2774,7 +2905,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {
    "flinchChance": 20
   }
@@ -2927,7 +3060,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.3333333333333333
   }
@@ -2966,7 +3101,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3024,7 +3161,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 20
   }
@@ -3040,7 +3179,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "drain": 0.5
   }
@@ -3056,7 +3198,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -3070,7 +3214,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -3255,7 +3401,9 @@
   "priority": 2,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -3292,7 +3440,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -3387,7 +3537,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -3406,7 +3559,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3429,7 +3584,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.3333333333333333,
    "status": {
@@ -3495,7 +3652,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -3534,7 +3693,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -3630,7 +3791,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "status": {
     "id": "slp",
@@ -3668,7 +3831,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3691,7 +3857,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.25
   }
@@ -3707,7 +3875,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.5
   }
@@ -3746,7 +3916,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -3810,7 +3982,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -3824,7 +3998,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "drain": 0.5
   }
@@ -3870,7 +4046,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {
    "flinchChance": 10
   }
@@ -3886,7 +4065,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {}
  },
  {
@@ -3959,7 +4140,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "status": {
     "id": "frz",
@@ -4013,7 +4197,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4092,7 +4278,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -4152,7 +4340,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "drain": 0.5
   }
@@ -4184,7 +4374,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4249,7 +4441,10 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {}
  },
  {
@@ -4314,7 +4509,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -4328,7 +4525,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {}
  },
  {
@@ -4342,7 +4542,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -4356,7 +4558,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4623,7 +4828,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -4662,7 +4869,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4691,7 +4900,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -4733,7 +4944,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {}
  },
  {
@@ -4747,7 +4960,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {}
  },
  {
@@ -4833,7 +5048,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "psn",
@@ -4889,7 +5106,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -5037,7 +5256,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5083,7 +5304,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5106,7 +5329,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -5202,7 +5427,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "fixedDamage": "level"
   }
@@ -5241,7 +5468,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -5255,7 +5484,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {}
  },
  {
@@ -5329,7 +5561,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "status": {
     "id": "slp",
@@ -5348,7 +5582,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -5367,7 +5603,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -5471,7 +5709,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5553,7 +5793,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -5569,7 +5811,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5592,7 +5836,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -5622,7 +5868,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -5636,7 +5884,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.25
   }
@@ -5666,7 +5916,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5849,7 +6101,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -5868,7 +6123,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5966,7 +6223,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5989,7 +6248,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -6052,7 +6313,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.3333333333333333,
    "status": {
@@ -6072,7 +6335,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 20
   }
@@ -6104,7 +6369,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.25
   }
@@ -6139,7 +6406,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recoil": 0.3333333333333333
   }
@@ -6184,7 +6453,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -6217,7 +6488,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 20
   }
@@ -6233,7 +6506,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -6249,7 +6524,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6310,7 +6587,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "bind": true
   }
@@ -6415,7 +6694,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "ignoreStages": true
   }
@@ -6431,7 +6712,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "bind": true
   }
@@ -6447,7 +6730,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6484,7 +6770,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "ignoreStages": true
   }
@@ -6516,7 +6804,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "confuse": {
     "chance": 20
@@ -6534,7 +6825,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6553,7 +6846,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6572,7 +6867,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6591,7 +6888,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6626,7 +6925,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "leaveOne": true
   }
@@ -6674,7 +6975,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "lowHpPower": true
   }
@@ -6720,7 +7023,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6739,7 +7044,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6758,7 +7065,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6777,7 +7086,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "recharge": true
   }
@@ -6793,7 +7104,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "ohko": true
   }
@@ -6825,7 +7138,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "leaveOne": true
   }
@@ -6841,7 +7156,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "ohko": true
   }
@@ -6931,7 +7248,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "bind": true
   }
@@ -7179,7 +7498,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "lowHpPower": true
   }
@@ -7230,7 +7551,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "confuse": {
     "chance": 20
@@ -7264,7 +7587,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "ignoreStages": true
   }
@@ -7378,7 +7703,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "bind": true
   }
@@ -7429,7 +7756,9 @@
   "priority": 0,
   "critStage": 3,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -7461,7 +7790,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "confuse": {
     "chance": 100
@@ -7514,7 +7845,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "hits": [
     2,
@@ -7614,7 +7947,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {
    "bind": true
   }
@@ -7630,7 +7965,9 @@
   "priority": 2,
   "critStage": 3,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {}
  },
  {
@@ -7691,7 +8028,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {
    "confuse": {
     "chance": 100
@@ -7709,7 +8048,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {
    "confuse": {
     "chance": 100
@@ -7764,6 +8106,528 @@
   }
  },
  {
+  "id": "bounce",
+  "name": "Bounce",
+  "type": "flying",
+  "category": "physical",
+  "power": 85,
+  "accuracy": 85,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "air"
+   },
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "dig",
+  "name": "Dig",
+  "type": "ground",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "underground"
+   }
+  }
+ },
+ {
+  "id": "dive",
+  "name": "Dive",
+  "type": "water",
+  "category": "physical",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "underwater"
+   }
+  }
+ },
+ {
+  "id": "electro-shot",
+  "name": "Electro Shot",
+  "type": "electric",
+  "category": "special",
+  "power": 130,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {}
+  }
+ },
+ {
+  "id": "fake-out",
+  "name": "Fake Out",
+  "type": "normal",
+  "category": "physical",
+  "power": 40,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 3,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "flinchChance": 100,
+   "firstTurnOnly": true
+  }
+ },
+ {
+  "id": "first-impression",
+  "name": "First Impression",
+  "type": "bug",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 2,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "firstTurnOnly": true
+  }
+ },
+ {
+  "id": "fly",
+  "name": "Fly",
+  "type": "flying",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 95,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "air"
+   }
+  }
+ },
+ {
+  "id": "freeze-shock",
+  "name": "Freeze Shock",
+  "type": "ice",
+  "category": "physical",
+  "power": 140,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {},
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "hail",
+  "name": "Hail",
+  "type": "ice",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "weather": "hail"
+  }
+ },
+ {
+  "id": "ice-burn",
+  "name": "Ice Burn",
+  "type": "ice",
+  "category": "special",
+  "power": 140,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {},
+   "status": {
+    "id": "brn",
+    "chance": 30
+   }
+  }
+ },
+ {
+  "id": "outrage",
+  "name": "Outrage",
+  "type": "dragon",
+  "category": "physical",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "lockIn": true
+  }
+ },
+ {
+  "id": "petal-dance",
+  "name": "Petal Dance",
+  "type": "grass",
+  "category": "special",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "lockIn": true
+  }
+ },
+ {
+  "id": "phantom-force",
+  "name": "Phantom Force",
+  "type": "ghost",
+  "category": "physical",
+  "power": 90,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "vanished"
+   },
+   "breaksProtect": true
+  }
+ },
+ {
+  "id": "raging-fury",
+  "name": "Raging Fury",
+  "type": "fire",
+  "category": "physical",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "lockIn": true
+  }
+ },
+ {
+  "id": "rain-dance",
+  "name": "Rain Dance",
+  "type": "water",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "weather": "rain"
+  }
+ },
+ {
+  "id": "razor-wind",
+  "name": "Razor Wind",
+  "type": "normal",
+  "category": "special",
+  "power": 80,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 1,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {}
+  }
+ },
+ {
+  "id": "sandstorm",
+  "name": "Sandstorm",
+  "type": "rock",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "weather": "sand"
+  }
+ },
+ {
+  "id": "shadow-force",
+  "name": "Shadow Force",
+  "type": "ghost",
+  "category": "physical",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "semi": "vanished"
+   },
+   "breaksProtect": true
+  }
+ },
+ {
+  "id": "shore-up",
+  "name": "Shore Up",
+  "type": "ground",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "heal": 0.5,
+   "healSand": true
+  }
+ },
+ {
+  "id": "skull-bash",
+  "name": "Skull Bash",
+  "type": "normal",
+  "category": "physical",
+  "power": 130,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "boosts": [
+     {
+      "stat": "def",
+      "stages": 1,
+      "target": "self",
+      "chance": 100
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "sky-attack",
+  "name": "Sky Attack",
+  "type": "flying",
+  "category": "physical",
+  "power": 140,
+  "accuracy": 90,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 1,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {},
+   "flinchChance": 30
+  }
+ },
+ {
+  "id": "sky-uppercut",
+  "name": "Sky Uppercut",
+  "type": "fighting",
+  "category": "physical",
+  "power": 85,
+  "accuracy": 90,
+  "pp": 15,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact",
+   "punch"
+  ],
+  "effects": {
+   "hitsSemi": {
+    "semi": "air",
+    "double": false
+   }
+  }
+ },
+ {
+  "id": "snowscape",
+  "name": "Snowscape",
+  "type": "ice",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "weather": "snow"
+  }
+ },
+ {
+  "id": "solar-beam",
+  "name": "Solar Beam",
+  "type": "grass",
+  "category": "special",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "charge": {
+    "sunSkips": true
+   }
+  }
+ },
+ {
+  "id": "solar-blade",
+  "name": "Solar Blade",
+  "type": "grass",
+  "category": "physical",
+  "power": 125,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "charge": {
+    "sunSkips": true
+   }
+  }
+ },
+ {
+  "id": "sunny-day",
+  "name": "Sunny Day",
+  "type": "fire",
+  "category": "status",
+  "power": null,
+  "accuracy": null,
+  "pp": 5,
+  "priority": 0,
+  "critStage": 0,
+  "target": "self",
+  "flags": [],
+  "effects": {
+   "weather": "sun"
+  }
+ },
+ {
+  "id": "thrash",
+  "name": "Thrash",
+  "type": "normal",
+  "category": "physical",
+  "power": 120,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "lockIn": true
+  }
+ },
+ {
+  "id": "weather-ball",
+  "name": "Weather Ball",
+  "type": "normal",
+  "category": "special",
+  "power": 50,
+  "accuracy": 100,
+  "pp": 10,
+  "priority": 0,
+  "critStage": 0,
+  "target": "enemy",
+  "flags": [],
+  "effects": {
+   "weatherBall": true
+  }
+ },
+ {
   "id": "10-000-000-volt-thunderbolt",
   "name": "10,000,000 Volt Thunderbolt",
   "type": "electric",
@@ -7806,7 +8670,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Stronger when the user does not have a held item."
@@ -7886,7 +8752,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user entangles the target with its anchor chain while attacking. The target becomes unable to flee."
@@ -7966,7 +8834,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if opponent already took damage in the same turn."
@@ -8062,7 +8932,9 @@
   "priority": -4,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if user took damage first."
@@ -8190,7 +9062,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Damage doubles if target is Dynamaxed."
@@ -8206,7 +9080,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Damage doubles if target is Dynamaxed."
@@ -8270,7 +9146,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "User takes damage for two turns then strikes back double."
@@ -8382,7 +9260,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The higher the user's Defense, the stronger the attack."
@@ -8398,32 +9278,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If the user attacks before the target, the power of this move is doubled."
- },
- {
-  "id": "bounce",
-  "name": "Bounce",
-  "type": "flying",
-  "category": "physical",
-  "power": 85,
-  "accuracy": 85,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "air"
-   },
-   "status": {
-    "id": "par",
-    "chance": 30
-   }
-  }
  },
  {
   "id": "breaking-swipe",
@@ -8436,7 +9296,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Hits multiple opponents and lowers their attack."
@@ -8468,7 +9330,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user swings its body around violently to inflict damage on everything in its vicinity."
@@ -8564,7 +9428,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Pikachu-exclusive Z-Move."
@@ -8644,7 +9510,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
@@ -8660,7 +9528,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Raises all user's stats but loses HP."
@@ -8676,7 +9546,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Kommo-o exclusive Z-Move."
@@ -8772,7 +9644,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "May lower opponent's Speed by one stage."
@@ -8900,7 +9774,9 @@
   "priority": -5,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "When hit by a Physical Attack, user strikes back with 2x power."
@@ -8932,7 +9808,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Opponent's item is stolen by the user."
@@ -8964,7 +9842,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "More powerful when opponent has higher HP."
@@ -9050,24 +9930,6 @@
   "needs": "Dragon type Z-Move."
  },
  {
-  "id": "dig",
-  "name": "Dig",
-  "type": "ground",
-  "category": "physical",
-  "power": 80,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "underground"
-   }
-  }
- },
- {
   "id": "dire-claw",
   "name": "Dire Claw",
   "type": "poison",
@@ -9098,24 +9960,6 @@
   "effects": {},
   "supported": false,
   "needs": "Opponent can't use its last attack for a few turns."
- },
- {
-  "id": "dive",
-  "name": "Dive",
-  "type": "water",
-  "category": "physical",
-  "power": 80,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "underwater"
-   }
-  }
  },
  {
   "id": "doodle",
@@ -9160,7 +10004,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Hits twice in one turn; may cause flinching."
@@ -9240,7 +10087,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user uses its body like a hammer to attack the target and inflict damage."
@@ -9272,7 +10121,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
@@ -9304,7 +10155,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user slams the target with its wings. The target is hit twice in a row."
@@ -9336,7 +10189,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases each turn."
@@ -9352,7 +10207,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Deals damage and reduces opponent's PP."
@@ -9422,22 +10279,6 @@
   "needs": "Boosted even more if it's super-effective."
  },
  {
-  "id": "electro-shot",
-  "name": "Electro Shot",
-  "type": "electric",
-  "category": "special",
-  "power": 130,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {}
-  }
- },
- {
   "id": "embargo",
   "name": "Embargo",
   "type": "dark",
@@ -9480,7 +10321,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Reduces opponent's HP to same as user's."
@@ -9592,7 +10435,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if user is burned, poisoned, or paralyzed."
@@ -9612,23 +10457,6 @@
   "effects": {},
   "supported": false,
   "needs": "Prevents fleeing in the next turn."
- },
- {
-  "id": "fake-out",
-  "name": "Fake Out",
-  "type": "normal",
-  "category": "physical",
-  "power": 40,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 3,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "flinchChance": 100,
-   "firstTurnOnly": true
-  }
  },
  {
   "id": "feint",
@@ -9657,7 +10485,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Drastically raises user's Attack if target is KO'd."
@@ -9721,7 +10551,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user strikes the target with a burning lash. This also lowers the target's Defense stat."
@@ -9743,22 +10575,6 @@
   "needs": "Added effects appear if combined with Grass Pledge or Water Pledge."
  },
  {
-  "id": "first-impression",
-  "name": "First Impression",
-  "type": "bug",
-  "category": "physical",
-  "power": 90,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 2,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "firstTurnOnly": true
-  }
- },
- {
   "id": "fishious-rend",
   "name": "Fishious Rend",
   "type": "water",
@@ -9769,7 +10585,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If the user attacks before the target, the power of this move is doubled."
@@ -9833,7 +10652,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "After making its attack, the user rushes back to switch places with a party Pokémon in waiting."
@@ -9887,24 +10708,6 @@
   "needs": "Never misses; always results in a critical hit."
  },
  {
-  "id": "fly",
-  "name": "Fly",
-  "type": "flying",
-  "category": "physical",
-  "power": 90,
-  "accuracy": 95,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "air"
-   }
-  }
- },
- {
   "id": "flying-press",
   "name": "Flying Press",
   "type": "fighting",
@@ -9915,7 +10718,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Deals Fighting and Flying type damage."
@@ -9947,7 +10752,10 @@
   "priority": -3,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If the user is hit before attacking, it flinches instead."
@@ -10011,30 +10819,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Uses the opponent's Attack stat."
- },
- {
-  "id": "freeze-shock",
-  "name": "Freeze Shock",
-  "type": "ice",
-  "category": "physical",
-  "power": 140,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {},
-   "status": {
-    "id": "par",
-    "chance": 30
-   }
-  }
  },
  {
   "id": "freeze-dry",
@@ -10079,7 +10869,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power decreases with higher Friendship."
@@ -10815,7 +11607,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The heavier the opponent, the stronger the attack."
@@ -10847,7 +11641,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "High priority during Grassy Terrain."
@@ -10975,26 +11771,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The slower the user, the stronger the attack."
- },
- {
-  "id": "hail",
-  "name": "Hail",
-  "type": "ice",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "weather": "hail"
-  }
  },
  {
   "id": "happy-hour",
@@ -11055,7 +11837,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Heals the user's party's status conditions."
@@ -11087,7 +11871,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Restores half the target's max HP."
@@ -11135,7 +11921,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The heavier the user, the stronger the attack."
@@ -11151,7 +11939,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The heavier the user, the stronger the attack."
@@ -11215,7 +12005,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user fiercely attacks the target using its entire body."
@@ -11231,7 +12023,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If it misses, the user loses half their HP."
@@ -11263,7 +12057,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Raises Attack of allies."
@@ -11311,30 +12107,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Doubles in power each turn for 5 turns."
- },
- {
-  "id": "ice-burn",
-  "name": "Ice Burn",
-  "type": "ice",
-  "category": "special",
-  "power": 140,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {},
-   "status": {
-    "id": "brn",
-    "chance": 30
-   }
-  }
  },
  {
   "id": "ice-hammer",
@@ -11347,7 +12125,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user swings and hits with its strong, heavy fist. It lowers the user's Speed, however."
@@ -11507,7 +12288,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Prevents user and opponent from switching out."
@@ -11539,7 +12323,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If it misses, the user loses half their HP."
@@ -11587,7 +12373,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Removes opponent's held item for the rest of the battle."
@@ -11619,7 +12407,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Double power if stats were lowered during the turn."
@@ -11635,7 +12425,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Can only be used after all other moves are used."
@@ -11683,7 +12475,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Mimikyu-exclusive Z-Move."
@@ -11763,7 +12557,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The heavier the opponent, the stronger the attack."
@@ -11843,7 +12639,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat."
@@ -11875,7 +12673,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "powder"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Changes target's type to Psychic."
@@ -11987,7 +12787,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Incineroar-exclusive Z-Move."
@@ -12659,7 +13461,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Type matches Memory item held."
@@ -12873,22 +13677,6 @@
   "needs": "Boosts Attack/Defense/Speed depending on ally Tatsugiri."
  },
  {
-  "id": "outrage",
-  "name": "Outrage",
-  "type": "dragon",
-  "category": "physical",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "lockIn": true
-  }
- },
- {
   "id": "pain-split",
   "name": "Pain Split",
   "type": "normal",
@@ -12915,7 +13703,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Lowers opponent's Attack and Special Attack then switches out."
@@ -12947,7 +13737,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if the user was attacked first."
@@ -12963,45 +13755,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Any Pokémon in play when this attack is used faints in 3 turns."
- },
- {
-  "id": "petal-dance",
-  "name": "Petal Dance",
-  "type": "grass",
-  "category": "special",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "lockIn": true
-  }
- },
- {
-  "id": "phantom-force",
-  "name": "Phantom Force",
-  "type": "ghost",
-  "category": "physical",
-  "power": 90,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "vanished"
-   },
-   "breaksProtect": true
-  }
  },
  {
   "id": "photon-geyser",
@@ -13046,7 +13805,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Changes Normal-type moves to Electric-type moves."
@@ -13062,7 +13824,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "If the opponent is holding a berry, its effect is stolen by user."
@@ -13078,7 +13842,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "May badly poison opponent."
@@ -13142,7 +13909,9 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "powder"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Damages Pokémon using Fire type moves."
@@ -13222,7 +13991,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user boasts its strength and attacks the target. The more the user's stats are raised, the greater the move's power."
@@ -13238,7 +14009,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Raises Attack."
@@ -13318,7 +14092,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bite",
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect."
@@ -13398,7 +14175,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Snorlax-exclusive Normal type Z-Move."
@@ -13414,7 +14193,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases when opponent's stats have been raised."
@@ -13478,7 +14259,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Raises user's Attack when hit."
@@ -13510,7 +14293,9 @@
   "priority": 2,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "powder"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Forces attacks to hit user, not team-mates."
@@ -13532,38 +14317,6 @@
   "needs": "Type depends on the user’s form. Breaks through Reflect and Light Screen barriers."
  },
  {
-  "id": "raging-fury",
-  "name": "Raging Fury",
-  "type": "fire",
-  "category": "physical",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "lockIn": true
-  }
- },
- {
-  "id": "rain-dance",
-  "name": "Rain Dance",
-  "type": "water",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "weather": "rain"
-  }
- },
- {
   "id": "rapid-spin",
   "name": "Rapid Spin",
   "type": "normal",
@@ -13574,26 +14327,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Raises user's Speed and removes entry hazards and trap move effects."
- },
- {
-  "id": "razor-wind",
-  "name": "Razor Wind",
-  "type": "normal",
-  "category": "special",
-  "power": 80,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 1,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {}
-  }
  },
  {
   "id": "recycle",
@@ -13670,7 +14409,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "May put the target to sleep."
@@ -13702,7 +14443,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Inflicts double damage if a teammate fainted on the last turn."
@@ -13718,7 +14461,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases with higher Friendship."
@@ -13750,7 +14495,9 @@
   "priority": -4,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases if user was hit first."
@@ -13798,7 +14545,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "In battles, the opponent switches. In the wild, the Pokémon runs."
@@ -13830,7 +14579,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Doubles in power each turn for 5 turns."
@@ -13878,7 +14629,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases if teammates use it in the same turn."
@@ -13946,22 +14699,6 @@
   "effects": {},
   "supported": false,
   "needs": "May burn target."
- },
- {
-  "id": "sandstorm",
-  "name": "Sandstorm",
-  "type": "rock",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "weather": "sand"
-  }
  },
  {
   "id": "sappy-seed",
@@ -14038,7 +14775,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Solgaleo-exclusive Z-Move."
@@ -14058,25 +14797,6 @@
   "effects": {},
   "supported": false,
   "needs": "Effects of the attack vary with the location."
- },
- {
-  "id": "shadow-force",
-  "name": "Shadow Force",
-  "type": "ghost",
-  "category": "physical",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "semi": "vanished"
-   },
-   "breaksProtect": true
-  }
  },
  {
   "id": "shattered-psyche",
@@ -14173,23 +14893,6 @@
   "effects": {},
   "supported": false,
   "needs": "Raises user's Attack and sharply raises Speed."
- },
- {
-  "id": "shore-up",
-  "name": "Shore Up",
-  "type": "ground",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "heal": 0.5,
-   "healSand": true
-  }
  },
  {
   "id": "silk-trap",
@@ -14298,52 +15001,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Lowers opponent's Sp. Attack."
- },
- {
-  "id": "skull-bash",
-  "name": "Skull Bash",
-  "type": "normal",
-  "category": "physical",
-  "power": 130,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "boosts": [
-     {
-      "stat": "def",
-      "stages": 1,
-      "target": "self",
-      "chance": 100
-     }
-    ]
-   }
-  }
- },
- {
-  "id": "sky-attack",
-  "name": "Sky Attack",
-  "type": "flying",
-  "category": "physical",
-  "power": 140,
-  "accuracy": 90,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 1,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {},
-   "flinchChance": 30
-  }
  },
  {
   "id": "sky-drop",
@@ -14356,29 +15019,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Takes opponent into the air on first turn, drops them on second turn."
- },
- {
-  "id": "sky-uppercut",
-  "name": "Sky Uppercut",
-  "type": "fighting",
-  "category": "physical",
-  "power": 85,
-  "accuracy": 90,
-  "pp": 15,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "hitsSemi": {
-    "semi": "air",
-    "double": false
-   }
-  }
  },
  {
   "id": "sleep-talk",
@@ -14423,7 +15069,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user stabs the target with a sharp horn. This attack never misses."
@@ -14439,7 +15087,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if opponent is paralyzed, but cures it."
@@ -14487,26 +15137,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Can only be used if asleep. May cause flinching."
- },
- {
-  "id": "snowscape",
-  "name": "Snowscape",
-  "type": "ice",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "weather": "snow"
-  }
  },
  {
   "id": "soak",
@@ -14523,42 +15159,6 @@
   "effects": {},
   "supported": false,
   "needs": "Changes the target's type to water."
- },
- {
-  "id": "solar-beam",
-  "name": "Solar Beam",
-  "type": "grass",
-  "category": "special",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "sunSkips": true
-   }
-  }
- },
- {
-  "id": "solar-blade",
-  "name": "Solar Blade",
-  "type": "grass",
-  "category": "physical",
-  "power": 125,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "charge": {
-    "sunSkips": true
-   }
-  }
  },
  {
   "id": "sonic-boom",
@@ -14587,7 +15187,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Marshadow-exclusive Z-Move."
@@ -14603,7 +15205,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Heals the burns of its target."
@@ -14635,7 +15239,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The user hides in the target's shadow, steals the target's stat boosts, and then attacks."
@@ -14891,7 +15497,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Fails if no Terrain in effect."
@@ -14955,7 +15563,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles."
@@ -15067,26 +15677,12 @@
   "priority": 1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "User attacks first, but only works if opponent is readying an attack."
- },
- {
-  "id": "sunny-day",
-  "name": "Sunny Day",
-  "type": "fire",
-  "category": "status",
-  "power": null,
-  "accuracy": null,
-  "pp": 5,
-  "priority": 0,
-  "critStage": 0,
-  "target": "self",
-  "flags": [],
-  "effects": {
-   "weather": "sun"
-  }
  },
  {
   "id": "sunsteel-strike",
@@ -15099,7 +15695,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Ignores the target's ability."
@@ -15115,7 +15713,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Always takes off half of the opponent's HP."
@@ -15147,7 +15747,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Always results in a critical hit and ignores stat changes."
@@ -15451,7 +16054,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "pulse"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Type and power change depending on the Terrain in effect."
@@ -15467,7 +16072,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Also steals opponent's held item."
@@ -15505,22 +16112,6 @@
   "needs": "Opponent cannot flee or switch."
  },
  {
-  "id": "thrash",
-  "name": "Thrash",
-  "type": "normal",
-  "category": "physical",
-  "power": 120,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "lockIn": true
-  }
- },
- {
   "id": "throat-chop",
   "name": "Throat Chop",
   "type": "dark",
@@ -15531,7 +16122,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Prevents use of sound moves for two turns."
@@ -15771,7 +16364,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Attacks thrice with more power each time."
@@ -15803,7 +16398,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Hits thrice in one turn at increasing power."
@@ -15819,7 +16416,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The lower the PP, the higher the power."
@@ -15851,7 +16450,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "User switches out immediately after attacking."
@@ -15883,7 +16484,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "sound"
+  ],
   "effects": {},
   "supported": false,
   "needs": "User attacks for 3 turns and prevents sleep."
@@ -15899,7 +16502,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power increases when player's bond is stronger."
@@ -15963,7 +16568,9 @@
   "priority": -1,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "User attacks last, but ignores Accuracy and Evasiveness."
@@ -15995,7 +16602,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Power doubles if opponent is asleep, but wakes it up."
@@ -16049,22 +16658,6 @@
   "needs": "The higher the user's HP, the higher the damage caused."
  },
  {
-  "id": "weather-ball",
-  "name": "Weather Ball",
-  "type": "normal",
-  "category": "special",
-  "power": 50,
-  "accuracy": 100,
-  "pp": 10,
-  "priority": 0,
-  "critStage": 0,
-  "target": "enemy",
-  "flags": [],
-  "effects": {
-   "weatherBall": true
-  }
- },
- {
   "id": "whirlwind",
   "name": "Whirlwind",
   "type": "normal",
@@ -16091,7 +16684,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact",
+   "punch"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Always results in a critical hit and ignores stat changes."
@@ -16203,7 +16799,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "contact"
+  ],
   "effects": {},
   "supported": false,
   "needs": "The higher the opponent's HP, the higher the damage."
