@@ -103,3 +103,15 @@ export const CAMP_EVENTS: Json[] = [
       ch('Care for the injured', out('You tend every scrape and bruise.', heal(0.5), cure())),
     ]),
 ];
+
+// Run-defining relics (catalog 96): three unusual relics, each with an upside and a clear downside.
+const relic = (id: string, name: string, effects: Json[]): Json => ({ kind: 'relic', id, name, effects });
+export const RELIC_EVENTS: Json[] = [
+  ev('relic-shrine', 'The Relic Shrine', 'Relics', { rarity: 'rare', minStage: 4, cast: [], effect: 'glint', tint: '#2a2410' },
+    'Three relics rest on a stone table. A plaque reads: "Each gift has its price. You may take only one."', [
+      ch('The Glass Crown (more Hyper, tougher rivals)', out('The crown hums on your head. Rivals will feel it too.', relic('glass-crown', 'Glass Crown', [{ kind: 'hyperChanceMultiplier', value: 1.5 }, { kind: 'rivalLevelOffset', value: 3 }]))),
+      ch("The Wanderer's Compass (more rare finds, weaker catches)", out('The needle spins toward strange places.', relic('wanderer-compass', "Wanderer's Compass", [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 1.6 }, { kind: 'catchLevelOffset', value: -2 }]))),
+      ch('The Heavy Heart (an extra held item, slower evolution)', out('Your Pokémon feel steadier, and slower to change.', relic('heavy-heart', 'Heavy Heart', [{ kind: 'itemSlotOffset', value: 1 }, { kind: 'evolutionLevelOffset', value: 4 }]))),
+      ch('Leave them', leave()),
+    ]),
+];

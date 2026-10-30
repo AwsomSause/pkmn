@@ -21136,6 +21136,98 @@
    ]
   },
   {
+   "id": "relic-shrine",
+   "name": "The Relic Shrine",
+   "group": "Relics",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2410",
+    "effect": "glint"
+   },
+   "intro": "Three relics rest on a stone table. A plaque reads: \"Each gift has its price. You may take only one.\"",
+   "choices": [
+    {
+     "label": "The Glass Crown (more Hyper, tougher rivals)",
+     "success": {
+      "text": "The crown hums on your head. Rivals will feel it too.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "glass-crown",
+        "name": "Glass Crown",
+        "effects": [
+         {
+          "kind": "hyperChanceMultiplier",
+          "value": 1.5
+         },
+         {
+          "kind": "rivalLevelOffset",
+          "value": 3
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Wanderer's Compass (more rare finds, weaker catches)",
+     "success": {
+      "text": "The needle spins toward strange places.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "wanderer-compass",
+        "name": "Wanderer's Compass",
+        "effects": [
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.6
+         },
+         {
+          "kind": "catchLevelOffset",
+          "value": -2
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Heavy Heart (an extra held item, slower evolution)",
+     "success": {
+      "text": "Your Pokémon feel steadier, and slower to change.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "heavy-heart",
+        "name": "Heavy Heart",
+        "effects": [
+         {
+          "kind": "itemSlotOffset",
+          "value": 1
+         },
+         {
+          "kind": "evolutionLevelOffset",
+          "value": 4
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "rival-feud",
    "name": "Two Rivals, One Argument",
    "group": "Rival Feud",

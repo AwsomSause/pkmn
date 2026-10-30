@@ -428,6 +428,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
     case 'aid':
       return 'allies gathered';
+    case 'relic':
+      return `the ${e.name}`;
     case 'feud':
       return 'a feud is settled';
     case 'hunt':
@@ -598,6 +600,13 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return effectWords(content, e);
     case 'tournament':
       return setTournament(content, run, e.round);
+    case 'relic': {
+      if (run.story.flags[`relic:${e.id}`]) return '';
+      run.story.flags[`relic:${e.id}`] = true;
+      run.perkEffects = [...(run.perkEffects ?? []), ...e.effects];
+      emit(content, run, 'storyMoment', { actors: [], data: { def: 'relic', suppressed: false }, importance: 75, text: `Took the ${e.name}` });
+      return effectWords(content, e);
+    }
     case 'feud':
       return settleFeud(content, run, e.choice);
     case 'hunt':

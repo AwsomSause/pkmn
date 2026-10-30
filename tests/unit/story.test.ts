@@ -81,8 +81,8 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
     itemCatalog: catalog.filter((e) => !eventItem(e)),
-    // The Camp Council is one more rest spot, which would shift which rest spot an old seed meets, so it is left out too.
-    events: { events: (RAW_CONTENT.events as { events: { id: string }[] }).events.filter((e) => e.id !== 'camp-council' && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
+    // The Camp Council (one more rest spot) and the Relic Shrine (one more rare event) would shift what an old seed meets, so they are left out too.
+    events: { events: (RAW_CONTENT.events as { events: { id: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
   });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {
