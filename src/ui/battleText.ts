@@ -183,6 +183,32 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} is hurt by the bind!`;
     case 'bindEnd':
       return `${who(e.side)} was freed!`;
+    case 'blocked':
+      return `${who(e.side)} can't use that move right now!`;
+    case 'disrupted':
+      return `${who(e.side)} was hit by ${e.kind === 'healBlock' ? 'Heal Block' : e.kind[0]!.toUpperCase() + e.kind.slice(1)}!`;
+    case 'statsReset':
+      return 'All stat changes were changed!';
+    case 'selfState':
+      return SELF_STATE[e.state] ? SELF_STATE[e.state]!(who(e.side)) : `${who(e.side)} is ready!`;
+    case 'substituteHit':
+      return e.broke ? `${who(e.side)}'s substitute faded!` : `The substitute took damage for ${who(e.side)}!`;
+    case 'perish':
+      return `${who(e.side)}'s perish count fell to ${e.count}!`;
+    case 'fieldStart':
+      return FIELD_TEXT[e.field]?.[0] ?? 'The battlefield changed!';
+    case 'fieldEnd':
+      return FIELD_TEXT[e.field]?.[1] ?? 'The battlefield returned to normal.';
+    case 'sideEffect':
+      return sideEffectText(e.side, e.effect, e.on, who);
+    case 'hazard':
+      return e.hazard === 'stealthRock'
+        ? `Pointed stones dug into ${who(e.side)}!`
+        : e.hazard === 'spikes'
+          ? `${who(e.side)} was hurt by the spikes!`
+          : e.hazard === 'stickyWeb'
+            ? `${who(e.side)} was caught in a sticky web!`
+            : `${who(e.side)} was affected by the poison spikes!`;
     case 'seeded':
       return `${who(e.side)} was seeded!`;
     case 'seedDamage':
@@ -244,3 +270,63 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
     }
   }
 }
+
+/** What the Power column shows for a move with fixed damage: Lv, a number, or ? (Psywave). */
+export function fixedDamageLabel(fixed: 'level' | 'psywave' | number | undefined): string {
+  return fixed === undefined ? '—' : fixed === 'level' ? 'Lv' : fixed === 'psywave' ? '?' : String(fixed);
+}
+
+const SIDE_ON: Record<string, string> = {
+  reflect: 'A wall of light cuts physical damage!',
+  lightScreen: 'A wall of light cuts special damage!',
+  auroraVeil: 'An aurora veil protects the team!',
+  tailwind: 'A tailwind blew in behind the team!',
+  safeguard: 'A veil protects the team from status!',
+  mist: 'A mist shrouded the team!',
+  luckyChant: 'The Lucky Chant shields the team from critical hits!',
+  spikes: 'Spikes were scattered around the foe!',
+  toxicSpikes: 'Poison spikes were scattered around the foe!',
+  stealthRock: 'Pointed stones float around the foe!',
+  stickyWeb: 'A sticky web spreads around the foe!',
+};
+const SIDE_OFF: Record<string, string> = {
+  reflect: "Reflect wore off.",
+  lightScreen: "Light Screen wore off.",
+  auroraVeil: "Aurora Veil wore off.",
+  tailwind: "The tailwind petered out.",
+  safeguard: "Safeguard wore off.",
+  mist: "The mist faded.",
+  luckyChant: "Lucky Chant wore off.",
+  toxicSpikes: "The poison spikes were absorbed.",
+  hazards: "The hazards were swept away!",
+};
+function sideEffectText(_side: string, effect: string, on: boolean, _who: (s: 'player' | 'enemy') => string): string {
+  return (on ? SIDE_ON : SIDE_OFF)[effect] ?? 'The field changed.';
+}
+
+const FIELD_TEXT: Record<string, [string, string]> = {
+  gravity: ['Gravity intensified!', 'Gravity returned to normal.'],
+  trickRoom: ['The dimensions were twisted!', 'The twisted dimensions returned to normal.'],
+  waterSport: ['Fire\'s power was weakened!', 'The effects of Water Sport faded.'],
+  mudSport: ['Electricity\'s power was weakened!', 'The effects of Mud Sport faded.'],
+};
+
+const SELF_STATE: Record<string, (who: string) => string> = {
+  focusEnergy: (w) => `${w} is getting pumped!`,
+  laserFocus: (w) => `${w} is focused!`,
+  lockOn: (w) => `${w} took aim!`,
+  ingrain: (w) => `${w} planted its roots!`,
+  aquaRing: (w) => `${w} surrounded itself with a veil of water!`,
+  endure: (w) => `${w} braced itself!`,
+  wish: (w) => `${w} made a wish!`,
+  trapped: (w) => `${w} can no longer escape!`,
+  substitute: (w) => `${w} put in a substitute!`,
+  destinyBond: (w) => `${w} is trying to take its foe down with it!`,
+  perishSong: (w) => `${w} heard the perish song!`,
+  yawn: (w) => `${w} grew drowsy!`,
+  magnetRise: (w) => `${w} levitated with electromagnetism!`,
+  courtChange: (w) => `${w} swapped the battle effects!`,
+  abilityChanged: (w) => `${w}'s ability changed!`,
+  typeChanged: (w) => `${w}'s type changed!`,
+  sketched: (w) => `${w} sketched the move!`,
+};

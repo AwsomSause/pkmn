@@ -100,9 +100,15 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
         continue;
       }
       const mon = session.run.party[battle.activeIndex];
+      battle.enemyItemsUsed = 99; // the champion would otherwise drink a potion at 1 HP
+      battle.enemySwitches = 99;
       battle.enemyTeam[battle.enemyIndex].hp = 1;
       mon.hp = 1_000_000; // keeps the lead standing against a champion; only the ending matters here
-      const index = mon.moves.findIndex((m: any) => (session.content.moves.get(m.id).power ?? 0) > 0);
+      let index = mon.moves.findIndex((m: any) => (session.content.moves.get(m.id).power ?? 0) > 0);
+      if (index < 0) {
+        mon.moves[0] = { id: 'tackle', pp: 35 }; // a lead that only knows status moves can't finish the champion
+        index = 0;
+      }
       session.takeTurn({ kind: 'move', index: Math.max(0, index) });
     }
     while (session.run.phase === 'decision') session.resolveDecision({ kind: 'skipMove' });

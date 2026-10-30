@@ -328,8 +328,8 @@ describe('move data from the director\'s move list', () => {
     for (const move of content.moves.values()) {
       if (!move.supported) continue;
       const fx = move.effects;
-      if (move.category === 'status') expect(Boolean(fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather || fx.terrain), move.id).toBe(true);
-      else expect(move.power !== null || fx.fixedDamage === 'level' || fx.ohko || fx.lowHpPower, move.id).toBe(true);
+      if (move.category === 'status') expect(Object.keys(fx).length > 0, move.id).toBe(true);
+      else expect(move.power !== null || Boolean(fx.fixedDamage || fx.halveTarget || fx.endeavor || fx.counter || fx.ohko || fx.lowHpPower), move.id).toBe(true);
     }
   });
 

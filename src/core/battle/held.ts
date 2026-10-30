@@ -468,6 +468,24 @@ export function statsGuarded(holder: Pick<Holder, 'mon'>): boolean {
   return (holder.mon.boosts ?? []).some((b) => b.kind === 'guard');
 }
 
+/** The item (if any) the holder carries with this hook that hasn't been used up this battle; `use` spends it. */
+export function triggerOnce(ctx: HeldContext, holder: Holder, kind: 'redCard' | 'ejectButton' | 'mentalHerb', events: HeldEvent[]): boolean {
+  if (holder.mon.hp <= 0) return false;
+  for (const { itemId } of hooks(hooksOf(ctx, holder.mon, holder.side), kind)) {
+    if (timesUsed(ctx, holder.mon.uid, itemId) > 0) continue;
+    markUsed(ctx, holder.mon.uid, itemId);
+    events.push({ type: 'held', side: holder.side, itemId, what: 'herb' });
+    return true;
+  }
+  return false;
+}
+
+/** Light Clay: how many turns the holder's screens last (null when it holds none). */
+export function lightClayTurns(ctx: HeldContext, holder: Holder): number | null {
+  const found = hooks(hooksOf(ctx, holder.mon, holder.side), 'lightClay')[0];
+  return found ? found.hook.turns : null;
+}
+
 /** White Herb: undo lowered stats, once per battle. Call after the holder's stats fell. */
 export function whiteHerb(ctx: HeldContext, holder: Holder, events: HeldEvent[]): void {
   if (holder.mon.hp <= 0 || !Object.values(holder.stages).some((v) => v < 0)) return;
