@@ -60,8 +60,8 @@
       "note": "The Nursery sells a Regional Egg that hatches a regional first-stage form (core/eggs.ts layEgg). Delta, Spooky and Z forms do not come from eggs yet."
     },
     "researchQuest": {
-      "status": "planned",
-      "note": "Clue chains (Phase F)."
+      "status": "limited",
+      "note": "Form Research: three clue stops, then a research battle with a regional form (events.json, tools/events/world.ts). Delta and Z forms have no clue chain yet."
     },
     "bossReward": {
       "status": "limited",
