@@ -9,7 +9,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 |---|---|---|
 | Check git state, run checks before edits | BUILT | Every slice PR reports them |
 | Baseline screenshots at fixed seeds: battle, move picker, map | BUILT | slice 1 (seed `visual-base`) |
-| Baseline screenshots: reward, shop, event, league, run end | TODO | slice V4 |
+| Baseline screenshots: reward, shop, event, league, run end | BUILT | `tests/e2e/visualBaseline.spec.ts` (seed `visual-base`, 960×540, 800×450, 480×800 → `test-results/visual/baseline-*.png`) |
 | Repo visibility / asset rights decision | BUILT | D4 private; director approved pack imports 2026-10-30 |
 | Asset provenance manifest | BUILT | `docs/quality/asset-provenance.md` |
 | Record sizes, load time, frame pacing baseline | TODO | slice V5 perf pass |
@@ -101,7 +101,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 ## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)
 | Item | Status | Where / note |
 |---|---|---|
-| Lazy-load and release art/audio; repeated-battle leak test | PART | lazy loading exists; leak test slice 11 |
+| Lazy-load and release art/audio; repeated-battle leak test | BUILT | lazy loading; `visualBaseline.spec.ts` restarts a battle 5 times: textures, objects and tweens stay flat (1192 / 10 / 20 before and after) |
 | Frame pacing / memory budget measurements | TODO | slice 11 |
 | Narrow viewport, no text overlap | PART | slice 1 screenshots at 960×540, 800×450, 480×800 |
 | Every asset listed in provenance | BUILT | ongoing |
