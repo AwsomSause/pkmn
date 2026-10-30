@@ -10,6 +10,23 @@ Status key: BUILT = already in the repo, PART = some slices done, TODO = nothing
 
 ---
 
+## Priority list (Kice asked 2026-10-30)
+
+1. **Finish the open to-do items** (CHECKLIST / STATUS): item slices 4b and 3c, rarer moves, ~107 abilities, smarter trainers (guide 5 AAI reference), boss Z-Moves/Dynamax, G-Max side effects, signature Z-Moves. Other threads own these.
+2. **Untitled document, Phase A then B** (guide 1): reward tiers and item eligibility, fixed base stats check, fewer attribute items, catch reveal panel, early-game trainer bands. Top priority by Kice's decision.
+3. **Encounter balancing, phases 1-3** (guide 2): audit, one progression config, availability data from the spreadsheet. Needed before trainer perks or raids.
+4. **Untitled document, Phases C-E** (guide 1): attributes and trainer identity, special-form routes, difficulty and modes.
+5. **Rivals, slices 1-3** (guide 3) together with **Battle Drama Engine, event bus and trainer lines** (guide 4).
+6. **Visual battle slice** (guide 9) using Essentials art (packs doc). Can start earlier in parallel if a thread is free, because it touches different files.
+7. **Trainers.md perks, batches of 20** (guide 10), after balancing tools exist.
+8. **Remaining Hyper/Overdrive events and hyper evolutions** (guide 5).
+9. **Totems, then raids, then expeditions, then minigames** (guide 6).
+10. **Untitled document, Phases F-G and later rival slices** (events, Spooky, species mastery, final balance).
+
+Reference only, never a task: the expansion catalog (guide 8) and the xlsx reports (guide 11).
+
+---
+
 ## 1. Untitled document.md — progression, economy, modes (TODO, 25 sections)
 Its own roadmap (§23) is the execution order. One phase = several PRs.
 - **A. Foundations.** Audit vs GAME_DESIGN/CHECKLIST. Item eligibility predicate (one pure function; Mega Stone needs Mega Ring + compatible party member + not owned). Reward tier weights in `balance.json` (55–65 / 22–30 / 7–12 / 1.5–4 / <1 %). Fixed base stats: add a content-gate check that BST = sum of six stats. Cut attribute items to ≤1 per draft. *Exit:* generated-draft tests (thousands of seeds), no unusable options.
