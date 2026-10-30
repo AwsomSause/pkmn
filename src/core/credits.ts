@@ -25,6 +25,7 @@ export function buildCredits(content: Content, run: RunState): CreditsLine[] {
     { kind: 'text', text: `${run.badges.length} badges · ${run.encountersCompleted} encounters` },
     ...(recap.legend ? [{ kind: 'text', text: `Legend: ${recap.legend}` } as CreditsLine] : []),
     ...(recap.biggestMoment ? [{ kind: 'text', text: `★ ${recap.biggestMoment}` } as CreditsLine] : []),
+    ...(recap.stamps.length ? [{ kind: 'text', text: `Stamps: ${recap.stamps.join(' · ')}` } as CreditsLine] : []),
     ...recap.rivals.map((r): CreditsLine => ({ kind: 'text', text: r })),
     { kind: 'gap', text: '' },
     { kind: 'heading', text: 'Made by' },
