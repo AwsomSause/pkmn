@@ -26,5 +26,10 @@
  "rei": "Agile and Strong styles are approximated: fast Pokémon (base Speed 90+) count as Agile, slow ones (60 or less) as Strong.",
  "plumeria": "Poison lasting one extra turn has no effect: poison never wears off in this game.",
  "phoebe-gen-6": "Ghost-types gaining 10% evasion is not built (no evasion perk yet).",
- "raihan": "Only rain and sun are covered: weather-boosted moves in sandstorm and hail are not boosted."
+ "raihan": "Only rain and sun are covered: weather-boosted moves in sandstorm and hail are not boosted.",
+ "nemona-v": "Equal-level foes count as the same level (no bonus): the 20% bonus applies to higher-level foes, the 10% penalty to lower-level ones.",
+ "n-classic": "Pokémon dealing 15% more damage against the same species is not built.",
+ "morty": "Ghost-types gaining 10% evasion is not built (no evasion perk yet).",
+ "marley": "Pokémon gaining 15% evasion is not built (no evasion perk yet).",
+ "mallow": "Food bonuses lasting 25% longer is not built (no food bonus yet)."
 }

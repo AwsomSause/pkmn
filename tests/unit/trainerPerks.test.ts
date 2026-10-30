@@ -559,3 +559,45 @@ describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
     }
   }, 240_000);
 });
+
+describe('trainer perks, batch Z4 (Magnus to Olivia)', () => {
+  const Z4 = ['magnus', 'mallow', 'marley', 'marlon', 'marnie-masters-4', 'matt', 'maxie-gen-6', 'may-emerald', 'may-ruby-sapphire', 'maylene', 'melony', 'milo', 'mina', 'misty-classic', 'molayne', 'morty', 'mr-fuji-gen-3', 'n-classic', 'nanu', 'nate', 'nemona-v', 'nessa', 'noland', 'norman', 'oak-classic', 'olivia'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'water' | 'grass' | 'fire' | 'fairy' | 'electric' | 'ground' | 'fighting') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all 26 are playable trainers', () => {
+    for (const id of Z4) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers: damage, stats and weaknesses', () => {
+    expect(damageDealtPerk(perks('nessa'), { ...info, userTypes: ['water'] })).toBeCloseTo(1.2);
+    expect(taken('nessa', 'electric')).toBeCloseTo(1.2);
+    expect(taken('olivia', 'water')).toBeCloseTo(1.15);
+    expect(taken('olivia', 'grass')).toBeCloseTo(1.15);
+    expect(statPerk(perks('olivia'), 'atk', ['rock'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('norman'), 'hp', ['normal'])).toBeCloseTo(1.1);
+    expect(taken('maylene', 'fairy')).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('molayne'), { ...info, userTypes: ['electric'] })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('misty-classic'), { ...info, userTypes: ['water'], physical: false })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('misty-classic'), { ...info, userTypes: ['water'], physical: true })).toBe(1);
+  });
+
+  it('Nemona: bonus against higher-level foes, penalty against lower ones', () => {
+    expect(damageDealtPerk(perks('nemona-v'), { ...info, targetLevel: 30 })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('nemona-v'), { ...info, targetLevel: 10 })).toBeCloseTo(0.9);
+  });
+
+  it('Noland: unusual Pokémon only; May: starter versus others', () => {
+    expect(perks('noland').find((m) => m.kind === 'unusualDamageMultiplier')).toMatchObject({ unusual: 1.2 });
+    expect(xpPerk(perks('may-emerald'), { types: ['normal'], baseSpeed: 70, isStarter: true, isBossBattle: false })).toBeCloseTo(1.15);
+    expect(xpPerk(perks('may-emerald'), { types: ['normal'], baseSpeed: 70, isStarter: false, isBossBattle: false })).toBeCloseTo(0.9);
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z4) {
+      const play = () => autoplay({ seed: `perkZ4-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 300_000);
+});
