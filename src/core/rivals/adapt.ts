@@ -17,6 +17,7 @@ import { bondNote, bondShift } from './bonds';
 import { isHostile } from './outcome';
 import { legacyNote, substitute } from './relations';
 import { rivalMods } from './profile';
+import { rivalDebtLevels } from './standing';
 import { allianceHelp, identityNote } from './relations';
 import { legacyLine } from './legacy';
 import { RIVAL_CONFIG } from './schema';
@@ -103,7 +104,7 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
   };
   const mods = rivalMods(rival);
   // Personality: vindictive rivals return stronger. Style: how sharp its move choice is.
-  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) + rivalLevelOffset(runPerks(content, run)) }), ai: Math.max(plan.ai, mods.ai) };
+  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) + rivalDebtLevels(run, rival) + rivalLevelOffset(runPerks(content, run)) }), ai: Math.max(plan.ai, mods.ai) };
   const perks = runPerks(content, run);
   const type = mostUsedType(content, run);
   const seen = bondNote(rival);

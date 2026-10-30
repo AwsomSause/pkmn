@@ -17,6 +17,7 @@ import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { RIVAL_PATHS } from '../rivals/schema';
 import { maybeSpark, sparkGain } from '../rivals/manager';
+import { onBossBeaten, onRivalDefeated, pathContext } from '../rivals/standing';
 import { advanceArc } from '../rivals/arcs';
 import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
@@ -463,6 +464,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       else if (outcome === 'retired') say(`${title}, worn down by defeats, stepped away from competition`);
       else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
       else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
+      onRivalDefeated(content, run, rivalBack, outcome, where);
       advanceArc(content, run, rivalBack);
       afterBattleBehavior(content, run, rivalBack, false);
       triangleEffect(run, rivalBack);
@@ -483,6 +485,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       turns: battle.turn - 1,
       flawless: run.party.every((m) => m.hp > 0),
       returning: Boolean(battle.returning),
+      ctx: pathContext(content, run, { where, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), hpLeftShare: totalHp > 0 ? hpLeft / totalHp : 0, turns: battle.turn - 1 }),
     });
     if (rival) {
       const title = `${content.trainers.get(trainer.classId)?.name ?? 'Trainer'} ${trainer.name}`;
@@ -498,6 +501,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       data: { leaderId: trainer.leaderId, role: trainer.classId, name: trainer.name },
       text: `Defeated ${role} ${trainer.name}`,
     });
+    onBossBeaten(content, run, where, ended.id);
     noteDuos(content, run, fought, where);
     // A milestone: the story may now follow a different rival.
     const chosen = evaluateUltimate(run);

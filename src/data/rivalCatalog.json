@@ -13,14 +13,14 @@
    "name": "The Accidental Hero",
    "group": "Paths created by the player's actions",
    "text": "You save their Pokémon, help them through an event, or intervene in a crisis. They become inspired by you—or resent needing your help.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "stolen-spotlight",
    "name": "The Stolen Spotlight",
    "group": "Paths created by the player's actions",
    "text": "You receive recognition, a sponsorship, a rare Pokémon, or a tournament invitation they expected to earn.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "merciful-victor",
@@ -41,21 +41,21 @@
    "name": "The Shared Disaster",
    "group": "Paths created by the player's actions",
    "text": "You both survive a disastrous route, raid, or powerful encounter. You become connected through a shared experience.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-s-choice",
    "name": "The Pokémon's Choice",
    "group": "Paths created by the player's actions",
    "text": "A Pokémon bonds with you, rejects their training, or repeatedly reacts to your presence. The trainer's response creates the rivalry.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-you-inspired",
    "name": "The Rival You Inspired",
    "group": "Paths created by the player's actions",
    "text": "They begin by copying your team or strategy, then gradually develop a style of their own.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-you-neglected",
@@ -69,7 +69,7 @@
    "name": "The Debt",
    "group": "Paths created by the player's actions",
    "text": "You owe them a favor, they owe you one, or a past decision leaves an unresolved obligation that resurfaces later.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "self-made-challenger",
@@ -83,7 +83,7 @@
    "name": "The Chosen Successor",
    "group": "Paths created by the rival's own ambitions",
    "text": "A respected trainer, Gym Leader, or Champion identifies both of you as potential successors, creating an unspoken competition.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "family-legacy",
@@ -125,14 +125,14 @@
    "name": "The Regional Idealist",
    "group": "Paths created by the rival's own ambitions",
    "text": "They believe the region needs a particular kind of Champion and decide you represent the opposing future.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "disgraced-champion-candidate",
    "name": "The Disgraced Champion Candidate",
    "group": "Paths created by the rival's own ambitions",
    "text": "They once stood on the verge of greatness before a public failure, scandal, or devastating loss.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "world-traveler",
@@ -146,42 +146,42 @@
    "name": "The Assigned Opponent",
    "group": "Paths created by circumstances and other characters",
    "text": "A mentor, tournament, academy, or organization pairs you together. The rivalry becomes genuine—or the arrangement falls apart.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mutual-enemy",
    "name": "The Mutual Enemy",
    "group": "Paths created by circumstances and other characters",
    "text": "You both oppose the same dangerous trainer or faction but disagree over how to handle it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "former-friend",
    "name": "The Former Friend",
    "group": "Paths created by circumstances and other characters",
    "text": "A friendship deteriorates because of ambition, conflicting ideals, a betrayal, or a misunderstanding.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-s-rival",
    "name": "The Rival's Rival",
    "group": "Paths created by circumstances and other characters",
    "text": "You defeat someone they have spent years trying to surpass, inheriting that person's attention.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-league-prospect",
    "name": "The Pokémon League Prospect",
    "group": "Paths created by circumstances and other characters",
    "text": "A league organization tracks both of you as promising competitors, turning ordinary encounters into a growing public competition.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-mentor",
    "name": "The Shared Mentor",
    "group": "Paths created by circumstances and other characters",
    "text": "You train under the same expert. Different lessons and interpretations create a philosophical rivalry.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "ideological-opponent",
@@ -202,14 +202,14 @@
    "name": "The Inherited Conflict",
    "group": "Paths created by circumstances and other characters",
    "text": "A rival believes your actions, family history, team legacy, or previous trainer's reputation wronged them.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-remembers",
    "name": "The Pokémon Who Remembers",
    "group": "Paths created by circumstances and other characters",
    "text": "One of their Pokémon recognizes you from an earlier encounter, a rescue, a battle, or a period when it belonged to someone else.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "personalities": [

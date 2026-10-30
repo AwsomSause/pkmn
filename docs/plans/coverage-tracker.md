@@ -10,7 +10,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Item | Count | Status |
 |---|---|---|
 | Rival slice 1 Spark, slice 2 return + adaptation, slice 3 Story screen | 3 slices | DONE |
-| Rival paths (Examples §1) | 30 | PART: 13 run as origins chosen from the battle and the rival's character (dominant win, close win, repeated loss, personality, region); 17 need systems that don't exist yet (sponsors, mentors, factions, debts, family, disasters, contests) |
+| Rival paths (Examples §1) | 30 | DONE (limited): all 30 run. 17 need world state from `rivals/standing.ts` (sponsor, faction standing, debts, other rivals, bonds, crises); limits: accidental-hero/shared-disaster read close calls in the same stage, mutual-enemy reads a hostile faction (standing −12) |
 | Personalities (§2) | 40 | PART: all 40 run as profiles (6 traits; vindictiveness changes the return level, low adaptability never adapts). Their special story behaviours wait for arcs/events |
 | Battle styles (§3) | 32 | PART: all 32 run as AI sharpness + stat bias + adaptation cap. Style tricks (berserker rage, trapping, copying) wait for battle hooks |
 | Off-screen events (§6; the doc says 40 but skips #19) | 39 | PART: all 39 run (`rivalBonds.json`, `rivals/bonds.ts`): one per rival per stage with eligibility, character/trait weighting, a cause chain, a habit, and private/rumour/observed visibility. Limited: generic habit pools, hyper events only move a readiness number |
@@ -187,3 +187,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D2 (§19), slice 2: Specialist Mart, Training Dojo, Rival Meeting Place done. Left: Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Raid Observatory, Lodge.
 
 - Untitled Phase D2 (§19), slice 3: Lodge, Relic Shrine, Auction House, Event Hall, Raid Observatory done. Limited/left: Nursery (no egg system), Ability Researcher (waits on ability mechanics), Fossil Restoration, Safari, Black Market, Garden, School.
+- Rival world slice A (`rivals/standing.ts`, `rivalWorld.json`, `story.standing` defaults so no save bump): 6 sponsors (advance + stipend, advance called in after 2 more boss wins), 4 factions (League up, Syndicate down on boss wins), debts (player owes a sponsor; a spared rival owes a favour and goes 1 level easier once), rival sponsors (+1 level), Story screen Standing row. Left: arcs (slice B), Pokémon transfer and unscheduled challenge (slice C).
