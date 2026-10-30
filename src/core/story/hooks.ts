@@ -20,7 +20,8 @@ import { applyDefeat } from '../rivals/outcome';
 import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
-import type { StoryEventDefinition, Where } from './schema';
+import { emotionOf } from './emotions';
+import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
 
@@ -214,6 +215,10 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           // Only your own Pokémon's transformations become memories.
           text: e.side === 'player' ? `${e.kind === 'primal' ? 'Underwent Primal Reversion into' : 'Mega Evolved into'} ${name(content, e.to)}` : undefined,
         });
+        if (e.side === 'player') {
+          const t = transformMoment(content, run, e, i, triggers.length, battle.trainer?.classId ?? null);
+          if (t) triggers.push(t);
+        }
         break;
       default:
         break;
@@ -228,6 +233,37 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   const cues = resolveTriggers(content, run, triggers, where);
   if (battle.outcome) recordBattleEnd(content, run, where);
   return cues;
+}
+
+/** Which Hyper evolution a battle transformation can be (Overdrive blueprint §4). Primal Reversion has none. */
+const TRANSFORM_TRIGGER: Record<string, StoryTriggerKind> = {
+  mega: 'megaOverdrive',
+  zmove: 'zHeart',
+  dynamax: 'dynamaxResolve',
+  gigantamax: 'dynamaxResolve',
+  tera: 'teraTrueColors',
+};
+
+/**
+ * A Mega Overdrive, "All of Its Heart", "A Giant Resolve" or "Its True Colors Shine Through!": the
+ * normal transformation rules decide everything; this only adds the banner, the line and a memory,
+ * and only when the moment is decisive (a boss fight or the Pokémon at half HP) or, for the Z-Move,
+ * the bond is strong. It draws no random numbers and never grants a second use.
+ */
+function transformMoment(content: Content, run: RunState, e: Extract<RunEvent, { type: 'transform' }>, at: number, order: number, classId: string | null): StoryTrigger | null {
+  const trigger = TRANSFORM_TRIGGER[e.kind];
+  const def = trigger && content.story.definitions.find((d) => d.triggerConditions.trigger === trigger);
+  const mon = run.party.find((m) => m.uid === e.uid);
+  if (!def || !mon) return null;
+  const cond = def.triggerConditions;
+  if (cond.minFriendship !== undefined && mon.friendship < cond.minFriendship) return null;
+  const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
+  if (cond.decisive && !boss && mon.hp > maxHp(content, mon) / 2) return null;
+  const history = run.story.histories[e.uid];
+  if (history) history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
+  const emotion = trigger === 'teraTrueColors' ? emotionOf(content, run, e.uid)?.id : undefined;
+  const variant = emotion && def.variants[emotion] ? emotion : null;
+  return { ...makeTrigger(run, def, at, order, { name: name(content, mon.speciesId), type: e.teraType ?? '' }, variant, e.uid), combat: false };
 }
 
 function makeTrigger(
@@ -443,6 +479,19 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
         data: { from: prev.speciesId, to: mon.speciesId, trigger: evolutionTrigger },
         text: `Evolved from ${name(content, prev.speciesId)} into ${name(content, mon.speciesId)}`,
       });
+      // Determination Evolution: the evolution rules are unchanged; an exceptional story (a boss beaten
+      // after surviving a fatal hit) only earns it a named memory and its own record.
+      const h = run.story.histories[mon.uid];
+      if (h && h.bossesBeaten > 0 && h.survivedFatal > 0) {
+        h.hyper['determination-evolution'] = (h.hyper['determination-evolution'] ?? 0) + 1;
+        emit(content, run, 'storyMoment', {
+          actors: [mon.uid],
+          data: { def: 'determination-evolution', suppressed: false },
+          importance: 85,
+          text: `Determination Evolution: became ${name(content, mon.speciesId)} after everything it endured`,
+          emotions: ['determination'],
+        });
+      }
     }
     for (const mark of content.story.friendshipMilestones) {
       if (prev.friendship < mark && mon.friendship >= mark) {
