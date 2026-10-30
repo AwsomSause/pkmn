@@ -139,24 +139,32 @@
   {
    "id": "overdriveBreakthrough",
    "name": "The Overdrive Breakthrough",
-   "status": "planned",
+   "status": "limited",
    "severity": "climactic",
    "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Owned by the Overdrive/Hyper thread",
-   "lines": []
+   "chance": 100,
+   "records": true,
+   "requires": "One of your Pokémon has an Overdrive or Hyper moment this turn",
+   "lines": [
+    "That glow... that's Overdrive!",
+    "So you've found it too. Show me everything you have!",
+    "{name}, brace yourself. That is no ordinary power."
+   ]
   },
   {
    "id": "overdriveMisfire",
    "name": "The Overdrive Misfire",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
    "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Owned by the Overdrive/Hyper thread",
-   "lines": []
+   "chance": 100,
+   "records": true,
+   "requires": "The enemy's Overdrive is calmed or broken this turn",
+   "lines": [
+    "No! {name}, focus! Don't lose it now!",
+    "It slipped away... steady, {name}.",
+    "Too wild, too fast. {name}, breathe!"
+   ]
   },
   {
    "id": "veteransAdjustment",

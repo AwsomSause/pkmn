@@ -123,8 +123,18 @@ const aceOut = (c: PlanCtx) => {
 };
 
 export const CHECKS: Record<string, Check> = {
+  overdriveBreakthrough: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'hyper' && e.side === 'player');
+    if (i >= 0) return { at: i };
+    const mine = c.run.story.events.some((k) => k.type === 'storyMoment' && k.where.battle === battleNo(c.run) && k.where.turn === c.turn - 1 && /^(overdrive-|dual-emotion)/.test(String(k.data.def ?? '')));
+    return mine && c.events.length > 0 ? { at: lastIdx(c) } : null;
+  },
+  overdriveMisfire: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'hyper' && e.side === 'enemy' && e.variant === 'calmed');
+    return i >= 0 ? { at: i } : null;
+  },
   lastSecondResolve: (c) => {
-    const i = c.events.findIndex((e) => e.type === 'hyper' && e.side === 'enemy');
+    const i = c.events.findIndex((e) => e.type === 'hyper' && e.side === 'enemy' && e.variant !== 'calmed');
     return i >= 0 ? { at: i } : null;
   },
   tacticalRevelation: (c) => (c.habit ? { at: c.habit.at, vars: { foeMove: c.content.moves.get(c.habit.moveId)?.name ?? 'that move' } } : null),
