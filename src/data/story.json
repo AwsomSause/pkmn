@@ -710,6 +710,48 @@
           ]
         }
       }
+    },
+    {
+      "id": "signature-awakening",
+      "displayName": "It Mastered the Power Within!",
+      "messagePool": [
+        "{name} mastered the power within {move}!",
+        "{move} has awakened in {name}!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "signatureAwakening"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "none",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Mastered {move}: it awakened for this run"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd95a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
     }
-  ]
+  ],
+  "awakening": {
+    "uses": 8,
+    "boost": 1.2,
+    "perPokemon": 2
+  }
 }

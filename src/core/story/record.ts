@@ -186,6 +186,7 @@ export function openHistory(content: Content, run: RunState, uid: string, specie
     memories: [],
     hyper: {},
     foes: {},
+    moves: {},
     finishTrades: {},
   };
   run.story.histories[uid] = history;

@@ -24,6 +24,7 @@ export const HYPER_EFFECTS: Record<StoryTriggerKind, StoryEffectSpec['kind']> = 
   zHeart: 'flair',
   dynamaxResolve: 'flair',
   teraTrueColors: 'flair',
+  signatureAwakening: 'flair',
 };
 
 /** Memories a trigger can ask for besides other Hyper moments (see PokemonHistory). */

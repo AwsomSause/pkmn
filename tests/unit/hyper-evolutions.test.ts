@@ -63,3 +63,61 @@ describe('Hyper evolutions', () => {
     expect(run.rng.hyper).toEqual(rngBefore.hyper);
   });
 });
+
+describe('Signature Move Awakening', () => {
+  const uses = content.story.awakening.uses;
+  const moveEvent = (moveId: string): RunEvent => ({ type: 'move', side: 'player', moveId } as unknown as RunEvent);
+
+  function trainerRun(seed: string) {
+    const { run, mon } = setup(seed);
+    run.battle!.kind = 'trainer';
+    mon.moves[0] = { id: 'tackle', pp: 35 };
+    run.battle!.activeIndex = 0;
+    return { run, mon };
+  }
+
+  it('a move used often in trainer fights awakens once, with a banner and a memory', () => {
+    const { run, mon } = trainerRun('awaken-1');
+    for (let n = 0; n < uses - 1; n++) {
+      expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')])).toEqual([]);
+    }
+    const cues = recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]);
+    expect(cues.map((c) => c.title)).toEqual(['It Mastered the Power Within!']);
+    expect(mon.awakened).toEqual(['tackle']);
+    expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')])).toEqual([]);
+    expect(mon.awakened).toEqual(['tackle']);
+  });
+
+  it('wild fights and status moves do not count', () => {
+    const { run, mon } = trainerRun('awaken-2');
+    run.battle!.kind = 'wild';
+    for (let n = 0; n < uses + 2; n++) recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]);
+    expect(mon.awakened).toBeUndefined();
+    run.battle!.kind = 'trainer';
+    for (let n = 0; n < uses + 2; n++) recordBattleTurn(content, structuredClone(run), run, [moveEvent('growl')]);
+    expect(mon.awakened).toBeUndefined();
+  });
+});
+
+describe('Awakened move damage', () => {
+  it('hits harder by the configured multiplier, and nothing else changes', async () => {
+    const { createBattle, resolveTurn } = await import('../../src/core/battle/engine');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const { hashSeed, Rng } = await import('../../src/core/rng');
+    const hit = (awakened: boolean) => {
+      const player = createPokemon(content, 'jolteon', 50, 'p1');
+      player.moves = [{ id: 'tackle', pp: 35 }];
+      if (awakened) player.awakened = ['tackle'];
+      const foe = createPokemon(content, 'snorlax', 60, 'e1');
+      foe.moves = [{ id: 'growl', pp: 40 }];
+      const ctx = { content, battle: createBattle('wild', [foe], 0, player.uid, null), party: [player], inventory: {}, rng: new Rng(hashSeed('aw')), captureRng: new Rng(hashSeed('aw-c')), catchMultiplier: 1 };
+      resolveTurn(ctx, { kind: 'move', index: 0 });
+      return foe.hp;
+    };
+    const maxHp = createPokemon(content, 'snorlax', 60, 'x').hp;
+    const plain = maxHp - hit(false);
+    const boosted = maxHp - hit(true);
+    expect(boosted).toBeGreaterThan(plain);
+    expect(boosted / plain).toBeCloseTo(content.story.awakening.boost, 0);
+  });
+});
