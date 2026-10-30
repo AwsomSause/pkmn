@@ -112,6 +112,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
     case 'held': {
       const item = content.catalog.get(e.itemId)?.name ?? content.items.get(e.itemId)?.name ?? 'item';
       switch (e.what) {
+        case 'received':
+          return `${who(e.side)} received a ${item} from its partner!`;
         case 'heal':
           return `${who(e.side)} restored HP using its ${item}!`;
         case 'hurt':
@@ -252,6 +254,10 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return e.side === 'player' ? `Come back, ${names.player}!` : null;
     case 'switchIn':
       return e.side === 'player' ? `Go! ${species(e.speciesId)}!` : `${names.trainer ?? 'The trainer'} sent out ${species(e.speciesId)}!`;
+    case 'focus':
+      return null;
+    case 'allySwitch':
+      return `${who(e.side)} switched places with its partner!`;
     case 'item':
       return e.message;
     case 'ball':
@@ -332,6 +338,16 @@ const FIELD_TEXT: Record<string, [string, string]> = {
 };
 
 const SELF_STATE: Record<string, (who: string) => string> = {
+  centerOfAttention: (w) => `${w} became the center of attention!`,
+  holdHands: (w) => `${w} and its partner held hands!`,
+  helpingHand: (w) => `${w} is ready to help its partner!`,
+  wideGuard: (w) => `Wide Guard protected ${w}'s side!`,
+  quashed: (w) => `${w}'s move was postponed!`,
+  afterYou: (w) => `${w} took the kind offer!`,
+  instructed: (w) => `${w} followed the instructions!`,
+  commanding: (w) => `${w} went into its partner's mouth and is giving commands!`,
+  coached: (w) => `${w} was coached by its partner!`,
+  healed: (w) => `${w} was healed by its partner!`,
   focusEnergy: (w) => `${w} is getting pumped!`,
   laserFocus: (w) => `${w} is focused!`,
   lockOn: (w) => `${w} took aim!`,

@@ -1,6 +1,7 @@
 {
  "unsupported-moves": 87,
  "unsupported-learnset-entries": 0,
+ "special-form-leaks": 0,
  "species-no-usable-moves": 0,
  "meetable-species-no-usable-moves": 0,
  "missing-sprites": 0,
@@ -17,7 +18,7 @@
  "supported.species": 1025,
  "supported.form": 105,
  "supported.move": 839,
- "supported.ability": 263,
+ "supported.ability": 283,
  "supported.item": 247,
  "supported.evolution": 611,
  "special-form-leaks": 0,

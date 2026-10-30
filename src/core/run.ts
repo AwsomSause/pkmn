@@ -15,8 +15,9 @@
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk, isUltraBeast } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, shopEarlyStockPerk, isUltraBeast } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
+import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, type AttributeKey, type Content, type TypeName } from './contentSchema';
@@ -1138,6 +1139,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
+    const doublesCfg = content.balance.doubles;
+    if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+      if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
+    }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
@@ -1410,10 +1416,23 @@ export function beginBattle(content: Content, current: RunState): { run: RunStat
   if ((current.battle!.pendingEntry ?? []).length === 0) return { run: current, events: [] };
   const run = structuredClone(current);
   const rng = new Rng(run.rng.battle);
-  const events = startBattle(battleContext(content, run, rng, new Rng(run.rng.capture)));
+  const ctx = battleContext(content, run, rng, new Rng(run.rng.capture));
+  const events = run.battle!.doubles ? startDoubles(ctx) : startBattle(ctx);
   run.rng.battle = rng.state;
   countAttributeGrowth(content, run, events);
   return { run, events };
+}
+
+/**
+ * A double battle given one command (older callers, simple tools): it is the left-hand
+ * Pokémon's, and its partner uses its first usable move on the first foe.
+ */
+function doublesAction(ctx: BattleContext, action: PlayerAction): PlayerAction {
+  const d = ctx.battle.doubles!;
+  if (action.kind === 'double' || ctx.battle.needsSwitch) return action;
+  const commands = autoCommands(ctx);
+  commands[primarySpot(d, 'player')] = { action };
+  return { kind: 'double', commands };
 }
 
 export function takeTurn(content: Content, current: RunState, action: PlayerAction, dialogue: DialogueFrequency = 'normal'): TurnResult {
@@ -1429,7 +1448,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const wasForced = battle.needsSwitch;
   const outgoing = run.party[battle.activeIndex]?.uid;
   const enemyBefore = battle.enemyIndex;
-  const engineEvents: BattleEvent[] = [...shaped.events, ...resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), shaped.action)];
+  const turnCtx = battleContext(content, run, rng, captureRng, hyperRng);
+  const engineEvents: BattleEvent[] = [...shaped.events, ...(battle.doubles ? resolveDoublesTurn(turnCtx, doublesAction(turnCtx, action)) : resolveTurn(turnCtx, shaped.action))];
   // A practiced pair hands over after a faint (yours, or a rival's).
   if (wasForced && action.kind === 'switch' && outgoing) {
     const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
@@ -1631,7 +1651,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  const doublesBonus = battle.doubles ? doubleBattleRewardPerk(archetype.modifiers) : 1;
+  let moneyGained = Math.floor(base * rematch * doublesBonus * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
