@@ -40,6 +40,7 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
+import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
 import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
@@ -122,6 +123,7 @@ const tween = (scene: Phaser.Scene, config: Phaser.Types.Tweens.TweenBuilderConf
 export class BattleScene extends Phaser.Scene {
   private message!: Phaser.GameObjects.Text;
   /** Battle log (catalog #115): the last lines said, reopened with the H key. Presentation only. */
+  private weatherLayer: WeatherLayer | null = null;
   private history: string[] = [];
   private historyView: Phaser.GameObjects.Container | null = null;
   private menu: Menu | null = null;
@@ -186,7 +188,7 @@ export class BattleScene extends Phaser.Scene {
     if (run?.battle) {
       const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
       const raid = this.raidTrack(run.battle);
-      queueAssets(this, [...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+      queueAssets(this, [...WEATHER_ASSET_IDS, ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
     }
   }
 
@@ -248,6 +250,8 @@ export class BattleScene extends Phaser.Scene {
       event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
       shadowFoe: Boolean(envFoe?.shadow),
     }), this.motion);
+    this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
+    this.weatherLayer.set(run.battle?.weather?.id ?? null);
     this.fieldBase = this.field.length;
     this.fx = new BattleFx(this, {
       field: this.field,
@@ -1471,6 +1475,12 @@ export class BattleScene extends Phaser.Scene {
       const mon = side ? this.shown[side] : null;
       let preText: string | null = null;
       switch (e.type) {
+        case 'weather':
+          this.weatherLayer?.set(e.weather);
+          break;
+        case 'weatherEnd':
+          this.weatherLayer?.set(null);
+          break;
         case 'focus':
           this.focusOn(e.side, e.uid);
           break;
