@@ -9,12 +9,19 @@ import type * as Auto from '../tests/unit/autoplay.ts';
 import type * as Rules from '../src/core/rules.ts';
 import type * as Data from '../src/data/index.ts';
 import type * as RngMod from '../src/core/rng.ts';
+import type * as RunMod from '../src/core/run.ts';
+import type * as Expedition from '../src/core/expedition/flow.ts';
+import type * as Minigame from '../src/core/minigame/flow.ts';
+import type * as Events from '../src/core/events.ts';
+import type * as Services from '../src/core/services/flow.ts';
 import { closeModules, loadModule } from './lib/gameModules.ts';
+import { sideBot, type SideFinding } from './lib/sideBot.ts';
 
 const { autoplay } = await loadModule<typeof Auto>('/tests/unit/autoplay.ts');
 const { RUN_RULES, rulesProblem } = await loadModule<typeof Rules>('/src/core/rules.ts');
 const { buildContent } = await loadModule<typeof Data>('/src/data/index.ts');
 const { Rng, hashSeed } = await loadModule<typeof RngMod>('/src/core/rng.ts');
+const sideMods = { run: await loadModule<typeof RunMod>('/src/core/run.ts'), exp: await loadModule<typeof Expedition>('/src/core/expedition/flow.ts'), mini: await loadModule<typeof Minigame>('/src/core/minigame/flow.ts'), events: await loadModule<typeof Events>('/src/core/events.ts'), services: await loadModule<typeof Services>('/src/core/services/flow.ts'), auto: await loadModule<typeof Auto>('/tests/unit/autoplay.ts') };
 await closeModules();
 
 const content = buildContent();
@@ -26,6 +33,7 @@ const modifiers = RUN_RULES.modifiers.filter((m) => m.status === 'supported').ma
 const args = process.argv.filter((a) => !a.startsWith('--'));
 const [from, count, out] = [Number(args[2] ?? 0), Number(args[3] ?? 5), args[4]];
 const HEAL = process.argv.includes('--heal');
+const SIDES = process.argv.includes('--sides');
 const STEPS = 4000;
 const STUCK_STEPS = 1500;
 
@@ -52,6 +60,9 @@ for (let i = from; i < from + count; i++) {
   let lastProgress = 0;
   let lastKey = '';
   const bad: string[] = [];
+  const findings: SideFinding[] = [];
+  const visits: Record<string, number> = {};
+  const visit = SIDES ? sideBot(sideMods, content, new Set(), findings, visits) : null;
   try {
     const run = autoplay({
       seed: cfg.seed,
@@ -60,7 +71,8 @@ for (let i = from; i < from + count; i++) {
       steps: STEPS,
       smart: true,
       healOnMap: HEAL,
-      onStep: (r) => {
+      onStep: (r0) => {
+        const r = visit ? visit(r0) : r0;
         steps++;
         const key = `${r.encountersCompleted}|${r.phase}|${r.party.reduce((s, p) => s + p.level, 0)}|${r.badges.length}`;
         if (key !== lastKey) (lastKey = key), (lastProgress = steps);
@@ -70,6 +82,7 @@ for (let i = from; i < from + count; i++) {
           for (const [k, v] of Object.entries(r.inventory)) if (!Number.isFinite(v) || v < 0) bad.push(`item ${k} ${v}`);
         }
         if (steps - lastProgress > STUCK_STEPS) throw new Error('STUCK');
+        return r;
       },
     });
     Object.assign(rec, { phase: run.phase, encounters: run.encountersCompleted, badges: run.badges.length, region: run.regionIndex, party: run.party.length, maxLevel: Math.max(...run.party.map((p) => p.level)), by: run.log.defeatedBy, stage: run.stage?.index ?? null, wipes: run.rules.wipes, wins: run.log.counters.battlesWon ?? null, money: run.money, earned: run.log.counters.moneyEarned ?? 0, steps });
@@ -81,6 +94,8 @@ for (let i = from; i < from + count; i++) {
     else Object.assign(rec, { error: msg.slice(0, 200), stack: String((e as Error).stack).split('\n').slice(1, 4).join(' | ').slice(0, 300), steps });
   }
   if (bad.length) rec.bad = bad;
+  if (findings.length) rec.sides = findings.slice(0, 5);
+  if (SIDES) rec.visits = visits;
   rec.ms = Date.now() - t0;
   const line = JSON.stringify(rec);
   if (out) appendFileSync(out, line + '\n');
