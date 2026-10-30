@@ -10,6 +10,16 @@ export type MoveRank = (typeof MOVE_RANKS)[number];
 export const MOVE_RANK_USES: Record<Exclude<MoveRank, 'none'>, number> = { bronze: 10, silver: 30, gold: 100 };
 export const MOVE_RANK_RESEARCH: Record<Exclude<MoveRank, 'none'>, number> = { bronze: 2, silver: 5, gold: 10 };
 
+/**
+ * Move Mastery VFX variants (#107): a mastered move gets a flourish on top of its animation, a ring of sparks in its
+ * rank colour (more sparks per rank; gold adds a shine ring). Cosmetic only: the battle is decided before it plays.
+ */
+export const MASTERY_VFX: Record<Exclude<MoveRank, 'none'>, { color: number; sparks: number; ring: boolean }> = {
+  bronze: { color: 0xcd7f32, sparks: 4, ring: false },
+  silver: { color: 0xd8e4f4, sparks: 6, ring: false },
+  gold: { color: 0xffd040, sparks: 8, ring: true },
+};
+
 export function moveRank(uses: number): MoveRank {
   return uses >= MOVE_RANK_USES.gold ? 'gold' : uses >= MOVE_RANK_USES.silver ? 'silver' : uses >= MOVE_RANK_USES.bronze ? 'bronze' : 'none';
 }

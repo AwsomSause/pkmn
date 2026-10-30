@@ -410,3 +410,31 @@ test('slice 10: a Pokémon evolves after battle with the light-pulse sequence', 
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId), { timeout: 10_000 }).toBe('charmeleon');
   expect(errors).toEqual([]);
 });
+
+test('catalog 107: a gold-mastered move plays its mastery flourish', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-mastery&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    const lead = session.run.party[session.run.battle.activeIndex];
+    lead.moves = [{ id: 'tackle', pp: 35 }];
+    session.profile.moveUses = { ...(session.profile.moveUses ?? {}), tackle: 100 };
+  });
+  // Watch for the gold sparks while the move plays.
+  await page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Battle');
+    (window as any).__sawMastery = false;
+    scene.events.on('postupdate', () => {
+      if (scene.children.list.some((o: any) => o.name === 'mastery-gold')) (window as any).__sawMastery = true;
+    });
+  });
+  await page.keyboard.press('Enter'); // Fight
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Enter'); // Tackle
+  await expect.poll(() => page.evaluate(() => (window as any).__sawMastery), { timeout: 15_000 }).toBe(true);
+  expect(errors).toEqual([]);
+});

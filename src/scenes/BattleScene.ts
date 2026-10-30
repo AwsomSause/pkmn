@@ -48,6 +48,7 @@ import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { addEnvironment } from '../ui/battleFx/environment';
 import { environmentStory } from '../core/presentation/environmentStory';
 import { crisisLevel } from '../core/story/crisis';
+import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
@@ -233,6 +234,7 @@ export class BattleScene extends Phaser.Scene {
       field: this.field,
       backgroundIndex: () => this.fieldBase,
       sprite: (side) => (side === 'player' ? this.playerSprite : this.enemySprite),
+      mastery: (moveId) => moveRank(session.profile.moveUses?.[moveId] ?? 0),
     });
 
     this.shown = { player: structuredClone(run.party[battle.activeIndex]!), enemy: structuredClone(currentEnemy(battle)) };
