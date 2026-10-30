@@ -50,7 +50,7 @@ function mapItemEffect(content: Content, itemId: string): MapItemEffect | null {
 /** Which counter on a run.mapEffects entry an item uses up, if any. */
 function counterOf(lasts: Lasts): 'battles' | 'throws' | 'uses' | null {
   if (lasts.for === 'battles' || lasts.for === 'throws') return lasts.for;
-  if (lasts.for === 'purchases' || lasts.for === 'shops' || lasts.for === 'trainers') return 'uses';
+  if (lasts.for === 'purchases' || lasts.for === 'shops' || lasts.for === 'trainers' || lasts.for === 'manual') return 'uses';
   return null;
 }
 
@@ -359,4 +359,66 @@ export function afterTrainerWin(content: Content, run: RunState, stock: readonly
 /** Money when the run reaches a new region (Pass Orb). */
 export function regionMoneyFromItems(content: Content, run: RunState): number {
   return perksOf(activePerks(content, run), 'regionMoney').reduce((sum, p) => sum + p.perk.amount * p.copies, 0);
+}
+
+// ---------- getting around the map ----------
+
+/** Whether a perk of this kind is working now (run-long copies or charges left). */
+export function hasPerk(content: Content, run: MapItemRun, kind: Perk['perk']): boolean {
+  return activePerks(content, run).some((p) => p.perk.perk === kind);
+}
+
+/** The item giving a perk of this kind, if one is working. */
+export function perkItem(content: Content, run: MapItemRun, kind: Perk['perk']): string | null {
+  return activePerks(content, run).find((p) => p.perk.perk === kind)?.itemId ?? null;
+}
+
+/** Uses left of a manual item (Escape Rope, VS Seeker). */
+export function usesLeft(run: Pick<RunState, 'mapEffects'>, itemId: string): number {
+  return (run.mapEffects ?? []).reduce((sum, e) => sum + (e.itemId === itemId ? (e.uses ?? 0) : 0), 0);
+}
+
+/** Uses up one use of a manual item (mutates `run`). */
+export function spendUse(run: RunState, itemId: string): void {
+  const index = (run.mapEffects ?? []).findIndex((e) => e.itemId === itemId && (e.uses ?? 0) > 0);
+  if (index < 0) throw new Error('That item is used up');
+  run.mapEffects = run.mapEffects!.map((e, i) => (i === index ? { ...e, uses: e.uses! - 1 } : e)).filter((e) => e.uses !== 0);
+}
+
+const stageUseKey = (run: MapItemRun, itemId: string) => `stage-use:${itemId}:${stageKey(run)}`;
+
+/** Whether a once-per-stage item (the Bikes) was already used on this stage. */
+export function usedThisStage(run: MapItemRun & Pick<RunState, 'itemCounters'>, itemId: string): boolean {
+  return (run.itemCounters?.[stageUseKey(run, itemId)] ?? 0) > 0;
+}
+
+export function markUsedThisStage(run: RunState, itemId: string): void {
+  run.itemCounters = { ...run.itemCounters, [stageUseKey(run, itemId)]: 1 };
+}
+
+/** Itemfinder: the wild stop on this stage that hides a Bag item (picked by a generator of its own), or null. */
+export function hiddenItemNode(content: Content, run: RunState): string | null {
+  if (!run.stage || !hasPerk(content, run, 'hiddenItem')) return null;
+  const wild = run.stage.map.nodes.filter((n) => n.kind === 'wild');
+  if (wild.length === 0) return null;
+  return new Rng(hashSeed(`${run.seed}::itemfinder::${stageKey(run)}`)).pick(wild).id;
+}
+
+/** Itemfinder: when the player beats or catches the wild Pokémon at the hidden stop, a Bag item from the shop's middle third (mutates `run`). */
+export function hiddenItemFound(content: Content, run: RunState, stock: readonly { item: string; price: number }[]): string | null {
+  const node = hiddenItemNode(content, run);
+  if (!node || run.stage?.current !== node || stock.length === 0) return null;
+  const key = `itemfinder:${stageKey(run)}`;
+  if ((run.itemCounters?.[key] ?? 0) > 0) return null;
+  run.itemCounters = { ...run.itemCounters, [key]: 1 };
+  const sorted = [...stock].sort((a, b) => a.price - b.price);
+  const third = Math.max(1, Math.floor(sorted.length / 3));
+  const middle = sorted.slice(third, Math.max(third + 1, sorted.length - third));
+  return new Rng(hashSeed(`${run.seed}::itemfinder-loot::${stageKey(run)}`)).pick(middle.length > 0 ? middle : sorted).item;
+}
+
+/** Bike Voucher: the voucher waiting to be traded at the next shop, if any. */
+export function voucherOf(content: Content, run: MapItemRun): { itemId: string; item: string; refund: number } | null {
+  const v = perksOf(activePerks(content, run), 'voucher')[0];
+  return v ? { itemId: v.itemId, item: v.perk.item, refund: v.perk.refund } : null;
 }

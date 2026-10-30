@@ -669,6 +669,8 @@ export const EncounterLastsSchema = z.discriminatedUnion('for', [
   z.object({ for: z.literal('purchases'), count: z.number().int().positive() }),
   z.object({ for: z.literal('shops'), count: z.number().int().positive() }),
   z.object({ for: z.literal('trainers'), count: z.number().int().positive() }),
+  /** Uses the player spends from the map's Items menu (Escape Rope, VS Seeker). */
+  z.object({ for: z.literal('manual'), count: z.number().int().positive() }),
   z.object({ for: z.literal('stage') }),
   z.object({ for: z.literal('nextStage') }),
   z.object({ for: z.literal('run') }),
@@ -692,6 +694,25 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   z.object({ perk: z.literal('trainerPoints'), every: z.number().int().positive() }),
   /** Money per copy when the run reaches a new region (Pass Orb). */
   z.object({ perk: z.literal('regionMoney'), amount: z.number().int().positive() }),
+  // ---------- getting around the map (slice 3b-2) ----------
+  /** From the Items menu: go back to the last fork and choose again (Escape Rope). */
+  z.object({ perk: z.literal('escapeRope') }),
+  /** Once per stage, from the Items menu: ride two columns ahead, skipping one (Bicycle). */
+  z.object({ perk: z.literal('bicycle') }),
+  /** Once per stage, from the Items menu: jump to any node in the next column, even without a path (Acro Bike). */
+  z.object({ perk: z.literal('acroBike') }),
+  /** Once per stage, from the Items menu: ride past the next wild Pokémon and still get its reward (Mach Bike). */
+  z.object({ perk: z.literal('machBike') }),
+  /** At the next shop, turns into this run-long item, or into `refund` money if the player already has it (Bike Voucher). */
+  z.object({ perk: z.literal('voucher'), item: z.string(), refund: z.number().int().min(0) }),
+  /** From the Items menu: fight a trainer you beat on this stage again, for double money (VS Seeker). */
+  z.object({ perk: z.literal('rematch') }),
+  /** The map shows what waits at nodes: wild Pokémon (Devon Scope), trainers' teams (Town Map), the gym leader's ace or whole team (Rule Book, Orange Mail). */
+  z.object({ perk: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymAce', 'gymTeam']) }),
+  /** The gym leaders of this region's next stages, with their types (Fame Checker). */
+  z.object({ perk: z.literal('nextLeaders') }),
+  /** Each stage, one wild stop hides a Bag item; win there to find it (Itemfinder). */
+  z.object({ perk: z.literal('hiddenItem') }),
 ]);
 export type Perk = z.infer<typeof PerkSchema>;
 
