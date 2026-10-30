@@ -331,6 +331,7 @@ describe('rewards, move learning and evolution', () => {
     start.party[0] = createPokemon(content, start.party[0]!.speciesId, 30, start.party[0]!.uid);
     const run = skipDecisions(fightOut(start).run);
     expect(run.phase).toBe('reward');
+    run.stage!.index = 4; // later stages allow higher levels (the stage level cap)
     return run;
   }
 

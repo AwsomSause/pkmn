@@ -4,12 +4,12 @@
 import { enemyLevelOffset } from './archetypes';
 import type { Archetype, BossTeam, Campaign, Content, StatName, Theme } from './contentSchema';
 import { createPokemon, getSpecies, maxHp } from './pokemon';
-import type { Rng } from './rng';
+import { hashSeed, Rng } from './rng';
 import type { LevelBreakdown, PokemonInstance } from './state';
 import { getBoss, levelCap, type BossRole } from './regions';
 import { isUsableMove } from './pokemon';
 import { eliteLevelOffset, isLegendaryLike, wildWeightPerk } from './trainerPerks';
-import { baseStatTotal, pickThemeSpecies, trainerClassesFor } from './themes';
+import { baseStatTotal, pickThemeSpecies, RIVAL_CLASS, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
 
@@ -193,6 +193,16 @@ export function planTrainer(content: Content, archetype: Archetype, theme: Theme
   const size = teamSize(content.balance.trainerTeam, stageNumber, rng);
   const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types, regionId), rng);
   return { classId: trainerClass.id, name, leaderId: null, ai: 0, ...team };
+}
+
+/** The first rival: one starter-line Pokémon at balance.rival.level, a different one for each run (its own seed). */
+export function planFirstRival(content: Content, seed: string): TrainerPlan {
+  const cfg = content.balance.rival;
+  const r = new Rng(hashSeed(`${seed}::first-rival`));
+  const species = cfg.starters[r.int(0, cfg.starters.length - 1)]!;
+  const name = r.pick(content.trainers.get(RIVAL_CLASS)!.names);
+  const info: EnemyLevelBreakdown = { base: cfg.level, progress: 0, variance: 0, archetypeOffset: 0, bonus: 0, unclamped: cfg.level, level: cfg.level };
+  return { classId: RIVAL_CLASS, name, leaderId: null, ai: 0.5, members: [{ speciesId: species, level: cfg.level }], levelInfo: [info] };
 }
 
 /** The class ids used for boss battles (they aren't trainer classes in trainers.json). */

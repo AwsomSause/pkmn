@@ -7,7 +7,7 @@ import { getArchetype } from '../../src/core/archetypes';
 import { leagueScale, planChampion, planEliteFour } from '../../src/core/encounters';
 import { generateLeagueMap, validateLeagueMap } from '../../src/core/map';
 import { createPokemon, gainXp, maxHp } from '../../src/core/pokemon';
-import { generateRegionOrder, levelCap, pickLeague } from '../../src/core/regions';
+import { generateRegionOrder, levelCap, pickLeague, runLevelCap } from '../../src/core/regions';
 import { rewardTargetProblem } from '../../src/core/rewards';
 import { hashSeed, Rng } from '../../src/core/rng';
 import {
@@ -112,9 +112,11 @@ describe('regions', () => {
     expect(result.newLevel).toBe(50);
     expect(mon.level).toBe(50);
     const run = newRun('cap');
-    run.party[0]!.level = 50;
+    run.stage!.index = 7;
+    const cap = runLevelCap(content, run);
+    run.party[0]!.level = cap;
     const levelUp = [...content.rewards.values()].find((r) => r.effect.kind === 'levelUp')!;
-    expect(rewardTargetProblem(content, run, levelUp, 0)).toMatch(/level cap \(50\)/);
+    expect(rewardTargetProblem(content, run, levelUp, 0)).toMatch(new RegExp(`level cap \\(${cap}\\)`));
   });
 
   it('the league picks its own Elite Four and champion first, and never someone already met', () => {
