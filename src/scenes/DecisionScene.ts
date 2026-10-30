@@ -3,6 +3,7 @@
 //   - a Pokémon was caught: add it, replace a party member, or release it
 // Replacing, releasing and forgetting can't be undone, so each asks to confirm.
 
+import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
 import { candiesForRelease } from '../core/encounters';
 import type { Content } from '../core/contentSchema';
@@ -22,7 +23,7 @@ import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 function describeMove(content: Content, id: string): string {
   const m = content.moves.get(id)!;
-  const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
+  const power = m.power ?? fixedDamageLabel(m.effects.fixedDamage);
   return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${m.pp}`;
 }
 
@@ -130,7 +131,7 @@ export class DecisionScene extends Phaser.Scene {
     this.add.text(300, 86, 'But it already knows four moves. Forget one to make room?', textStyle(22, '#d8d0e0'));
     const describe = (id: string, pp?: number, slot?: MoveSlot) => {
       const m = content.moves.get(id)!;
-      const power = m.power ?? (m.effects.fixedDamage ? 'Lv' : '—');
+      const power = m.power ?? fixedDamageLabel(m.effects.fixedDamage);
       return `${m.type.toUpperCase()} · ${m.category} · Pow ${power} · Acc ${m.accuracy ?? '—'} · PP ${pp ?? m.pp}/${slot ? maxPp(content, slot) : m.pp}`;
     };
     drawPanel(this, 300, 124, 620, 70, { fill: COLORS.panelDark, border: TYPE_COLORS[newMove.type] ?? 0x808080 });

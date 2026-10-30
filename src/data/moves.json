@@ -8942,9 +8942,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if user took damage first."
+  "effects": {
+   "powerRule": "doubleUserSecond"
+  }
  },
  {
   "id": "axe-kick",
@@ -9006,9 +9006,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May poison opponent; inflicts double damage if the target is already poisoned."
+  "effects": {
+   "powerRule": "doubleTargetPoison"
+  }
  },
  {
   "id": "baton-pass",
@@ -9298,9 +9298,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If the user attacks before the target, the power of this move is doubled."
+  "effects": {
+   "powerRule": "doubleUserFirst"
+  }
  },
  {
   "id": "breaking-swipe",
@@ -9870,7 +9870,7 @@
   "name": "Crush Grip",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 5,
   "priority": 0,
@@ -9879,9 +9879,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "More powerful when opponent has higher HP."
+  "effects": {
+   "powerRule": "targetHp"
+  }
  },
  {
   "id": "curse",
@@ -10113,9 +10113,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The higher the user's HP, the higher the power."
+  "effects": {
+   "powerRule": "userHp"
+  }
  },
  {
   "id": "dragon-hammer",
@@ -10145,9 +10145,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always inflicts 40 HP."
+  "effects": {
+   "fixedDamage": 40
+  }
  },
  {
   "id": "dragon-tail",
@@ -10293,16 +10293,16 @@
   "name": "Electro Ball",
   "type": "electric",
   "category": "special",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The faster the user, the stronger the attack."
+  "effects": {
+   "powerRule": "userSpeed"
+  }
  },
  {
   "id": "electro-drift",
@@ -10366,9 +10366,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Reduces opponent's HP to same as user's."
+  "effects": {
+   "endeavor": true
+  }
  },
  {
   "id": "endure",
@@ -10414,9 +10414,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Stronger when the user's HP is higher."
+  "effects": {
+   "powerRule": "userHp"
+  }
  },
  {
   "id": "eternabeam",
@@ -10446,9 +10446,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Increases power and hits all opponents on Psychic Terrain."
+  "effects": {
+   "powerRule": "psychicTerrainBoost"
+  }
  },
  {
   "id": "extreme-evoboost",
@@ -10480,9 +10480,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if user is burned, poisoned, or paralyzed."
+  "effects": {
+   "powerRule": "doubleUserStatus"
+  }
  },
  {
   "id": "fairy-lock",
@@ -10638,9 +10638,9 @@
    "bite",
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If the user attacks before the target, the power of this move is doubled."
+  "effects": {
+   "powerRule": "doubleUserFirst"
+  }
  },
  {
   "id": "flame-burst",
@@ -10922,7 +10922,7 @@
   "name": "Frustration",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -10931,9 +10931,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power decreases with higher Friendship."
+  "effects": {
+   "powerRule": "frustration"
+  }
  },
  {
   "id": "fusion-bolt",
@@ -11829,7 +11829,7 @@
   "name": "Gyro Ball",
   "type": "steel",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 5,
   "priority": 0,
@@ -11838,9 +11838,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The slower the user, the stronger the attack."
+  "effects": {
+   "powerRule": "targetSpeed"
+  }
  },
  {
   "id": "happy-hour",
@@ -12038,9 +12038,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts more damage if the target has a status condition."
+  "effects": {
+   "powerRule": "doubleTargetStatus"
+  }
  },
  {
   "id": "hidden-power",
@@ -12221,9 +12221,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes effects of Terrain."
+  "effects": {}
  },
  {
   "id": "imprison",
@@ -12269,9 +12267,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts double damage if the target has a status condition."
+  "effects": {
+   "powerRule": "doubleTargetStatus"
+  }
  },
  {
   "id": "inferno-overdrive",
@@ -12520,9 +12518,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damages increases the more party Pokémon have been defeated."
+  "effects": {
+   "powerRule": "fallenAllies"
+  }
  },
  {
   "id": "leafage",
@@ -13482,9 +13480,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases on Misty Terrain."
+  "effects": {
+   "powerRule": "mistyTerrainBoost"
+  }
  },
  {
   "id": "misty-terrain",
@@ -13612,9 +13610,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Halves the foe's HP."
+  "effects": {
+   "halveTarget": true
+  }
  },
  {
   "id": "never-ending-nightmare",
@@ -13843,9 +13841,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if the user was attacked first."
+  "effects": {
+   "powerRule": "doubleUserSecond"
+  }
  },
  {
   "id": "perish-song",
@@ -14100,9 +14098,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user boasts its strength and attacks the target. The more the user's stats are raised, the greater the move's power."
+  "effects": {
+   "powerRule": "statsRaised"
+  }
  },
  {
   "id": "power-up-punch",
@@ -14174,9 +14172,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases on Electric Terrain."
+  "effects": {
+   "powerRule": "electricTerrainBoost"
+  }
  },
  {
   "id": "psych-up",
@@ -14271,9 +14269,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts damage 50-150% of user's level."
+  "effects": {
+   "fixedDamage": "psywave"
+  }
  },
  {
   "id": "pulverizing-pancake",
@@ -14298,7 +14296,7 @@
   "name": "Punishment",
   "type": "dark",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 5,
   "priority": 0,
@@ -14307,9 +14305,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases when opponent's stats have been raised."
+  "effects": {
+   "powerRule": "targetStatsRaised"
+  }
  },
  {
   "id": "purify",
@@ -14569,7 +14567,7 @@
   "name": "Return",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -14578,9 +14576,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases with higher Friendship."
+  "effects": {
+   "powerRule": "friendship"
+  }
  },
  {
   "id": "revelation-dance",
@@ -14612,9 +14610,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases if user was hit first."
+  "effects": {
+   "powerRule": "doubleUserSecond"
+  }
  },
  {
   "id": "revival-blessing",
@@ -14644,9 +14642,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles on Electric Terrain."
+  "effects": {
+   "powerRule": "electricTerrainDouble"
+  }
  },
  {
   "id": "roar",
@@ -14762,9 +14760,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Halves the opponent's HP."
+  "effects": {
+   "halveTarget": true
+  }
  },
  {
   "id": "safeguard",
@@ -15280,9 +15278,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if opponent is paralyzed, but cures it."
+  "effects": {
+   "powerRule": "doubleTargetParalyzed"
+  }
  },
  {
   "id": "snatch",
@@ -15360,9 +15358,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Always inflicts 20 HP."
+  "effects": {
+   "fixedDamage": 20
+  }
  },
  {
   "id": "soul-stealing-7-star-strike",
@@ -15710,9 +15708,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Fails if no Terrain in effect."
+  "effects": {
+   "powerRule": "needsTerrain"
+  }
  },
  {
   "id": "sticky-web",
@@ -15808,9 +15806,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases when user's stats have been raised."
+  "effects": {
+   "powerRule": "statsRaised"
+  }
  },
  {
   "id": "strength-sap",
@@ -15926,9 +15924,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Always takes off half of the opponent's HP."
+  "effects": {
+   "halveTarget": true
+  }
  },
  {
   "id": "supersonic-skystrike",
@@ -16793,9 +16791,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts double damage if the target is poisoned."
+  "effects": {
+   "powerRule": "doubleTargetPoison"
+  }
  },
  {
   "id": "victory-dance",
@@ -16880,9 +16878,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power doubles if opponent is asleep, but wakes it up."
+  "effects": {
+   "powerRule": "doubleTargetAsleep"
+  }
  },
  {
   "id": "water-pledge",
@@ -16928,9 +16926,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The higher the user's HP, the higher the damage caused."
+  "effects": {
+   "powerRule": "userHp"
+  }
  },
  {
   "id": "whirlwind",
@@ -17074,7 +17072,7 @@
   "name": "Wring Out",
   "type": "normal",
   "category": "special",
-  "power": null,
+  "power": 60,
   "accuracy": 100,
   "pp": 5,
   "priority": 0,
@@ -17083,9 +17081,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The higher the opponent's HP, the higher the damage."
+  "effects": {
+   "powerRule": "targetHp"
+  }
  },
  {
   "id": "yawn",

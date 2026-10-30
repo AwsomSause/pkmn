@@ -18,7 +18,7 @@
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
-import type { BoostStat, Content, Move, Semi, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
+import type { BoostStat, Content, Move, PowerRule, Semi, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
@@ -1265,6 +1265,44 @@ function executeMove(
   }
 }
 
+/**
+ * Moves whose power depends on the battle (Electro Ball, Hex, Eruption...). Returns the power to use,
+ * or null when the move can't be used (Steel Roller with no terrain).
+ */
+function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: Combatant, target: Combatant, userStats: { hp: number; spe: number }, targetStats: { hp: number; spe: number }, movedFirst: boolean): number | null {
+  const positive = (st: Record<string, number>) => Object.values(st).reduce((n, v) => n + Math.max(0, v), 0);
+  const terrain = ctx.battle.terrain?.id;
+  switch (rule) {
+    case 'userSpeed': {
+      const ratio = userStats.spe / Math.max(1, targetStats.spe);
+      return ratio >= 4 ? 150 : ratio >= 3 ? 120 : ratio >= 2 ? 80 : ratio >= 1 ? 60 : 40;
+    }
+    case 'targetSpeed': return Math.min(150, Math.floor((25 * targetStats.spe) / Math.max(1, userStats.spe)) + 1);
+    case 'userHp': return Math.max(1, Math.floor((base * user.mon.hp) / userStats.hp));
+    case 'targetHp': return Math.max(1, Math.floor((120 * target.mon.hp) / targetStats.hp));
+    case 'doubleTargetStatus': return target.mon.status ? base * 2 : base;
+    case 'doubleUserStatus': return user.mon.status ? base * 2 : base;
+    case 'doubleTargetPoison': return target.mon.status?.id === 'psn' ? base * 2 : base;
+    case 'doubleTargetParalyzed': return target.mon.status?.id === 'par' ? base * 2 : base;
+    case 'doubleTargetAsleep': return target.mon.status?.id === 'slp' ? base * 2 : base;
+    case 'doubleUserFirst': return movedFirst ? base * 2 : base;
+    case 'doubleUserSecond': return movedFirst ? base : base * 2;
+    case 'electricTerrainDouble': return terrain === 'electric' ? base * 2 : base;
+    case 'electricTerrainBoost': return terrain === 'electric' ? Math.floor(base * 1.5) : base;
+    case 'mistyTerrainBoost': return terrain === 'misty' ? Math.floor(base * 1.5) : base;
+    case 'psychicTerrainBoost': return terrain === 'psychic' ? Math.floor(base * 1.5) : base;
+    case 'needsTerrain': return terrain ? base : null;
+    case 'statsRaised': return 20 + 20 * positive(user.stages);
+    case 'targetStatsRaised': return Math.min(200, 60 + 20 * positive(target.stages));
+    case 'fallenAllies': {
+      const team = user.side === 'player' ? ctx.party : ctx.battle.enemyTeam;
+      return 50 + 50 * Math.min(6, team.filter((m) => m.hp <= 0).length);
+    }
+    case 'friendship': return Math.max(1, Math.min(102, Math.floor(user.mon.friendship / 2.5)));
+    case 'frustration': return Math.max(1, Math.min(102, Math.floor((255 - user.mon.friendship) / 2.5)));
+  }
+}
+
 /** What a move does once its user has acted: accuracy, then its status effect or its damage and side effects. */
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   const { content, rng } = ctx;
@@ -1422,6 +1460,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
 
   const contact = move.flags.includes('contact') && userAbility !== 'long-reach';
   const changes = fx.statChanges ?? [];
+  if ((fx.endeavor && user.mon.hp >= target.mon.hp) || (fx.powerRule === 'needsTerrain' && !ctx.battle.terrain)) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
   // Sheer Force: moves with an extra effect are 1.3× as strong and lose the effect.
   const hasExtra = Boolean(fx.status || fx.flinchChance || fx.confuse || changes.some((c) => c.target === 'enemy' || c.chance < 100));
   const sheerForce = userAbility === 'sheer-force' && hasExtra;
@@ -1435,8 +1477,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     const targetMax = calcStats(content, target.mon).hp;
     if (fx.ohko) {
       damage = target.mon.hp;
-    } else if (fx.fixedDamage === 'level') {
-      damage = user.mon.level;
+    } else if (fx.fixedDamage || fx.halveTarget || fx.endeavor) {
+      if (fx.endeavor) damage = Math.max(1, target.mon.hp - user.mon.hp);
+      else if (fx.halveTarget) damage = Math.max(1, Math.floor(target.mon.hp / 2));
+      else if (fx.fixedDamage === 'level') damage = user.mon.level;
+      else if (fx.fixedDamage === 'psywave') damage = Math.max(1, Math.floor((user.mon.level * rng.int(50, 150)) / 100));
+      else damage = fx.fixedDamage as number;
     } else {
       const userStats = calcStats(content, user.mon);
       const targetStats = calcStats(content, target.mon);
@@ -1448,6 +1494,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor') crit = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
+      if (fx.powerRule) power = powerFromRule(ctx, fx.powerRule, power, user, target, userStats, targetStats, movedFirst) ?? power;
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
       let stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
       if (stab === 1 && user.vol.typeShift === moveType) stab = content.ruleset.stabMultiplier;
@@ -1556,6 +1603,18 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     }
   }
   if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
+  if (landed > 0 && target.mon.hp > 0) {
+    // Smelling Salts and Wake-Up Slap use up the status they punish; Steel Roller and Ice Spinner clear the terrain.
+    const cures = (fx.powerRule === 'doubleTargetParalyzed' && target.mon.status?.id === 'par') || (fx.powerRule === 'doubleTargetAsleep' && target.mon.status?.id === 'slp');
+    if (cures) {
+      target.mon.status = null;
+      events.push({ type: 'cured', side: target.side });
+    }
+  }
+  if (landed > 0 && (fx.powerRule === 'needsTerrain' || move.id === 'ice-spinner') && ctx.battle.terrain) {
+    events.push({ type: 'terrainEnd', terrain: ctx.battle.terrain.id });
+    ctx.battle.terrain = null;
+  }
   Held.afterHit(ctx, user, target, move, moveType, effectiveness, dealt, movedFirst, events as Held.HeldEvent[]);
   if (target.mon.hp <= 0) Held.onKnockout(ctx, user, events as Held.HeldEvent[]);
   if (fx.ohko && target.mon.hp <= 0) events.push({ type: 'ohko', side: target.side });

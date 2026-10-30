@@ -114,6 +114,15 @@ export const WEATHERS = ['rain', 'sun', 'sand', 'snow', 'hail'] as const;
 export const WeatherSchema = z.enum(WEATHERS);
 /** Terrains (Electric, Grassy, Misty, Psychic): they last 5 turns and affect Pokémon standing on the ground. */
 export const TERRAINS = ['electric', 'grassy', 'misty', 'psychic'] as const;
+export const PowerRuleSchema = z.enum([
+  'userSpeed', 'targetSpeed', 'userHp', 'targetHp',
+  'doubleTargetStatus', 'doubleUserStatus', 'doubleTargetPoison', 'doubleTargetParalyzed', 'doubleTargetAsleep',
+  'doubleUserFirst', 'doubleUserSecond',
+  'electricTerrainDouble', 'electricTerrainBoost', 'mistyTerrainBoost', 'psychicTerrainBoost', 'needsTerrain',
+  'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
+]);
+export type PowerRule = z.infer<typeof PowerRuleSchema>;
+
 export const TerrainSchema = z.enum(TERRAINS);
 export type Terrain = z.infer<typeof TerrainSchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
@@ -166,7 +175,13 @@ export const MoveSchema = z.object({
       /** Fraction of the user's max HP it loses after using the move. */
       recoilMaxHp: z.number().positive().max(1).optional(),
       /** Deals damage equal to the user's level, ignoring stats. */
-      fixedDamage: z.literal('level').optional(),
+      fixedDamage: z.union([z.literal('level'), z.literal('psywave'), z.number().int().positive()]).optional(),
+      /** Takes off half of the target's current HP (Super Fang). */
+      halveTarget: z.literal(true).optional(),
+      /** Brings the target's HP down to the user's (Endeavor); fails if it is already lower. */
+      endeavor: z.literal(true).optional(),
+      /** How the move's power is worked out from the battle (see powerFromRule in the engine). */
+      powerRule: PowerRuleSchema.optional(),
       /** Confuses the target (chance in percent). */
       confuse: z.object({ chance: z.number().min(1).max(100) }).optional(),
       /** Hits this many times: [2, 5] rolls 2–5 hits (35/35/15/15%), [2, 2] always twice. */

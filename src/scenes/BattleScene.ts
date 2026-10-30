@@ -15,7 +15,7 @@ import { currentEnemy, type PokemonInstance, type RunState } from '../core/state
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { playCry, playMusic, playSfx } from '../ui/audio';
-import { eventText, type Names } from '../ui/battleText';
+import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
 import { itemVisual, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
@@ -556,7 +556,7 @@ export class BattleScene extends Phaser.Scene {
           return;
         }
         const move = zMoves?.[i] ?? maxMoves?.[i] ?? content.moves.get(slot.id)!;
-        const power = move.power ?? (move.effects.fixedDamage ? 'Lv' : '—');
+        const power = move.power ?? fixedDamageLabel(move.effects.fixedDamage);
         this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
         this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
       },

@@ -111,7 +111,7 @@ export function isTransformation(s: Species): boolean {
 export function moveStatus(content: Content, m: Move): EntryStatus {
   const notes: { status: SupportStatus; note: string }[] = [];
   // Same rule as the content check in src/data/index.ts: these effects set the damage themselves.
-  if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage && !m.effects.ohko && !m.effects.lowHpPower) notes.push({ status: 'invalid', note: 'damaging move with no power' });
+  if (m.supported && m.category !== 'status' && m.power === null && !m.effects.fixedDamage && !m.effects.halveTarget && !m.effects.endeavor && !m.effects.ohko && !m.effects.lowHpPower) notes.push({ status: 'invalid', note: 'damaging move with no power' });
   // The schema only allows effects the engine runs, so a status move with any effect does something.
   if (m.supported && m.category === 'status' && Object.keys(m.effects).length === 0) notes.push({ status: 'invalid', note: 'status move with no effect the engine runs' });
   // The type Z-Moves are made in battle from a move and its Z-Crystal (M8.5, battle/transform.ts zMoveFor).
