@@ -199,3 +199,67 @@ test('shop items: a Coupon halves a price and the Member Card sells an item earl
   expect((await run(page)).mapEffects).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test('map movement items: the Items menu puts you on a Bicycle, and the Devon Scope shows the next wild Pokémon', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
+  await startRun(page, 'e2e-move-items');
+
+  // Take the Bicycle, then the Devon Scope (showDraft sets the passives, so the second keeps the Bicycle).
+  await showDraft(page, ['item:bicycle', 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl']);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  await showDraft(page, ['item:devon-scope', 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl'], { bicycle: 1 });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  expect((await run(page)).passives).toEqual({ bicycle: 1, 'devon-scope': 1 });
+  const map = () => page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Map');
+    return { busy: scene.busy, notice: scene.notice?.text ?? '', info: scene.info?.text ?? '', options: scene.options.map((o: any) => (o.kind === 'node' ? `node:${o.node.column}:${o.node.kind}` : o.kind)) as string[], previews: Object.keys(scene.previews) };
+  });
+  await expect.poll(async () => (await map()).busy, { timeout: 10_000 }).toBe(false);
+  // The Devon Scope previews the wild stops on offer, and the info line names them.
+  const before = await map();
+  expect(before.previews.length).toBeGreaterThan(0);
+  const wildIndex = before.options.findIndex((o) => o.endsWith(':wild'));
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), wildIndex);
+  await expect.poll(async () => (await map()).info).toMatch(/Devon Scope: .+ Lv\d+/);
+  await page.screenshot({ path: 'test-results/m875-map-previews.png' });
+
+  // Items → Bicycle: the stops on offer move two columns ahead.
+  const itemsIndex = before.options.indexOf('items');
+  expect(itemsIndex).toBeGreaterThanOrEqual(0);
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), itemsIndex);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: 'test-results/m875-map-items-menu.png' });
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await run(page)).moveMode, { timeout: 10_000 }).toBe('bicycle');
+  await waitForScene(page, 'Map');
+  await expect.poll(async () => (await map()).busy, { timeout: 10_000 }).toBe(false);
+  const riding = await map();
+  expect(riding.notice).toMatch(/Bicycle/);
+  expect(riding.options.filter((o) => o.startsWith('node:')).every((o) => o.startsWith('node:2:'))).toBe(true);
+
+  // Near the gym with a Rule Book, Fame Checker and Itemfinder: the Items menu lists what they show.
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    const run = session.run;
+    delete run.moveMode;
+    run.passives = { ...run.passives, 'rule-book': 1, 'fame-checker': 1, itemfinder: 1 };
+    run.stage.current = run.stage.map.nodes.find((n: any) => n.column === run.stage.map.columns - 2).id;
+    game.scene.getScene('Map').scene.restart({ notice: 'test' });
+  });
+  await expect.poll(async () => (await map()).busy, { timeout: 10_000 }).toBe(false);
+  await page.screenshot({ path: 'test-results/m875-map-gym-preview.png' });
+  const items = (await map()).options.indexOf('items');
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), items);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: 'test-results/m875-map-items-info.png' });
+  const rows = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').itemRows().map((r: any) => r.title));
+  expect(rows).toEqual(['Bicycle', 'Fame Checker', 'Rule Book']);
+  await page.keyboard.press('Escape');
+  expect(errors).toEqual([]);
+});
