@@ -6,6 +6,7 @@ import Phaser from 'phaser';
 import { getArchetype } from '../core/archetypes';
 import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
+import { runQuestOf, stepsDone } from '../core/quests';
 import { itemsText } from '../core/runPrep';
 import { getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -53,6 +54,11 @@ export class BriefingScene extends Phaser.Scene {
     line('Starting with', `₽${run.money}; ${itemsText(content, run.inventory) || 'an empty Bag'}`);
     line('Rules', `${pool?.name ?? run.prep.poolId} pool, ${rule?.name ?? run.prep.draftRuleId}${run.prep.typeFocus ? ` (${capitalise(run.prep.typeFocus)})` : ''}; preparation: ${token?.name ?? 'none'}`);
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
+    const quest = runQuestOf(content, run);
+    if (quest) line('Run Quest', `${quest.text} (+${quest.researchPoints} Research Points)`);
+    const questLine = content.questLines.get(run.archetypeId);
+    const done = stepsDone(content, session.profile, run.archetypeId);
+    if (questLine && done < questLine.steps.length) line('Trainer quest', `${questLine.name}, step ${done + 1}/5: ${questLine.steps[done]!.goal}`);
     line('Seed', `${run.seed}   (the same seed replays the same run)`);
 
     this.status = this.add.text(GAME_WIDTH / 2, 444, '', textStyle(16, '#f0e0a0')).setOrigin(0.5, 0);

@@ -495,6 +495,8 @@ export const BASE_COUNTER_NAMES = [
   'regionsClearedWithStarter',
   /** Stats your Pokémon raised on themselves with moves (Bulk Up, Nasty Plot...): one per stat raised. */
   'statsBoosted',
+  /** Run Quests finished (the trainer's goal offered on the briefing screen). */
+  'runQuestsDone',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -548,6 +550,51 @@ export const AchievementSchema = z.object({
   reward: UnlockRewardSchema,
 });
 export type Achievement = z.infer<typeof AchievementSchema>;
+
+/** What a trainer quest step pays out, once (its claim key is `quest:<trainer>:<step>`). */
+export const QuestRewardSchema = UnlockRewardSchema.extend({
+  /** A Starter Laboratory set unlocked for free. */
+  pool: z.string().optional(),
+  /** The last step of a special trainer's line unlocks their Trainer Evolution. */
+  evolution: z.boolean().default(false),
+});
+export type QuestReward = z.infer<typeof QuestRewardSchema>;
+
+/**
+ * One step of a trainer's quest line. Counters ("total", "best") count only
+ * runs played as that trainer; steps are done in order, across runs.
+ */
+export const QuestStepSchema = z.object({
+  /** What to do, in a few words. */
+  goal: z.string().min(1),
+  /** A line of story shown when the step is done. */
+  story: z.string().min(1),
+  requirement: RequirementSchema,
+  reward: QuestRewardSchema,
+});
+export type QuestStep = z.infer<typeof QuestStepSchema>;
+
+export const QuestLineSchema = z.object({
+  trainerId: z.string(),
+  name: z.string().min(1),
+  steps: z.array(QuestStepSchema).length(5),
+});
+export type QuestLine = z.infer<typeof QuestLineSchema>;
+
+/** A goal for one run, offered on the briefing screen; done when the run's counter reaches `atLeast`. */
+export const RunQuestSchema = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
+  counter: CounterNameSchema,
+  atLeast: z.number().int().positive(),
+  researchPoints: z.number().int().min(0),
+});
+export type RunQuest = z.infer<typeof RunQuestSchema>;
+
+export const TrainerQuestsFileSchema = z.object({
+  lines: z.array(QuestLineSchema),
+  runQuests: z.array(RunQuestSchema).min(1),
+});
 
 export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('xpMultiplier'), value: z.number().positive() }),
@@ -1814,6 +1861,9 @@ export interface Content {
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   achievements: Map<string, Achievement>;
+  /** Trainer quest lines by trainer id, and Run Quests (trainerQuests.json, core/quests.ts). */
+  questLines: Map<string, QuestLine>;
+  runQuests: Map<string, RunQuest>;
   starterPools: Map<string, StarterPool>;
   draftRules: Map<string, DraftRule>;
   prepTokens: Map<string, PrepToken>;

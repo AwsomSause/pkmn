@@ -5,8 +5,9 @@
 
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
-import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type Species, type StarterPoolCategory } from '../core/contentSchema';
+import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
+import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
@@ -20,7 +21,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -30,6 +31,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'lab', label: 'Starter Laboratory', blurb: 'Starter sets by category: regions, types, teams, leagues and more (Enter).' },
   { room: 'attributes', label: 'Attributes', blurb: 'Your permanent attributes, what they do, and how they grow (Enter for details).' },
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
+  { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -82,7 +84,7 @@ const BLURB_Y = 382;
 
 const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
-  { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive'], blurb: ROOMS[1]!.blurb },
+  { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Past Runs', icon: 'item.calendar', rooms: ['history'], blurb: ROOMS[6]!.blurb },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes'], blurb: 'Achievements, the Bank, the Starter Laboratory and your Attributes.' },
@@ -388,6 +390,14 @@ export class HubScene extends Phaser.Scene {
         if (p.titles.length > 0) y = this.line(y, `Titles: ${p.titles.join(', ')}`, 16);
         break;
       }
+      case 'quests': {
+        y = this.line(y, 'Trainer Quests', 22);
+        const lines = [...session.content.questLines.values()];
+        const finished = lines.filter((l) => stepsDone(session.content, p, l.trainerId) === l.steps.length).length;
+        y = this.line(y, `${finished} of ${lines.length} quest lines finished`, 16);
+        y = this.line(y, `Steps done: ${lines.reduce((n, l) => n + stepsDone(session.content, p, l.trainerId), 0)} of ${lines.length * 5}`, 16, COLORS.textMuted);
+        break;
+      }
       case 'history': {
         y = this.line(y, 'Past Runs', 22);
         const runs = p.runHistory.slice(0, 4);
@@ -433,6 +443,9 @@ export class HubScene extends Phaser.Scene {
       case 'history':
         this.openHistory();
         break;
+      case 'quests':
+        this.openQuests();
+        break;
       case 'save':
         this.openSaveData();
         break;
@@ -451,6 +464,62 @@ export class HubScene extends Phaser.Scene {
     this.picker?.close();
     this.picker = null;
     if (this.submenu) this.submenu.menu.enabled = true;
+  }
+
+  /** Every trainer's quest line; Enter shows its five steps. */
+  private openQuests(): void {
+    const { session } = services();
+    const p = session.profile;
+    const trainers = [...session.content.archetypes.values()].filter((a) => session.content.questLines.has(a.id));
+    const rows: PickerRow[] = trainers.map((a) => {
+      const view = questLineView(session.content, p, a.id)!;
+      const done = view.steps.filter((s) => s.status === 'done').length;
+      const current = view.steps.find((s) => s.status === 'current');
+      return {
+        problem: null,
+        hint: current ? `Step ${done + 1}: ${current.step.goal}  (${current.progress.current}/${current.progress.target})` : `All five steps done${evolutionUnlocked(p, a.id) ? '. Trainer Evolution unlocked!' : '.'}`,
+        draw: (scene, box, w, h) => {
+          box.add(trainerVisual(scene, a.spriteAssetId, a.name, 34, h / 2 + 4, 0.7));
+          box.add(scene.add.text(76, 8, a.name, textStyle(20)));
+          box.add(scene.add.text(76, 34, view.line.name, textStyle(15, COLORS.textMuted)));
+          box.add(scene.add.text(w - 12, h / 2, done === 5 ? '★' : `${done}/5`, textStyle(done === 5 ? 24 : 18, done === 5 ? COLORS.gold : COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({
+      title: 'Trainer Quests',
+      rows,
+      columns: 2,
+      rowHeight: 62,
+      onSelect: (i) => this.openQuestLine(trainers[i]!.id),
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openQuestLine(trainerId: string): void {
+    const { session } = services();
+    const view = questLineView(session.content, session.profile, trainerId)!;
+    const rows: PickerRow[] = view.steps.map(({ step, status, progress }, i) => ({
+      problem: null,
+      hint: status === 'done' ? `"${step.story}"  ·  Reward: ${questRewardText(step.reward)}` : `Reward: ${questRewardText(step.reward)}`,
+      draw: (scene, box, w, h) => {
+        const color = status === 'done' ? COLORS.good : status === 'current' ? COLORS.textLight : COLORS.textMuted;
+        box.add(scene.add.text(12, h / 2, `${i + 1}. ${step.goal}`, textStyle(17, color, { wordWrap: { width: w - 90 } })).setOrigin(0, 0.5));
+        box.add(scene.add.text(w - 12, h / 2, status === 'done' ? '✓' : status === 'current' ? `${progress.current}/${progress.target}` : '…', textStyle(18, color)).setOrigin(1, 0.5));
+      },
+    }));
+    this.closePicker();
+    this.openPicker({
+      title: view.line.name,
+      rows,
+      columns: 1,
+      rowHeight: 52,
+      onSelect: () => undefined,
+      onBack: () => {
+        this.closePicker();
+        this.openQuests();
+      },
+    });
   }
 
   private openArchive(): void {
@@ -761,4 +830,15 @@ function pickTextFile(onText: (text: string) => void): void {
     if (file) void file.text().then(onText);
   };
   input.click();
+}
+
+function questRewardText(r: QuestReward): string {
+  const parts: string[] = [];
+  if (r.researchPoints) parts.push(`${r.researchPoints} Research Points`);
+  if (r.bankCredits) parts.push(`${r.bankCredits} Bank Credits`);
+  if (r.candies) parts.push(`${r.candies} candies`);
+  if (r.title) parts.push(`title "${r.title}"`);
+  if (r.pool) parts.push('a starter set');
+  if (r.evolution) parts.push('Trainer Evolution');
+  return parts.join(', ') || 'nothing';
 }

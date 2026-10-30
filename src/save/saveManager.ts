@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 17, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 8, run: 18, settings: 4, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -72,6 +72,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v7 (M8.9 slice 5): the archive of past runs' Pokémon. Runs before it kept none.
     6: (data) => ({ ...(data as Json), pastPokemon: [] }),
+    // v8 (trainer quests): the claim ledger and per-trainer counters start empty.
+    7: (data) => ({ ...(data as Json), claims: {}, trainerCounters: {}, trainerBest: {} }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -216,6 +218,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       ...(data as Json),
       rules: { ruleVersion: 1, modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false, deathBlockUsed: false, progressionEligible: true, rewardMultiplier: 1, enemyLevelBonus: 0, wipes: 0 },
     }),
+    // v18 (trainer quests): the run's Run Quest; runs started before it have none.
+    17: (data) => ({ ...(data as Json), runQuest: null }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.
