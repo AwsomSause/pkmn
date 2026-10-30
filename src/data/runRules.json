@@ -188,6 +188,15 @@
       "group": "contract-evolution"
     },
     {
+      "id": "boss-remix",
+      "name": "Boss Remix",
+      "status": "supported",
+      "bonus": 0.15,
+      "blurb": "Gym leaders, the Elite Four and champions lead with different Pokémon and a different ace.",
+      "bossRemix": true,
+      "group": "boss-remix"
+    },
+    {
       "id": "solo-run",
       "name": "Solo Run",
       "status": "supported",
