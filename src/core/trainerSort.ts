@@ -50,7 +50,7 @@ const ORIGINS: Record<string, string> = {
   allister: 'ss g', bea: 'ss g', bede: 'ss g', 'gloria-league': 'ss g', hop: 'ss g', kabu: 'ss g', klara: 'ss g', melony: 'ss g', milo: 'ss g', nessa: 'ss g', opal: 'ss g', peonia: 'ss g', peony: 'ss g', piers: 'ss g', raihan: 'ss g', sonia: 'ss g', 'sordward-shielbert': 'ss g', 'leon-masters': 'ms g', 'marnie-masters-4': 'ms g',
   adaman: 'la i', arezu: 'la i', cogita: 'la i', rei: 'la i', volo: 'la i', irida: 'la i',
   'ball-guy': 'sv p', brassius: 'sv p', canari: 'sv p', carmine: 'sv p', geeta: 'sv p', giacomo: 'sv p', grusha: 'sv p', iono: 'sv p', katy: 'sv p', 'nemona-v': 'sv p', ortega: 'sv p',
-  'the-royal': 'sm a', 'hex-maniac': 'xy x', thorton: 'dppt s', brigette: 'dppt s', grace: 'xy x', harmony: 'ms m', jacinthe: 'za x', magnus: 'ms m', marley: 'ms m', ryuki: 'ms m',
+  'the-royal': 'sm a', 'hex-maniac': 'xy x', thorton: 'dppt s', brigette: 'dppt s', grace: 'xy x', harmony: 'ms m', jacinthe: 'za x', magnus: 'ms m', marley: 'dppt s', ryuki: 'ss g',
   alain: 'an x', 'ash-kalos': 'an x', ash: 'an k', 'todd-snap': 'an k', trace: 'an k', trevor: 'an k',
 };
 
