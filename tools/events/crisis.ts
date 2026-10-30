@@ -48,3 +48,11 @@ export const TOURNAMENT_EVENTS: Json[] = [
   entry('tournament-semi', 2, 'Circuit: Semifinal', 'The field has thinned. Your opponent has clearly studied your last match.', 'Circuit Ace', 4, 1, [$(900), eff.round(3), rp(20)], 'Play the semifinal'),
   entry('tournament-final', 3, 'Circuit: The Final', 'The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.', 'Circuit Champion', 5, 2, [$(2000), any(...TREASURE), rp(60), eff.round(9), good(2)], 'Play the final'),
 ];
+
+export const GAUNTLET_EVENTS: Json[] = [
+  ev('rival-gauntlet-entry', 'The Rival Gauntlet', T, { rarity: 'rare', minStage: 4, requires: [{ kind: 'rivalMet', atLeast: 2 }, { kind: 'gauntlet', active: false }], cast: ['trainer.psychic_m'], effect: 'sparkle', tint: '#38202a' },
+    'A hand-painted sign on the wall: "Everyone you have ever beaten wants a word." Rivals you have crossed paths with are lining up, each with the team they have trained since.', [
+      ch('Take on the gauntlet', out('Word spreads fast. One rival will meet you on each of the next stops, in order of how dangerous they are. Beat them all for a big purse.', { kind: 'gauntlet', rivals: 3 })),
+      ch('Not today', leave()),
+    ]),
+];

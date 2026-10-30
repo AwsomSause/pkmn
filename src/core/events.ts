@@ -19,6 +19,7 @@ import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
+import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { addLevels, calcStats, maxHp } from './pokemon';
@@ -74,6 +75,8 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return crisisAid(run) >= c.atLeast;
     case 'tournament':
       return tournamentRound(run) === c.round;
+    case 'gauntlet':
+      return (gauntletLeft(run) > 0) === c.active;
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
     case 'bond':
@@ -122,6 +125,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs allies gathered in this region';
     case 'tournament':
       return 'Needs the tournament bracket to be at this round';
+    case 'gauntlet':
+      return c.active ? 'Needs a rival gauntlet to be running' : 'Needs no rival gauntlet running';
   }
 }
 
@@ -408,6 +413,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
     case 'aid':
       return 'allies gathered';
+    case 'gauntlet':
+      return `${e.rivals} rivals will come for you`;
     case 'tournament':
       return e.round === 9 ? 'tournament over' : 'tournament round';
     case 'count':
@@ -572,6 +579,8 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return effectWords(content, e);
     case 'tournament':
       return setTournament(content, run, e.round);
+    case 'gauntlet':
+      return startGauntlet(content, run, e.rivals) > 0 ? effectWords(content, e) : 'no rivals to face yet';
     case 'count':
       count(run, e.counter, e.amount);
       return effectWords(content, e);

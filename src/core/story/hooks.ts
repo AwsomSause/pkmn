@@ -23,6 +23,7 @@ import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
 import { triangleEffect } from '../rivals/relations';
 import { evaluateUltimate } from '../rivals/ultimate';
+import { gauntletWon } from './gauntlet';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import { emotionOf } from './emotions';
@@ -466,6 +467,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
       else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
       onRivalDefeated(content, run, rivalBack, outcome, where);
+      gauntletWon(content, run, rivalBack.id);
       advanceArc(content, run, rivalBack);
       afterBattleBehavior(content, run, rivalBack, false);
       triangleEffect(run, rivalBack);

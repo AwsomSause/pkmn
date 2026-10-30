@@ -128,6 +128,7 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
@@ -1142,7 +1143,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.story.flags[returnFlag(back.id)] = 'returned';
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
-    const rivalBack = rule && !back ? waitingRival(run) : null;
+    const gauntlet = rule && !back ? gauntletRival(content, run) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {

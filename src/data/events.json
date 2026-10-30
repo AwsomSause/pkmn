@@ -21046,6 +21046,52 @@
    ]
   },
   {
+   "id": "rival-gauntlet-entry",
+   "name": "The Rival Gauntlet",
+   "group": "Rival Tournament",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "gauntlet",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#38202a",
+    "effect": "sparkle"
+   },
+   "intro": "A hand-painted sign on the wall: \"Everyone you have ever beaten wants a word.\" Rivals you have crossed paths with are lining up, each with the team they have trained since.",
+   "choices": [
+    {
+     "label": "Take on the gauntlet",
+     "success": {
+      "text": "Word spreads fast. One rival will meet you on each of the next stops, in order of how dangerous they are. Beat them all for a big purse.",
+      "effects": [
+       {
+        "kind": "gauntlet",
+        "rivals": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "tournament-entry",
    "name": "The Rival Circuit",
    "group": "Rival Tournament",
