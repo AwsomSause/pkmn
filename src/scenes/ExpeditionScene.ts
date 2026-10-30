@@ -7,7 +7,9 @@ import { maxHp } from '../core/pokemon';
 import type { ExpeditionState, RunState } from '../core/state';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
-import { playSfx } from '../ui/audio';
+import { playMusic, playSfx } from '../ui/audio';
+import { loadAssets } from '../ui/lazyAssets';
+import { EXPEDITION_TRACK_IDS, expeditionTrack } from '../core/presentation/battleMusic';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
@@ -36,6 +38,8 @@ export class ExpeditionScene extends Phaser.Scene {
     }
     const exp = run.expedition;
     const def = getExpedition(session.content, exp.id);
+    const song = expeditionTrack(def.tier);
+    void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
     this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, 16, 48, GAME_WIDTH - 32, 200, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     this.drawRoute(exp);

@@ -141,6 +141,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...Object.entries({ rain1: 'rain_1', rain2: 'rain_2', rain3: 'rain_3', hail1: 'hail_1', hail2: 'hail_2', hail3: 'hail_3', snow1: 'blizzard_1', snow2: 'blizzard_2', snow3: 'blizzard_3', snow4: 'blizzard_4', sandTile: 'sandstorm_tile', snowTile: 'blizzard_tile' }).map(
     ([id, file]): AssetEntry => ({ id: `fx.weather.${id}`, kind: 'image', category: 'ui', path: `images/packs/uie/weather/${file}.png`, lazy: true }),
   ),
+  ...['basic', 'ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.adventure.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_adventure_${n}.mp3`, lazy: true })),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
   { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },

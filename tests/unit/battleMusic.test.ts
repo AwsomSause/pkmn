@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { battleTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { battleTrack, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
 
@@ -31,6 +31,15 @@ describe('raid music', () => {
     expect(seen.size).toBeGreaterThan(1);
     const ids = new Set(FIXED_ASSETS.map((a) => a.id));
     for (const id of RAID_TRACK_IDS) expect(ids.has(id)).toBe(true);
+  });
+});
+
+describe('expedition music', () => {
+  it('one adventure song per tier, clamped, all in the catalog', () => {
+    expect(expeditionTrack(1)).toBe('bgm.raid.adventure.basic');
+    expect(expeditionTrack(9)).toBe('bgm.raid.adventure.tera');
+    const ids = new Set(FIXED_ASSETS.map((a) => a.id));
+    for (const id of EXPEDITION_TRACK_IDS) expect(ids.has(id)).toBe(true);
   });
 });
 
