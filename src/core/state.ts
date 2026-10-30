@@ -467,6 +467,8 @@ export type ExpeditionState = z.infer<typeof ExpeditionStateSchema>;
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
+  /** The ball that caught the wild Pokémon (Friend, Luxury and Heal Ball change it afterwards). */
+  ball: z.string().optional(),
   turn: z.number().int().min(1),
   /** Index into run.party of the Pokémon currently fighting. */
   activeIndex: z.number().int().min(0),

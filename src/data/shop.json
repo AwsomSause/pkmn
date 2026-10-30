@@ -168,5 +168,90 @@
   "item": "dynamax-band",
   "price": 10000,
   "minBadges": 3
+ },
+ {
+  "item": "premier-ball",
+  "price": 300,
+  "minBadges": 3
+ },
+ {
+  "item": "net-ball",
+  "price": 800,
+  "minBadges": 2
+ },
+ {
+  "item": "dive-ball",
+  "price": 800,
+  "minBadges": 2
+ },
+ {
+  "item": "nest-ball",
+  "price": 500,
+  "minBadges": 1
+ },
+ {
+  "item": "repeat-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "timer-ball",
+  "price": 800,
+  "minBadges": 4
+ },
+ {
+  "item": "quick-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "dusk-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "luxury-ball",
+  "price": 1000,
+  "minBadges": 4
+ },
+ {
+  "item": "heal-ball",
+  "price": 500,
+  "minBadges": 2
+ },
+ {
+  "item": "level-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "lure-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "moon-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "friend-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "love-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "heavy-ball",
+  "price": 800,
+  "minBadges": 3
+ },
+ {
+  "item": "fast-ball",
+  "price": 800,
+  "minBadges": 3
  }
 ]

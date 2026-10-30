@@ -20,5 +20,7 @@
  "supported.ability": 263,
  "supported.item": 247,
  "supported.evolution": 611,
- "special-form-leaks": 0
+ "special-form-leaks": 0,
+ "mechanics-without-proof": 0,
+ "supported.mechanic": 35
 }
