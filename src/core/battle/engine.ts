@@ -18,7 +18,10 @@
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
+<<<<<<< HEAD
 import { TYPE_NAMES } from '../contentSchema';
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
 import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
@@ -26,7 +29,11 @@ import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
+<<<<<<< HEAD
 import { currentEnemy, freshExtra, freshHeldState, freshSideEffects, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
+=======
+import { currentEnemy, freshHeldState, freshSideEffects, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
+>>>>>>> origin/claude/project-thread-h47l6h
 import {
   calcDamage,
   pokeRound,
@@ -117,8 +124,11 @@ export type BattleEvent =
   /** Thrash and Outrage ended and the user became confused from fatigue. */
   | { type: 'fatigue'; side: Side }
   | { type: 'weather'; weather: Weather }
+<<<<<<< HEAD
   /** A raid message: shield up/broken, a new phase, a charged attack, the timer. */
   | { type: 'raid'; tone: 'shield' | 'phase' | 'warn' | 'info'; text: string }
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   /** A Substitute took a hit (and `broke`). */
   | { type: 'substituteHit'; side: Side; broke: boolean }
   /** Perish Song countdown. */
@@ -128,7 +138,11 @@ export type BattleEvent =
   /** The user (or `side`) is now in a state: Focus Energy, Wish, trapped... */
   | { type: 'selfState'; side: Side; state: string }
   /** Disable, Encore, Torment, Taunt, Heal Block or Spite took hold. */
+<<<<<<< HEAD
   | { type: 'disrupted'; side: Side; kind: 'disable' | 'encore' | 'torment' | 'taunt' | 'healBlock' | 'spite' | 'throatChop'; moveId: string | null }
+=======
+  | { type: 'disrupted'; side: Side; kind: 'disable' | 'encore' | 'torment' | 'taunt' | 'healBlock' | 'spite'; moveId: string | null }
+>>>>>>> origin/claude/project-thread-h47l6h
   /** Every stat change was reset (Haze, Clear Smog). */
   | { type: 'statsReset'; side: Side }
   /** The move was stopped before it began (Disable, Torment, Taunt). */
@@ -236,7 +250,10 @@ export function createBattle(
     terrain: null,
     batonStages: null,
     field: { gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 },
+<<<<<<< HEAD
     extra: freshExtra(),
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
     sideEffects: { player: freshSideEffects(), enemy: freshSideEffects() },
     pendingEntry: ['player', 'enemy'],
     participants: [activeUid],
@@ -360,7 +377,10 @@ export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Par
   const shedShell = active && 'content' in ctx ? Held.canAlwaysSwitch(ctx as Pick<BattleContext, 'content' | 'teamItems'>, active, 'player') : false;
   if (!ctx.battle.needsSwitch && !shedShell && (ctx.battle.playerVolatile?.bound ?? 0) > 0) return "Your Pokémon is bound and can't escape!";
   if (!ctx.battle.needsSwitch && forcedMoveId(ctx.battle.playerVolatile)) return 'Your Pokémon is in the middle of a move!';
+<<<<<<< HEAD
   if (!ctx.battle.needsSwitch && ctx.battle.extra?.fairyLock === ctx.battle.turn) return "Fairy Lock keeps your Pokémon from switching out!";
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   if (!ctx.battle.needsSwitch && !shedShell && ctx.battle.playerVolatile?.trapped) return "Your Pokémon can't be switched out!";
   if (!ctx.battle.needsSwitch && !shedShell && active && 'content' in ctx && ctx.content) {
     const foeMon = currentEnemy(ctx.battle);
@@ -485,12 +505,17 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     v.tookSpecial = 0;
     v.endure = false;
     v.plannedAttack = false;
+<<<<<<< HEAD
     v.loweredThisTurn = false;
     v.plannedMove = null;
   }
   enemy.vol.plannedAttack = enemyMove.category !== 'status';
   enemy.vol.plannedMove = enemyMove.id;
   enemy.vol.beakHeat = Boolean(enemyMove.effects.beakBlast);
+=======
+  }
+  enemy.vol.plannedAttack = enemyMove.category !== 'status';
+>>>>>>> origin/claude/project-thread-h47l6h
   // Two rivals on the field recognise each other (Heated Rivalry).
   if (!battle.outcome) meetRival(ctx, playerC, enemy, events);
 
@@ -500,8 +525,11 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     // A Z-Move replaces the chosen move (its Z-Power was spent above).
     const playerMove = battleMove(content, battle, playerC.mon, action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen);
     playerC.vol.plannedAttack = playerMove.category !== 'status';
+<<<<<<< HEAD
     playerC.vol.plannedMove = playerMove.id;
     playerC.vol.beakHeat = Boolean(playerMove.effects.beakBlast);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
     const order = decideOrder(ctx, rng, playerC, playerMove, enemy, enemyMove);
     const actions =
       order === 'player'
@@ -540,10 +568,14 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
       }
     }
   }
+<<<<<<< HEAD
   primalCheck(ctx, playerC, enemy, events);
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
+=======
+  endTurnStates(ctx, playerC, enemy, events);
+>>>>>>> origin/claude/project-thread-h47l6h
 
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -819,7 +851,10 @@ function resolveEntries(ctx: BattleContext, events: BattleEvent[]): void {
   const { player, enemy } = activeCombatants(ctx);
   const sides = pending.map((side) => (side === 'player' ? { c: player, other: enemy } : { c: enemy, other: player }));
   if (sides.length === 2 && speedOf(ctx, enemy) > speedOf(ctx, player)) sides.reverse();
+<<<<<<< HEAD
   for (const { c } of sides) enterExtras(ctx, c, events);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   for (const { c } of sides) applyHazards(ctx, c, events);
   if (sides.some(({ c }) => c.mon.hp <= 0)) {
     // A hazard knocked it out as it came in.
@@ -1121,8 +1156,11 @@ function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
   if (ability === 'prankster' && move.category === 'status') return move.priority + 1;
   if (ability === 'gale-wings' && move.type === 'flying' && c.mon.hp >= calcStats(ctx.content, c.mon).hp) return move.priority + 1;
   if (ability === 'triage' && (move.effects.heal || move.effects.drain)) return move.priority + 3;
+<<<<<<< HEAD
   if (ability === 'mycelium-might' && move.category === 'status') return move.priority - 0.5;
   if (ability === 'stall') return move.priority - 0.5;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   const tp = move.effects.terrainPriority;
   if (tp && ctx.battle.terrain?.id === tp.terrain) return move.priority + tp.bonus;
   return move.priority;
@@ -1131,11 +1169,18 @@ function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
 function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
   // Trick Room: slower Pokémon move first within a priority.
   const trickSign = ctx.battle.field.trickRoom > 0 ? -1 : 1;
+<<<<<<< HEAD
   const quickDraw = (c: Combatant, m: Move): number => (abilityIn(ctx, c) === 'quick-draw' && m.category !== 'status' && rng.chance(0.3) ? 0.2 : 0);
   // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
     { priority: priorityOf(ctx, player, pMove) + quickDraw(player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) * trickSign },
     { priority: priorityOf(ctx, enemy, eMove) + quickDraw(enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) * trickSign },
+=======
+  // Custap Berry moves first and Lagging Tail last within the same priority.
+  const result = compareTurnOrder(
+    { priority: priorityOf(ctx, player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) * trickSign },
+    { priority: priorityOf(ctx, enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) * trickSign },
+>>>>>>> origin/claude/project-thread-h47l6h
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
   return result === 'a' ? 'player' : 'enemy';
@@ -1557,9 +1602,13 @@ function executeMove(
     const stopped =
       (v.disabled && v.disabled.turns > 0 && v.disabled.moveId === move.id) ||
       (v.torment && v.lastMove === move.id) ||
+<<<<<<< HEAD
       (v.taunt > 0 && move.category === 'status') ||
       (v.throat > 0 && move.flags.includes('sound')) ||
       (target.vol.imprison && target.mon.moves.some((m) => m.id === move.id));
+=======
+      (v.taunt > 0 && move.category === 'status');
+>>>>>>> origin/claude/project-thread-h47l6h
     if (stopped) {
       events.push({ type: 'blocked', side: user.side, moveId: move.id });
       return;
@@ -1578,9 +1627,12 @@ function executeMove(
     user.vol.lastMove = move.id;
   }
   user.vol.destinyBond = false;
+<<<<<<< HEAD
   user.vol.exposed = false;
   if (!continuing && !user.vol.movesUsed.includes(move.id)) user.vol.movesUsed.push(move.id);
   if (!move.effects.rage) user.vol.raging = false;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   if (!move.effects.protect) user.vol.protectChain = 0;
   if (slot !== -1) Held.noteMoveUsed(ctx, user, move.id);
   if (slot !== -1 && abilityIn(ctx, user) === 'gorilla-tactics' && ctx.battle.held && !ctx.battle.held.choice[user.mon.uid]) ctx.battle.held.choice[user.mon.uid] = move.id;
@@ -1643,6 +1695,12 @@ function executeMove(
     }
   }
 
+  // Encore: forced to repeat the move for a few turns.
+  if (user.vol.locked && !move.effects.lockIn && user.vol.locked.moveId === move.id) {
+    user.vol.locked.turns -= 1;
+    if (user.vol.locked.turns <= 0) user.vol.locked = null;
+  }
+
   // Thrash: 2–3 turns in a row, then confusion from fatigue.
   if (move.effects.lockIn) {
     if (!user.vol.locked) {
@@ -1671,6 +1729,7 @@ function executeMove(
  * Moves whose power depends on the battle (Electro Ball, Hex, Eruption...). Returns the power to use,
  * or null when the move can't be used (Steel Roller with no terrain).
  */
+<<<<<<< HEAD
 /** Present's rolled power and Fling's item power, set just before the damage step. */
 let presentPower = 40;
 let flingPower = 30;
@@ -1682,6 +1741,8 @@ function weightOf(ctx: BattleContext, c: Combatant): number {
   return Math.max(0.1, ability === 'heavy-metal' ? base * 2 : ability === 'light-metal' ? base / 2 : base);
 }
 
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
 function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: Combatant, target: Combatant, userStats: { hp: number; spe: number }, targetStats: { hp: number; spe: number }, movedFirst: boolean, hit = 0): number | null {
   const positive = (st: Record<string, number>) => Object.values(st).reduce((n, v) => n + Math.max(0, v), 0);
   const terrain = ctx.battle.terrain?.id;
@@ -1720,6 +1781,7 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'doubleTargetHurt': return target.vol.tookPhysical + target.vol.tookSpecial > 0 ? base * 2 : base;
     case 'doubleRandom': return ctx.rng.chance(0.3) ? base * 2 : base;
     case 'stockpile': return 100 * user.vol.stockpile;
+<<<<<<< HEAD
     case 'rageFist': return Math.min(350, 50 + 50 * user.vol.timesHit);
     case 'stompingTantrum': return user.vol.lastFailed ? base * 2 : base;
     case 'lashOut': return user.vol.loweredThisTurn ? base * 2 : base;
@@ -1747,6 +1809,8 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'knockOff': return Object.keys(Held.effectiveHeld(ctx, target.mon)).length > 0 ? Math.floor(base * 1.5) : base;
     case 'terrainPulse': return terrain ? base * 2 : base;
     case 'flingItem': return flingPower;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
     case 'friendship': return Math.max(1, Math.min(102, Math.floor(user.mon.friendship / 2.5)));
     case 'frustration': return Math.max(1, Math.min(102, Math.floor((255 - user.mon.friendship) / 2.5)));
   }
@@ -1780,6 +1844,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     runMove(ctx, user, target, called, movedFirst, events);
     return;
   }
+<<<<<<< HEAD
 
   // Future Sight and Doom Desire: the hit lands two turns later.
   if (fx.delayed) {
@@ -1855,6 +1920,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     }
     presentPower = r <= 60 ? 40 : r <= 90 ? 80 : 120;
   }
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
 
   // Psychic Terrain: a grounded Pokémon can't be hit by a move with priority.
   if (ctx.battle.terrain?.id === 'psychic' && user.side !== target.side && priorityOf(ctx, user, move) > 0 && isGrounded(ctx, target)) {
@@ -1964,6 +2031,38 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   if (targetsEnemy && move.category === 'status' && user !== target && foeAbility === 'magic-bounce' && userAbility !== 'magic-bounce' && !target.protected) {
     announce(target, 'magic-bounce', events);
     applyStatusMove(ctx, target, user, move, events);
+<<<<<<< HEAD
+=======
+    return;
+  }
+  if (targetsEnemy && target.protected && !fx.breaksProtect && !piercesProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
+    events.push({ type: 'protected', side: target.side });
+    const punish = PROTECT_CONTACT.get(target);
+    if (punish && move.flags.includes('contact') && user.mon.hp > 0) {
+      if (punish.stat && punish.stages) applyStageChange(ctx, user, punish.stat, punish.stages, events, target);
+      if (punish.status && canGetStatus(ctx, target, user, punish.status)) tryInflictStatus(ctx, target, user, punish.status, undefined, events, false);
+      if (punish.hurt) abilityHurt(ctx, user, Math.max(1, Math.floor(calcStats(content, user.mon).hp * punish.hurt)), events);
+    }
+    return;
+  }
+  // Dream Eater, Sucker Punch, Counter, Focus Punch, Blood Moon...: they only work in the right situation.
+  const hitThisTurn = user.vol.tookPhysical + user.vol.tookSpecial > 0;
+  if (
+    (fx.focus === 'unhit' && hitThisTurn) ||
+    (fx.focus === 'hitPhysical' && user.vol.tookPhysical <= 0) ||
+    (fx.noRepeat && user.vol.prevMove === move.id) ||
+    (fx.powerRule === 'stockpile' && user.vol.stockpile <= 0)
+  ) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
+  if (
+    (fx.requiresSleepingTarget && target.mon.status?.id !== 'slp') ||
+    (fx.suckerPunch && !(movedFirst && target.vol.plannedAttack)) ||
+    (fx.counter && (fx.counter === 'physical' ? user.vol.tookPhysical : fx.counter === 'special' ? user.vol.tookSpecial : user.vol.tookPhysical + user.vol.tookSpecial) <= 0)
+  ) {
+    events.push({ type: 'fail', side: user.side });
+>>>>>>> origin/claude/project-thread-h47l6h
     return;
   }
   if (targetsEnemy && target.protected && !fx.breaksProtect && !piercesProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
@@ -2049,7 +2148,11 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     }
     accuracy = Math.min(1, accuracy);
   }
+<<<<<<< HEAD
   if (noGuard || ((target.vol.exposed || target.vol.telekinesis > 0) && !fx.ohko && targetsEnemy)) accuracy = 1;
+=======
+  if (noGuard) accuracy = 1;
+>>>>>>> origin/claude/project-thread-h47l6h
   if (user.vol.sureHit && targetsEnemy) {
     accuracy = 1;
     user.vol.sureHit = false;
@@ -2074,6 +2177,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   const targetTypes = battleTypes(content, ctx.battle, target.mon);
   // Scrappy: Normal and Fighting moves hit Ghost types.
   const hitTypes = userAbility === 'scrappy' && (moveType === 'normal' || moveType === 'fighting') ? targetTypes.filter((t) => t !== 'ghost') : targetTypes;
+<<<<<<< HEAD
   // Foresight / Odor Sleuth / Miracle Eye open the immunities they name.
   const idHit = target.vol.identified === 'ghost' && (moveType === 'normal' || moveType === 'fighting') ? hitTypes.filter((t) => t !== 'ghost') : target.vol.identified === 'dark' && moveType === 'psychic' ? hitTypes.filter((t) => t !== 'dark') : hitTypes;
   let rawEff = fx.superAgainst ? idHit.reduce((n, t) => n * (t === fx.superAgainst ? 2 : typeEffectiveness(content.typeChart, moveType, [t])), 1) : typeEffectiveness(content.typeChart, moveType, idHit);
@@ -2087,6 +2191,9 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     events.push({ type: 'fail', side: user.side });
     return;
   }
+=======
+  const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, hitTypes));
+>>>>>>> origin/claude/project-thread-h47l6h
   if (targetsEnemy && move.category === 'status' && target.vol.substitute > 0 && user !== target && !move.effects.sideMove && !move.effects.field) {
     events.push({ type: 'fail', side: user.side });
     return;
@@ -2125,19 +2232,31 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     const targetMax = calcStats(content, target.mon).hp;
     if (fx.ohko) {
       damage = target.mon.hp;
+<<<<<<< HEAD
     } else if (fx.fixedDamage || fx.halveTarget || fx.endeavor || fx.counter || fx.userFaint === 'finalGambit') {
       if (fx.userFaint === 'finalGambit') damage = Math.max(1, user.mon.hp);
       else if (fx.counter) damage = Math.max(1, Math.floor((fx.counter === 'physical' ? user.vol.tookPhysical : fx.counter === 'special' ? user.vol.tookSpecial : (user.vol.tookPhysical + user.vol.tookSpecial) * 0.75) * 2));
+=======
+    } else if (fx.fixedDamage || fx.halveTarget || fx.endeavor || fx.counter) {
+      if (fx.counter) damage = Math.max(1, Math.floor((fx.counter === 'physical' ? user.vol.tookPhysical : fx.counter === 'special' ? user.vol.tookSpecial : (user.vol.tookPhysical + user.vol.tookSpecial) * 0.75) * 2));
+>>>>>>> origin/claude/project-thread-h47l6h
       else if (fx.endeavor) damage = Math.max(1, target.mon.hp - user.mon.hp);
       else if (fx.halveTarget) damage = Math.max(1, Math.floor(target.mon.hp / 2));
       else if (fx.fixedDamage === 'level') damage = user.mon.level;
       else if (fx.fixedDamage === 'psywave') damage = Math.max(1, Math.floor((user.mon.level * rng.int(50, 150)) / 100));
       else damage = fx.fixedDamage as number;
     } else {
+<<<<<<< HEAD
       const userStats = statsOf(ctx, user);
       const targetStats = statsOf(ctx, target);
       const physical = fx.attackFrom === 'best' || fx.autoCategory || (fx.teraBlast && ctx.battle.transform.teraTypes[user.mon.uid]) ? userStats.atk >= userStats.spa : move.category === 'physical';
       const hitsDefense = (physical || fx.targetsDefense) !== (ctx.battle.extra.wonderRoom > 0);
+=======
+      const userStats = calcStats(content, user.mon);
+      const targetStats = calcStats(content, target.mon);
+      const physical = fx.attackFrom === 'best' ? userStats.atk >= userStats.spa : move.category === 'physical';
+      const hitsDefense = physical || fx.targetsDefense;
+>>>>>>> origin/claude/project-thread-h47l6h
       const userStatus = user.mon.status?.id;
       crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0)));
       if (fx.alwaysCrit || user.vol.laserFocus) crit = true;
@@ -2146,7 +2265,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (crit) user.vol.laserFocus = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
+<<<<<<< HEAD
       if (fx.beatUp && beaters.length > 0) power = Math.floor(getSpecies(content, beaters[Math.min(hit, beaters.length - 1)]!.speciesId).baseStats.atk / 10) + 5;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
       if (fx.powerRule) power = powerFromRule(ctx, fx.powerRule, power, user, target, userStats, targetStats, movedFirst, hit) ?? power;
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
       let stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
@@ -2181,8 +2303,12 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       let attack = Math.floor(baseAttack * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa'));
       let attackMult = attackBoost;
       if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
+<<<<<<< HEAD
       if (physical && (userAbility === 'hustle' || userAbility === 'gorilla-tactics')) attackMult *= 1.5;
       if (physical && userAbility === 'flower-gift' && weather === 'sun') attackMult *= 1.5;
+=======
+      if (physical && userAbility === 'hustle') attackMult *= 1.5;
+>>>>>>> origin/claude/project-thread-h47l6h
       if (foeAbility && RUINS[foeAbility] === (physical ? 'atk' : 'spa')) attackMult *= 0.75;
       if (userAbility === 'supreme-overlord') {
         const fallen = ctx.party.filter((m) => m.hp <= 0).length;
@@ -2205,7 +2331,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'marvel-scale' && target.mon.status) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'fur-coat') defense *= 2;
+<<<<<<< HEAD
       if (!hitsDefense && foeAbility === 'flower-gift' && weather === 'sun') defense = Math.floor(defense * 1.5);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
       if (userAbility && RUINS[userAbility] === (hitsDefense ? 'def' : 'spd')) defense = Math.floor(defense * 0.75);
       if (hitsDefense && foeAbility === 'grass-pelt' && ctx.battle.terrain?.id === 'grassy') defense = Math.floor(defense * 1.5);
       // Abilities that change the final damage.
@@ -2220,7 +2349,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
+<<<<<<< HEAD
       if (user.mon.awakened?.includes(move.id)) final *= content.story.awakening.boost;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
       if (foeAbility === 'fluffy' && contact) final *= 0.5;
       if (parental && hit === 1) final *= 0.25;
       if (userAbility === 'stakeout' && target.vol.turnsOut === 0) final *= 2;
@@ -2263,6 +2395,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     const sturdy = foeAbility === 'sturdy' && target.mon.hp >= targetMax && target.mon.hp > 1 && damage >= target.mon.hp;
     if (sturdy) damage = target.mon.hp - 1;
 
+<<<<<<< HEAD
     // Disguise and Ice Face take one hit for the Pokémon, then the form breaks.
     if ((foeAbility === 'disguise' || (foeAbility === 'ice-face' && move.category === 'physical')) && !ctx.battle.extra.brokenFace.includes(target.mon.uid) && user !== target) {
       ctx.battle.extra.brokenFace.push(target.mon.uid);
@@ -2274,6 +2407,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       } else swapForm(ctx, target, 'eiscue-noice', events);
       continue;
     }
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
     // A Substitute takes the hit instead (sound moves go past it).
     if (target.vol.substitute > 0 && !move.flags.includes('sound') && user !== target) {
       target.vol.substitute = Math.max(0, target.vol.substitute - damage);
@@ -2297,7 +2432,11 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       ctx.battle.hyper.superEffective[target.mon.uid] = (ctx.battle.hyper.superEffective[target.mon.uid] ?? 0) + 1;
     }
   }
+<<<<<<< HEAD
   if (fx.hits || fx.beatUp) events.push({ type: 'hits', side: target.side, count: landed });
+=======
+  if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
+>>>>>>> origin/claude/project-thread-h47l6h
   if (dealt > 0) {
     if (move.category === 'physical') target.vol.tookPhysical += dealt;
     else if (move.category === 'special') target.vol.tookSpecial += dealt;
@@ -2373,12 +2512,18 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     for (const c of fx.resetStages === 'both' ? [user, target] : [target]) for (const k of Object.keys(c.stages) as BoostStat[]) c.stages[k] = 0;
     events.push({ type: 'statsReset', side: target.side });
   }
+<<<<<<< HEAD
   if (target.mon.hp <= 0 && user.mon.hp > 0 && userAbility === 'battle-bond') swapForm(ctx, user, 'greninja-ash', events);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   if (fx.koBoost && target.mon.hp <= 0 && user.mon.hp > 0) applyStageChange(ctx, user, fx.koBoost.stat, fx.koBoost.stages, events);
   if (landed > 0 && fx.forceSwitch) forceOut(ctx, target, events);
   if (landed > 0 && fx.trap) target.vol.trapped = true;
   if (landed > 0 && fx.disrupt) disrupt(ctx, user, target, fx.disrupt, events);
+<<<<<<< HEAD
   postHitExtras(ctx, user, target, move, landed, movedFirst, events);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   // Hazard-setting and hazard-clearing attacks (Ceaseless Edge, Stone Axe, Rapid Spin).
   if (landed > 0 && fx.sideMove) applySideMove(ctx, user, fx.sideMove, events);
   if (landed > 0 && fx.clearHazards) clearHazards(ctx, user, fx.clearHazards, events);
@@ -2726,9 +2871,12 @@ function disrupt(ctx: BattleContext, user: Combatant, target: Combatant, kind: N
         return true;
       }
       break;
+<<<<<<< HEAD
     case 'throatChop':
       target.vol.throat = 2;
       break;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
     case 'healBlock':
       if (target.vol.healBlock > 0) return fail();
       target.vol.healBlock = 5;
@@ -2745,6 +2893,7 @@ function disrupt(ctx: BattleContext, user: Combatant, target: Combatant, kind: N
 }
 
 /** End of turn for the new battle states: Ingrain and Aqua Ring, Wish, and the Disable / Taunt / Heal Block clocks. */
+<<<<<<< HEAD
 /** Future Sight and Doom Desire come due. */
 function tickDelayed(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
   const list = ctx.battle.extra.delayed;
@@ -2795,6 +2944,12 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
     c.vol.beakHeat = false;
     c.vol.electrified = false;
     if (c.mon.hp <= 0) continue;
+=======
+function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
+  for (const c of [player, enemy]) {
+    if (c.mon.hp <= 0) continue;
+    const max = calcStats(ctx.content, c.mon).hp;
+>>>>>>> origin/claude/project-thread-h47l6h
     const heal = (amount: number) => {
       if (c.vol.healBlock > 0) return;
       const gain = Math.min(max - c.mon.hp, Math.max(1, amount));
@@ -2835,9 +2990,12 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
       if (c.vol.perish === 0) c.mon.hp = 0;
     }
   }
+<<<<<<< HEAD
   ctx.battle.extra.ionDeluge = false;
   if (ctx.battle.extra.wonderRoom > 0 && --ctx.battle.extra.wonderRoom === 0) events.push({ type: 'fieldEnd', field: 'wonderRoom' });
   Held.tickItemRooms(ctx.battle);
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   for (const key of ['gravity', 'trickRoom', 'waterSport', 'mudSport'] as const) {
     if (ctx.battle.field[key] > 0 && --ctx.battle.field[key] === 0) events.push({ type: 'fieldEnd', field: key });
   }
@@ -2897,6 +3055,7 @@ function clearHazards(ctx: BattleContext, user: Combatant, which: 'self' | 'both
   return cleared;
 }
 
+<<<<<<< HEAD
 
 const TERRAIN_TYPE: Record<Terrain, TypeName> = { electric: 'electric', grassy: 'grass', misty: 'fairy', psychic: 'psychic' };
 
@@ -3214,6 +3373,8 @@ function content_maxPp(ctx: BattleContext, slot: { id: string; pp: number; ppUps
   return Math.floor(base * (1 + 0.2 * (slot.ppUps ?? 0)));
 }
 
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
 /** A Pokémon coming in meets the hazards its side has: Stealth Rock, Spikes, Toxic Spikes, Sticky Web. */
 function applyHazards(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
   const fx = ctx.battle.sideEffects[c.side];
@@ -3266,6 +3427,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     events.push({ type: 'fail', side: user.side });
     return;
   }
+<<<<<<< HEAD
   if (fx.toxic) {
     if (!canGetStatus(ctx, user, target, 'psn', move)) return void events.push({ type: 'fail', side: user.side });
     tryInflictStatus(ctx, user, target, 'psn', move, events, true);
@@ -3500,6 +3662,8 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     return;
   }
   if (STATE_KEYS.some((k) => fx[k])) return;
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   if (fx.substitute) {
     const cost = Math.floor(calcStats(content, user.mon).hp / 4);
     if (user.vol.substitute > 0 || user.mon.hp <= cost) {
@@ -3738,7 +3902,11 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   if (fx.switchOut) {
     for (const change of fx.statChanges ?? []) changeStage(ctx, user, change.target === 'self' ? user : target, change.stat, change.stages, events);
     if (fx.weather) {
+<<<<<<< HEAD
       setWeather(ctx, fx.weather, 5);
+=======
+      ctx.battle.weather = { id: fx.weather, turns: 5 };
+>>>>>>> origin/claude/project-thread-h47l6h
       events.push({ type: 'weather', weather: fx.weather });
     }
     user.vol.pivot = { baton: fx.switchOut === 'baton' };
@@ -3917,11 +4085,14 @@ function applyStageChange(ctx: BattleContext, c: Combatant, stat: BoostStat, sta
     events.push({ type: 'fail', side: c.side });
     return false;
   }
+<<<<<<< HEAD
   if (source && stages < 0 && ability === 'mirror-armor' && source.side !== c.side) {
     announce(c, ability, events);
     applyStageChange(ctx, source, stat, stages, events);
     return false;
   }
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
   if (ability === 'contrary') stages = -stages;
   if (ability === 'simple') stages *= 2;
   if (source && stages < 0 && ability) {

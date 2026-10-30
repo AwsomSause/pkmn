@@ -72,6 +72,7 @@ describe('moves the battle engine does not support yet', () => {
   });
 
   it('stay in learnsets but are never learned', () => {
+<<<<<<< HEAD
     // Max moves are only reached through Dynamax, so a learnset entry for one is never learned.
     const c = structuredClone(content);
     c.species.get('pikachu')!.learnset.push({ level: 1, move: 'max-guard' });
@@ -80,6 +81,15 @@ describe('moves the battle engine does not support yet', () => {
     for (const m of mon.moves) expect(isUsableMove(c, m.id), m.id).toBe(true);
     gainXp(c, mon, 1_000_000);
     for (const m of mon.moves) expect(isUsableMove(c, m.id), m.id).toBe(true);
+=======
+    // Some species still list moves the engine can't run (item moves, weight moves, doubles-only ones).
+    const pikachu = [...content.species.values()].find((s) => s.learnset.some((e) => !isUsableMove(content, e.move)))!;
+    expect(pikachu).toBeDefined();
+    const mon = createPokemon(content, pikachu.id, 1, 'p1');
+    for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);
+    gainXp(content, mon, 1_000_000);
+    for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);
+>>>>>>> origin/claude/project-thread-h47l6h
   });
 
   it('a Pokémon with no supported moves at all only has Struggle', () => {

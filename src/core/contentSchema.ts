@@ -124,8 +124,11 @@ export const PowerRuleSchema = z.enum([
   'electricTerrainDouble', 'electricTerrainBoost', 'mistyTerrainBoost', 'psychicTerrainBoost', 'needsTerrain',
   'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
   'perHit', 'magnitude', 'sunBoost', 'doubleTargetHurt', 'doubleRandom', 'stockpile',
+<<<<<<< HEAD
   'rageFist', 'stompingTantrum', 'lashOut', 'retaliate', 'echoedVoice', 'rollout', 'fusionFire', 'fusionElectric', 'present', 'trumpCard', 'hardPress',
   'acrobatics', 'doubleDynamax', 'knockOff', 'terrainPulse', 'flingItem', 'targetWeight', 'weightRatio',
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
 ]);
 export type PowerRule = z.infer<typeof PowerRuleSchema>;
 
@@ -220,7 +223,11 @@ export const MoveSchema = z.object({
       /** If the move knocks the target out, the user's stat rises (Fell Stinger). */
       koBoost: z.object({ stat: BoostStatSchema, stages: z.number().int() }).optional(),
       /** Takes hold of the target's last move or its moves (Disable, Encore, Torment, Taunt, Heal Block, Spite). */
+<<<<<<< HEAD
       disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite', 'throatChop']).optional(),
+=======
+      disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite']).optional(),
+>>>>>>> origin/claude/project-thread-h47l6h
       /** Uses another move: a random one (Metronome), the target's last (Mirror Move), or the last one used by anyone (Copycat). */
       callMove: z.enum(['metronome', 'mirrorMove', 'copycat']).optional(),
       /** Which stat the attack uses: the target's Attack (Foul Play), the user's Defense (Body Press), or the higher of Atk and Sp. Atk (Photon Geyser). */
@@ -271,6 +278,7 @@ export const MoveSchema = z.object({
       randomStatus: z.object({ chance: z.number().min(1).max(100), ids: z.array(StatusIdSchema).min(2) }).optional(),
       /** Priority bonus while this terrain is up (Grassy Glide). */
       terrainPriority: z.object({ terrain: TerrainSchema, bonus: z.number().int() }).optional(),
+<<<<<<< HEAD
       /** Pays this share of max HP, then changes stats (Belly Drum, Clangorous Soul, Fillet Away, No Retreat). */
       hpCost: z.object({ fraction: z.number().min(0).max(1), stats: z.array(z.object({ stat: BoostStatSchema, stages: z.number().int() })).min(1), trapSelf: z.literal(true).optional() }).optional(),
       /** Raises one random stat that isn't maxed (Acupressure). */
@@ -378,6 +386,8 @@ export const MoveSchema = z.object({
       statusIfBoosted: StatusIdSchema.optional(),
       /** Suppresses the target's ability if it has already moved this turn (Core Enforcer). */
       suppressIfMoved: z.literal(true).optional(),
+=======
+>>>>>>> origin/claude/project-thread-h47l6h
       /** Ignores the target's ability (Sunsteel Strike). */
       ignoreAbility: z.literal(true).optional(),
       /** Counter and Mirror Coat (and Metal Burst for both): returns the damage the user took this turn, times this. */

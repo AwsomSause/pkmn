@@ -617,6 +617,7 @@ export class BattleScene extends Phaser.Scene {
         }
         const move = zMoves?.[i] ?? maxMoves?.[i] ?? content.moves.get(slot.id)!;
         const power = move.power ?? fixedDamageLabel(move.effects.fixedDamage);
+<<<<<<< HEAD
         // Type label and category icon from Essentials; plain text if the art is missing.
         const type = typeLabel(this, 0, 0, move.type, 1.5);
         const cat = categoryIcon(this, 120, 0, move.category, 1.5);
@@ -628,6 +629,10 @@ export class BattleScene extends Phaser.Scene {
         } else art.forEach((o) => o.destroy());
         this.moveInfo.setText(`${label}PP  ${slot.pp}/${maxPp(content, slot)}\nPower ${power}`).setY(art.length === 2 ? MESSAGE_Y + 70 : MESSAGE_Y + 30);
         this.moveInfo.setColor(COLORS.textLight);
+=======
+        this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
+        this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
+>>>>>>> origin/claude/project-thread-h47l6h
       },
       onSelect: (i) => {
         const transform = this.transformChoice;
