@@ -1103,6 +1103,9 @@ export const SettingsSchema = z.object({
   damageDetails: z.boolean().default(false),
   /** The last accessibility preset applied ('custom' once any single setting is changed by hand). */
   accessibilityProfile: z.enum(['custom', 'reducedMotion', 'lowFlash', 'moreDetail', 'fastBattles']).default('custom'),
+  /** How trainer lists are sorted (core/trainerSort.ts), and whether that order is flipped. */
+  trainerSort: z.enum(['default', 'game', 'region', 'name', 'obtainment', 'tier', 'owned', 'recent']).default('default'),
+  trainerSortReverse: z.boolean().default(false),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
