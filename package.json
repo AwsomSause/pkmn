@@ -37,6 +37,7 @@
     "report:assets": "node tools/report-assets.ts",
     "report:economy": "node tools/report-economy.ts",
     "report:anims": "node tools/report-anims.ts",
+    "report:qa": "node tools/report-qa.ts",
     "data:events": "node tools/build-events.ts",
     "data:quests": "node tools/build-quests.ts",
     "data:trainer-unlocks": "node tools/build-trainer-unlocks.ts",
