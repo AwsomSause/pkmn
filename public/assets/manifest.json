@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T10:16:58.318Z",
+  "generatedAt": "2026-10-30T10:37:49.481Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -60,6 +60,78 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/ebdx/ui/status.png"
+    },
+    {
+      "id": "pack.ebdx.symMega",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/symMega.png"
+    },
+    {
+      "id": "pack.ebdx.symDynamax",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/symDynamax.png"
+    },
+    {
+      "id": "pack.ebui.effectiveness",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/move_effectiveness.png"
+    },
+    {
+      "id": "pack.ebui.flag.Contact",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Contact.png"
+    },
+    {
+      "id": "pack.ebui.flag.Sound",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Sound.png"
+    },
+    {
+      "id": "pack.ebui.flag.Biting",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Biting.png"
+    },
+    {
+      "id": "pack.ebui.flag.Powder",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Powder.png"
+    },
+    {
+      "id": "pack.ebui.flag.Pulse",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Pulse.png"
+    },
+    {
+      "id": "pack.ebui.flag.Punching",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Punching.png"
+    },
+    {
+      "id": "pack.ebui.flag.HighCriticalHitRate",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/HighCriticalHitRate.png"
+    },
+    {
+      "id": "pack.ebui.flag.ZMove",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/ZMove.png"
+    },
+    {
+      "id": "pack.ebui.flag.DynamaxMove",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/DynamaxMove.png"
     },
     {
       "id": "pack.ebdx.cloud1",
