@@ -144,3 +144,53 @@ describe('Research Lab, Scout Tower and Trade Post', () => {
     expect(regional).toBeGreaterThan(0);
   });
 });
+
+describe('Specialist Mart, Training Dojo and Rival Meeting Place', () => {
+  it('the mart only sells evolution items someone in the party can use', () => {
+    const run = stopRun('mart2');
+    run.party[0]!.speciesId = 'pikachu';
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options.map((o) => o.id)).toContain('buy:thunder-stone');
+    expect(view.options.map((o) => o.id)).not.toContain('buy:fire-stone');
+    const out = useService(content, run, 'svc-test', 'buy:thunder-stone');
+    expect(out.run.inventory['thunder-stone']).toBe(1);
+    expect(out.run.money).toBe(5000 - SERVICES.costs.evolutionItem);
+    run.party[0]!.speciesId = 'rattata';
+    run.party = [run.party[0]!];
+    expect(serviceView(content, run, 'svc-test').options.every((o) => o.problem !== null)).toBe(true);
+  });
+  it('the dojo adds one capped stack, once per stop', () => {
+    const run = stopRun('dojo');
+    const view = serviceView(content, run, 'svc-test');
+    const opt = view.options[0]!;
+    const [, uid, stat] = opt.id.split(':');
+    const out = useService(content, run, 'svc-test', opt.id);
+    expect(out.run.party.find((m) => m.uid === uid)!.vitamins[stat as 'hp']).toBe(1);
+    expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
+    const maxed = stopRun('dojo');
+    maxed.party[0]!.vitamins[stat as 'hp'] = content.balance.vitaminMaxStacks;
+    expect(serviceView(content, maxed, 'svc-test').options.find((o) => o.id === opt.id)!.problem).toMatch(/fully trained/);
+  });
+  it('the meeting place needs a living rival, shows its team, and a truce puts it on cooldown', () => {
+    const run = stopRun('meeting');
+    expect(serviceView(content, run, 'svc-test').options).toHaveLength(0);
+    run.story.rivals = [{ id: 'r1', classId: 'youngster', name: 'Joey', state: 'recurring', cooldown: 0, adaptations: [], memory: { lastBattle: { team: ['pidgey'] } } } as never];
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options.map((o) => o.id)).toEqual(['size:r1', 'truce:r1']);
+    expect(useService(content, run, 'svc-test', 'size:r1').message).toMatch(/Pidgey/);
+    const out = useService(content, run, 'svc-test', 'truce:r1');
+    expect(out.run.story.rivals[0]!.cooldown).toBe(2);
+    expect(serviceView(content, out.run, 'svc-test').options.every((o) => o.problem !== null)).toBe(true);
+  });
+  it('rival-only services are not placed without a rival', () => {
+    let meeting = 0;
+    for (let i = 0; i < 120; i++) {
+      const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'p', seed: `nr-${i}`, archetypeId: 'red' }), 0));
+      run.badges = ['a', 'b', 'c'] as never;
+      for (const n of run.stage!.map.nodes) n.sides = [];
+      placeServiceStop(run);
+      if (run.stage!.map.nodes.some((n) => n.sides.some((s) => s.serviceId === 'meeting'))) meeting++;
+    }
+    expect(meeting).toBe(0);
+  });
+});

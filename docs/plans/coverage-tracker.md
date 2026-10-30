@@ -181,3 +181,5 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 | Bond screens (summary UI for the seven values), bond-based evolution/moves outside battle | TODO (UI belongs to the visual thread) |
 
 - Untitled Phase D2 (§19), slice 1: Center, Tutor, Reminder, Lab, Trade Post, Scout Tower done (services.json). Left: Specialist Mart, Dojo, Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Rival Meeting Place, Raid Observatory, Lodge.
+
+- Untitled Phase D2 (§19), slice 2: Specialist Mart, Training Dojo, Rival Meeting Place done. Left: Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Raid Observatory, Lodge.

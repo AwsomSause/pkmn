@@ -9,7 +9,9 @@ import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, requireStage } from '../run';
 import { maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
-import type { Content } from '../contentSchema';
+import { addItem, itemUseProblem } from '../items';
+import { isHostile } from '../rivals/outcome';
+import type { Content, StatName } from '../contentSchema';
 import type { PokemonInstance, RunState, SideStop } from '../state';
 import { getService, SERVICES, type ServiceDef } from './schema';
 
@@ -144,6 +146,34 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       add('scout', 'Scout the stage boss', `Learn ${stage.leaderId ? bossInfo(content, 'gym', stage.leaderId).title : 'the boss'}'s types and signature Pokémon.`, price(run, C.scout), side.used ? 'You already scouted from here.' : null);
       break;
     }
+    case 'mart2': {
+      const items = [...content.items.values()]
+        .filter((it) => it.category === 'evolution' && it.effect.kind === 'evolve' && run.party.some((m) => itemUseProblem(content, it, m, run.regionOrder[run.regionIndex]) === null))
+        .sort((a, b) => a.id.localeCompare(b.id));
+      for (const it of items) add(`buy:${it.id}`, it.name, `${it.description} You have ${run.inventory[it.id] ?? 0}.`, price(run, C.evolutionItem));
+      if (items.length === 0) add('none', 'Nothing for your party today', 'No evolution item here would work on anyone you carry.', 0, 'Nothing to sell you.');
+      break;
+    }
+    case 'dojo':
+      for (const m of run.party) {
+        const top = (Object.entries(getSpecies(content, m.speciesId).baseStats) as [StatName, number][]).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 2);
+        for (const [stat] of top) {
+          const stacks = m.vitamins[stat] ?? 0;
+          add(`train:${m.uid}:${stat}`, `${monName(content, m)}: ${stat.toUpperCase()}`, `One training session: +1 ${stat.toUpperCase()} stack (${stacks} of ${content.balance.vitaminMaxStacks} now).`, price(run, C.dojo),
+            side.used ? 'The dojo has already trained someone today.' : stacks >= content.balance.vitaminMaxStacks ? 'Already fully trained in that.' : null);
+        }
+      }
+      break;
+    case 'meeting': {
+      const rivals = run.story.rivals.filter((r) => isHostile(r));
+      for (const r of rivals) {
+        const who = `${content.trainers.get(r.classId)?.name ?? 'Trainer'} ${r.name}`;
+        const used = side.used ? 'You already spent your time here.' : null;
+        add(`size:${r.id}`, `Size up ${who}`, `See their last team and what they have learned about you.`, 0, used);
+        add(`truce:${r.id}`, `Ask ${who} for a truce`, 'They skip their next appearance.', price(run, C.truce), used);
+      }
+      break;
+    }
     default:
       throw new Error(`Service "${service.id}" is not available`);
   }
@@ -203,6 +233,29 @@ export function useService(content: Content, current: RunState, sideId: string, 
       discover(run, arg!, false);
       count(run, 'tradesMade');
       message = `${monName(content, mon!)} was traded for ${getSpecies(content, arg!).name}!`;
+      break;
+    }
+    case 'buy': {
+      addItem(run.inventory, uid!, 1);
+      message = `Bought a ${content.items.get(uid!)?.name ?? uid}.`;
+      break;
+    }
+    case 'train': {
+      mon!.vitamins[arg as StatName] = (mon!.vitamins[arg as StatName] ?? 0) + 1;
+      count(run, 'dojoSessions');
+      message = `${monName(content, mon!)} trained its ${arg!.toUpperCase()}.`;
+      break;
+    }
+    case 'size': {
+      const r = run.story.rivals.find((x) => x.id === uid)!;
+      const team = r.memory.lastBattle.team.map((id) => getSpecies(content, id).name).join(', ');
+      message = `${r.name}'s last team: ${team || 'unknown'}.${r.adaptations.length ? ` They have learned: ${r.adaptations[r.adaptations.length - 1]}` : ''}${r.identity ? ` Their team leans ${r.identity.type}.` : ''}`;
+      break;
+    }
+    case 'truce': {
+      const r = run.story.rivals.find((x) => x.id === uid)!;
+      r.cooldown = Math.max(r.cooldown, 2);
+      message = `${r.name} agrees to stay out of your way for a while.`;
       break;
     }
     case 'scout': {
