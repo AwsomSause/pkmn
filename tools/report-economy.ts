@@ -96,7 +96,7 @@ const md = [
   '',
   `${gameContent.balance.draftSize}-item drafts, 300 per row, ordinary run state. Each source uses its own weights from balance.json; better routes and bosses must show more rare and epic items.`,
   '',
-  `Reward pool size by rarity: ${Object.entries(pool).map(([k, v]) => `${k} ${v}`).join(', ')}. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json; a gap this wide is worth a look.`,
+  `Reward pool size by rarity: ${Object.entries(pool).map(([k, v]) => `${k} ${v}`).join(', ')}. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json;.`,
   '',
   '| Reward source | Common | Uncommon | Rare | Epic |',
   '| --- | --- | --- | --- | --- |',
