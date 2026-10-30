@@ -95,3 +95,15 @@ describe('Stamp collection and title arenas (#111)', () => {
     expect(setMenuArena(picked, null).menuArena).toBeUndefined();
   });
 });
+
+describe('Cry themes (#111)', () => {
+  it('shift the pitch only after a stamp, and normal clears the pick', async () => {
+    const { cryDetune, setCryTheme } = await import('../../src/core/wardrobe');
+    expect(cryDetune({} as never)).toBe(0);
+    expect(() => setCryTheme({ stamps: {} } as never, 'deep')).toThrow(/stamp/);
+    expect(() => setCryTheme({ stamps: { Victory: 1 } } as never, 'nope')).toThrow(/Unknown/);
+    const deep = setCryTheme({ stamps: { Victory: 1 } } as never, 'deep');
+    expect(cryDetune(deep)).toBeLessThan(0);
+    expect(setCryTheme(deep, 'normal').cryTheme).toBeUndefined();
+  });
+});

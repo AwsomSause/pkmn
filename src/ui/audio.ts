@@ -4,13 +4,14 @@
 import type Phaser from 'phaser';
 import { pokemonAssetIds } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
+import { cryDetune } from '../core/wardrobe';
 import { sfxAllowed, SFX_WINDOW_MS, type SfxPlay } from '../core/audioBudget';
 import { services } from '../game/services';
 import { loadAssets } from './lazyAssets';
 
 let recentSfx: SfxPlay[] = [];
 
-export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1): void {
+export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1, detune = 0): void {
   const { session, assets } = services();
   if (!assets.has(id) || session.settings.muted) return;
   // Many hits in a row: cap how many play at once and skip an immediate repeat.
@@ -19,7 +20,7 @@ export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1): void 
   if (!sfxAllowed(recentSfx, id, now)) return;
   recentSfx.push({ id, at: now });
   try {
-    scene.sound.play(id, { volume: session.settings.sfxVolume * volumeScale });
+    scene.sound.play(id, { volume: session.settings.sfxVolume * volumeScale, detune });
   } catch {
     // Audio can fail before the first user interaction; it's never critical.
   }
@@ -29,8 +30,9 @@ export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1): void 
 export function playCry(scene: Phaser.Scene, species: Species): void {
   const id = pokemonAssetIds(species.assets).cry;
   if (!services().assets.has(id) || services().session.settings.muted) return;
-  if (scene.cache.audio.exists(id)) playSfx(scene, id, 0.6);
-  else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, 0.6));
+  const detune = cryDetune(services().session.profile);
+  if (scene.cache.audio.exists(id)) playSfx(scene, id, 0.6, detune);
+  else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, 0.6, detune));
 }
 
 let currentMusic: { id: string; sound: Phaser.Sound.BaseSound } | null = null;

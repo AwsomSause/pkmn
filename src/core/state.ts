@@ -1073,6 +1073,8 @@ export const ProfileSchema = z.object({
   stamps: z.record(z.string(), z.number().int().min(0)).optional(),
   /** The title-screen arena you chose in the Wardrobe (a bg.arena.* key), or unset to cycle through them all. */
   menuArena: z.string().optional(),
+  /** The cry theme chosen in the Wardrobe (core/wardrobe.ts CRY_THEMES), or unset for normal cries. */
+  cryTheme: z.string().optional(),
   /** Counters summed over the runs played as each trainer, and their best single run (for quest lines). */
   trainerCounters: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
