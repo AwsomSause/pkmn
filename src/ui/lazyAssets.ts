@@ -7,6 +7,7 @@
 import Phaser from 'phaser';
 import { pokemonAssetIds, type AssetEntry } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
+import { lookSpecies } from '../core/pokemon';
 import { services } from '../game/services';
 
 /** Whether an asset is already in Phaser's caches. */
@@ -125,5 +126,5 @@ export function preloadPokemon(scene: Phaser.Scene, species: readonly Species[],
 /** Species of the current run's party (for preloading their icons and sprites). */
 export function partySpecies(): Species[] {
   const { session } = services();
-  return (session.run?.party ?? []).flatMap((m) => session.content.species.get(m.speciesId) ?? []);
+  return (session.run?.party ?? []).map((m) => lookSpecies(session.content, m));
 }

@@ -9,7 +9,7 @@ import { friendshipHearts } from '../core/friendship';
 import { emotionOf } from '../core/story/emotions';
 import { services } from '../game/services';
 import { abilityStatus } from '../core/battle/abilities';
-import { abilityOf, calcStats, getSpecies } from '../core/pokemon';
+import { abilityOf, calcStats, getSpecies, lookSpecies } from '../core/pokemon';
 import type { PokemonInstance } from '../core/state';
 import { playSfx } from './audio';
 import type { InputAction } from './input';
@@ -234,7 +234,7 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
     problem,
     hint: [opts.hint ?? abilityHint(content, mon), extra].filter(Boolean).join('  ') || undefined,
     draw: (scene, box, w) => {
-      const species = getSpecies(content, mon.speciesId);
+      const species = lookSpecies(content, mon);
       const max = calcStats(content, mon).hp;
       box.add(pokemonIcon(scene, species, 34, 36, 1.5));
       const shiny = mon.shiny ? ' ★' : '';
