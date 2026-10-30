@@ -276,6 +276,26 @@ export function draftStarters(content: Content, rng: Rng, prep: RunPrep): Starte
   return { choices: shuffled.slice(0, n), note: null };
 }
 
+/**
+ * Signature Pokémon (Untitled doc §11): when none of the trainer's signature
+ * species was drawn but the pool (and a Type Focus) allows one, it takes the
+ * last slot with balance.signatureStarterChance. It runs on its own RNG
+ * stream, so the draft itself rolls exactly as for any other trainer.
+ */
+export function withSignatureStarter(content: Content, rng: Rng, archetype: Archetype, prep: RunPrep, choices: string[]): string[] {
+  const pool = content.starterPools.get(prep.poolId);
+  if (!pool || archetype.signatureSpecies.length === 0) return choices;
+  const eligible = new Set(eligibleSpecies(content, pool));
+  const rule = content.draftRules.get(prep.draftRuleId);
+  const focus = rule?.kind === 'typeFocus' ? prep.typeFocus : null;
+  const candidates = [...new Set(archetype.signatureSpecies.map((id) => firstStage(content, id)?.id))].filter(
+    (id): id is string => !!id && eligible.has(id) && (!focus || content.species.get(id)!.types.includes(focus)),
+  );
+  if (candidates.length === 0 || choices.some((id) => candidates.includes(id))) return choices;
+  if (!rng.chance(content.balance.signatureStarterChance)) return choices;
+  return [...choices.slice(0, -1), rng.pick(candidates)];
+}
+
 // ---------- starting resources and the build summary ----------
 
 export interface StartingResources {
@@ -314,6 +334,7 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
     `Trainer: ${archetype.name}${archetype.title ? ` (${archetype.title})` : ''}`,
     ...archetype.pros.map((p) => `  + ${p}`),
     ...archetype.cons.map((c) => `  − ${c}`),
+    ...signatureLines(content, archetype),
     `Campaign: ${campaign?.name ?? prep.campaignId}`,
     `Starters: ${pool.name} pool (${eligibleSpecies(content, pool).length} species), ${rule.name}${rule.kind === 'typeFocus' && prep.typeFocus ? `: ${typeName(prep.typeFocus)}` : ''}`,
     `Preparation: ${token ? `${token.name}, ${token.description.charAt(0).toLowerCase()}${token.description.slice(1)}` : 'none'}`,
@@ -321,6 +342,15 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
   ];
   if (attributes) lines.push(`Attributes: ${attributesLine(readAttributes(content, attributes))}`);
   return lines;
+}
+
+/** The trainer's identity in words: signature types and Pokémon. Empty for trainers without one (Red). */
+export function signatureLines(content: Content, archetype: Archetype): string[] {
+  const parts: string[] = [];
+  if (archetype.signatureTypes.length > 0) parts.push(archetype.signatureTypes.map(typeName).join('/'));
+  const names = archetype.signatureSpecies.map((id) => content.species.get(id)?.name ?? id);
+  if (names.length > 0) parts.push(names.join(', '));
+  return parts.length > 0 ? [`Signature: ${parts.join(' · ')}`] : [];
 }
 
 /** "fire" → "Fire". */

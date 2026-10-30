@@ -448,6 +448,12 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('typeDamageMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
   /** Super-effective damage taken by your Pokémon of this type. */
   z.object({ kind: z.literal('weaknessDamageTakenMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
+  /** Friendship your Pokémon gain from battles. */
+  z.object({ kind: z.literal('friendshipMultiplier'), value: z.number().positive() }),
+  /** Research Points from new species, catches and shinies at the end of a run. */
+  z.object({ kind: z.literal('researchMultiplier'), value: z.number().positive() }),
+  /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
+  z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -473,6 +479,15 @@ export const ArchetypeSchema = z.object({
   modifiers: z.array(ArchetypeModifierSchema),
   /** Items added to the Bag at the start of a run (a signature preparation). */
   startingItems: z.record(z.string(), z.number().int().positive()).default({}),
+  // ---------- identity (Untitled doc §11) ----------
+  /** The trainer's types, shown on the Trainer Archive and the Run Build Summary. */
+  signatureTypes: z.array(TypeNameSchema).max(2).default([]),
+  /** Species (any stage) more likely among the three starters, never forced. */
+  signatureSpecies: z.array(z.string()).default([]),
+  /** The trainer's own starter set in the Starter Laboratory. */
+  signaturePool: z.string().nullable().default(null),
+  /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
+  eventTags: z.array(z.string()).default([]),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
@@ -1170,6 +1185,8 @@ export const BalanceSchema = z.object({
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
+  /** The chance a trainer's signature species takes the last starter slot when none was drawn (own RNG stream). */
+  signatureStarterChance: z.number().min(0).max(1),
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),

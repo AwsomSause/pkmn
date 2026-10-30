@@ -363,6 +363,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const m of a.modifiers) {
       if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
+    for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
+    if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
   // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
