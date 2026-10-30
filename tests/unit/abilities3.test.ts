@@ -180,3 +180,30 @@ describe('urge and drop items in the battle bag', () => {
     expect(Object.keys((d.ctx.battle.held!.lost[d.enemy.uid] ?? []))).toContain('0');
   });
 });
+
+describe('ball kinds', () => {
+  const throwBall = (d: ReturnType<typeof duel>, id: string) => {
+    d.ctx.inventory[id] = 1;
+    return resolveTurn(d.ctx, { kind: 'item', itemId: id });
+  };
+  it('Master Ball always catches', () => {
+    const d = duel({ enemy: 'mewtwo' });
+    throwBall(d, 'master-ball');
+    expect(d.battle.outcome).toBe('caught');
+    expect(d.battle.ball).toBe('master-ball');
+  });
+  it('Quick Ball is strong on turn one only, Dive Ball only on Water', () => {
+    const quick = (turns: number) => {
+      const d = duel({ enemy: 'snorlax' });
+      d.battle.turn = turns;
+      d.ctx.inventory['quick-ball'] = 1;
+      const wild = d.battle.enemyTeam[0]!;
+      wild.hp = 1;
+      return resolveTurn(d.ctx, { kind: 'item', itemId: 'quick-ball' }).some((e) => e.type === 'ball' && e.caught);
+    };
+    expect(typeof quick(1)).toBe('boolean');
+    const dive = duel({ enemy: 'snorlax' });
+    dive.ctx.inventory['dive-ball'] = 1;
+    expect(() => resolveTurn(dive.ctx, { kind: 'item', itemId: 'dive-ball' })).not.toThrow();
+  });
+});

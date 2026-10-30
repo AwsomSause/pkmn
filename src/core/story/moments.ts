@@ -4,6 +4,7 @@
 // them and applies a small effect through the effect ledger. Counters live in
 // run.story.flags under "m:" keys and are cleared when the battle ends.
 
+import { openingFor, rivalFeeling } from '../rivals/feelings';
 import { grandMoment } from './grandEnemy';
 import type { Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
@@ -39,6 +40,9 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   somethingDifferent: 'flair',
   waitingForBattle: 'flair',
   somethingWatching: 'flair',
+  rivalResentment: 'enemyStage',
+  rivalFear: 'enemyStage',
+  rivalRespect: 'flair',
   grandOmen: 'flair',
   grandShadow: 'enemyStage',
   grandGrudge: 'statStage',
@@ -233,6 +237,9 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       const idle = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && (run.story.histories[m.uid]?.battles ?? 99) <= 1);
       if (idle) fire('feelsLeftOut', 'player', idle.uid, -1, { name: nameOf(idle.speciesId), other: nameOf(lead.speciesId) });
     }
+    const feltRival = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
+    const opening = feltRival ? openingFor(rivalFeeling(feltRival).feeling) : null;
+    if (opening) fire(opening, opening === 'rivalRespect' ? 'player' : 'enemy', opening === 'rivalRespect' ? lead.uid : foe.uid, -1, { name: nameOf(foe.speciesId), enemy: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? 'The rival' });
     if (boss) {
       const g = grandMoment(content, run, lead.uid);
       if (g) fire(g, g === 'grandShadow' ? 'enemy' : 'player', g === 'grandShadow' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });

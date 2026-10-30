@@ -11,6 +11,7 @@ import { boxCapacity } from '../core/trainerPerks';
 import { runPerks } from '../core/archetypes';
 import { canCashIn, partyCapacity } from '../core/run';
 import { legacyCard } from '../core/story/legacy';
+import { chronicleStories } from '../core/story/storybook';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
 import { bagRow, emotionDot, partyRows, Picker, speciesRow } from './partyPanel';
@@ -115,6 +116,13 @@ export function openStoryMenu(host: FieldMenuHost): void {
       },
     }];
   });
+  const storyRows = chronicleStories(content, run).map((st) => ({
+    problem: null,
+    hint: `${st.body}  ·  ${st.tags.join(' · ')}`,
+    draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+      box.add(scene.add.text(14, 8, `📖 ${st.title}`, textStyle(20, '#ffd9a0', { fixedWidth: w - 28 })));
+    },
+  }));
   const rows = entries.map((entry) => {
     const names = entry.actors.map(who).filter(Boolean).join(' & ');
     const where = `Region ${entry.where.region + 1}${entry.where.stage !== null ? ` · Stage ${entry.where.stage + 1}` : ''}`;
@@ -131,10 +139,10 @@ export function openStoryMenu(host: FieldMenuHost): void {
   });
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: rows.length + rivalRows.length + legacyRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
+    title: rows.length + rivalRows.length + legacyRows.length + storyRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
     columns: 1,
     rowHeight: 40,
-    rows: [...legacyRows, ...rivalRows, ...rows],
+    rows: [...storyRows, ...legacyRows, ...rivalRows, ...rows],
     onSelect: () => undefined,
     onBack: () => close(host, picker),
   });

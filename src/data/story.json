@@ -2453,6 +2453,114 @@
         "bravery"
       ],
       "variants": {}
+    },
+    {
+      "id": "rival-resentment",
+      "displayName": "The Rival Opens With a Grudge",
+      "messagePool": [
+        "{trainer} has not forgotten the last battle, and strikes first!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "rivalResentment"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Faced a rival who held a grudge"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff4f6a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "rival-fear",
+      "displayName": "The Rival Plays It Safe",
+      "messagePool": [
+        "{trainer} remembers how the last fight went, and braces for impact."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "rivalFear"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Faced a rival who was afraid of a rematch"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#9f7fff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "rival-respect",
+      "displayName": "The Rival Asks for a Fair Rematch",
+      "messagePool": [
+        "{trainer} bows. No tricks this time, just a fair fight."
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "rivalRespect"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Was challenged to a fair rematch"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "integrity"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {

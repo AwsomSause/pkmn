@@ -948,7 +948,13 @@ export const TransformKindSchema = z.enum(TRANSFORM_KINDS);
 export type TransformKind = z.infer<typeof TransformKindSchema>;
 
 export const ItemEffectSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
+  /** A ball. `rule` adds a condition to `multiplier` (see ballBonus in battle/engine.ts); `after` changes the caught Pokémon. */
+  z.object({
+    kind: z.literal('catch'),
+    multiplier: z.number().positive(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk']).optional(),
+    after: z.enum(['friend', 'luxury', 'heal']).optional(),
+  }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('cureStatus') }),
   z.object({ kind: z.literal('fullRestore') }),
@@ -1638,6 +1644,8 @@ export const BalanceSchema = z.object({
    * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
    * and the Research Points each rank pays once.
    */
+  /** The Research Directive (plan Part 5): defeat or catch this many of the studied type for these Research Points. */
+  directive: z.object({ target: z.number().int().min(1), researchPoints: z.number().int().min(0) }),
   mastery: z.object({
     bronzeBattles: z.number().int().min(1),
     silverBattles: z.number().int().min(1),

@@ -111,6 +111,17 @@ export function catalogTargetProblem(content: Content, run: RunState, entry: Cat
   }
 }
 
+/** The ball each Apricorn becomes in an Apricorn Box. */
+const APRICORN_BALLS: Record<string, string> = {
+  'red-apricorn': 'level-ball',
+  'blu-apricorn': 'lure-ball',
+  'ylw-apricorn': 'moon-ball',
+  'grn-apricorn': 'friend-ball',
+  'pnk-apricorn': 'love-ball',
+  'wht-apricorn': 'fast-ball',
+  'blk-apricorn': 'heavy-ball',
+};
+
 /** Whether the item does something for this run right now (it's left out of the draft otherwise). */
 export function isCatalogUseful(content: Content, run: RunState, entry: CatalogEntry): boolean {
   if (entry.status !== 'supported') return false;
@@ -179,8 +190,9 @@ export function applyCatalog(
 
   // Apricorn Box: each Apricorn becomes a ball right away.
   if (entry.id.endsWith('-apricorn') && passivePercent(content, run, 'apricornBox') > 0) {
-    addItem(run.inventory, 'great-ball', 1);
-    messages.push('The Apricorn Box turned it into a Great Ball.');
+    const ball = APRICORN_BALLS[entry.id] ?? 'great-ball';
+    addItem(run.inventory, ball, 1);
+    messages.push(`The Apricorn Box turned it into a ${content.items.get(ball)?.name ?? 'ball'}.`);
   }
 
   switch (effect.kind) {

@@ -3,6 +3,7 @@
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import catalog from '../../data/rivalCatalog.json';
+import { FEELING_NAMES, rivalFeeling } from './feelings';
 import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG } from './schema';
 import { ultimateRival } from './ultimate';
@@ -34,7 +35,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
     return {
       title: `${className} ${r.name}, ${personality?.name ?? r.archetype}`,
       summary: `Fights as ${style?.name ?? r.style}. Strongest trait: ${topTrait[0]} (${topTrait[1]}).`,
-      state: r.state[0]!.toUpperCase() + r.state.slice(1),
+      state: `${r.state[0]!.toUpperCase() + r.state.slice(1)}, feels ${FEELING_NAMES[rivalFeeling(r).feeling].toLowerCase()}`,
       ultimate: ultimateRival(run)?.id === r.id,
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
       bonds: [...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
