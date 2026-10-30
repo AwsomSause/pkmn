@@ -17,7 +17,7 @@ The real status of every system on 2026-10-30, checked against the code, the uni
 - **Mechanics:** 42 listed; 35 supported, 4 limited (moves, abilities, Battle Drama, Trainers.md perks), 3 not built (Overdrive Breakthrough/Misfire events, double battles, egg hatching; the last two are in progress in other threads).
 - **Content:** 87 of 934 moves can't be run by the engine (was 611); 0 broken evolutions, 0 missing sprites/cries/assets, 0 unreachable map nodes in 603 generated maps, 0 invalid entries, every save upgrade has a test.
 - **Open findings**, in order of importance:
-  1. **GitHub Actions has still never run on this repository** (0 workflow runs, checked with the GitHub API; the CI workflow exists and is "active"). So the gates only run when someone runs them by hand. Kice must switch Actions on: repository Settings → Actions → General → "Allow all actions and reusable workflows". Until then this audit and the e2e sweeps are the only gate.
+  1. **GitHub Actions is now switched on** (2026-10-30; it had never run before). The first runs on pull requests show whether CI itself passes: the browser tests take about 13 minutes there.
   2. **Boss teams are now all different**: `npm run data:bosses` retries a team with more variety whenever its lineup (Pokémon and moves) was already used, so the 6 exact copies and 983 repeats are 0 (baseline 0). Teams that needed a retry pick slightly weaker Pokémon than their first choice.
   3. **Browser tests are slow under load** (the full run takes about 12 minutes). Two long-fight tests now have a 180 s budget; keep new long tests on `test.setTimeout`.
   4. **The balance report now covers abilities and Mega/Tera/Z/Dynamax** (regenerated 2026-10-30): with every key item, stone and crystal the average one-on-one win rate rises from 47% to 61% and 24 lines win 90% or more (3 without). The kit makes fights much easier than the plain numbers show; watch this when tuning.
@@ -54,7 +54,7 @@ The real status of every system on 2026-10-30, checked against the code, the uni
 | Content report, support statuses, mechanics, dashboard, gate | Working | `src/quality/`, `tools/report-content.ts` · `quality.test.ts`, `qualityMechanics.test.ts` |
 | Balance simulations | Limited | `quality/balanceSim.ts` · `quality.test.ts`; report out of date (finding 4) |
 | Window sizes, console errors, failed requests | Working | `viewports.spec.ts` (4 sizes: 1280×720, 1024×600, 768×1024, 390×844) |
-| CI on GitHub | **Not running** | finding 1 |
+| CI on GitHub | Working (just switched on) | `.github/workflows/ci.yml`; first runs being checked |
 | Double battles, egg hatching, Overdrive events | Not built | other threads |
 
 ## Save compatibility risks
