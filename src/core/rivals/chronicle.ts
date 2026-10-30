@@ -3,7 +3,7 @@
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import catalog from '../../data/rivalCatalog.json';
-import { bondLines } from './bonds';
+import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG } from './schema';
 import { ultimateRival } from './ultimate';
 
@@ -37,7 +37,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       state: r.state[0]!.toUpperCase() + r.state.slice(1),
       ultimate: ultimateRival(run)?.id === r.id,
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
-      bonds: bondLines(content, r),
+      bonds: [...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };
   });
 }

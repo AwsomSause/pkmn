@@ -101,6 +101,6 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
     // Some rumours are only partly true; the player cannot tell which.
     const rng = new Rng(hashSeed(`${run.seed}::rival-rumor::${run.regionIndex}.${stage}`));
     const accurate = rng.float() >= w.distortedRumorChance;
-    emit(content, run, 'rivalryFormed', { data: { outcome: 'rumor', accurate }, text: accurate ? `Word is that ${rumor}` : `You heard a rumour that ${rumor}, though the story seems incomplete` });
+    emit(content, run, 'rivalryFormed', { data: { outcome: 'rumor', accurate }, text: accurate ? `Word is that ${rumor}` : `You heard a rumour that ${rumor}, though a second account tells it differently` });
   }
 }
