@@ -2,7 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { chooseStarter, createRun, useItemOutsideBattle } from '../../src/core/run';
-import { noEvolution, partyCap, rulesProblem, STANDARD_CHOICE, type RulesChoice } from '../../src/core/rules';
+import { bossTeamSpecies } from '../../src/core/encounters';
+import { bossRemix, noEvolution, partyCap, rulesProblem, STANDARD_CHOICE, type RulesChoice } from '../../src/core/rules';
 import type { RunState } from '../../src/core/state';
 import { content } from './helpers';
 
@@ -31,5 +32,19 @@ describe('contracts', () => {
     const stone = [...content.items.values()].find((i) => i.effect.kind === 'evolve' && i.usableOutside)!;
     const withStone = { ...run, inventory: { ...run.inventory, [stone.id]: 1 } };
     expect(() => useItemOutsideBattle(content, withStone, stone.id, 0)).toThrow();
+  });
+});
+
+describe('Boss Remix (#149)', () => {
+  it('reorders a boss team without changing who is on it, and is stable', () => {
+    const plain = bossTeamSpecies(content, 'gym', 'brock', 3);
+    const remix = bossTeamSpecies(content, 'gym', 'brock', 3, true);
+    expect([...remix].sort()).toEqual([...plain].sort());
+    expect(remix).not.toEqual(plain);
+    expect(bossTeamSpecies(content, 'gym', 'brock', 3, true)).toEqual(remix);
+  });
+  it('is a modifier that reaches the rules', () => {
+    expect(bossRemix({ modifierIds: ['boss-remix'] })).toBe(true);
+    expect(bossRemix({ modifierIds: [] })).toBe(false);
   });
 });
