@@ -8,6 +8,7 @@ import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, g
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
@@ -24,7 +25,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'wardrobe' | 'events' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'events' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -36,6 +37,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
+  { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, their objectives and rewards (Enter)." },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
@@ -110,7 +112,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history'], blurb: "This week's event, holiday events, and your past runs." },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery and the Wardrobe.' },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -119,6 +121,7 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   lab: 'item.mystery_egg',
   attributes: 'item.exp_charm',
   mastery: 'item.master_ribbon',
+  research: 'item.scanner',
   wardrobe: 'item.sachet',
   events: 'item.calendar',
   save: 'item.map',
@@ -434,6 +437,13 @@ export class HubScene extends Phaser.Scene {
         }
         break;
       }
+      case 'research': {
+        y = this.line(y, 'Research Room', 22);
+        const t = researchTotals(session.content, p);
+        y = this.line(y, `Met ${t.met} · Caught ${t.caught} of ${t.total}`, 16);
+        y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
+        break;
+      }
       case 'wardrobe': {
         y = this.line(y, 'Wardrobe', 22);
         const frame = getFrame(p.cardFrame);
@@ -502,6 +512,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'mastery':
         this.openMastery();
+        break;
+      case 'research':
+        this.openResearch();
         break;
       case 'wardrobe':
         this.openWardrobe();
@@ -609,6 +622,39 @@ export class HubScene extends Phaser.Scene {
   }
 
   /** Titles and card frames for the trainer card. Enter puts one on. */
+  /** Collection sets (generations and special forms) with their milestones; opening it pays any new milestone. */
+  private openResearch(): void {
+    const { session } = services();
+    const paid = session.claimCollections();
+    const p = session.profile;
+    const motion = session.settings.battleAnimations;
+    const rows: PickerRow[] = collectionSets(session.content).map((set) => {
+      const prog = setProgress(set, p);
+      return {
+        problem: null,
+        hint: `${prog.caught} of ${set.members.length} caught, ${prog.seen} met. Milestones at 25/50/75/100% pay ${MILESTONE_PAY.join('/')} Research Points once each.`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, 6, set.name, textStyle(19)));
+          box.add(scene.add.text(12, 32, `${prog.caught}/${set.members.length} caught`, textStyle(14, COLORS.textMuted)));
+          const bar = scene.add.graphics();
+          const frac = set.members.length ? prog.caught / set.members.length : 0;
+          bar.fillStyle(0x0b2a4a, 0.8).fillRoundedRect(w - 220, h / 2 - 7, 200, 14, 7);
+          bar.fillStyle(0x6fd0a0, 1).fillRoundedRect(w - 220, h / 2 - 7, Math.max(8, 200 * frac), 14, 7);
+          box.add(bar);
+          if (motion === 'full') scene.tweens.add({ targets: bar, alpha: 0.8, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        },
+      };
+    });
+    this.openPicker({
+      title: paid.length ? `Research Room  ·  +${paid.reduce((n, x) => n + x.researchPoints, 0)} Research Points (${paid.map((x) => `${x.setName} ${x.pct}%`).join(', ')})` : 'Research Room',
+      rows,
+      columns: 1,
+      rowHeight: 58,
+      onSelect: () => undefined,
+      onBack: () => this.closePicker(),
+    });
+  }
+
   private openWardrobe(): void {
     const { session } = services();
     const p = session.profile;

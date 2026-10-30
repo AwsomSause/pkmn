@@ -13,7 +13,7 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 | 76-84 | G Shadow, Delta, forms | PART: 78-84 partial (specialForms.ts); 76-77 Shadow arc TODO |
 | 85-93 | H Bosses and raids | PART: 85-89 raids/totems exist; 90-93 TODO |
 | 94-104 | I Rewards and pacing | PART: **95 synergy line on draft cards DONE (slice 2; vitamins, level-ups, healing, attributes only)**; 98 contracts, 102 run rules DONE; **103 recap and 104 seed code DONE (slice 1)**; 94-97, 99-101 TODO |
-| 105-114 | J Persistent progression | PART: 106 mastery, 108 trainer mastery, 113 legacy DONE; 105, 107, 109-112 TODO; 114 recap DONE (slice 1) |
+| 105-114 | J Persistent progression | PART: **105 Research Room (met/caught/evolved totals), 112 collection sets (9 generations, Delta/Z/Spooky/Regional/Mega) with Research Point milestones DONE (slice 3; no shiny count: not tracked)**; 106 mastery, 108 trainer mastery, 113 legacy DONE; 107, 109-111 TODO; 114 recap DONE (slice 1) |
 | 115-125 | K UI and QoL | **116 damage details DONE, 120 retry seed DONE, 124 settings PART (slice 1); 115 battle log (H key), 119 party roles on the Bond screen DONE, 118 PART (synergy line, no side-by-side) (slice 2)**; 117, 121-123, 125 TODO |
 | 126-132 | L Audio | TODO (audio.ts exists, basic) |
 | 133-145 | M Technical pipeline | PART: 133 provenance doc, 142 dashboard, 143 migrations exist; 134-141, 144-145 TODO |
@@ -25,3 +25,4 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 ## Slices
 1. Run recap, seed code, retry seed, damage details, accessibility profiles (settings v5). DONE.
 2. Party roles, battle log (H), reward synergy line. DONE.
+3. Research Room with collection sets and milestone payouts. DONE.

@@ -20,6 +20,7 @@ import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
 import * as Mini from '../core/minigame/flow';
 import { claim } from '../core/quests';
+import { claimCollectionMilestones } from '../core/collection';
 import * as Run from '../core/run';
 import * as Svc from '../core/services/flow';
 import type { RulesChoice } from '../core/rules';
@@ -390,6 +391,17 @@ export class GameSession {
     if (!claim(profile, key, new Date().toISOString())) return;
     this.profile = profile;
     this.checkSave(this.saves.saveProfile(this.profile));
+  }
+
+  /** Research Room: pays every collection milestone reached and not yet paid. Returns what was paid. */
+  claimCollections(): { setName: string; pct: number; researchPoints: number }[] {
+    const profile = structuredClone(this.profile);
+    const paid = claimCollectionMilestones(this.content, profile, new Date().toISOString());
+    if (paid.length === 0) return paid;
+    this.profile = profile;
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+    return paid;
   }
 
   savePreset(slot: number, preset: LoadoutPreset): void {
