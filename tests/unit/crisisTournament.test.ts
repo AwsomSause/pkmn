@@ -205,3 +205,16 @@ describe('World events', () => {
     expect(ids()).toContain('legend-encounter');
   });
 });
+
+describe('Champion personality', () => {
+  it('a champion opens according to the journey, and only champions do', async () => {
+    const { championOpener } = await import('../../src/core/story/crisis');
+    const run = fresh('champ-open');
+    expect(championOpener(run, 'champion')).toBeNull();
+    run.story.flags['ge:met'] = 1;
+    expect(championOpener(run, 'champion')).toBe('championRecall');
+    expect(championOpener(run, 'gym-leader')).toBeNull();
+    run.story.rivals.push({ encounters: 3 } as never);
+    expect(championOpener(run, 'champion')).toBe('championRespect');
+  });
+});
