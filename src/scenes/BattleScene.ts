@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
@@ -12,6 +13,7 @@ import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
+import { noBattleItems } from '../core/rules';
 import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
@@ -1059,7 +1061,7 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run) };
+    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
   }
 
   private openBag(): void {
@@ -1507,6 +1509,10 @@ export class BattleScene extends Phaser.Scene {
     if (caught) {
       playSfx(this, 'se.ball_catch');
       const reveal = burstReveal(this, ball.x, ball.y, 0xfff0a0, this.motion);
+      // Seal Case: a ring of coloured bursts around the ball.
+      if (hasPerk(services().session.content, this.run, 'sealCase')) {
+        for (const [i, colour] of [0xff80c0, 0x80d0ff, 0xa0ff90, 0xffd060].entries()) burstReveal(this, ball.x + (i - 1.5) * 34, ball.y - 24 + (i % 2) * 36, colour, this.motion);
+      }
       await tween(this, { targets: ball, alpha: 0.6, duration: 150, yoyo: true });
       await reveal.done;
       return;

@@ -8,6 +8,7 @@ import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, g
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
@@ -23,7 +24,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'events' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'wardrobe' | 'events' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -35,6 +36,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
+  { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, their objectives and rewards (Enter)." },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
@@ -108,7 +110,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history'], blurb: "This week's event, holiday events, and your past runs." },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes and Species Mastery.' },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery and the Wardrobe.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -117,6 +119,7 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   lab: 'item.mystery_egg',
   attributes: 'item.exp_charm',
   mastery: 'item.master_ribbon',
+  wardrobe: 'item.sachet',
   events: 'item.calendar',
   save: 'item.map',
   back: 'item.pair_of_tickets',
@@ -188,9 +191,10 @@ export class HubScene extends Phaser.Scene {
     right -= currencyChip(this, right, 32, 'item.dna_splicers', p.researchPoints, 'Research Points') + 8;
     currencyChip(this, right, 32, 'item.coin_case', p.bankCredits, 'Bank Credits');
     const earned = Object.keys(p.achievements).length;
-    this.add
+    const card = this.add
       .text(GAME_WIDTH - 16, 62, `${p.activeTitle ? `${p.activeTitle}  ·  ` : ''}Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, COLORS.textMuted))
       .setOrigin(1, 0);
+    this.drawCardFrame(card, getFrame(p.cardFrame));
 
     this.detail = this.add.container(0, 0);
     this.blurbPill = this.add.graphics();
@@ -430,6 +434,14 @@ export class HubScene extends Phaser.Scene {
         }
         break;
       }
+      case 'wardrobe': {
+        y = this.line(y, 'Wardrobe', 22);
+        const frame = getFrame(p.cardFrame);
+        y = this.line(y, `Title: ${p.activeTitle ?? 'none'}`, 16);
+        y = this.line(y, `Frame: ${frame.name}`, 16, frame.color);
+        y = this.line(y, `${CARD_FRAMES.filter((f) => frameOpen(p, f)).length}/${CARD_FRAMES.length} frames open`, 14, COLORS.textMuted);
+        break;
+      }
       case 'mastery': {
         y = this.line(y, 'Species Mastery', 22);
         const families = masteryFamilies(session.content, p);
@@ -490,6 +502,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'mastery':
         this.openMastery();
+        break;
+      case 'wardrobe':
+        this.openWardrobe();
         break;
       case 'events':
         this.openEventHall();
@@ -573,6 +588,83 @@ export class HubScene extends Phaser.Scene {
     const archive = [...content.gameEvents.values()].filter((e) => rewardEarned(p, e.id));
     if (archive.length > 0) header(`Earned: ${archive.map((e) => e.name).join(', ')}`, COLORS.good, 'Event rewards you have earned for good.');
     this.openPicker({ title: 'Event Hall', rows, columns: 1, rowHeight: 44, onSelect: () => undefined, onBack: () => this.closePicker() });
+  }
+
+  /** The Wardrobe's frame around the trainer card line: a rounded border, and a slow shine on the fancier ones. */
+  private drawCardFrame(card: Phaser.GameObjects.Text, frame: CardFrame): void {
+    const pad = 6;
+    const x = card.x - card.width - pad;
+    const y = card.y - pad / 2;
+    const w = card.width + pad * 2;
+    const h = card.height + pad;
+    const color = Phaser.Display.Color.HexStringToColor(frame.color).color;
+    const g = this.add.graphics().setDepth(card.depth - 1);
+    g.fillStyle(0x14101a, 0.6).fillRoundedRect(x, y, w, h, 8);
+    g.lineStyle(2, color, 1).strokeRoundedRect(x, y, w, h, 8);
+    if (!frame.shimmer || services().session.settings.battleAnimations !== 'full') return;
+    // A soft glint that glides along the top edge and breathes in and out.
+    const glint = this.add.rectangle(x + 10, y + 1, 26, 3, 0xffffff, 0.8).setDepth(card.depth);
+    this.tweens.add({ targets: glint, x: x + w - 10, duration: 1800, ease: 'Sine.easeInOut', yoyo: true, repeat: -1 });
+    this.tweens.add({ targets: g, alpha: 0.7, duration: 1400, ease: 'Sine.easeInOut', yoyo: true, repeat: -1 });
+  }
+
+  /** Titles and card frames for the trainer card. Enter puts one on. */
+  private openWardrobe(): void {
+    const { session } = services();
+    const p = session.profile;
+    const motion = session.settings.battleAnimations;
+    const choices: ({ kind: 'title'; title: string | null } | { kind: 'frame'; frame: CardFrame })[] = [
+      { kind: 'title', title: null },
+      ...p.titles.map((title) => ({ kind: 'title' as const, title })),
+      ...CARD_FRAMES.map((frame) => ({ kind: 'frame' as const, frame })),
+    ];
+    const rows: PickerRow[] = choices.map((c) => {
+      if (c.kind === 'title') {
+        const on = p.activeTitle === c.title;
+        return {
+          problem: null,
+          hint: c.title ? 'A title you earned. Enter shows it on your trainer card.' : 'Show no title.',
+          draw: (scene, box, w, h) => {
+            box.add(scene.add.text(12, h / 2, `Title: ${c.title ?? 'none'}`, textStyle(17, on ? COLORS.gold : COLORS.textLight)).setOrigin(0, 0.5));
+            if (on) box.add(scene.add.text(w - 12, h / 2, 'ON', textStyle(15, COLORS.good)).setOrigin(1, 0.5));
+          },
+        };
+      }
+      const open = frameOpen(p, c.frame);
+      const on = p.cardFrame === c.frame.id;
+      return {
+        problem: open ? null : `Not yet: ${c.frame.unlockText}.`,
+        hint: open ? `The ${c.frame.name} card frame. Enter puts it on.` : `Locked: ${c.frame.unlockText}.`,
+        draw: (scene, box, w, h) => {
+          const color = Phaser.Display.Color.HexStringToColor(c.frame.color).color;
+          const swatch = scene.add.graphics();
+          swatch.lineStyle(3, color, open ? 1 : 0.35).strokeRoundedRect(12, h / 2 - 10, 34, 20, 6);
+          box.add(swatch);
+          box.add(scene.add.text(58, h / 2, `Frame: ${c.frame.name}`, textStyle(17, open ? (on ? COLORS.gold : COLORS.textLight) : COLORS.textMuted)).setOrigin(0, 0.5));
+          const tag = scene.add.text(w - 12, h / 2, on ? 'ON' : open ? '' : c.frame.unlockText, textStyle(14, on ? COLORS.good : COLORS.textMuted)).setOrigin(1, 0.5);
+          box.add(tag);
+          // The frame you wear bobs gently (none when motion is reduced or off).
+          if (on && motion === 'full') scene.tweens.add({ targets: swatch, y: -3, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        },
+      };
+    });
+    this.openPicker({
+      title: 'Wardrobe',
+      rows,
+      columns: 2,
+      rowHeight: 44,
+      onSelect: (i) => {
+        const c = choices[i]!;
+        if (c.kind === 'title') {
+          session.setActiveTitle(c.title);
+          this.restart(c.title ? `Now showing the title "${c.title}".` : 'No title on show.', 'wardrobe');
+        } else {
+          session.setCardFrame(c.frame.id);
+          this.restart(`Your card now wears the ${c.frame.name} frame.`, 'wardrobe');
+        }
+      },
+      onBack: () => this.closePicker(),
+    });
   }
 
   /** Every family you met, best rank first; Enter shows its members, goals and unlocks. */

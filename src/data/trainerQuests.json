@@ -16847,6 +16847,150 @@
      }
     }
    ]
+  },
+  {
+   "trainerId": "lusamine-masters",
+   "name": "Lusamine (Masters)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Lusamine (Masters)",
+     "story": "Lusamine (Masters) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Lusamine (Masters)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Lusamine (Masters)",
+     "story": "Lusamine (Masters) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-lusamine-masters"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Lusamine (Masters)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Lusamine (Masters)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Lusamine (Masters)",
+     "story": "Lusamine (Masters)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Lusamine (Masters), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "lusamine-nihilego",
+   "name": "Lusamine (Nihilego)'s Poison Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Poison-types as Lusamine (Nihilego)",
+     "story": "Lusamine (Nihilego) feels the Poison-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Lusamine (Nihilego)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Lusamine (Nihilego)",
+     "story": "Lusamine (Nihilego) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-lusamine-nihilego"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Poison-type leading",
+     "story": "The Poison-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.poison",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Poison-types in one run",
+     "story": "A whole run of Poison-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Poison Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Lusamine (Nihilego)",
+     "story": "Lusamine (Nihilego)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Lusamine (Nihilego), Master"
+     }
+    }
+   ]
   }
  ],
  "runQuests": [

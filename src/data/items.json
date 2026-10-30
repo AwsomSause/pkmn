@@ -1471,5 +1471,273 @@
   "effect": {
    "kind": "itemDrop"
   }
+ },
+ {
+  "id": "master-ball",
+  "name": "Master Ball",
+  "description": "Never fails to catch a wild Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.master",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 255
+  }
+ },
+ {
+  "id": "premier-ball",
+  "name": "Premier Ball",
+  "description": "A plain white ball, made for celebrations.",
+  "category": "ball",
+  "iconAssetId": "ball.premier",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1
+  }
+ },
+ {
+  "id": "net-ball",
+  "name": "Net Ball",
+  "description": "3.5× against Water and Bug Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.net",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3.5,
+   "rule": "net"
+  }
+ },
+ {
+  "id": "dive-ball",
+  "name": "Dive Ball",
+  "description": "3.5× against Water Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.dive",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3.5,
+   "rule": "dive"
+  }
+ },
+ {
+  "id": "nest-ball",
+  "name": "Nest Ball",
+  "description": "Better against low-level Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.nest",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1,
+   "rule": "nest"
+  }
+ },
+ {
+  "id": "repeat-ball",
+  "name": "Repeat Ball",
+  "description": "3.5× against species you have already caught.",
+  "category": "ball",
+  "iconAssetId": "ball.repeat",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3.5,
+   "rule": "repeat"
+  }
+ },
+ {
+  "id": "timer-ball",
+  "name": "Timer Ball",
+  "description": "Gets better the longer the battle lasts, up to 4×.",
+  "category": "ball",
+  "iconAssetId": "ball.timer",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "timer"
+  }
+ },
+ {
+  "id": "quick-ball",
+  "name": "Quick Ball",
+  "description": "5× on the first turn of a battle.",
+  "category": "ball",
+  "iconAssetId": "ball.quick",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 5,
+   "rule": "quick"
+  }
+ },
+ {
+  "id": "dusk-ball",
+  "name": "Dusk Ball",
+  "description": "3× against Dark and Ghost Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.dusk",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 3,
+   "rule": "dusk"
+  }
+ },
+ {
+  "id": "luxury-ball",
+  "name": "Luxury Ball",
+  "description": "The caught Pokémon grows fond of you faster.",
+  "category": "ball",
+  "iconAssetId": "ball.luxury",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1,
+   "after": "luxury"
+  }
+ },
+ {
+  "id": "heal-ball",
+  "name": "Heal Ball",
+  "description": "The caught Pokémon is fully healed.",
+  "category": "ball",
+  "iconAssetId": "ball.heal",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1,
+   "after": "heal"
+  }
+ },
+ {
+  "id": "level-ball",
+  "name": "Level Ball",
+  "description": "Better when your Pokémon is much higher level (up to 8×).",
+  "category": "ball",
+  "iconAssetId": "ball.level",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 8,
+   "rule": "level"
+  }
+ },
+ {
+  "id": "lure-ball",
+  "name": "Lure Ball",
+  "description": "4× against Water Pokémon.",
+  "category": "ball",
+  "iconAssetId": "ball.lure",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "lure"
+  }
+ },
+ {
+  "id": "moon-ball",
+  "name": "Moon Ball",
+  "description": "4× against Pokémon that evolve with a Moon Stone.",
+  "category": "ball",
+  "iconAssetId": "ball.moon",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "moon"
+  }
+ },
+ {
+  "id": "friend-ball",
+  "name": "Friend Ball",
+  "description": "The caught Pokémon starts out very friendly.",
+  "category": "ball",
+  "iconAssetId": "ball.friend",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1,
+   "after": "friend"
+  }
+ },
+ {
+  "id": "love-ball",
+  "name": "Love Ball",
+  "description": "8× against the same species as your Pokémon in battle.",
+  "category": "ball",
+  "iconAssetId": "ball.love",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 8,
+   "rule": "love"
+  }
+ },
+ {
+  "id": "heavy-ball",
+  "name": "Heavy Ball",
+  "description": "Better against heavy Pokémon, worse against light ones.",
+  "category": "ball",
+  "iconAssetId": "ball.heavy",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 1,
+   "rule": "heavy"
+  }
+ },
+ {
+  "id": "fast-ball",
+  "name": "Fast Ball",
+  "description": "4× against Pokémon with 100 or more base Speed.",
+  "category": "ball",
+  "iconAssetId": "ball.fast",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 4,
+   "rule": "fast"
+  }
  }
 ]

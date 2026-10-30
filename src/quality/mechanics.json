@@ -1,0 +1,475 @@
+[
+ {
+  "id": "battle-engine",
+  "name": "Turn-based battle engine (turn order, accuracy, crits, status, stat stages, weather)",
+  "status": "supported",
+  "code": [
+   "src/core/battle/engine.ts"
+  ],
+  "tests": [
+   "tests/unit/battle.test.ts"
+  ]
+ },
+ {
+  "id": "damage",
+  "name": "Damage formula, type chart, STAB",
+  "status": "supported",
+  "code": [
+   "src/core/battle/damage.ts"
+  ],
+  "tests": [
+   "tests/unit/damage.test.ts"
+  ]
+ },
+ {
+  "id": "moves",
+  "name": "Move effects (about 930 moves, tiers and per-move rules)",
+  "status": "limited",
+  "code": [
+   "src/core/battle/engine.ts",
+   "src/data/moves.json"
+  ],
+  "tests": [
+   "tests/unit/moves2.test.ts",
+   "tests/unit/movesTier1.test.ts"
+  ],
+  "note": "Moves the engine cannot run are marked disabled in the move statuses; see the unsupported-moves check."
+ },
+ {
+  "id": "abilities",
+  "name": "Abilities",
+  "status": "limited",
+  "code": [
+   "src/core/battle/abilities.ts",
+   "src/data/abilities.json"
+  ],
+  "tests": [
+   "tests/unit/abilities.test.ts",
+   "tests/unit/abilities3.test.ts"
+  ],
+  "note": "Some abilities do nothing on purpose; see the ability statuses."
+ },
+ {
+  "id": "held-items",
+  "name": "Held items",
+  "status": "supported",
+  "code": [
+   "src/core/battle/held.ts"
+  ],
+  "tests": [
+   "tests/unit/heldItems.test.ts"
+  ]
+ },
+ {
+  "id": "terrain",
+  "name": "Terrain and terrain Max Moves",
+  "status": "supported",
+  "code": [
+   "src/core/battle/engine.ts"
+  ],
+  "tests": [
+   "tests/unit/terrain.test.ts"
+  ]
+ },
+ {
+  "id": "mega",
+  "name": "Mega Evolution and Primal Reversion",
+  "status": "supported",
+  "code": [
+   "src/core/battle/transform.ts"
+  ],
+  "tests": [
+   "tests/unit/milestone8_5.test.ts"
+  ]
+ },
+ {
+  "id": "tera",
+  "name": "Terastallization",
+  "status": "supported",
+  "code": [
+   "src/core/battle/transform.ts"
+  ],
+  "tests": [
+   "tests/unit/milestone8_5.test.ts"
+  ]
+ },
+ {
+  "id": "z-moves",
+  "name": "Z-Moves",
+  "status": "supported",
+  "code": [
+   "src/core/battle/transform.ts",
+   "src/data/zMoves.json"
+  ],
+  "tests": [
+   "tests/unit/milestone8_5.test.ts"
+  ]
+ },
+ {
+  "id": "dynamax",
+  "name": "Dynamax and Gigantamax Max Moves",
+  "status": "supported",
+  "code": [
+   "src/core/battle/transform.ts",
+   "src/data/maxMoves.json"
+  ],
+  "tests": [
+   "tests/unit/milestone8_5.test.ts"
+  ]
+ },
+ {
+  "id": "boss-transform",
+  "name": "Bosses that transform in battle",
+  "status": "supported",
+  "code": [
+   "src/core/battle/transform.ts"
+  ],
+  "tests": [
+   "tests/unit/bossTransform.test.ts"
+  ]
+ },
+ {
+  "id": "hyper",
+  "name": "Hyper evolutions (Mega Overdrive, All of Its Heart, A Giant Resolve, True Colors)",
+  "status": "supported",
+  "code": [
+   "src/core/battle/hyper.ts",
+   "src/core/story/hyper.ts"
+  ],
+  "tests": [
+   "tests/unit/hyper-evolutions.test.ts",
+   "tests/unit/hyper.test.ts"
+  ]
+ },
+ {
+  "id": "overdrive-events",
+  "name": "Overdrive Breakthrough and Misfire events",
+  "status": "disabled",
+  "code": [],
+  "tests": [],
+  "note": "Planned; owned by the Overdrive thread."
+ },
+ {
+  "id": "capture",
+  "name": "Catching wild Pokémon",
+  "status": "supported",
+  "code": [
+   "src/core/capture.ts"
+  ],
+  "tests": [
+   "tests/unit/run.test.ts"
+  ]
+ },
+ {
+  "id": "evolution",
+  "name": "Evolution (level, item, trade-by-item, friendship)",
+  "status": "supported",
+  "code": [
+   "src/core/evolution.ts"
+  ],
+  "tests": [
+   "tests/unit/pokemon.test.ts"
+  ]
+ },
+ {
+  "id": "friendship",
+  "name": "Friendship and Love",
+  "status": "supported",
+  "code": [
+   "src/core/friendship.ts"
+  ],
+  "tests": [
+   "tests/unit/milestone8_75.test.ts"
+  ]
+ },
+ {
+  "id": "attributes",
+  "name": "Attributes and luck",
+  "status": "supported",
+  "code": [
+   "src/core/attributes.ts"
+  ],
+  "tests": [
+   "tests/unit/milestone7.test.ts"
+  ]
+ },
+ {
+  "id": "map-generation",
+  "name": "Stage maps (paths, nodes, boss column)",
+  "status": "supported",
+  "code": [
+   "src/core/map.ts"
+  ],
+  "tests": [
+   "tests/unit/milestone2.test.ts"
+  ]
+ },
+ {
+  "id": "encounters",
+  "name": "Wild and trainer encounters",
+  "status": "supported",
+  "code": [
+   "src/core/encounters.ts"
+  ],
+  "tests": [
+   "tests/unit/run.test.ts"
+  ]
+ },
+ {
+  "id": "run-prep",
+  "name": "Run-Prep, starter sets and the Starter Laboratory",
+  "status": "supported",
+  "code": [
+   "src/core/runPrep.ts"
+  ],
+  "tests": [
+   "tests/unit/starterSets.test.ts"
+  ]
+ },
+ {
+  "id": "rewards",
+  "name": "Reward drafts and shop",
+  "status": "supported",
+  "code": [
+   "src/core/rewards.ts"
+  ],
+  "tests": [
+   "tests/unit/rewardDraft.test.ts",
+   "tests/unit/shopItems.test.ts"
+  ]
+ },
+ {
+  "id": "map-items",
+  "name": "Map items and \"?\" event stops",
+  "status": "supported",
+  "code": [
+   "src/core/mapItems.ts",
+   "src/core/events.ts"
+  ],
+  "tests": [
+   "tests/unit/mapItems.test.ts",
+   "tests/unit/events.test.ts"
+  ]
+ },
+ {
+  "id": "saves",
+  "name": "Versioned saves, migrations, damaged-save recovery",
+  "status": "supported",
+  "code": [
+   "src/save/saveManager.ts"
+  ],
+  "tests": [
+   "tests/unit/save.test.ts"
+  ]
+ },
+ {
+  "id": "rivals",
+  "name": "Rivals: memory, adaptation, bonds, arcs, chronicle",
+  "status": "supported",
+  "code": [
+   "src/core/rivals/manager.ts"
+  ],
+  "tests": [
+   "tests/unit/rivals.test.ts",
+   "tests/unit/rivalScheduler.test.ts"
+  ]
+ },
+ {
+  "id": "story-engine",
+  "name": "Story events, moments, effect ledger, Story Log",
+  "status": "supported",
+  "code": [
+   "src/core/story/hooks.ts"
+  ],
+  "tests": [
+   "tests/unit/story.test.ts",
+   "tests/unit/moments.test.ts"
+  ]
+ },
+ {
+  "id": "mentorship",
+  "name": "Protégé and mentorship",
+  "status": "supported",
+  "code": [
+   "src/core/story/mentorship.ts"
+  ],
+  "tests": [
+   "tests/unit/mentorship.test.ts"
+  ],
+  "note": "Mentor Hall-of-Fame legacy and mastery sharing are not built."
+ },
+ {
+  "id": "legacy",
+  "name": "Legacy cards, earned titles, run epitaph",
+  "status": "supported",
+  "code": [
+   "src/core/story/legacy.ts"
+  ],
+  "tests": [
+   "tests/unit/legacy.test.ts"
+  ]
+ },
+ {
+  "id": "battle-drama",
+  "name": "Battle Drama Engine (trainer talk, signature moves, event library)",
+  "status": "limited",
+  "code": [
+   "src/core/drama/index.ts"
+  ],
+  "tests": [
+   "tests/unit/drama.test.ts"
+  ],
+  "note": "The two Overdrive events are still planned."
+ },
+ {
+  "id": "bond-engine",
+  "name": "Bond Engine for your Pokémon (traits, refusal, initiative, combos, turning points)",
+  "status": "supported",
+  "code": [
+   "src/core/bond/index.ts"
+  ],
+  "tests": [
+   "tests/unit/bond.test.ts",
+   "tests/unit/bondScreen.test.ts"
+  ]
+ },
+ {
+  "id": "raids",
+  "name": "Raids",
+  "status": "supported",
+  "code": [
+   "src/core/raid/raid.ts"
+  ],
+  "tests": [
+   "tests/unit/raids.test.ts"
+  ]
+ },
+ {
+  "id": "totems",
+  "name": "Totem battles",
+  "status": "supported",
+  "code": [
+   "src/core/totem"
+  ],
+  "tests": [
+   "tests/unit/totems.test.ts"
+  ]
+ },
+ {
+  "id": "expeditions",
+  "name": "Expeditions",
+  "status": "supported",
+  "code": [
+   "src/core/expedition/flow.ts"
+  ],
+  "tests": [
+   "tests/unit/expeditions.test.ts"
+  ]
+ },
+ {
+  "id": "minigames",
+  "name": "Minigames",
+  "status": "supported",
+  "code": [
+   "src/core/minigame/flow.ts"
+  ],
+  "tests": [
+   "tests/unit/minigames.test.ts"
+  ]
+ },
+ {
+  "id": "service-stops",
+  "name": "Service stops (Center, Tutor, Reminder, Lab, Trade Post, Scout Tower)",
+  "status": "supported",
+  "code": [
+   "src/core/services/flow.ts"
+  ],
+  "tests": [
+   "tests/unit/services.test.ts"
+  ]
+ },
+ {
+  "id": "trainer-quests",
+  "name": "Trainer quests and Run Quests",
+  "status": "supported",
+  "code": [
+   "src/core/quests.ts"
+  ],
+  "tests": [
+   "tests/unit/quests.test.ts"
+  ]
+ },
+ {
+  "id": "trainer-evolutions",
+  "name": "Trainer Evolutions",
+  "status": "supported",
+  "code": [
+   "src/core/trainerEvolution.ts"
+  ],
+  "tests": [
+   "tests/unit/trainerEvolution.test.ts"
+  ]
+ },
+ {
+  "id": "trainer-perks",
+  "name": "Trainer perks (Trainers.md)",
+  "status": "limited",
+  "code": [
+   "src/core/trainerPerks.ts"
+  ],
+  "tests": [
+   "tests/unit/trainerPerks.test.ts"
+  ],
+  "note": "Perks are added in batches; see the Trainers.md coverage tracker."
+ },
+ {
+  "id": "mastery",
+  "name": "Species Mastery",
+  "status": "supported",
+  "code": [
+   "src/core/mastery.ts"
+  ],
+  "tests": [
+   "tests/unit/mastery.test.ts"
+  ]
+ },
+ {
+  "id": "game-events",
+  "name": "Weekly and holiday game events",
+  "status": "supported",
+  "code": [
+   "src/core/gameEvents.ts"
+  ],
+  "tests": [
+   "tests/unit/gameEvents.test.ts",
+   "tests/unit/holidayEvents.test.ts"
+  ]
+ },
+ {
+  "id": "presentation",
+  "name": "Presentation cues and battle animations (never change outcomes)",
+  "status": "supported",
+  "code": [
+   "src/core/presentation/cues.ts"
+  ],
+  "tests": [
+   "tests/unit/visual.test.ts"
+  ]
+ },
+ {
+  "id": "double-battles",
+  "name": "Double battles",
+  "status": "disabled",
+  "code": [],
+  "tests": [],
+  "note": "In progress in another thread; not on main yet."
+ },
+ {
+  "id": "egg-hatching",
+  "name": "Egg hatching",
+  "status": "disabled",
+  "code": [],
+  "tests": [],
+  "note": "In progress in another thread; not on main yet."
+ }
+]

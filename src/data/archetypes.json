@@ -6221,6 +6221,10 @@
       {
         "kind": "damageMultiplier",
         "value": 0.9
+      },
+      {
+        "kind": "hiddenItemChance",
+        "chance": 0.2
       }
     ],
     "signatureTypes": [],
@@ -6730,6 +6734,11 @@
         "kind": "groupXpMultiplier",
         "type": "ghost",
         "value": 0.9
+      },
+      {
+        "kind": "evasionMultiplier",
+        "type": "ghost",
+        "value": 1.1
       }
     ],
     "signatureTypes": [
@@ -7055,13 +7064,13 @@
     "spriteAssetId": "boss.rei",
     "modifiers": [
       {
-        "kind": "damageMultiplier",
-        "speed": "fast",
+        "kind": "moveStyleDamage",
+        "style": "agile",
         "value": 1.2
       },
       {
-        "kind": "damageMultiplier",
-        "speed": "slow",
+        "kind": "moveStyleDamage",
+        "style": "strong",
         "value": 0.9
       }
     ],
@@ -7449,6 +7458,10 @@
         "kind": "damageTakenMultiplier",
         "moveType": "fire",
         "value": 1.15
+      },
+      {
+        "kind": "foodDurationMultiplier",
+        "value": 1.25
       }
     ],
     "signatureTypes": [],
@@ -7491,6 +7504,10 @@
       {
         "kind": "damageMultiplier",
         "value": 0.9
+      },
+      {
+        "kind": "evasionMultiplier",
+        "value": 1.15
       }
     ],
     "signatureTypes": [],
@@ -8145,6 +8162,11 @@
         "stat": "hp",
         "value": 0.9,
         "type": "ghost"
+      },
+      {
+        "kind": "evasionMultiplier",
+        "type": "ghost",
+        "value": 1.1
       }
     ],
     "signatureTypes": [
@@ -8235,6 +8257,10 @@
       {
         "kind": "catchLevelOffset",
         "value": -2
+      },
+      {
+        "kind": "sameSpeciesDamageMultiplier",
+        "value": 1.15
       }
     ],
     "signatureTypes": [],
@@ -11199,5 +11225,102 @@
     "signaturePool": "trainer-kurt",
     "eventTags": [],
     "signatureMechanic": null
+  },
+  {
+    "id": "lusamine-masters",
+    "name": "Lusamine (Masters)",
+    "title": "The Specialist",
+    "description": "Ultra Beasts deal 25% more damage — Non-Ultra Beast Pokémon gain 15% less EXP.",
+    "pros": [
+      "Ultra Beasts deal 25% more damage"
+    ],
+    "cons": [
+      "Non-Ultra Beast Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1310
+    },
+    "unlockText": "Defeat 1310 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lusamine-masters",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "ultraBeast": true,
+        "value": 1.25
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "ultraBeast": false,
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "clefable",
+      "milotic",
+      "lilligant",
+      "bewear"
+    ],
+    "signaturePool": "trainer-lusamine-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lusamine-nihilego",
+    "name": "Lusamine (Nihilego)",
+    "title": "The Poison / psychic Specialist",
+    "description": "Poison- and Psychic-types deal 20% more damage — Your team has 10% less HP.",
+    "pros": [
+      "Poison- and Psychic-types deal 20% more damage",
+      "status-affected enemies take 15% more damage"
+    ],
+    "cons": [
+      "Your team has 10% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1320
+    },
+    "unlockText": "Defeat 1320 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lusamine-masters",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "types": [
+          "poison",
+          "psychic"
+        ],
+        "value": 1.2
+      },
+      {
+        "kind": "statusedFoeDamageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "poison",
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "clefable",
+      "milotic",
+      "lilligant",
+      "bewear"
+    ],
+    "signaturePool": "trainer-lusamine-nihilego",
+    "eventTags": [],
+    "signatureMechanic": "beautiful-parasite"
   }
 ]

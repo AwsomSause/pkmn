@@ -83,6 +83,51 @@
       "reusable": false,
       "requires": "rival",
       "blurb": "A quiet place to size up a rival's team, or to ask for a one-stage truce."
+    },
+    {
+      "id": "lodge",
+      "name": "Pokémon Lodge",
+      "status": "supported",
+      "weight": 2,
+      "minBadges": 0,
+      "reusable": false,
+      "blurb": "Rest and bond with one Pokémon: friendship rises. Once per stop, no combat buff."
+    },
+    {
+      "id": "relic",
+      "name": "Relic Shrine",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 3,
+      "reusable": false,
+      "blurb": "Trade a point of one attribute for two of another for this run. Both sides are shown first."
+    },
+    {
+      "id": "auction",
+      "name": "Auction House",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Bid money on a small item pool. A bid only costs money if it wins; one bid per stop."
+    },
+    {
+      "id": "hall",
+      "name": "Event Hall",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 0,
+      "reusable": true,
+      "blurb": "The bulletin board: which event editions count for this run."
+    },
+    {
+      "id": "observatory",
+      "name": "Raid Observatory",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 1,
+      "reusable": false,
+      "blurb": "Reveals every raid den on this stage map: the boss, its tier and what it asks."
     }
   ],
   "costs": {
@@ -101,6 +146,11 @@
     "tradeBstSpread": 0.12,
     "evolutionItem": 500,
     "dojo": 300,
-    "truce": 150
+    "truce": 150,
+    "auctionReserve": 300,
+    "auctionHighBid": 1.6,
+    "relicGain": 2,
+    "relicLoss": 1,
+    "lodgeFriendship": 25
   }
 }

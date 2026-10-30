@@ -633,13 +633,13 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
   /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
-  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), ultraBeast: z.boolean().optional(), value: z.number().positive() }),
   /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
   z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
   /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
   z.object({ kind: z.literal('statMultiplier'), stat: z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Experience for a group of Pokémon: of a type, not of a type, fast (base Speed 90+) or slow (base Speed 60-), or the starter. */
-  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), ultraBeast: z.boolean().optional(), value: z.number().positive() }),
   /** Experience from ordinary (non-boss) battles only. */
   z.object({ kind: z.literal('ordinaryXpMultiplier'), value: z.number().positive() }),
   /** A Mega Evolved Pokémon with at least this much friendship stays Mega after the battle (Alain). */
@@ -801,6 +801,14 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('critChanceBonus'), value: z.number().positive().max(1) }),
   /** Prize money after catching a wild Pokémon. */
   z.object({ kind: z.literal('catchMoneyMultiplier'), value: z.number().positive() }),
+  /** Damage dealt to a foe of the same species as the attacker (N). */
+  z.object({ kind: z.literal('sameSpeciesDamageMultiplier'), value: z.number().positive() }),
+  /** Damage of Agile-style (fast, light: priority moves and power 60 or less) or Strong-style (power 90 or more) moves (Rei). */
+  z.object({ kind: z.literal('moveStyleDamage'), style: z.enum(['agile', 'strong']), value: z.number().positive() }),
+  /** Food (Berries and Honey) bought as map items lasts this much longer, rounded up (Mallow). */
+  z.object({ kind: z.literal('foodDurationMultiplier'), value: z.number().positive() }),
+  /** Each stage has this chance (0-1) of a hidden Bag item at one wild stop, with no Itemfinder needed (Looker). */
+  z.object({ kind: z.literal('hiddenItemChance'), chance: z.number().positive().max(1) }),
   /** Damage of moves with one of these flags (dance and sound moves, punches...). */
   z.object({ kind: z.literal('moveFlagDamage'), flags: z.array(z.enum(['sound', 'punch', 'bite', 'pulse', 'bullet', 'slicing', 'wind', 'contact', 'dance'])).min(1), value: z.number().positive() }),
   /** Pokémon with an unusual type pairing or ability deal `unusual`× damage; those with a very common ability deal `common`×. */
@@ -946,7 +954,13 @@ export const TransformKindSchema = z.enum(TRANSFORM_KINDS);
 export type TransformKind = z.infer<typeof TransformKindSchema>;
 
 export const ItemEffectSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
+  /** A ball. `rule` adds a condition to `multiplier` (see ballBonus in battle/engine.ts); `after` changes the caught Pokémon. */
+  z.object({
+    kind: z.literal('catch'),
+    multiplier: z.number().positive(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk']).optional(),
+    after: z.enum(['friend', 'luxury', 'heal']).optional(),
+  }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('cureStatus') }),
   z.object({ kind: z.literal('fullRestore') }),
@@ -1638,6 +1652,8 @@ export const BalanceSchema = z.object({
    * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
    * and the Research Points each rank pays once.
    */
+  /** The Research Directive (plan Part 5): defeat or catch this many of the studied type for these Research Points. */
+  directive: z.object({ target: z.number().int().min(1), researchPoints: z.number().int().min(0) }),
   mastery: z.object({
     bronzeBattles: z.number().int().min(1),
     silverBattles: z.number().int().min(1),
