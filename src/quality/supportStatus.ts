@@ -150,7 +150,7 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   const custom = s.tags.some((t) => t === 'delta' || t === 'zform' || t === 'spooky');
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
   if (isTransformation(s)) {
-    if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken when its species Dynamaxes (M8.5); most G-Max side effects not built yet' });
+    if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken in every battle while you own the Dynamax Band (M8.5); most G-Max side effects not built yet' });
     else if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
     else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
   }

@@ -319,7 +319,8 @@ describe('story foundation: transformations', () => {
     const enemy = createPokemon(content, 'snorlax', 60, 'e900');
     enemy.moves = [{ id: 'splash', pp: 40 }];
     run.battle = createBattle('wild', [enemy], 0, uid);
-    run = takeTurn(content, run, { kind: 'move', index: 0, transform: { kind: 'mega' } }).run;
+    // Mega Evolution happens by itself with the Mega Ring and the stone (PokeRogue style, M8.5).
+    run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
     expect(run.party[0]!.speciesId).toBe('venusaur-mega');
     let guard = 0;
     while (run.phase === 'battle' && guard++ < 60) run = takeTurn(content, run, { kind: 'move', index: 0 }).run;

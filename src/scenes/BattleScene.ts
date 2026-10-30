@@ -4,7 +4,7 @@
 
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
-import { canDynamax, gmaxFormFor, maxMoveOptions, megaOptions, ownedMegaForms, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
+import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -95,8 +95,8 @@ export class BattleScene extends Phaser.Scene {
     // Forms they might transform into this battle (Megas for stones you own; any Mega or Primal for the enemy).
     const formsOf = (ids: string[]) => ids.flatMap((id) => content.species.get(id) ?? []);
     const partyForms = (run?.party ?? []).flatMap((m) => [
-      ...[...ownedMegaForms(content, run!.inventory, m), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId),
-      ...[gmaxFormFor(content, m.speciesId) ?? []].flat(),
+      ...stoneForms(content, m.speciesId, true).map((o) => o.formId),
+      ...[permanentForm(content, run!.inventory, m)?.option.formId ?? []].flat(),
     ]);
     const enemyForms = (run?.battle?.enemyTeam ?? []).flatMap((m) => [...stoneForms(content, m.speciesId, false), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
     preloadPokemon(this, formsOf(partyForms), { back: true, shiny: true, cry: true });
@@ -458,33 +458,30 @@ export class BattleScene extends Phaser.Scene {
   private showRootMenu(): void {
     this.clearMenus();
     const content = services().session.content;
-    // Transformations: a fourth option that cycles off -> each Mega form (Charizard X, Y) -> Tera -> Z-Move -> Dynamax -> off.
+    // Transformations: a fourth option that cycles off -> Tera -> Z-Move -> Dynamax -> off. (Mega and Gigantamax happen by themselves.)
     const ctx = this.battleCtx();
     const tera = teraOption(ctx);
     const zMove = zMoveOptions(ctx).some((z) => z !== null);
     const choices: TransformRequest[] = [
-      ...megaOptions(ctx).map((o) => ({ kind: 'mega' as const, formId: o.formId })),
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
       ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
-    const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind && (a.kind !== 'mega' || b.kind !== 'mega' || a.formId === b.formId);
+    const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind;
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
     const choice = this.transformChoice;
     const ready =
-      choice?.kind === 'mega'
-        ? ` It will Mega Evolve into ${content.species.get(choice.formId!)?.name}!`
-        : choice?.kind === 'tera'
+      choice?.kind === 'tera'
           ? ` It will Terastallize into the ${tera![0]!.toUpperCase()}${tera!.slice(1)} type!`
           : choice?.kind === 'zmove'
             ? ' Pick a move to unleash as a Z-Move!'
             : choice?.kind === 'dynamax'
-              ? ` It will ${gmaxFormFor(content, this.activeMon().speciesId) ? 'Gigantamax' : 'Dynamax'}!`
+              ? ' It will Dynamax!'
               : '';
     this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
-    const label = (c: TransformRequest) => ({ mega: 'Mega', tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
-    const onLabel = (c: TransformRequest) => ({ mega: 'Mega', tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
+    const label = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
+    const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
     const kinds = [...new Set(choices.map(label))];
     if (choices.length > 0) options.push({ label: choice ? `${onLabel(choice)}: ON` : `${kinds.join('/')}: OFF` });
     this.commandWindow.setVisible(true);
