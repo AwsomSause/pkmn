@@ -14,7 +14,7 @@ import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
-import { maybeSpark } from '../rivals/manager';
+import { maybeSpark, sparkGain } from '../rivals/manager';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import type { StoryEventDefinition, Where } from './schema';
@@ -337,8 +337,15 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const back = battle.returning ? run.story.enemyProfiles.find((p) => p.id === battle.returning) : undefined;
   if (back && (result === 'win' || result === 'lose')) recordEnemyBattle(content, back, ended, result);
   const trainer = battle.trainer;
+  // A rival back for its rematch remembers this battle.
+  const rivalBack = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
+  if (rivalBack && (result === 'win' || result === 'lose')) {
+    const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
+    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId) };
+    rivalBack.rivalPotential += sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) });
+  }
   // Rival Spark: a memorable win over an ordinary trainer can make them your rival.
-  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.returning) {
+  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.returning && !battle.rivalId) {
     const rival = maybeSpark(run, {
       where,
       classId: trainer.classId,

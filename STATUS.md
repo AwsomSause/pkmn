@@ -27,6 +27,6 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 498 moves unsupported (terrain, rare moves); 170 items without effects.
-- Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Next: slice 2 counter-adaptation, slice 3 Chronicle screen. Relationships/nemesis records are still only created by rivalries and returning trainers.
+- Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Slice 2: the rival returns once per region in place of the first ordinary trainer, with its old team stronger and ONE telegraphed counter-pick (resists your most-used attack type; shown before the battle). Next: slice 3 Chronicle screen. Relationships/nemesis records are still only created by rivalries and returning trainers.
 - Event types `traded`, `trainerEscaped`, `transformed`, `eventChoice` are defined but never emitted.
 - CI workflow exists but has never run on GitHub.

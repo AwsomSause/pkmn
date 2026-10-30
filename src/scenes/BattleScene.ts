@@ -411,11 +411,12 @@ export class BattleScene extends Phaser.Scene {
       const art = this.trainerArt();
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
-        await this.say(battle.returning ? `${title} is back for a rematch!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
+        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
+        if (battle.rivalNote) await this.say(battle.rivalNote);
         await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
       } else {
         this.showSprite('enemy', this.shown.enemy);
