@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 24, settings: 6, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 24, settings: 7, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -271,6 +271,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     4: (data) => ({ ...(data as Json), damageDetails: false, accessibilityProfile: 'custom' }),
     // v6 (trainer sorting): the saved sort order of trainer lists.
     5: (data) => ({ ...(data as Json), trainerSort: 'default', trainerSortReverse: false }),
+    // v7 (battle UI styles): older settings use the Aero look.
+    6: (data) => ({ ...(data as Json), battleUi: 'aero' }),
   },
   meta: {},
 };
@@ -292,7 +294,7 @@ export type LoadResult<T> =
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' };
 
 /** True when the browser asks for less motion (then new players start with reduced battle animations). */
 function prefersReducedMotion(): boolean {

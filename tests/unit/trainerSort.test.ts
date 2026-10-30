@@ -70,4 +70,10 @@ describe('trainer sorting', () => {
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 5, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom' } }));
     expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ trainerSort: 'default', trainerSortReverse: false, musicVolume: 0.3 });
   });
+
+  it('migrates settings v6 to v7 with the Aero battle UI', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 6, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'name', trainerSortReverse: true } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ battleUi: 'aero', trainerSort: 'name', musicVolume: 0.3 });
+  });
 });
