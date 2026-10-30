@@ -126,7 +126,7 @@ describe('the 10 other modifiers', () => {
   it('every modifier is supported and the unsupported list is empty', () => {
     expect(RUN_RULES.modifiers.filter((m) => m.status !== 'supported')).toEqual([]);
     // 10 challenge modifiers, 3 Challenge Contracts (Empty Bag, No Rest, No Evolution), Solo Run and Quick Route.
-    expect(RUN_RULES.modifiers).toHaveLength(18);
+    expect(RUN_RULES.modifiers).toHaveLength(19);
   });
 
   it('Limited Party caps the party at 4', () => {
@@ -310,5 +310,16 @@ describe('mode snapshot survives a reload', () => {
       expect(loaded.data.rules.loops).toBe(1);
       expect(loaded.data.regionOrder).toEqual(run.regionOrder);
     }
+  });
+});
+
+describe('Speed Clear (catalog 101)', () => {
+  it('pays only for quick trainer wins, only when chosen, and never punishes a slow win', async () => {
+    const { quickWinBonus, makeRules, STANDARD_CHOICE } = await import('../../src/core/rules');
+    const on = makeRules({ ...STANDARD_CHOICE, modifierIds: ['speed-clear'] });
+    const off = makeRules(STANDARD_CHOICE);
+    expect(quickWinBonus(on, 6)).toBe(150);
+    expect(quickWinBonus(on, 7)).toBe(0);
+    expect(quickWinBonus(off, 1)).toBe(0);
   });
 });

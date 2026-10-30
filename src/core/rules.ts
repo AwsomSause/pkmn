@@ -51,6 +51,8 @@ export const RunRulesDataSchema = z.object({
       noEvolution: z.boolean().optional(),
       /** Boss Remix (catalog #149): gym, Elite Four and champion teams come in a different order. */
       bossRemix: z.boolean().optional(),
+      /** Speed Clear (catalog #101): an opt-in bonus for a quick trainer win. No timer, no penalty. */
+      quickWin: z.object({ turns: z.number().int().min(1), money: z.number().int().min(1) }).optional(),
     }),
   ),
   /** What an unlock that is already owned (a set, a trainer, a title) pays instead (Untitled doc §8.3). */
@@ -179,6 +181,12 @@ export const noBattleItems = (rules: Pick<RunRules, 'modifierIds'>): boolean => 
 /** The No Evolution contract is on. */
 export const noEvolution = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noEvolution);
 /** Boss Remix is on. */
+/** The Speed Clear bonus for a trainer win (0 when the modifier is off or the win was slow). */
+export const quickWinBonus = (rules: Pick<RunRules, 'modifierIds'>, turnsTaken: number): number =>
+  rules.modifierIds.reduce((sum, id) => {
+    const q = getModifier(id)?.quickWin;
+    return sum + (q && turnsTaken <= q.turns ? q.money : 0);
+  }, 0);
 export const bossRemix = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.bossRemix);
 export const noHealStops = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noHealStops);
 export const battleMoneyScale = (rules: Pick<RunRules, 'modifierIds'>): number => product(rules, (m) => m.battleMoney);

@@ -23,6 +23,7 @@ import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
 import { triangleEffect } from '../rivals/relations';
 import { evaluateUltimate } from '../rivals/ultimate';
+import { eliteReward } from './elite';
 import { gauntletWon } from './gauntlet';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
@@ -505,6 +506,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       text: `Defeated ${role} ${trainer.name}`,
     });
     onBossBeaten(content, run, where, ended.id);
+    if (trainer.classId === ELITE_FOUR_CLASS) eliteReward(content, run, battle.enemyTeam[0]?.speciesId ?? '', trainer.name);
     if (trainer.classId === CHAMPION_CLASS) recordChampionMemory(content, run, run.party[battle.activeIndex], trainer.name, where);
     noteDuos(content, run, fought, where);
     // A milestone: the story may now follow a different rival.

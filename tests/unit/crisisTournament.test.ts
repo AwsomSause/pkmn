@@ -218,3 +218,20 @@ describe('Champion personality', () => {
     expect(championOpener(run, 'champion')).toBe('championRespect');
   });
 });
+
+describe('Elite Four identity', () => {
+  it('a philosophy follows the lead type, covers every type group once, and its reward is a vitamin', async () => {
+    const { elitePhilosophy, eliteReward } = await import('../../src/core/story/elite');
+    expect(elitePhilosophy(content, 'charmander')!.id).toBe('force');
+    expect(elitePhilosophy(content, 'pikachu')!.id).toBe('tempo');
+    expect(elitePhilosophy(content, 'abra')!.id).toBe('mind');
+    expect(elitePhilosophy(content, 'onix')!.id).toBe('wall');
+    const run = fresh('elite');
+    const lead = run.party[0]!;
+    lead.hp = 10;
+    const stat = elitePhilosophy(content, 'charmander')!.stat;
+    const before = lead.vitamins[stat] ?? 0;
+    expect(eliteReward(content, run, 'charmander', 'Lorelei')).toContain('Overwhelming Force');
+    expect((lead.vitamins[stat] ?? 0)).toBe(before + 1);
+  });
+});
