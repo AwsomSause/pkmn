@@ -6,6 +6,7 @@ import arcsJson from '../../data/rivalArcs.json';
 import pathsJson from '../../data/rivalPaths.json';
 import profilesJson from '../../data/rivalProfiles.json';
 import rivalsJson from '../../data/rivals.json';
+import worldJson from '../../data/rivalWorld.json';
 
 import { TraitsSchema } from '../story/schema';
 
@@ -69,6 +70,20 @@ export const RivalPathsSchema = z.object({
         minPride: z.number().optional(),
         minAmbition: z.number().optional(),
         minRegion: z.number().int().optional(),
+        /** World state (core/rivals/standing.ts `pathContext`). */
+        sponsored: z.boolean().optional(),
+        openDebt: z.boolean().optional(),
+        leaguePatron: z.boolean().optional(),
+        hostileFaction: z.boolean().optional(),
+        hasAlly: z.boolean().optional(),
+        hasRival: z.boolean().optional(),
+        mentorRival: z.boolean().optional(),
+        legacy: z.boolean().optional(),
+        crisis: z.boolean().optional(),
+        sharedSpecies: z.boolean().optional(),
+        copiesYou: z.boolean().optional(),
+        devotedBond: z.boolean().optional(),
+        minBosses: z.number().int().optional(),
       }),
       traitNudge: z.record(z.string(), z.number()),
       potentialBonus: z.number(),
@@ -76,6 +91,17 @@ export const RivalPathsSchema = z.object({
     }),
   ).min(1),
 });
+export const RivalWorldSchema = z.object({
+  note: z.string(),
+  sponsors: z.array(z.object({ id: z.string(), name: z.string(), faction: z.string(), advance: z.number().int(), stipend: z.number().int(), line: z.string() })).min(1),
+  factions: z.array(z.object({ id: z.string(), name: z.string() })).min(1),
+  rivalFactions: z.object({ default: z.string(), byPersonality: z.record(z.string(), z.string()) }),
+  standing: z.object({ bossLeague: z.number(), bossSyndicate: z.number(), rivalWinLeague: z.number(), sponsorFaction: z.number(), hostileAt: z.number(), patronAt: z.number(), min: z.number(), max: z.number() }),
+  debts: z.object({ repayAfterBosses: z.number().int(), owedToPlayerLevels: z.number().int(), sponsorRivalLevels: z.number().int(), rivalSponsorChance: z.number(), rivalSponsorMinAmbition: z.number() }),
+  context: z.object({ crisisEvents: z.number().int(), copyTypes: z.number().int() }),
+});
+export const RIVAL_WORLD = RivalWorldSchema.parse(worldJson);
+
 export const RIVAL_PATHS = RivalPathsSchema.parse(pathsJson);
 
 export const RivalArcsSchema = z.object({

@@ -502,6 +502,8 @@ export const BASE_COUNTER_NAMES = [
   'runQuestsDone',
   /** Raid dens and Totems beaten, and battles won against a rival. */
   'raidsWon',
+  /** Pokémon swapped at a Trade Post. */
+  'tradesMade',
   'totemsWon',
   'rivalBattlesWon',
   /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
@@ -512,11 +514,14 @@ export const BASE_COUNTER_NAMES = [
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
  * and enemy Pokémon defeated or caught, by each of their types, as "defeatedOrCaught.<type>".
+ * Trainer unlock feats: "bossWinsMono.<type>" (a boss won while every Pokémon in the party has that type) and "bossWinsSolo" (a boss won with a one-Pokémon party).
  */
 export const COUNTER_NAMES: readonly string[] = [
   ...BASE_COUNTER_NAMES,
   ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`),
   ...TYPE_NAMES.map((t) => `defeatedOrCaught.${t}`),
+  ...TYPE_NAMES.map((t) => `bossWinsMono.${t}`),
+  'bossWinsSolo',
 ];
 export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes(s), { message: 'unknown counter' });
 
@@ -528,13 +533,21 @@ export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes
  *   achievement — another achievement has been earned
  *   claim       — a claim-ledger key exists (e.g. a game event's reward, "event:spooky-season:reward")
  */
-export const RequirementSchema = z.discriminatedUnion('kind', [
+const LeafRequirementSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('total'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('best'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('distinct'), set: z.enum(['speciesSeen', 'speciesCaught']), atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('achievement'), id: z.string() }),
   z.object({ kind: z.literal('claim'), key: z.string().min(1) }),
+  /** A species caught at least once (any run). */
+  z.object({ kind: z.literal('caught'), species: z.string().min(1) }),
 ]);
+export const RequirementSchema = z.union([
+  LeafRequirementSchema,
+  /** Every part must be met (trainer unlock challenges). */
+  z.object({ kind: z.literal('all'), parts: z.array(LeafRequirementSchema).min(2).max(4) }),
+]);
+export type LeafRequirement = z.infer<typeof LeafRequirementSchema>;
 export type Requirement = z.infer<typeof RequirementSchema>;
 
 /** What earning an achievement pays out. */
@@ -633,13 +646,13 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
   /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
-  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), ultraBeast: z.boolean().optional(), value: z.number().positive() }),
   /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
   z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
   /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
   z.object({ kind: z.literal('statMultiplier'), stat: z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Experience for a group of Pokémon: of a type, not of a type, fast (base Speed 90+) or slow (base Speed 60-), or the starter. */
-  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), ultraBeast: z.boolean().optional(), value: z.number().positive() }),
   /** Experience from ordinary (non-boss) battles only. */
   z.object({ kind: z.literal('ordinaryXpMultiplier'), value: z.number().positive() }),
   /** A Mega Evolved Pokémon with at least this much friendship stays Mega after the battle (Alain). */
@@ -799,6 +812,14 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('critChanceBonus'), value: z.number().positive().max(1) }),
   /** Prize money after catching a wild Pokémon. */
   z.object({ kind: z.literal('catchMoneyMultiplier'), value: z.number().positive() }),
+  /** Damage dealt to a foe of the same species as the attacker (N). */
+  z.object({ kind: z.literal('sameSpeciesDamageMultiplier'), value: z.number().positive() }),
+  /** Damage of Agile-style (fast, light: priority moves and power 60 or less) or Strong-style (power 90 or more) moves (Rei). */
+  z.object({ kind: z.literal('moveStyleDamage'), style: z.enum(['agile', 'strong']), value: z.number().positive() }),
+  /** Food (Berries and Honey) bought as map items lasts this much longer, rounded up (Mallow). */
+  z.object({ kind: z.literal('foodDurationMultiplier'), value: z.number().positive() }),
+  /** Each stage has this chance (0-1) of a hidden Bag item at one wild stop, with no Itemfinder needed (Looker). */
+  z.object({ kind: z.literal('hiddenItemChance'), chance: z.number().positive().max(1) }),
   /** Damage of moves with one of these flags (dance and sound moves, punches...). */
   z.object({ kind: z.literal('moveFlagDamage'), flags: z.array(z.enum(['sound', 'punch', 'bite', 'pulse', 'bullet', 'slicing', 'wind', 'contact', 'dance'])).min(1), value: z.number().positive() }),
   /** Pokémon with an unusual type pairing or ability deal `unusual`× damage; those with a very common ability deal `common`×. */
@@ -830,6 +851,12 @@ export const ArchetypeSchema = z.object({
   unlockText: z.string().default(''),
   /** Bank Credits to claim the trainer once its requirement is met. */
   unlockCost: z.number().int().min(0).default(0),
+  /** Difficulty of the unlock challenge, 1 (easy) to 5 (Champion-hard); set from trainerUnlocks.json. */
+  unlockTier: z.number().int().min(1).max(5).optional(),
+  /** A line of the trainer's voice shown with the challenge. */
+  unlockFlavor: z.string().optional(),
+  /** "supported" = the exact feat runs; "limited" = approximated with the closest counter (see the file's note). */
+  unlockStatus: z.enum(['supported', 'limited']).optional(),
   /** False for trainers whose passives need systems that don't exist yet; shown as "coming later". */
   available: z.boolean().default(true),
   spriteAssetId: z.string(),
@@ -2178,3 +2205,18 @@ export interface Content {
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }
+
+/** One trainer's unlock challenge (trainerUnlocks.json, built by `npm run data:trainer-unlocks`). */
+export const TrainerUnlockSchema = z.object({
+  trainerId: z.string(),
+  tier: z.number().int().min(1).max(5),
+  /** Plain-language challenge shown in the Trainer Archive. */
+  text: z.string().min(1),
+  flavor: z.string().min(1),
+  requirement: RequirementSchema,
+  cost: z.number().int().min(0),
+  status: z.enum(['supported', 'limited']),
+  /** For "limited": what the closest counter leaves out. */
+  note: z.string().optional(),
+});
+export const TrainerUnlocksFileSchema = z.object({ unlocks: z.array(TrainerUnlockSchema) });

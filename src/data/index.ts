@@ -12,6 +12,7 @@ import {
   EventsFileSchema,
   RunPrepFileSchema,
   ArchetypeSchema,
+  TrainerUnlocksFileSchema,
   BalanceSchema,
   ZMoveDataSchema,
   MaxMoveDataSchema,
@@ -42,6 +43,7 @@ import trainerQuestsJson from './trainerQuests.json';
 import gameEventsJson from './gameEvents.json';
 import runPrepJson from './runPrep.json';
 import archetypesJson from './archetypes.json';
+import trainerUnlocksJson from './trainerUnlocks.json';
 import balanceJson from './balance.json';
 import bossesJson from './bosses.json';
 import bossTeamsJson from './bossTeams.json';
@@ -88,6 +90,8 @@ export interface RawContent {
   abilities: unknown;
   typeChart: unknown;
   archetypes: unknown;
+  /** Per-trainer unlock challenges (trainerUnlocks.json); replaces each trainer's generic unlock. Optional. */
+  trainerUnlocks?: unknown;
   achievements: unknown;
   trainerQuests: unknown;
   gameEvents: unknown;
@@ -137,6 +141,7 @@ export const RAW_CONTENT: RawContent = {
   abilities: abilitiesJson,
   typeChart: typeChartJson,
   archetypes: archetypesJson,
+  trainerUnlocks: trainerUnlocksJson,
   achievements: achievementsJson,
   trainerQuests: trainerQuestsJson,
   gameEvents: gameEventsJson,
@@ -190,11 +195,25 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const moves = parse(z.array(MoveSchema), raw.moves, 'moves.json', problems);
   const abilities = parse(z.array(AbilitySchema), raw.abilities, 'abilities.json', problems);
   const typeChart = parse(TypeChartSchema, raw.typeChart, 'typeChart.json', problems);
-  const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
+  const baseArchetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
+  const unlockFile = raw.trainerUnlocks === undefined ? { unlocks: [] } : parse(TrainerUnlocksFileSchema, raw.trainerUnlocks, 'trainerUnlocks.json', problems);
+  const unlockById = new Map((unlockFile?.unlocks ?? []).map((u) => [u.trainerId, u]));
+  // A trainer's own challenge replaces the generic unlock (and the matching "<Name>'s Team" starter set follows it).
+  const archetypes = baseArchetypes?.map((a) => {
+    const u = unlockById.get(a.id);
+    return u && !a.unlockedByDefault && !a.evolvedFrom ? { ...a, unlock: u.requirement, unlockText: u.text, unlockCost: u.cost, unlockTier: u.tier, unlockFlavor: u.flavor, unlockStatus: u.status } : a;
+  });
   const achievements = parse(z.array(AchievementSchema), raw.achievements, 'achievements.json', problems);
   const quests = parse(TrainerQuestsFileSchema, raw.trainerQuests, 'trainerQuests.json', problems);
   const gameEventsFile = parse(GameEventsFileSchema, raw.gameEvents, 'gameEvents.json', problems);
-  const runPrep = parse(RunPrepFileSchema, raw.runPrep, 'runPrep.json', problems);
+  const runPrepRaw = parse(RunPrepFileSchema, raw.runPrep, 'runPrep.json', problems);
+  const runPrep = runPrepRaw && {
+    ...runPrepRaw,
+    starterPools: runPrepRaw.starterPools.map((pool) => {
+      const u = pool.id.startsWith('trainer-') ? unlockById.get(pool.id.slice('trainer-'.length)) : undefined;
+      return u ? { ...pool, unlock: u.requirement, unlockText: u.text } : pool;
+    }),
+  };
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
   const itemCatalog = parse(z.array(CatalogEntrySchema), raw.itemCatalog, 'itemCatalog.json', problems);
@@ -425,6 +444,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   // Permanent progression (achievements and trainer unlocks).
   const checkRequirement = (req: Requirement | null, where: string) => {
+    if (req?.kind === 'all') for (const part of req.parts) checkRequirement(part, where);
+    if (req?.kind === 'caught' && !content.species.has(req.species)) problems.push(`${where} requires catching unknown species "${req.species}"`);
     if (req?.kind === 'achievement' && !content.achievements.has(req.id)) problems.push(`${where} requires unknown achievement "${req.id}"`);
   };
   for (const a of content.achievements.values()) {

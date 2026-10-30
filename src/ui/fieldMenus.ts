@@ -7,6 +7,7 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
+import { standingSummary } from '../core/rivals/standing';
 import { boxCapacity } from '../core/trainerPerks';
 import { runPerks } from '../core/archetypes';
 import { canCashIn, partyCapacity } from '../core/run';
@@ -104,6 +105,16 @@ export function openStoryMenu(host: FieldMenuHost): void {
       box.add(scene.add.text(14, 8, `${r.ultimate ? '★★ Ultimate Rival' : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
     },
   }));
+  const standing = standingSummary(run);
+  if (standing) {
+    rivalRows.unshift({
+      problem: null,
+      hint: standing.hint,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, standing.title, textStyle(20, '#9be39b', { fixedWidth: w - 28 })));
+      },
+    });
+  }
   const legacyRows = run.party.flatMap((m) => {
     const card = legacyCard(content, run, m.uid);
     if (!card || (card.titles.length === 0 && card.tags.length === 0)) return [];

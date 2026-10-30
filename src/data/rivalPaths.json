@@ -1,6 +1,228 @@
 {
- "note": "How a rival's origin is chosen (Examples \u00a71 paths). First matching path wins; unexpected-nemesis is the default. The paths needing sponsors, mentors, factions, families, debts or disasters wait for those systems.",
+ "note": "How a rival's origin is chosen (Examples section 1 paths). First matching path wins; unexpected-nemesis is the default. The first 17 depend on world state (sponsors, factions, debts, other rivals, bonds, crises) from core/rivals/standing.ts.",
  "paths": [
+  {
+   "id": "stolen-spotlight",
+   "when": {
+    "sponsored": true,
+    "minAmbition": 55
+   },
+   "traitNudge": {
+    "ambition": 6,
+    "pride": 4
+   },
+   "potentialBonus": 6,
+   "line": "{who} thinks the sponsorship was meant for them"
+  },
+  {
+   "id": "debt",
+   "when": {
+    "openDebt": true
+   },
+   "traitNudge": {
+    "vindictiveness": 4,
+    "pride": 4
+   },
+   "potentialBonus": 5,
+   "line": "{who} reminds you that you still owe your backers"
+  },
+  {
+   "id": "assigned-opponent",
+   "when": {
+    "leaguePatron": true,
+    "secondInRegion": false
+   },
+   "traitNudge": {
+    "ambition": 4,
+    "resilience": 3
+   },
+   "potentialBonus": 4,
+   "line": "The League paired {who} with you, and it stopped being an arrangement"
+  },
+  {
+   "id": "pok-mon-league-prospect",
+   "when": {
+    "minBosses": 2,
+    "minRegion": 1
+   },
+   "traitNudge": {
+    "ambition": 6
+   },
+   "potentialBonus": 5,
+   "line": "League scouts are tracking {who} and you side by side"
+  },
+  {
+   "id": "chosen-successor",
+   "when": {
+    "minBosses": 1,
+    "secondInRegion": true
+   },
+   "traitNudge": {
+    "ambition": 6,
+    "pride": 4
+   },
+   "potentialBonus": 6,
+   "line": "A Gym Leader named both of you as possible successors, and {who} noticed"
+  },
+  {
+   "id": "mutual-enemy",
+   "when": {
+    "hostileFaction": true
+   },
+   "traitNudge": {
+    "empathy": 3,
+    "vindictiveness": -2
+   },
+   "potentialBonus": 4,
+   "line": "{who} fights the same shadow you do, but wants to handle it differently"
+  },
+  {
+   "id": "former-friend",
+   "when": {
+    "hasAlly": true
+   },
+   "traitNudge": {
+    "vindictiveness": 6,
+    "empathy": -4
+   },
+   "potentialBonus": 7,
+   "line": "{who} used to stand beside you, and not anymore"
+  },
+  {
+   "id": "rival-s-rival",
+   "when": {
+    "hasRival": true
+   },
+   "traitNudge": {
+    "ambition": 5,
+    "vindictiveness": 3
+   },
+   "potentialBonus": 6,
+   "line": "You beat the person {who} has chased for years, and now {who} is looking at you"
+  },
+  {
+   "id": "shared-mentor",
+   "when": {
+    "mentorRival": true
+   },
+   "traitNudge": {
+    "adaptability": 5,
+    "pride": 3
+   },
+   "potentialBonus": 4,
+   "line": "{who} learned from the same teacher and took a different lesson from it"
+  },
+  {
+   "id": "inherited-conflict",
+   "when": {
+    "legacy": true
+   },
+   "traitNudge": {
+    "vindictiveness": 6,
+    "pride": 3
+   },
+   "potentialBonus": 6,
+   "line": "{who} blames you for what an earlier trainer in your story did"
+  },
+  {
+   "id": "shared-disaster",
+   "when": {
+    "crisis": true,
+    "close": true
+   },
+   "traitNudge": {
+    "empathy": 6,
+    "resilience": 6
+   },
+   "potentialBonus": 5,
+   "line": "{who} and you both got out of a disaster alive, and neither forgot it"
+  },
+  {
+   "id": "accidental-hero",
+   "when": {
+    "crisis": true,
+    "dominant": true
+   },
+   "traitNudge": {
+    "empathy": 4,
+    "pride": -4
+   },
+   "potentialBonus": 5,
+   "line": "{who} was pulled out of trouble by you and cannot decide whether to be grateful"
+  },
+  {
+   "id": "pok-mon-who-remembers",
+   "when": {
+    "sharedSpecies": true
+   },
+   "traitNudge": {
+    "empathy": 4
+   },
+   "potentialBonus": 4,
+   "line": "One of {who}'s Pokémon looked at yours as if it knew them"
+  },
+  {
+   "id": "rival-you-inspired",
+   "when": {
+    "copiesYou": true
+   },
+   "traitNudge": {
+    "adaptability": 6,
+    "pride": -3
+   },
+   "potentialBonus": 4,
+   "line": "{who} copied your team, and is slowly making it their own"
+  },
+  {
+   "id": "pok-mon-s-choice",
+   "when": {
+    "devotedBond": true,
+    "minRegion": 1
+   },
+   "traitNudge": {
+    "pride": -4,
+    "vindictiveness": 4
+   },
+   "potentialBonus": 5,
+   "line": "A devoted Pokémon of yours turned {who}'s head, and {who} did not take it well"
+  },
+  {
+   "id": "regional-idealist",
+   "when": {
+    "personalities": [
+     "idealist",
+     "innovator",
+     "fallen-idealist",
+     "spiritualist"
+    ],
+    "minRegion": 1
+   },
+   "traitNudge": {
+    "pride": 4,
+    "ambition": 6
+   },
+   "potentialBonus": 5,
+   "line": "{who} believes the region needs a different kind of Champion than you"
+  },
+  {
+   "id": "disgraced-champion-candidate",
+   "when": {
+    "personalities": [
+     "prodigy",
+     "perpetual-runner-up",
+     "perfectionist"
+    ],
+    "minPride": 70,
+    "minRegion": 1,
+    "returning": false
+   },
+   "traitNudge": {
+    "ambition": 8,
+    "resilience": -4
+   },
+   "potentialBonus": 6,
+   "line": "{who} was once close to the top, and a public failure still follows them"
+  },
   {
    "id": "public-humiliation",
    "when": {

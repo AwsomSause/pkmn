@@ -14,6 +14,7 @@ import { mostUsedType } from './adapt';
 import { formAlliances, grudgeType, mentorType, pokemonInfluence, trainingExchange } from './relations';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
+import { rivalSponsorRoll } from './standing';
 
 type Edge = RunState['story']['rivalGraph'][number];
 
@@ -47,6 +48,8 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       if (ev?.visibility === 'rumor') rumor ??= `${title(content, r)}: ${ev.text}`;
     }
     if (!isHostile(r)) continue;
+    const backed = rivalSponsorRoll(content, run, r, `${run.regionIndex}.${stage}`);
+    if (backed) rumor ??= backed;
     const who = title(content, r);
     if (rng.float() < w.privateGoalChance && r.traits.ambition >= w.privateGoalMinAmbition) {
       // A private goal that comes before any battle invitation.
