@@ -13,7 +13,9 @@ const source = readFileSync(join(root, 'tools', 'sources', 'trainers.md'), 'utf8
 const modifiers: Record<string, unknown[]> = JSON.parse(readFileSync(join(root, 'tools', 'data', 'trainer-perk-modifiers.json'), 'utf8'));
 const archetypesPath = join(root, 'src', 'data', 'archetypes.json');
 const archetypes: Array<Record<string, unknown> & { id: string }> = JSON.parse(readFileSync(archetypesPath, 'utf8'));
-const bosses: Array<{ id: string; sprites: Record<string, string> }> = JSON.parse(readFileSync(join(root, 'src', 'data', 'bosses.json'), 'utf8'));
+const runPrepPath = join(root, 'src', 'data', 'runPrep.json');
+const runPrep: { starterPools: Array<Record<string, unknown> & { id: string }> } = JSON.parse(readFileSync(runPrepPath, 'utf8'));
+const bosses: Array<{ id: string; sprites: Record<string, string>; signature: string[] }> = JSON.parse(readFileSync(join(root, 'src', 'data', 'bosses.json'), 'utf8'));
 
 /** The original hand-made trainers keep their ids; a Trainers.md trainer with the same plain name gets "-classic". */
 const ORIGINAL = new Set(['red', 'blue', 'green', 'brock', 'misty', 'giovanni', 'cynthia', 'oak', 'n']);
@@ -42,12 +44,26 @@ const spriteFor = (e: Entry) => {
   return boss ? boss.sprites.default ?? Object.values(boss.sprites)[0]! : 'trainer.red';
 };
 
+const bossFor = (e: Entry) => bosses.find((b) => b.id === (BOSS_ALIASES[e.baseId] ?? e.baseId));
+
+/** Up to two types the trainer boosts (shown on the Trainer Archive). */
+const typesOf = (mods: Array<Record<string, unknown>>): string[] => {
+  const out: string[] = [];
+  for (const m of mods) {
+    if (m.kind !== 'damageMultiplier' && m.kind !== 'groupXpMultiplier' && m.kind !== 'survivalChance' && m.kind !== 'statusChanceMultiplier') continue;
+    if (m.kind === 'damageMultiplier' && Number(m.value) < 1) continue;
+    for (const t of (m.types as string[] | undefined) ?? (m.type ? [m.type as string] : [])) if (!out.includes(t)) out.push(t);
+  }
+  return out.slice(0, 2);
+};
+
 const titleFor = (mods: Array<Record<string, unknown>>): string => {
   const typed = mods.find((m) => m.kind === 'damageMultiplier' && (m.type || m.types) && Number(m.value) > 1);
   const type = (typed?.type as string | undefined) ?? (typed?.types as string[] | undefined)?.join(' / ');
   return type ? `The ${type[0]!.toUpperCase()}${type.slice(1)} Specialist` : 'The Specialist';
 };
 
+const entry_unlock = (need: number) => ({ kind: 'total', counter: 'trainersDefeated', atLeast: need });
 let added = 0;
 let skipped = 0;
 for (const e of entries) {
@@ -67,7 +83,23 @@ for (const e of entries) {
     unlockCost: 300,
     spriteAssetId: spriteFor(e),
     modifiers: mods,
+    signatureTypes: typesOf(mods),
+    signatureSpecies: bossFor(e)?.signature.slice(0, 4) ?? [],
+    signaturePool: `trainer-${e.id}`,
+    eventTags: [],
   };
+  const pool = {
+    id: `trainer-${e.id}`,
+    name: `${e.name}’s Team`,
+    description: `Pokémon from ${e.name}’s team, as first stages.`,
+    category: 'trainer',
+    bosses: bossFor(e) ? [bossFor(e)!.id] : [],
+    filter: bossFor(e) ? undefined : { types: typesOf(mods) },
+    unlock: entry_unlock(need),
+    unlockText: `Defeat ${need} trainers in total across your runs`,
+  };
+  const pAt = runPrep.starterPools.findIndex((p) => p.id === pool.id);
+  if (pAt >= 0) runPrep.starterPools[pAt] = pool; else runPrep.starterPools.push(pool);
   const at = archetypes.findIndex((a) => a.id === e.id);
   if (at >= 0) archetypes[at] = entry; else archetypes.push(entry);
   added++;
@@ -75,6 +107,7 @@ for (const e of entries) {
 const unknown = Object.keys(modifiers).filter((id) => !entries.some((e) => e.id === id));
 if (unknown.length) throw new Error(`modifiers for unknown trainers: ${unknown.join(', ')}`);
 writeFileSync(archetypesPath, JSON.stringify(archetypes, null, 2) + '\n');
+writeFileSync(runPrepPath, JSON.stringify(runPrep, null, 1) + '\n');
 const rows = entries.map((e) => `- [${modifiers[e.id] ? 'x' : ' '}] ${e.name} (\`${e.id}\`)`);
 writeFileSync(
   join(root, 'docs', 'plans', 'trainers-coverage.md'),

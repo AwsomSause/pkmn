@@ -408,7 +408,18 @@
         "type": "bug",
         "value": 1.1
       }
-    ]
+    ],
+    "signatureTypes": [
+      "bug"
+    ],
+    "signatureSpecies": [
+      "drapion",
+      "vespiquen",
+      "heracross",
+      "scizor"
+    ],
+    "signaturePool": "trainer-aaron",
+    "eventTags": []
   },
   {
     "id": "acerola",
@@ -446,7 +457,18 @@
         "notType": "ghost",
         "value": 0.85
       }
-    ]
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "palossand",
+      "mimikyu",
+      "dhelmise",
+      "froslass"
+    ],
+    "signaturePool": "trainer-acerola",
+    "eventTags": []
   },
   {
     "id": "adaman",
@@ -491,7 +513,16 @@
         "stat": "spd",
         "value": 0.9
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "leafeon",
+      "vaporeon",
+      "umbreon",
+      "ursaluna"
+    ],
+    "signaturePool": "trainer-adaman",
+    "eventTags": []
   },
   {
     "id": "agatha-lgpe",
@@ -527,7 +558,18 @@
         "kind": "healingMultiplier",
         "value": 0.8
       }
-    ]
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "gengar",
+      "arbok",
+      "crobat",
+      "mismagius"
+    ],
+    "signaturePool": "trainer-agatha-lgpe",
+    "eventTags": []
   },
   {
     "id": "alain",
@@ -576,7 +618,18 @@
         "moveType": "water",
         "value": 1.15
       }
-    ]
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "charizard",
+      "metagross",
+      "tyranitar",
+      "weavile"
+    ],
+    "signaturePool": "trainer-alain",
+    "eventTags": []
   },
   {
     "id": "alder",
@@ -608,7 +661,16 @@
         "kind": "evolutionLevelOffset",
         "value": 5
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "volcarona",
+      "bouffalant",
+      "accelgor",
+      "escavalier"
+    ],
+    "signaturePool": "trainer-alder",
+    "eventTags": []
   },
   {
     "id": "allister",
@@ -645,7 +707,18 @@
         "kind": "friendshipMultiplier",
         "value": 0.8
       }
-    ]
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "gengar",
+      "mimikyu",
+      "cursola",
+      "polteageist"
+    ],
+    "signaturePool": "trainer-allister",
+    "eventTags": []
   },
   {
     "id": "anabel-gen-7",
@@ -677,7 +750,16 @@
         "kind": "xpMultiplier",
         "value": 0.85
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "alakazam",
+      "espeon",
+      "metagross",
+      "slowking"
+    ],
+    "signaturePool": "trainer-anabel-gen-7",
+    "eventTags": []
   },
   {
     "id": "archie-gen-6",
@@ -715,7 +797,18 @@
         "type": "fire",
         "value": 0.75
       }
-    ]
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "sharpedo",
+      "crobat",
+      "mightyena",
+      "wailord"
+    ],
+    "signaturePool": "trainer-archie-gen-6",
+    "eventTags": []
   },
   {
     "id": "archie-usum",
@@ -757,7 +850,16 @@
         "side": "enemy",
         "value": 1.35
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sharpedo",
+      "crobat",
+      "mightyena",
+      "wailord"
+    ],
+    "signaturePool": "trainer-archie-usum",
+    "eventTags": []
   },
   {
     "id": "arezu",
@@ -795,7 +897,16 @@
         "speed": "slow",
         "value": 0.9
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "lilligant",
+      "arcanine",
+      "braviary",
+      "avalugg"
+    ],
+    "signaturePool": "trainer-arezu",
+    "eventTags": []
   },
   {
     "id": "ash-kalos",
@@ -842,7 +953,16 @@
         "fromLegendary": true,
         "value": 1.1
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "greninja",
+      "charizard",
+      "lucario"
+    ],
+    "signaturePool": "trainer-ash-kalos",
+    "eventTags": []
   },
   {
     "id": "ash",
@@ -888,7 +1008,16 @@
         "kind": "releaseLimit",
         "value": 6
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "greninja",
+      "charizard",
+      "lucario"
+    ],
+    "signaturePool": "trainer-ash",
+    "eventTags": []
   },
   {
     "id": "az",
@@ -929,7 +1058,16 @@
         "kind": "xpMultiplier",
         "value": 0.7
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "torkoal",
+      "golurk",
+      "sigilyph",
+      "aegislash"
+    ],
+    "signaturePool": "trainer-az",
+    "eventTags": []
   },
   {
     "id": "ball-guy",
@@ -967,7 +1105,16 @@
         "group": "otherItems",
         "value": 1.3
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "snorlax",
+      "porygon-z",
+      "kangaskhan",
+      "lickilicky"
+    ],
+    "signaturePool": "trainer-ball-guy",
+    "eventTags": []
   },
   {
     "id": "barry",
@@ -1004,7 +1151,16 @@
         "group": "all",
         "value": 1.2
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "empoleon",
+      "staraptor",
+      "heracross",
+      "roserade"
+    ],
+    "signaturePool": "trainer-barry",
+    "eventTags": []
   },
   {
     "id": "bea",
@@ -1038,7 +1194,18 @@
         "stat": "spd",
         "value": 0.85
       }
-    ]
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "machamp",
+      "sirfetchd",
+      "hawlucha",
+      "grapploct"
+    ],
+    "signaturePool": "trainer-bea",
+    "eventTags": []
   },
   {
     "id": "bede",
@@ -1072,7 +1239,19 @@
       {
         "kind": "friendshipBonusesDisabled"
       }
-    ]
+    ],
+    "signatureTypes": [
+      "psychic",
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "hatterene",
+      "rapidash",
+      "mawile",
+      "gardevoir"
+    ],
+    "signaturePool": "trainer-bede",
+    "eventTags": []
   },
   {
     "id": "benga",
@@ -1103,7 +1282,16 @@
         "kind": "ordinaryXpMultiplier",
         "value": 0.8
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "volcarona",
+      "hydreigon",
+      "chandelure",
+      "krookodile"
+    ],
+    "signaturePool": "trainer-benga",
+    "eventTags": []
   },
   {
     "id": "bianca-pwt",
@@ -1139,6 +1327,15 @@
         "kind": "regionLevelOffset",
         "value": -1
       }
-    ]
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "emboar",
+      "musharna",
+      "stoutland",
+      "chandelure"
+    ],
+    "signaturePool": "trainer-bianca-pwt",
+    "eventTags": []
   }
 ]
