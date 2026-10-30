@@ -2,7 +2,7 @@ import type { Content } from './contentSchema';
 import { rollShiny } from './encounters';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
 import { maxHp } from './pokemon';
-import { count, discover } from './progress';
+import { count, countShiny, discover } from './progress';
 import type { Rng } from './rng';
 import { newMon } from './run';
 import type { Egg, PokemonInstance, RunState } from './state';
@@ -72,7 +72,7 @@ export function tickEggs(content: Content, run: RunState, unit: Egg['unit']): Po
       continue;
     }
     const mon = hatchEgg(content, run, egg);
-    if (mon.shiny) count(run, 'shiniesFound');
+    if (mon.shiny) countShiny(run, mon.speciesId);
     discover(run, mon.speciesId, true);
     count(run, 'eggsHatched');
     run.pending.push({ kind: 'caught', mon });
