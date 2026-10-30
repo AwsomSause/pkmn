@@ -5,7 +5,7 @@ import type { RunState } from '../state';
 import type { DomainEvent, Where } from '../story/schema';
 import type { Rival, Traits } from '../story/schema';
 import { TRAIT_KEYS } from '../story/schema';
-import { RIVAL_CONFIG, RIVAL_PATHS, RIVAL_PROFILES } from './schema';
+import { RIVAL_ARCS, RIVAL_CONFIG, RIVAL_PATHS, RIVAL_PROFILES } from './schema';
 
 export interface SparkInput {
   where: Where;
@@ -67,6 +67,7 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
     traits,
     rivalPotential: gain + path.potentialBonus,
     state: 'recognized',
+    arc: null,
     away: 0,
     cooldown: 0,
     progress: 0,
@@ -76,6 +77,8 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
     origin: { eventId: input.ended.id, where: input.where, path: path.id },
     memory: { lastBattle: { eventId: input.ended.id, result: 'win', hpLeftShare: input.hpLeftShare, turns: input.turns, team: input.team } },
   };
+  const arc = RIVAL_ARCS.arcs.find((a) => a.personalities.includes(personalityId) || a.styles.includes(styleId) || a.paths.includes(path.id));
+  if (arc) rival.arc = { id: arc.id, stage: 0, ticks: 0, resolution: null };
   rivals.push(rival);
   return rival;
 }

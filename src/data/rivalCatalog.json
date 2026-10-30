@@ -1001,126 +1001,126 @@
    "name": "The Prodigy Learns Humility",
    "group": "Growth and self-discovery",
    "text": "Expects to win naturally. | Learns to respect preparation, collaboration, and opponents.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "underdog-finds-their-method",
    "name": "The Underdog Finds Their Method",
    "group": "Growth and self-discovery",
    "text": "Tries to copy stronger trainers. | Develops a style that fits their own strengths.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "perfectionist-accepts-failure",
    "name": "The Perfectionist Accepts Failure",
    "group": "Growth and self-discovery",
    "text": "Treats every mistake as unacceptable. | Learns to adapt rather than endlessly repeat the same routine.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "loner-learns-to-trust",
    "name": "The Loner Learns to Trust",
    "group": "Growth and self-discovery",
    "text": "Avoids help and emotional attachment. | Builds a reliable support network without losing independence.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "showboat-finds-meaning",
    "name": "The Showboat Finds Meaning",
    "group": "Growth and self-discovery",
    "text": "Cares about recognition. | Learns to value the relationship behind the performance.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "burnout-rediscovers-joy",
    "name": "The Burnout Rediscovers Joy",
    "group": "Growth and self-discovery",
    "text": "Battles out of obligation. | Finds a new reason to compete—or chooses a different life.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "reluctant-champion",
    "name": "The Reluctant Champion",
    "group": "Growth and self-discovery",
    "text": "Doesn't want the responsibilities of success. | Decides what kind of Champion they actually want to become.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "late-bloomer-emerges",
    "name": "The Late Bloomer Emerges",
    "group": "Growth and self-discovery",
    "text": "Is dismissed as unremarkable. | Achieves success through patience and self-knowledge.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "copycat-becomes-original",
    "name": "The Copycat Becomes Original",
    "group": "Growth and self-discovery",
    "text": "Copies the player's team and techniques. | Develops an independent identity and may surpass their inspiration.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "obsession-spiral",
    "name": "The Obsession Spiral",
    "group": "Conflict and deterioration",
    "text": "Defines success around beating one opponent. | Learns to pursue personal goals—or becomes consumed by obsession.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fall-from-grace",
    "name": "The Fall from Grace",
    "group": "Conflict and deterioration",
    "text": "Loses status after a major defeat. | Rebuilds honestly or resorts to desperate shortcuts.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "champion-s-shadow",
    "name": "The Champion's Shadow",
    "group": "Conflict and deterioration",
    "text": "Lives under a famous predecessor's reputation. | Establishes their own legacy or remains trapped in comparison.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "broken-promise",
    "name": "The Broken Promise",
    "group": "Conflict and deterioration",
    "text": "A betrayal damages a central relationship. | Reconciliation, permanent separation, or a new understanding.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "power-at-any-cost",
    "name": "The Power at Any Cost",
    "group": "Conflict and deterioration",
    "text": "Pursues Hyper/Overdrive without sufficient control. | Learns restraint or suffers increasingly serious setbacks.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fear-of-winning",
    "name": "The Fear of Winning",
    "group": "Conflict and deterioration",
    "text": "Self-sabotages when success becomes possible. | Confronts the insecurity driving the behavior.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-who-cheats",
    "name": "The Rival Who Cheats",
    "group": "Conflict and deterioration",
    "text": "Justifies unfair tactics to keep up. | Takes responsibility, hides the truth, or doubles down.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "cold-strategist",
    "name": "The Cold Strategist",
    "group": "Conflict and deterioration",
    "text": "Treats Pokémon as interchangeable tools. | Learns to respect individual needs—or embraces an increasingly ruthless approach.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fallen-idealist",
    "name": "The Fallen Idealist",
    "group": "Conflict and deterioration",
    "text": "Loses faith after witnessing unfairness. | Rebuilds their principles or decides that winning matters more than fairness.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "neglected-ace",
@@ -1190,63 +1190,63 @@
    "name": "Friends Become Rivals",
    "group": "Social and world-changing arcs",
    "text": "A supportive relationship turns competitive. | Healthy competition, resentment, or reconciliation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rivals-become-friends",
    "name": "Rivals Become Friends",
    "group": "Social and world-changing arcs",
    "text": "Mutual hostility gradually softens. | Cooperation, friendship, or an alliance that remains competitive.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-s-rival",
    "name": "The Rival's Rival",
    "group": "Social and world-changing arcs",
    "text": "Another trainer competes for the same person, goal, or title. | A three-way rivalry, alliance, or change in priorities.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mentor-s-disappointment",
    "name": "The Mentor's Disappointment",
    "group": "Social and world-changing arcs",
    "text": "A respected mentor loses faith in the rival. | Earned reconciliation or independence from the mentor's expectations.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "regional-reformer",
    "name": "The Regional Reformer",
    "group": "Social and world-changing arcs",
    "text": "Wants to change how the League operates. | Wins institutional influence, compromises their ideals, or becomes disillusioned.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unlikely-protector",
    "name": "The Unlikely Protector",
    "group": "Social and world-changing arcs",
    "text": "Initially prioritizes personal ambition. | Takes responsibility for another trainer, community, or team.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-who-leaves",
    "name": "The Rival Who Leaves",
    "group": "Social and world-changing arcs",
    "text": "Abandons the current competition. | Returns with a different philosophy or never comes back.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-who-surpasses-you",
    "name": "The Rival Who Surpasses You",
    "group": "Social and world-changing arcs",
    "text": "Gradually becomes stronger and more independent. | Forces the player to respond, accepts a new relationship, or moves on.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unfinished-rivalry",
    "name": "The Unfinished Rivalry",
    "group": "Social and world-changing arcs",
    "text": "A major conflict is never properly resolved. | Reopens later, possibly in another region or during a world event.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "uncontrolled-prodigy",

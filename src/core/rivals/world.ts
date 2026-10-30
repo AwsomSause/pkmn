@@ -8,6 +8,7 @@ import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
+import { advanceArc } from './arcs';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 
@@ -35,6 +36,7 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
   for (const r of story.rivals) {
     const rng = new Rng(hashSeed(`${run.seed}::rival-world::${run.regionIndex}.${stage}::${r.id}`));
     r.away += 1;
+    advanceArc(content, run, r, true);
     if (r.cooldown > 0) r.cooldown -= 1;
     if (!isHostile(r)) continue;
     const who = title(content, r);

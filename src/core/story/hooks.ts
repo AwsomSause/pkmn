@@ -16,6 +16,7 @@ import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { RIVAL_PATHS } from '../rivals/schema';
 import { maybeSpark, sparkGain } from '../rivals/manager';
+import { advanceArc } from '../rivals/arcs';
 import { applyDefeat } from '../rivals/outcome';
 import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
@@ -354,6 +355,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       else if (outcome === 'retired') say(`${title}, worn down by defeats, stepped away from competition`);
       else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
       else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
+      advanceArc(content, run, rivalBack);
       const chosen = evaluateUltimate(run);
       if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
     }
