@@ -47,6 +47,8 @@ export const RunRulesDataSchema = z.object({
       noBattleItems: z.boolean().optional(),
       /** Challenge Contracts: healing stops on the map can't be used. */
       noHealStops: z.boolean().optional(),
+      /** Challenge Contracts: nothing evolves (level-ups and evolution items). */
+      noEvolution: z.boolean().optional(),
     }),
   ),
   modeRewards: z.array(z.object({
@@ -170,6 +172,8 @@ const product = (rules: Pick<RunRules, 'modifierIds'>, pick: (m: NonNullable<Ret
 export const blindMap = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.blind);
 export const noRevives = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noRevives);
 export const noBattleItems = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noBattleItems);
+/** The No Evolution contract is on. */
+export const noEvolution = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noEvolution);
 export const noHealStops = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noHealStops);
 export const battleMoneyScale = (rules: Pick<RunRules, 'modifierIds'>): number => product(rules, (m) => m.battleMoney);
 export const researchScale = (rules: Pick<RunRules, 'modifierIds'>): number => product(rules, (m) => m.researchScale);

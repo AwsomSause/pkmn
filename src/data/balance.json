@@ -39,12 +39,20 @@
  "abilities": {
   "hiddenChance": 0.05
  },
- "directive": { "target": 12, "researchPoints": 60 },
+ "directive": {
+  "target": 12,
+  "researchPoints": 60
+ },
  "mastery": {
   "bronzeBattles": 5,
   "silverBattles": 20,
   "goldBattles": 50,
-  "rankResearch": { "bronze": 25, "silver": 50, "gold": 100, "master": 200 }
+  "rankResearch": {
+   "bronze": 25,
+   "silver": 50,
+   "gold": 100,
+   "master": 200
+  }
  },
  "transformations": {
   "bossGymFrom": 5,
@@ -135,7 +143,13 @@
  "dualTypeWeight": 3,
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
- "opening": { "encounters": 2, "maxBaseStats": 380, "levelOffset": 2, "minLevel": 2, "softMovesUntilLevel": 15 },
+ "opening": {
+  "encounters": 2,
+  "maxBaseStats": 380,
+  "levelOffset": 2,
+  "minLevel": 2,
+  "softMovesUntilLevel": 15
+ },
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
  "heldItemSlots": 8,
@@ -196,6 +210,26 @@
    ],
    "eliteFourSize": 4,
    "countsForProgress": true
+  },
+  {
+   "id": "quick-route",
+   "name": "Quick Route",
+   "regularRegions": 9,
+   "grandRegion": true,
+   "stagesPerRegion": 3,
+   "columns": 10,
+   "trainerColumns": [
+    [
+     3,
+     4
+    ],
+    [
+     6,
+     8
+    ]
+   ],
+   "eliteFourSize": 4,
+   "countsForProgress": false
   },
   {
    "id": "dev",

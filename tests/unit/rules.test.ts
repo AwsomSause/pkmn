@@ -125,8 +125,8 @@ describe('Death-Block and Adventure', () => {
 describe('the 10 other modifiers', () => {
   it('every modifier is supported and the unsupported list is empty', () => {
     expect(RUN_RULES.modifiers.filter((m) => m.status !== 'supported')).toEqual([]);
-    // 10 challenge modifiers and 2 Challenge Contracts (Empty Bag, No Rest).
-    expect(RUN_RULES.modifiers).toHaveLength(14);
+    // 10 challenge modifiers, 3 Challenge Contracts (Empty Bag, No Rest, No Evolution), Solo Run and Quick Route.
+    expect(RUN_RULES.modifiers).toHaveLength(17);
   });
 
   it('Limited Party caps the party at 4', () => {
