@@ -2208,5 +2208,309 @@
    "side": "enemy",
    "value": 1.2
   }
+ ],
+ "ryuki": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "critDamageMultiplier",
+   "side": "player",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "dragon",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "roxie-masters": [
+  {
+   "kind": "damageMultiplier",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "roxanne-gen-6": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "rock"
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "rock",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "rowan": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "startingLevelOffset",
+   "value": -1
+  }
+ ],
+ "rosa": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.95
+  }
+ ],
+ "riley": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.15
+  }
+ ],
+ "rei": [
+  {
+   "kind": "damageMultiplier",
+   "speed": "fast",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "speed": "slow",
+   "value": 0.9
+  }
+ ],
+ "red-classic": [],
+ "red-masters": [
+  {
+   "kind": "damageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "raihan": [
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "player",
+   "value": 1.2
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "sun",
+   "side": "player",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.1
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "enemy",
+   "value": 1.15
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "sun",
+   "side": "enemy",
+   "value": 1.15
+  }
+ ],
+ "pryce": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "ice"
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.85,
+   "type": "ice"
+  }
+ ],
+ "plumeria": [
+  {
+   "kind": "damageMultiplier",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "piers": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "moveFlagDamage",
+   "flags": [
+    "sound"
+   ],
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "peony": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "steel"
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "value": 1.1,
+   "type": "steel"
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "peonia": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "phoebe-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "ghost",
+   "value": 0.9
+  }
+ ],
+ "palmer": [
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "opal": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "ortega": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "value": 1.1,
+   "type": "fairy"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "steel",
+   "value": 1.2
+  }
+ ],
+ "olympia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "psychic",
+   "value": 1.2
+  },
+  {
+   "kind": "statusDurationBonus",
+   "turns": 1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "dark",
+   "value": 1.2
+  }
  ]
 }

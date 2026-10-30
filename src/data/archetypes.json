@@ -6408,6 +6408,962 @@
     "signatureMechanic": null
   },
   {
+    "id": "olympia",
+    "name": "Olympia",
+    "title": "The Psychic Specialist",
+    "description": "Psychic-types deal 20% more damage — Dark moves deal 20% more damage against your team.",
+    "pros": [
+      "Psychic-types deal 20% more damage",
+      "status effects last one extra turn"
+    ],
+    "cons": [
+      "Dark moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1610
+    },
+    "unlockText": "Defeat 1610 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.olympia",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "psychic",
+        "value": 1.2
+      },
+      {
+        "kind": "statusDurationBonus",
+        "turns": 1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "dark",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "meowstic",
+      "sigilyph",
+      "slowking",
+      "delphox"
+    ],
+    "signaturePool": "trainer-olympia",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "opal",
+    "name": "Opal",
+    "title": "The Fairy Specialist",
+    "description": "Fairy-types deal 20% more damage — Pokémon lose 10% Speed.",
+    "pros": [
+      "Fairy-types deal 20% more damage",
+      "status effects are 15% more likely to land"
+    ],
+    "cons": [
+      "Pokémon lose 10% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1620
+    },
+    "unlockText": "Defeat 1620 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.opal",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fairy",
+        "value": 1.2
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "alcremie",
+      "togekiss",
+      "mawile",
+      "weezing"
+    ],
+    "signaturePool": "trainer-opal",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "ortega",
+    "name": "Ortega",
+    "title": "The Fairy Specialist",
+    "description": "Fairy-types deal 20% more damage and gain 10% Special Defense — Steel moves deal 20% more damage against your team.",
+    "pros": [
+      "Fairy-types deal 20% more damage and gain 10% Special Defense"
+    ],
+    "cons": [
+      "Steel moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1630
+    },
+    "unlockText": "Defeat 1630 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ortega",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fairy",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spd",
+        "value": 1.1,
+        "type": "fairy"
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "steel",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "wigglytuff",
+      "dachsbun",
+      "azumarill",
+      "dedenne"
+    ],
+    "signaturePool": "trainer-ortega",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "palmer",
+    "name": "Palmer",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against bosses and gain 10% Defense — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Pokémon deal 20% more damage against bosses and gain 10% Defense"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1640
+    },
+    "unlockText": "Defeat 1640 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.palmer",
+    "modifiers": [
+      {
+        "kind": "bossDamageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "rhyperior",
+      "milotic",
+      "dragonite",
+      "cresselia"
+    ],
+    "signaturePool": "trainer-palmer",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "peonia",
+    "name": "Peonia",
+    "title": "The Specialist",
+    "description": "Legendary encounters are 20% more common — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Legendary encounters are 20% more common"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1650
+    },
+    "unlockText": "Defeat 1650 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.peonia",
+    "modifiers": [
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "legendary",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "copperajah",
+      "grimmsnarl",
+      "centiskorch",
+      "ninetales"
+    ],
+    "signaturePool": "trainer-peonia",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "peony",
+    "name": "Peony",
+    "title": "The Specialist",
+    "description": "Steel-types gain 20% Defense and 10% Attack — Pokémon lose 10% Speed.",
+    "pros": [
+      "Steel-types gain 20% Defense and 10% Attack"
+    ],
+    "cons": [
+      "Pokémon lose 10% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1660
+    },
+    "unlockText": "Defeat 1660 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.peony",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.2,
+        "type": "steel"
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "atk",
+        "value": 1.1,
+        "type": "steel"
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "copperajah",
+      "perrserker",
+      "aggron",
+      "bronzong"
+    ],
+    "signaturePool": "trainer-peony",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "phoebe-gen-6",
+    "name": "Phoebe (Gen 6)",
+    "title": "The Ghost Specialist",
+    "description": "Ghost-types deal 20% more damage and gain 10% evasion — Ghost-types gain 10% less EXP.",
+    "pros": [
+      "Ghost-types deal 20% more damage and gain 10% evasion"
+    ],
+    "cons": [
+      "Ghost-types gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1670
+    },
+    "unlockText": "Defeat 1670 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.phoebe-gen6",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "ghost",
+        "value": 1.2
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "type": "ghost",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "dusknoir",
+      "banette",
+      "sableye",
+      "froslass"
+    ],
+    "signaturePool": "trainer-phoebe-gen-6",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "piers",
+    "name": "Piers",
+    "title": "The Dark Specialist",
+    "description": "Dark-types deal 20% more damage — Pokémon gain 10% less Speed.",
+    "pros": [
+      "Dark-types deal 20% more damage",
+      "sound-based moves deal 15% more damage"
+    ],
+    "cons": [
+      "Pokémon gain 10% less Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1680
+    },
+    "unlockText": "Defeat 1680 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.piers",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dark",
+        "value": 1.2
+      },
+      {
+        "kind": "moveFlagDamage",
+        "flags": [
+          "sound"
+        ],
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "dark"
+    ],
+    "signatureSpecies": [
+      "obstagoon",
+      "skuntank",
+      "malamar",
+      "scrafty"
+    ],
+    "signaturePool": "trainer-piers",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "plumeria",
+    "name": "Plumeria",
+    "title": "The Poison Specialist",
+    "description": "Poison-types deal 20% more damage — Psychic moves deal 20% more damage against your team.",
+    "pros": [
+      "Poison-types deal 20% more damage",
+      "poison lasts one extra turn"
+    ],
+    "cons": [
+      "Psychic moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1690
+    },
+    "unlockText": "Defeat 1690 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.plumeria",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "poison",
+        "value": 1.2
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "psychic",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "poison"
+    ],
+    "signatureSpecies": [
+      "salazzle",
+      "toxapex",
+      "crobat",
+      "gengar"
+    ],
+    "signaturePool": "trainer-plumeria",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "pryce",
+    "name": "Pryce",
+    "title": "The Ice Specialist",
+    "description": "Ice-types gain 20% Defense and deal 15% more damage — Ice-types lose 15% Speed.",
+    "pros": [
+      "Ice-types gain 20% Defense and deal 15% more damage"
+    ],
+    "cons": [
+      "Ice-types lose 15% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1700
+    },
+    "unlockText": "Defeat 1700 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.pryce",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.2,
+        "type": "ice"
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "ice",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.85,
+        "type": "ice"
+      }
+    ],
+    "signatureTypes": [
+      "ice"
+    ],
+    "signatureSpecies": [
+      "mamoswine",
+      "dewgong",
+      "lapras",
+      "cloyster"
+    ],
+    "signaturePool": "trainer-pryce",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "raihan",
+    "name": "Raihan",
+    "title": "The Dragon Specialist",
+    "description": "Weather-boosted moves deal 20% more damage — Weather also boosts enemy damage by 15%.",
+    "pros": [
+      "Weather-boosted moves deal 20% more damage",
+      "Dragon-types deal 10% more damage"
+    ],
+    "cons": [
+      "Weather also boosts enemy damage by 15%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1710
+    },
+    "unlockText": "Defeat 1710 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.raihan",
+    "modifiers": [
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "rain",
+        "side": "player",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "sun",
+        "side": "player",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "rain",
+        "side": "enemy",
+        "value": 1.15
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "sun",
+        "side": "enemy",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "duraludon",
+      "flygon",
+      "gigalith",
+      "sandaconda"
+    ],
+    "signaturePool": "trainer-raihan",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "red-masters",
+    "name": "Red (Masters)",
+    "title": "The Specialist",
+    "description": "All Pokémon deal 20% more damage — Pokémon gain 20% less EXP.",
+    "pros": [
+      "All Pokémon deal 20% more damage"
+    ],
+    "cons": [
+      "Pokémon gain 20% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1720
+    },
+    "unlockText": "Defeat 1720 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.red",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "charizard",
+      "venusaur",
+      "blastoise"
+    ],
+    "signaturePool": "trainer-red-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "red-classic",
+    "name": "Red",
+    "title": "The Specialist",
+    "description": "No bonuses or penalties.",
+    "pros": [
+      "No bonuses or penalties",
+      "the baseline Trainer"
+    ],
+    "cons": [],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1730
+    },
+    "unlockText": "Defeat 1730 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.red",
+    "modifiers": [],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "charizard",
+      "venusaur",
+      "blastoise"
+    ],
+    "signaturePool": "trainer-red-classic",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "rei",
+    "name": "Rei",
+    "title": "The Specialist",
+    "description": "Agile-style attacks deal 20% more damage — Strong-style attacks deal 10% less damage.",
+    "pros": [
+      "Agile-style attacks deal 20% more damage"
+    ],
+    "cons": [
+      "Strong-style attacks deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1740
+    },
+    "unlockText": "Defeat 1740 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.rei",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "speed": "fast",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "speed": "slow",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sneasler",
+      "ursaluna",
+      "samurott",
+      "decidueye"
+    ],
+    "signaturePool": "trainer-rei",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "riley",
+    "name": "Riley",
+    "title": "The Fighting Specialist",
+    "description": "Fighting-types deal 20% more damage — Fairy moves deal 15% more damage against your team.",
+    "pros": [
+      "Fighting-types deal 20% more damage",
+      "Pokémon gain 10% Defense"
+    ],
+    "cons": [
+      "Fairy moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1750
+    },
+    "unlockText": "Defeat 1750 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.riley",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fighting",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fairy",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "lucario",
+      "weavile",
+      "magnezone",
+      "steelix"
+    ],
+    "signaturePool": "trainer-riley",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "rosa",
+    "name": "Rosa",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% more EXP — Pokémon deal 5% less damage.",
+    "pros": [
+      "Pokémon gain 15% more EXP",
+      "healing items restore 10% more HP"
+    ],
+    "cons": [
+      "Pokémon deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1760
+    },
+    "unlockText": "Defeat 1760 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.rosa",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "serperior",
+      "emolga",
+      "gothitelle",
+      "reuniclus"
+    ],
+    "signaturePool": "trainer-rosa",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "rowan",
+    "name": "Rowan",
+    "title": "The Specialist",
+    "description": "Pokémon gain 20% more EXP — Pokémon start one level lower.",
+    "pros": [
+      "Pokémon gain 20% more EXP"
+    ],
+    "cons": [
+      "Pokémon start one level lower"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1770
+    },
+    "unlockText": "Defeat 1770 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.rowan",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "startingLevelOffset",
+        "value": -1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "torterra",
+      "infernape",
+      "empoleon",
+      "staraptor"
+    ],
+    "signaturePool": "trainer-rowan",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "roxanne-gen-6",
+    "name": "Roxanne (Gen 6)",
+    "title": "The Rock Specialist",
+    "description": "Rock-types gain 20% Defense and deal 15% more damage — Water moves deal 20% more damage against your team.",
+    "pros": [
+      "Rock-types gain 20% Defense and deal 15% more damage"
+    ],
+    "cons": [
+      "Water moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1780
+    },
+    "unlockText": "Defeat 1780 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.roxanne-gen6",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.2,
+        "type": "rock"
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "rock",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "water",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "rock"
+    ],
+    "signatureSpecies": [
+      "probopass",
+      "nosepass",
+      "golem",
+      "kabutops"
+    ],
+    "signaturePool": "trainer-roxanne-gen-6",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "roxie-masters",
+    "name": "Roxie (Masters)",
+    "title": "The Poison Specialist",
+    "description": "Poison-types deal 20% more damage — Psychic moves deal 20% more damage against your team.",
+    "pros": [
+      "Poison-types deal 20% more damage",
+      "status conditions are 15% more likely to land"
+    ],
+    "cons": [
+      "Psychic moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1790
+    },
+    "unlockText": "Defeat 1790 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.roxie-masters",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "poison",
+        "value": 1.2
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "psychic",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "poison"
+    ],
+    "signatureSpecies": [
+      "scolipede",
+      "garbodor",
+      "whirlipede",
+      "toxicroak"
+    ],
+    "signaturePool": "trainer-roxie-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "ryuki",
+    "name": "Ryuki",
+    "title": "The Dragon Specialist",
+    "description": "Dragon-types deal 25% more damage — Dragon-types take 15% more damage from Ice moves.",
+    "pros": [
+      "Dragon-types deal 25% more damage",
+      "critical hits deal 10% more damage"
+    ],
+    "cons": [
+      "Dragon-types take 15% more damage from Ice moves"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1800
+    },
+    "unlockText": "Defeat 1800 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ryuki",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dragon",
+        "value": 1.25
+      },
+      {
+        "kind": "critDamageMultiplier",
+        "side": "player",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "dragon",
+        "moveType": "ice",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "kommo-o",
+      "garchomp",
+      "salamence",
+      "noivern"
+    ],
+    "signaturePool": "trainer-ryuki",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
     "id": "glacia",
     "name": "Glacia",
     "title": "The Ice Specialist",
