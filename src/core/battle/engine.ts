@@ -1010,6 +1010,7 @@ const FORM_PAIRS: Record<string, [string, string][]> = {
   'power-construct': [['zygarde', 'zygarde-complete']],
   'hunger-switch': [['morpeko', 'morpeko-hangry']],
   'tera-shift': [['terapagos', 'terapagos-terastal']],
+  'shields-down': [['minior', 'minior-core']],
 };
 const FORECAST_FORMS: Partial<Record<Weather, string>> = { sun: 'castform-sunny', rain: 'castform-rainy', snow: 'castform-snowy', hail: 'castform-snowy' };
 
@@ -1042,7 +1043,7 @@ function syncForms(ctx: BattleContext, c: Combatant, events: BattleEvent[], endO
   for (const [base, alt] of pairs) {
     if (c.mon.speciesId !== base && c.mon.speciesId !== alt) continue;
     let useAlt: boolean;
-    if (ability === 'zen-mode') useAlt = c.mon.hp * 2 <= max;
+    if (ability === 'zen-mode' || ability === 'shields-down') useAlt = c.mon.hp * 2 <= max;
     else if (ability === 'schooling') useAlt = c.mon.level >= 20 && c.mon.hp * 4 > max;
     else if (ability === 'power-construct') useAlt = c.mon.speciesId === alt || c.mon.hp * 2 <= max;
     else if (ability === 'hunger-switch') useAlt = c.vol.hangry;

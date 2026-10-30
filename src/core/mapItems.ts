@@ -238,8 +238,9 @@ export function useRepel(content: Content, run: RunState): string {
 }
 
 /** Battle set-up from map items for a wild battle: free turns (Poké Doll) and the foe's lowered Speed (Poké Toy). */
-export function wildBattleSetup(content: Content, run: RunState, mods = activeMods(content, run)): { freeTurns: number; foeSpeed: number } {
+export function wildBattleSetup(content: Content, run: RunState, mods = activeMods(content, run)): { freeTurns: number; foeSpeed: number; drop: boolean } {
   return {
+    drop: modsOf(mods, 'drop').length > 0,
     freeTurns: modsOf(mods, 'freeTurn').length > 0 ? 1 : 0,
     foeSpeed: modsOf(mods, 'foeSpeed').reduce((sum, m) => sum + m.mod.stages * m.copies, 0),
   };
@@ -472,4 +473,23 @@ export function addBridgeStops(content: Content, run: RunState, nodeId: string):
       spendUse(run, p.itemId);
     }
   }
+}
+
+/** Pinap Berry: a catch ends with a Bag item from the shop's cheapest third (or null). Always clears the pending drop. */
+export function catchDrop(run: RunState, stock: readonly { item: string; price: number }[], caught: boolean): string | null {
+  const key = 'pinap-drop';
+  if ((run.itemCounters?.[key] ?? 0) <= 0) return null;
+  run.itemCounters = { ...run.itemCounters, [key]: 0 };
+  if (!caught || stock.length === 0) return null;
+  const sorted = [...stock].sort((a, b) => a.price - b.price);
+  const cheap = sorted.slice(0, Math.max(1, Math.floor(sorted.length / 3)));
+  return new Rng(hashSeed(`${run.seed}::pinap::${run.encountersCompleted}`)).pick(cheap).item;
+}
+
+/** Pal Pad: extra levels for the first Pokémon caught on this stage (uses the stage's charge). */
+export function palPadLevels(content: Content, run: RunState): number {
+  const id = perkItem(content, run, 'palPad');
+  if (!id || usedThisStage(run, id)) return 0;
+  markUsedThisStage(run, id);
+  return perksOf(activePerks(content, run), 'palPad').reduce((sum, p) => sum + p.perk.levels, 0) || 0;
 }
