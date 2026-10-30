@@ -380,8 +380,15 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
     if (!prev) {
       const starter = mon.uid === run.log.starterUid && !before.log.starterUid;
       const caught = before.pending.some((d) => d.kind === 'caught' && d.mon.uid === mon.uid);
+      const reunion = before.pending.find((d) => d.kind === 'reunion' && d.mon.uid === mon.uid);
       openHistory(content, run, mon.uid, mon.speciesId, starter ? 'starter' : caught ? 'caught' : 'gift');
       if (starter) emit(content, run, 'starterChosen', { actors: [mon.uid], data: { speciesId: mon.speciesId }, text: 'Chosen as your starter' });
+      else if (reunion?.kind === 'reunion')
+        emit(content, run, 'joinedParty', {
+          actors: [mon.uid],
+          data: { speciesId: mon.speciesId, how: 'reunion', hallOfFame: reunion.hallOfFame },
+          text: reunion.hallOfFame ? 'Never forgot you, and came back from a past run' : 'Came back from a past run to join you',
+        });
       else emit(content, run, 'joinedParty', { actors: [mon.uid], data: { speciesId: mon.speciesId, how: caught ? 'caught' : 'gift' }, text: `Joined your team as a ${name(content, mon.speciesId)}` });
       continue;
     }

@@ -119,16 +119,17 @@ Design: the Hyper section of the Electric plan doc (Kice ticked all 10 Phase 1 i
 - [x] Slice 2: The Enemy Is Getting Riled Up (telegraphed a turn ahead with a banner and a badge; calmed by a status, a super-effective hit or a move that lowers its attacks; Evil makes it uncontrollable)
 - [x] Slice 3: The Two Pokémon Feel a Heated Rivalry (your Pokémon that fought the same species in 3 battles: +10% damage against it, Rage can make it reckless for +20% and −1 Defense; Friendly Competition between teammates who trade finishing blows)
 - [x] Slice 4: This Trainer Will Return (an ordinary trainer you barely beat, with one Pokémon left at 25% HP or less, comes back in a later stage with its old team 2 levels above the usual and one more Pokémon; 1 per stage, 4 per region)
-- [ ] Slice 5: A Past Pokémon Wants to Join Your Party (archive across runs)
+- [x] Slice 5: A Past Pokémon Wants to Join Your Party, simple version (a finished run's party goes into the profile's archive of 30 past Pokémon; a new run has a 40% chance to meet one, Hall of Fame Pokémon twice as likely, after 4 to 12 battles won. It comes at that battle's level, back to an earlier form if it is below its evolution level, keeping its moves, ability, shininess and Tera type. Recruit it, take a keepsake (twice a release's candies) or let it go; "It never forgot you" and higher friendship for Hall of Fame Pokémon); profile save v7
 - [x] Slice 6: The Seven Emotions as event tags (memories carry emotion tags; a Pokémon's current emotion, the most common tag in its last 10 tagged memories, shows as a coloured dot on the party screen; Justice for knocking out the foe that knocked out a teammate); a Story screen on the map lists the run's chronicle with its emotions
 
-### Known limits in slices 1 to 4 and 6
+### Known limits in slices 1 to 6
 
 - "Our Hearts Beat as One" (Felt a Bond after a Champion win) is not in yet: histories count boss wins but not which boss. Rescues don't exist yet, so Felt a Bond reads close calls, survived knockouts and boss wins.
 - A "Peace-tagged move" (the doc's third counter) is read as any move that lowers the foe's Attack or Sp. Atk, since moves have no Peace tag yet.
 - A Heated Rivalry is with an opposing species, not one individual Pokémon: wild Pokémon are new every battle, and trainers don't come back yet (slice 4). Your rival evolving counts as a new species. Opposing Pokémon have no rivals of their own.
 - Rivalry records share the run's limit of 12 open relationships; past that a rivalry still works in battle but isn't recorded. Friendly Competition needs the record, so it stops forming once the limit is reached.
 - A returning trainer comes back at the first ordinary trainer of any later stage, even in a later region; it has no special dialogue, arena or reward yet, and its team only changes by level, evolution and one extra Pokémon (no counter-picks: that is the nemesis system).
+- Past Pokémon: only the party at a run's end is archived (not released, traded or left-behind Pokémon), and the meeting is a choice screen after a battle, not a map event with its own scene. It carries its moves, ability and Tera type, not its old memories or emotion.
 - Emotions are tags only: their Overdrives (battle effects), emotional clash and dual emotion come later. Integrity has no source yet (it reads event choices and challenge rules), and nothing tags Patience or Kindness outside Hung In There, Felt a Bond and friendship milestones.
 
 ## Milestone 9 — Grand Region, ending, deploy

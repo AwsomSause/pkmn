@@ -1215,6 +1215,20 @@ export const BalanceSchema = z.object({
   runHistorySize: z.number().int().min(1),
   /** How many loadout presets the Preparation Desk can store. */
   presetSlots: z.number().int().min(1),
+  /**
+   * "A Past Pokémon Wants to Join" (story slice 5): how many past Pokémon the profile keeps, the chance a run
+   * has a reunion, the battles (won) before it comes, its friendship (more if it won a past run with you),
+   * how much likelier Hall of Fame Pokémon are to come back, and the keepsake's candies (times a release's).
+   */
+  reunion: z.object({
+    archiveSize: z.number().int().min(1),
+    chance: z.number().min(0).max(1),
+    afterEncounters: z.tuple([z.number().int().min(1), z.number().int().min(1)]),
+    friendship: z.number().int().min(0).max(255),
+    hallOfFameFriendship: z.number().int().min(0).max(255),
+    hallOfFameWeight: z.number().min(0),
+    keepsakeCandyMultiplier: z.number().int().min(1),
+  }),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 

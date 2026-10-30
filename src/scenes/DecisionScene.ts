@@ -39,7 +39,7 @@ export class DecisionScene extends Phaser.Scene {
 
   preload(): void {
     const { session } = services();
-    const caught = (session.run?.pending ?? []).flatMap((d) => (d.kind === 'caught' ? (session.content.species.get(d.mon.speciesId) ?? []) : []));
+    const caught = (session.run?.pending ?? []).flatMap((d) => (d.kind === 'caught' || d.kind === 'reunion' ? (session.content.species.get(d.mon.speciesId) ?? []) : []));
     preloadPokemon(this, [...partySpecies(), ...caught], { front: true, shiny: true, icon: true });
   }
 
@@ -57,6 +57,7 @@ export class DecisionScene extends Phaser.Scene {
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);
     else if (decision.kind === 'caught') this.buildCaught(decision.mon);
+    else if (decision.kind === 'reunion') this.buildCaught(decision.mon, decision.hallOfFame);
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
@@ -223,7 +224,8 @@ export class DecisionScene extends Phaser.Scene {
 
   // ---------- a caught Pokémon ----------
 
-  private buildCaught(caught: PokemonInstance): void {
+  /** A caught Pokémon, or one from a past run that wants to join (`reunion` set: true if it won a past run with you). */
+  private buildCaught(caught: PokemonInstance, reunion?: boolean): void {
     const { session } = services();
     const content = session.content;
     const run = session.run!;
@@ -236,7 +238,9 @@ export class DecisionScene extends Phaser.Scene {
     spot.fillStyle(0x0e0b12, 0.55).fillEllipse(200, 300, 240, 44);
     spot.fillStyle(0x4a3f5c, 0.9).fillEllipse(200, 298, 200, 32);
     fitHeight(this, pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny), 240);
-    this.add.text(400, 40, `You caught ${species.name}!`, textStyle(40, COLORS.textLight));
+    const past = reunion !== undefined;
+    const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
+    this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
     const stats = calcStats(content, caught);
     const lines = [
       `${species.name}${caught.shiny ? '  ★ Shiny' : ''}   Lv${caught.level}`,
@@ -248,10 +252,13 @@ export class DecisionScene extends Phaser.Scene {
     this.add.text(400, 250, full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`, textStyle(22, full ? '#f0c028' : '#a0e0a0'));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
-    const options = full
-      ? [{ label: 'Replace a party Pokémon' }, { label: `Release it (+${candyText})` }]
-      : [{ label: 'Add to party' }, { label: `Release it (+${candyText})` }];
-    drawPanel(this, 400, 300, 520, 140);
+    const keepsake = candies * content.balance.reunion.keepsakeCandyMultiplier;
+    const keepsakeText = `${keepsake} cand${keepsake === 1 ? 'y' : 'ies'}`;
+    const options = [
+      { label: full ? 'Replace a party Pokémon' : 'Add to party' },
+      ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : [{ label: `Release it (+${candyText})` }]),
+    ];
+    drawPanel(this, 400, 300, 520, past ? 196 : 140);
     this.menu = new Menu(this, {
       x: 420,
       y: 320,
@@ -262,6 +269,8 @@ export class DecisionScene extends Phaser.Scene {
       onSelect: (i) => {
         if (i === 0 && !full) this.resolve({ kind: 'addToParty' });
         else if (i === 0) this.openReplace(caught);
+        else if (past && i === 1) this.resolve({ kind: 'keepsake' });
+        else if (past) this.resolve({ kind: 'release' });
         else
           this.confirm(`Release ${species.name}? You'll get ${candyText}. This can't be undone.`, () => {
             playSfx(this, 'se.ball_release');
@@ -269,7 +278,8 @@ export class DecisionScene extends Phaser.Scene {
           });
       },
     });
-    this.add.text(GAME_WIDTH / 2, 500, 'Candies are kept after the run ends.', textStyle(18, '#a69cb4')).setOrigin(0.5);
+    const note = past ? 'It wants to join you again. It kept its moves; it meets you at this battle\'s level.' : 'Candies are kept after the run ends.';
+    this.add.text(GAME_WIDTH / 2, past ? 520 : 500, note, textStyle(18, '#a69cb4')).setOrigin(0.5);
   }
 
   private openReplace(caught: PokemonInstance): void {
