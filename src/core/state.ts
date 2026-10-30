@@ -1018,6 +1018,10 @@ export const SettingsSchema = z.object({
   battleSpeed: z.enum(['normal', 'fast', 'quick']),
   /** How much trainers talk in battle: off, low, normal or high. */
   dialogueFrequency: z.enum(['off', 'low', 'normal', 'high']),
+  /** Show why damage came out as it did (effectiveness, STAB, crit) in the battle text. */
+  damageDetails: z.boolean().default(false),
+  /** The last accessibility preset applied ('custom' once any single setting is changed by hand). */
+  accessibilityProfile: z.enum(['custom', 'reducedMotion', 'lowFlash', 'moreDetail', 'fastBattles']).default('custom'),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
