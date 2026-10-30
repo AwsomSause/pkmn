@@ -2,6 +2,8 @@
 
 Written 2026-10-30. Covers every file in the project's shared folder (`/mnt/project-files/`). Each entry says what the file is, what is useful in it, and where it fits in the game. Grep this file for a file name; don't read it whole.
 
+**Next step docs:** [how-to-execute-guides.md](how-to-execute-guides.md) (how to run each text guide, slice by slice) and [how-to-implement-packs.md](how-to-implement-packs.md) (how to use each .zip/.rar).
+
 ## How to read the big files cheaply
 
 - Five design docs are huge only because they carry pasted images (`data:image` lines). The text is 22–70 KB each. Read them with `grep -v 'data:image' FILE`, then grep headings (`grep -n '^#'`).

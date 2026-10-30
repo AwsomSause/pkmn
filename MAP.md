@@ -85,6 +85,7 @@ To look something up: `grep -n '"id": "pikachu"' src/data/species.json` then rea
 | `docs/plans/electric-plan.md` | Full director directive "Implementation Plan Electric" (588 lines). |
 | `docs/plans/hyper-overdrive-techno.md` | **big** (1370). Story/Hyper/emotions design source. Grep for the system you need. |
 | `docs/plans/source-files-plan.md` | What every file in the shared project folder is, and where each fits in the game. Grep by file name. |
+| `docs/plans/how-to-execute-guides.md`, `docs/plans/how-to-implement-packs.md` | Step-by-step: how to execute each design guide, and how to use each Essentials pack (code reference + asset import recipe). |
 | `docs/story-foundation.md` | How to add story events. |
 | `docs/m8-designed-forms.md` | Custom forms list (M8). |
 | `docs/quality/` | Generated `CONTENT_REPORT.md`, `BALANCE_REPORT.md`. |
