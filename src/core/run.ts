@@ -43,6 +43,7 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
+import { masteredStarters, runMasteryPerks } from './mastery';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -94,7 +95,7 @@ import { placeExpeditionGate } from './expedition/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
@@ -133,6 +134,8 @@ export interface NewRunOptions {
   pastPokemon?: readonly PastPokemon[];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
+  /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
+  mastery?: Profile['mastery'];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -145,9 +148,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, scale < 1 ? Math.floor(n * scale) : n);
   const campaign = getCampaign(content, prep.campaignId);
   const rng = createStreams(opts.seed);
-  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
+  const mastered = masteredStarters(content, opts);
+  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep, mastered));
   // Used once here, so its own seed-derived generator needs no saved stream.
-  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices);
+  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices, mastered);
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   const run: RunState = {
     runId: opts.runId,
@@ -177,6 +181,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
+    mastery: runMasteryPerks(content, opts),
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,

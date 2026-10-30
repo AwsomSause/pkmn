@@ -2,6 +2,7 @@
 // The run's results were already applied to the permanent profile (once)
 // before this screen appears; the right side shows what they paid out.
 
+import { RANK_NAMES } from '../core/mastery';
 import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
 import Phaser from 'phaser';
@@ -74,6 +75,8 @@ export class GameOverScene extends Phaser.Scene {
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
       if (summary.runQuestDone) lines.push('', `Run Quest done: ${summary.runQuestDone.text} (+${summary.runQuestDone.researchPoints} Research Points)`);
       for (const q of summary.questSteps) lines.push(`Quest step ${q.index + 1}/5 done: ${q.step.goal}. "${q.step.story}"`);
+      const ups = summary.masteryUps ?? [];
+      if (ups.length > 0) lines.push(`Mastery: ${ups.slice(0, 6).map((u) => `${session.content.species.get(u.speciesId)?.name ?? u.speciesId} ${RANK_NAMES[u.rank]}`).join(', ')}${ups.length > 6 ? ` and ${ups.length - 6} more` : ''}`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);
       if (run && !session.content.campaigns.get(run.campaignId)?.countsForProgress) lines.push('', 'Test campaign: achievements and unlocks were not counted.');
       if (run && !run.rules.progressionEligible) lines.push('', 'Adventure run: no Bank Credits, Research Points, candies, unlocks or achievements were earned.');

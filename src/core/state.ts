@@ -690,6 +690,29 @@ export const PastPokemonSchema = z.object({
 });
 export type PastPokemon = z.infer<typeof PastPokemonSchema>;
 
+/** One species' mastery counters (runs it was seen/caught in, battles, boss wins, evolutions, flawless boss runs, regions cleared). */
+export const MasteryRecordSchema = z.object({
+  seen: z.number().int().min(0).default(0),
+  caught: z.number().int().min(0).default(0),
+  battles: z.number().int().min(0).default(0),
+  bossWins: z.number().int().min(0).default(0),
+  evolved: z.number().int().min(0).default(0),
+  flawless: z.number().int().min(0).default(0),
+  regions: z.number().int().min(0).default(0),
+  /** The player's picks for this family (kept on its first stage): egg moves and ability slot (-1 hidden). */
+  eggMoves: z.array(z.string()).max(2).optional(),
+  abilitySlot: z.number().int().min(-1).optional(),
+});
+export type MasteryRecord = z.infer<typeof MasteryRecordSchema>;
+
+/** What a family's mastery gives a Pokémon of it when it joins (worked out at the start of a run from the profile). */
+export const MasteryPerkSchema = z.object({
+  eggMoves: z.array(z.string()),
+  abilitySlot: z.number().int().min(-1).nullable(),
+  awaken: z.boolean(),
+});
+export type MasteryPerk = z.infer<typeof MasteryPerkSchema>;
+
 export const RunStateSchema = z.object({
   runId: z.string(),
   seed: z.string(),
@@ -761,6 +784,8 @@ export const RunStateSchema = z.object({
   checkpoint: z.record(z.string(), z.unknown()).optional(),
   /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
   runQuest: z.string().nullable().default(null),
+  /** Species Mastery unlocks for this run, by family (first-stage id): applied to each Pokémon of it that joins. */
+  mastery: z.record(z.string(), MasteryPerkSchema).default({}),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */
@@ -881,6 +906,8 @@ export const ProfileSchema = z.object({
   /** Counters summed over the runs played as each trainer, and their best single run (for quest lines). */
   trainerCounters: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
+  /** Species Mastery (core/mastery.ts): counters for each species you met, and your picks for its family's unlocks. */
+  mastery: z.record(z.string(), MasteryRecordSchema),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

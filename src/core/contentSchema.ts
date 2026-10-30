@@ -740,7 +740,9 @@ export const StarterPoolSchema = z.object({
   license: z.string().nullable().default(null),
   /** Research Points to unlock the pool. */
   researchCost: z.number().int().min(0).default(0),
-}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined, { message: 'a starter pool needs species, bosses or a filter' });
+  /** The "Mastered" set: its species are the ones you raised to Silver mastery or better (core/mastery.ts). */
+  mastered: z.boolean().default(false),
+}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
@@ -1444,6 +1446,16 @@ export const BalanceSchema = z.object({
   vitaminMaxStacks: z.number().int().positive(),
   /** Abilities (M8.75 part C3): the chance a new Pokémon has its hidden ability instead of a normal one. */
   abilities: z.object({ hiddenChance: z.number().min(0).max(1) }),
+  /**
+   * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
+   * and the Research Points each rank pays once.
+   */
+  mastery: z.object({
+    bronzeBattles: z.number().int().min(1),
+    silverBattles: z.number().int().min(1),
+    goldBattles: z.number().int().min(1),
+    rankResearch: z.object({ bronze: z.number().int().min(0), silver: z.number().int().min(0), gold: z.number().int().min(0), master: z.number().int().min(0) }),
+  }),
   /** Battle transformations (M8.5): which bosses may use them. */
   transformations: z.object({
     /** Gym leaders use them from this gym of the run on (1 = the first gym). */
@@ -1874,6 +1886,8 @@ export interface Content {
   catalog: Map<string, CatalogEntry>;
   /** Every move each species can learn by TM, tutor or egg, beyond its level-up moves (learnables.json). */
   learnables: Map<string, string[]>;
+  /** Each species' egg moves (learnables.json "egg"), for Species Mastery. */
+  eggMoves: Map<string, string[]>;
   trainers: Map<string, TrainerClass>;
   /** Every gym leader, Elite Four member and champion, with their teams. */
   bosses: Map<string, Boss>;

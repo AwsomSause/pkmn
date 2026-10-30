@@ -24,7 +24,7 @@ describe('starter sets', () => {
   });
 
   it('every pool can draw three starters, and every starter is a legal first stage with a usable move', () => {
-    for (const p of pools) {
+    for (const p of pools.filter((x) => !x.mastered)) {
       const ids = eligibleSpecies(content, p);
       expect(ids.length, p.id).toBeGreaterThanOrEqual(content.balance.starterChoices);
       for (const id of ids) {
@@ -74,7 +74,7 @@ describe('starter sets', () => {
   it('rejects a pool with nothing in it, an unknown boss or an unknown region', () => {
     const raw = structuredClone(RAW_CONTENT) as any;
     raw.runPrep.starterPools.push({ id: 'empty', name: 'Empty', description: '' });
-    expect(() => buildContent(raw)).toThrow(/needs species, bosses or a filter/);
+    expect(() => buildContent(raw)).toThrow(/needs species, bosses, a filter/);
     const raw2 = structuredClone(RAW_CONTENT) as any;
     raw2.runPrep.starterPools.push({ id: 'x', name: 'X', description: '', bosses: ['nobody'], filter: { region: 'atlantis' } });
     expect(() => buildContent(raw2)).toThrow(/unknown boss "nobody"[\s\S]*atlantis|atlantis[\s\S]*nobody/);

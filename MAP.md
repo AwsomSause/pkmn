@@ -39,6 +39,7 @@ Update this file when you add, move or delete a folder or a key file.
 | `src/core/story/` | Story layer (M8.9): `schema`, `record` (domain events), `effects` + `ledger` (never apply twice), `queue`, `hooks` (run → story), `hyper` (Hyper moment eligibility). Guide: `docs/story-foundation.md`. |
 | `src/core/raid/` | Raids: `schema` (raids.json shape), `raid.ts` (shields, phases, telegraph, timer, den placement; the engine calls its hooks). |
 | `src/core/events.ts` | Map events ("!"/"?" stops): placement, choices, checks, effects, event battles. Data: `src/data/events.json`, built from `tools/events/*.ts` by `npm run data:events`. Screen: `src/scenes/EventScene.ts`. |
+| `src/core/mastery.ts` | Species Mastery: per-species counters and ranks (Seen → Master), family view, unlocks applied to joining Pokémon (`run.mastery`), the Mastered starter set. |
 | `src/core/quests.ts` | Trainer quests and the claim ledger: quest lines (`trainerQuests.json`, built by `npm run data:quests`), Run Quests, `claim()` pays a key once. |
 | `src/core/totem/` | Totems: `schema` (totems.json shape), `totem.ts` (placement, ally rules, previews; the engine runs aura, ally calls and phases). |
 | `src/core/expedition/` | Mega-Expeditions: `schema`, `graph` (route generation and validation), `flow` (begin, stops, choices, extract, fail), `gate` (map gates). Screen: `src/scenes/ExpeditionScene.ts`. |

@@ -225,6 +225,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     items: toMap(items, 'items.json', problems),
     catalog: toMap(itemCatalog, 'itemCatalog.json', problems),
     learnables: new Map(Object.entries(learnables).map(([id, l]) => [id, [...new Set([...l.egg, ...l.other])]])),
+    eggMoves: new Map(Object.entries(learnables).map(([id, l]) => [id, l.egg])),
     trainers: toMap(trainers, 'trainers.json', problems),
     bosses: new Map(),
     regions: toMap(regions, 'regions.json', problems),
