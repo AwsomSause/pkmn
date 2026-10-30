@@ -231,7 +231,7 @@ export function bossTeamIndex(role: BossRole, number: number): number {
 
 /** The species of a boss's team, in battle order (the last one is the ace). Needs no roll, so map previews can show it. */
 export function bossTeamSpecies(content: Content, role: BossRole, bossId: string, number: number, remix = false): string[] {
-  return remixMembers(getBoss(content, bossId).teams[role][bossTeamIndex(role, number)]!.members, remix, `${role}:${bossId}:${number}`).map((m) => m.speciesId);
+  return remixedMembers(getBoss(content, bossId), role, bossTeamIndex(role, number), remix, `${role}:${bossId}:${number}`).map((m) => m.speciesId);
 }
 
 const textHash = (text: string): number => [...text].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
@@ -244,6 +244,20 @@ export function remixMembers<T>(members: readonly T[], remix: boolean, key: stri
 }
 
 /**
+ * Boss Remix (catalog #149) rebuilds a team: one member is swapped for a Pokémon from the same
+ * boss's other teams (with its own moves and training, so move support holds), then the order
+ * turns so the lead and the ace change. Levels stay on the normal curve. Hashed, so no run roll.
+ */
+export function remixedMembers(boss: { teams: Record<BossRole, readonly BossTeam[]> }, role: BossRole, index: number, remix: boolean, key: string): BossTeam['members'][number][] {
+  const members = [...boss.teams[role][index]!.members];
+  if (!remix) return members;
+  const have = new Set(members.map((m) => m.speciesId));
+  const donors = boss.teams[role].flatMap((t, i) => (i === index ? [] : t.members)).filter((m, i, all) => !have.has(m.speciesId) && all.findIndex((x) => x.speciesId === m.speciesId) === i);
+  if (donors.length > 0 && members.length > 1) members[textHash(`swap:${key}`) % members.length] = donors[textHash(`donor:${key}`) % donors.length]!;
+  return remixMembers(members, true, key);
+}
+
+/**
  * A boss's team for a battle: the species, moves and training come from
  * bossTeams.json; levels follow the difficulty curve with the role's bonus,
  * and the last Pokémon (the ace) gets `aceBonus` more.
@@ -253,7 +267,7 @@ function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId
   const team: BossTeam = boss.teams[role][bossTeamIndex(role, number)]!;
   const { aceBonus } = content.balance.difficulty;
   const levelInfo: EnemyLevelBreakdown[] = [];
-  const members = remixMembers(team.members, remix, `${role}:${bossId}:${number}`).map((m, i) => {
+  const members = remixedMembers(boss, role, bossTeamIndex(role, number), remix, `${role}:${bossId}:${number}`).map((m, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === team.members.length - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
     return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training };
