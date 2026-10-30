@@ -213,7 +213,8 @@
       "progressionEligible": true,
       "checkpoints": false,
       "blurb": "No final victory: beat the last champion and the regions start again, enemies +5 levels each loop. The run ends when you wipe.",
-      "loopLevelBonus": 5
+      "loopLevelBonus": 5,
+      "loopLimit": 10
     },
     {
       "id": "spooky",
@@ -223,6 +224,75 @@
       "checkpoints": false,
       "blurb": "Spooky forms haunt the wild: about 1 in 4 wild Pokémon is replaced by a Spooky form.",
       "spookyChance": 0.25
+    }
+  ],
+  "modeRewards": [
+    {
+      "modeId": "daily",
+      "id": "daily-fourth-gym",
+      "needs": {
+        "badges": 4
+      },
+      "claim": "daily:fourth-gym",
+      "once": {
+        "pool": "daily-set",
+        "text": "Daily Set starter pool unlocked"
+      },
+      "repeat": {
+        "bankCredits": 100,
+        "text": "+100 Bank Credits"
+      }
+    },
+    {
+      "modeId": "spooky",
+      "id": "spooky-fourth-gym",
+      "needs": {
+        "badges": 4
+      },
+      "claim": "mode:spooky:fourth-gym",
+      "once": {
+        "pool": "spooky",
+        "trainer": "hex-maniac",
+        "text": "Spooky Set and Hex Maniac unlocked"
+      },
+      "repeat": {
+        "candies": 3,
+        "text": "+3 candies"
+      }
+    },
+    {
+      "modeId": "endless",
+      "id": "endless-lap-1",
+      "needs": {
+        "loops": 1
+      },
+      "claim": "mode:endless:lap-1",
+      "once": {
+        "title": "Endless Walker",
+        "bankCredits": 300,
+        "text": "Title Endless Walker and +300 Bank Credits"
+      },
+      "repeat": {
+        "bankCredits": 50,
+        "text": "+50 Bank Credits"
+      }
+    },
+    {
+      "modeId": "endless",
+      "id": "endless-lap-3",
+      "needs": {
+        "loops": 3
+      },
+      "claim": "mode:endless:lap-3",
+      "once": {
+        "title": "Without End",
+        "bankCredits": 1000,
+        "text": "Title Without End and +1000 Bank Credits"
+      },
+      "repeat": {
+        "bankCredits": 150,
+        "text": "+150 Bank Credits"
+      }
     }
   ]
 }
