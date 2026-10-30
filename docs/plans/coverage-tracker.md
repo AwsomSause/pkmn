@@ -225,3 +225,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D, researchQuest route: done as limited (Form Research clue chain, regional forms). Left: secretRoute detours, Delta/Z sets.
 - Untitled Phase D, secretRoute: done as limited (Hidden Path event). Left: Delta/Z sets.
 - Untitled Phase D, Delta/Z starter sets: done (delta-set, z-set pools, unlock by event claim). Phase D complete; remaining limits are listed in specialForms.json.
+- Untitled Phase G (deterministic simulations): economy, early loss rate, mode multipliers, item rarity and attribute pace are all in `npm run report:economy`. Tuning is owned by the rebalance thread. Still not done in Phase G: viewport/UI pass (visuals thread) and the Playwright sweep.

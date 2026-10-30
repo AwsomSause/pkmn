@@ -10,10 +10,18 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type * as Auto from '../tests/unit/autoplay.ts';
 import type * as Rules from '../src/core/rules.ts';
+import type * as RunMod from '../src/core/run.ts';
+import type * as RewardsMod from '../src/core/rewards.ts';
+import type * as RngMod from '../src/core/rng.ts';
+import type * as Data from '../src/data/index.ts';
 import { closeModules, loadModule, root } from './lib/gameModules.ts';
 
 const { autoplay } = await loadModule<typeof Auto>('/tests/unit/autoplay.ts');
 const { RUN_RULES, rewardMultiplier } = await loadModule<typeof Rules>('/src/core/rules.ts');
+const { createRun, chooseStarter } = await loadModule<typeof RunMod>('/src/core/run.ts');
+const { generateDraft } = await loadModule<typeof RewardsMod>('/src/core/rewards.ts');
+const { Rng, hashSeed } = await loadModule<typeof RngMod>('/src/core/rng.ts');
+const { buildContent } = await loadModule<typeof Data>('/src/data/index.ts');
 await closeModules();
 
 const SEEDS = ['eco-a', 'eco-b', 'eco-c', 'eco-d', 'eco-e', 'eco-f'];
@@ -33,6 +41,38 @@ for (const d of RUN_RULES.difficulties) {
     rows.push(`| ${d.name} | ${deathBlock ? 'on' : 'off'} | x${rewardMultiplier(rules)} | ${mean((r) => r.encountersCompleted)} | ${mean((r) => r.badges.length)} | ${mean((r) => r.log.counters.moneyEarned ?? 0)} | ${early}% |`);
   }
 }
+
+// Item rarity from generated drafts: 300 drafts per reward source (the weights the game uses for each).
+const gameContent = buildContent();
+const rarityRows: string[] = [];
+const pool: Record<string, number> = {};
+for (const r of gameContent.rewards.values()) pool[r.rarity] = (pool[r.rarity] ?? 0) + 1;
+const sources: [string, Record<string, number>][] = [
+  ['Ordinary stop', gameContent.balance.rarityWeights],
+  ['Harder route', gameContent.balance.harderRarityWeights],
+  ['Gym, Elite Four or Champion', gameContent.balance.bossRarityWeights],
+];
+for (const [label, weights] of sources) {
+  const run = chooseStarter(gameContent, createRun(gameContent, { runId: 'r', seed: 'rarity', archetypeId: 'red' }), 0);
+  const tally: Record<string, number> = {};
+  let total = 0;
+  for (let i = 0; i < 300; i++) {
+    for (const id of generateDraft(gameContent, run, new Rng(hashSeed(`rarity-${i}`)), weights)) {
+      const r = gameContent.rewards.get(id)!.rarity;
+      tally[r] = (tally[r] ?? 0) + 1;
+      total += 1;
+    }
+  }
+  const pct = (k: string) => `${Math.round(((tally[k] ?? 0) / total) * 100)}%`;
+  rarityRows.push(`| ${label} | ${pct('common')} | ${pct('uncommon')} | ${pct('rare')} | ${pct('epic')} |`);
+}
+
+// Attribute growth pace: what one smart-bot run adds to the permanent attributes, by the balance.attributeGrowth table.
+const growth = gameContent.balance.attributeGrowth;
+const paceRuns = SEEDS.map((seed) => autoplay({ seed, steps: 6000, rules: { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false }, healOnMap: true, smart: true }));
+const gained = paceRuns.map((r) => growth.reduce((sum, g) => sum + (g.counter ? Math.floor((r.log.counters[g.counter] ?? 0) / g.per) * g.amount : 0), 0));
+const paceMean = (gained.reduce((a, b) => a + b, 0) / gained.length).toFixed(1);
+
 const md = [
   '# Economy and difficulty simulation',
   '',
@@ -51,6 +91,20 @@ const md = [
   '| Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |',
   '| --- | --- | --- | --- | --- | --- | --- |',
   ...smartRows,
+  '',
+  '## Item rarity in generated drafts',
+  '',
+  `${gameContent.balance.draftSize}-item drafts, 300 per row, ordinary run state. Each source uses its own weights from balance.json; better routes and bosses must show more rare and epic items.`,
+  '',
+  `Reward pool size by rarity: ${Object.entries(pool).map(([k, v]) => `${k} ${v}`).join(', ')}. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json; a gap this wide is worth a look.`,
+  '',
+  '| Reward source | Common | Uncommon | Rare | Epic |',
+  '| --- | --- | --- | --- | --- |',
+  ...rarityRows,
+  '',
+  '## Attribute growth pace',
+  '',
+  `One smart-bot run (Standard, no Death-Block) would add about ${paceMean} permanent attribute points by the balance.attributeGrowth table (${gained.join(', ')} across the ${SEEDS.length} seeds). The sum can be negative: meters (like Good/Evil) move both ways. Compare this with the maximum of ${gameContent.balance.attributeMax} per attribute: a number that is large after one run means growth is too frequent (Untitled doc §6.3).`,
   '',
   `(${Math.round((Date.now() - started) / 1000)} s)`,
   '',
