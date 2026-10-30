@@ -15,7 +15,7 @@ What has to pass before a slice of work counts as done, which checks run by them
 | 7 | Screens checked at several sizes | By hand, with screenshots in the pull request | No |
 | 8 | Asset loading, missing files, memory, performance | The content report finds missing files; `milestone6.spec.ts` checks lazy loading; memory and frame rate by hand | Partly |
 | 9 | Diff reviewed for unrelated changes | By the session, in five passes: gameplay edge cases, architecture, screen quality, determinism and save safety, performance | No |
-| 10 | Docs and known limits updated | CHECKLIST.md, SYSTEMS_AUDIT.md, this page | No |
+| 10 | Docs and known limits updated | STATUS.md, CHECKLIST.md, SYSTEMS_AUDIT.md, this page | No |
 | 11 | Balance looked at when numbers change | `npm run report:balance -- --write`, then compare `docs/quality/BALANCE_REPORT.md` in the diff | No (it reports, it doesn't fail) |
 
 **CI is not running yet.** `.github/workflows/ci.yml` runs gates 1 to 5 on every pull request and every push to `main`, but GitHub has recorded no workflow run on this repository, ever. Until GitHub Actions is switched on (repository Settings → Actions → General → "Allow all actions and reusable workflows"), the gates only run when someone runs `npm run check` and `npm run test:e2e`.
@@ -106,4 +106,4 @@ The simulated player has no items, vitamins, healing or team choice, so real run
 1. `npm run check` passes (type check, unit tests, build, content gate).
 2. `npm run test:e2e` passes, or the failing test is named in the pull request with the reason.
 3. If you changed data or balance: `npm run report:content -- --write` and `npm run report:balance -- --write`, and look at the diff of `docs/quality/`.
-4. Update CHECKLIST.md and SYSTEMS_AUDIT.md for what changed.
+4. Update STATUS.md, CHECKLIST.md and SYSTEMS_AUDIT.md for what changed.
