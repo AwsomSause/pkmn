@@ -7,7 +7,7 @@ import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
-import { activeGameEvents, durationText, gameRewardText, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
@@ -72,6 +72,7 @@ const POOL_CATEGORY_LABEL: Record<StarterPoolCategory, string> = {
   evilTeam: 'Villainous Teams',
   league: 'Pokémon League',
   spinOff: 'Spin-off Games',
+  event: 'Event Sets',
   research: 'Research',
   rare: 'Rare',
 };
@@ -533,7 +534,8 @@ export class HubScene extends Phaser.Scene {
       });
     for (const a of activeGameEvents(content, now)) {
       const color = a.event.visualTheme.color;
-      header(`★ ${a.event.name}  ·  ends in ${durationText(a.endsIn)}`, color, `${a.event.description}  Rules: ${a.event.ruleText}`, true);
+      const from = a.archive ? '  ·  back from the Archive' : '';
+      header(`★ ${a.event.name}${from}  ·  ends in ${durationText(a.endsIn)}`, color, `${a.event.description}  Rules: ${a.event.ruleText}`, true);
       for (const v of objectiveViews(p, a.event, a.edition)) {
         rows.push({
           problem: null,
@@ -561,6 +563,13 @@ export class HubScene extends Phaser.Scene {
     const upcoming = upcomingWeekly(content, now, 3);
     if (upcoming.length > 0) header('Coming up', COLORS.textLight, 'Weekly events rotate every Monday (UTC). Each one comes back in a later week.');
     for (const u of upcoming) header(`  ${u.event.name}  ·  in ${durationText(u.startsIn)}`, COLORS.textMuted, `${u.event.description}  Rules: ${u.event.ruleText}`);
+    header('Holiday calendar', COLORS.textLight, 'Holiday and themed events come back every year (dates in UTC). Outside its dates, each one also returns from the Event Archive for a week, in turn.');
+    for (const c of holidayCalendar(content, now)) {
+      const sched = c.event.schedule;
+      const dates = sched.kind === 'yearly' ? `${sched.start} to ${sched.end}` : '';
+      const when = c.startsIn === 0 ? 'on now' : `in ${durationText(c.startsIn)}`;
+      header(`  ${rewardEarned(p, c.event.id) ? '✓' : '•'} ${c.event.name}  ·  ${dates}  ·  ${when}`, c.startsIn === 0 ? c.event.visualTheme.color : COLORS.textMuted, `${c.event.description}  Reward: ${gameRewardText(content, c.event.reward)}`, c.startsIn === 0, 15);
+    }
     const archive = [...content.gameEvents.values()].filter((e) => rewardEarned(p, e.id));
     if (archive.length > 0) header(`Earned: ${archive.map((e) => e.name).join(', ')}`, COLORS.good, 'Event rewards you have earned for good.');
     this.openPicker({ title: 'Event Hall', rows, columns: 1, rowHeight: 44, onSelect: () => undefined, onBack: () => this.closePicker() });

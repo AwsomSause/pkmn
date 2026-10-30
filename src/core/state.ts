@@ -6,7 +6,7 @@ import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
-import { StoryStateSchema } from './story/schema';
+import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
 import { freshHyperBattle } from './battle/hyper';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -92,9 +92,11 @@ export const HeldStateSchema = z.object({
   magicRoom: z.number().int().min(0).default(0),
   /** Attacks your side has made this battle (First Attack perks). */
   playerAttacks: z.number().int().min(0).default(0),
+  /** Berries the player's side ate this battle (Powder Jar, Gooey Mulch). */
+  berries: z.number().int().min(0).default(0),
 });
 export type HeldState = z.infer<typeof HeldStateSchema>;
-export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0, playerAttacks: 0 });
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0, playerAttacks: 0, berries: 0 });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -820,6 +822,10 @@ export const RunStateSchema = z.object({
   rules: RunRulesSchema,
   /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */
   checkpoint: z.record(z.string(), z.unknown()).optional(),
+  /** VS Recorder: the run as the current trainer battle began, so a loss can replay it once. */
+  recorder: z.record(z.string(), z.unknown()).optional(),
+  /** Journal: one line per finished stage (the stops passed), kept for the run history. */
+  journal: z.array(z.string()).default([]),
   /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
   runQuest: z.string().nullable().default(null),
   /** Species Mastery unlocks for this run, by family (first-stage id): applied to each Pokémon of it that joins. */
@@ -849,6 +855,8 @@ export const RunStateSchema = z.object({
   }),
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
+  /** An earlier run's rival whose character may shape one of this run's rivals (picked at the start from the account archive; null: none). */
+  legacyRival: ArchivedRivalSchema.nullable().default(null),
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
   /** Totem record this run, the unlocks they gave and research points. */
   /** The expedition in progress, and the ones finished or unlocked this run. */
@@ -908,6 +916,8 @@ export const RunRecordSchema = z.object({
   achievements: z.array(z.string()),
   /** The run's top chronicle moments, most memorable first. */
   moments: z.array(z.string()),
+  /** Journal: the run's map, stage by stage (empty without the Journal). */
+  journal: z.array(z.string()).default([]),
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
@@ -952,6 +962,8 @@ export const ProfileSchema = z.object({
   lastPrep: LoadoutPresetSchema.nullable(),
   /** Recently finalized run ids, so a run's result is never applied twice. */
   finalizedRunIds: z.array(z.string()),
+  /** Rivals from finished runs (core/rivals/legacy.ts). */
+  rivalArchive: z.array(ArchivedRivalSchema).default([]),
   /** Party Pokémon of past runs, newest first; one may come back to join a later run. */
   pastPokemon: z.array(PastPokemonSchema),
   /** The claim ledger: every one-time reward paid, by key ("quest:misty:3"), so nothing pays twice. */

@@ -46,7 +46,7 @@ import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } fr
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
-import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
+import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -103,7 +103,8 @@ import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, get
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
-import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
+import { itemSlotLimit } from './trainerPerks';
+import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
 import {
   ensureHistories,
   recordBattleStarted,
@@ -125,7 +126,8 @@ import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from 
 import { createStoryState } from './story/record';
 import { extendEndless, spookyWild, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
-import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
+import { pickLegacyRival } from './rivals/legacy';
+import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
@@ -142,6 +144,8 @@ export interface NewRunOptions {
   attributes?: Record<string, number>;
   /** The profile's past Pokémon; one may come back this run (core/story/reunion.ts). */
   pastPokemon?: readonly PastPokemon[];
+  /** The account's archived rivals; one may shape a rival this run (core/rivals/legacy.ts). */
+  rivalArchive?: Profile['rivalArchive'];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
@@ -169,6 +173,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   const run: RunState = {
     runId: opts.runId,
+    journal: [],
     seed: opts.seed,
     archetypeId: opts.archetypeId,
     phase: 'starter',
@@ -208,6 +213,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
+    legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
@@ -330,6 +336,47 @@ export function prepareLoadedRun(content: Content, run: RunState): RunState {
   return copy;
 }
 
+/** Journal: writes down the stops of the stage that just ended (mutates `run`). */
+function noteJournal(content: Content, run: RunState): void {
+  if (!run.stage || !hasPerk(content, run, 'journal')) return;
+  const stops = run.stage.visited.map((id) => findNode(run.stage!.map, id).kind).join(' > ');
+  run.journal = [...(run.journal ?? []), `Region ${run.regionIndex + 1}, ${run.stage.kind} ${run.stage.index + 1}: ${stops || 'no stops'}`];
+}
+
+/** Berry Pots: after each gym, a random Berry (two with Growth Mulch) goes to a Pokémon with room to hold it. */
+export function plantBerries(content: Content, run: RunState): void {
+  if (passivePercent(content, run, 'berryPots') <= 0) return;
+  const berries = [...content.catalog.values()].filter((e) => e.family.startsWith('Berries') && e.status === 'supported' && e.effect?.kind === 'held' && e.stacksOn === 'pokemon' && (e.rarity === 'common' || e.rarity === 'uncommon'));
+  if (berries.length === 0) return;
+  const rng = new Rng(hashSeed(`${run.seed}::berry-pots::${run.badges.length}`));
+  const slots = itemSlotLimit(content.balance.heldItemSlots, runPerks(content, run));
+  const picks = passivePercent(content, run, 'berryPotsExtra') > 0 ? 2 : 1;
+  for (let i = 0; i < picks; i++) {
+    const berry = rng.pick(berries);
+    const mon = run.party.find((m) => (m.held?.[berry.id] ?? 0) > 0 && (berry.max === null || m.held![berry.id]! < berry.max)) ?? run.party.find((m) => Object.keys(m.held ?? {}).length < slots);
+    if (mon) mon.held = { ...mon.held, [berry.id]: (mon.held?.[berry.id] ?? 0) + 1 };
+  }
+}
+
+/** Mystery Eggs: each new stage brings every egg closer; one that is ready hatches into a first-stage Pokémon (a generator of its own, so no other roll changes). */
+export function hatchEggs(content: Content, run: RunState): void {
+  for (const key of Object.keys(run.itemCounters ?? {}).filter((k) => k.startsWith('egg:'))) {
+    const left = run.itemCounters![key]!;
+    if (left <= 0) continue;
+    run.itemCounters = { ...run.itemCounters, [key]: left - 1 };
+    if (left - 1 > 0) continue;
+    const rng = new Rng(hashSeed(`${run.seed}::egg::${key}`));
+    const pool = wildEligibleSpecies(content);
+    const species = rng.pick(pool);
+    const levels = run.party.map((m) => m.level);
+    const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length))));
+    const mon = newMon(content, run, species.id, Math.max(1, level - 5), 'p');
+    mon.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * (run.itemCounters![`egg-shiny:${key.slice(4)}`] ?? 1));
+    discover(run, mon.speciesId, true);
+    run.pending.push({ kind: 'caught', mon });
+  }
+}
+
 /** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
 function enterStage(content: Content, run: RunState, index: number): void {
   fillRegionOrder(content, run);
@@ -342,10 +389,12 @@ function enterStage(content: Content, run: RunState, index: number): void {
   });
   const problems = validateStageMap(map);
   if (problems.length > 0) throw new Error(`Generated an invalid stage map: ${problems.join('; ')}`);
+  noteJournal(content, run);
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   startStageEffects(run);
+  hatchEggs(content, run);
   simulateRivalWorld(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
@@ -478,7 +527,16 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
     return run;
   }
   startEncounter(content, run, node);
+  recordBattleStart(content, run);
   return run;
+}
+
+/** VS Recorder: keeps the run as a trainer battle begins, for one replay after a loss (mutates `run`). */
+function recordBattleStart(content: Content, run: RunState): void {
+  delete run.recorder;
+  if (run.battle?.kind !== 'trainer' || !hasPerk(content, run, 'vsRecorder') || (run.itemCounters?.['vs-recorder-used'] ?? 0) > 0) return;
+  const { checkpoint: _c, recorder: _r, ...rest } = run;
+  run.recorder = structuredClone(rest) as Record<string, unknown>;
 }
 
 // ---------- map items: getting around (M8.75 slice 3b-2) ----------
@@ -499,7 +557,7 @@ export function mapChoices(content: Content, run: RunState): MapNode[] {
   return plain;
 }
 
-export type MapActionKind = 'escapeRope' | 'bicycle' | 'acroBike' | 'machBike' | 'rematch';
+export type MapActionKind = 'escapeRope' | 'bicycle' | 'acroBike' | 'machBike' | 'rematch' | 'transceiver' | 'pail' | 'sprayduck' | 'squirt';
 
 export interface MapAction {
   kind: MapActionKind;
@@ -567,6 +625,19 @@ export function mapActions(content: Content, run: RunState): MapAction[] {
       on: false,
     });
   }
+  // Gadgets and care items: once per stage.
+  const care: { kind: 'transceiver' | 'pail' | 'sprayduck' | 'squirt'; text: string; problem: string | null }[] = [
+    { kind: 'transceiver', text: 'Call home: your whole team heals 25%', problem: run.party.every((m) => m.hp >= maxHp(content, m)) ? 'Your team is already healthy.' : null },
+    { kind: 'pail', text: 'Water a Pokémon: friendship goes up', problem: run.party.length === 0 ? 'No Pokémon.' : null },
+    { kind: 'sprayduck', text: 'Cool a Pokémon down: +1 toward Peace', problem: null },
+    { kind: 'squirt', text: 'Your lead gains +5% EXP in the next battle', problem: (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 'Already sprayed for the next battle.' : null },
+  ];
+  for (const c of care) {
+    const itemId = perkItem(content, run, c.kind === 'squirt' ? 'squirt' : c.kind);
+    if (!itemId) continue;
+    const used = usedThisStage(run, itemId) ? 'Already used on this stage.' : null;
+    out.push({ kind: c.kind, itemId, text: `${c.text} (once per stage)`, problem: league ?? used ?? c.problem, on: false });
+  }
   return out;
 }
 
@@ -587,6 +658,29 @@ export function useMapAction(content: Content, current: RunState, kind: MapActio
       stage.current = fork < 0 ? null : stage.visited[fork]!;
       delete run.moveMode;
       return { run, message: `You used the ${name} and went back to the last fork.` };
+    }
+    case 'transceiver': {
+      markUsedThisStage(run, action.itemId);
+      const share = perksOf(activePerks(content, run), 'transceiver')[0]?.perk.heal ?? 0.25;
+      for (const mon of run.party) if (mon.hp > 0) mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.ceil(maxHp(content, mon) * share));
+      return { run, message: `You called home with the ${name}: your team healed a little.` };
+    }
+    case 'pail':
+    case 'sprayduck':
+    case 'squirt': {
+      markUsedThisStage(run, action.itemId);
+      if (kind === 'sprayduck') {
+        addRunAttribute(content, run, 'ragePeace', -(perksOf(activePerks(content, run), 'sprayduck')[0]?.perk.peace ?? 1));
+        return { run, message: `You cooled your Pokémon down with the ${name}: a little more Peace.` };
+      }
+      if (kind === 'squirt') {
+        run.itemCounters = { ...run.itemCounters, 'squirt-exp': 1 };
+        return { run, message: `You sprayed your lead with the ${name}: it gains extra EXP next battle.` };
+      }
+      // The Pokémon who likes you least gets the water.
+      const mon = [...run.party].sort((a, b) => a.friendship - b.friendship)[0]!;
+      changeFriendship(content, mon, perksOf(activePerks(content, run), 'pail')[0]?.perk.friendship ?? 5, runAttributeEffects(content, run).friendship);
+      return { run, message: `You watered ${getSpecies(content, mon.speciesId).name} with the ${name}: it likes you more.` };
     }
     case 'rematch': {
       spendUse(run, action.itemId);
@@ -965,7 +1059,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
-    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`);
+    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`, spookyEncounterChance(runPerks(content, run)));
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -1012,6 +1106,8 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       rivalNote = ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
+      run.story.flags[rivalSeenFlag(rivalBack.id)] = scheduleKey(run);
+      run.story.flags[RIVAL_SEEN_ANY] = scheduleKey(run);
       rivalBack.away = 0;
     }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
@@ -1139,6 +1235,32 @@ export function shopPrice(content: Content, run: RunState, entry: Content['shop'
   // Coupons lower the price; a full Point Card makes it free.
   const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
   return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
+}
+
+/** Base price for an item the shop doesn't list (urge items and other finds), by rarity. */
+const RARITY_VALUE: Record<string, number> = { common: 60, uncommon: 120, rare: 240, epic: 480 };
+
+/** What the shop pays for one of an item, or null when it can't be sold (keys, Mega gear, ...). Half the price, or all of it with a Seal Bag. */
+export function sellPrice(content: Content, run: RunState, itemId: string): number | null {
+  const item = content.items.get(itemId);
+  if (!item || item.category === 'key' || item.category === 'transformation' || item.category === 'attribute') return null;
+  const listed = content.shop.find((e) => e.item === itemId)?.price;
+  const base = listed ?? RARITY_VALUE[content.catalog.get(itemId)?.rarity ?? 'common'] ?? 60;
+  return Math.max(1, Math.floor(hasPerk(content, run, 'fullSell') ? base : base / 2));
+}
+
+/** Sells one of an item to the shop. */
+export function sellItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
+  assertPhase(current, 'shop');
+  const item = getItem(content, itemId);
+  const price = sellPrice(content, current, itemId);
+  if (price === null) throw new Error(`The shop won't buy the ${item.name}.`);
+  if (itemCount(current.inventory, itemId) <= 0) throw new Error(`You have no ${item.name} to sell.`);
+  const run = structuredClone(current);
+  consumeItem(run.inventory, itemId);
+  run.money += price;
+  count(run, 'moneyEarned', price);
+  return { run, message: `You sold a ${item.name} for ₽${price}.` };
 }
 
 /** Buys one of an item at the shop. */
@@ -1341,6 +1463,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
     run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
+    // VS Recorder: the trainer battle replays from the start, once per run.
+    if (battle.kind === 'trainer' && run.recorder) {
+      const replay = structuredClone(run.recorder) as unknown as RunState;
+      replay.itemCounters = { ...replay.itemCounters, 'vs-recorder-used': 1 };
+      return { run: replay, events, end: null, defeated: false, cues, drama, wiped: true };
+    }
     // Adventure and Death-Block: a wipe sends you back to the checkpoint instead of ending the run.
     const back = restoreAfterWipe(content, run);
     if (back) {
@@ -1426,7 +1554,8 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const monSpecies = getSpecies(content, mon.speciesId);
       const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle });
       const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
-      const amount = participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100);
+      const squirt = mon === run.party[0] && (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 1 + (perksOf(activePerks(content, run), 'squirt')[0]?.perk.percent ?? 5) / 100 : 1;
+      const amount = Math.floor((participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100)) * squirt);
       if (amount <= 0) continue;
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
       out.push({ type: 'xp', uid, amount });
@@ -1479,6 +1608,15 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
+  // Powder Jar and Gooey Mulch: every Berry your side ate this battle.
+  const eaten = battle.held?.berries ?? 0;
+  if (eaten > 0) {
+    const jar = eaten * passivePercent(content, run, 'berryMoney');
+    run.money += jar;
+    count(run, 'moneyEarned', jar);
+    const peace = eaten * passivePercent(content, run, 'berryPeace');
+    if (peace > 0) addRunAttribute(content, run, 'ragePeace', -peace);
+  }
 
   let caughtSpeciesId: string | null = null;
   const caughtPending: PendingDecision[] = [];
@@ -1499,6 +1637,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       count(run, 'moneyEarned', research);
       moneyGained += research;
     }
+    // Seal Case: a catch brings Luck.
+    const seals = perksOf(activePerks(content, run), 'sealCase').reduce((sum, p) => sum + p.perk.luck * p.copies, 0);
+    if (seals > 0) addRunAttribute(content, run, 'luck', seals);
     discover(run, caught.speciesId, true);
     caughtPending.push({ kind: 'caught', mon: caught });
   }
@@ -1554,6 +1695,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     count(run, 'moneyEarned', interest);
     const charisma = passivePercent(content, run, 'stageCharisma');
     if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
+    plantBerries(content, run);
   }
   // Loot Sack and Blue Card: Bag items after trainer wins, from a generator of their own.
   // Bridge Mail S: the next trainer's reward draft gets the gym leader's odds.
@@ -1614,6 +1756,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     if (run.regionIndex + 1 >= run.regionOrder.length && !extendEndless(run)) run.victory = true;
   }
   run.battle = null;
+  delete run.recorder;
+  if ((run.itemCounters?.['squirt-exp'] ?? 0) > 0) run.itemCounters = { ...run.itemCounters, 'squirt-exp': 0 };
   run.encountersCompleted += 1;
   count(run, 'encountersCompleted');
   run.log.battlesWon += 1;

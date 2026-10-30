@@ -17,21 +17,39 @@ import { bondNote, bondShift } from './bonds';
 import { isHostile } from './outcome';
 import { legacyNote, substitute } from './relations';
 import { rivalMods } from './profile';
+import { allianceHelp, identityNote } from './relations';
+import { legacyLine } from './legacy';
+import { RIVAL_CONFIG } from './schema';
 
 /** The story flag holding the region a rival last came back in. */
 export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
 
-/** The first rival due to come back: it sparked in an earlier stage and hasn't returned in this region. */
+/** Story flags with the stage each rival (and any rival) last appeared in, counted as region × 100 + stage. */
+export const rivalSeenFlag = (id: string) => `rival-seen:${id}`;
+export const RIVAL_SEEN_ANY = 'rival-seen-any';
+export const scheduleKey = (run: Pick<RunState, 'regionIndex' | 'stage'>): number => run.regionIndex * 100 + (run.stage?.index ?? 0);
+const LADDER: Rival['state'][] = ['recognized', 'recurring', 'nemesis', 'active', 'contender'];
+
+/**
+ * The Rival Scheduler (Living Rivalry doc §13): the rival most worth showing in this stage, or null. A rival that hasn't
+ * come back since its Spark may return at once; after that its ladder state sets how many stages it waits (a background name
+ * once, a recurring one every few stages, a nemesis rarely), never fewer than the floor, and no rival appears in the stage after
+ * another. On cooldown, away or allied rivals sit out. Among those due, the higher state and the greater rivalry win.
+ */
 export function waitingRival(run: RunState): Rival | null {
-  return (
-    run.story.rivals.find((r) => {
-      if (!isHostile(r) || r.cooldown > 0) return false;
-      const last = run.story.flags[rivalReturnFlag(r.id)];
-      if (typeof last === 'number' && last >= run.regionIndex) return false;
-      const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
-      return !met || met.region !== run.regionIndex || met.stage !== (run.stage?.index ?? null);
-    }) ?? null
-  );
+  const sched = RIVAL_CONFIG.scheduler;
+  const now = scheduleKey(run);
+  const lastAny = run.story.flags[RIVAL_SEEN_ANY];
+  if (typeof lastAny === 'number' && now - lastAny < sched.anyGap) return null;
+  const due = run.story.rivals.filter((r) => {
+    if (!isHostile(r) || r.cooldown > 0) return false;
+    const last = run.story.flags[rivalSeenFlag(r.id)];
+    if (typeof last === 'number' && now - last < Math.max(sched.minGap, sched.intervals[r.state] ?? sched.minGap)) return false;
+    const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
+    return !met || met.region !== run.regionIndex || met.stage !== (run.stage?.index ?? null);
+  });
+  due.sort((a, b) => LADDER.indexOf(b.state) - LADDER.indexOf(a.state) || b.rivalPotential - a.rivalPotential);
+  return due[0] ?? null;
 }
 
 /** The attack type the party's damaging moves use most (ties: the type listed first in the type chart). */
@@ -62,8 +80,14 @@ export function rivalReturn(content: Content, run: RunState, rival: Rival, plan:
   const base = baseReturn(content, run, rival, plan, effect);
   // A worn-out ace sits out; a rival that remembers a close battle says so.
   const sub = substitute(content, run, rival, base.plan.members);
-  const members = sub ? sub.order.map((i) => base.plan.members[i]!) : base.plan.members;
-  const note = [base.note, sub?.note, legacyNote(rival)].filter(Boolean).join(' ') || null;
+  let members = sub ? sub.order.map((i) => base.plan.members[i]!) : base.plan.members;
+  // Team identity shift (Examples §8): a mentor's or a grudge's type is always on the roster.
+  const shifted = identityNote(content, rival, withTeamTypes(content, { ...base.plan, members }, rival.identity ? [rival.identity.type as TypeName] : []));
+  members = shifted.plan.members;
+  // Alliance: a friend lends its best Pokémon for one battle.
+  const ally = allianceHelp(content, run, rival, { ...base.plan, members });
+  members = ally.plan.members;
+  const note = [base.note, sub?.note, shifted.note, ally.note, legacyNote(rival), legacyLine(rival)].filter(Boolean).join(' ') || null;
   return { plan: { ...base.plan, members }, note };
 }
 
@@ -106,7 +130,7 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
 }
 
 /** Makes sure the team has a Pokémon of each type, swapping in a species of similar strength for the last members. */
-function withTeamTypes(content: Content, plan: TrainerPlan, types: readonly TypeName[]): TrainerPlan {
+export function withTeamTypes(content: Content, plan: TrainerPlan, types: readonly TypeName[]): TrainerPlan {
   if (types.length === 0) return plan;
   let members = plan.members;
   types.forEach((type, k) => {

@@ -484,7 +484,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const ge of content.gameEvents.values()) {
     const where = `game event "${ge.id}"`;
     for (const id of ge.mapEvents) if (!content.events.has(id)) problems.push(`${where} features unknown map event "${id}"`);
-    for (const r of [ge.reward, ge.fallbackReward, ...ge.objectives.map((o) => o.reward)]) if (r.pool && !content.starterPools.has(r.pool)) problems.push(`${where} gives unknown starter set "${r.pool}"`);
+    for (const r of [ge.reward, ge.fallbackReward, ...ge.objectives.map((o) => o.reward)]) {
+      if (r.pool && !content.starterPools.has(r.pool)) problems.push(`${where} gives unknown starter set "${r.pool}"`);
+      if (r.trainer && !content.archetypes.has(r.trainer)) problems.push(`${where} gives unknown trainer "${r.trainer}"`);
+    }
     if (new Set(ge.objectives.map((o) => o.id)).size !== ge.objectives.length) problems.push(`${where} has two objectives with the same id`);
     if ((ge.schedule.kind === 'weeklyRotation') !== (ge.seedRule === 'isoWeek')) problems.push(`${where}: weekly events use the ISO week, yearly ones the year`);
   }
@@ -499,6 +502,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     line.steps.forEach((step, i) => {
       checkRequirement(step.requirement, `${where} step ${i + 1}`);
       if (step.reward.pool && !content.starterPools.has(step.reward.pool)) problems.push(`${where} step ${i + 1} gives unknown starter set "${step.reward.pool}"`);
+      if (step.reward.trainer && !content.archetypes.has(step.reward.trainer)) problems.push(`${where} step ${i + 1} gives unknown trainer "${step.reward.trainer}"`);
       if (step.reward.evolution && i !== line.steps.length - 1) problems.push(`${where} step ${i + 1}: only the last step unlocks a Trainer Evolution`);
     });
   }

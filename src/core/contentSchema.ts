@@ -504,6 +504,10 @@ export const BASE_COUNTER_NAMES = [
   'raidsWon',
   'totemsWon',
   'rivalBattlesWon',
+  /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
+  'eventClues',
+  'eventBossesWon',
+  'eventFinalesWon',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -522,12 +526,14 @@ export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes
  *   best        — a counter's best value in a single run
  *   distinct    — how many different species have been seen or caught
  *   achievement — another achievement has been earned
+ *   claim       — a claim-ledger key exists (e.g. a game event's reward, "event:spooky-season:reward")
  */
 export const RequirementSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('total'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('best'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('distinct'), set: z.enum(['speciesSeen', 'speciesCaught']), atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('achievement'), id: z.string() }),
+  z.object({ kind: z.literal('claim'), key: z.string().min(1) }),
 ]);
 export type Requirement = z.infer<typeof RequirementSchema>;
 
@@ -564,6 +570,8 @@ export const QuestRewardSchema = UnlockRewardSchema.extend({
   pool: z.string().optional(),
   /** The last step of a special trainer's line unlocks their Trainer Evolution. */
   evolution: z.boolean().default(false),
+  /** A trainer unlocked for free (the Spooky pack's Hex Maniac). */
+  trainer: z.string().optional(),
 });
 export type QuestReward = z.infer<typeof QuestRewardSchema>;
 
@@ -799,6 +807,10 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('afterKoDamageMultiplier'), value: z.number().positive() }),
   /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
   z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
+  /** Spooky pack (Hex Maniac, Spooky Season): this share of wild Pokémon turn into Spooky forms (added to Spooky mode's share). */
+  z.object({ kind: z.literal('spookyEncounters'), chance: z.number().positive().max(1) }),
+  /** A game event's own map stops (e.g. the Spooky pack's) appear in this trainer's runs all year. */
+  z.object({ kind: z.literal('eventStops'), gameEvent: z.string().min(1) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -850,7 +862,7 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
-export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare'] as const;
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event'] as const;
 export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
 
 export const StarterPoolSchema = z.object({
@@ -875,6 +887,8 @@ export const StarterPoolSchema = z.object({
   researchCost: z.number().int().min(0).default(0),
   /** The "Mastered" set: its species are the ones you raised to Silver mastery or better (core/mastery.ts). */
   mastered: z.boolean().default(false),
+  /** An earned set that may hold special forms (Spooky forms...), which every other pool leaves out (core/specialForms.ts). */
+  specialForms: z.boolean().default(false),
 }).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
@@ -952,6 +966,10 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
   /** A Z-Crystal: with the Z-Ring, turns one move of its type into that type's Z-Move once per battle. */
   z.object({ kind: z.literal('zCrystal'), type: TypeNameSchema }),
+  /** Battle-only "urge" items on the Pokémon in battle: trigger its ability now, use its held Berry or Herb now, or reset its stat changes. */
+  z.object({ kind: z.literal('urge'), what: z.enum(['ability', 'item', 'reset']) }),
+  /** Makes the opposing Pokémon drop its held item for the rest of the battle (Item Drop). */
+  z.object({ kind: z.literal('itemDrop') }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -1250,6 +1268,23 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   /** Tidal Bell, Clear Bell: this legendary is chosen whenever an event could offer it. */
   z.object({ perk: z.literal('favorSpecies'), species: z.string() }),
   /** Pal Pad: the first Pokémon caught each stage joins with this many extra levels. */
+  /** X-Transceiver: once per stage, from the Items menu, call home and heal the whole team by a share. */
+  z.object({ perk: z.literal('transceiver'), heal: z.number().positive().max(1) }),
+  /** Wailmer Pail, Sprayduck: once per stage, from the Items menu, tend a Pokémon (friendship) or cool one down (Peace). */
+  z.object({ perk: z.literal('pail'), friendship: z.number().int().positive() }),
+  z.object({ perk: z.literal('sprayduck'), peace: z.number().int().positive() }),
+  /** Squirtbottle: once per stage, from the Items menu, the lead gains extra EXP from the next battle. */
+  z.object({ perk: z.literal('squirt'), percent: z.number().positive() }),
+  /** VS Recorder: losing a trainer battle replays it from the start, once per run. */
+  z.object({ perk: z.literal('vsRecorder') }),
+  /** GB Sounds: the battle music plays in the Game Boy style. */
+  z.object({ perk: z.literal('gbSounds') }),
+  /** Journal: the run's full map is recorded with the run history. */
+  z.object({ perk: z.literal('journal') }),
+  /** Seal Case: catching a Pokémon shows a special effect and gives Luck. */
+  z.object({ perk: z.literal('sealCase'), luck: z.number().int().positive() }),
+  /** Seal Bag: items sell for their full shop price instead of half. */
+  z.object({ perk: z.literal('fullSell') }),
   z.object({ perk: z.literal('palPad'), levels: z.number().int().positive() }),
   /** Prop Case: Contest stops give double Charisma. */
   z.object({ perk: z.literal('doubleContest') }),
@@ -1313,11 +1348,15 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   /** A run-long perk (Amulet Coin, Exp. Share...). `percent` is per copy. */
   z.object({
     kind: z.literal('passive'),
-    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp']),
+    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp', 'berrySave', 'berryHeal', 'berryPinch', 'berryMoney', 'berryPeace', 'feedFriendship', 'feedCharisma', 'berryPots', 'berryPotsExtra', 'apricornBox']),
     percent: z.number().positive(),
   }),
   /** The fossil's Pokémon joins the party (or is released, like a catch). */
   z.object({ kind: z.literal('fossil'), species: z.string() }),
+  /** Mystery Egg: hatches after this many stages into a random first-stage Pokémon (shiny chance times `shiny`). */
+  z.object({ kind: z.literal('egg'), stages: z.number().int().positive(), shiny: z.number().positive() }),
+  /** Goes into the Bag (items.json `item`) to be used in battle or from the map. */
+  z.object({ kind: z.literal('bagItem'), item: z.string(), count: z.number().int().positive().default(1) }),
   /** Teach a move of one type the Pokémon can learn: TM = pick 1 of 3 random ones, HM = pick any. */
   z.object({ kind: z.literal('teachMove'), type: TypeNameSchema, mode: z.enum(['tm', 'hm']) }),
   /** A held item: copies go on the chosen Pokémon (or on every team member for team items like the Plates). */
@@ -1942,6 +1981,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('revealStops') }),
   /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
   z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
+  /** Adds to a run counter: a holiday event's clue, boss or finale (game event objectives count these). */
+  z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 

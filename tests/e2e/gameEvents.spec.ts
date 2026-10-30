@@ -53,6 +53,6 @@ test('the Event Hall shows the weekly event and runs play by its rules', async (
   }
   await waitForScene(page, 'Briefing');
   expect(await texts(page, 'Briefing')).toContain('Your Pokémon gain 15% more experience');
-  expect(await page.evaluate(() => (window as any).__pkr.session.run.gameEvents)).toEqual(['egg-expedition@2026-W44']);
+  expect(await page.evaluate(() => (window as any).__pkr.session.run.gameEvents)).toContain('egg-expedition@2026-W44');
   expect(errors).toEqual([]);
 });

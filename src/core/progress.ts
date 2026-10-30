@@ -58,6 +58,10 @@ export function requirementProgress(profile: Profile, req: Requirement): Require
       current = profile.achievements[req.id] ? 1 : 0;
       target = 1;
       break;
+    case 'claim':
+      current = profile.claims?.[req.key] ? 1 : 0;
+      target = 1;
+      break;
   }
   return { current: Math.min(current, target), target, met: current >= target };
 }
@@ -201,6 +205,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
       moments: topMoments(run.story).map((m) => m.text),
+      journal: run.journal ?? [],
     },
     ...profile.runHistory,
   ].slice(0, content.balance.runHistorySize);

@@ -223,6 +223,10 @@ export const RivalSchema = z.object({
   /** Bonds with its Pokémon, by species id, and what happened off-screen (newest last). */
   bonds: z.record(z.string(), BondSchema).default({}),
   offscreen: z.array(OffscreenEventSchema).default([]),
+  /** Set when an earlier run's rival shaped this one (its name): it carries that character's traits and style. */
+  legacyOf: z.string().optional(),
+  /** The team identity it has taken on (a type its roster is rebuilt around) and why: a mentor's example or a grudge against your style. */
+  identity: z.object({ type: z.string(), source: z.enum(['mentor', 'grudge']), by: z.string() }).optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
@@ -240,6 +244,20 @@ export const RivalSchema = z.object({
   }),
 });
 export type Rival = z.infer<typeof RivalSchema>;
+
+/** A rival from a finished run, kept on the account (optional legacy layer). Archived records never change an active run. */
+export const ArchivedRivalSchema = z.object({
+  runId: z.string(),
+  name: z.string(),
+  classId: z.string(),
+  archetype: z.string(),
+  style: z.string(),
+  traits: TraitsSchema,
+  state: z.string(),
+  encounters: z.number().int().min(0),
+  resolution: z.enum(['good', 'bad']).nullable(),
+});
+export type ArchivedRival = z.infer<typeof ArchivedRivalSchema>;
 
 export const StoryStateSchema = z.object({
   /** Last sequence number used (event ids are seed + seq). */
@@ -340,7 +358,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure'] as const;
+export const STORY_TRIGGERS = ['grandOmen', 'grandShadow', 'grandGrudge', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -452,6 +470,8 @@ export type StoryChain = z.infer<typeof StoryChainSchema>;
 export const StoryConfigSchema = z.object({
   /** Protégé system: battles a veteran needs, the level gap to a protégé, and the gap at which it graduates. */
   mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
+  /** The Grand-Enemy (Techno §5): its name, where its phases begin (share of the campaign), and the title it leaves. */
+  grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0) }),
   /** Legacy titles (Techno §6.1): earned from a Pokémon's own history; recognition only, never a stat. */
   legacyTitles: z
     .array(
