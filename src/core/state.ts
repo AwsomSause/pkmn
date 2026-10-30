@@ -460,6 +460,15 @@ export const TotemBattleSchema = z.object({
 });
 export type TotemBattle = z.infer<typeof TotemBattleSchema>;
 
+/** A wild Pokémon's SOS call (rules in core/battle/sos.ts). */
+export const SosBattleSchema = z.object({
+  answered: z.number().int().min(0),
+  callerUid: z.string().nullable(),
+  allyUid: z.string().nullable(),
+  lastTurnCalled: z.number().int().min(0),
+  lastAnswered: z.boolean().nullable(),
+});
+
 /** A minigame being played (rules in core/minigame). `state` is the game's own JSON; `outcome` appears when it ends. */
 export const MinigameSessionSchema = z.object({
   id: z.string(),
@@ -602,6 +611,8 @@ export const BattleStateSchema = z.object({
   drama: DramaBattleSchema.default(freshDrama),
   /** A Totem fight: aura, ally calls and phases (core/totem/totem.ts). */
   totem: TotemBattleSchema.optional(),
+  /** A wild Pokémon that called for help (core/battle/sos.ts); absent until the first call. */
+  sos: SosBattleSchema.optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */

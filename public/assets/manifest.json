@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T22:21:08.915Z",
+  "generatedAt": "2026-10-30T22:44:30.679Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -78838,6 +78838,108 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/timid-mint.png"
+    },
+    {
+      "id": "item.gen5/fighting-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fighting-memory.png"
+    },
+    {
+      "id": "item.gen5/flying-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/flying-memory.png"
+    },
+    {
+      "id": "item.gen5/poison-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/poison-memory.png"
+    },
+    {
+      "id": "item.gen5/ground-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ground-memory.png"
+    },
+    {
+      "id": "item.gen5/rock-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/rock-memory.png"
+    },
+    {
+      "id": "item.gen5/bug-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/bug-memory.png"
+    },
+    {
+      "id": "item.gen5/ghost-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ghost-memory.png"
+    },
+    {
+      "id": "item.gen5/steel-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/steel-memory.png"
+    },
+    {
+      "id": "item.gen5/fire-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fire-memory.png"
+    },
+    {
+      "id": "item.gen5/water-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/water-memory.png"
+    },
+    {
+      "id": "item.gen5/grass-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grass-memory.png"
+    },
+    {
+      "id": "item.gen5/electric-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/electric-memory.png"
+    },
+    {
+      "id": "item.gen5/psychic-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/psychic-memory.png"
+    },
+    {
+      "id": "item.gen5/ice-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ice-memory.png"
+    },
+    {
+      "id": "item.gen5/dragon-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dragon-memory.png"
+    },
+    {
+      "id": "item.gen5/dark-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/dark-memory.png"
+    },
+    {
+      "id": "item.gen5/fairy-memory",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fairy-memory.png"
     },
     {
       "id": "bg.arena.plains",

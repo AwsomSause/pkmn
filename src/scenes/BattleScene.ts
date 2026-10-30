@@ -41,6 +41,7 @@ import { sceneForRun } from './routing';
 import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { pickWipe, wipeAssetId } from '../ui/battleFx/ruleWipe';
+import { sosEntry } from '../core/battle/sos';
 import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
 import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
@@ -176,6 +177,11 @@ export class BattleScene extends Phaser.Scene {
     const enemies = (run?.battle?.enemyTeam ?? []).flatMap((m) => content.species.get(m.speciesId) ?? []);
     preloadPokemon(this, partySpecies(), { back: true, shiny: true, icon: true, cry: true });
     preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
+    // A wild Pokémon may call a friend (SOS): have its art ready.
+    if (run?.battle?.kind === 'wild' && !run.battle.raid && !run.battle.totem && !run.battle.doubles) {
+      const friends = enemies.flatMap((e) => (sosEntry(e.id) ? [...(sosEntry(e.id)!.allies ?? [e.id])] : [])).flatMap((id) => content.species.get(id) ?? []);
+      preloadPokemon(this, friends.filter((f) => !enemies.includes(f)), { front: true, shiny: true, cry: true });
+    }
     // Forms they might transform into this battle (Megas for stones you own; any Mega or Primal for the enemy).
     const formsOf = (ids: string[]) => ids.flatMap((id) => content.species.get(id) ?? []);
     const partyForms = (run?.party ?? []).flatMap((m) => [
@@ -1447,7 +1453,8 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private findMon(before: RunState, uid: string): PokemonInstance | undefined {
-    return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid);
+    // A Pokémon that joined mid-turn (a called SOS friend or Totem ally) is only in the state after the turn.
+    return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid) ?? this.run.battle?.enemyTeam.find((m) => m.uid === uid);
   }
 
   /** A line of trainer dialogue: "Joey: \"Crush them!\"". */

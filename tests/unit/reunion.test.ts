@@ -5,6 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
+import { freshSos } from '../../src/core/battle/sos';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { SaveManager } from '../../src/save/saveManager';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
@@ -39,6 +40,7 @@ function dueRun(hallOfFame = false): RunState {
   lead.moves = [{ id: 'tackle', pp: 35 }];
   run.party[0] = lead;
   run.battle = createBattle('wild', [weakFoe('e1')], 0, lead.uid);
+  run.battle.sos = { ...freshSos(), answered: 1 }; // scripted fight: no SOS call
   run.reunion = { mon: past({ hallOfFame }), afterEncounters: 1, done: false };
   return run;
 }

@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
+import { freshSos } from '../../src/core/battle/sos';
 import { applyCatalog, getCatalogEntry } from '../../src/core/catalog';
 import { eggStatus, hatchEgg, HATCH_FRIENDSHIP, layEgg, tickEggs } from '../../src/core/eggs';
 import { chooseEvent } from '../../src/core/events';
@@ -24,6 +25,7 @@ function inEasyBattle(run: RunState): RunState {
   foe.hp = 1;
   foe.moves = [{ id: 'growl', pp: 40 }];
   run.battle = createBattle('wild', [foe], 0, lead.uid);
+  run.battle.sos = { ...freshSos(), answered: 1 }; // scripted fight: no SOS call
   run.phase = 'battle';
   return run;
 }

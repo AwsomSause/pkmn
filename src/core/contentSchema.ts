@@ -1186,6 +1186,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('statusImmune'), statuses: z.array(StatusIdSchema).min(1) }),
   /** While held, this species takes another form in battle (Griseous Orb, Gracidea). */
   z.object({ hook: z.literal('formHeld'), from: z.string(), to: z.string() }),
+  /** Silvally (RKS System) takes this type while holding it, and Multi-Attack uses it (Memories). */
+  z.object({ hook: z.literal('memory'), type: TypeNameSchema }),
   // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
   /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
   z.object({
@@ -1677,6 +1679,8 @@ export const BalanceSchema = z.object({
   doubles: z
     .object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0), wildChance: z.number().min(0).max(1).default(0), bossIds: z.array(z.string()).default([]) })
     .default({ chance: 0.3, fromStage: 1, wildChance: 0, bossIds: [] }),
+  /** SOS calls (core/battle/sos.ts): hurt wild Pokémon may call a friend. Off = never (old-seed checks switch it off). */
+  sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   partyMax: z.number().int().positive(),

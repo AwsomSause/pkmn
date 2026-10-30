@@ -56,14 +56,14 @@ describe('story foundation: random streams', () => {
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2 to 3b-3b (held, map, shop, money, map-movement, map-stop and draft items in drafts, bosses
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
-  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix, natures), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
+  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix, natures, Silvally Memories), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': '37e04e9b4fad6216',
-    'STORY2/0': '89acd72c47454687',
-    'STORY4/0': 'c685f89d623505af',
-    'STORY5/0': 'b5789715d2478e69',
-    'STORY6/0': '7b7515ae10df9c5d',
-    'STORY7/0': '349ab492b7f5a7e1',
+    'STORY2/0': '2d63435877621182',
+    'STORY4/0': '723fa1f26d1cf54d',
+    'STORY5/0': '46e9cc623a94d750',
+    'STORY6/0': 'c7062ed148176f46',
+    'STORY7/0': 'b54ccadfcac4022d',
     'STORY8/0': '65a2b5b1a05765e7',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
@@ -86,7 +86,8 @@ describe('story foundation: random streams', () => {
     // The Camp Council (one more rest spot) the Relic Shrine and the world events (milestones, rare sites, callbacks, legendary route) would shift what an old seed meets, so they are left out too.
     events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats', 'Routes'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
     // Wild pairs and Tate & Liza's double battle came later too.
-    balance: { ...structuredClone(RAW_CONTENT.balance as object), doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
+    // SOS calls (Z7) came later too.
+    balance: { ...structuredClone(RAW_CONTENT.balance as object), sos: { enabled: false }, doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
   });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {
