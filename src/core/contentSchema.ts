@@ -7,6 +7,7 @@ import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
 import type { ExpeditionFile } from './expedition/schema';
+import type { MinigameFile } from './minigame/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -1894,6 +1895,8 @@ export interface Content {
   totems: TotemFile;
   /** Mega-Expeditions (expeditions.json, core/expedition). */
   expeditions: ExpeditionFile;
+  /** Minigames (minigames.json, core/minigame). */
+  minigames: MinigameFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

@@ -422,6 +422,16 @@ export const TotemBattleSchema = z.object({
 });
 export type TotemBattle = z.infer<typeof TotemBattleSchema>;
 
+/** A minigame being played (rules in core/minigame). `state` is the game's own JSON; `outcome` appears when it ends. */
+export const MinigameSessionSchema = z.object({
+  id: z.string(),
+  sideId: z.string(),
+  tier: z.number().int().min(0).max(2),
+  state: z.unknown(),
+  outcome: z.object({ score: z.number(), max: z.number(), medal: z.enum(['none', 'bronze', 'silver', 'gold']), money: z.number().int(), item: z.string().nullable(), lines: z.array(z.string()) }).nullable(),
+});
+export type MinigameSession = z.infer<typeof MinigameSessionSchema>;
+
 /** A Mega-Expedition in progress (rules in core/expedition). */
 export const ExpeditionStateSchema = z.object({
   id: z.string(),
@@ -555,13 +565,15 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
   totemId: z.string().optional(),
   /** An expedition gate: which expedition (expeditions.json) starts here. */
   expeditionId: z.string().optional(),
+  /** A minigame stop: which game (minigames.json) waits here. */
+  minigameId: z.string().optional(),
   /** A healing stop, a fishing spot and an event work once; a shop can be visited again. */
   used: z.boolean(),
   /** An event stop's event (events.json). */
@@ -677,7 +689,7 @@ export const RunRulesSchema = z.object({
 });
 export type RunRules = z.infer<typeof RunRulesSchema>;
 
-export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over', 'expedition']);
+export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over', 'expedition', 'minigame']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
 /** A Pokémon kept from a finished run, that may come back in a later one (core/story/reunion.ts). */
@@ -792,6 +804,16 @@ export const RunStateSchema = z.object({
   /** Totem record this run, the unlocks they gave and research points. */
   /** The expedition in progress, and the ones finished or unlocked this run. */
   expedition: ExpeditionStateSchema.nullable().default(null),
+  /** The minigame in progress; what it paid this stage (money, items, plays per game); attempts per stop; best medal per game. */
+  minigame: MinigameSessionSchema.nullable().default(null),
+  minigames: z.object({
+    stage: z.number().int().default(-1),
+    money: z.number().int().default(0),
+    items: z.number().int().default(0),
+    plays: z.record(z.string(), z.number().int()).default({}),
+    attempts: z.record(z.string(), z.number().int()).default({}),
+    best: z.record(z.string(), z.enum(['none', 'bronze', 'silver', 'gold'])).default({}),
+  }).default(() => ({ stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} })),
   expeditions: z.object({ completed: z.array(z.string()), failed: z.array(z.string()), unlocked: z.array(z.string()), last: z.array(z.string()).default([]) }).default(() => ({ completed: [], failed: [], unlocked: [], last: [] })),
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),

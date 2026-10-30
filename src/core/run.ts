@@ -91,6 +91,7 @@ import {
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
+import { placeMinigameStop } from './minigame/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -189,6 +190,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
+    minigame: null,
+    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -328,6 +331,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeRaidDens(content, run);
   placeTotem(content, run);
   placeExpeditionGate(content, run);
+  placeMinigameStop(content, run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);

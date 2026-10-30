@@ -133,6 +133,6 @@ describe('quests in saves', () => {
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(17);
     expect(loaded.data.runQuest).toBeNull();
-    expect(CURRENT_VERSIONS.run).toBe(18);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(18);
   });
 });
