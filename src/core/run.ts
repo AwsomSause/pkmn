@@ -20,7 +20,7 @@ import { createBattle, resolveTurn, startBattle, type BattleContext, type Battle
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
-import { RARITIES, type AttributeKey, type Content, type TypeName } from './contentSchema';
+import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
   bossTeamSpecies,
   candiesForRelease,
@@ -1181,6 +1181,15 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));
     // Gym number counted from the start of the run (1 = the first gym).
     run.battle.transform.enemyMechanics = bossMechanics(content, role, run.badges.length + 1, run.disabledMechanics);
+    // Meteor's Prophecy: every third boss also gains a random second type (its own seed, so no other roll changes).
+    if (role && thirdBossLevels(runPerks(content, run)) > 0) {
+      const c = run.log.counters;
+      const bossNumber = (c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + 1;
+      if (bossNumber % 3 === 0) {
+        const r = new Rng(hashSeed(`${run.seed}::boss-type::${bossNumber}`));
+        for (const mon of run.battle.enemyTeam) run.battle.transform.bonusTypes[mon.uid] = TYPE_NAMES[r.int(0, TYPE_NAMES.length - 1)]!;
+      }
+    }
   }
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
