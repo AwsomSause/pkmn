@@ -6,6 +6,9 @@ import { RANK_NAMES } from '../core/mastery';
 import { gameRewardText } from '../core/gameEvents';
 import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
+import { buildRecap } from '../core/recap';
+import { encodeSeedCode } from '../core/seedCode';
+import { getMode } from '../core/rules';
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
@@ -28,6 +31,8 @@ export class GameOverScene extends Phaser.Scene {
     // Left: the run. Right: what it earned for the permanent profile.
     drawPanel(this, 24, 72, 440, 286);
     drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    const recap = run ? buildRecap(session.content, run) : null;
+    const recapLines = recap ? [recap.ending, ...(recap.legend ? [`Legend: ${recap.legend}`] : []), ...recap.rivals.slice(0, 1), ...(recap.tip ? [recap.tip] : [])] : [];
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];
@@ -47,8 +52,10 @@ export class GameOverScene extends Phaser.Scene {
           `Candies earned: ${run.candies}`,
           ...(byName ? [`Defeated by ${byName}`] : []),
           `Seed: ${run.seed}`,
+          `Seed code: ${encodeSeedCode({ seed: run.seed, archetypeId: run.archetypeId, rules: run.rules })}`,
+          ...recapLines,
         ].join('\n'),
-        textStyle(19, COLORS.text, { lineSpacing: 3, wordWrap: { width: 400 } }),
+        textStyle(15, COLORS.text, { lineSpacing: 2, wordWrap: { width: 410 } }),
       );
       // The run's story: the chronicle's five most memorable moments.
       const moments = topMoments(run.story);
@@ -94,11 +101,22 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(500, 84, lines.join('\n'), textStyle(18, COLORS.textLight, { lineSpacing: 3, wordWrap: { width: GAME_WIDTH - 540 } }));
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,
-      y: 492,
-      options: [{ label: 'Back to the Hub' }],
-      fontSize: 28,
+      y: 486,
+      options: [{ label: 'Back to the Hub' }, ...(run ? [{ label: 'Retry this seed' }] : [])],
+      itemHeight: 25,
+      fontSize: 22,
       color: COLORS.textLight,
-      onSelect: () => this.scene.start('Hub'),
+      onSelect: (i) => {
+        if (i === 1 && run) {
+          // Same seed, trainer, preparation and rules. Daily seeds pay their account rewards once, so a retry pays nothing.
+          const { note: _note, ...prep } = run.prep;
+          const rules = { modeId: run.rules.modeId, difficultyId: run.rules.difficultyId, modifierIds: run.rules.modifierIds, deathBlock: run.rules.deathBlock, ...(getMode(run.rules.modeId)?.dailySeed ? { noRewards: true } : {}) };
+          session.newRun(run.archetypeId, run.seed, undefined, prep, rules);
+          this.scene.start('StarterSelect');
+          return;
+        }
+        this.scene.start('Hub');
+      },
     });
     // Ignore keys mashed through the battle's last message so the summary
     // isn't skipped the moment it appears.

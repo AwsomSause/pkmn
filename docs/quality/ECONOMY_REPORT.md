@@ -6,15 +6,32 @@ The bot is crude (no item use beyond Poké Balls, no switching tactics), so it l
 
 | Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Story | off | x0.8 | 8.5 | 0.0 | 677.7 | 50% |
-| Story | on | x0.72 | 8.5 | 0.0 | 677.7 | 50% |
-| Standard | off | x1 | 3.2 | 0.0 | 261.7 | 83% |
-| Standard | on | x0.9 | 3.2 | 0.0 | 261.7 | 83% |
-| Veteran | off | x1.2 | 0.3 | 0.0 | 18.7 | 100% |
-| Veteran | on | x1.08 | 0.3 | 0.0 | 18.7 | 100% |
-| Champion | off | x1.4 | 0.3 | 0.0 | 24.0 | 100% |
-| Champion | on | x1.26 | 0.3 | 0.0 | 24.0 | 100% |
-| Nightmare | off | x1.7 | 0.7 | 0.0 | 66.7 | 100% |
-| Nightmare | on | x1.53 | 0.7 | 0.0 | 66.7 | 100% |
+| Story | off | x0.8 | 6.5 | 0.0 | 422.0 | 67% |
+| Story | on | x0.72 | 8.2 | 0.0 | 663.3 | 50% |
+| Standard | off | x1 | 7.8 | 0.0 | 749.0 | 50% |
+| Standard | on | x0.9 | 7.8 | 0.0 | 749.0 | 50% |
+| Veteran | off | x1.2 | 4.5 | 0.0 | 403.0 | 83% |
+| Veteran | on | x1.08 | 4.5 | 0.0 | 403.0 | 83% |
+| Champion | off | x1.4 | 1.2 | 0.0 | 70.7 | 100% |
+| Champion | on | x1.26 | 1.2 | 0.0 | 70.7 | 100% |
+| Nightmare | off | x1.7 | 0.8 | 0.0 | 73.3 | 100% |
+| Nightmare | on | x1.53 | 0.8 | 0.0 | 73.3 | 100% |
 
-(7 s)
+## Smarter bot
+
+Picks the best move by power, STAB and type effectiveness, drinks potions when low, switches out of a bad matchup and shops for potions.
+
+| Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Story | off | x0.8 | 12.5 | 0.2 | 1720.0 | 67% |
+| Story | on | x0.72 | 12.5 | 0.2 | 1720.0 | 67% |
+| Standard | off | x1 | 11.0 | 0.3 | 1800.0 | 67% |
+| Standard | on | x0.9 | 11.0 | 0.3 | 1800.0 | 67% |
+| Veteran | off | x1.2 | 9.7 | 0.0 | 1281.0 | 50% |
+| Veteran | on | x1.08 | 9.7 | 0.0 | 1281.0 | 50% |
+| Champion | off | x1.4 | 1.3 | 0.0 | 85.3 | 100% |
+| Champion | on | x1.26 | 1.3 | 0.0 | 85.3 | 100% |
+| Nightmare | off | x1.7 | 0.8 | 0.0 | 73.3 | 100% |
+| Nightmare | on | x1.53 | 0.8 | 0.0 | 73.3 | 100% |
+
+(27 s)

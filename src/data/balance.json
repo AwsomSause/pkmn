@@ -135,6 +135,7 @@
  "dualTypeWeight": 3,
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
+ "opening": { "encounters": 2, "maxBaseStats": 380, "levelOffset": 2, "minLevel": 2, "softMovesUntilLevel": 15 },
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
  "heldItemSlots": 8,

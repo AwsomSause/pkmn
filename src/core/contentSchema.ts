@@ -793,6 +793,10 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('evasionMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Damage dealt to foes with a status condition (burn, poison, sleep...). */
   z.object({ kind: z.literal('statusedFoeDamageMultiplier'), value: z.number().positive() }),
+  /** Encore!: critical hits build Hype; at `needed` Hype your active Pokémon deals `damage`× for `turns` turns; a miss or failed move costs `missPenalty` Hype; Hype resets after each boss battle. */
+  z.object({ kind: z.literal('hypeMeter'), needed: z.number().int().positive(), damage: z.number().positive(), turns: z.number().int().positive(), missPenalty: z.number().int().min(0) }),
+  /** Every third boss you face is this many levels higher (Meteor's Prophecy). */
+  z.object({ kind: z.literal('thirdBossLevels'), value: z.number().int().positive() }),
   /** Elite Four members are this many levels higher (negative: lower). */
   z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
   /** Foes can't heal with moves, drains or healing effects. */
@@ -1861,6 +1865,8 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
+  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */

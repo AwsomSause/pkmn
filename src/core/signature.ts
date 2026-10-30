@@ -9,12 +9,14 @@ import { getSpecies } from './pokemon';
 import { isBossClass } from './trainerPerks';
 import type { BattleState, PendingDecision, RunState } from './state';
 
-export type SignatureTrigger = 'rivalBattle' | 'bossBattle';
+export type SignatureTrigger = 'rivalBattle' | 'bossBattle' | 'thirdBoss' | 'newSpecies';
 
 export interface SignatureOption {
   label: string;
   description: string;
   effects: ArchetypeModifier[];
+  grant?: { items?: Record<string, number>; partyLevels?: number };
+  temp?: { battles: number; until: 'battle' | 'boss' | 'wild' };
 }
 
 interface SignatureDef {
@@ -72,6 +74,47 @@ const DEFS: SignatureDef[] = [
     },
   },
   {
+    id: 'perfect-shot',
+    name: 'Perfect Shot',
+    trigger: 'newSpecies',
+    title: 'Perfect Shot: Field Research milestone reached. Choose a reward',
+    options() {
+      return [
+        { label: 'Rare supplies', description: '2 Full Restores and an Ether.', effects: [], grant: { items: { 'full-restore': 2, ether: 1 } } },
+        { label: 'Party level boost', description: 'Every Pokémon in your party gains a level.', effects: [], grant: { partyLevels: 1 } },
+        { label: 'Damage surge', description: '+20% damage for your next 5 battles.', effects: [{ kind: 'damageMultiplier', value: 1.2 }], temp: { battles: 5, until: 'battle' } },
+      ];
+    },
+  },
+  {
+    id: 'final-revelation',
+    name: 'The Final Revelation',
+    trigger: 'thirdBoss',
+    title: 'The Final Revelation: an Ancient Relic awakens. Choose one',
+    options(_content, run) {
+      // Every third boss also makes later bosses hit 10% harder, up to three times.
+      const curse = run.perkEffects.filter((m) => m.kind === 'bossDamageTakenMultiplier' && m.value === 1.1).length < 3 ? [{ kind: 'bossDamageTakenMultiplier', value: 1.1 } as ArchetypeModifier] : [];
+      return [
+        { label: 'Relic of Might', description: '+10% damage for the rest of the run.', effects: [{ kind: 'damageMultiplier', value: 1.1 }, ...curse] },
+        { label: 'Relic of Ward', description: '15% less damage from bosses for the rest of the run.', effects: [{ kind: 'bossDamageTakenMultiplier', value: 0.85 }, ...curse] },
+        { label: 'Relic of Legends', description: 'Legendary encounters are 30% more common for the rest of the run.', effects: [{ kind: 'encounterWeightMultiplier', group: 'legendary', value: 1.3 }, ...curse] },
+      ];
+    },
+  },
+  {
+    id: 'meteors-prophecy',
+    name: "Meteor's Prophecy",
+    trigger: 'thirdBoss',
+    title: "Meteor's Prophecy: choose a prophecy",
+    options() {
+      return [
+        { label: 'Omen of Rarity', description: 'The next wild encounter is far more likely to be rare or Legendary.', effects: [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 }, { kind: 'encounterWeightMultiplier', group: 'legendary', value: 2 }], temp: { battles: 1, until: 'wild' } },
+        { label: 'Dragon Relic', description: 'Dragon-types deal 10% more damage and have 10% more HP for the rest of the run.', effects: [{ kind: 'damageMultiplier', type: 'dragon', value: 1.1 }, { kind: 'statMultiplier', stat: 'hp', type: 'dragon', value: 1.1 }] },
+        { label: 'Weaken the next boss', description: 'Your Pokémon deal 20% more and take 15% less damage in the next boss battle.', effects: [{ kind: 'bossDamageMultiplier', value: 1.2 }, { kind: 'bossDamageTakenMultiplier', value: 0.85 }], temp: { battles: 1, until: 'boss' } },
+      ];
+    },
+  },
+  {
     id: 'beautiful-parasite',
     name: 'Beautiful Parasite',
     trigger: 'bossBattle',
@@ -89,6 +132,12 @@ const DEFS: SignatureDef[] = [
   },
 ];
 
+/** Bosses (gym leaders, Elite Four, champions) defeated this run, counting this battle's win. */
+function bossesDefeated(run: RunState, battle: BattleState): number {
+  const c = run.log.counters;
+  return (c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + (isBossClass(battle.trainer?.classId) ? 1 : 0);
+}
+
 /** Assimilations chosen so far (each one adds a 5% damage-taken cost). */
 function assimilations(run: RunState): number {
   return (run.signatureApplied['beautiful-parasite'] ?? []).filter((m) => m.kind === 'damageTakenMultiplier').length;
@@ -102,15 +151,20 @@ export function signatureDef(id: string | null | undefined): SignatureDef | unde
 export function signatureDecisions(content: Content, run: RunState, battle: BattleState): PendingDecision[] {
   const archetype = content.archetypes.get(run.archetypeId);
   const def = signatureDef(archetype?.signatureMechanic);
-  if (!def || battle.outcome !== 'win') return [];
+  if (!def || (battle.outcome !== 'win' && !(def.trigger === 'newSpecies' && battle.outcome === 'caught'))) return [];
   if (def.trigger === 'rivalBattle' && !battle.rivalId && !battle.rival) return [];
   if (def.trigger === 'bossBattle' && !isBossClass(battle.trainer?.classId)) return [];
+  if (def.trigger === 'thirdBoss' && !(isBossClass(battle.trainer?.classId) && bossesDefeated(run, battle) % 3 === 0)) return [];
+  if (def.trigger === 'newSpecies') {
+    const caught = battle.enemyTeam[battle.enemyIndex]?.speciesId;
+    if (battle.outcome !== 'caught' || !caught || run.log.speciesCaught.at(-1) !== caught || run.log.speciesCaught.length % 3 !== 0) return [];
+  }
   const options = def.options(content, run, battle);
   return options.length === 0 ? [] : [{ kind: 'signature', mechanicId: def.id, title: def.title, options }];
 }
 
-/** Adds the chosen option's modifiers to the run (mutates `run`). Returns the message to show. */
-export function chooseSignatureOption(run: RunState, optionIndex: number): string {
+/** Adds the chosen option's modifiers to the run (mutates `run`). Returns the message to show and any items or levels to hand out. */
+export function chooseSignatureOption(run: RunState, optionIndex: number): { message: string; grant?: SignatureOption['grant'] } {
   const decision = run.pending[0];
   if (!decision || decision.kind !== 'signature') throw new Error('No signature choice is waiting');
   const option = decision.options[optionIndex];
@@ -124,5 +178,6 @@ export function chooseSignatureOption(run: RunState, optionIndex: number): strin
     run.signatureApplied[def.id] = [...(run.signatureApplied[def.id] ?? []), ...option.effects];
   }
   run.perkEffects.push(...option.effects);
-  return `${option.label}: ${option.description}`;
+  if (option.temp && option.effects.length > 0) run.tempEffects.push({ effects: option.effects, battles: option.temp.battles, until: option.temp.until });
+  return { message: `${option.label}: ${option.description}`, grant: option.grant };
 }

@@ -3,6 +3,7 @@
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { playMusic, stopMusic } from '../ui/audio';
+import { applyProfile, nextProfile, PROFILE_INFO } from '../core/accessibility';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
@@ -81,12 +82,21 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.cycleTalk(),
     });
 
+    options.push({
+      option: { label: `Accessibility: ${PROFILE_INFO[session.settings.accessibilityProfile].label}` },
+      action: () => this.cycleProfile(),
+    });
+    options.push({
+      option: { label: `Damage details: ${session.settings.damageDetails ? 'On' : 'Off'}` },
+      action: () => this.toggleDetails(),
+    });
+
     this.menu = new Menu(this, {
       x: 78,
       y: 206,
       options: options.map((o) => o.option),
-      itemHeight: 46,
-      fontSize: 28,
+      itemHeight: options.length > 8 ? 30 : 46,
+      fontSize: options.length > 8 ? 20 : 28,
       onSelect: (i) => options[i]!.action(),
     });
     if (data?.focus) this.menu.focus(data.focus, false);
@@ -125,7 +135,7 @@ export class MainMenuScene extends Phaser.Scene {
     const { session } = services();
     const order = ['full', 'reduced', 'off'] as const;
     const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, battleAnimations: next });
+    session.saveSettings({ ...session.settings, battleAnimations: next , accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index });
   }
 
@@ -134,7 +144,20 @@ export class MainMenuScene extends Phaser.Scene {
     const { session } = services();
     const order = ['normal', 'high', 'off', 'low'] as const;
     const next = order[(order.indexOf(session.settings.dialogueFrequency) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, dialogueFrequency: next });
+    session.saveSettings({ ...session.settings, dialogueFrequency: next , accessibilityProfile: 'custom' });
+    this.scene.restart({ focus: this.menu.index });
+  }
+
+  /** Accessibility presets: custom → Reduced Motion → Low Flash → More Combat Detail → Fast Battles. */
+  private cycleProfile(): void {
+    const { session } = services();
+    session.saveSettings(applyProfile(session.settings, nextProfile(session.settings.accessibilityProfile)));
+    this.scene.restart({ focus: this.menu.index });
+  }
+
+  private toggleDetails(): void {
+    const { session } = services();
+    session.saveSettings({ ...session.settings, damageDetails: !session.settings.damageDetails, accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index });
   }
 
@@ -143,7 +166,7 @@ export class MainMenuScene extends Phaser.Scene {
     const { session } = services();
     const order = ['normal', 'fast', 'quick'] as const;
     const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, battleSpeed: next });
+    session.saveSettings({ ...session.settings, battleSpeed: next , accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index });
   }
 
@@ -152,7 +175,7 @@ export class MainMenuScene extends Phaser.Scene {
     const { session } = services();
     const order = [1, 0.5, 0.25];
     const i = order.findIndex((v) => Math.abs(v - session.settings.effectIntensity) < 0.01);
-    session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! });
+    session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! , accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index });
   }
 

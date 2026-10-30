@@ -39,7 +39,8 @@ export interface Names {
 
 const BALL_FAIL = ['Oh no! The Pokémon broke free!', 'Aww! It appeared to be caught!', 'Aargh! Almost had it!', 'Gah! It was so close, too!'];
 
-export function eventText(content: Content, names: Names, e: RunEvent): string | null {
+/** `details` (settings.damageDetails) adds the numbers behind each hit. */
+export function eventText(content: Content, names: Names, e: RunEvent, details = false): string | null {
   const foe = names.trainer ? 'opposing' : 'wild';
   const who = (side: Side) => (side === 'player' ? names.player : `The ${foe} ${names.enemy}`);
   const whoLower = (side: Side) => (side === 'player' ? names.player : `the ${foe} ${names.enemy}`);
@@ -56,6 +57,7 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       if (e.crit) parts.push('A critical hit!');
       if (e.effectiveness > 1) parts.push("It's super effective!");
       if (e.effectiveness < 1) parts.push("It's not very effective…");
+      if (details) parts.push(`(${e.amount} damage${e.effectiveness !== 1 ? `, ×${e.effectiveness}` : ''}${e.crit ? ', crit ×1.5' : ''}; ${e.hpAfter} HP left)`);
       return parts.length ? parts.join(' ') : null;
     }
     case 'noEffect':

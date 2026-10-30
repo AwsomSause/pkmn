@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 11, run: 22, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 11, run: 22, settings: 5, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -249,6 +249,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     2: (data) => ({ ...(data as Json), battleSpeed: 'normal' }),
     // v4 (Battle Drama Engine): how much trainers talk.
     3: (data) => ({ ...(data as Json), dialogueFrequency: 'normal' }),
+    // v5 (Master Expansion Catalog): damage details and accessibility presets.
+    4: (data) => ({ ...(data as Json), damageDetails: false, accessibilityProfile: 'custom' }),
   },
   meta: {},
 };
@@ -270,7 +272,7 @@ export type LoadResult<T> =
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom' };
 
 /** True when the browser asks for less motion (then new players start with reduced battle animations). */
 function prefersReducedMotion(): boolean {

@@ -35,3 +35,29 @@ describe('economy and difficulty simulations', () => {
     }
   });
 });
+
+describe('the gentle opening', () => {
+  it('a smart player rarely loses the very first fight (under 20% over 60 seeds)', () => {
+    let lost = 0;
+    for (let i = 0; i < 60; i++) {
+      const r = autoplay({ seed: `first-${i}`, steps: 400, smart: true });
+      if (r.phase === 'over' && r.encountersCompleted === 0) lost++;
+    }
+    expect(lost / 60).toBeLessThan(0.2);
+  }, 300000);
+  it('every starter that can attack starts with an attacking move, and low-level enemies carry no fixed-damage move', async () => {
+    const { content } = await import('./helpers');
+    const { movesAtLevel } = await import('../../src/core/pokemon');
+    for (const s of content.species.values()) {
+      const usable = s.learnset.filter((e) => (content.moves.get(e.move)?.power ?? 0) > 0 && content.moves.get(e.move)?.supported);
+      if (usable.length === 0 || s.evolutionStage !== 1) continue;
+      const moves = movesAtLevel(content, s, 5);
+      if (usable.some((e) => e.level <= 5)) expect(moves.some((m) => (content.moves.get(m)?.power ?? 0) > 0), s.id).toBe(true);
+    }
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const { softenOpeningMoves } = await import('../../src/core/rules');
+    const deino = createPokemon(content, 'deino', 2, 'x');
+    softenOpeningMoves(content, deino);
+    expect(deino.moves.every((m) => typeof (content.moves.get(m.id)?.effects as { fixedDamage?: unknown } | undefined)?.fixedDamage !== 'number')).toBe(true);
+  });
+});

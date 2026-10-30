@@ -1435,7 +1435,7 @@ export class BattleScene extends Phaser.Scene {
         this.showMoment(cue, battleAnimations === 'full' && effectIntensity > 0);
         for (const line of cue.messages) await this.say(line);
       } else {
-        const text = eventText(content, this.names(trainer), e);
+        const text = eventText(content, this.names(trainer), e, session.settings.damageDetails);
         if (text) await this.say(text);
       }
       // What the trainer says about it (spoken lines, after the event's own text).
