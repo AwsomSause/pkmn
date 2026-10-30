@@ -119,6 +119,15 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
   expect(r.victory).toBe(true);
   expect(r.regionsCleared).toHaveLength(1);
   await page.screenshot({ path: 'test-results/m4-victory.png' });
+  // The credits roll from the victory screen and return to it.
+  await page.evaluate(() => {
+    (window as any).__pkr.game.scene.getScene('GameOver').scene.start('Credits');
+  });
+  await waitForScene(page, 'Credits');
+  await page.screenshot({ path: 'test-results/m4-credits.png' });
+  await page.waitForTimeout(500);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'GameOver');
   // The finished run is no longer offered as Continue.
   expect(await page.evaluate(() => (window as any).__pkr.session.canContinue)).toBe(false);
   expect(errors).toEqual([]);

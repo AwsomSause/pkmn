@@ -64,6 +64,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 3: Hub > Unlocks > Research Room (`core/collection.ts`): 9 generation sets plus Delta, Z, Spooky, Regional and Mega form sets; milestones at 25/50/75/100% pay 5/10/15/30 Research Points once via the claim ledger.
 - Catalog slice 4: wild Pokémon first impressions (7 behaviours, `core/wildBehavior.ts`, narrative only, own hashed seed), territorial warning, two rescue events and a 3-link chain via `eventSeen` (`tools/events/wild.ts`, 353 events).
 - Boss Remix now rebuilds teams: one member is swapped for a Pokémon from the same boss's other teams (own moves kept), then the order turns so lead and ace change. Levels stay on the normal curve (`remixedMembers`).
+- Research Room shows lifetime shinies found and distinct shiny species (`profile.speciesShiny`, defaulted so old saves load; `countShiny` in progress.ts).
 - Catalog slice 5a: Quick Route (shorter practice campaign), Solo Run (party of 1) and Contract: No Evolution (`noEvolution` in `rules.ts`) on the Preparation Desk.
 - Quick Route is now a real mode (`modes.quick-route`): its own short campaign, counts for account progress, rewards scaled x0.6 (`rewardScale`). The old modifier is retired so older saves still load.
 - Catalog slice 6b: Shadow Pokémon arc as a 4-link event chain (sighting, sanctuary, stabilize, purified; `tools/events/wild.ts`, 378 events).
@@ -90,7 +91,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
-- M9: Grand Region, final boss, ending, deploy.
+- M9: Grand Region, final boss, deploy. Ending credits built (`core/credits.ts`, `CreditsScene`, "Roll the credits" on the victory screen); no Grand Region decision needed.
 - M10 visuals (guide 9, Visual Bible V1–V5): next slices = event choice frames, league/run-end, level-up/evolution, perf pass.
 
 ## Biggest known gaps
