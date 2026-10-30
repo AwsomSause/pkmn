@@ -500,6 +500,10 @@ export const BASE_COUNTER_NAMES = [
   'statsBoosted',
   /** Run Quests finished (the trainer's goal offered on the briefing screen). */
   'runQuestsDone',
+  /** Raid dens and Totems beaten, and battles won against a rival. */
+  'raidsWon',
+  'totemsWon',
+  'rivalBattlesWon',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -1708,6 +1712,8 @@ export const BalanceSchema = z.object({
     trainerMoneyPerLevel: z.number().int().min(0),
     /** Items the Explorer Kit can turn up. */
     explorerItems: z.array(z.string()).min(1),
+    /** Map events a running game event features (gameEvents.json mapEvents) are this many times as likely. */
+    gameEventWeight: z.number().min(1),
   }),
   attributeGrowth: z.array(
     z.object({
@@ -1977,6 +1983,61 @@ export const EventSceneSchema = z.object({
   effect: z.enum(EVENT_EFFECTS).default('none'),
 });
 
+// ---------- game events (Untitled doc §17, plan Part 4b): weekly and holiday events ----------
+
+/** One milestone of a game event, counted over the runs started while it is on. */
+export const GameEventObjectiveSchema = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
+  counter: CounterNameSchema,
+  atLeast: z.number().int().positive(),
+  reward: QuestRewardSchema,
+});
+export type GameEventObjective = z.infer<typeof GameEventObjectiveSchema>;
+
+/** A month and day, "MM-DD" (UTC). */
+const MonthDaySchema = z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+
+/**
+ * A timed account event (Untitled doc §17.4). Weekly events rotate by ISO week; holiday and themed
+ * events come back every year between two dates. Every run started while one is on plays by its
+ * rules and counts toward its objectives. Rewards use claim keys, so nothing pays twice.
+ */
+export const GameEventSchema = z.object({
+  id: z.string().min(1),
+  /** Bumped when the definition changes; a reward already earned is never taken back. */
+  version: z.number().int().min(1),
+  name: z.string().min(1),
+  kind: z.enum(['weekly', 'holiday', 'themed']),
+  description: z.string().min(1),
+  /** Weekly: one of the rotation, chosen by ISO week. Yearly: on between two dates (inclusive, may wrap the new year). */
+  schedule: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('weeklyRotation') }),
+    z.object({ kind: z.literal('yearly'), start: MonthDaySchema, end: MonthDaySchema }),
+  ]),
+  /** What makes an edition: the ISO week ("2026-W44") or the year ("2026"). */
+  seedRule: z.enum(['isoWeek', 'year']),
+  /** Which runs count: only runs that earn progress (Standard mode, not the dev campaign) when true. */
+  progressionEligibility: z.boolean().default(true),
+  /** Which runs it applies to (every mode for now). */
+  eligibility: z.object({ minRunsFinished: z.number().int().min(0).default(0) }).default({ minRunsFinished: 0 }),
+  mode: z.enum(['any']).default('any'),
+  /** The themed ruleset, in words, and the trainer modifiers it adds to every run started while it is on. */
+  ruleText: z.string().min(1),
+  modifiers: z.array(ArchetypeModifierSchema).default([]),
+  /** Map events (events.json) it features: they turn up more often. */
+  mapEvents: z.array(z.string()).default([]),
+  objectives: z.array(GameEventObjectiveSchema).min(3).max(5),
+  /** For finishing every objective, the first time ever; after that, `fallbackReward` instead. */
+  reward: QuestRewardSchema,
+  repeatPolicy: z.enum(['oncePerEvent', 'oncePerEdition']).default('oncePerEvent'),
+  fallbackReward: QuestRewardSchema,
+  visualTheme: z.object({ color: z.string().regex(/^#[0-9a-fA-F]{6}$/), icon: z.string() }),
+  contentTags: z.array(z.string()).default([]),
+});
+export type GameEvent = z.infer<typeof GameEventSchema>;
+export const GameEventsFileSchema = z.object({ events: z.array(GameEventSchema).min(1) });
+
 export const EventDefSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -1993,6 +2054,8 @@ export const EventDefSchema = z.object({
   requires: z.array(EventConditionSchema).default([]),
   /** Only appears when the player holds this key item; it is used up. */
   keyItem: z.string().optional(),
+  /** Only appears in a run started while this game event (gameEvents.json) was on, e.g. the Spooky pack. */
+  gameEvent: z.string().nullable().default(null),
   scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
   intro: z.string(),
   choices: z.array(EventChoiceSchema).min(1).max(4),
@@ -2011,6 +2074,8 @@ export interface Content {
   /** Trainer quest lines by trainer id, and Run Quests (trainerQuests.json, core/quests.ts). */
   questLines: Map<string, QuestLine>;
   runQuests: Map<string, RunQuest>;
+  /** Weekly, holiday and themed game events (gameEvents.json), in file order. */
+  gameEvents: Map<string, GameEvent>;
   starterPools: Map<string, StarterPool>;
   draftRules: Map<string, DraftRule>;
   prepTokens: Map<string, PrepToken>;

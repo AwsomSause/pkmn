@@ -25,7 +25,7 @@ test('the Hub shows the Bank, the Trainer Archive and the Achievement Hall', asy
   await waitForScene(page, 'Hub');
   await page.screenshot({ path: 'test-results/m5-hub.png' });
 
-  // The Hub is a row of tiles: Settings, Trainers, New Run (focused), Past Runs, Unlocks.
+  // The Hub is a row of tiles: Settings, Trainers, New Run (focused), Events (and Past Runs), Unlocks.
   await page.keyboard.press('ArrowLeft'); // Trainers
   await page.keyboard.press('Enter'); // open the Trainers menu
   await page.keyboard.press('Enter'); // Trainer Archive

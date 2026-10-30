@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import { featuredMapEvents, runGameEventIds } from './gameEvents';
 import { eventChanceScale } from './rules';
 import { getArchetype } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
@@ -91,18 +92,29 @@ export function conditionText(content: Content, c: EventCondition): string {
 export function eligibleEvents(content: Content, run: RunState): EventDef[] {
   const n = stageNumber(content, run);
   return [...content.events.values()].filter(
-    (e) => !e.keyItem && e.stop !== 'rest' && e.minStage <= n && !(run.itemCounters?.[`event-seen:${e.id}`]) && e.requires.every((c) => conditionMet(content, run, c)),
+    (e) =>
+      !e.keyItem &&
+      e.stop !== 'rest' &&
+      e.minStage <= n &&
+      // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on.
+      (!e.gameEvent || runGameEventIds(run).includes(e.gameEvent)) &&
+      !(run.itemCounters?.[`event-seen:${e.id}`]) &&
+      e.requires.every((c) => conditionMet(content, run, c)),
   );
 }
 
 function pickEvent(content: Content, run: RunState, rng: Rng, taken: Set<string>): EventDef | null {
   const theme = run.stage ? getTheme(content, run.stage.themeId) : null;
   const cfg = content.balance.events;
+  const featured = featuredMapEvents(content, run);
   const pool = eligibleEvents(content, run)
     .filter((e) => !taken.has(e.id))
     .map((e) => ({
       item: e,
-      weight: (cfg.rarityWeights[e.rarity] ?? 0) * (theme && e.types.some((t) => theme.types.includes(t)) ? cfg.themeWeight : 1),
+      weight:
+        (cfg.rarityWeights[e.rarity] ?? 0) *
+        (theme && e.types.some((t) => theme.types.includes(t)) ? cfg.themeWeight : 1) *
+        (featured.has(e.id) || e.gameEvent ? cfg.gameEventWeight : 1),
     }))
     .filter((p) => p.weight > 0);
   if (pool.length === 0) return null;

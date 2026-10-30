@@ -7,6 +7,7 @@ import {
   AbilitySchema,
   AchievementSchema,
   TrainerQuestsFileSchema,
+  GameEventsFileSchema,
   ATTRIBUTE_KEYS,
   EventsFileSchema,
   RunPrepFileSchema,
@@ -38,6 +39,7 @@ import { MOMENT_EFFECTS } from '../core/story/moments';
 import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import trainerQuestsJson from './trainerQuests.json';
+import gameEventsJson from './gameEvents.json';
 import runPrepJson from './runPrep.json';
 import archetypesJson from './archetypes.json';
 import balanceJson from './balance.json';
@@ -88,6 +90,7 @@ export interface RawContent {
   archetypes: unknown;
   achievements: unknown;
   trainerQuests: unknown;
+  gameEvents: unknown;
   runPrep: unknown;
   rewards: unknown;
   items: unknown;
@@ -136,6 +139,7 @@ export const RAW_CONTENT: RawContent = {
   archetypes: archetypesJson,
   achievements: achievementsJson,
   trainerQuests: trainerQuestsJson,
+  gameEvents: gameEventsJson,
   runPrep: runPrepJson,
   // Mega Stones are generated (npm run data:megas) and kept in their own file.
   rewards: [...rewardsJson, ...megaStonesJson.rewards],
@@ -189,6 +193,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
   const achievements = parse(z.array(AchievementSchema), raw.achievements, 'achievements.json', problems);
   const quests = parse(TrainerQuestsFileSchema, raw.trainerQuests, 'trainerQuests.json', problems);
+  const gameEventsFile = parse(GameEventsFileSchema, raw.gameEvents, 'gameEvents.json', problems);
   const runPrep = parse(RunPrepFileSchema, raw.runPrep, 'runPrep.json', problems);
   const rewards = parse(z.array(RewardSchema), raw.rewards, 'rewards.json', problems);
   const items = parse(z.array(ItemSchema), raw.items, 'items.json', problems);
@@ -210,7 +215,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -223,6 +228,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     achievements: toMap(achievements, 'achievements.json', problems),
     questLines: new Map(quests.lines.map((l) => [l.trainerId, l])),
     runQuests: toMap(quests.runQuests, 'trainerQuests.json runQuests', problems),
+    gameEvents: toMap(gameEventsFile.events, 'gameEvents.json', problems),
     starterPools: toMap(runPrep.starterPools, 'runPrep.json starterPools', problems),
     draftRules: toMap(runPrep.draftRules, 'runPrep.json draftRules', problems),
     prepTokens: toMap(runPrep.tokens, 'runPrep.json tokens', problems),
@@ -474,6 +480,15 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const p of entry.effect.perks) if (p.perk === 'favorSpecies' && !content.species.has(p.species)) problems.push(`item "${entry.id}" favours unknown species "${p.species}"`);
     if (entry.effect.perks.some((p) => p.perk === 'eventKey') && ![...content.events.values()].some((e) => e.keyItem === entry.id)) problems.push(`key item "${entry.id}" opens no event`);
   }
+  // Game events: featured and own map events exist, rewards give real starter sets, objective ids are unique.
+  for (const ge of content.gameEvents.values()) {
+    const where = `game event "${ge.id}"`;
+    for (const id of ge.mapEvents) if (!content.events.has(id)) problems.push(`${where} features unknown map event "${id}"`);
+    for (const r of [ge.reward, ge.fallbackReward, ...ge.objectives.map((o) => o.reward)]) if (r.pool && !content.starterPools.has(r.pool)) problems.push(`${where} gives unknown starter set "${r.pool}"`);
+    if (new Set(ge.objectives.map((o) => o.id)).size !== ge.objectives.length) problems.push(`${where} has two objectives with the same id`);
+    if ((ge.schedule.kind === 'weeklyRotation') !== (ge.seedRule === 'isoWeek')) problems.push(`${where}: weekly events use the ISO week, yearly ones the year`);
+  }
+  for (const e of content.events.values()) if (e.gameEvent && !content.gameEvents.has(e.gameEvent)) problems.push(`map event "${e.id}" belongs to unknown game event "${e.gameEvent}"`);
   // Trainer quests: one line per trainer, real pools, rewards that exist.
   const lineTrainers = new Set<string>();
   for (const line of quests.lines) {
