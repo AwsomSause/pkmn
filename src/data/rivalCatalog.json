@@ -218,280 +218,280 @@
    "name": "The Perfectionist",
    "group": "Competitive personalities",
    "text": "Repeats training routines and punishes their own mistakes. Strong consistency; risks overtraining and rigidity.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "prodigy",
    "name": "The Prodigy",
    "group": "Competitive personalities",
    "text": "Learns quickly and expects natural excellence. Powerful early, but may struggle after a humiliating loss.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "underdog",
    "name": "The Underdog",
    "group": "Competitive personalities",
    "text": "Believes effort can overcome almost any disadvantage. Adapts well under pressure, but may take unnecessary risks.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "tactician",
    "name": "The Tactician",
    "group": "Competitive personalities",
    "text": "Studies team composition, move interactions, and opponent habits. Strong counterplay; can be slow to improvise.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "gambler",
    "name": "The Gambler",
    "group": "Competitive personalities",
    "text": "Prefers high-risk, high-reward battles. Can create spectacular victories and spectacular collapses.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "showboat",
    "name": "The Showboat",
    "group": "Competitive personalities",
    "text": "Wants an audience and memorable victories. Thrives in public battles but can be distracted by humiliation or applause.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "veteran",
    "name": "The Veteran",
    "group": "Competitive personalities",
    "text": "Values preparation and reliable fundamentals. Excellent resource management; can underestimate unconventional opponents.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "speedrunner",
    "name": "The Speedrunner",
    "group": "Competitive personalities",
    "text": "Wants to progress as efficiently as possible. Builds streamlined teams and dislikes delays, detours, or prolonged battles.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "golden-retriever",
    "name": "The Golden Retriever",
    "group": "Social personalities",
    "text": "Enthusiastic, supportive, and genuinely happy to battle. Bonds quickly and often inspires team confidence.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "gentle-giant",
    "name": "The Gentle Giant",
    "group": "Social personalities",
    "text": "Calm, patient, and protective. Excels at steady trust-building and defensive coordination.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "tease",
    "name": "The Tease",
    "group": "Social personalities",
    "text": "Uses humor and playful provocation. Tests whether opponents lose composure; may hide genuine insecurity.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "ice-queen-king",
    "name": "The Ice Queen/King",
    "group": "Social personalities",
    "text": "Emotionally reserved and difficult to read. Relies on routine and may struggle to express affection directly.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "social-climber",
    "name": "The Social Climber",
    "group": "Social personalities",
    "text": "Pursues status, powerful connections, and public recognition. May abandon a path that no longer improves their reputation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "loner",
    "name": "The Loner",
    "group": "Social personalities",
    "text": "Trains independently and avoids asking for help. Can develop highly individualistic team chemistry, but trust takes time.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mediator",
    "name": "The Mediator",
    "group": "Social personalities",
    "text": "Resolves conflict among people and Pokémon. Keeps a balanced team but may avoid difficult confrontations.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "people-pleaser",
    "name": "The People-Pleaser",
    "group": "Social personalities",
    "text": "Wants everyone to be proud of them. Can develop excellent bonds, yet struggles with boundaries and independent decisions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "idealist",
    "name": "The Idealist",
    "group": "Philosophical personalities",
    "text": "Believes every Pokémon deserves dignity and a chance. Resists exploitative strategies, even at a competitive cost.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pragmatist",
    "name": "The Pragmatist",
    "group": "Philosophical personalities",
    "text": "Believes good intentions are meaningless without results. Makes efficient choices and questions sentimentality.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "traditionalist",
    "name": "The Traditionalist",
    "group": "Philosophical personalities",
    "text": "Respects established training methods and regional customs. Gains stability from routines but may resist new approaches.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "innovator",
    "name": "The Innovator",
    "group": "Philosophical personalities",
    "text": "Experiments with strange teams, unconventional moves, and unusual bond-building methods. Can discover unique tactics.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "naturalist",
    "name": "The Naturalist",
    "group": "Philosophical personalities",
    "text": "Studies Pokémon in their environments and adapts to their instincts. Develops species-specific synergies.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "scholar",
    "name": "The Scholar",
    "group": "Philosophical personalities",
    "text": "Seeks to understand the mechanics behind power. Excels at observing Hyper and Overdrive behavior.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "spiritualist",
    "name": "The Spiritualist",
    "group": "Philosophical personalities",
    "text": "Treats battling as a relationship between trainer and Pokémon, not merely a competition. Strong emotional alignment, but may interpret setbacks too personally.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "nihilist",
    "name": "The Nihilist",
    "group": "Philosophical personalities",
    "text": "Believes victory is temporary and bonds are fragile. May fight with cold efficiency until an event challenges that worldview.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "perpetual-runner-up",
    "name": "The Perpetual Runner-Up",
    "group": "Troubled personalities",
    "text": "Always comes close to winning, then loses at the critical moment. May learn composure or become consumed by comparison.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "burnout",
    "name": "The Burnout",
    "group": "Troubled personalities",
    "text": "Once loved battling but now struggles to care. Small acts of kindness or a surprising defeat can rekindle their motivation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "obsessive",
    "name": "The Obsessive",
    "group": "Troubled personalities",
    "text": "Focuses almost entirely on one goal or one opponent. Develops specialized counters but neglects other relationships.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "avenger",
    "name": "The Avenger",
    "group": "Troubled personalities",
    "text": "Connects competition with an unresolved wrong. Strong persistence; may mistake revenge for progress.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "control-freak",
    "name": "The Control Freak",
    "group": "Troubled personalities",
    "text": "Wants every action to be predictable. Trains through rigid commands and struggles when Pokémon act independently.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "escapist",
    "name": "The Escapist",
    "group": "Troubled personalities",
    "text": "Uses travel and battling to avoid a personal problem. Their arc can involve facing the issue rather than winning more battles.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "self-saboteur",
    "name": "The Self-Saboteur",
    "group": "Troubled personalities",
    "text": "Retreats or makes reckless choices when success becomes possible. Their growth depends on accepting that they deserve to succeed.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fallen-idealist",
    "name": "The Fallen Idealist",
    "group": "Troubled personalities",
    "text": "Once believed deeply in fair play but has become cynical after betrayal or repeated disappointments.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "collector",
    "name": "The Collector",
    "group": "Unusual and unpredictable personalities",
    "text": "Values discovery, unusual species, and variety. Rotates their team often and may struggle to develop deep synergy with every partner.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "natural-talent",
    "name": "The Natural Talent",
    "group": "Unusual and unpredictable personalities",
    "text": "Seems casual and effortless, but has an unseen history of practice. Can frustrate rivals who believe effort should be visible.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "caretaker",
    "name": "The Caretaker",
    "group": "Unusual and unpredictable personalities",
    "text": "Prioritizes Pokémon health and happiness. Avoids unnecessary risks and may withdraw from a battle when a partner is genuinely overwhelmed.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "chaos-agent",
    "name": "The Chaos Agent",
    "group": "Unusual and unpredictable personalities",
    "text": "Enjoys disrupting expectations. Uses unpredictable tactics and constantly changes routines.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "secret-softie",
    "name": "The Secret Softie",
    "group": "Unusual and unpredictable personalities",
    "text": "Acts intimidating or dismissive in public but is deeply affectionate in private. Their Pokémon may reveal the truth before they do.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "reluctant-battler",
    "name": "The Reluctant Battler",
    "group": "Unusual and unpredictable personalities",
    "text": "Battles for practical reasons rather than personal ambition. Their motivation can grow through friendships, discoveries, or protecting someone.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "former-antagonist",
    "name": "The Former Antagonist",
    "group": "Unusual and unpredictable personalities",
    "text": "Starts with questionable methods but has the capacity to change. Their actions, not a single apology, determine whether others trust them.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "quiet-observer",
    "name": "The Quiet Observer",
    "group": "Unusual and unpredictable personalities",
    "text": "Says little but notices everything. Builds accurate opponent profiles and may be one of the most dangerous late-game rivals.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "styles": [
@@ -500,224 +500,224 @@
    "name": "Blitz",
    "group": "Offensive styles",
    "text": "Applies early pressure and attempts to end battles quickly.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "snowball",
    "name": "Snowball",
    "group": "Offensive styles",
    "text": "Builds momentum after each knockout or successful setup.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "glass-cannon",
    "name": "Glass Cannon",
    "group": "Offensive styles",
    "text": "Uses powerful attacks and accepts defensive vulnerability.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "executioner",
    "name": "Executioner",
    "group": "Offensive styles",
    "text": "Preserves resources until an opponent is weakened, then commits decisively.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "combo-artist",
    "name": "Combo Artist",
    "group": "Offensive styles",
    "text": "Chains move effects, status, abilities, and team roles into planned sequences.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "berserker",
    "name": "Berserker",
    "group": "Offensive styles",
    "text": "Becomes more aggressive as the battle deteriorates, especially after a partner falls.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "revenge-striker",
    "name": "Revenge Striker",
    "group": "Offensive styles",
    "text": "Builds plans around punishing the Pokémon that defeated a previous partner.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overdrive-specialist",
    "name": "Overdrive Specialist",
    "group": "Offensive styles",
    "text": "Constructs the team around creating, exploiting, and surviving Overdrive windows.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fortress",
    "name": "Fortress",
    "group": "Defensive and control styles",
    "text": "Prioritizes durability, recovery, and safe switching.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "attrition",
    "name": "Attrition",
    "group": "Defensive and control styles",
    "text": "Wins by draining resources and forcing repeated unfavorable decisions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "trapper",
    "name": "Trapper",
    "group": "Defensive and control styles",
    "text": "Limits switching and punishes predictable patterns.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "counterpuncher",
    "name": "Counterpuncher",
    "group": "Defensive and control styles",
    "text": "Absorbs pressure and retaliates when the opponent overcommits.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "stallbreaker",
    "name": "Stallbreaker",
    "group": "Defensive and control styles",
    "text": "Specializes in dismantling defensive teams and recovery loops.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "guardian",
    "name": "Guardian",
    "group": "Defensive and control styles",
    "text": "Protects key team members and uses defensive support to preserve its ace.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "disruptor",
    "name": "Disruptor",
    "group": "Defensive and control styles",
    "text": "Uses status, stat changes, move denial, and confusion to undermine plans.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "sacrificial-strategist",
    "name": "Sacrificial Strategist",
    "group": "Defensive and control styles",
    "text": "Willingly trades one team member's position to secure a larger advantage—unless that conflicts with their bond philosophy.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "scout",
    "name": "Scout",
    "group": "Adaptive and technical styles",
    "text": "Uses early turns to learn about the opponent before committing.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "counter-builder",
    "name": "Counter-Builder",
    "group": "Adaptive and technical styles",
    "text": "Changes its team or moves between encounters based on remembered battles.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "gambit",
    "name": "Gambit",
    "group": "Adaptive and technical styles",
    "text": "Sets up a specific high-risk tactical payoff.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "improviser",
    "name": "Improviser",
    "group": "Adaptive and technical styles",
    "text": "Abandons planned sequences quickly when circumstances change.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mirror-match",
    "name": "Mirror Match",
    "group": "Adaptive and technical styles",
    "text": "Copies the opponent's broad strategy to prove superiority or expose weaknesses.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "anti-meta",
    "name": "Anti-Meta",
    "group": "Adaptive and technical styles",
    "text": "Builds specifically to punish the most common strategies in the region.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "resource-manager",
    "name": "Resource Manager",
    "group": "Adaptive and technical styles",
    "text": "Carefully budgets healing, consumables, switches, and once-per-battle mechanics.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "specialist",
    "name": "Specialist",
    "group": "Adaptive and technical styles",
    "text": "Focuses on a type, weather, terrain, or a narrow tactical identity.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "conductor",
    "name": "Conductor",
    "group": "Relationship-driven styles",
    "text": "Coordinates multiple Pokémon around complementary roles and carefully timed switches.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "protector",
    "name": "Protector",
    "group": "Relationship-driven styles",
    "text": "Prioritizes keeping one partner safe, even if it costs a tactical advantage.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "trust-fighter",
    "name": "Trust Fighter",
    "group": "Relationship-driven styles",
    "text": "Uses risky team plays that depend on strong bond-based synergy.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "instinctive-duo",
    "name": "Instinctive Duo",
    "group": "Relationship-driven styles",
    "text": "Favors improvisational combinations that reflect a trainer and Pokémon's shared habits.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "ace-centric",
    "name": "Ace-Centric",
    "group": "Relationship-driven styles",
    "text": "Builds the team to support one signature Pokémon.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rotating-ensemble",
    "name": "Rotating Ensemble",
    "group": "Relationship-driven styles",
    "text": "Treats the entire team as a cooperative unit, with no single permanent star.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "bond-breaker",
    "name": "Bond Breaker",
    "group": "Relationship-driven styles",
    "text": "Tries to disrupt the opponent's trust, confidence, or team rhythm rather than merely dealing damage.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "last-stand",
    "name": "Last Stand",
    "group": "Relationship-driven styles",
    "text": "Saves resources for a dramatic late-game comeback and a possible Hyper/Overdrive climax.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "offscreenEvents": [

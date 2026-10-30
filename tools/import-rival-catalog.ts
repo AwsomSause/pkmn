@@ -13,7 +13,7 @@ const lines = readFileSync(join(root, 'tools', 'sources', 'rivalry-examples.md')
 const clean = (s: string) => s.replace(/\\([.#*_-])/g, '$1').replace(/\*\*/g, '').replace(/^#+\s*/, '').trim();
 const slug = (s: string) => clean(s).toLowerCase().replace(/^the\s+/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-interface Entry { id: string; name: string; group: string; text: string; status: 'planned' }
+interface Entry { id: string; name: string; group: string; text: string; status: 'planned' | 'limited' | 'supported' | 'disabled' }
 const sections: Record<string, Entry[]> = { paths: [], personalities: [], styles: [], offscreenEvents: [], arcs: [], mechanics: [] };
 const SECTION_BY_NUMBER: Record<string, string> = { '1': 'paths', '2': 'personalities', '3': 'styles', '6': 'offscreenEvents', '7': 'arcs', '8': 'mechanics' };
 
@@ -59,5 +59,9 @@ for (const [key, want] of Object.entries(expected)) {
   const ids = sections[key]!.map((e) => e.id);
   if (new Set(ids).size !== ids.length) throw new Error(`${key}: duplicate ids ${ids.filter((x, k) => ids.indexOf(x) !== k).join(', ')}`);
 }
+// Statuses come from the profile files that make an entry run in the game.
+const profiles = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalProfiles.json'), 'utf8')) as { personalities: Record<string, { status: Entry['status'] }>; styles: Record<string, { status: Entry['status'] }> };
+for (const e of sections.personalities!) e.status = profiles.personalities[e.id]?.status ?? e.status;
+for (const e of sections.styles!) e.status = profiles.styles[e.id]?.status ?? e.status;
 writeFileSync(join(root, 'src', 'data', 'rivalCatalog.json'), JSON.stringify({ source: 'A Living Rivalry Engine - Examples, Possibilities, and Guidence.md', ...sections }, null, 1) + '\n');
 console.log(Object.entries(sections).map(([k, v]) => `${k}: ${v.length}`).join(', '));
