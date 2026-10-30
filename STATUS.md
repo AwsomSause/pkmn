@@ -35,7 +35,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Rival relations (`rivals/relations.ts`): training exchange, enemy Pokémon sparring, rivalry triangle, tired-ace substitute, close-battle memory (5 more mechanics "limited"; 8 left).
+- Rival relations (`rivals/relations.ts`): training exchange, enemy Pokémon sparring, rivalry triangle, tired-ace substitute, close-battle memory (5 more mechanics "limited"); reputation, signature and conflicting rumours add 3 more (5 mechanics left).
 - Rival bonds (run save v12): each rival Pokémon has 8 bond dimensions, a trait and habits; one of 39 off-screen events runs per rival each stage (`rivalBonds.json`, `rivals/bonds.ts`, built by `tools/build-rival-bonds.mjs`); bonds change the return level and show up as a pre-battle line and on the Story screen. Hyper/Overdrive and the 9 bond arcs wait.
 - Rival arcs: 27 of 46 run (`rivalArcs.json`, `rivals/arcs.ts`); bond and Overdrive arcs wait for those systems.
 - Rival paths: 13 of 30 run as rival origins (`rivalPaths.json`); the rest need sponsors, mentors, factions, debts, family or disasters.
