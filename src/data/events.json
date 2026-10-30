@@ -3327,14 +3327,16 @@
     {
      "label": "Take the egg",
      "success": {
-      "text": "It hatches right away into a baby!",
+      "text": "You tuck the Egg into your bag. It feels warm.",
       "effects": [
        {
-        "kind": "join",
+        "kind": "egg",
         "species": [],
         "types": [],
         "levelBonus": -5,
-        "shinyMultiplier": 1
+        "shinyMultiplier": 1,
+        "left": 3,
+        "unit": "battle"
        },
        {
         "kind": "attribute",
@@ -4696,14 +4698,16 @@
     {
      "label": "Ask about eggs",
      "success": {
-      "text": "They found an Egg! It hatches in your arms.",
+      "text": "They found an Egg! Keep it warm and it will hatch.",
       "effects": [
        {
-        "kind": "join",
+        "kind": "egg",
         "species": [],
         "types": [],
         "levelBonus": -6,
-        "shinyMultiplier": 1
+        "shinyMultiplier": 1,
+        "left": 2,
+        "unit": "battle"
        }
       ]
      }
@@ -5825,13 +5829,11 @@
       "text": "A new trick from its parents!",
       "effects": [
        {
-        "kind": "friendship",
-        "amount": 10,
-        "who": "lead"
+        "kind": "eggMove"
        },
        {
-        "kind": "levels",
-        "amount": 1,
+        "kind": "friendship",
+        "amount": 10,
         "who": "lead"
        }
       ]
@@ -14292,14 +14294,16 @@
       }
      ],
      "success": {
-      "text": "It hatches right away!",
+      "text": "It wriggles in your bag. It will hatch soon!",
       "effects": [
        {
-        "kind": "join",
+        "kind": "egg",
         "species": [],
         "types": [],
         "levelBonus": -3,
-        "shinyMultiplier": 3
+        "shinyMultiplier": 3,
+        "left": 2,
+        "unit": "battle"
        },
        {
         "kind": "attribute",
@@ -15981,11 +15985,13 @@
       "text": "\"Here, this one was left behind.\"",
       "effects": [
        {
-        "kind": "join",
+        "kind": "egg",
         "species": [],
         "types": [],
         "levelBonus": -3,
-        "shinyMultiplier": 2
+        "shinyMultiplier": 2,
+        "left": 3,
+        "unit": "battle"
        }
       ]
      }

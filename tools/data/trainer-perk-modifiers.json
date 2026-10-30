@@ -1092,6 +1092,14 @@
  ],
  "elm": [
   {
+   "kind": "hatchLevelOffset",
+   "value": 3
+  },
+  {
+   "kind": "hatchedXpMultiplier",
+   "value": 1.15
+  },
+  {
    "kind": "catchLevelOffset",
    "value": -2
   }

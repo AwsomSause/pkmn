@@ -34,6 +34,7 @@ Update this file when you add, move or delete a folder or a key file.
 | `src/core/state.ts` | Types for changing state: Pokémon instances, battles, the run. |
 | `src/core/contentSchema.ts` | **big** (1300). Zod shapes of every data file. |
 | `src/core/rng.ts` | Seeded RNG and named streams. |
+| `src/core/eggs.ts` | Eggs: lay (species, shine, egg moves rolled then), count down per battle or stage, hatch into a "caught" decision. |
 | `src/core/battle/` | `engine.ts` **big** (1930) turn engine; `abilities.ts`; `damage.ts` pure maths; `held.ts` held items; `transform.ts` Mega/Tera/Z/Dynamax; `hyper.ts` Hyper moments (M8.9); `doubles.ts` double battles (two a side: focus, spread moves, aiming, ally moves/abilities, AI). |
 | `src/core/presentation/` | Presentation-cue layer: `cues.ts` (engine events → animation plan), `moveAnims.ts`, `animFormat.ts`. |
 | `src/core/story/` | Story layer (M8.9): `schema`, `record` (domain events), `effects` + `ledger` (never apply twice), `queue`, `hooks` (run → story), `hyper` (Hyper moment eligibility). Guide: `docs/story-foundation.md`. |

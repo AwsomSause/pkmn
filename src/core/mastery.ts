@@ -202,27 +202,34 @@ export function masteredStarters(content: Content, profile: { mastery?: Profile[
  * Gives a Pokémon that just joined its family's unlocks (mutates `mon`).
  * Returns what changed, in words. A Pokémon with nothing unlocked is left alone.
  */
+/**
+ * Teaches an egg move: into a free slot, or in place of its weakest move that isn't in `keep`.
+ * False when the move can't run, is already known, or every slot is kept.
+ */
+export function teachEggMove(content: Content, mon: PokemonInstance, id: string, keep: readonly string[]): boolean {
+  if (!content.moves.get(id)?.supported || mon.moves.some((m) => m.id === id)) return false;
+  const species = content.species.get(mon.speciesId);
+  const entry = { id, pp: content.moves.get(id)!.pp };
+  if (mon.moves.length < 4) {
+    mon.moves.push(entry);
+    return true;
+  }
+  let weakest = -1;
+  mon.moves.forEach((m, i) => {
+    if (keep.includes(m.id)) return;
+    if (weakest < 0 || moveScore(content, species, m.id) < moveScore(content, species, mon.moves[weakest]!.id)) weakest = i;
+  });
+  if (weakest < 0) return false;
+  mon.moves[weakest] = entry;
+  return true;
+}
+
 export function applyMastery(content: Content, run: RunState, mon: PokemonInstance): string[] {
   const perk = run.mastery?.[familyId(content, mon.speciesId)];
   if (!perk) return [];
   const species = content.species.get(mon.speciesId);
   const changes: string[] = [];
-  for (const id of perk.eggMoves) {
-    if (!content.moves.get(id)?.supported || mon.moves.some((m) => m.id === id)) continue;
-    const entry = { id, pp: content.moves.get(id)!.pp };
-    if (mon.moves.length < 4) mon.moves.push(entry);
-    else {
-      // Replaces its weakest move that isn't another egg move.
-      let weakest = -1;
-      mon.moves.forEach((m, i) => {
-        if (perk.eggMoves.includes(m.id)) return;
-        if (weakest < 0 || moveScore(content, species, m.id) < moveScore(content, species, mon.moves[weakest]!.id)) weakest = i;
-      });
-      if (weakest < 0) continue;
-      mon.moves[weakest] = entry;
-    }
-    changes.push(`knows the egg move ${content.moves.get(id)!.name}`);
-  }
+  for (const id of perk.eggMoves) if (teachEggMove(content, mon, id, perk.eggMoves)) changes.push(`knows the egg move ${content.moves.get(id)!.name}`);
   if (perk.abilitySlot !== null && species) {
     const fits = perk.abilitySlot === -1 ? Boolean(species.abilities.hidden) : perk.abilitySlot < species.abilities.normal.length;
     if (fits && mon.abilitySlot !== perk.abilitySlot) {

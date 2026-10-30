@@ -21,7 +21,9 @@ import { createPokemon, getSpecies, MAX_PP_UPS, maxHp, maxPp } from './pokemon';
 import { activePerks, addMapItem, mapItemCopies, perksOf } from './mapItems';
 import { discover } from './progress';
 import { runLevelCap } from './regions';
-import type { Rng } from './rng';
+import { eggStatus, layEgg } from './eggs';
+import { isNative, wildEligibleSpecies } from './themes';
+import { hashSeed, Rng } from './rng';
 import type { PendingDecision, PokemonInstance, RunState } from './state';
 
 /** How many random moves a TM offers (an HM offers every one). */
@@ -136,7 +138,7 @@ export function isCatalogUseful(content: Content, run: RunState, entry: CatalogE
         (effect.pp !== undefined && mon.moves.some((m) => m.pp < maxPp(content, m))),
     );
   }
-  if (effect.kind === 'fossil') return run.party.length > 0;
+  if (effect.kind === 'fossil' || effect.kind === 'egg') return run.party.length > 0;
   return true;
 }
 
@@ -305,12 +307,6 @@ export function applyCatalog(
       messages.push(`${entry.name}: ${entry.description}.`);
       break;
     }
-    case 'egg': {
-      run.itemCounters = { ...run.itemCounters, [`egg:${run.nextUid}`]: effect.stages, [`egg-shiny:${run.nextUid}`]: effect.shiny };
-      run.nextUid += 1;
-      messages.push(`${entry.name}: it hatches after ${effect.stages} stages.`);
-      break;
-    }
     case 'bagItem': {
       addItem(run.inventory, effect.item, effect.count);
       messages.push(`${entry.name} went into your Bag${effect.count > 1 ? ` ×${effect.count}` : ''}.`);
@@ -324,6 +320,19 @@ export function applyCatalog(
       discover(run, mon.speciesId, true);
       messages.push(`The ${entry.name} was revived into ${name(mon)}!`);
       pending.push({ kind: 'caught', mon });
+      break;
+    }
+    case 'egg': {
+      // Its own generator, so no other roll in this pick changes.
+      const rng = new Rng(hashSeed(`${run.seed}::mystery-egg::${run.itemCounters?.['eggs-laid'] ?? 0}`));
+      const region = run.regionOrder[run.regionIndex];
+      const pool = wildEligibleSpecies(content).filter((s) => s.evolutionStage === 1);
+      const speciesId = rng.weighted(pool.map((s) => ({ item: s.id, weight: isNative(content, s, region) ? content.balance.nativeWeight : 1 })));
+      const levels = run.party.map((m) => m.level);
+      const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)) - 3));
+      const shiny = runAttributeEffects(content, run).shinyChance * effect.shiny;
+      const made = layEgg(content, run, speciesId, { level, left: effect.stages, unit: 'stage', source: entry.name, shinyMultiplier: shiny }, rng);
+      messages.push(`You have an Egg! ${eggStatus(made)}.`);
       break;
     }
     case 'teachMove': {

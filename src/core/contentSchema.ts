@@ -773,6 +773,10 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
   /** Prize money from double battles. */
   z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
+  /** Pokémon hatched from Eggs start this many levels higher. */
+  z.object({ kind: z.literal('hatchLevelOffset'), value: z.number().int() }),
+  /** Experience for Pokémon hatched from Eggs. */
+  z.object({ kind: z.literal('hatchedXpMultiplier'), value: z.number().positive() }),
   /** Accuracy of your status moves. */
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
@@ -2028,6 +2032,18 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('levels'), amount: z.number().int().positive(), who: z.enum(['lead', 'party']).default('lead') }),
   /** A Pokémon joins (or goes to storage when the party is full): a listed species, or one of the types, or the stage's theme. */
   z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1) }),
+  /** You get an Egg (core/eggs.ts) that hatches after `left` battles or stages; it carries up to two egg moves. */
+  z.object({
+    kind: z.literal('egg'),
+    species: z.array(z.string()).default([]),
+    types: z.array(TypeNameSchema).default([]),
+    levelBonus: z.number().int().default(0),
+    shinyMultiplier: z.number().min(1).default(1),
+    left: z.number().int().min(1).default(3),
+    unit: z.enum(['battle', 'stage']).default('battle'),
+  }),
+  /** The lead learns one of its family's egg moves it doesn't know yet. */
+  z.object({ kind: z.literal('eggMove') }),
   /** The next reward draft uses the gym leader's odds and offers `extra` more choices. */
   z.object({ kind: z.literal('betterDraft'), extra: z.number().int().min(0).default(0) }),
   /** The map shows this stage's gym leader's whole team. */

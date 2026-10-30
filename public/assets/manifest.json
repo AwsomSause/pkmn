@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T14:19:16.364Z",
+  "generatedAt": "2026-10-30T14:50:24.263Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -96,6 +96,56 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/ebdx/ui/symDynamax.png"
+    },
+    {
+      "id": "pack.ebdx.egg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/egg.png",
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.eggCracks",
+      "kind": "spritesheet",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/cracks.png",
+      "frameSize": 80,
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.hatch.hatchbg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/hatchbg.png",
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.hatch.line",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/line.png",
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.hatch.overlay",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/overlay.png",
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.hatch.shine6",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/shine6.png",
+      "lazy": true
+    },
+    {
+      "id": "pack.ebdx.hatch.shine7",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/hatch/shine7.png",
+      "lazy": true
     },
     {
       "id": "pack.ebui.effectiveness",
@@ -492,6 +542,12 @@
       "kind": "audio",
       "category": "sound",
       "path": "audio/se/exp.wav"
+    },
+    {
+      "id": "se.egg_get",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/egg_get.ogg"
     },
     {
       "id": "ui.select",
@@ -70741,6 +70797,12 @@
       "path": "images/bosses/kurt.png"
     },
     {
+      "id": "boss.lusamine-masters",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/lusamine-masters.png"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -71082,12 +71144,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/gladion-masters2.png"
-    },
-    {
-      "id": "boss.lusamine-masters",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/lusamine-masters.png"
     },
     {
       "id": "boss.lusamine-nihilego",

@@ -163,6 +163,7 @@ export interface XpInfo {
   isStarter: boolean;
   isBossBattle: boolean;
   ultraBeast?: boolean;
+  isHatched?: boolean;
 }
 
 /** Experience multiplier for one Pokémon (group perks and ordinary-battle perks). */
@@ -177,6 +178,7 @@ export function xpPerk(perks: Perks | undefined, i: XpInfo): number {
     return true;
   });
   if (!i.isBossBattle) v *= product(perks, 'ordinaryXpMultiplier');
+  if (i.isHatched) v *= product(perks, 'hatchedXpMultiplier');
   return v;
 }
 
@@ -409,6 +411,10 @@ export function burnDamageTakenPerk(perks: Perks | undefined): number {
 
 export function bossMoneyPerk(perks: Perks | undefined): number {
   return product(perks, 'bossMoneyMultiplier');
+}
+
+export function hatchLevelOffset(perks: Perks | undefined): number {
+  return sum(perks, 'hatchLevelOffset', (m) => m.value);
 }
 
 export function doubleBattleRewardPerk(perks: Perks | undefined): number {

@@ -56,6 +56,16 @@ export const join = (o: { species?: string[]; types?: string[]; lv?: number; shi
   levelBonus: o.lv ?? 0,
   shinyMultiplier: o.shiny ?? 1,
 });
+export const egg = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; left?: number; unit?: 'battle' | 'stage' } = {}): Json => ({
+  kind: 'egg',
+  species: o.species ?? [],
+  types: o.types ?? [],
+  levelBonus: o.lv ?? 0,
+  shinyMultiplier: o.shiny ?? 1,
+  left: o.left ?? 3,
+  unit: o.unit ?? 'battle',
+});
+export const eggMove = (): Json => ({ kind: 'eggMove' });
 export const better = (extra = 0): Json => ({ kind: 'betterDraft', extra });
 export const gym = (): Json => ({ kind: 'gymPreview' });
 export const reveal = (): Json => ({ kind: 'revealStops' });
