@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 11, settings 3, meta 1. Next free run version: 12 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 12, settings 3, meta 1. Next free run version: 13 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -32,6 +32,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
+- Rival bonds (run save v12): each rival Pokémon has 8 bond dimensions, a trait and habits; one of 39 off-screen events runs per rival each stage (`rivalBonds.json`, `rivals/bonds.ts`, built by `tools/build-rival-bonds.mjs`); bonds change the return level and show up as a pre-battle line and on the Story screen. Hyper/Overdrive and the 9 bond arcs wait.
 - Rival arcs: 27 of 46 run (`rivalArcs.json`, `rivals/arcs.ts`); bond and Overdrive arcs wait for those systems.
 - Rival paths: 13 of 30 run as rival origins (`rivalPaths.json`); the rest need sponsors, mentors, factions, debts, family or disasters.
 - Rivals slice 5: up to 3 rivals; off-screen world sim each stage (`rivals/world.ts`): wins/defeats/private goals/cooldowns, rival graph, rumours; 11 catalog mechanics now "limited".
