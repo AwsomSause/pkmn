@@ -107,9 +107,11 @@ test('the healing spot and the shop work from the map', async ({ page }) => {
   await waitForScene(page, 'Shop');
   await page.screenshot({ path: 'test-results/m3-shop.png' });
   const balls = (await run(page)).inventory['poke-ball'] ?? 0;
+  const moneyBefore = (await run(page)).money;
   await page.keyboard.press('Enter'); // first row: Poké Ball
   await expect.poll(async () => (await run(page)).inventory['poke-ball'] ?? 0, { timeout: 5000 }).toBe(balls + 1);
-  expect((await run(page)).money).toBe(300);
+  // The shop's weekly sale may take 20% off the ball (200 → 160).
+  expect([moneyBefore - 200, moneyBefore - 160]).toContain((await run(page)).money);
   await page.waitForTimeout(250);
   await page.keyboard.press('Escape');
   await mapReady(page);
