@@ -417,7 +417,11 @@
  ],
  "doubles": {
   "chance": 0.3,
-  "fromStage": 1
+  "fromStage": 1,
+  "wildChance": 0.12,
+  "bossIds": [
+   "tate"
+  ]
  },
  "shopSale": {
   "everyStages": 3,

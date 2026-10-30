@@ -99,3 +99,40 @@ test('a double battle takes two commands a turn and survives a reload', async ({
   }
   expect(errors).toEqual([]);
 });
+
+test('wild Pokémon can come in pairs, and the battle plays as a double battle', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/?seed=wild-pair-e2e');
+  await waitForScene(page, 'MainMenu');
+  await toMap(page);
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.content.balance.doubles = { ...session.content.balance.doubles, wildChance: 1, fromStage: 0 };
+    const run = session.run;
+    const twin = structuredClone(run.party[0]);
+    twin.uid = 'p-dbl';
+    run.party.push(twin);
+    const node = run.stage.map.nodes.find((n: any) => n.column === 1);
+    node.kind = 'wild';
+    node.harder = false;
+    session.chooseNode(node.id);
+    game.scene.getScene('Map').scene.start('Battle');
+  });
+  await waitForScene(page, 'Battle');
+  const state = await battleState(page);
+  expect(state?.doubles).toBe(true);
+  expect(await page.evaluate(() => (window as any).__pkr.session.run.battle.enemyTeam.length)).toBe(2);
+  for (let i = 0; i < 60; i++) {
+    const s = await battleState(page);
+    if (!s || s.outcome || s.turn >= 2) break;
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(150);
+  }
+  const after = await battleState(page);
+  expect(after === null || after.outcome !== null || after.turn >= 2).toBe(true);
+  expect(errors).toEqual([]);
+});

@@ -1629,12 +1629,12 @@
    "value": 0.9
   },
   {
-   "kind": "singleBattleXpMultiplier",
-   "value": 0.9
-  },
-  {
    "kind": "doubleBattleRewardMultiplier",
    "value": 1.2
+  },
+  {
+   "kind": "singleBattleXpMultiplier",
+   "value": 0.9
   }
  ],
  "tate-liza-gen-6": [

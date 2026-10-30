@@ -2,7 +2,9 @@
 // redirection, the ally moves and abilities, faints and replacements, determinism.
 
 import { describe, expect, it } from 'vitest';
-import { createBattle, type BattleContext, type BattleEvent, type SlotCommand } from '../../src/core/battle/engine';
+import { createBattle, itemProblem, type BattleContext, type BattleEvent, type SlotCommand } from '../../src/core/battle/engine';
+import { chooseStarter, createRun, startEncounter } from '../../src/core/run';
+import { nextChoices } from '../../src/core/map';
 import { autoCommands, makeDoubles, monAt, needsTarget, resolveDoublesTurn, startDoubles, targetKind } from '../../src/core/battle/doubles';
 import { abilityStatus } from '../../src/core/battle/abilities';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
@@ -203,5 +205,65 @@ describe('determinism', () => {
       return JSON.stringify(out);
     };
     expect(run()).toBe(run());
+  });
+});
+
+describe('Wild and boss double battles', () => {
+  function wildPair() {
+    const party = ['snorlax', 'pikachu'].map((id, i) => {
+      const mon = createPokemon(content, id, 50, `p${i}`);
+      mon.moves = [{ id: 'tackle', pp: 35 }];
+      return mon;
+    });
+    const team = ['rattata', 'pidgey'].map((id, i) => {
+      const mon = createPokemon(content, id, 5, `e${i}`);
+      mon.moves = [{ id: 'growl', pp: 40 }];
+      return mon;
+    });
+    const battle = createBattle('wild', team, 0, party[0]!.uid);
+    makeDoubles(battle, party);
+    const ctx: BattleContext = { content, battle, party, inventory: { 'ultra-ball': 5 }, rng: new Rng(hashSeed('wild2')), captureRng: new Rng(hashSeed('wild2c')), catchMultiplier: 1 };
+    return { ctx, battle, team };
+  }
+
+  it('no Poké Ball while two wild Pokémon are out; once one is down, the ball aims at the other', () => {
+    const { ctx, battle, team } = wildPair();
+    expect(itemProblem(ctx, 'ultra-ball')).toMatch(/two wild/);
+    team[0]!.hp = 1;
+    const tackle = (spot: 0 | 1): SlotCommand => ({ action: { kind: 'move', index: 0 }, target: { side: 'enemy', spot } });
+    resolveDoublesTurn(ctx, { kind: 'double', commands: [tackle(0), { action: { kind: 'idle' } }] });
+    expect(team[0]!.hp).toBe(0);
+    expect(battle.outcome).toBeNull();
+    expect(itemProblem(ctx, 'ultra-ball')).toBeNull();
+    let caught = false;
+    for (let i = 0; i < 20 && !caught; i++) {
+      resolveDoublesTurn(ctx, { kind: 'double', commands: [{ action: { kind: 'item', itemId: 'ultra-ball' } }, { action: { kind: 'idle' } }] });
+      caught = battle.outcome === 'caught';
+      ctx.inventory['ultra-ball'] = 5;
+    }
+    expect(caught).toBe(true);
+    expect(battle.enemyTeam[battle.enemyIndex]!.uid).toBe('e1');
+  });
+
+  it('wild pairs and Tate & Liza come up on the map when the balance allows them', () => {
+    const c = { ...content, balance: { ...content.balance, doubles: { ...content.balance.doubles, wildChance: 1, fromStage: 0 } } };
+    const run = structuredClone(chooseStarter(c, createRun(c, { runId: 'w', seed: 'wild-pairs', archetypeId: 'red' }), 0));
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'p-two' });
+    const node = { ...nextChoices(run.stage!)[0]!, kind: 'wild' as const, harder: false };
+    startEncounter(c, run, node);
+    expect(run.battle!.doubles).toBeDefined();
+    expect(run.battle!.enemyTeam).toHaveLength(2);
+    // Same seed, same pair.
+    const again = structuredClone(chooseStarter(c, createRun(c, { runId: 'w', seed: 'wild-pairs', archetypeId: 'red' }), 0));
+    again.party.push({ ...structuredClone(again.party[0]!), uid: 'p-two' });
+    startEncounter(c, again, node);
+    expect(again.battle!.enemyTeam.map((m) => m.speciesId)).toEqual(run.battle!.enemyTeam.map((m) => m.speciesId));
+
+    const gym = structuredClone(chooseStarter(content, createRun(content, { runId: 'g', seed: 'tate', archetypeId: 'red' }), 0));
+    gym.party.push({ ...structuredClone(gym.party[0]!), uid: 'p-two' });
+    gym.stage!.leaderId = 'tate';
+    startEncounter(content, gym, { ...node, kind: 'gym' });
+    expect(gym.battle!.enemyTeam.length).toBeGreaterThanOrEqual(2);
+    expect(gym.battle!.doubles).toBeDefined();
   });
 });

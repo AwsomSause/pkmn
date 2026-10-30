@@ -750,6 +750,11 @@ export class BattleScene extends Phaser.Scene {
           if (battle.rivalNote) await this.say(battle.rivalNote);
           await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
         }
+      } else if (this.duo) {
+        // Wild Pokémon in a pair.
+        await this.showDuoSide('enemy', true);
+        const second = this.duo.other.enemy.mon;
+        await this.say(`Wild ${this.speciesName(this.shown.enemy)}${second ? ` and ${this.speciesName(second)}` : ''} appeared!`);
       } else {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);

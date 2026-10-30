@@ -1117,6 +1117,18 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
     if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
     useWildBattleCharges(run);
+    // Wild Pokémon sometimes come in pairs (a second, ordinary one from this stage's pool, rolled by its own generator).
+    const doublesCfg = content.balance.doubles;
+    const pairRng = new Rng(hashSeed(`${run.seed}::wild-doubles::${run.regionIndex}::${stage.index}::${node.id}::${run.encountersCompleted}`));
+    if (!legendary && !run.battle.mapItems && stageNumber >= doublesCfg.fromStage && run.party.filter((m) => m.hp > 0).length >= 2 && pairRng.chance(doublesCfg.wildChance)) {
+      const second = planWild(content, archetype, theme, scale, 0, pairRng, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
+      const partner = newMon(content, run, lockSpecies(content, run, second.speciesId, `wild2:${node.id}`), Math.min(second.level, enemy.level + 2), 'e');
+      partner.shiny = second.shiny;
+      if (partner.shiny) count(run, 'shiniesFound');
+      run.battle.enemyTeam.push(partner);
+      run.battle.levelInfo = [...(run.battle.levelInfo ?? []), second.levelInfo];
+      makeDoubles(run.battle, run.party);
+    }
   } else {
     const roll = <T>(fn: (r: Rng) => T): T => (rematch ? fn(rematch) : withStream(run.rng, 'encounter', fn));
     let plan: TrainerPlan = roll((r) => {
@@ -1197,7 +1209,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (firstRival) run.battle.firstRival = true;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
-    if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+    // Bosses known for double battles (Tate & Liza) always fight two at a time.
+    if (plan.leaderId && doublesCfg.bossIds.includes(plan.leaderId) && canBeDoubles(run.party, team)) makeDoubles(run.battle, run.party);
+    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
       if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
     }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
@@ -1683,7 +1697,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
       // Macho Brace: more EXP for its holder.
       const monSpecies = getSpecies(content, mon.speciesId);
-      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId), isHatched: mon.hatched === true });
+      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId), isHatched: mon.hatched === true, isDoubles: battle.doubles !== undefined });
       const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const squirt = mon === run.party[0] && (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 1 + (perksOf(activePerks(content, run), 'squirt')[0]?.perk.percent ?? 5) / 100 : 1;
       const amount = Math.floor((participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100)) * squirt);
