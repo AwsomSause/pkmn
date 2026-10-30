@@ -41,6 +41,7 @@ export const DOMAIN_EVENT_TYPES = [
   'rewardTaken',
   'storyMoment',
   'rivalryFormed',
+  'trainerVowedReturn',
   'runEnded',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
@@ -219,6 +220,18 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
     recklessDamage: z.number().min(0).max(1),
     reckless: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
   }),
+  /**
+   * Run scope: a trainer you barely beat joins the rematch pool and comes back in a later stage
+   * with its old team at the new levels (+levelBonus) and extra members (the run does it).
+   * At most perStage vows per stage and perRegion per region.
+   */
+  z.object({
+    kind: z.literal('rematch'),
+    levelBonus: z.number().int().min(0),
+    extraMembers: z.number().int().min(0).max(5),
+    perStage: z.number().int().positive(),
+    perRegion: z.number().int().positive(),
+  }),
   z.object({
     kind: z.literal('boost'),
     stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
@@ -236,7 +249,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */

@@ -14,7 +14,8 @@ import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
-import { battleIndex, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, whereNow } from './record';
+import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
+import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import type { StoryEventDefinition, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
@@ -215,6 +216,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   const lead = run.party[battle.activeIndex];
   if (lead && !battle.outcome) noteLowHpTurn(run, lead.uid, lead.hp > 0 && lead.hp <= maxHp(content, lead) * cfg.lowHpShare);
 
+  if (battle.outcome === 'win') trainerVow(content, run, triggers, events.length - 1, where);
   const cues = resolveTriggers(content, run, triggers, where);
   if (battle.outcome) recordBattleEnd(content, run, where);
   return cues;
@@ -245,6 +247,37 @@ function makeTrigger(
     order,
     names,
   };
+}
+
+/** "This Trainer Will Return": an ordinary trainer you beat with one Pokémon left at low HP vows to come back. */
+function trainerVow(content: Content, run: RunState, triggers: StoryTrigger[], at: number, where: Where): void {
+  const rule = rematchRule(content);
+  const battle = run.battle!;
+  const trainer = battle.trainer;
+  if (!rule || battle.kind !== 'trainer' || !trainer || trainer.leaderId || battle.rematch || battle.returning) return;
+  const standing = run.party.filter((m) => m.hp > 0);
+  const last = standing[0];
+  if (standing.length !== 1 || !last || last.hp > maxHp(content, last) * rule.lowHpShare) return;
+  const inRegion = vowedTrainers(run).filter((p) => p.battles[0]?.where.region === where.region);
+  if (inRegion.length >= rule.effect.perRegion || inRegion.filter((p) => p.battles[0]?.where.stage === where.stage).length >= rule.effect.perStage) return;
+  const profile = createEnemyProfile(content, run, {
+    id: `trainer-${where.region}-${where.stage ?? 0}-${battleIndex(run)}`,
+    name: trainer.name,
+    trainerId: trainer.classId,
+    team: battle.enemyTeam.slice(0, 6).map((m) => ({ speciesId: m.speciesId, level: m.level })),
+  });
+  if (!profile) return;
+  const title = `${content.trainers.get(trainer.classId)?.name ?? 'Trainer'} ${trainer.name}`;
+  const cause = emit(content, run, 'trainerVowedReturn', {
+    where,
+    actors: [last.uid],
+    data: { profile: profile.id, classId: trainer.classId, name: trainer.name },
+    text: `Barely beat ${title}, who vowed to return`,
+  });
+  recordEnemyBattle(content, profile, cause, 'win');
+  run.story.flags[returnFlag(profile.id)] = 'waiting';
+  const def = content.story.definitions.find((d) => d.id === rule.id)!;
+  triggers.push({ ...makeTrigger(run, def, at, triggers.length, { trainer: title, name: name(content, last.speciesId) }, null, last.uid), combat: false });
 }
 
 /** Runs the event queue over the turn's triggers: effects, memories and cues. */
@@ -289,11 +322,14 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
     const history = run.story.histories[uid];
     if (history) for (const id of species) history.foes[id] = (history.foes[id] ?? 0) + 1;
   }
-  emit(content, run, 'battleEnded', {
+  const ended = emit(content, run, 'battleEnded', {
     where,
     actors: fought,
     data: { result, kind: battle.kind, turns: battle.turn - 1, hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0 },
   });
+  // A returning trainer's rematch goes into its record.
+  const back = battle.returning ? run.story.enemyProfiles.find((p) => p.id === battle.returning) : undefined;
+  if (back && (result === 'win' || result === 'lose')) recordEnemyBattle(content, back, ended, result);
   const trainer = battle.trainer;
   const role = trainer?.leaderId ? BOSS_ROLES[trainer.classId] : undefined;
   if (!trainer || !role) return;

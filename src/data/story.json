@@ -5,8 +5,8 @@
     "histories": 60,
     "openRelationships": 12,
     "relationshipHistory": 20,
-    "enemyProfilesPerRun": 6,
-    "enemyProfilesPerRegion": 3,
+    "enemyProfilesPerRun": 40,
+    "enemyProfilesPerRegion": 4,
     "enemyProfileBattles": 10,
     "chronicleEntries": 300,
     "appliedEffects": 2000
@@ -50,6 +50,7 @@
     "rewardTaken": 0,
     "storyMoment": 60,
     "rivalryFormed": 55,
+    "trainerVowedReturn": 50,
     "runEnded": 90
   },
   "definitions": [
@@ -421,6 +422,44 @@
           "major": false
         }
       }
+    },
+    {
+      "id": "trainer-will-return",
+      "displayName": "This Trainer Will Return!",
+      "messagePool": [
+        "{trainer} barely lost to {name}. \"This isn't over! I'll be back with a stronger team!\"",
+        "{trainer} came so close... \"Next time, I'll win! Count on it!\""
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "trainerReturns",
+        "lowHpShare": 0.25
+      },
+      "chance": null,
+      "effect": {
+        "kind": "rematch",
+        "levelBonus": 2,
+        "extraMembers": 1,
+        "perStage": 1,
+        "perRegion": 4
+      },
+      "duration": "run",
+      "cooldown": "none",
+      "memoryRecord": null,
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#b08cff",
+        "sound": "se.level_up",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "memory",
+      "eligibilityTags": [
+        "enemy"
+      ],
+      "variants": {}
     }
   ]
 }

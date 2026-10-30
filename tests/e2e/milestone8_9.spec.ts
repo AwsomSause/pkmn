@@ -153,3 +153,41 @@ test('The Two Pokémon Feel a Heated Rivalry: a banner when your Pokémon meets 
   expect(await page.evaluate(() => (window as any).__pkr.session.run.story.relationships.filter((r: any) => r.kind === 'rivalry').length)).toBe(1);
   expect(errors).toEqual([]);
 });
+
+test('This Trainer Will Return: a trainer that vowed to return comes back for a rematch', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/?debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.newRun('red', 'e2e-return-1');
+    session.chooseStarter(0);
+    const run = session.run;
+    run.story.enemyProfiles.push({
+      id: 'trainer-0-9-1',
+      name: 'Joey',
+      trainerId: 'youngster',
+      region: 0,
+      team: [{ speciesId: 'rattata', level: 5 }],
+      battles: [{ eventId: 'x', result: 'win', where: { region: 0, stage: 9, level: 3, node: null, battle: 1, turn: 2 } }],
+      adaptations: [],
+    });
+    run.story.flags['return:trainer-0-9-1'] = 'waiting';
+    const first = run.stage.map.nodes.filter((n: any) => n.column === 1)[0];
+    first.kind = 'trainer';
+    session.chooseNode(first.id);
+    game.scene.getScenes(true)[0].scene.start('Battle');
+  });
+  await waitForScene(page, 'Battle');
+  const texts = () =>
+    page.evaluate(() => {
+      const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+      return (window as any).__pkr.game.scene.getScene('Battle').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text as string);
+    });
+  await expect.poll(async () => (await texts()).some((t: string) => t.includes('is back for a rematch!')), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await page.screenshot({ path: 'test-results/m89-trainer-returns.png' });
+  expect(await page.evaluate(() => (window as any).__pkr.session.run.battle.returning)).toBe('trainer-0-9-1');
+  expect(errors).toEqual([]);
+});

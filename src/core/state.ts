@@ -212,6 +212,8 @@ export const BattleStateSchema = z.object({
   mapItems: z.object({ freeTurns: z.number().int().min(0), thrown: z.number().int().min(0) }).optional(),
   /** A VS Seeker rematch: double prize money. */
   rematch: z.boolean().optional(),
+  /** "This Trainer Will Return": the enemy profile id of a trainer back for its rematch. */
+  returning: z.string().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
 });

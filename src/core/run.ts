@@ -99,6 +99,7 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
+import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 
 export interface NewRunOptions {
   runId: string;
@@ -629,7 +630,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     useWildBattleCharges(run);
   } else {
     const roll = <T>(fn: (r: Rng) => T): T => (rematch ? fn(rematch) : withStream(run.rng, 'encounter', fn));
-    const plan: TrainerPlan = roll((r) => {
+    let plan: TrainerPlan = roll((r) => {
       switch (node.kind) {
         case 'gym':
           return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r);
@@ -644,6 +645,13 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
+    // A trainer that vowed to return takes the place of the first ordinary trainer of a later stage.
+    const rule = node.kind === 'trainer' && !rematch ? rematchRule(content) : null;
+    const back = rule ? waitingTrainer(run) : null;
+    if (rule && back) {
+      plan = revisedTeam(content, run, back, plan, rule.effect);
+      run.story.flags[returnFlag(back.id)] = 'returned';
+    }
     const team = plan.members.map((m) => {
       const uid = nextUid(run, 'e');
       return createPlannedPokemon(content, m, uid, `${run.seed}:${uid}`);
@@ -652,6 +660,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
     if (rematch) run.battle.rematch = true;
+    if (back) run.battle.returning = back.id;
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
     if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));
