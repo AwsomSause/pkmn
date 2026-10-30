@@ -16,6 +16,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - Untitled doc Phase A: drafts offer ≤1 attribute item; base-stat sanity test (tier weights, Mega Stone gating already existed).
 - Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
 - Untitled doc Phase B (settings): battle speed (normal/fast/quick) in settings v3. Reduced motion already existed (battleAnimations). Still open: trainer bands, new NPC classes.
+- Untitled doc Phase B (trainer bands): `trainerTeam.earlyCaps` = stage 1 has 1 Pokémon, stages 2–6 cap 2–4. NPC classes audit: 17 classes use existing sprites; no new classes yet.
 - M9 battle animations + settings; boss teams (229 bosses).
 
 ## In progress / next
