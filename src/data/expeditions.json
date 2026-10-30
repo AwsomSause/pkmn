@@ -1,0 +1,409 @@
+{
+ "denChance": 0.3,
+ "tierByRegion": [
+  1,
+  2,
+  3,
+  4
+ ],
+ "failureHealFraction": 0.5,
+ "mysteryEvents": [
+  {
+   "id": "old-shrine",
+   "text": "An old shrine hums with energy.",
+   "options": [
+    {
+     "label": "Pray",
+     "result": "Your team feels restored.",
+     "effect": {
+      "heal": 0.3
+     }
+    },
+    {
+     "label": "Take the offering",
+     "result": "You pocket some coins, but the air turns cold.",
+     "effect": {
+      "money": 300,
+      "hurt": 0.1
+     }
+    }
+   ]
+  },
+  {
+   "id": "strange-crate",
+   "text": "A sealed crate sits in the path.",
+   "options": [
+    {
+     "label": "Pry it open",
+     "result": "Supplies!",
+     "effect": {
+      "item": "hyper-potion"
+     }
+    },
+    {
+     "label": "Leave it",
+     "result": "You move on, a bit wiser.",
+     "effect": {
+      "research": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "glowing-rock",
+   "text": "A rock glows with Mega Energy.",
+   "options": [
+    {
+     "label": "Study it",
+     "result": "You learn something useful.",
+     "effect": {
+      "research": 2
+     }
+    },
+    {
+     "label": "Chip off a piece",
+     "result": "A shard of Mega Energy!",
+     "effect": {
+      "energy": 1,
+      "hurt": 0.05
+     }
+    }
+   ]
+  }
+ ],
+ "expeditions": [
+  {
+   "id": "ember-trail",
+   "name": "Ember Trail",
+   "tier": 1,
+   "blurb": "A short, safe route up a volcanic path. Bring your own team.",
+   "nodes": {
+    "min": 5,
+    "max": 7
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 3,
+    "trainer": 3,
+    "elite": 1,
+    "rest": 2,
+    "cache": 2,
+    "research": 1,
+    "mystery": 1,
+    "recruit": 1,
+    "megaEnergy": 2,
+    "totem": 0,
+    "raid": 0
+   },
+   "finale": {
+    "kind": "megaBoss",
+    "species": [
+     "charizard"
+    ],
+    "levelBonus": 1,
+    "hpBoostPercent": 150
+   },
+   "rentals": [
+    "growlithe",
+    "machop",
+    "geodude",
+    "abra",
+    "pikachu",
+    "eevee"
+   ],
+   "restHeal": 0.3,
+   "cache": [
+    {
+     "item": "super-potion",
+     "chance": 1
+    },
+    {
+     "item": "ether",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 2,
+   "researchGoal": 3,
+   "rewards": {
+    "moneyPerLevel": 90,
+    "items": [
+     {
+      "item": "super-potion",
+      "chance": 1
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": "borrowed-team",
+   "failureKeep": 0.25
+  },
+  {
+   "id": "borrowed-team",
+   "name": "Borrowed Team",
+   "tier": 1,
+   "blurb": "Leave your team behind: three rental Pokémon only.",
+   "nodes": {
+    "min": 5,
+    "max": 7
+   },
+   "partyMode": "rental",
+   "nodeWeights": {
+    "wild": 3,
+    "trainer": 3,
+    "elite": 1,
+    "rest": 2,
+    "cache": 2,
+    "research": 1,
+    "mystery": 1,
+    "recruit": 0,
+    "megaEnergy": 2,
+    "totem": 0,
+    "raid": 0
+   },
+   "finale": {
+    "kind": "megaBoss",
+    "species": [
+     "lucario",
+     "gardevoir"
+    ],
+    "levelBonus": 1,
+    "hpBoostPercent": 150
+   },
+   "rentals": [
+    "growlithe",
+    "machop",
+    "geodude",
+    "abra",
+    "pikachu",
+    "eevee"
+   ],
+   "restHeal": 0.35,
+   "cache": [
+    {
+     "item": "super-potion",
+     "chance": 1
+    },
+    {
+     "item": "ether",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 2,
+   "researchGoal": 3,
+   "rewards": {
+    "moneyPerLevel": 90,
+    "items": [
+     {
+      "item": "super-potion",
+      "chance": 1
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": "wanderers-road",
+   "failureKeep": 0.25
+  },
+  {
+   "id": "wanderers-road",
+   "name": "Wanderer's Road",
+   "tier": 2,
+   "blurb": "Your team plus recruits you meet along the way, ending at a storm raid.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "recruit",
+   "nodeWeights": {
+    "wild": 3,
+    "trainer": 3,
+    "elite": 1,
+    "rest": 2,
+    "cache": 2,
+    "research": 1,
+    "mystery": 1,
+    "recruit": 3,
+    "megaEnergy": 2,
+    "totem": 0,
+    "raid": 0
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "storm-gyarados"
+   },
+   "rentals": [
+    "ponyta",
+    "gastly",
+    "slowpoke",
+    "magnemite",
+    "riolu",
+    "ralts"
+   ],
+   "restHeal": 0.3,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "revive",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 4,
+   "rewards": {
+    "moneyPerLevel": 120,
+    "items": [
+     {
+      "item": "hyper-potion",
+      "chance": 1
+     },
+     {
+      "item": "revive",
+      "chance": 0.5
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": "hyper-potion"
+   },
+   "unlocks": "draft-cup",
+   "failureKeep": 0.3
+  },
+  {
+   "id": "draft-cup",
+   "name": "Draft Cup",
+   "tier": 3,
+   "blurb": "Pick three of six offered Pokémon and take on a Totem.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "draft",
+   "nodeWeights": {
+    "wild": 3,
+    "trainer": 3,
+    "elite": 1,
+    "rest": 2,
+    "cache": 2,
+    "research": 1,
+    "mystery": 1,
+    "recruit": 0,
+    "megaEnergy": 2,
+    "totem": 2,
+    "raid": 0
+   },
+   "finale": {
+    "kind": "totem",
+    "totemId": "totem-lycanroc"
+   },
+   "rentals": [
+    "larvitar",
+    "gible",
+    "dratini",
+    "beldum",
+    "ralts",
+    "riolu"
+   ],
+   "restHeal": 0.3,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "revive",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 5,
+   "rewards": {
+    "moneyPerLevel": 170,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     }
+    ],
+    "megaStones": 2,
+    "researchBonusItem": "full-restore"
+   },
+   "unlocks": "grand-crossing",
+   "failureKeep": 0.3
+  },
+  {
+   "id": "grand-crossing",
+   "name": "Grand Crossing",
+   "tier": 4,
+   "blurb": "Your team plus one recruit across the Grand Region, ending at a Mega guardian.",
+   "nodes": {
+    "min": 7,
+    "max": 9
+   },
+   "partyMode": "combined",
+   "nodeWeights": {
+    "wild": 3,
+    "trainer": 3,
+    "elite": 2,
+    "rest": 2,
+    "cache": 2,
+    "research": 1,
+    "mystery": 1,
+    "recruit": 2,
+    "megaEnergy": 2,
+    "totem": 1,
+    "raid": 0
+   },
+   "finale": {
+    "kind": "megaBoss",
+    "species": [
+     "garchomp",
+     "tyranitar",
+     "gengar"
+    ],
+    "levelBonus": 3,
+    "hpBoostPercent": 300
+   },
+   "rentals": [
+    "larvitar",
+    "gible",
+    "dratini",
+    "beldum",
+    "ralts",
+    "riolu"
+   ],
+   "restHeal": 0.3,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "revive",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 4,
+   "researchGoal": 6,
+   "rewards": {
+    "moneyPerLevel": 230,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "revive",
+      "chance": 0.6
+     }
+    ],
+    "megaStones": 3,
+    "researchBonusItem": "full-restore"
+   },
+   "unlocks": null,
+   "failureKeep": 0.35
+  }
+ ]
+}

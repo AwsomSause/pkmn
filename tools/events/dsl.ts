@@ -100,3 +100,10 @@ export const TREASURE = ['nugget', 'big-pearl', 'pearl', 'star-piece', 'stardust
 export const HELD = ['leftovers', 'focus-sash', 'life-orb', 'choice-band', 'lucky-punch', 'macho-brace', 'smoke-ball'];
 export const BERRIES = ['oran-berry', 'sitrus-berry', 'lum-berry'];
 export const FOSSILS = ['old-amber', 'helix-fossil', 'dome-fossil'];
+
+// ---------- map changes ----------
+export const stopHere = (stop: 'heal' | 'shop' | 'fish'): Json => ({ kind: 'addStop', stop });
+export const ferry = (): Json => ({ kind: 'skipAhead' });
+export const RARE_HELD = ['leftovers', 'focus-sash', 'choice-band', 'choice-specs', 'choice-scarf', 'life-orb', 'eviolite', 'rocky-helmet'];
+export const TYPE_ITEMS = ['silk-scarf', 'black-belt', 'sharp-beak', 'soft-sand', 'hard-stone', 'spell-tag', 'metal-coat', 'charcoal', 'mystic-water', 'miracle-seed', 'magnet', 'dragon-fang'];
+export const SNACKS = ['fresh-water', 'soda-pop', 'lemonade', 'moomoo-milk', 'lava-cookie', 'old-gateau', 'casteliacone', 'sweet-heart'];

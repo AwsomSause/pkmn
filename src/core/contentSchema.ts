@@ -6,6 +6,7 @@ import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
+import type { ExpeditionFile } from './expedition/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -1881,6 +1882,8 @@ export interface Content {
   events: Map<string, EventDef>;
   /** Totem Pokémon (totems.json, core/totem). */
   totems: TotemFile;
+  /** Mega-Expeditions (expeditions.json, core/expedition). */
+  expeditions: ExpeditionFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

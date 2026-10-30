@@ -94,3 +94,51 @@ describe('form changes', () => {
     expect(d.battle.weather?.id).toBe('sun');
   });
 });
+
+describe('last abilities', () => {
+  it('Aura Guard halves contact damage', () => {
+    const base = lost(duel({ pMove: 'tackle' }).go(), 'enemy');
+    const guarded = lost(duel({ pMove: 'tackle', eAbility: 'aura-guard' }).go(), 'enemy');
+    expect(guarded).toBeLessThan(base * 0.7);
+  });
+  it('Shields Down stops status above half HP', () => {
+    const d = duel({ enemy: 'minior', pMove: 'thunder-wave' });
+    d.go();
+    expect(d.enemy.status).toBeNull();
+  });
+  it('Delta Stream clears weather and takes away Flying weaknesses', () => {
+    const d = duel({ enemy: 'pidgey', eAbility: 'delta-stream', pMove: 'thunder-shock' });
+    const normal = lost(duel({ enemy: 'pidgey', pMove: 'thunder-shock' }).go(), 'enemy');
+    const es = d.go();
+    expect(d.battle.extra.delta).toBe(true);
+    expect(lost(es, 'enemy')).toBeLessThan(normal);
+  });
+  it('Teraform Zero clears terrain on entry', () => {
+    const d = duel({ eAbility: 'teraform-zero', pMove: 'splash' });
+    d.battle.terrain = { id: 'grassy', turns: 5 };
+    d.go();
+    expect(d.battle.terrain).toBeNull();
+  });
+  it('Illusion shows another party member until a damaging hit', () => {
+    const enemies = [createPokemon(content, 'zoroark', 50, 'e'), createPokemon(content, 'machop', 50, 'e2')];
+    const p = createPokemon(content, 'machop', 50, 'p');
+    p.moves = [{ id: 'tackle', pp: 35 }];
+    enemies.forEach((m) => (m.moves = [{ id: 'splash', pp: 40 }]));
+    const battle = createBattle('trainer', enemies, 0, p.uid);
+    const ctx: BattleContext = { content, battle, party: [p], inventory: {}, rng: new Rng(hashSeed('ill')), captureRng: new Rng(hashSeed('illc')), catchMultiplier: 1 };
+    p.moves = [{ id: 'splash', pp: 40 }];
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(battle.enemyVolatile.illusion).toBe('machop');
+    p.moves = [{ id: 'tackle', pp: 35 }];
+    const es = resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(es.some((e) => e.type === 'transform' && e.kind === 'illusion' && e.broken)).toBe(true);
+    expect(battle.enemyVolatile.illusion).toBeNull();
+  });
+  it('Multitype takes the type of the held plate', async () => {
+    const { battleTypes } = await import('../../src/core/battle/transform');
+    const d = duel({ player: 'arceus', enemy: 'snorlax' });
+    d.battle.held = { ...(d.battle.held ?? {}), lost: {}, gained: {}, embargo: {}, magicRoom: 0 } as never;
+    d.player.held = { 'flame-plate': 1 };
+    expect(battleTypes(content, d.battle, d.player)).toEqual(['fire']);
+  });
+});

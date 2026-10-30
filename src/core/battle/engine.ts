@@ -924,13 +924,15 @@ function resolveEntries(ctx: BattleContext, events: BattleEvent[]): void {
 /** Sets the weather unless a primal weather (Desolate Land, Primordial Sea) is holding it. */
 function setWeather(ctx: BattleContext, id: Weather, turns: number, primal?: string): boolean {
   const cur = ctx.battle.weather;
-  if (cur?.primal && !primal) return false;
+  if ((cur?.primal || ctx.battle.extra.delta) && !primal) return false;
+  if (primal) ctx.battle.extra.delta = false;
   ctx.battle.weather = primal ? { id, turns, primal } : { id, turns };
   return true;
 }
 
 /** Ends a primal weather once nobody on the field has the ability that holds it. */
 function primalCheck(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
+  if (ctx.battle.extra.delta && ![player, enemy].some((c) => c.mon.hp > 0 && abilityIn(ctx, c) === 'delta-stream')) ctx.battle.extra.delta = false;
   const w = ctx.battle.weather;
   if (!w?.primal) return;
   if ([player, enemy].some((c) => c.mon.hp > 0 && abilityIn(ctx, c) === w.primal)) return;
@@ -1029,6 +1031,39 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
   const ability = abilityIn(ctx, c);
   if (!ability) return;
   syncForms(ctx, c, events, false);
+  if (ability === 'delta-stream') {
+    announce(c, ability, events);
+    const old = ctx.battle.weather;
+    if (old) {
+      ctx.battle.weather = null;
+      events.push({ type: 'weatherEnd', weather: old.id });
+    }
+    ctx.battle.extra.delta = true;
+    return;
+  }
+  if (ability === 'teraform-zero') {
+    announce(c, ability, events);
+    const old = ctx.battle.weather;
+    if (old && !old.primal) {
+      ctx.battle.weather = null;
+      events.push({ type: 'weatherEnd', weather: old.id });
+    }
+    if (ctx.battle.terrain) {
+      events.push({ type: 'terrainEnd', terrain: ctx.battle.terrain.id });
+      ctx.battle.terrain = null;
+    }
+    return;
+  }
+  if (ability === 'illusion') {
+    const team = c.side === 'player' ? ctx.party : ctx.battle.enemyTeam;
+    const alive = team.filter((m) => m.hp > 0 && m.uid !== c.mon.uid && m.speciesId !== c.mon.speciesId);
+    const as = alive[alive.length - 1];
+    if (as) {
+      c.vol.illusion = as.speciesId;
+      events.push({ type: 'transform', side: c.side, uid: c.mon.uid, kind: 'illusion', from: c.mon.speciesId, to: as.speciesId, itemId: null });
+    }
+    return;
+  }
   if (ability === 'imposter') {
     announce(c, ability, events);
     transformInto(ctx, c, other, events);
@@ -1237,6 +1272,15 @@ function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Mov
 function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move?: Move): boolean {
   const { content, rng } = ctx;
   const ability = abilityIn(ctx, user);
+  if (user.vol.skyHeld) {
+    const holder = user.side === 'player' ? activeCombatants(ctx).enemy : activeCombatants(ctx).player;
+    if (holder.mon.hp > 0 && holder.vol.charging === 'sky-drop') {
+      events.push({ type: 'cant', side: user.side, reason: 'flinch' });
+      return false;
+    }
+    user.vol.skyHeld = false;
+    if (user.vol.semi === 'air') user.vol.semi = null;
+  }
   if (user.vol.truant) {
     user.vol.truant = false;
     announce(user, 'truant', events);
@@ -1877,7 +1921,7 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
 
 /** What a move does once its user has acted: accuracy, then its status effect or its damage and side effects. */
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
-  moveIgnoresAbility = Boolean(move.effects.ignoreAbility);
+  moveIgnoresAbility = Boolean(move.effects.ignoreAbility) || (move.category === 'status' && abilityIn(ctx, user) === 'mycelium-might');
   try {
     runMoveInner(ctx, user, target, move, movedFirst, events);
   } finally {
@@ -2009,11 +2053,19 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     if (user.vol.charging === move.id) {
       user.vol.charging = null;
       user.vol.semi = null;
-      if (fx.charge.grab) target.flinched = true;
+      if (fx.charge.grab) {
+        target.flinched = true;
+        target.vol.skyHeld = false;
+        target.vol.semi = null;
+      }
     } else if (!(fx.charge.sunSkips && weather === 'sun') && !Held.usePowerHerb(ctx, user, events as Held.HeldEvent[])) {
       user.vol.charging = move.id;
       user.vol.semi = fx.charge.semi ?? null;
-      if (fx.charge.grab) target.flinched = true;
+      if (fx.charge.grab) {
+        target.flinched = true;
+        target.vol.skyHeld = true;
+        target.vol.semi = 'air';
+      }
       events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
       for (const change of fx.charge.boosts ?? []) applyStageChange(ctx, user, change.stat, change.stages, events);
       return;
@@ -2202,6 +2254,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   let rawEff = fx.superAgainst ? idHit.reduce((n, t) => n * (t === fx.superAgainst ? 2 : typeEffectiveness(content.typeChart, moveType, [t])), 1) : typeEffectiveness(content.typeChart, moveType, idHit);
   if (fx.secondType) rawEff *= typeEffectiveness(content.typeChart, fx.secondType, idHit);
   if (target.vol.tarred && moveType === 'fire') rawEff *= 2;
+  if (ctx.battle.extra.delta && idHit.includes('flying')) {
+    const vsFlying = typeEffectiveness(content.typeChart, moveType, ['flying']);
+    if (vsFlying > 1) rawEff /= vsFlying;
+  }
   const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, rawEff);
   // Powder: a Fire move backfires.
   if (user.vol.powdered && moveType === 'fire') {
@@ -2300,7 +2356,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (foeAbility === 'dry-skin' && moveType === 'fire') powerMult *= 1.25;
       if (powerMult !== 1) power = Math.max(1, pokeRound(power, powerMult));
       // Abilities that change the attacking stat.
-      const baseAttack = fx.attackFrom === 'targetAtk' ? targetStats.atk : fx.attackFrom === 'def' ? userStats.def : physical ? userStats.atk : userStats.spa;
+      const baseAttack = fx.beatUp && beaters.length > 0 ? calcStats(content, beaters[Math.min(hit, beaters.length - 1)]!).atk : fx.attackFrom === 'targetAtk' ? targetStats.atk : fx.attackFrom === 'def' ? userStats.def : physical ? userStats.atk : userStats.spa;
       let attack = Math.floor(baseAttack * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa'));
       let attackMult = attackBoost;
       if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
@@ -2344,7 +2400,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
       if (user.mon.awakened?.includes(move.id)) final *= content.story.awakening.boost;
-      if (foeAbility === 'fluffy' && contact) final *= 0.5;
+      if ((foeAbility === 'fluffy' || foeAbility === 'aura-guard') && contact) final *= 0.5;
       if (parental && hit === 1) final *= 0.25;
       if (userAbility === 'stakeout' && target.vol.turnsOut === 0) final *= 2;
       if (foeAbility === 'tera-shell' && target.mon.hp >= targetStats.hp && effectiveness > 0) final *= 0.5 / effectiveness;
@@ -2648,6 +2704,10 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
     if (target.mon.speciesId === 'cramorant-gulping') applyStageChange(ctx, user, 'def', -1, events, target);
     else if (canGetStatus(ctx, target, user, 'par')) tryInflictStatus(ctx, target, user, 'par', undefined, events, false);
     swapForm(ctx, target, 'cramorant', events);
+  }
+  if (holder === 'illusion' && target.vol.illusion && move.category !== 'status') {
+    events.push({ type: 'transform', side: target.side, uid: target.mon.uid, kind: 'illusion', from: target.vol.illusion, to: target.mon.speciesId, itemId: null, broken: true });
+    target.vol.illusion = null;
   }
   if (holder === 'innards-out' && target.mon.hp <= 0 && user.mon.hp > 0 && userAbility !== 'magic-guard') {
     const hit = [...events].reverse().find((e) => e.type === 'damage' && e.side === target.side);
@@ -3977,6 +4037,7 @@ function statusAbilityBlock(ctx: BattleContext, source: Combatant, target: Comba
   if (!ability) return null;
   if (STATUS_IMMUNE[ability]?.includes(status)) return ability;
   if (ability === 'leaf-guard' && weatherNow(ctx) === 'sun') return ability;
+  if (ability === 'shields-down' && target.mon.hp * 2 > calcStats(ctx.content, target.mon).hp) return ability;
   return null;
 }
 

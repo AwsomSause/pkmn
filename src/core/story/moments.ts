@@ -10,6 +10,8 @@ import { GYM_LEADER_CLASS, ELITE_FOUR_CLASS, CHAMPION_CLASS } from '../encounter
 import { maxHp } from '../pokemon';
 import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
+import { emotionOf } from './emotions';
+import { mentorshipOf } from './mentorship';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
 /** The one effect each moment trigger may carry (checked when content loads). */
@@ -36,6 +38,19 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   somethingDifferent: 'flair',
   waitingForBattle: 'flair',
   somethingWatching: 'flair',
+  studentLearned: 'statStage',
+  studentSurpassed: 'flair',
+  lastLesson: 'flair',
+  differentWays: 'flair',
+  overdriveDetermination: 'statStage',
+  overdriveBravery: 'statStage',
+  overdriveJustice: 'statStage',
+  overdriveKindness: 'statStage',
+  overdrivePatience: 'statStage',
+  overdriveIntegrity: 'cure',
+  overdrivePerseverance: 'statStage',
+  dualEmotion: 'heal',
+  emotionalClash: 'flair',
 };
 
 export interface Moment {
@@ -99,6 +114,13 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         if (e.side === 'player') {
           lastMoveByLead = e.moveId;
           // It Remembered Its Training: a move that finished a boss before, used again.
+          // It Learned Something Today: a protégé's first use of a move its mentor has used often.
+          const rel = leadUid ? mentorshipOf(run, leadUid) : undefined;
+          const mentorH = rel ? run.story.histories[rel.a.id] : undefined;
+          const proteH = leadUid ? run.story.histories[leadUid] : undefined;
+          if (rel && lead && mentorH && proteH && (mentorH.moves[e.moveId] ?? 0) >= 5 && proteH.moves[e.moveId] === 1) {
+            fire('studentLearned', 'player', lead.uid, i, { name: nameOf(lead.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId, other: nameOf(run.party.find((m) => m.uid === rel.a.id)?.speciesId ?? '') });
+          }
           const memory = leadUid ? flags[`fin:${leadUid}`] : undefined;
           if (leadUid && memory === e.moveId && trainerFight && lead?.uid === leadUid) {
             fire('rememberedTraining', 'player', leadUid, i, { name: nameOf(lead.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId });
@@ -141,6 +163,13 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
           const dead = battle.enemyTeam.find((m) => m.uid === e.uid);
           if (lead && dead && dead.level >= lead.level + 10) fire('brokeLimits', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
           if (boss && leadUid && lastMoveByLead) flags[`fin:${leadUid}`] = lastMoveByLead;
+          // The Student Has Surpassed the Teacher: a protégé beats a species that once knocked out its mentor.
+          const rel = lead ? mentorshipOf(run, lead.uid) : undefined;
+          const h = lead ? run.story.histories[lead.uid] : undefined;
+          if (rel && lead && dead && h && !h.hyper['student-surpassed'] && run.story.events.some((k) => k.type === 'knockout' && k.actors[0] === rel.a.id && k.data.bySpeciesId === dead.speciesId)) {
+            h.hyper['student-surpassed'] = 1;
+            fire('studentSurpassed', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId), other: nameOf(run.party.find((m) => m.uid === rel.a.id)?.speciesId ?? '') });
+          }
         }
         break;
       default:
@@ -167,6 +196,50 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (prior.turn >= 8 && lead.hp <= maxHp(content, lead) / 2) fire('secondWind', 'player', lead.uid, lastAt, leadNames());
     const h = run.story.histories[lead.uid];
     if (h && Object.keys(h.hyper).length >= 3) fire('somethingAwakened', 'player', lead.uid, lastAt, leadNames());
+  }
+  // Emotional Overdrives (blueprint §2): the Pokémon's current emotion plus a dramatic moment, once per battle.
+  if (lead && lead.hp > 0 && !flags[flagKey('eo', lead.uid)]) {
+    const em = emotionOf(content, run, lead.uid)?.id;
+    const max = maxHp(content, lead);
+    const hurtAlly = run.party.some((m) => m.uid !== lead.uid && m.hp > 0 && m.hp <= maxHp(content, m) * 0.3);
+    const fallen = run.party.some((m) => m.hp <= 0);
+    const names = leadNames();
+    const go = (trigger: StoryTriggerKind) => {
+      const before = out.length;
+      fire(trigger, 'player', lead.uid, lastAt, names);
+      if (out.length > before) flags[flagKey('eo', lead.uid)] = true;
+    };
+    const justice = events.some((e) => e.type === 'faint' && e.side === 'enemy') && run.story.events.some((k) => k.type === 'knockout' && k.data.side === 'player' && k.actors[1] === (events.find((e) => e.type === 'faint' && e.side === 'enemy') as { uid?: string } | undefined)?.uid);
+    const status = events.some((e) => e.type === 'status' && e.side === 'player') && Boolean(lead.status);
+    if (em === 'determination' && lead.hp <= max * 0.25 && hurtAlly) go('dualEmotion');
+    else if (em === 'determination' && lead.hp <= max * 0.25) go('overdriveDetermination');
+    else if (em === 'bravery' && foe.level >= lead.level + 5 && prior.turn >= 2) go('overdriveBravery');
+    else if (em === 'justice' && justice) go('overdriveJustice');
+    else if (em === 'kindness' && hurtAlly) go('overdriveKindness');
+    else if (em === 'patience' && prior.turn >= 5 && lead.hp >= max * 0.5) go('overdrivePatience');
+    else if (em === 'integrity' && status) go('overdriveIntegrity');
+    else if (em === 'perseverance' && prior.turn >= 5 && (lead.status || fallen)) go('overdrivePerseverance');
+    // Emotional clash: a Brave lead hurt while a Kind teammate watches.
+    else if (em === 'bravery' && lead.hp <= max * 0.5 && run.party.some((m) => m.uid !== lead.uid && m.hp > 0 && emotionOf(content, run, m.uid)?.id === 'kindness')) go('emotionalClash');
+  }
+
+  // The Teacher Has One Last Lesson / They Have Different Ways of Fighting.
+  for (const rel of run.story.relationships) {
+    if (!rel.open || rel.kind !== 'mentorship') continue;
+    const mentor = run.party.find((m) => m.uid === rel.a.id);
+    const prote = run.party.find((m) => m.uid === rel.b.id);
+    if (!mentor || !prote) continue;
+    if (lead?.uid === mentor.uid && mentor.hp > 0 && mentor.hp <= maxHp(content, mentor) * 0.2 && prote.hp > 0) {
+      fire('lastLesson', 'player', mentor.uid, lastAt, { name: nameOf(mentor.speciesId), other: nameOf(prote.speciesId) });
+    }
+    const mh = run.story.histories[mentor.uid];
+    const ph = run.story.histories[prote.uid];
+    const top = (hist?: { moves: Record<string, number> }) => Object.entries(hist?.moves ?? {}).sort((a, b) => b[1] - a[1])[0];
+    const pt = top(ph);
+    if (ph && !ph.hyper['different-ways'] && pt && pt[1] >= 6 && pt[0] !== top(mh)?.[0]) {
+      ph.hyper['different-ways'] = 1;
+      fire('differentWays', 'player', prote.uid, lastAt, { name: nameOf(prote.speciesId), other: nameOf(mentor.speciesId) });
+    }
   }
   if (trainerFight && foe.hp > 0) {
     const share = foe.hp / maxHp(content, foe);

@@ -2,9 +2,11 @@
 // Run with: npm run data:events
 import { writeFileSync } from 'node:fs';
 import { KEY_EVENTS } from './events/keys.ts';
+import { MORE_EVENTS } from './events/more.ts';
+import { OVERDRIVE_EVENTS } from './events/overdrive.ts';
 import { PLAN_EVENTS } from './events/plan.ts';
 
-const events = [...PLAN_EVENTS, ...KEY_EVENTS];
+const events = [...PLAN_EVENTS, ...KEY_EVENTS, ...MORE_EVENTS, ...OVERDRIVE_EVENTS];
 const seen = new Set<string>();
 for (const e of events) {
   const id = String(e.id);

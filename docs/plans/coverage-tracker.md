@@ -29,9 +29,11 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 ## Other guides (see how-to-execute-guides.md for the order)
 | Guide | Status |
 |---|---|
-| Untitled document phases A, B | DONE (except new NPC classes); C–G TODO (C overlaps the planning thread) |
+| Untitled document phases A, B | DONE (except new NPC classes) |
+| Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), 2 of 12 modifiers run (No Transformations, Scarce Supplies; the other 10 listed as planned), Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
+| Untitled doc Phase C–G rest | TODO: C prep slots (Field License, Research Directive, Challenge Contract) and effective-attribute layers (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
-| Overdrive Hyper Techno Supreme Z | PART: §1 Phase 1 events + §2 emotions tags + §4 Hyper evolutions (4 transform moments + Determination Evolution memory) DONE; §4 Signature Move Awakening DONE (also §3 "It Mastered the Power Within"); §3 other 29 events, §5 (6 unusual events), §6 chains, §7 generator TODO |
+| Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | PART: see table below |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
 | Trainers.md perks | PART: batches 1–2 of 11 (40 of 220 trainers, Aaron to Canari); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
@@ -60,8 +62,24 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Overworld raid dens | DONE (map side stop `raid`); Raid Adventures mode = Expedition below |
 | Use encounter availability for the boss pool | PART (species are listed in `raids.json`; `availability.json` is not wired yet) |
 
-### 2. Mega-Expeditions — TODO (every item)
-Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid, final boss. Route generation (5–9 nodes, valid graph, visible route). Party modes: own, rental, recruit one, draft, combined. Attrition and recovery (rest node). Mega Energy, Mega Stones, temporary Mega, Mega bosses, Mega research, exclusive encounters/achievements. Extraction and failure rules. Progression by region. Briefing, route choice, checkpoint, finale, extract.
+### 2. Mega-Expeditions (slice 3, DONE except the TODO lines)
+Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.json` (5 expeditions, tiers 1–4), screen `ExpeditionScene`. Gate = map side stop `E`.
+| Item | Status |
+|---|---|
+| Structure: 5–9 stops, branching, part of the route visible, validated before it is shown | DONE |
+| Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid boss, final boss | DONE (all 12 kinds); elite = a harder trainer fight with a loot bonus |
+| Example flow: briefing, combat/resource route choice (two-stop layers), checkpoint (rest), finale, extract and claim | DONE |
+| A. Route generation: directed graph, valid path, no dead ends, unit-tested over 300 seeds | DONE |
+| B. Party modes: own, rental, recruit, draft, combined (one expedition each) | DONE |
+| C. Attrition and recovery: HP/status/PP carry between stops; rest and events heal | DONE |
+| D. Mega: Mega Energy resource, temporary Mega Stone + lent Mega Ring (stone kept on completion), Mega guardian finale that Mega Evolves, research objective, exclusive finales | DONE; achievements TODO; Mega bosses use the normal Mega rules only |
+| E. Extraction and failure rules written in `flow.ts`: completion keeps all + unlock; early extract keeps loot, no finale rewards; loss forfeits loot (share of money kept), heals, never ends the run, never loses your own Pokémon | DONE |
+| Reload mid-expedition (run v16), no double reward (gate used on entry) | DONE |
+| Progression table by region (tiers 1–4, unlock chain) | DONE |
+| Raid as finale or Totem as finale/stop | DONE |
+| Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
+| Temporary Mega in battle for rentals | limited: only for Pokémon with a Mega Stone available |
+| More expeditions / routes (content expansion, Blueprint M7) | TODO |
 
 ### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
 Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
@@ -81,7 +99,7 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5–M8 TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; M6–M8 TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |
@@ -96,3 +114,43 @@ Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.tes
 | P8 Pacing director: tiers, gaps, budgets, dialogue-frequency setting (settings v4) | DONE (limited: animation-speed/reduced-motion already exist) |
 | P9 Tests: 14 unit tests; 3 scripted scenarios, evolution/Hyper tests | PART |
 | §9 Emergent battle memories | PART: Chronicle entries + rival callbacks; style changes / recurring-rival promotion TODO |
+
+## Overdrive Hyper Techno Supreme Z (thread "Finish Overdrive and Hyper evolutions")
+Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-overdrive-techno.md`). Statuses checked against the repo 2026-10-30.
+
+| Section | Items | Status |
+|---|---|---|
+| §1 Original Hyper moments (Toughened It Out, Hung In There, Felt a Bond, Pushed Back Up, Heated Rivalry, This Trainer Will Return, Riled Up, A Past Pokémon Wants to Join) | 8 | DONE |
+| §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
+| §2 Seven Emotions: tags, current emotion dot, Story screen; 7 Emotional Overdrives (once per battle each: Determination/Bravery/Justice +1 Attack, Kindness +1 Defense, Patience +1 Sp. Atk, Perseverance +1 Sp. Def, Integrity cures a fresh status), rare dual emotion (Determination + Kindness: heal 15%), emotional clash | 7 + 2 | DONE (limited: no drawbacks/exhaustion, no signature achievement events such as "Not Until It's Over", Kindness peaceful encounters TODO) |
+| §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
+| §3 Bond/friendship/party: Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 6 of 10 | DONE; TODO: Understand Each Other, Won't Let Friend Fight Alone, Wants to Prove Itself, Feels Left Out (need pair combos / a choice screen) |
+| §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |
+| §3 Enemy Overdrive: Unshaken, Pure Instinct, Learned From Your Attacks, Protecting Its Trainer, Partner's Fall, Will Not Let Trainer Down, Riled Up | 7 of 10 | DONE; TODO: Gathering Everything, Fighting Beyond Limits, Lost Its Composure (need telegraphed ultimates + counterplay) |
+| §4 Hyper evolutions: Determination Evolution (memory), Mega Overdrive, All of Its Heart, A Giant Resolve, True Colors (7 emotion lines), Signature Move Awakening | 6 | DONE |
+| §5 Unusual events | 6 | DONE: 3 first-turn banners (Something Different, Waiting for This Battle, Something Watching) + 3 map "?" events (Doesn't Want to Fight, It Saw What You Did, This Place Remembers; `tools/events/overdrive.ts`). Limited: This Place Remembers fires anywhere; It Saw What You Did reads the Good/Evil meter |
+| §6 Overdrive chains: engine (`core/story/chains.ts`) + 7 chains | 7 | DONE (limited: rival chain has 3 of 5 steps; Legacy Record gives a title, not a Hall of Fame entry) |
+| §7 Event generator (the 14-field definition, priority queue, scopes) | 1 | DONE (story.json definitions + queue); no separate generator UI |
+| §8 Fairness rules (per-battle budget, cooldowns, no stacked buffs) | 1 | DONE (major-cue budget, one combat effect per queue) |
+| §9 Phase 1 core / Phase 2 advanced | 2 | Phase 1 DONE; Phase 2 PART (this table) |
+| Techno §1 Rivalry, §2 Nemesis | — | owned by the rivals threads |
+| Techno §3 Raids | — | owned by the Raids/Blueprint thread |
+| Techno §4 Protégé: accept/decline screen, 6 paths, mentorship ends on evolution/catching up; Looks Up, Learned Something Today, Student Surpassed Teacher, Teacher's Last Lesson, Different Ways, Student Becomes Teacher (`core/story/mentorship.ts`) | 6 paths + 8 stories | PART: DONE except Carried Its Mentor's Legacy (Hall of Fame), mastery sharing, mentor-taught move variants (limited: paths shape story text, not stats) |
+| Techno §5 Grand-Enemy, §6 Additional systems (Lucario example, Rival Who Wouldn't Give Up), §7 high-hype moments, §8 Memory-driven chaining | — | TODO |
+
+## Implementation Plan Electric
+Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-plan.md`).
+
+| Section | Status |
+|---|---|
+| §1 Core Game Event Bus (domain events, effect ledger) | DONE (M8.9-0) |
+| §2A Rivalry / §2B Nemesis | rivals threads |
+| §2C Dynamic Event Director | PART: 173 map events exist (events thread); curated eligibility, risks and memory of choices TODO |
+| §2D Bond & Protégé | Protégé PART (above); Bond via rival bonds/Overdrive bond moments |
+| §2E Raid & World Crisis | Raids thread |
+| §3 Spectacle layers 1–2, animation fallback | DONE (M9) |
+| §3 Layer 3 transformations | PART (Hyper evolutions add banners; cinematics M9.5) |
+| §3 Layer 4 boss spectacle, dynamic music, battle commentary (Drama thread), arena modifiers, victory moments | TODO / Drama thread |
+| §4 Campaign dramatic arcs, route consequence engine | TODO |
+| §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
+| §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
