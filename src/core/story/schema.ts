@@ -223,6 +223,8 @@ export const RivalSchema = z.object({
   /** Bonds with its Pokémon, by species id, and what happened off-screen (newest last). */
   bonds: z.record(z.string(), BondSchema).default({}),
   offscreen: z.array(OffscreenEventSchema).default([]),
+  /** Set when an earlier run's rival shaped this one (its name): it carries that character's traits and style. */
+  legacyOf: z.string().optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
@@ -240,6 +242,20 @@ export const RivalSchema = z.object({
   }),
 });
 export type Rival = z.infer<typeof RivalSchema>;
+
+/** A rival from a finished run, kept on the account (optional legacy layer). Archived records never change an active run. */
+export const ArchivedRivalSchema = z.object({
+  runId: z.string(),
+  name: z.string(),
+  classId: z.string(),
+  archetype: z.string(),
+  style: z.string(),
+  traits: TraitsSchema,
+  state: z.string(),
+  encounters: z.number().int().min(0),
+  resolution: z.enum(['good', 'bad']).nullable(),
+});
+export type ArchivedRival = z.infer<typeof ArchivedRivalSchema>;
 
 export const StoryStateSchema = z.object({
   /** Last sequence number used (event ids are seed + seq). */
