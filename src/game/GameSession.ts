@@ -179,6 +179,13 @@ export class GameSession {
     return result;
   }
 
+  useDraftItem(kind: Run.DraftItemKind, index: number): { run: RunState; message: string } {
+    const result = Run.useDraftItem(this.content, this.requireRun(), kind, index);
+    this.run = result.run;
+    this.persistRun();
+    return result;
+  }
+
   resolveDecision(choice: Run.DecisionChoice): Run.DecisionResult {
     const result = Run.resolveDecision(this.content, this.requireRun(), choice);
     this.run = result.run;

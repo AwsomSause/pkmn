@@ -5432,16 +5432,25 @@
   "id": "cornn-berry",
   "name": "Cornn Berry",
   "family": "Berries (held, eaten in battle)",
-  "description": "Next reward draft rerolls one choice of your choice",
+  "description": "On the reward screen: swap one draft choice for a new one",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "cornn-berry",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "rerollOne"
+    }
+   ]
+  }
  },
  {
   "id": "magost-berry",
@@ -7691,16 +7700,24 @@
   "id": "dowsing-mchn",
   "name": "Dowsing Machine",
   "family": "Map and encounter items",
-  "description": "Once per stage, a reward draft shows 6 choices instead of 5",
+  "description": "Each stage's first reward draft shows 6 choices instead of 5",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "dowsing-mchn",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "dowsing"
+    }
+   ]
+  }
  },
  {
   "id": "bicycle",
@@ -8496,16 +8513,25 @@
   "id": "lock-capsule",
   "name": "Lock Capsule",
   "family": "Capture and party items",
-  "description": "Lock one reward draft choice so it appears in the next draft too",
+  "description": "On the reward screen: lock one choice so it is in the next draft too",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "lock-capsule",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "lockOne"
+    }
+   ]
+  }
  },
  {
   "id": "tm-case",
@@ -8517,10 +8543,19 @@
   "max": 1,
   "how": "passive",
   "icon": "tm-case",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "tmChoices",
+     "extra": 1
+    }
+   ]
+  }
  },
  {
   "id": "mystery-egg",
@@ -9763,10 +9798,18 @@
   "max": null,
   "how": "use",
   "icon": "bloom-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "extraChoice"
+    }
+   ]
+  }
  },
  {
   "id": "bead-mail",
@@ -9894,10 +9937,19 @@
   "max": null,
   "how": "use",
   "icon": "favored-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "favored"
+    }
+   ]
+  }
  },
  {
   "id": "reply-mail",

@@ -16,7 +16,7 @@ import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, pr
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
-import type { AttributeKey, Content, TypeName } from './contentSchema';
+import { RARITIES, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
   bossTeamSpecies,
   candiesForRelease,
@@ -1073,6 +1073,15 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     spendUse(run, bridge);
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
   }
+  // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
+  let extraChoices = 0;
+  if (outcome === 'win' && battle.kind === 'trainer' && hasPerk(content, run, 'extraChoice')) extraChoices += 1;
+  const dowsing = perkItem(content, run, 'dowsing');
+  if (dowsing && !battle.fishing && !usedThisStage(run, dowsing)) {
+    markUsedThisStage(run, dowsing);
+    extraChoices += 1;
+  }
+  if (extraChoices > 0) run.itemCounters = { ...run.itemCounters, 'draft-extra': extraChoices };
   const stock = shopStock(content, run).map((e) => ({ item: e.item, price: e.price }));
   const itemsFound =
     outcome === 'win' && battle.kind === 'trainer'
@@ -1157,7 +1166,7 @@ function continueAfterDecisions(content: Content, run: RunState): void {
     const better = (run.itemCounters?.['better-draft'] ?? 0) > 0;
     if (better) run.itemCounters = Object.fromEntries(Object.entries(run.itemCounters!).filter(([key]) => key !== 'better-draft'));
     const weights = luckWeights(better ? content.balance.bossRarityWeights : rewardWeights(content, run), runAttributeEffects(content, run));
-    run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
+    run.draft = newDraft(content, run, weights);
     run.phase = 'reward';
     return;
   }
@@ -1176,6 +1185,48 @@ function continueAfterDecisions(content: Content, run: RunState): void {
   } else {
     run.phase = 'map';
   }
+}
+
+/** A fresh reward draft. The draft items' extra choices and carried-over rewards (Lock Capsule, Favored Mail) are used up here. */
+function newDraft(content: Content, run: RunState, weights: Parameters<typeof generateDraft>[3]): string[] {
+  const extra = run.itemCounters?.['draft-extra'] ?? 0;
+  const forced = run.draftCarry ?? [];
+  if (extra > 0) run.itemCounters = Object.fromEntries(Object.entries(run.itemCounters!).filter(([key]) => key !== 'draft-extra'));
+  delete run.draftCarry;
+  return withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights, undefined, { size: content.balance.draftSize + extra, forced }));
+}
+
+/** Puts a reward into the next draft (once). */
+function carryReward(run: RunState, rewardId: string): void {
+  if (!(run.draftCarry ?? []).includes(rewardId)) run.draftCarry = [...(run.draftCarry ?? []), rewardId];
+}
+
+export type DraftItemKind = 'reroll' | 'lock';
+
+/** Uses left of the Bag item behind a reward-screen action: Cornn Berry re-rolls one choice, Lock Capsule carries one into the next draft. */
+export function draftItemUses(content: Content, run: RunState, kind: DraftItemKind): number {
+  const itemId = perkItem(content, run, kind === 'reroll' ? 'rerollOne' : 'lockOne');
+  return itemId ? usesLeft(run, itemId) : 0;
+}
+
+/** Uses a Cornn Berry (swap one draft choice for a new one) or a Lock Capsule (that choice comes back in the next draft too). */
+export function useDraftItem(content: Content, current: RunState, kind: DraftItemKind, draftIndex: number): { run: RunState; message: string } {
+  assertPhase(current, 'reward');
+  const rewardId = current.draft?.[draftIndex];
+  if (!rewardId) throw new Error(`Invalid reward choice ${draftIndex}`);
+  const itemId = perkItem(content, current, kind === 'reroll' ? 'rerollOne' : 'lockOne');
+  if (!itemId) throw new Error(kind === 'reroll' ? 'You have no Cornn Berry' : 'You have no Lock Capsule');
+  const run = structuredClone(current);
+  spendUse(run, itemId);
+  const name = content.rewards.get(rewardId)!.name;
+  if (kind === 'lock') {
+    carryReward(run, rewardId);
+    return { run, message: `${name} is locked in: it will be in the next draft too.` };
+  }
+  const weights = luckWeights(rewardWeights(content, run), runAttributeEffects(content, run));
+  const fresh = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights, undefined, { size: 1, exclude: run.draft! }))[0]!;
+  run.draft![draftIndex] = fresh;
+  return { run, message: `${name} was swapped for ${content.rewards.get(fresh)!.name}.` };
 }
 
 /** Better rewards after harder routes and gym leaders. */
@@ -1342,8 +1393,19 @@ export function chooseReward(content: Content, current: RunState, draftIndex: nu
   if (reward.reroll) {
     // A free re-roll: a fresh draft, still in the reward phase.
     const weights = luckWeights(rewardWeights(content, run), runAttributeEffects(content, run));
-    run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
+    run.draft = newDraft(content, run, weights);
     return { run, reward };
+  }
+  // Favored Mail: the best reward you skipped comes back in the next draft (the earlier one on a tie).
+  const favored = perkItem(content, run, 'favored');
+  if (favored) {
+    const skipped = current.draft!.filter((_, i) => i !== draftIndex).map((id) => content.rewards.get(id)!);
+    const best = skipped.sort((a, b) => RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity))[0];
+    if (best) {
+      spendUse(run, favored);
+      carryReward(run, best.id);
+      reward.messages.push(`The Favored Mail keeps ${best.name} for your next draft.`);
+    }
   }
   run.draft = null;
   run.pending.push(...reward.pending);

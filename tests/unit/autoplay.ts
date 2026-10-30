@@ -2,6 +2,7 @@
 // the same situation, so the same seed always plays the same run.
 
 import type { Content } from '../../src/core/contentSchema';
+import { forcedMoveIndex } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
 import { currentEnemy, type RunState } from '../../src/core/state';
@@ -39,7 +40,9 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
         return { run: turn.run, turn };
       }
       const enemy = currentEnemy(battle);
-      if (battle.kind === 'wild' && run.party.length < 6 && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2) {
+      // A Pokémon in the middle of a two-turn move, or locked by a Choice item, can't throw a ball.
+      const midMove = forcedMoveIndex(battle, run.party) !== null;
+      if (!midMove && battle.kind === 'wild' && run.party.length < 6 && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2) {
         const turn = takeTurn(content, run, { kind: 'item', itemId: 'poke-ball' });
         return { run: turn.run, turn };
       }

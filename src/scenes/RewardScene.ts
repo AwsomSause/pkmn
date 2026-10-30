@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { isRerollReward, rewardTargetProblem } from '../core/rewards';
+import { draftItemUses, type DraftItemKind } from '../core/run';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -18,6 +19,8 @@ import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 export class RewardScene extends Phaser.Scene {
   /** 0..draft-1 are the cards; then the Party and Bag buttons. */
   private index = 0;
+  /** A draft item waiting for the card it is used on (Cornn Berry re-roll, Lock Capsule). */
+  private mode: DraftItemKind | null = null;
   private cursors: Phaser.GameObjects.Graphics[] = [];
   private picker: Picker | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
@@ -37,6 +40,7 @@ export class RewardScene extends Phaser.Scene {
     const content = session.content;
     const draft = run.draft!;
     this.index = 0;
+    this.mode = null;
     this.cursors = [];
     this.picker = null;
     this.chosen = false;
@@ -46,8 +50,9 @@ export class RewardScene extends Phaser.Scene {
       .text(GAME_WIDTH / 2, 66, `Encounter ${run.encountersCompleted} cleared  ·  ₽${run.money}  ·  Candies ${run.candies}`, textStyle(20, '#a69cb4'))
       .setOrigin(0.5);
 
-    const cardW = 172;
     const gap = 12;
+    // Dowsing Machine and Bloom Mail add choices; the cards shrink to fit.
+    const cardW = Math.min(172, Math.floor((GAME_WIDTH - 52 - gap * (draft.length - 1)) / draft.length));
     const startX = (GAME_WIDTH - (cardW * draft.length + gap * (draft.length - 1))) / 2;
     draft.forEach((rewardId, i) => {
       const reward = content.rewards.get(rewardId)!;
@@ -64,6 +69,7 @@ export class RewardScene extends Phaser.Scene {
       // A team or player item already at its max: picking it re-rolls the draft for free.
       const reroll = isRerollReward(content, run, reward);
       this.add.text(x + 12, y + 144, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : COLORS.textMuted, { wordWrap: { width: cardW - 24 } }));
+      if ((run.draftCarry ?? []).includes(rewardId)) this.add.text(x + cardW / 2, y + 236, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0);
       this.clickZone(x, y, cardW, 270, i);
     });
 
@@ -77,16 +83,23 @@ export class RewardScene extends Phaser.Scene {
       this.add.text(x, 458, mon.hp <= 0 ? 'FNT' : `${mon.hp} HP`, textStyle(16, mon.hp <= 0 ? '#f08080' : '#a0e0a0')).setOrigin(0.5, 0);
       if (i === 0) this.add.text(x, 384, 'LEAD', textStyle(12, '#f0c028')).setOrigin(0.5, 0);
     });
-    const buttons = [
-      { label: 'Party', x: 680 },
-      { label: 'Bag', x: 800 },
+    // Party and Bag under the party strip; the draft items' buttons at the top right, beside the title.
+    const rerolls = draftItemUses(content, run, 'reroll');
+    const locks = draftItemUses(content, run, 'lock');
+    const buttons: { label: string; x: number; y: number; w: number; h: number; size: number; act: () => void }[] = [
+      { label: 'Party', x: 680, y: 404, w: 104, h: 64, size: 26, act: () => this.openParty() },
+      { label: 'Bag', x: 800, y: 404, w: 104, h: 64, size: 26, act: () => this.openBag() },
     ];
+    if (rerolls > 0) buttons.push({ label: `Re-roll ×${rerolls}`, x: 0, y: 12, w: 100, h: 44, size: 18, act: () => this.startMode('reroll', 'Choose the card to swap for a new one (Cornn Berry).') });
+    if (locks > 0) buttons.push({ label: `Lock ×${locks}`, x: 0, y: 12, w: 100, h: 44, size: 18, act: () => this.startMode('lock', 'Choose the card to keep in the next draft too (Lock Capsule).') });
+    buttons.slice(2).forEach((b, n, extra) => (b.x = GAME_WIDTH - 40 - (extra.length - n) * 112 + 12));
     buttons.forEach((b, n) => {
-      drawPanel(this, b.x, 404, 104, 64, { fill: COLORS.panel });
-      this.add.text(b.x + 52, 436, b.label, textStyle(26)).setOrigin(0.5);
-      this.cursors.push(this.highlight(b.x, 404, 104, 64));
-      this.clickZone(b.x, 404, 104, 64, draft.length + n);
+      drawPanel(this, b.x, b.y, b.w, b.h, { fill: COLORS.panel });
+      this.add.text(b.x + b.w / 2, b.y + b.h / 2, b.label, textStyle(b.size)).setOrigin(0.5);
+      this.cursors.push(this.highlight(b.x, b.y, b.w, b.h));
+      this.clickZone(b.x, b.y, b.w, b.h, draft.length + n);
     });
+    this.buttons = buttons;
 
     this.notice = this.add.text(GAME_WIDTH / 2, 508, data.notice ?? '', textStyle(18, '#f0e0a0')).setOrigin(0.5);
     this.add.text(GAME_WIDTH / 2, 528, '←/→ ↑/↓ move  ·  Enter choose', textStyle(14, '#a69cb4')).setOrigin(0.5);
@@ -105,7 +118,19 @@ export class RewardScene extends Phaser.Scene {
       if (action === 'down' && this.index < cards) this.focus(cards);
       if (action === 'up' && this.index >= cards) this.focus(0);
       if (action === 'confirm') this.activate(this.index);
+      if (action === 'back' && this.mode) {
+        this.mode = null;
+        this.notice?.setText('');
+      }
     });
+  }
+
+  private buttons: { label: string; act: () => void }[] = [];
+
+  private startMode(mode: DraftItemKind, hint: string): void {
+    this.mode = mode;
+    this.notice?.setText(hint);
+    this.focus(0);
   }
 
   private highlight(x: number, y: number, w: number, h: number): Phaser.GameObjects.Graphics {
@@ -130,9 +155,12 @@ export class RewardScene extends Phaser.Scene {
 
   private activate(i: number): void {
     const draft = services().session.run!.draft!;
-    if (i < draft.length) this.pickReward(i);
-    else if (i === draft.length) this.openParty();
-    else this.openBag();
+    if (i < draft.length && this.mode) {
+      const { message } = services().session.useDraftItem(this.mode, i);
+      playSfx(this, 'ui.select');
+      this.restart(message);
+    } else if (i < draft.length) this.pickReward(i);
+    else this.buttons[i - draft.length]?.act();
   }
 
   private closePicker(): void {
