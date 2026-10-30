@@ -123,6 +123,32 @@ export const FORM_RESEARCH_EVENTS: Json[] = [
     ]),
 ];
 
+// Own routes for Delta, Z and Spooky forms (catalog: special-form routes beyond their sets): each family has its own
+// clue chain (reusing the `flag` effect and condition) and a research battle. They need no event in season.
+const routeClue = (id: string, group: string, key: string, name: string, intro: string, tint: string, max: number, minStage: number): Json =>
+  ev(id, name, group, { rarity: 'uncommon', minStage, requires: [{ kind: 'flag', key, atLeast: 0, atMost: max - 1 }], cast: [], effect: 'sparkle', tint }, intro, [
+    ch('Take notes', out('You write it down. The pattern is getting clearer.', flag(key), rp(15))),
+    ch('Not now', leave()),
+  ]);
+const routeBattle = (id: string, group: string, key: string, need: number, metKey: string, name: string, intro: string, species: string[], tint: string, minStage: number, lv: number): Json =>
+  ev(id, name, group, { rarity: 'rare', minStage, requires: [{ kind: 'flag', key, atLeast: need }, { kind: 'flag', key: metKey, atLeast: 0, atMost: 0 }], cast: [], effect: 'glint', tint }, intro, [
+    ch('Begin the battle', fight('It meets you head on.', wild({ species, lv, win: [rp(90), flag(metKey)] }))),
+    ch('Leave it be', out('You note the spot and move on. The notes are worth something.', rp(30))),
+  ]);
+
+export const FORM_FAMILY_ROUTE_EVENTS: Json[] = [
+  routeClue('delta-clue-scales', 'Delta Research', 'delta-clue', 'Scales Out of Place', 'A shed scale in a colour the field guide does not list. Whatever left it came from another kind of habitat.', '#1f2a30', 3, 3),
+  routeClue('delta-clue-nest', 'Delta Research', 'delta-clue', 'An Odd Nest', 'A nest built from materials that never grew here. The eggs are missing.', '#2a301f', 3, 3),
+  routeClue('delta-clue-song', 'Delta Research', 'delta-clue', 'A Call You Do Not Know', 'A cry from the brush that no Pokémon of this region makes.', '#2a1f30', 3, 3),
+  routeBattle('delta-research-battle', 'Delta Research', 'delta-clue', 3, 'delta-met', 'The Delta Study', 'The clues point to one clearing. A Delta form, changed by its habitat, waits there.', ['bulbasaur-delta', 'charmander-delta', 'squirtle-delta', 'ralts-delta', 'dratini-delta', 'shinx-delta', 'pidgey-delta', 'growlithe-delta', 'geodude-delta', 'pichu-delta'], '#1f2a30', 4, 3),
+  routeClue('z-sigil-ruin', 'Z-Form Trial', 'z-sigil', 'A Sigil in the Stone', 'A carved sigil glows faintly in a ruined wall. It matches nothing in the guidebook.', '#30281f', 2, 5),
+  routeClue('z-sigil-pool', 'Z-Form Trial', 'z-sigil', 'The Sigil Pool', 'The water in a rock pool is humming. A second sigil lies on the bottom.', '#1f2f30', 2, 5),
+  routeBattle('z-form-trial', 'Z-Form Trial', 'z-sigil', 2, 'z-met', 'The Z-Form Trial', 'Both sigils burn together. A Z-form steps out of the glow to test you.', ['abra-z', 'gastly-z', 'onix-z', 'tangela-z', 'voltorb-z', 'diglett-z', 'piplup-z', 'skarmory-z', 'sudowoodo-z'], '#30281f', 6, 5),
+  routeClue('spooky-light-one', 'Haunted Detour', 'spooky-light', 'A Light Off the Road', 'A pale light drifts between the trees. It waits when you stop.', '#241f30', 2, 3),
+  routeClue('spooky-light-two', 'Haunted Detour', 'spooky-light', 'The Light Returns', 'The light is back, nearer now, and the air turns cold around it.', '#1f1f2a', 2, 3),
+  routeBattle('spooky-detour-battle', 'Haunted Detour', 'spooky-light', 2, 'spooky-met', 'The Haunted Detour', 'The light leads you off the path. Something wearing a Spooky coat is waiting.', ['litwick-spooky', 'timburr-spooky', 'emolga-spooky', 'snorunt-spooky', 'ponyta-spooky', 'sinistea-spooky', 'tangela-spooky'], '#241f30', 4, 3),
+];
+
 // Route state mutations (catalog 68): an optional action changes the route you are on.
 export const ROUTE_EVENTS: Json[] = [
   ev('route-detour', 'A Hand-Painted Detour Sign', 'Routes', { rarity: 'uncommon', minStage: 2, cast: [], effect: 'none', tint: '#2a2a20' },

@@ -63,6 +63,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 2: party role labels on the Bond screen (`core/partyRoles.ts`), battle log on H in battle, reward cards show why they fit (`core/rewardSynergy.ts`).
 - Catalog slice 3: Hub > Unlocks > Research Room (`core/collection.ts`): 9 generation sets plus Delta, Z, Spooky, Regional and Mega form sets; milestones at 25/50/75/100% pay 5/10/15/30 Research Points once via the claim ledger.
 - Catalog slice 4: wild Pokémon first impressions (7 behaviours, `core/wildBehavior.ts`, narrative only, own hashed seed), territorial warning, two rescue events and a 3-link chain via `eventSeen` (`tools/events/wild.ts`, 353 events).
+- Delta, Z and Spooky forms now have routes of their own beyond their sets: Delta Research (3 clues, Delta Study), Z-Form Trial (2 sigils, trial battle) and Haunted Detour (2 lights, battle). Each battle fires once per run and uses the `flag` clue system (`FORM_FAMILY_ROUTE_EVENTS`). Eggs and trades still do not hand them out.
 - Research Room shows lifetime shinies found and distinct shiny species (`profile.speciesShiny`, defaulted so old saves load; `countShiny` in progress.ts).
 - Catalog slice 5a: Quick Route (shorter practice campaign), Solo Run (party of 1) and Contract: No Evolution (`noEvolution` in `rules.ts`) on the Preparation Desk.
 - Quick Route is now a real mode (`modes.quick-route`): its own short campaign, counts for account progress, rewards scaled x0.6 (`rewardScale`). The old modifier is retired so older saves still load.

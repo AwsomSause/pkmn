@@ -22473,6 +22473,559 @@
    ]
   },
   {
+   "id": "delta-clue-scales",
+   "name": "Scales Out of Place",
+   "group": "Delta Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "delta-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1f2a30",
+    "effect": "sparkle"
+   },
+   "intro": "A shed scale in a colour the field guide does not list. Whatever left it came from another kind of habitat.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "delta-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "delta-clue-nest",
+   "name": "An Odd Nest",
+   "group": "Delta Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "delta-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a301f",
+    "effect": "sparkle"
+   },
+   "intro": "A nest built from materials that never grew here. The eggs are missing.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "delta-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "delta-clue-song",
+   "name": "A Call You Do Not Know",
+   "group": "Delta Research",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "delta-clue",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1f30",
+    "effect": "sparkle"
+   },
+   "intro": "A cry from the brush that no Pokémon of this region makes.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "delta-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "delta-research-battle",
+   "name": "The Delta Study",
+   "group": "Delta Research",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "delta-clue",
+     "atLeast": 3
+    },
+    {
+     "kind": "flag",
+     "key": "delta-met",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1f2a30",
+    "effect": "glint"
+   },
+   "intro": "The clues point to one clearing. A Delta form, changed by its habitat, waits there.",
+   "choices": [
+    {
+     "label": "Begin the battle",
+     "success": {
+      "text": "It meets you head on.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "bulbasaur-delta",
+        "charmander-delta",
+        "squirtle-delta",
+        "ralts-delta",
+        "dratini-delta",
+        "shinx-delta",
+        "pidgey-delta",
+        "growlithe-delta",
+        "geodude-delta",
+        "pichu-delta"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 90
+        },
+        {
+         "kind": "flag",
+         "key": "delta-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it be",
+     "success": {
+      "text": "You note the spot and move on. The notes are worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "z-sigil-ruin",
+   "name": "A Sigil in the Stone",
+   "group": "Z-Form Trial",
+   "rarity": "uncommon",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "z-sigil",
+     "atLeast": 0,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30281f",
+    "effect": "sparkle"
+   },
+   "intro": "A carved sigil glows faintly in a ruined wall. It matches nothing in the guidebook.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "z-sigil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "z-sigil-pool",
+   "name": "The Sigil Pool",
+   "group": "Z-Form Trial",
+   "rarity": "uncommon",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "z-sigil",
+     "atLeast": 0,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1f2f30",
+    "effect": "sparkle"
+   },
+   "intro": "The water in a rock pool is humming. A second sigil lies on the bottom.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "z-sigil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "z-form-trial",
+   "name": "The Z-Form Trial",
+   "group": "Z-Form Trial",
+   "rarity": "rare",
+   "minStage": 6,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "z-sigil",
+     "atLeast": 2
+    },
+    {
+     "kind": "flag",
+     "key": "z-met",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30281f",
+    "effect": "glint"
+   },
+   "intro": "Both sigils burn together. A Z-form steps out of the glow to test you.",
+   "choices": [
+    {
+     "label": "Begin the battle",
+     "success": {
+      "text": "It meets you head on.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "abra-z",
+        "gastly-z",
+        "onix-z",
+        "tangela-z",
+        "voltorb-z",
+        "diglett-z",
+        "piplup-z",
+        "skarmory-z",
+        "sudowoodo-z"
+       ],
+       "types": [],
+       "levelBonus": 5,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 90
+        },
+        {
+         "kind": "flag",
+         "key": "z-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it be",
+     "success": {
+      "text": "You note the spot and move on. The notes are worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-light-one",
+   "name": "A Light Off the Road",
+   "group": "Haunted Detour",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "spooky-light",
+     "atLeast": 0,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#241f30",
+    "effect": "sparkle"
+   },
+   "intro": "A pale light drifts between the trees. It waits when you stop.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "spooky-light",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-light-two",
+   "name": "The Light Returns",
+   "group": "Haunted Detour",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "spooky-light",
+     "atLeast": 0,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1f1f2a",
+    "effect": "sparkle"
+   },
+   "intro": "The light is back, nearer now, and the air turns cold around it.",
+   "choices": [
+    {
+     "label": "Take notes",
+     "success": {
+      "text": "You write it down. The pattern is getting clearer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "spooky-light",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-detour-battle",
+   "name": "The Haunted Detour",
+   "group": "Haunted Detour",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "spooky-light",
+     "atLeast": 2
+    },
+    {
+     "kind": "flag",
+     "key": "spooky-met",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#241f30",
+    "effect": "glint"
+   },
+   "intro": "The light leads you off the path. Something wearing a Spooky coat is waiting.",
+   "choices": [
+    {
+     "label": "Begin the battle",
+     "success": {
+      "text": "It meets you head on.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "litwick-spooky",
+        "timburr-spooky",
+        "emolga-spooky",
+        "snorunt-spooky",
+        "ponyta-spooky",
+        "sinistea-spooky",
+        "tangela-spooky"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 90
+        },
+        {
+         "kind": "flag",
+         "key": "spooky-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it be",
+     "success": {
+      "text": "You note the spot and move on. The notes are worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "secret-route-path",
    "name": "A Hidden Path",
    "group": "Form Research",
