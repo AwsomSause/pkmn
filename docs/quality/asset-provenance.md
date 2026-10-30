@@ -54,3 +54,5 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 | `images/packs/dbk/primal/icon_kyogre.png` | Pokemon Essentials 21.1 UIE.rar (Deluxe Battle Kit) | `Graphics/Plugins/Deluxe Battle Kit/Primal/icon_KYOGRE.png` | Lucidious89 | Mega glow orb; Primal symbol after the shatter | 2026-10-30 |
 | `images/packs/ess/bag_pockets.png` | Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip | `Graphics/UI/Bag/icon_pocket.png` (top row, padded to 28×28 frames) | Pokémon Essentials team | Shop category icons (8 bag pockets) | 2026-10-30 |
 | `images/packs/ebui/{info_gender,info_stats}.png` | Enhanced Battle UI.zip (v2.1.1) | `Graphics/Plugins/Enhanced Battle UI/<name>.png` (copied unchanged) | Lucidious89 | Summary screen gender marks and raised-stat arrows (`src/ui/summaryMenu.ts`) | 2026-10-30 |
+
+| `public/assets/images/pokemon/**` (415 species/forms re-imported) | Pokémon Essentials 21 + Unofficial EBDX, Graphics/Pokemon (Front, Back, Front shiny, Back shiny), converted by `tools/importPackSprites.py` | Animated strips repacked as atlases |

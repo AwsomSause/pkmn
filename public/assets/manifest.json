@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T20:50:37.169Z",
+  "generatedAt": "2026-10-30T21:38:27.893Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -723,6 +723,174 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/raid_tera.mp3"
+    },
+    {
+      "id": "bgm.raid.basic",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_basic.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.basic2",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_basic_v2.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.ultra2",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_ultra_v2.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.ultra3",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_ultra_v3.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.max2",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_max_v2.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.max3",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_max_v3.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.tera2",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_tera_v2.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.tera3",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_tera_v3.mp3",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.rain1",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/rain_1.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.rain2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/rain_2.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.rain3",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/rain_3.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.hail1",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/hail_1.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.hail2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/hail_2.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.hail3",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/hail_3.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.snow1",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/blizzard_1.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.snow2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/blizzard_2.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.snow3",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/blizzard_3.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.snow4",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/blizzard_4.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.sandTile",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/sandstorm_tile.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.weather.snowTile",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/weather/blizzard_tile.png",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.adventure.basic",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_adventure_basic.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.adventure.ultra",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_adventure_ultra.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.adventure.max",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_adventure_max.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.adventure.tera",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_adventure_tera.mp3",
+      "lazy": true
     },
     {
       "id": "bgm.battle_trainer",
@@ -71168,6 +71336,312 @@
       "path": "images/bosses/lusamine-masters.png"
     },
     {
+      "id": "boss.npc_youngster",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_youngster.png"
+    },
+    {
+      "id": "boss.npc_lass",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_lass.png"
+    },
+    {
+      "id": "boss.npc_bugcatcher",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_bugcatcher.png"
+    },
+    {
+      "id": "boss.npc_camper",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_camper.png"
+    },
+    {
+      "id": "boss.npc_picnicker",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_picnicker.png"
+    },
+    {
+      "id": "boss.npc_hiker",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_hiker.png"
+    },
+    {
+      "id": "boss.npc_fisherman",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_fisherman.png"
+    },
+    {
+      "id": "boss.npc_birdkeeper",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_birdkeeper.png"
+    },
+    {
+      "id": "boss.npc_blackbelt",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_blackbelt.png"
+    },
+    {
+      "id": "boss.npc_biker",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_biker.png"
+    },
+    {
+      "id": "boss.npc_burglar",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_burglar.png"
+    },
+    {
+      "id": "boss.npc_channeler",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_channeler.png"
+    },
+    {
+      "id": "boss.npc_cooltrainer_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_cooltrainer_m.png"
+    },
+    {
+      "id": "boss.npc_cooltrainer_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_cooltrainer_f.png"
+    },
+    {
+      "id": "boss.npc_crushgirl",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_crushgirl.png"
+    },
+    {
+      "id": "boss.npc_crushkin",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_crushkin.png"
+    },
+    {
+      "id": "boss.npc_cueball",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_cueball.png"
+    },
+    {
+      "id": "boss.npc_engineer",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_engineer.png"
+    },
+    {
+      "id": "boss.npc_gambler",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_gambler.png"
+    },
+    {
+      "id": "boss.npc_gentleman",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_gentleman.png"
+    },
+    {
+      "id": "boss.npc_juggler",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_juggler.png"
+    },
+    {
+      "id": "boss.npc_lady",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_lady.png"
+    },
+    {
+      "id": "boss.npc_painter",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_painter.png"
+    },
+    {
+      "id": "boss.npc_pokemaniac",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_pokemaniac.png"
+    },
+    {
+      "id": "boss.npc_pokemonbreeder",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_pokemonbreeder.png"
+    },
+    {
+      "id": "boss.npc_pokemonranger_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_pokemonranger_m.png"
+    },
+    {
+      "id": "boss.npc_pokemonranger_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_pokemonranger_f.png"
+    },
+    {
+      "id": "boss.npc_psychic_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_psychic_m.png"
+    },
+    {
+      "id": "boss.npc_psychic_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_psychic_f.png"
+    },
+    {
+      "id": "boss.npc_rocker",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_rocker.png"
+    },
+    {
+      "id": "boss.npc_ruinmaniac",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_ruinmaniac.png"
+    },
+    {
+      "id": "boss.npc_sailor",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_sailor.png"
+    },
+    {
+      "id": "boss.npc_scientist",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_scientist.png"
+    },
+    {
+      "id": "boss.npc_sisandbro",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_sisandbro.png"
+    },
+    {
+      "id": "boss.npc_supernerd",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_supernerd.png"
+    },
+    {
+      "id": "boss.npc_swimmer_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_swimmer_m.png"
+    },
+    {
+      "id": "boss.npc_swimmer_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_swimmer_f.png"
+    },
+    {
+      "id": "boss.npc_swimmer2_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_swimmer2_m.png"
+    },
+    {
+      "id": "boss.npc_swimmer2_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_swimmer2_f.png"
+    },
+    {
+      "id": "boss.npc_tamer",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_tamer.png"
+    },
+    {
+      "id": "boss.npc_teamrocket_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_teamrocket_m.png"
+    },
+    {
+      "id": "boss.npc_teamrocket_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_teamrocket_f.png"
+    },
+    {
+      "id": "boss.npc_tuber_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_tuber_m.png"
+    },
+    {
+      "id": "boss.npc_tuber_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_tuber_f.png"
+    },
+    {
+      "id": "boss.npc_tuber2_m",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_tuber2_m.png"
+    },
+    {
+      "id": "boss.npc_tuber2_f",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_tuber2_f.png"
+    },
+    {
+      "id": "boss.npc_twins",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_twins.png"
+    },
+    {
+      "id": "boss.npc_youngcouple",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_youngcouple.png"
+    },
+    {
+      "id": "boss.npc_beauty",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_beauty.png"
+    },
+    {
+      "id": "boss.npc_aromalady",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_aromalady.png"
+    },
+    {
+      "id": "boss.npc_coolcouple",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/npc_coolcouple.png"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -72515,6 +72989,60 @@
       "kind": "image",
       "category": "item",
       "path": "images/pokeball/fast.png"
+    },
+    {
+      "id": "item.dream_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/dream_ball.png"
+    },
+    {
+      "id": "item.beast_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/beast_ball.png"
+    },
+    {
+      "id": "item.safari_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/safari_ball.png"
+    },
+    {
+      "id": "item.sport_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/sport_ball.png"
+    },
+    {
+      "id": "item.feather_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/feather_ball.png"
+    },
+    {
+      "id": "item.wing_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/wing_ball.png"
+    },
+    {
+      "id": "item.jet_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/jet_ball.png"
+    },
+    {
+      "id": "item.leaden_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/leaden_ball.png"
+    },
+    {
+      "id": "item.gigaton_ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gigaton_ball.png"
     },
     {
       "id": "item.abomasite",
@@ -76685,6 +77213,108 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/gold-canari-plush-3.png"
+    },
+    {
+      "id": "item.gen5/hyper-occa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-occa-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-passho-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-passho-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-wacan-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-wacan-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-rindo-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-rindo-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-yache-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-yache-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-chople-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-chople-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-kebia-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-kebia-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-shuca-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-shuca-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-coba-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-coba-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-payapa-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-payapa-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-tanga-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-tanga-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-charti-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-charti-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-kasib-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-kasib-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-haban-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-haban-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-colbur-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-colbur-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-babiri-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-babiri-berry.png"
+    },
+    {
+      "id": "item.gen5/hyper-chilan-berry",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/hyper-chilan-berry.png"
     },
     {
       "id": "bg.arena.plains",
