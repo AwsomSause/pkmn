@@ -5,10 +5,10 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 | Items | Topic | Status |
 |---|---|---|
 | 1-15 | A Battle drama, trainer voice, banter, recap cards | PART: Battle Drama Engine covers 1-13 [drama thread]. **14 recap card: TODO (run-end recap done in slice 1)**, 15 PART |
-| 16-25 | B Mid-battle evolution, phases, charge-ups | PART: 16, 20, 22, 23, 25 exist (drama/Hyper/raids) [Hyper thread]; 17-19, 21, 24 TODO |
+| 16-25 | B Mid-battle evolution, phases, charge-ups | DONE in the rival/Hyper areas: 16 rival mid-battle evolution (drama engine), 17 evolution reveal and 22 transformation cues (drama and presentation cues, Hyper evolutions), 18 foreshadowing (Bond engine), 19 battle-only awakening (Signature Awakening, Hyper), 20 boss phases (raids), 23 failed breakthrough (Misfire event), 24 charge interruption (raids), 25 Second Wind / Last Stand. **21 charge-up visuals: visual battle thread** |
 | 26-35 | C Wild Pokémon identity | PART: **26, 27 first-impression behaviours (7, narrative only), 30 territorial warnings, 31 rescue events (no punishment for declining), 32/66 one 3-link ecological chain (disturbed habitat -> poacher hideout -> habitat restored) DONE (slice 4)**; 28 recognized wild rival, 29 pack/habitat encounters, 35 unusual moves as clues TODO; 33-34 PART (shiny/special forms exist) |
-| 36-47 | D Bond and personality | PART: 36-37, 44-46 via Bond screen/engine; 40 mentorship DONE; 38-39, 41-43, 47 TODO |
-| 48-61 | E Rivals and nemesis | PART/DONE [rivals thread]; 60 Rival Ghost, 61 Chronicle page TODO |
+| 36-47 | D Bond and personality | DONE: 36-37 traits and bond dimensions (Bond screen), 38 Camp Council, 39 chemistry, 40 mentorship, 41 competitive duo (chemistry), 42 promises, 43 reunion, 44 signature memory (histories), 45 individual style cues, 46 bond strain, 47 trait label on the Bond screen |
+| 48-61 | E Rivals and nemesis | DONE: 48-59 Living Rivalry Engine (graph, identity, offscreen world, feelings, feuds #196, rematch variants, pacing), 60 Rival Ghost (archived rivals return, `rivals/legacy.ts`) and the champion defense fight (154), 61 Rival Chronicle (Story screen) |
 | 62-75 | F World, routes, events | PART: 64-66, 71 events/services exist; 62, 63, 67-70, 72-75 TODO |
 | 76-84 | G Shadow, Delta, forms | PART: 78-84 partial (specialForms.ts); 76-77 Shadow arc DONE as a 4-event chain (sighting, sanctuary, stabilize, purified; tools/events/wild.ts); no separate Shadow species or in-battle Shadow meter (limited) |
 | 85-93 | H Bosses and raids | PART: 85-89 raids/totems exist; 90-93 TODO |
