@@ -5,7 +5,7 @@
 import Phaser from 'phaser';
 import { getMinigame, minigameView } from '../core/minigame/flow';
 import { services } from '../game/services';
-import { bounceIn, floatIdle } from '../ui/aero';
+import { aeroBackdrop, bounceIn, floatIdle } from '../ui/aero';
 import { onInputAction } from '../ui/input';
 import { playSfx } from '../ui/audio';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
@@ -27,20 +27,21 @@ export class MinigameScene extends Phaser.Scene {
   create(data?: { focus?: number; slow?: boolean; paused?: boolean }): void {
     const { session } = services();
     const run = session.run!;
+    const motion = session.settings.battleAnimations;
     if (run.phase !== 'minigame' || !run.minigame) {
       this.scene.start(sceneForRun(run), { notice: '', focus: 0 });
       return;
     }
     this.slow = data?.slow ?? false;
     this.paused = data?.paused ?? false;
+    aeroBackdrop(this, motion, 0x58c0e8);
     const def = getMinigame(session.content, run.minigame.id);
     const view = minigameView(session.content, run);
     const outcome = run.minigame.outcome;
-    const motion = session.settings.battleAnimations;
     this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  ${def.difficultyTiers[run.minigame.tier]!.label}`, textStyle(30, COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, 16, 48, GAME_WIDTH - 32, 96, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
-    this.add.text(28, 54, view.hud.join('   ·   '), textStyle(16, '#f0e0a0', { wordWrap: { width: GAME_WIDTH - 56 } }));
-    this.add.text(28, 84, outcome ? outcome.lines.join(' ') : view.prompt, textStyle(17, outcome ? '#a0f0a0' : COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 56 } }));
+    this.add.text(28, 54, view.hud.filter((h) => h.length > 0).join('   ·   '), textStyle(18, '#f0e0a0', { wordWrap: { width: GAME_WIDTH - 56 } }));
+    this.add.text(28, 98, outcome ? outcome.lines.join(' ') : view.prompt, textStyle(20, outcome ? '#a0f0a0' : COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 56 } }));
 
     if (outcome) this.showMedal(outcome.medal, motion);
     const options = outcome

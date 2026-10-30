@@ -710,6 +710,39 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
   /** Mega Evolved Pokémon of yours take more damage. */
   z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Your side's first attack in a battle deals `first`× damage, every later attack `later`×. */
+  z.object({ kind: z.literal('firstAttackDamage'), first: z.number().positive(), later: z.number().positive() }),
+  /** Damage dealt by your Pokémon that are holding an item (holding: true) or not holding one (false). */
+  z.object({ kind: z.literal('heldItemDamageMultiplier'), holding: z.boolean(), value: z.number().positive() }),
+  /** Held-item bonuses on your Pokémon (stats, damage boosts, healing, draining) are this much stronger. */
+  z.object({ kind: z.literal('heldEffectMultiplier'), value: z.number().positive() }),
+  /** After each won battle, every conscious party Pokémon recovers this share of its max HP. */
+  z.object({ kind: z.literal('postBattleHeal'), percent: z.number().positive() }),
+  /** Rare and epic rewards turn up this much more often in reward drafts. */
+  z.object({ kind: z.literal('rareItemWeight'), value: z.number().positive() }),
+  /** Critical-hit damage: your Pokémon's crits (side player) or the crits they take (side enemy). */
+  z.object({ kind: z.literal('critDamageMultiplier'), side: z.enum(['player', 'enemy']), value: z.number().positive() }),
+  /** Damage dealt by your Mega Evolved Pokémon. */
+  z.object({ kind: z.literal('megaDamageMultiplier'), value: z.number().positive() }),
+  /** Elite Four members are this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
+  /** Foes can't heal with moves, drains or healing effects. */
+  z.object({ kind: z.literal('enemyHealingBlocked') }),
+  /** Mega Evolution happens this many turns later than normal. */
+  z.object({ kind: z.literal('megaDelay'), turns: z.number().int().positive() }),
+  // ---------- Trainer Evolutions (core/trainerEvolution.ts): each evolved trainer's own mechanic ----------
+  /** Champion Red's Last Stand: once per battle, your last Pokémon standing survives a knockout hit at 1 HP. */
+  z.object({ kind: z.literal('championLastStand') }),
+  /** Champion Blue's Smell Ya Later: on the first turn of a trainer battle your Pokémon moves before the foe's same-priority move. */
+  z.object({ kind: z.literal('firstStrike') }),
+  /** Champion Cynthia's Champion's Aura: at the start of a boss battle your lead's best stat rises by `stages`. */
+  z.object({ kind: z.literal('championsAura'), stages: z.number().int().min(1).max(6) }),
+  /** Rocket Boss Giovanni's Black Market: shops also sell stock your badges haven't opened yet, at `markup` times the price. */
+  z.object({ kind: z.literal('blackMarket'), markup: z.number().min(1) }),
+  /** King N's Voice of Pokémon: a wild Pokémon you defeat asks to join with this chance (no ball needed). */
+  z.object({ kind: z.literal('voiceOfPokemon'), chance: z.number().positive().max(1) }),
+  /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
+  z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -746,6 +779,11 @@ export const ArchetypeSchema = z.object({
   eventTags: z.array(z.string()).default([]),
   /** The trainer's signature mechanic (core/signature.ts), if any. */
   signatureMechanic: z.string().nullable().default(null),
+  /**
+   * A Trainer Evolution (plan Part 2c): the base trainer this is the evolved form of. It unlocks when the
+   * base trainer's quest line is finished, and runs count toward the base trainer's quests.
+   */
+  evolvedFrom: z.string().nullable().default(null),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 

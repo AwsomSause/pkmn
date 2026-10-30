@@ -16,6 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
+import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
@@ -24,7 +25,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -1287,7 +1288,7 @@ function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Mov
   const quickDraw = (c: Combatant, m: Move): number => (abilityIn(ctx, c) === 'quick-draw' && m.category !== 'status' && rng.chance(0.3) ? 0.2 : 0);
   // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: priorityOf(ctx, player, pMove) + quickDraw(player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) * trickSign },
+    { priority: priorityOf(ctx, player, pMove) + quickDraw(player, pMove) + Held.orderBracket(ctx, player) / 10 + firstStrikeBonus(ctx.perks, ctx.battle), speed: speedOf(ctx, player) * trickSign },
     { priority: priorityOf(ctx, enemy, eMove) + quickDraw(enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) * trickSign },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
@@ -1429,8 +1430,10 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       userIsMega: getSpecies(ctx.content, user.mon.speciesId).form?.kind === 'mega',
       partyHasMega: ctx.party.some((p) => getSpecies(ctx.content, p.speciesId).form?.kind === 'mega'),
       firstInBattle: ctx.battle.participants[0] === user.mon.uid,
+      firstAttack: ctx.battle.held?.playerAttacks === 1,
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
+      userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
     });
   }
   if (target.side === 'player') {
@@ -1772,6 +1775,7 @@ function executeMove(
     pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1) - (user.side === 'player' ? ppCostExtra(ctx.perks, move.type) : 0));
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
+  if (user.side === 'player' && !continuing) Held.countPlayerAttack(ctx.battle);
   if (!continuing && slot !== -1) {
     user.vol.prevMove = user.vol.lastMove;
     user.vol.lastMove = move.id;
@@ -2440,7 +2444,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
       if (foeAbility === 'punk-rock' && move.flags.includes('sound')) final *= 0.5;
-      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) } : content.ruleset;
+      const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) * critDamagePerk(ctx.perks, user.side) } : content.ruleset;
       damage = calcDamage(ruleset, {
         level: user.mon.level,
         power,
@@ -2550,7 +2554,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     } else {
       const userMax = calcStats(content, user.mon).hp;
       const heal = Math.min(userMax - user.mon.hp, amount);
-      if (heal > 0) {
+      if (heal > 0 && !(user.side === 'enemy' && enemyHealingBlocked(ctx.perks))) {
         user.mon.hp += heal;
         events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
       }
@@ -3154,7 +3158,7 @@ function specialMoveType(ctx: BattleContext, user: Combatant, move: Move, _weath
 function healMon(ctx: BattleContext, c: Combatant, fraction: number, events: BattleEvent[]): boolean {
   const max = calcStats(ctx.content, c.mon).hp;
   const gain = Math.min(max - c.mon.hp, Math.max(1, Math.floor(max * fraction)));
-  if (gain <= 0 || c.mon.hp <= 0 || c.vol.healBlock > 0) {
+  if (gain <= 0 || c.mon.hp <= 0 || c.vol.healBlock > 0 || (c.side === 'enemy' && enemyHealingBlocked(ctx.perks))) {
     events.push({ type: 'fail', side: c.side });
     return false;
   }
@@ -4002,7 +4006,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
       return;
     }
   }
-  if (fx.heal && user.vol.healBlock > 0) {
+  if (fx.heal && (user.vol.healBlock > 0 || (user.side === 'enemy' && enemyHealingBlocked(ctx.perks)))) {
     events.push({ type: 'fail', side: user.side });
     return;
   }
@@ -4433,5 +4437,20 @@ export function startBattle(ctx: BattleContext): BattleEvent[] {
   const events: BattleEvent[] = [];
   resolveEntries(ctx, events);
   if (ctx.battle.totem) totemAura(ctx, events);
+  championsAura(ctx, events);
   return events;
+}
+
+/** Champion Cynthia's Champion's Aura: at the start of a boss battle your lead's best stat rises. */
+function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
+  const stages = championsAuraStages(ctx.perks);
+  if (stages === 0 || !isBossClass(ctx.battle.trainer?.classId)) return;
+  const { battle, content } = ctx;
+  const mon = ctx.party[battle.activeIndex];
+  if (!mon || mon.hp <= 0) return;
+  const stats = calcStats(content, mon);
+  const best = (['atk', 'def', 'spa', 'spd', 'spe'] as const).reduce((a, b) => (stats[b] > stats[a] ? b : a));
+  const player: Combatant = { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false };
+  events.push({ type: 'raid', tone: 'phase', text: "Champion's Aura! Your Pokémon feels the Champion's resolve!" });
+  applyStageChange(ctx, player, best, stages, events);
 }

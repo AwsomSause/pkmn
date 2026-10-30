@@ -125,6 +125,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
         case 'gem':
           return `The ${item} strengthened ${whoLower(e.side)}'s power!`;
         case 'survive':
+          if (e.itemId === 'perk-last-stand') return `Last Stand! ${who(e.side)} refuses to fall!`;
+          if (e.itemId === 'perk-survive') return `${who(e.side)} hung on!`;
           return `${who(e.side)} hung on using its ${item}!`;
         case 'pop':
           return `${who(e.side)}'s Air Balloon popped!`;

@@ -26,7 +26,7 @@ function finished(seed: string, archetypeId: string, counters: Record<string, nu
 describe('quest data', () => {
   it('gives every trainer a five-step line; only the special trainers end in a Trainer Evolution', () => {
     const special = ['red', 'blue', 'cynthia', 'giovanni', 'n', 'oak'];
-    for (const a of content.archetypes.values()) {
+    for (const a of [...content.archetypes.values()].filter((x) => !x.evolvedFrom)) {
       const line = content.questLines.get(a.id);
       expect(line, a.id).toBeDefined();
       expect(line!.steps).toHaveLength(5);

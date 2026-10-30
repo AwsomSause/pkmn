@@ -10,6 +10,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
+  scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
 } from '../../src/core/trainerPerks';
 import { autoplay, gameplayFingerprint } from './autoplay';
 import { content } from './helpers';
@@ -207,4 +208,72 @@ describe('trainer perks, batch 2', () => {
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }
   }, 120_000);
+
+  describe('batch 3 (Carmine to Diantha)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+
+    it('Colress rewards held items and punishes bare Pokémon; held effects are stronger', () => {
+      expect(damageDealtPerk(perks('colress'), { ...base, userHoldsItem: true })).toBeCloseTo(1.2);
+      expect(damageDealtPerk(perks('colress'), { ...base, userHoldsItem: false })).toBeCloseTo(0.85);
+      expect(scaleHeldBonus(perks('colress'), 1.5)).toBeCloseTo(1.575);
+      expect(scaleHeldBonus(perks('red'), 1.5)).toBe(1.5);
+    });
+
+    it('Cheryl heals after battles and Cogita finds rare items', () => {
+      expect(postBattleHealShare(perks('cheryl'))).toBeCloseTo(0.05);
+      expect(postBattleHealShare(perks('red'))).toBe(0);
+      expect(rareItemWeightPerk(perks('cogita'))).toBeCloseTo(1.1);
+    });
+
+    it('Cynthia (Masters) crits harder both ways; Cynthia (Masters 4) favours the first attack', () => {
+      expect(critDamagePerk(perks('cynthia-masters'), 'player')).toBeCloseTo(1.25);
+      expect(critDamagePerk(perks('cynthia-masters'), 'enemy')).toBeCloseTo(1.15);
+      expect(damageDealtPerk(perks('cynthia-masters-4'), { ...base, firstAttack: true })).toBeCloseTo(1.3);
+      expect(damageDealtPerk(perks('cynthia-masters-4'), { ...base, firstAttack: false })).toBeCloseTo(0.95);
+    });
+
+    it('Diantha: Mega Pokémon hit harder and Mega Evolution waits a turn', () => {
+      expect(damageDealtPerk(perks('diantha'), { ...base, userIsMega: true, userTypes: ['fairy'] })).toBeCloseTo(1.2 * 1.2);
+      expect(megaDelayTurns(perks('diantha'))).toBe(1);
+    });
+
+    it('Cynthia (Gen 7) boosts every Dragon-type stat and HP, Clay/Chuck boost HP of their type', () => {
+      for (const stat of ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const) expect(statPerk(perks('cynthia-gen-7'), stat, ['dragon'])).toBeCloseTo(1.1);
+      expect(statPerk(perks('cynthia-gen-7'), 'atk', ['normal'])).toBe(1);
+      expect(statPerk(perks('clay'), 'hp', ['ground'])).toBeCloseTo(1.15);
+    });
+
+    it('Cyrus: Dark/Steel damage, longer status, weaker healing', () => {
+      expect(damageDealtPerk(perks('cyrus'), { ...base, userTypes: ['steel'] })).toBeCloseTo(1.2);
+      expect(statusTurnsPerk(perks('cyrus'), 3)).toBe(4);
+    });
+
+    it('Distortion Protocol offers a choice after a boss, and a new choice replaces the old one', () => {
+      let run = chooseStarter(content, createRun(content, { runId: 't', seed: 'dp', archetypeId: 'cyrus' }), 0);
+      const foe = { ...run.party[0]!, uid: 'e1', speciesId: 'charizard', level: 30 };
+      const gym = createBattle('trainer', [foe], 0, run.party[0]!.uid, { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' });
+      gym.outcome = 'win';
+      const ordinary = createBattle('trainer', [foe], 0, run.party[0]!.uid, { classId: 'youngster', name: 'Joey', leaderId: null });
+      ordinary.outcome = 'win';
+      expect(signatureDecisions(content, run, ordinary)).toHaveLength(0);
+      run.pending = signatureDecisions(content, run, gym);
+      expect(run.pending).toHaveLength(1);
+      chooseSignatureOption(run, 1);
+      expect(enemyHealingBlocked([...perks('cyrus'), ...run.perkEffects])).toBe(true);
+      expect(eliteLevelOffset(run.perkEffects)).toBe(3);
+      run.pending = signatureDecisions(content, run, gym);
+      chooseSignatureOption(run, 0);
+      expect(enemyHealingBlocked(run.perkEffects)).toBe(false);
+      expect(eliteLevelOffset(run.perkEffects)).toBe(2);
+      expect(statPerk(run.perkEffects, 'spe', ['normal'])).toBeCloseTo(1.15);
+    });
+
+    it('every batch-3 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of [...content.archetypes.keys()].slice(49, 69)) {
+        const play = () => autoplay({ seed: `perk3-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
 });

@@ -2353,5 +2353,1256 @@
     "signaturePool": "trainer-canari",
     "eventTags": [],
     "signatureMechanic": null
+  },
+  {
+    "id": "carmine",
+    "name": "Carmine",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against higher-level enemies — Healing items restore 20% less HP.",
+    "pros": [
+      "Pokémon deal 20% more damage against higher-level enemies"
+    ],
+    "cons": [
+      "Healing items restore 20% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 410
+    },
+    "unlockText": "Defeat 410 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.carmine",
+    "modifiers": [
+      {
+        "kind": "levelGapDamageMultiplier",
+        "foe": "higher",
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sinistcha",
+      "perrserker",
+      "ninetales",
+      "chandelure"
+    ],
+    "signaturePool": "trainer-carmine",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cheren",
+    "name": "Cheren",
+    "title": "The Normal Specialist",
+    "description": "Normal-types deal 20% more damage and gain 10% HP — Fighting moves deal 15% more damage against your team.",
+    "pros": [
+      "Normal-types deal 20% more damage and gain 10% HP"
+    ],
+    "cons": [
+      "Fighting moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 420
+    },
+    "unlockText": "Defeat 420 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cheren",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "normal",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "normal",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fighting",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "stoutland",
+      "cinccino",
+      "liepard",
+      "zebstrika"
+    ],
+    "signaturePool": "trainer-cheren",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cheryl",
+    "name": "Cheryl",
+    "title": "The Specialist",
+    "description": "Healing items restore 25% more HP — Pokémon deal 10% less damage.",
+    "pros": [
+      "Healing items restore 25% more HP",
+      "your party recovers 5% HP after each battle"
+    ],
+    "cons": [
+      "Pokémon deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 430
+    },
+    "unlockText": "Defeat 430 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cheryl",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "postBattleHeal",
+        "percent": 5
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "chansey",
+      "blissey",
+      "mime-jr",
+      "mr-mime"
+    ],
+    "signaturePool": "trainer-cheryl",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "chili",
+    "name": "Chili",
+    "title": "The Fire Specialist",
+    "description": "Fire-types deal 20% more damage — Water moves deal 20% more damage against your team.",
+    "pros": [
+      "Fire-types deal 20% more damage"
+    ],
+    "cons": [
+      "Water moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 440
+    },
+    "unlockText": "Defeat 440 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.chili",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 1.2
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "water",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "simisear",
+      "emboar",
+      "chandelure",
+      "heatmor"
+    ],
+    "signaturePool": "trainer-chili",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "chuck",
+    "name": "Chuck",
+    "title": "The Fighting Specialist",
+    "description": "Fighting-types deal 20% more damage and gain 10% HP — Pokémon lose 10% Speed.",
+    "pros": [
+      "Fighting-types deal 20% more damage and gain 10% HP"
+    ],
+    "cons": [
+      "Pokémon lose 10% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 450
+    },
+    "unlockText": "Defeat 450 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.chuck",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fighting",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "fighting",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "poliwrath",
+      "hitmontop",
+      "machamp",
+      "primeape"
+    ],
+    "signaturePool": "trainer-chuck",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cilan",
+    "name": "Cilan",
+    "title": "The Grass Specialist",
+    "description": "Grass-types deal 15% more damage and gain 10% EXP — Fire moves deal 15% more damage against your team.",
+    "pros": [
+      "Grass-types deal 15% more damage and gain 10% EXP"
+    ],
+    "cons": [
+      "Fire moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 460
+    },
+    "unlockText": "Defeat 460 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cilan",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "grass",
+        "value": 1.15
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "type": "grass",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fire",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "simisage",
+      "lilligant",
+      "maractus",
+      "whimsicott"
+    ],
+    "signaturePool": "trainer-cilan",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "clair",
+    "name": "Clair",
+    "title": "The Dragon Specialist",
+    "description": "Dragon-types deal 25% more damage — Dragon-types take 15% more damage from Ice moves.",
+    "pros": [
+      "Dragon-types deal 25% more damage"
+    ],
+    "cons": [
+      "Dragon-types take 15% more damage from Ice moves"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 470
+    },
+    "unlockText": "Defeat 470 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.clair",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dragon",
+        "value": 1.25
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "dragon",
+        "moveType": "ice",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "kingdra",
+      "dragonite",
+      "gyarados",
+      "flygon"
+    ],
+    "signaturePool": "trainer-clair",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "clay",
+    "name": "Clay",
+    "title": "The Ground Specialist",
+    "description": "Ground-types deal 20% more damage and gain 15% HP — Shop prices increase by 15%.",
+    "pros": [
+      "Ground-types deal 20% more damage and gain 15% HP"
+    ],
+    "cons": [
+      "Shop prices increase by 15%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 480
+    },
+    "unlockText": "Defeat 480 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.clay",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "ground",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "ground",
+        "value": 1.15
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "excadrill",
+      "krookodile",
+      "seismitoad",
+      "golurk"
+    ],
+    "signaturePool": "trainer-clay",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "clemont",
+    "name": "Clemont",
+    "title": "The Electric Specialist",
+    "description": "Electric-types deal 20% more damage — Pokémon have 10% less HP.",
+    "pros": [
+      "Electric-types deal 20% more damage",
+      "held-item effects are 15% stronger"
+    ],
+    "cons": [
+      "Pokémon have 10% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 490
+    },
+    "unlockText": "Defeat 490 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.clemont",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "electric",
+        "value": 1.2
+      },
+      {
+        "kind": "heldEffectMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "heliolisk",
+      "magnezone",
+      "emolga",
+      "luxray"
+    ],
+    "signaturePool": "trainer-clemont",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cogita",
+    "name": "Cogita",
+    "title": "The Specialist",
+    "description": "Legendary encounters are 15% more common — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Legendary encounters are 15% more common",
+      "rare items appear 10% more often"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 500
+    },
+    "unlockText": "Defeat 500 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cogita",
+    "modifiers": [
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "legendary",
+        "value": 1.15
+      },
+      {
+        "kind": "rareItemWeight",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "wobbuffet",
+      "bronzong",
+      "mamoswine",
+      "cresselia"
+    ],
+    "signaturePool": "trainer-cogita",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "colress",
+    "name": "Colress",
+    "title": "The Specialist",
+    "description": "Pokémon holding items deal 20% more damage — Pokémon without held items deal 15% less damage.",
+    "pros": [
+      "Pokémon holding items deal 20% more damage",
+      "held-item effects are 15% stronger"
+    ],
+    "cons": [
+      "Pokémon without held items deal 15% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 510
+    },
+    "unlockText": "Defeat 510 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.colress",
+    "modifiers": [
+      {
+        "kind": "heldItemDamageMultiplier",
+        "holding": true,
+        "value": 1.2
+      },
+      {
+        "kind": "heldEffectMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "heldItemDamageMultiplier",
+        "holding": false,
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "klinklang",
+      "magnezone",
+      "metang",
+      "beheeyem"
+    ],
+    "signaturePool": "trainer-colress",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "crasher-wake",
+    "name": "Crasher Wake",
+    "title": "The Water Specialist",
+    "description": "Water-types gain 15% Speed and deal 20% more damage — Water-types lose 10% Defense.",
+    "pros": [
+      "Water-types gain 15% Speed and deal 20% more damage"
+    ],
+    "cons": [
+      "Water-types lose 10% Defense"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 520
+    },
+    "unlockText": "Defeat 520 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.crasherwake",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "water",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "water",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "floatzel",
+      "gyarados",
+      "gastrodon",
+      "quagsire"
+    ],
+    "signaturePool": "trainer-crasher-wake",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cress",
+    "name": "Cress",
+    "title": "The Water Specialist",
+    "description": "Water-types deal 20% more special damage — Grass moves deal 15% more damage against your team.",
+    "pros": [
+      "Water-types deal 20% more special damage"
+    ],
+    "cons": [
+      "Grass moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 530
+    },
+    "unlockText": "Defeat 530 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cress",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "category": "special",
+        "value": 1.2
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "grass",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "simipour",
+      "samurott",
+      "seismitoad",
+      "basculin"
+    ],
+    "signaturePool": "trainer-cress",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cynthia-gen-7",
+    "name": "Cynthia (Gen 7)",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against bosses — Pokémon level up 20% slower.",
+    "pros": [
+      "Pokémon deal 20% more damage against bosses",
+      "Dragon-types gain 10% to all stats"
+    ],
+    "cons": [
+      "Pokémon level up 20% slower"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 540
+    },
+    "unlockText": "Defeat 540 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cynthia-gen7",
+    "modifiers": [
+      {
+        "kind": "bossDamageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "atk",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spa",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spd",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "dragon",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "garchomp",
+      "spiritomb",
+      "lucario",
+      "milotic"
+    ],
+    "signaturePool": "trainer-cynthia-gen-7",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cynthia-masters",
+    "name": "Cynthia (Masters)",
+    "title": "The Ground / dragon Specialist",
+    "description": "Critical hits deal 25% more damage — Critical hits against your team deal 15% more damage.",
+    "pros": [
+      "Critical hits deal 25% more damage",
+      "Ground- and Dragon-types deal 10% more damage"
+    ],
+    "cons": [
+      "Critical hits against your team deal 15% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 550
+    },
+    "unlockText": "Defeat 550 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cynthia-gen7",
+    "modifiers": [
+      {
+        "kind": "critDamageMultiplier",
+        "side": "player",
+        "value": 1.25
+      },
+      {
+        "kind": "damageMultiplier",
+        "types": [
+          "ground",
+          "dragon"
+        ],
+        "value": 1.1
+      },
+      {
+        "kind": "critDamageMultiplier",
+        "side": "enemy",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "ground",
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "garchomp",
+      "spiritomb",
+      "lucario",
+      "milotic"
+    ],
+    "signaturePool": "trainer-cynthia-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cynthia-masters-4",
+    "name": "Cynthia (Masters 4)",
+    "title": "The Specialist",
+    "description": "Your first attack each battle deals 30% more damage — Subsequent attacks deal 5% less damage until the next battle.",
+    "pros": [
+      "Your first attack each battle deals 30% more damage"
+    ],
+    "cons": [
+      "Subsequent attacks deal 5% less damage until the next battle"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 560
+    },
+    "unlockText": "Defeat 560 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cynthia-gen7",
+    "modifiers": [
+      {
+        "kind": "firstAttackDamage",
+        "first": 1.3,
+        "later": 0.95
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "garchomp",
+      "spiritomb",
+      "lucario",
+      "milotic"
+    ],
+    "signaturePool": "trainer-cynthia-masters-4",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "cyrus",
+    "name": "Cyrus",
+    "title": "The Dark / steel Specialist",
+    "description": "Dark- and Steel-types deal 20% more damage — Healing effects are 20% weaker.",
+    "pros": [
+      "Dark- and Steel-types deal 20% more damage",
+      "status effects last one extra turn"
+    ],
+    "cons": [
+      "Healing effects are 20% weaker"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 570
+    },
+    "unlockText": "Defeat 570 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.cyrus",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "types": [
+          "dark",
+          "steel"
+        ],
+        "value": 1.2
+      },
+      {
+        "kind": "statusDurationBonus",
+        "turns": 1
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [
+      "dark",
+      "steel"
+    ],
+    "signatureSpecies": [
+      "weavile",
+      "honchkrow",
+      "houndoom",
+      "gyarados"
+    ],
+    "signaturePool": "trainer-cyrus",
+    "eventTags": [],
+    "signatureMechanic": "distortion-protocol"
+  },
+  {
+    "id": "dawn-gen-4-platinum",
+    "name": "Dawn (Gen 4 Platinum)",
+    "title": "The Specialist",
+    "description": "Starter Pokémon gain 20% more EXP — Non-starters gain 10% less EXP.",
+    "pros": [
+      "Starter Pokémon gain 20% more EXP",
+      "healing items restore 15% more HP"
+    ],
+    "cons": [
+      "Non-starters gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 580
+    },
+    "unlockText": "Defeat 580 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.dawn",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "starter": true,
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "starter": false,
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "piplup",
+      "empoleon",
+      "pachirisu",
+      "togekiss"
+    ],
+    "signaturePool": "trainer-dawn-gen-4-platinum",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "dawn",
+    "name": "Dawn",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% more EXP — Shop prices increase by 10%.",
+    "pros": [
+      "Pokémon gain 15% more EXP",
+      "capture chance increases by 10%"
+    ],
+    "cons": [
+      "Shop prices increase by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 590
+    },
+    "unlockText": "Defeat 590 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.dawn",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "piplup",
+      "empoleon",
+      "pachirisu",
+      "togekiss"
+    ],
+    "signaturePool": "trainer-dawn",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "diantha",
+    "name": "Diantha",
+    "title": "The Fairy Specialist",
+    "description": "Fairy-types and Mega-Evolved Pokémon deal 20% more damage — Mega Evolution takes one extra turn to activate.",
+    "pros": [
+      "Fairy-types and Mega-Evolved Pokémon deal 20% more damage"
+    ],
+    "cons": [
+      "Mega Evolution takes one extra turn to activate"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 600
+    },
+    "unlockText": "Defeat 600 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.diantha",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fairy",
+        "value": 1.2
+      },
+      {
+        "kind": "megaDamageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "megaDelay",
+        "turns": 1
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "gardevoir",
+      "hawlucha",
+      "tyrantrum",
+      "aurorus"
+    ],
+    "signaturePool": "trainer-diantha",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "evolved-red",
+    "name": "Champion Red",
+    "title": "The Silent Champion",
+    "description": "Red after Mt. Silver: the strongest trainer there is, and every foe knows it.",
+    "pros": [
+      "Last Stand: once per battle, your last Pokémon standing survives a knockout hit with 1 HP"
+    ],
+    "cons": [
+      "Enemy Pokémon are 2 levels higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Red's quest line",
+    "spriteAssetId": "boss.red-masters",
+    "modifiers": [
+      {
+        "kind": "championLastStand"
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 2
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "charizard",
+      "venusaur",
+      "blastoise"
+    ],
+    "signaturePool": "trainer-red",
+    "eventTags": [
+      "silent"
+    ],
+    "evolvedFrom": "red"
+  },
+  {
+    "id": "evolved-blue",
+    "name": "Champion Blue",
+    "title": "The First Champion",
+    "description": "Blue as the Champion who got there first: always one step ahead.",
+    "pros": [
+      "Smell Ya Later: on the first turn of every trainer battle your Pokémon moves first (unless the foe uses a priority move)",
+      "Pokémon gain 25% more experience"
+    ],
+    "cons": [
+      "Enemy Pokémon are 3 levels higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Blue's quest line",
+    "spriteAssetId": "boss.blue-gen3champion",
+    "modifiers": [
+      {
+        "kind": "firstStrike"
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 3
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhydon",
+      "exeggutor"
+    ],
+    "signaturePool": "trainer-blue",
+    "eventTags": [
+      "rival",
+      "bold"
+    ],
+    "evolvedFrom": "blue"
+  },
+  {
+    "id": "evolved-cynthia",
+    "name": "Champion Cynthia",
+    "title": "Sinnoh’s Champion",
+    "description": "Cynthia in full Champion form: calm, studied and impossible to rattle.",
+    "pros": [
+      "Champion's Aura: at the start of every boss battle your lead's best stat rises",
+      "The map shows each gym leader's whole team"
+    ],
+    "cons": [
+      "Pokémon gain 10% less experience"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Cynthia's quest line",
+    "spriteAssetId": "boss.cynthia-masters",
+    "modifiers": [
+      {
+        "kind": "championsAura",
+        "stages": 1
+      },
+      {
+        "kind": "preview",
+        "what": "gymTeam"
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "gible",
+      "riolu",
+      "spiritomb"
+    ],
+    "signaturePool": "trainer-cynthia",
+    "eventTags": [
+      "scholar"
+    ],
+    "evolvedFrom": "cynthia"
+  },
+  {
+    "id": "evolved-giovanni",
+    "name": "Rocket Boss Giovanni",
+    "title": "Team Rocket’s Boss",
+    "description": "Giovanni running Team Rocket: anything can be bought, for a price.",
+    "pros": [
+      "Black Market: every shop also sells stock your badges have not opened yet"
+    ],
+    "cons": [
+      "Black Market goods cost 50% more",
+      "Healing items cost 25% more"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Giovanni's quest line",
+    "spriteAssetId": "boss.giovanni-rocketboss",
+    "modifiers": [
+      {
+        "kind": "blackMarket",
+        "markup": 1.5
+      },
+      {
+        "kind": "priceMultiplier",
+        "items": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-restore",
+          "full-heal",
+          "revive"
+        ],
+        "value": 1.25
+      }
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "rhyhorn",
+      "nidoran-m",
+      "persian"
+    ],
+    "signaturePool": "trainer-giovanni",
+    "eventTags": [
+      "villain",
+      "merchant"
+    ],
+    "evolvedFrom": "giovanni"
+  },
+  {
+    "id": "evolved-n",
+    "name": "King N",
+    "title": "King of Team Plasma",
+    "description": "N on the throne of Team Plasma, still hearing every Pokémon’s voice.",
+    "pros": [
+      "Voice of Pokémon: a wild Pokémon you defeat may ask to join you (1 in 4), no ball needed",
+      "Your Pokémon gain 50% more friendship from battles"
+    ],
+    "cons": [
+      "Poké Balls work 15% worse",
+      "Some aggressive event choices are unavailable"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish N's quest line",
+    "spriteAssetId": "boss.n",
+    "modifiers": [
+      {
+        "kind": "voiceOfPokemon",
+        "chance": 0.25
+      },
+      {
+        "kind": "friendshipMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "zorua",
+      "purrloin",
+      "darumaka"
+    ],
+    "signaturePool": "trainer-n",
+    "eventTags": [
+      "pacifist",
+      "friend"
+    ],
+    "evolvedFrom": "n"
+  },
+  {
+    "id": "evolved-oak",
+    "name": "Champion Oak",
+    "title": "The Former Champion",
+    "description": "Professor Oak as the Champion he was in his youth, still collecting data.",
+    "pros": [
+      "Field Research: each species you catch for the first time in a run pays ₽300",
+      "50% more Research Points from new species, catches and shinies",
+      "The map shows which wild Pokémon wait at each stop"
+    ],
+    "cons": [
+      "Enemy Pokémon are 1 level higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Professor Oak's quest line",
+    "spriteAssetId": "boss.oak",
+    "modifiers": [
+      {
+        "kind": "fieldResearch",
+        "money": 300
+      },
+      {
+        "kind": "researchMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "preview",
+        "what": "wild"
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "bulbasaur",
+      "charmander",
+      "squirtle",
+      "eevee"
+    ],
+    "signaturePool": "trainer-oak",
+    "eventTags": [
+      "scholar"
+    ],
+    "evolvedFrom": "oak"
   }
 ]
