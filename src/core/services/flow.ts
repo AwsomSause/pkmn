@@ -8,6 +8,7 @@ import { baseStatTotal, wildEligibleSpecies } from '../themes';
 import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, partyCapacity, requireStage } from '../run';
 import { runLevelCap } from '../regions';
+import { layEgg } from '../eggs';
 import { evolveFully } from '../evolution';
 import { abilityOf, addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
@@ -158,6 +159,11 @@ function abilityAlternatives(content: Content, mon: PokemonInstance): { slot: nu
   return alts.filter((a, i) => a.id !== now && alts.findIndex((b) => b.id === a.id) === i);
 }
 
+/** The regional first-stage forms the nursery could hatch, in a fixed order (the choice among them is seeded). */
+function regionalEggSpecies(content: Content): string[] {
+  return [...content.species.values()].filter((sp) => sp.evolutionStage === 1 && specialFamily(sp) === 'regional').map((sp) => sp.id).sort();
+}
+
 function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
   const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
   const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
@@ -247,6 +253,7 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       break;
     case 'nursery':
       add('egg', 'Buy a Mystery Egg', 'Hatches after 3 stages into a first-stage Pokémon (shiny chance x4). It is not a party member until it hatches.', price(run, C.eggPrice), side.used ? 'The nursery has no more eggs for you.' : null);
+      add('regional', 'Buy a Regional Egg', 'Hatches after 3 stages into a first-stage regional form (Alolan, Galarian...).', price(run, C.regionalEgg), side.used ? 'The nursery has no more eggs for you.' : regionalEggSpecies(content).length === 0 ? 'No regional eggs are in stock.' : null);
       break;
     case 'fossil':
       for (const f of fossilLots(content, run, sideId)) add(`fossil:${f.id}`, `Restore the ${f.name}`, `Brings back ${getSpecies(content, f.species).name} at your party's average level.`, price(run, C.fossilPrice), side.used ? 'The restorer has finished for today.' : null);
@@ -432,6 +439,15 @@ export function useService(content: Content, current: RunState, sideId: string, 
       const toParty = run.party.length < partyCapacity(content, run);
       (toParty ? run.party : run.box).push(born);
       message = `The ${lot.name} was restored: ${getSpecies(content, born.speciesId).name} ${toParty ? 'joins your party' : 'waits in the PC'}!`;
+      break;
+    }
+    case 'regional': {
+      const rng = new Rng(hashSeed(`${run.seed}::nursery-regional::${sideId}`));
+      const species = rng.pick(regionalEggSpecies(content));
+      const levels = run.party.map((m) => m.level);
+      const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)) - 5));
+      layEgg(content, run, species, { level, left: 3, unit: 'stage', source: 'Regional Egg' }, rng);
+      message = 'You take the egg home. It hatches in 3 stages into a regional form.';
       break;
     }
     case 'egg': {
