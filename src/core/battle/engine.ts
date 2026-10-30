@@ -25,7 +25,7 @@ import type { BoostStat, Content, ItemEffect, Move, PowerRule, Semi, SideMove, S
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, poisonDamagePerk, evasionPerk, moveFlagsOf, moveStyleOf, unusualKind } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -1529,6 +1529,8 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       userLegendary: isLegendaryLike(getSpecies(ctx.content, user.mon.speciesId)),
       userRarity: perks?.some((m) => m.kind === 'unusualDamageMultiplier') ? unusualKind(ctx.content, user.mon) : null,
       moveFlags: moveFlagsOf(move),
+      sameSpecies: user.mon.speciesId === target.mon.speciesId,
+      moveStyle: moveStyleOf(move),
       enemiesDefeated: ctx.battle.kind === 'trainer' ? ctx.battle.enemyIndex : 0,
     });
   }

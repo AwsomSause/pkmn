@@ -6217,6 +6217,10 @@
       {
         "kind": "damageMultiplier",
         "value": 0.9
+      },
+      {
+        "kind": "hiddenItemChance",
+        "chance": 0.2
       }
     ],
     "signatureTypes": [],
@@ -7051,13 +7055,13 @@
     "spriteAssetId": "boss.rei",
     "modifiers": [
       {
-        "kind": "damageMultiplier",
-        "speed": "fast",
+        "kind": "moveStyleDamage",
+        "style": "agile",
         "value": 1.2
       },
       {
-        "kind": "damageMultiplier",
-        "speed": "slow",
+        "kind": "moveStyleDamage",
+        "style": "strong",
         "value": 0.9
       }
     ],
@@ -7445,6 +7449,10 @@
         "kind": "damageTakenMultiplier",
         "moveType": "fire",
         "value": 1.15
+      },
+      {
+        "kind": "foodDurationMultiplier",
+        "value": 1.25
       }
     ],
     "signatureTypes": [],
@@ -8231,6 +8239,10 @@
       {
         "kind": "catchLevelOffset",
         "value": -2
+      },
+      {
+        "kind": "sameSpeciesDamageMultiplier",
+        "value": 1.15
       }
     ],
     "signatureTypes": [],

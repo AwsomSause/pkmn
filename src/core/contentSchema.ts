@@ -799,6 +799,14 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('critChanceBonus'), value: z.number().positive().max(1) }),
   /** Prize money after catching a wild Pokémon. */
   z.object({ kind: z.literal('catchMoneyMultiplier'), value: z.number().positive() }),
+  /** Damage dealt to a foe of the same species as the attacker (N). */
+  z.object({ kind: z.literal('sameSpeciesDamageMultiplier'), value: z.number().positive() }),
+  /** Damage of Agile-style (fast, light: priority moves and power 60 or less) or Strong-style (power 90 or more) moves (Rei). */
+  z.object({ kind: z.literal('moveStyleDamage'), style: z.enum(['agile', 'strong']), value: z.number().positive() }),
+  /** Food (Berries and Honey) bought as map items lasts this much longer, rounded up (Mallow). */
+  z.object({ kind: z.literal('foodDurationMultiplier'), value: z.number().positive() }),
+  /** Each stage has this chance (0-1) of a hidden Bag item at one wild stop, with no Itemfinder needed (Looker). */
+  z.object({ kind: z.literal('hiddenItemChance'), chance: z.number().positive().max(1) }),
   /** Damage of moves with one of these flags (dance and sound moves, punches...). */
   z.object({ kind: z.literal('moveFlagDamage'), flags: z.array(z.enum(['sound', 'punch', 'bite', 'pulse', 'bullet', 'slicing', 'wind', 'contact', 'dance'])).min(1), value: z.number().positive() }),
   /** Pokémon with an unusual type pairing or ability deal `unusual`× damage; those with a very common ability deal `common`×. */

@@ -13,8 +13,9 @@ import {
   poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
-  critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
+  critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind,
 } from '../../src/core/trainerPerks';
+import { hiddenItemNode } from '../../src/core/mapItems';
 import { autoplay, gameplayFingerprint } from './autoplay';
 import { content } from './helpers';
 
@@ -540,10 +541,8 @@ describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
     expect(statPerk(perks('opal'), 'spe', ['fairy'])).toBeCloseTo(0.9);
   });
 
-  it('Piers: sound moves, Rei: fast and slow Pokémon', () => {
+  it('Piers: sound moves', () => {
     expect(damageDealtPerk(perks('piers'), { ...info, moveFlags: ['sound'] })).toBeCloseTo(1.15);
-    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 100 })).toBeCloseTo(1.2);
-    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 40 })).toBeCloseTo(0.9);
   });
 
   it('Palmer: boss damage; Rowan: lower start level', () => {
@@ -666,4 +665,43 @@ describe('trainer perks, batch L (Lana to Lysandre)', () => {
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }
   }, 300_000);
+});
+
+describe('trainer perk systems: N, Rei, Looker, Mallow', () => {
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const runOf = (seed: string, archetypeId: string) => chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId }), 0);
+
+  it('N: more damage only against the same species', () => {
+    expect(damageDealtPerk(perks('n-classic'), { ...info, sameSpecies: true })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('n-classic'), { ...info, sameSpecies: false })).toBe(1);
+  });
+
+  it('Rei: Agile-style (quick or light) and Strong-style (heavy) moves', () => {
+    expect(moveStyleOf({ power: 40, priority: 0 })).toBe('agile');
+    expect(moveStyleOf({ power: 80, priority: 1 })).toBe('agile');
+    expect(moveStyleOf({ power: 80, priority: 0 })).toBeNull();
+    expect(moveStyleOf({ power: 120, priority: 0 })).toBe('strong');
+    expect(moveStyleOf({ power: null, priority: 0 })).toBeNull();
+    expect(damageDealtPerk(perks('rei'), { ...info, moveStyle: 'agile' })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('rei'), { ...info, moveStyle: 'strong' })).toBeCloseTo(0.9);
+    expect(damageDealtPerk(perks('rei'), { ...info, moveStyle: null })).toBe(1);
+  });
+
+  it('Looker: some stages hide an item without an Itemfinder, the same ones every time', () => {
+    const hiddenOf = (id: string) => Array.from({ length: 40 }, (_, i) => hiddenItemNode(content, runOf(`looker-${i}`, id)));
+    const looker = hiddenOf('spr-pt-looker');
+    const found = looker.filter((n) => n !== null).length;
+    expect(found).toBeGreaterThan(0);
+    expect(found).toBeLessThan(25);
+    expect(hiddenOf('spr-pt-looker')).toEqual(looker);
+    expect(hiddenOf('red').every((n) => n === null)).toBe(true);
+  });
+
+  it('Mallow: Berries and Honey last 25% longer, rounded up; other items are unchanged', () => {
+    expect(foodCount(perks('mallow'), 'razz-berry', 1)).toBe(2);
+    expect(foodCount(perks('mallow'), 'bluk-berry', 3)).toBe(4);
+    expect(foodCount(perks('mallow'), 'honey', 1)).toBe(2);
+    expect(foodCount(perks('mallow'), 'repel', 1)).toBe(1);
+    expect(foodCount(perks('red'), 'razz-berry', 1)).toBe(1);
+  });
 });

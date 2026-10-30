@@ -77,6 +77,9 @@ export interface DamageDealtInfo {
   /** `unusual` / `common`: see unusualKind. */
   userRarity?: 'unusual' | 'common' | null;
   moveFlags?: readonly string[];
+  /** The target is the same species as the attacker. */
+  sameSpecies?: boolean;
+  moveStyle?: 'agile' | 'strong' | null;
   /** Enemies your side has already defeated in this battle. */
   enemiesDefeated?: number;
 }
@@ -85,6 +88,8 @@ export interface DamageDealtInfo {
 export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): number {
   let v = 1;
   v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)));
+  if (i.sameSpecies) v *= product(perks, 'sameSpeciesDamageMultiplier');
+  v *= product(perks, 'moveStyleDamage', (m) => m.style === i.moveStyle);
   v *= product(perks, 'moveFlagDamage', (m) => m.flags.some((f) => i.moveFlags?.includes(f)));
   for (const m of of(perks, 'unusualDamageMultiplier')) v *= i.userRarity === 'unusual' ? m.unusual : i.userRarity === 'common' ? m.common : 1;
   if ((i.enemiesDefeated ?? 0) > 0) v *= product(perks, 'afterKoDamageMultiplier');
@@ -440,6 +445,28 @@ export function catchMoneyPerk(perks: Perks | undefined): number {
 const DANCE_MOVES = new Set(['swords-dance', 'dragon-dance', 'quiver-dance', 'feather-dance', 'petal-dance', 'fiery-dance', 'lunar-dance', 'teeter-dance', 'revelation-dance', 'victory-dance', 'clangorous-soul-dance', 'aqua-step', 'raging-fury-dance']);
 export function moveFlagsOf(move: { id: string; flags: readonly string[] }): readonly string[] {
   return DANCE_MOVES.has(move.id) ? [...move.flags, 'dance'] : move.flags;
+}
+
+/** Agile style: quick moves (priority, or power 60 or less); Strong style: heavy moves (power 90 or more). Status moves have none. */
+export function moveStyleOf(move: { power: number | null; priority: number }): 'agile' | 'strong' | null {
+  if (move.power === null) return null;
+  if (move.power >= 90) return 'strong';
+  return move.priority > 0 || move.power <= 60 ? 'agile' : null;
+}
+
+/** Food for the perks that name it: Berries and Honey. */
+export function isFoodItem(itemId: string): boolean {
+  return itemId === 'honey' || itemId.endsWith('-berry');
+}
+
+/** How many battles or throws a food map item lasts, with the perk's longer duration (rounded up). */
+export function foodCount(perks: Perks | undefined, itemId: string, count: number): number {
+  return isFoodItem(itemId) ? Math.ceil(count * product(perks, 'foodDurationMultiplier')) : count;
+}
+
+/** Chance of a hidden item at one wild stop of a stage from the archetype's perks (0 when it has none). */
+export function hiddenItemChancePerk(perks: Perks | undefined): number {
+  return Math.min(1, sum(perks, 'hiddenItemChance', (m) => m.chance));
 }
 
 const RARITY = new WeakMap<Content, { combo: Map<string, number>; ability: Map<string, number> }>();
