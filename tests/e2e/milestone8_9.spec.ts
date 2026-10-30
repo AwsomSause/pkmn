@@ -191,3 +191,57 @@ test('This Trainer Will Return: a trainer that vowed to return comes back for a 
   expect(await page.evaluate(() => (window as any).__pkr.session.run.battle.returning)).toBe('trainer-0-9-1');
   expect(errors).toEqual([]);
 });
+
+test('The Seven Emotions: a coloured heart on the party screen and the Story screen on the map', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/?debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.newRun('red', 'e2e-emotions-1');
+    session.chooseStarter(0);
+    const run = session.run;
+    const uid = run.party[0].uid;
+    const where = { region: 0, stage: 0, level: 1, node: null, battle: 0, turn: 1 };
+    const add = (seq: number, text: string, emotions: string[]) => {
+      const m = { eventId: `x${seq}`, seq: 900 + seq, type: 'storyMoment', importance: 80, text, where, emotions };
+      run.story.histories[uid].memories.push(m);
+      run.story.chronicle.push({ ...m, actors: [uid] });
+    };
+    add(1, 'Hung in there at low HP against Pidgey', ['patience']);
+    add(2, 'Toughened it out against Rattata', ['determination']);
+    add(3, 'Hung on again', ['patience']);
+    game.scene.getScenes(true)[0].scene.start('Map');
+  });
+  await waitForScene(page, 'Map');
+  await page.waitForTimeout(400);
+  const texts = () =>
+    page.evaluate(() => {
+      const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+      return (window as any).__pkr.game.scene.getScene('Map').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => ({ text: o.text as string, name: o.name as string }));
+    });
+  // Opens a map button's menu the way a click does (the button's option, by label).
+  const clickButton = async (label: string) => {
+    await page.evaluate((l) => {
+      const scene = (window as any).__pkr.game.scene.getScene('Map');
+      const i = scene.options.findIndex((o: any) => o.kind === l.toLowerCase());
+      scene.activate(i);
+    }, label);
+    await page.waitForTimeout(400);
+  };
+  await clickButton('Party');
+  const named = await page.evaluate(() => {
+    const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+    return (window as any).__pkr.game.scene.getScene('Map').children.list.flatMap(all).map((o: any) => o.name as string);
+  });
+  expect(named).toContain('emotion-patience');
+  await page.screenshot({ path: 'test-results/m89-emotion-party.png' });
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  await clickButton('Story');
+  await expect.poll(async () => (await texts()).some((t: { text: string; name: string }) => t.text.includes('Toughened it out against Rattata')), { timeout: 5000 }).toBe(true);
+  await page.screenshot({ path: 'test-results/m89-story-screen.png' });
+  expect(errors).toEqual([]);
+});

@@ -77,6 +77,11 @@ export type DomainEvent = z.infer<typeof DomainEventSchema>;
 
 // ---------- memories, history, relationships, enemies, chronicle ----------
 
+/** The Seven Emotions (Undertale's soul traits): tags on memories; the most common recent one is a Pokémon's current emotion. */
+export const EMOTIONS = ['determination', 'bravery', 'justice', 'kindness', 'patience', 'integrity', 'perseverance'] as const;
+export const EmotionSchema = z.enum(EMOTIONS);
+export type Emotion = (typeof EMOTIONS)[number];
+
 export const MemorySchema = z.object({
   eventId: z.string(),
   seq: z.number().int().min(1),
@@ -85,6 +90,8 @@ export const MemorySchema = z.object({
   importance: z.number().int().min(0).max(100),
   text: z.string(),
   where: WhereSchema,
+  /** Seven Emotions tags (from the story moment, or story.json's emotions.byEvent). */
+  emotions: z.array(EmotionSchema).default([]),
 });
 export type Memory = z.infer<typeof MemorySchema>;
 
@@ -328,6 +335,8 @@ export const StoryEventDefinitionSchema = z.object({
   priority: PriorityTierSchema,
   /** Restrictions (species, form, trainer, region, mechanic...). Checked once those systems exist. */
   eligibilityTags: z.array(z.string()),
+  /** Seven Emotions tags its memory carries. */
+  emotions: z.array(EmotionSchema).default([]),
   /** Named variants ("again", "wouldntStayDown"): a different title and lines for the same event. */
   variants: z
     .record(
@@ -368,6 +377,14 @@ export const StoryConfigSchema = z.object({
   chronicleMinImportance: z.number().int().min(0).max(100),
   /** How memorable each kind of domain event is (0: never a memory). */
   importance: z.record(DomainEventTypeSchema, z.number().int().min(0).max(100)),
+  emotions: z.object({
+    /** A Pokémon's current emotion is the most common tag in this many of its latest tagged memories. */
+    window: z.number().int().positive(),
+    /** The heart colour of each emotion. */
+    colors: z.record(EmotionSchema, z.string()),
+    /** Tags for memories of each kind of domain event (story moments use their definition's tags). */
+    byEvent: z.partialRecord(DomainEventTypeSchema, z.array(EmotionSchema)),
+  }),
   definitions: z.array(StoryEventDefinitionSchema),
 });
 export type StoryConfig = z.infer<typeof StoryConfigSchema>;
