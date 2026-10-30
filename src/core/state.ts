@@ -520,6 +520,8 @@ export const SettingsSchema = z.object({
   battleAnimations: z.enum(['full', 'reduced', 'off']),
   /** 0–1: how strong screen shake and flashes are. */
   effectIntensity: z.number().min(0).max(1),
+  /** How fast battles play: normal, fast (2×) or quick (3×). Outcomes never depend on it. */
+  battleSpeed: z.enum(['normal', 'fast', 'quick']),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
