@@ -56,15 +56,15 @@ describe('story foundation: random streams', () => {
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
   // effects slices 2 to 3b-3b (held, map, shop, money, map-movement, map-stop and draft items in drafts, bosses
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
-  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known).
+  // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer).
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': 'ee7018878dcc76d7',
-    'STORY2/0': 'd361603f62132f24',
-    'STORY4/0': '52986e1b2b5ef9be',
-    'STORY5/0': 'c7367b7a8f14933b',
+    'STORY1/0': '80ef2fe33d6d5c51',
+    'STORY2/0': '2fde4a902ddd3d1c',
+    'STORY4/0': 'c9acc58934a28713',
+    'STORY5/0': 'fa01e5230e73e916',
     'STORY6/0': 'e149f57f2e6e324d',
     'STORY7/0': '9fb9e0425e407819',
-    'STORY8/0': '5d4edd2e328a877b',
+    'STORY8/0': 'b1528d834f61d683',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.

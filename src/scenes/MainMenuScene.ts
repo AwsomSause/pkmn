@@ -42,8 +42,8 @@ export class MainMenuScene extends Phaser.Scene {
     pick();
     this.time.addEvent({ delay: 6500, loop: true, callback: pick });
 
-    drawLogo(this, 60, 24, 64);
-    this.add.text(64, 158, 'Milestone 5 prototype', textStyle(16, COLORS.textMuted));
+    drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
+    this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
 
     drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });
 

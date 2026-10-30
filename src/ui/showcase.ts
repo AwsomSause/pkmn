@@ -7,6 +7,7 @@ import type { Species } from '../core/contentSchema';
 import { services } from '../game/services';
 import { itemVisual, pokemonVisual, type Visual } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from './theme';
+import { bounceIn, floatIdle, type MotionLevel } from './aero';
 import { paintWindow } from './widgets';
 
 /** Every arena background that is loaded, e.g. "bg.arena.volcano". */
@@ -76,17 +77,56 @@ export class ArenaBackdrop {
 }
 
 /** The game's logo: chunky gold letters with a red outline and a hard shadow. */
-export function drawLogo(scene: Phaser.Scene, x: number, y: number, size = 56, origin = 0): Phaser.GameObjects.Container {
+/**
+ * The Pocket Raiders title: an original glossy crest (a rounded diamond with a spark) beside
+ * a small "POCKET" over a big, aqua-gradient "RAIDERS". Width is about 6.4 x size, height about 2 x size.
+ */
+export function drawLogo(scene: Phaser.Scene, x: number, y: number, size = 56, origin = 0, motion: MotionLevel = 'full'): Phaser.GameObjects.Container {
   const c = scene.add.container(x, y);
-  const style = (color: string) =>
-    textStyle(size, color, {
-      stroke: '#c73625',
-      strokeThickness: Math.round(size / 7),
-      shadow: { offsetX: 0, offsetY: Math.round(size / 10), color: '#181818', fill: true, stroke: true, blur: 0 },
-    });
-  const top = scene.add.text(0, 0, 'Pokémon', style(COLORS.textLight)).setOrigin(origin, 0);
-  const bottom = scene.add.text(0, top.height - size * 0.2, 'Roguelike', style(COLORS.gold)).setOrigin(origin, 0);
-  c.add([top, bottom]);
+  const r = size * 0.9;
+  const crest = scene.add.container(r, size * 1.0);
+  const g = scene.add.graphics();
+  const diamond = (k: number): number[] => [0, -r * k, r * k, 0, 0, r * k, -r * k, 0];
+  const poly = (pts: number[]) => g.fillPoints(pts.reduce<Phaser.Math.Vector2[]>((a, v, i) => (i % 2 ? a : [...a, new Phaser.Math.Vector2(v, pts[i + 1])]), []), true);
+  g.fillStyle(0x0c1f3a, 0.55);
+  g.fillEllipse(0, r * 1.05, r * 1.5, r * 0.22);
+  g.fillStyle(0x0b2a52, 1);
+  poly(diamond(1.02));
+  g.fillStyle(0x35c6f4, 1);
+  poly(diamond(0.9));
+  g.fillStyle(0x1b7fd6, 1);
+  poly([-r * 0.9, 0, 0, r * 0.9, r * 0.9, 0, 0, r * 0.2]);
+  g.fillStyle(0xffffff, 0.55);
+  poly([-r * 0.78, -r * 0.04, 0, -r * 0.78, r * 0.78, -r * 0.04, 0, -r * 0.3]);
+  g.lineStyle(Math.max(2, size / 14), 0xffffff, 0.9);
+  g.strokePoints(diamond(0.9).reduce<Phaser.Math.Vector2[]>((a, v, i, all) => (i % 2 ? a : [...a, new Phaser.Math.Vector2(v, all[i + 1])]), []), true);
+  // Spark: a four-pointed star with a gold core.
+  const star = (k: number) => [0, -k, k * 0.28, -k * 0.28, k, 0, k * 0.28, k * 0.28, 0, k, -k * 0.28, k * 0.28, -k, 0, -k * 0.28, -k * 0.28];
+  g.fillStyle(0x0b2a52, 1);
+  poly(star(r * 0.62));
+  g.fillStyle(0xffd23a, 1);
+  poly(star(r * 0.5));
+  g.fillStyle(0xffffff, 0.9);
+  g.fillCircle(0, 0, r * 0.12);
+  crest.add(g);
+  c.add(crest);
+
+  const tx = r * 2 + size * 0.25;
+  const outline = (px: number) => ({ stroke: '#0b2a52', strokeThickness: Math.max(2, Math.round(px / 6)), shadow: { offsetX: 0, offsetY: Math.round(px / 12), color: '#06142a', fill: true, stroke: true, blur: 0 } });
+  const small = Math.round(size * 0.5);
+  const top = scene.add.text(tx + size * 0.05, size * 0.05, 'POCKET', textStyle(small, '#ffd23a', { ...outline(small), letterSpacing: Math.round(size * 0.22) })).setOrigin(0, 0);
+  const bottom = scene.add.text(tx, size * 0.62, 'RAIDERS', textStyle(size, '#ffffff', outline(size))).setOrigin(0, 0);
+  if (bottom.setTint) {
+    bottom.setTint(0xffffff, 0xffffff, 0x7fe3ff, 0x4fb6f2);
+    top.setTint(0xfff3a8, 0xfff3a8, 0xffb21a, 0xffb21a);
+  }
+  c.add([bottom, top]);
+  c.x -= (tx + bottom.width) * origin;
+  if (motion === 'full') {
+    bounceIn(scene, c, motion);
+    floatIdle(scene, crest, motion, size * 0.06, 2200);
+    scene.tweens.add({ targets: crest, angle: { from: -4, to: 4 }, duration: 2600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
   return c;
 }
 

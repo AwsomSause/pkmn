@@ -201,7 +201,7 @@ export class HubScene extends Phaser.Scene {
     }
     this.showcase = new ShowcaseMon(this, GAME_WIDTH / 2, 356, PIXEL_SCALE, 250);
 
-    drawLogo(this, 20, 10, 40);
+    drawLogo(this, 20, 8, 34, 0, session.settings.battleAnimations);
     let right = GAME_WIDTH - 16;
     right -= currencyChip(this, right, 32, 'item.candy', p.candies, 'Candies') + 8;
     right -= currencyChip(this, right, 32, 'item.dna_splicers', p.researchPoints, 'Research Points') + 8;

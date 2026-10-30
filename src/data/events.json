@@ -169,7 +169,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -601,7 +605,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -609,7 +620,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -987,7 +1005,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -1024,7 +1046,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -1535,7 +1561,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -2845,7 +2875,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -2853,7 +2890,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -2971,7 +3015,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -4617,7 +4665,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -6350,7 +6402,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -7023,7 +7082,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -8133,7 +8196,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -8156,7 +8226,14 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry"
+          "lum-berry",
+          "leppa-berry",
+          "chesto-berry",
+          "aspear-berry",
+          "pecha-berry",
+          "rawst-berry",
+          "figy-berry",
+          "aguav-berry"
          ]
         }
        ]
@@ -11249,7 +11326,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -11257,7 +11341,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -11335,7 +11426,14 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry"
+          "lum-berry",
+          "leppa-berry",
+          "chesto-berry",
+          "aspear-berry",
+          "pecha-berry",
+          "rawst-berry",
+          "figy-berry",
+          "aguav-berry"
          ]
         },
         {
@@ -11343,7 +11441,14 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry"
+          "lum-berry",
+          "leppa-berry",
+          "chesto-berry",
+          "aspear-berry",
+          "pecha-berry",
+          "rawst-berry",
+          "figy-berry",
+          "aguav-berry"
          ]
         },
         {
@@ -11351,7 +11456,14 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry"
+          "lum-berry",
+          "leppa-berry",
+          "chesto-berry",
+          "aspear-berry",
+          "pecha-berry",
+          "rawst-berry",
+          "figy-berry",
+          "aguav-berry"
          ]
         }
        ]
@@ -12179,7 +12291,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -12187,7 +12306,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -12206,7 +12332,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -12214,7 +12347,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -12222,7 +12362,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -12230,7 +12377,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -12238,7 +12392,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -13040,7 +13201,11 @@
           "super-potion",
           "hyper-potion",
           "full-heal",
-          "revive"
+          "revive",
+          "max-potion",
+          "big-malasada",
+          "lumiose-galette",
+          "pewter-crunchies"
          ]
         }
        ]
@@ -13742,7 +13907,11 @@
           "super-potion",
           "hyper-potion",
           "full-heal",
-          "revive"
+          "revive",
+          "max-potion",
+          "big-malasada",
+          "lumiose-galette",
+          "pewter-crunchies"
          ]
         }
        ]
@@ -14310,7 +14479,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -15604,7 +15780,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -15709,7 +15889,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -15776,7 +15960,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -15784,7 +15972,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -15845,7 +16040,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -16467,7 +16666,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -16477,7 +16683,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -17960,7 +18170,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -17968,7 +18185,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -17976,7 +18200,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -18954,7 +19185,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        }
       ]
@@ -19340,7 +19575,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -19677,7 +19916,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -19685,7 +19931,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -19981,7 +20234,11 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive"
+         "revive",
+         "max-potion",
+         "big-malasada",
+         "lumiose-galette",
+         "pewter-crunchies"
         ]
        },
        {
@@ -25462,7 +25719,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -25583,7 +25847,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -25591,7 +25862,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -25609,7 +25887,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -26034,7 +26319,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        }
       ]
@@ -26513,7 +26805,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
@@ -26792,7 +27091,14 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry"
+         "lum-berry",
+         "leppa-berry",
+         "chesto-berry",
+         "aspear-berry",
+         "pecha-berry",
+         "rawst-berry",
+         "figy-berry",
+         "aguav-berry"
         ]
        },
        {
