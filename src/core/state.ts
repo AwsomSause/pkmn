@@ -582,6 +582,8 @@ export const BattleStateSchema = z.object({
   returning: z.string().optional(),
   /** An RSVP Mail rival: beating it gives a better reward draft. */
   rival: z.boolean().optional(),
+  /** The scripted first rival (stage 2): fighting it switches the Exp. Share on. */
+  firstRival: z.boolean().optional(),
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),

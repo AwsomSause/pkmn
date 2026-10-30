@@ -151,6 +151,7 @@ describe('TM Case', () => {
 describe('RSVP Mail: a rival', () => {
   it('next stage, the first ordinary trainer is a stronger rival; beating it gives gym odds and one more choice; only once', () => {
     const run = nextStage(take(newRun('rsvp-c'), 'rsvp-mail'));
+    run.story.flags['first-rival'] = 'met'; // stage 2's first trainer is otherwise the scripted first rival
     const trainers = run.stage!.map.nodes.filter((n) => n.kind === 'trainer' && n.column > 1);
     const enter = (r: RunState, id: string) => {
       r.stage!.current = r.stage!.map.nodes.find((n) => n.next.includes(id))!.id;

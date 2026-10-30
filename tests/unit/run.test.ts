@@ -163,6 +163,7 @@ describe('run flow', () => {
     for (const archetypeId of ['red', 'blue', 'green']) {
       let run = toBattle(chooseStarter(content, newRun('xp', archetypeId), 0));
       run.party[0] = createPokemon(content, run.party[0]!.speciesId, 40, run.party[0]!.uid);
+      run.stage!.index = 7; // the stage level cap must allow level 40
       const enemy = currentEnemy(run.battle!);
       const archetype = getArchetype(content, archetypeId);
       const expectedXp = xpForDefeat(getSpecies(content, enemy.speciesId).baseExp, enemy.level, 40, xpMultiplier(archetype) * content.balance.difficulty.xpScale);

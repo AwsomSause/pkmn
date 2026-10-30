@@ -1752,6 +1752,8 @@ export const BalanceSchema = z.object({
     levelCapStep: z.number().int().positive(),
     /** Multiplies all experience gained (the single knob for how fast the party levels). */
     xpScale: z.number().positive(),
+    /** Party levels stop at the stage's last enemy level plus this many (the region cap still applies). */
+    stageCapMargin: z.number().int().min(0),
     /** Party members that did not battle always get this percent of the EXP (the Exp. Share item can raise it). */
     benchXpPercent: z.number().min(0).max(100),
     variance: z.number().int().min(0),
@@ -1908,6 +1910,8 @@ export const BalanceSchema = z.object({
   heldItemSlots: z.number().int().positive(),
   /** Wild species with at least this base stat total count as rare (trainer perks make them turn up more or less). */
   rareEncounterBst: z.number().int().positive(),
+  /** The first rival: met on the first ordinary trainer of `stage` (0-based, counted from the run start) with one Pokémon of `level`. The Exp. Share (and bench EXP) switch on after that fight. */
+  rival: z.object({ stage: z.number().int().min(0), level: z.number().int().min(1), starters: z.array(z.string()).min(1) }),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
