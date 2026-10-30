@@ -1,0 +1,7181 @@
+{
+ "status": "suggested",
+ "source": "Pokemon_Spreadsheet.xlsx (director), Pokedex sheet",
+ "species": {
+  "bulbasaur": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "ivysaur": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "venusaur": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "charmander": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "charmeleon": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "charizard": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "squirtle": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "wartortle": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "blastoise": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "caterpie": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 255
+  },
+  "metapod": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 120
+  },
+  "butterfree": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 45
+  },
+  "weedle": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 255
+  },
+  "kakuna": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 120
+  },
+  "beedrill": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 45
+  },
+  "pidgey": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "pidgeotto": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "pidgeot": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "rattata": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "raticate": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 127
+  },
+  "spearow": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "fearow": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "ekans": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "arbok": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "pikachu": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "raichu": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "sandshrew": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "sandslash": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "nidoran-f": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 235
+  },
+  "nidorina": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "nidoqueen": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "nidoran-m": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 235
+  },
+  "nidorino": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "nidoking": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "clefairy": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 150
+  },
+  "clefable": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 25
+  },
+  "vulpix": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "ninetales": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 75
+  },
+  "jigglypuff": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 170
+  },
+  "wigglytuff": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 50
+  },
+  "zubat": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "golbat": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "oddish": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 255
+  },
+  "gloom": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 120
+  },
+  "vileplume": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "paras": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "parasect": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 75
+  },
+  "venonat": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "venomoth": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "diglett": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "dugtrio": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 50
+  },
+  "meowth": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 255
+  },
+  "persian": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "psyduck": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "golduck": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 75
+  },
+  "mankey": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "primeape": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "growlithe": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 190
+  },
+  "arcanine": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 75
+  },
+  "poliwag": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "poliwhirl": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 120
+  },
+  "poliwrath": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "abra": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 200
+  },
+  "kadabra": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 100
+  },
+  "alakazam": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 50
+  },
+  "machop": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 180
+  },
+  "machoke": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 90
+  },
+  "machamp": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "bellsprout": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "weepinbell": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 120
+  },
+  "victreebel": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "tentacool": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "tentacruel": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 60
+  },
+  "geodude": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "graveler": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 120
+  },
+  "golem": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "ponyta": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 190
+  },
+  "rapidash": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "slowpoke": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "slowbro": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "magnemite": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "magneton": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 60
+  },
+  "farfetchd": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 45
+  },
+  "doduo": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "dodrio": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "seel": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "dewgong": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "grimer": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "muk": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 75
+  },
+  "shellder": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "cloyster": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 60
+  },
+  "gastly": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "haunter": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 90
+  },
+  "gengar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "onix": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "drowzee": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "hypno": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "krabby": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 225
+  },
+  "kingler": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "voltorb": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "electrode": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "exeggcute": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 90
+  },
+  "exeggutor": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "cubone": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "marowak": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 75
+  },
+  "hitmonlee": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "hitmonchan": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "lickitung": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "koffing": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 190
+  },
+  "weezing": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "rhyhorn": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "rhydon": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "chansey": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 30
+  },
+  "tangela": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 45
+  },
+  "kangaskhan": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "horsea": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 225
+  },
+  "seadra": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 75
+  },
+  "goldeen": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 225
+  },
+  "seaking": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 60
+  },
+  "staryu": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 225
+  },
+  "starmie": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 60
+  },
+  "mr-mime": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "scyther": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "jynx": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "electabuzz": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "magmar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "pinsir": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "tauros": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "magikarp": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 255
+  },
+  "gyarados": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 45
+  },
+  "lapras": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "ditto": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 35
+  },
+  "eevee": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 45
+  },
+  "vaporeon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "jolteon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "flareon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "porygon": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 45
+  },
+  "omanyte": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "omastar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "kabuto": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "kabutops": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "aerodactyl": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "snorlax": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 25
+  },
+  "articuno": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "zapdos": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "moltres": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "dratini": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "dragonair": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "dragonite": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "mewtwo": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "mew": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 45
+  },
+  "chikorita": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "bayleef": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "meganium": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "cyndaquil": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "quilava": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "typhlosion": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "totodile": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "croconaw": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "feraligatr": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "sentret": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 255
+  },
+  "furret": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 90
+  },
+  "hoothoot": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "noctowl": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "ledyba": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "ledian": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 90
+  },
+  "spinarak": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "ariados": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 90
+  },
+  "crobat": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 90
+  },
+  "chinchou": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "lanturn": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "pichu": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 190
+  },
+  "cleffa": {
+   "rarity": "uncommon",
+   "difficulty": 2,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 150
+  },
+  "igglybuff": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 170
+  },
+  "togepi": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 190
+  },
+  "togetic": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 75
+  },
+  "natu": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "xatu": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "mareep": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 235
+  },
+  "flaaffy": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "ampharos": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "bellossom": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "marill": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 190
+  },
+  "azumarill": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 75
+  },
+  "sudowoodo": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 65
+  },
+  "politoed": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "hoppip": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "skiploom": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "jumpluff": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "aipom": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 45
+  },
+  "sunkern": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 2,
+   "maxLevel": 6,
+   "captureRate": 235
+  },
+  "sunflora": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 120
+  },
+  "yanma": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 75
+  },
+  "wooper": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 255
+  },
+  "quagsire": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 90
+  },
+  "espeon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "umbreon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "murkrow": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 30
+  },
+  "slowking": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 70
+  },
+  "misdreavus": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 45
+  },
+  "unown": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 225
+  },
+  "wobbuffet": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "girafarig": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 60
+  },
+  "pineco": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "forretress": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "dunsparce": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 190
+  },
+  "gligar": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 60
+  },
+  "steelix": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 25
+  },
+  "snubbull": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "granbull": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "qwilfish": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 45
+  },
+  "scizor": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 25
+  },
+  "shuckle": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 190
+  },
+  "heracross": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "sneasel": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 60
+  },
+  "teddiursa": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "ursaring": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "slugma": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 190
+  },
+  "magcargo": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 75
+  },
+  "swinub": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 225
+  },
+  "piloswine": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "corsola": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 60
+  },
+  "remoraid": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "octillery": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "delibird": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 45
+  },
+  "mantine": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 25
+  },
+  "skarmory": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 25
+  },
+  "houndour": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "houndoom": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "kingdra": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 45
+  },
+  "phanpy": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "donphan": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "porygon2": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "stantler": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "smeargle": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 45
+  },
+  "tyrogue": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 75
+  },
+  "hitmontop": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "smoochum": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 45
+  },
+  "elekid": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 45
+  },
+  "magby": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 45
+  },
+  "miltank": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "blissey": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 30
+  },
+  "raikou": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "entei": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "suicune": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "larvitar": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "pupitar": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "tyranitar": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "lugia": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "ho-oh": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "celebi": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 45
+  },
+  "treecko": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "grovyle": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "sceptile": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "torchic": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "combusken": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "blaziken": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "mudkip": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "marshtomp": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "swampert": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "poochyena": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 6,
+   "maxLevel": 11,
+   "captureRate": 255
+  },
+  "mightyena": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 127
+  },
+  "zigzagoon": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "linoone": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 90
+  },
+  "wurmple": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 255
+  },
+  "silcoon": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 120
+  },
+  "beautifly": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 45
+  },
+  "cascoon": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 120
+  },
+  "dustox": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "lotad": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 6,
+   "maxLevel": 11,
+   "captureRate": 255
+  },
+  "lombre": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "ludicolo": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "seedot": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 6,
+   "maxLevel": 11,
+   "captureRate": 255
+  },
+  "nuzleaf": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "shiftry": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "taillow": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 200
+  },
+  "swellow": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "wingull": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "pelipper": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 45
+  },
+  "ralts": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 235
+  },
+  "kirlia": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 120
+  },
+  "gardevoir": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "surskit": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 200
+  },
+  "masquerain": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "shroomish": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 255
+  },
+  "breloom": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 90
+  },
+  "slakoth": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "vigoroth": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 120
+  },
+  "slaking": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 51,
+   "maxLevel": 65,
+   "captureRate": 45
+  },
+  "nincada": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "ninjask": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 120
+  },
+  "shedinja": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 7,
+   "maxLevel": 12,
+   "captureRate": 45
+  },
+  "whismur": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 190
+  },
+  "loudred": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "exploud": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "makuhita": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 7,
+   "maxLevel": 12,
+   "captureRate": 180
+  },
+  "hariyama": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 200
+  },
+  "azurill": {
+   "rarity": "uncommon",
+   "difficulty": 2,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 150
+  },
+  "nosepass": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 255
+  },
+  "skitty": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "delcatty": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 60
+  },
+  "sableye": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "mawile": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "aron": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 180
+  },
+  "lairon": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 90
+  },
+  "aggron": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "meditite": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 180
+  },
+  "medicham": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 90
+  },
+  "electrike": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 120
+  },
+  "manectric": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "plusle": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 200
+  },
+  "minun": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 200
+  },
+  "volbeat": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 150
+  },
+  "illumise": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 150
+  },
+  "roselia": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 150
+  },
+  "gulpin": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 225
+  },
+  "swalot": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "carvanha": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 225
+  },
+  "sharpedo": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 60
+  },
+  "wailmer": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 125
+  },
+  "wailord": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "numel": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "camerupt": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 150
+  },
+  "torkoal": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 90
+  },
+  "spoink": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 255
+  },
+  "grumpig": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "spinda": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 255
+  },
+  "trapinch": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 255
+  },
+  "vibrava": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "flygon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "cacnea": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "cacturne": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "swablu": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 255
+  },
+  "altaria": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "zangoose": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "seviper": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "lunatone": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "solrock": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "barboach": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "whiscash": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "corphish": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 205
+  },
+  "crawdaunt": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 155
+  },
+  "baltoy": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "claydol": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 90
+  },
+  "lileep": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "cradily": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "anorith": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "armaldo": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "feebas": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 255
+  },
+  "milotic": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 60
+  },
+  "castform": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "kecleon": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 200
+  },
+  "shuppet": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 225
+  },
+  "banette": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "duskull": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "dusclops": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 90
+  },
+  "tropius": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 200
+  },
+  "chimecho": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "absol": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 30
+  },
+  "wynaut": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 125
+  },
+  "snorunt": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "glalie": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "spheal": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 255
+  },
+  "sealeo": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 120
+  },
+  "walrein": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "clamperl": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 255
+  },
+  "huntail": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "gorebyss": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "relicanth": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 25
+  },
+  "luvdisc": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 225
+  },
+  "bagon": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "shelgon": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "salamence": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "beldum": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 3
+  },
+  "metang": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 3
+  },
+  "metagross": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 3
+  },
+  "regirock": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "regice": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "registeel": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "latias": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "latios": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "kyogre": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 69,
+   "maxLevel": 69,
+   "captureRate": 3
+  },
+  "groudon": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 69,
+   "maxLevel": 69,
+   "captureRate": 3
+  },
+  "rayquaza": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 45
+  },
+  "jirachi": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "deoxys": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "turtwig": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "grotle": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "torterra": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "chimchar": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "monferno": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "infernape": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "piplup": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "prinplup": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "empoleon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "starly": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "staravia": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "staraptor": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "bidoof": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "bibarel": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 127
+  },
+  "kricketot": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 3,
+   "maxLevel": 7,
+   "captureRate": 255
+  },
+  "kricketune": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 45
+  },
+  "shinx": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 235
+  },
+  "luxio": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "luxray": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "budew": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 255
+  },
+  "roserade": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 75
+  },
+  "cranidos": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "rampardos": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "shieldon": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "bastiodon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "burmy": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 6,
+   "maxLevel": 11,
+   "captureRate": 120
+  },
+  "wormadam": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "mothim": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "combee": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 120
+  },
+  "vespiquen": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "pachirisu": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 200
+  },
+  "buizel": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "floatzel": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "cherubi": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "cherrim": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "shellos": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "gastrodon": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "ambipom": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "drifloon": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 125
+  },
+  "drifblim": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "buneary": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 190
+  },
+  "lopunny": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "mismagius": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "honchkrow": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 30
+  },
+  "glameow": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "purugly": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 75
+  },
+  "chingling": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 120
+  },
+  "stunky": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 225
+  },
+  "skuntank": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "bronzor": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "bronzong": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 90
+  },
+  "bonsly": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 255
+  },
+  "mime-jr": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 145
+  },
+  "happiny": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 130
+  },
+  "chatot": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 30
+  },
+  "spiritomb": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 100
+  },
+  "gible": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "gabite": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "garchomp": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "munchlax": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 50
+  },
+  "riolu": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 75
+  },
+  "lucario": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "hippopotas": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 140
+  },
+  "hippowdon": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 60
+  },
+  "skorupi": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "drapion": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "croagunk": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 140
+  },
+  "toxicroak": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "carnivine": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 200
+  },
+  "finneon": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "lumineon": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "mantyke": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 25
+  },
+  "snover": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "abomasnow": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "weavile": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "magnezone": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 30
+  },
+  "lickilicky": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 30
+  },
+  "rhyperior": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 30
+  },
+  "tangrowth": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 30
+  },
+  "electivire": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 30
+  },
+  "magmortar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 30
+  },
+  "togekiss": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 30
+  },
+  "yanmega": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 30
+  },
+  "leafeon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "glaceon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "gliscor": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 30
+  },
+  "mamoswine": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 50
+  },
+  "porygon-z": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 30
+  },
+  "gallade": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "probopass": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 60
+  },
+  "dusknoir": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "froslass": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "rotom": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 45
+  },
+  "uxie": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "mesprit": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "azelf": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "dialga": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "palkia": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "heatran": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "regigigas": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 69,
+   "maxLevel": 69,
+   "captureRate": 3
+  },
+  "giratina": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "cresselia": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "phione": {
+   "rarity": "mythical",
+   "difficulty": 7,
+   "minLevel": 49,
+   "maxLevel": 49,
+   "captureRate": 30
+  },
+  "manaphy": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "darkrai": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "shaymin": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 45
+  },
+  "arceus": {
+   "rarity": "mythical",
+   "difficulty": 9,
+   "minLevel": 74,
+   "maxLevel": 74,
+   "captureRate": 3
+  },
+  "victini": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "snivy": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "servine": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "serperior": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "tepig": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "pignite": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "emboar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "oshawott": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "dewott": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "samurott": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "patrat": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "watchog": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 255
+  },
+  "lillipup": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 255
+  },
+  "herdier": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 120
+  },
+  "stoutland": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "purrloin": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "liepard": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "pansage": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "simisage": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "pansear": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "simisear": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "panpour": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "simipour": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "munna": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "musharna": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "pidove": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "tranquill": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 120
+  },
+  "unfezant": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "blitzle": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "zebstrika": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "roggenrola": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "boldore": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 120
+  },
+  "gigalith": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "woobat": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "swoobat": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "drilbur": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 120
+  },
+  "excadrill": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "audino": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 255
+  },
+  "timburr": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 180
+  },
+  "gurdurr": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 90
+  },
+  "conkeldurr": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "tympole": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 255
+  },
+  "palpitoad": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 120
+  },
+  "seismitoad": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "throh": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "sawk": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 45
+  },
+  "sewaddle": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 255
+  },
+  "swadloon": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 120
+  },
+  "leavanny": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "venipede": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "whirlipede": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "scolipede": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "cottonee": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "whimsicott": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "petilil": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "lilligant": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "basculin": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 25
+  },
+  "sandile": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 180
+  },
+  "krokorok": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 90
+  },
+  "krookodile": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "darumaka": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 120
+  },
+  "darmanitan": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "maractus": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 255
+  },
+  "dwebble": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "crustle": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "scraggy": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 180
+  },
+  "scrafty": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "sigilyph": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "yamask": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "cofagrigus": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "tirtouga": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 45
+  },
+  "carracosta": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "archen": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "archeops": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 40,
+   "maxLevel": 52,
+   "captureRate": 45
+  },
+  "trubbish": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 190
+  },
+  "garbodor": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "zorua": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 75
+  },
+  "zoroark": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "minccino": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "cinccino": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "gothita": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 200
+  },
+  "gothorita": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 100
+  },
+  "gothitelle": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 50
+  },
+  "solosis": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 200
+  },
+  "duosion": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 100
+  },
+  "reuniclus": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 50
+  },
+  "ducklett": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "swanna": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "vanillite": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "vanillish": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 23,
+   "maxLevel": 31,
+   "captureRate": 120
+  },
+  "vanilluxe": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "deerling": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "sawsbuck": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "emolga": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 200
+  },
+  "karrablast": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 200
+  },
+  "escavalier": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "foongus": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "amoonguss": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "frillish": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "jellicent": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "alomomola": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "joltik": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "galvantula": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "ferroseed": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "ferrothorn": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "klink": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 130
+  },
+  "klang": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 60
+  },
+  "klinklang": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 30
+  },
+  "tynamo": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "eelektrik": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 60
+  },
+  "eelektross": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 30
+  },
+  "elgyem": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 255
+  },
+  "beheeyem": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "litwick": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "lampent": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 90
+  },
+  "chandelure": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "axew": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 75
+  },
+  "fraxure": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 60
+  },
+  "haxorus": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 45
+  },
+  "cubchoo": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 120
+  },
+  "beartic": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "cryogonal": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 25
+  },
+  "shelmet": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 200
+  },
+  "accelgor": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "stunfisk": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "mienfoo": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 180
+  },
+  "mienshao": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "druddigon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "golett": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "golurk": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "pawniard": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 120
+  },
+  "bisharp": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "bouffalant": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "rufflet": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 190
+  },
+  "braviary": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 60
+  },
+  "vullaby": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 190
+  },
+  "mandibuzz": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 60
+  },
+  "heatmor": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "durant": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "deino": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "zweilous": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "hydreigon": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "larvesta": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 45
+  },
+  "volcarona": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 15
+  },
+  "cobalion": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "terrakion": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "virizion": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "tornadus": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "thundurus": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "reshiram": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "zekrom": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 3
+  },
+  "landorus": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "kyurem": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 68,
+   "maxLevel": 68,
+   "captureRate": 3
+  },
+  "keldeo": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "meloetta": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "genesect": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "chespin": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "quilladin": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "chesnaught": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "fennekin": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "braixen": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "delphox": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "froakie": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "frogadier": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 45
+  },
+  "greninja": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "bunnelby": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 7,
+   "maxLevel": 12,
+   "captureRate": 255
+  },
+  "diggersby": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 127
+  },
+  "fletchling": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 255
+  },
+  "fletchinder": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 120
+  },
+  "talonflame": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "scatterbug": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 4,
+   "maxLevel": 8,
+   "captureRate": 255
+  },
+  "spewpa": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 120
+  },
+  "vivillon": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "litleo": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 220
+  },
+  "pyroar": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 65
+  },
+  "flabebe": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 225
+  },
+  "floette": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 120
+  },
+  "florges": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 45
+  },
+  "skiddo": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 200
+  },
+  "gogoat": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "pancham": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 220
+  },
+  "pangoro": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 65
+  },
+  "furfrou": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 160
+  },
+  "espurr": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 190
+  },
+  "meowstic": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "honedge": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 180
+  },
+  "doublade": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "aegislash": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "spritzee": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 200
+  },
+  "aromatisse": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 140
+  },
+  "swirlix": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 200
+  },
+  "slurpuff": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 140
+  },
+  "inkay": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "malamar": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 80
+  },
+  "binacle": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 120
+  },
+  "barbaracle": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "skrelp": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 225
+  },
+  "dragalge": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 55
+  },
+  "clauncher": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 225
+  },
+  "clawitzer": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 55
+  },
+  "helioptile": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "heliolisk": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "tyrunt": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 45
+  },
+  "tyrantrum": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "amaura": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 45
+  },
+  "aurorus": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "sylveon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "hawlucha": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 100
+  },
+  "dedenne": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 180
+  },
+  "carbink": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "goomy": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "sliggoo": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "goodra": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "klefki": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "phantump": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 120
+  },
+  "trevenant": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "pumpkaboo": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "gourgeist": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "bergmite": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "avalugg": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 55
+  },
+  "noibat": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 190
+  },
+  "noivern": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "xerneas": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 45
+  },
+  "yveltal": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 45
+  },
+  "zygarde": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "diancie": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "hoopa": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "volcanion": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "rowlet": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 45
+  },
+  "dartrix": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "decidueye": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "litten": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 45
+  },
+  "torracat": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "incineroar": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "popplio": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 45
+  },
+  "brionne": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "primarina": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "pikipek": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "trumbeak": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 120
+  },
+  "toucannon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "yungoos": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "gumshoos": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 127
+  },
+  "grubbin": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 255
+  },
+  "charjabug": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 120
+  },
+  "vikavolt": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "crabrawler": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 225
+  },
+  "crabominable": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "oricorio": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "cutiefly": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "ribombee": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "rockruff": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "lycanroc": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "wishiwashi": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 2,
+   "maxLevel": 6,
+   "captureRate": 60
+  },
+  "mareanie": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "toxapex": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 75
+  },
+  "mudbray": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 190
+  },
+  "mudsdale": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "dewpider": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 200
+  },
+  "araquanid": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 100
+  },
+  "fomantis": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 190
+  },
+  "lurantis": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "morelull": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 190
+  },
+  "shiinotic": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 75
+  },
+  "salandit": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 120
+  },
+  "salazzle": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "stufful": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 140
+  },
+  "bewear": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 70
+  },
+  "bounsweet": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 235
+  },
+  "steenee": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 120
+  },
+  "tsareena": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "comfey": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "oranguru": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "passimian": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "wimpod": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 7,
+   "maxLevel": 12,
+   "captureRate": 90
+  },
+  "golisopod": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "sandygast": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 140
+  },
+  "palossand": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "pyukumuku": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 60
+  },
+  "type-null": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 55,
+   "maxLevel": 55,
+   "captureRate": 3
+  },
+  "silvally": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 3
+  },
+  "minior": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 30
+  },
+  "komala": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "turtonator": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 70
+  },
+  "togedemaru": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 180
+  },
+  "mimikyu": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "bruxish": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 80
+  },
+  "drampa": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 70
+  },
+  "dhelmise": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 25
+  },
+  "jangmo-o": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "hakamo-o": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "kommo-o": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "tapu-koko": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 3
+  },
+  "tapu-lele": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 3
+  },
+  "tapu-bulu": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 3
+  },
+  "tapu-fini": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 3
+  },
+  "cosmog": {
+   "rarity": "legendary",
+   "difficulty": 4,
+   "minLevel": 21,
+   "maxLevel": 21,
+   "captureRate": 45
+  },
+  "cosmoem": {
+   "rarity": "legendary",
+   "difficulty": 6,
+   "minLevel": 41,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "solgaleo": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 45
+  },
+  "lunala": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 70,
+   "maxLevel": 70,
+   "captureRate": 45
+  },
+  "nihilego": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "buzzwole": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "pheromosa": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "xurkitree": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "celesteela": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "kartana": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "guzzlord": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 45
+  },
+  "necrozma": {
+   "rarity": "legendary",
+   "difficulty": 4,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 255
+  },
+  "magearna": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "marshadow": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "poipole": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "naganadel": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 45
+  },
+  "stakataka": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "blacephalon": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "zeraora": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "meltan": {
+   "rarity": "mythical",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 31,
+   "captureRate": 3
+  },
+  "melmetal": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "grookey": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "thwackey": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "rillaboom": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "scorbunny": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "raboot": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "cinderace": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "sobble": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "drizzile": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 45
+  },
+  "inteleon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "skwovet": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 255
+  },
+  "greedent": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 90
+  },
+  "rookidee": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "corvisquire": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 20,
+   "maxLevel": 28,
+   "captureRate": 120
+  },
+  "corviknight": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "blipbug": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 2,
+   "maxLevel": 6,
+   "captureRate": 255
+  },
+  "dottler": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 120
+  },
+  "orbeetle": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "nickit": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "thievul": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 127
+  },
+  "gossifleur": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 190
+  },
+  "eldegoss": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 30,
+   "maxLevel": 40,
+   "captureRate": 75
+  },
+  "wooloo": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 255
+  },
+  "dubwool": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 127
+  },
+  "chewtle": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "drednaw": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "yamper": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 255
+  },
+  "boltund": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "rolycoly": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "carkol": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 120
+  },
+  "coalossal": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "applin": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "flapple": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "appletun": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "silicobra": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 255
+  },
+  "sandaconda": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 120
+  },
+  "cramorant": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "arrokuda": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "barraskewda": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 60
+  },
+  "toxel": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 75
+  },
+  "toxtricity": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "sizzlipede": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "centiskorch": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 75
+  },
+  "clobbopus": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 180
+  },
+  "grapploct": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "sinistea": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 120
+  },
+  "polteageist": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "hatenna": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 235
+  },
+  "hattrem": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 120
+  },
+  "hatterene": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "impidimp": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "morgrem": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 21,
+   "maxLevel": 29,
+   "captureRate": 120
+  },
+  "grimmsnarl": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "obstagoon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "perrserker": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 28,
+   "maxLevel": 37,
+   "captureRate": 90
+  },
+  "cursola": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 30
+  },
+  "sirfetchd": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "mr-rime": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "runerigus": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "milcery": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 200
+  },
+  "alcremie": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 100
+  },
+  "falinks": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "pincurchin": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 75
+  },
+  "snom": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 2,
+   "maxLevel": 6,
+   "captureRate": 190
+  },
+  "frosmoth": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "stonjourner": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "eiscue": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 60
+  },
+  "indeedee": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 30
+  },
+  "morpeko": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 180
+  },
+  "cufant": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "copperajah": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 90
+  },
+  "dracozolt": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "arctozolt": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "dracovish": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "arctovish": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "duraludon": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "dreepy": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 45
+  },
+  "drakloak": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "dragapult": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 45
+  },
+  "zacian": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 68,
+   "maxLevel": 68,
+   "captureRate": 10
+  },
+  "zamazenta": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 68,
+   "maxLevel": 68,
+   "captureRate": 10
+  },
+  "eternatus": {
+   "rarity": "legendary",
+   "difficulty": 4,
+   "minLevel": 71,
+   "maxLevel": 71,
+   "captureRate": 255
+  },
+  "kubfu": {
+   "rarity": "legendary",
+   "difficulty": 7,
+   "minLevel": 40,
+   "maxLevel": 40,
+   "captureRate": 3
+  },
+  "urshifu": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 57,
+   "maxLevel": 57,
+   "captureRate": 3
+  },
+  "zarude": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  },
+  "regieleki": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "regidrago": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "glastrier": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "spectrier": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "calyrex": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 51,
+   "maxLevel": 51,
+   "captureRate": 3
+  },
+  "wyrdeer": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 135
+  },
+  "kleavor": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 115
+  },
+  "ursaluna": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 75
+  },
+  "basculegion": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 135
+  },
+  "sneasler": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 135
+  },
+  "overqwil": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 135
+  },
+  "enamorus": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 60,
+   "maxLevel": 60,
+   "captureRate": 3
+  },
+  "sprigatito": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "floragato": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "meowscarada": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "fuecoco": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "crocalor": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "skeledirge": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "quaxly": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 45
+  },
+  "quaxwell": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 45
+  },
+  "quaquaval": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "lechonk": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 255
+  },
+  "oinkologne": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 100
+  },
+  "tarountula": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 255
+  },
+  "spidops": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 24,
+   "maxLevel": 32,
+   "captureRate": 120
+  },
+  "nymble": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 5,
+   "maxLevel": 10,
+   "captureRate": 190
+  },
+  "lokix": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 30
+  },
+  "pawmi": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 190
+  },
+  "pawmo": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 80
+  },
+  "pawmot": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 45
+  },
+  "tandemaus": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 150
+  },
+  "maushold": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 75
+  },
+  "fidough": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 190
+  },
+  "dachsbun": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 90
+  },
+  "smoliv": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 10,
+   "maxLevel": 16,
+   "captureRate": 255
+  },
+  "dolliv": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 120
+  },
+  "arboliva": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 45
+  },
+  "squawkabilly": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 25,
+   "maxLevel": 34,
+   "captureRate": 190
+  },
+  "nacli": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 255
+  },
+  "naclstack": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 120
+  },
+  "garganacl": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "charcadet": {
+   "rarity": "rare",
+   "difficulty": 4,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 90
+  },
+  "armarouge": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 25
+  },
+  "ceruledge": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 25
+  },
+  "tadbulb": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "bellibolt": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 50
+  },
+  "wattrel": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 12,
+   "maxLevel": 18,
+   "captureRate": 180
+  },
+  "kilowattrel": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 33,
+   "maxLevel": 43,
+   "captureRate": 90
+  },
+  "maschiff": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 18,
+   "maxLevel": 25,
+   "captureRate": 150
+  },
+  "mabosstiff": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 75
+  },
+  "shroodle": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "grafaiai": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 90
+  },
+  "bramblin": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "brambleghast": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "toedscool": {
+   "rarity": "common",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 190
+  },
+  "toedscruel": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 35,
+   "maxLevel": 46,
+   "captureRate": 90
+  },
+  "klawf": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 120
+  },
+  "capsakid": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "scovillain": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 75
+  },
+  "rellor": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 11,
+   "maxLevel": 17,
+   "captureRate": 190
+  },
+  "rabsca": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 45
+  },
+  "flittle": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 9,
+   "maxLevel": 14,
+   "captureRate": 120
+  },
+  "espathra": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "tinkatink": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 190
+  },
+  "tinkatuff": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 22,
+   "maxLevel": 30,
+   "captureRate": 90
+  },
+  "tinkaton": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 45
+  },
+  "wiglett": {
+   "rarity": "common",
+   "difficulty": 1,
+   "minLevel": 8,
+   "maxLevel": 13,
+   "captureRate": 255
+  },
+  "wugtrio": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 50
+  },
+  "bombirdier": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 25
+  },
+  "finizen": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 15,
+   "maxLevel": 22,
+   "captureRate": 200
+  },
+  "palafin": {
+   "rarity": "veryRare",
+   "difficulty": 6,
+   "minLevel": 29,
+   "maxLevel": 38,
+   "captureRate": 45
+  },
+  "varoom": {
+   "rarity": "common",
+   "difficulty": 2,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 190
+  },
+  "revavroom": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 75
+  },
+  "cyclizar": {
+   "rarity": "common",
+   "difficulty": 4,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 190
+  },
+  "orthworm": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 25
+  },
+  "glimmet": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 19,
+   "maxLevel": 26,
+   "captureRate": 70
+  },
+  "glimmora": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 25
+  },
+  "greavard": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 13,
+   "maxLevel": 19,
+   "captureRate": 120
+  },
+  "houndstone": {
+   "rarity": "rare",
+   "difficulty": 6,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 60
+  },
+  "flamigo": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 100
+  },
+  "cetoddle": {
+   "rarity": "uncommon",
+   "difficulty": 3,
+   "minLevel": 17,
+   "maxLevel": 24,
+   "captureRate": 150
+  },
+  "cetitan": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 50
+  },
+  "veluza": {
+   "rarity": "uncommon",
+   "difficulty": 6,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 100
+  },
+  "dondozo": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 25
+  },
+  "tatsugiri": {
+   "rarity": "uncommon",
+   "difficulty": 5,
+   "minLevel": 31,
+   "maxLevel": 41,
+   "captureRate": 100
+  },
+  "annihilape": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 37,
+   "maxLevel": 48,
+   "captureRate": 45
+  },
+  "clodsire": {
+   "rarity": "rare",
+   "difficulty": 5,
+   "minLevel": 27,
+   "maxLevel": 36,
+   "captureRate": 90
+  },
+  "farigiraf": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "dudunsparce": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 36,
+   "maxLevel": 47,
+   "captureRate": 45
+  },
+  "kingambit": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 25
+  },
+  "great-tusk": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "scream-tail": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 50
+  },
+  "brute-bonnet": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 50
+  },
+  "flutter-mane": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "slither-wing": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "sandy-shocks": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "iron-treads": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "iron-bundle": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 50
+  },
+  "iron-hands": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 50
+  },
+  "iron-jugulis": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "iron-moth": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "iron-thorns": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 41,
+   "maxLevel": 53,
+   "captureRate": 30
+  },
+  "frigibax": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 16,
+   "maxLevel": 23,
+   "captureRate": 45
+  },
+  "arctibax": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 26,
+   "maxLevel": 35,
+   "captureRate": 25
+  },
+  "baxcalibur": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 10
+  },
+  "gimmighoul": {
+   "rarity": "veryRare",
+   "difficulty": 5,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 45
+  },
+  "gholdengo": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 39,
+   "maxLevel": 50,
+   "captureRate": 45
+  },
+  "wo-chien": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 6
+  },
+  "chien-pao": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 6
+  },
+  "ting-lu": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 6
+  },
+  "chi-yu": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 59,
+   "maxLevel": 59,
+   "captureRate": 6
+  },
+  "roaring-moon": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "iron-valiant": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "koraidon": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 69,
+   "maxLevel": 69,
+   "captureRate": 3
+  },
+  "miraidon": {
+   "rarity": "legendary",
+   "difficulty": 9,
+   "minLevel": 69,
+   "maxLevel": 69,
+   "captureRate": 3
+  },
+  "walking-wake": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 5
+  },
+  "iron-leaves": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 5
+  },
+  "dipplin": {
+   "rarity": "veryRare",
+   "difficulty": 7,
+   "minLevel": 32,
+   "maxLevel": 42,
+   "captureRate": 45
+  },
+  "poltchageist": {
+   "rarity": "uncommon",
+   "difficulty": 4,
+   "minLevel": 14,
+   "maxLevel": 20,
+   "captureRate": 120
+  },
+  "sinistcha": {
+   "rarity": "rare",
+   "difficulty": 7,
+   "minLevel": 34,
+   "maxLevel": 44,
+   "captureRate": 60
+  },
+  "okidogi": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 57,
+   "maxLevel": 57,
+   "captureRate": 3
+  },
+  "munkidori": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 57,
+   "maxLevel": 57,
+   "captureRate": 3
+  },
+  "fezandipiti": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 57,
+   "maxLevel": 57,
+   "captureRate": 3
+  },
+  "ogerpon": {
+   "rarity": "legendary",
+   "difficulty": 8,
+   "minLevel": 57,
+   "maxLevel": 57,
+   "captureRate": 5
+  },
+  "archaludon": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 44,
+   "maxLevel": 56,
+   "captureRate": 10
+  },
+  "hydrapple": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 38,
+   "maxLevel": 49,
+   "captureRate": 10
+  },
+  "gouging-fire": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "raging-bolt": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "iron-boulder": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "iron-crown": {
+   "rarity": "veryRare",
+   "difficulty": 8,
+   "minLevel": 43,
+   "maxLevel": 55,
+   "captureRate": 10
+  },
+  "terapagos": {
+   "rarity": "legendary",
+   "difficulty": 2,
+   "minLevel": 46,
+   "maxLevel": 46,
+   "captureRate": 255
+  },
+  "pecharunt": {
+   "rarity": "mythical",
+   "difficulty": 8,
+   "minLevel": 62,
+   "maxLevel": 62,
+   "captureRate": 3
+  }
+ }
+}

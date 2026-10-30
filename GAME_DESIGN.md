@@ -256,7 +256,7 @@ Six plain attributes from 0 to 100 (Strength, Intelligence, Speed, Charisma, Luc
 - **D11 Bank.** Decided (2026-10-25): works like candies in the long run, as a permanent currency for out-of-run purchases. *(Superseded in detail by the Out-of-Run design, §14: the Bank's currency is Bank Credits.)*
 - **D12 Trainer unlocks.** Decided (2026-10-25): future trainers include Gold, Silver, Crystal, Brendan, May, Wally, Dawn, Lucas, Barry, Looker and more. *(Unlock conditions and pros/cons to be proposed in Milestone 5.)*
 - **D13 Elite Four rewards.** Decided (2026-10-25): a reward draft after each Elite Four member.
-- **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. **Levels go above 100, up to a maximum of 500** (director, 2026-10-25). Built in Milestone 8.75 part G; until then levels stop at 100.
+- **D14 Level caps.** Decided (2026-10-25): each region raises the level cap by 50. **Levels go above 100, up to a maximum of 500** (director, 2026-10-25). Built in Milestone 8.75 part G; until then levels stop at 100. The balancing plan asks for +100 per region (2026-10-30); that waits for part G because `maxLevel` is 100 (see `docs/quality/encounter-audit.md`).
 - **D15 Evolution.** Decided (2026-10-25): standard level-up evolution.
 - **D16 Currencies.** Decided (2026-10-25): four currencies. Poké Dollars (spent during a run), Bank Credits (permanent upgrades and unlocks), Research Points (Pokédex, starters, research) and candies (kept as a separate fourth currency, D7).
 
