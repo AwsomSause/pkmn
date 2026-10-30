@@ -49,8 +49,9 @@ export const rage = (n: number): Json => attr('ragePeace', n);
 export const peace = (n: number): Json => attr('ragePeace', -n);
 export const rp = (amount: number): Json => ({ kind: 'research', amount });
 export const lv = (amount: number, who: 'lead' | 'party' = 'lead'): Json => ({ kind: 'levels', amount, who });
-export const join = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number } = {}): Json => ({
+export const join = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; shadow?: boolean } = {}): Json => ({
   kind: 'join',
+  shadow: o.shadow ?? false,
   species: o.species ?? [],
   types: o.types ?? [],
   levelBonus: o.lv ?? 0,

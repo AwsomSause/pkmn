@@ -997,7 +997,8 @@ export class BattleScene extends Phaser.Scene {
               : '';
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
     const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon()) : null;
-    this.message.setText(`${intent ? `${intent.text}\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
+    const shadow = this.activeMon().shadow;
+    this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
     const label = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
@@ -1274,6 +1275,7 @@ export class BattleScene extends Phaser.Scene {
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
     for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
+    for (const n of end.shadowPurified) await this.say(`The Shadow haze lifts from ${n}! It is purified!`);
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');

@@ -12,6 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
+import { soothePartyAfterBattle } from './shadow';
 import { wildCatchMultiplier } from './wildBehavior';
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
@@ -1436,6 +1437,8 @@ export interface BattleEndResult {
   /** Bag items found after the battle (Loot Sack, Blue Card). */
   itemsFound: string[];
   caughtSpeciesId: string | null;
+  /** Shadow Pokémon purified by this battle (names). */
+  shadowPurified: string[];
   evolutions: (EvolutionResult & { uid: string })[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
@@ -1810,6 +1813,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     voiceJoined = joined.speciesId;
   }
 
+  let shadowPurified: string[] = [];
   if (battle.outcome === 'win') {
     if (battle.rivalId) count(run, 'rivalBattlesWon');
     const { perBattleWon, perBossWon } = content.balance.friendship;
@@ -1818,6 +1822,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     for (const mon of run.party) {
       if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
     }
+    // Shadow Pokémon that fought are soothed; at 0 the haze lifts.
+    shadowPurified = soothePartyAfterBattle(content, run, battle.participants);
   }
 
   const evolutions: BattleEndResult['evolutions'] = [];
@@ -1946,7 +1952,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined };
 }
 
 /**

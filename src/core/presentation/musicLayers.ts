@@ -2,7 +2,6 @@
 // states, a short motif per character, and an ambience bed per arena type. Pure and deterministic: no gameplay RNG,
 // and the music never changes a battle (boss phases follow battle state, never the other way round).
 
-import { hashSeed, Rng } from '../rng';
 
 export type LayerId = 'pad' | 'pulse' | 'lead' | 'choir';
 export type MusicState = 'calm' | 'tense' | 'boss' | 'bossAce' | 'danger';
@@ -33,7 +32,14 @@ export const LAYERS: Record<MusicState, LayerId[]> = {
 
 /** A motif (#129): semitone steps above the root, 4 to 6 notes, the same for the same id on every run. */
 export function motifFor(id: string): number[] {
-  const rng = new Rng(hashSeed(`motif::${id}`));
+  // A tiny string-seeded generator of its own: presentation never touches gameplay randomness.
+  let h = 2166136261;
+  for (const ch of `motif::${id}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  const next = () => {
+    h = (Math.imul(h, 1664525) + 1013904223) >>> 0;
+    return h / 0x100000000;
+  };
+  const rng = { int: (a: number, b: number) => a + Math.floor(next() * (b - a + 1)), pick: <T,>(xs: T[]) => xs[Math.floor(next() * xs.length)]! };
   const scale = [0, 3, 5, 7, 10, 12]; // minor pentatonic
   const length = rng.int(4, 6);
   const notes: number[] = [];
