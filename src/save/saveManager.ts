@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 6, run: 10, settings: 2, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 10, settings: 2, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -70,6 +70,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const profile = data as Json;
       return { ...profile, runHistory: ((profile.runHistory as Json[]) ?? []).map((r) => ({ ...r, moments: [] })) };
     },
+    // v7 (M8.9 slice 5): the archive of past runs' Pokémon. Runs before it kept none.
+    6: (data) => ({ ...(data as Json), pastPokemon: [] }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against

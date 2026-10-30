@@ -82,7 +82,9 @@ if (flag('--write')) {
 }
 
 const only = option('--only');
-const limit = flag('--all') || only ? Infinity : 8;
+// --check (inside npm run check and CI) prints one line per check; ask for ids with --only or --all.
+const brief = flag('--check') && !only && !flag('--all');
+const limit = flag('--all') || only ? Infinity : brief ? 0 : 8;
 
 console.log('Content report');
 console.log(`  ${Object.entries(report.totals).map(([k, v]) => `${k} ${v}`).join(', ')}`);
@@ -93,9 +95,9 @@ console.log('');
 for (const check of report.checks) {
   if (only && check.id !== only) continue;
   console.log(`${check.count === 0 ? 'ok  ' : 'FIND'} ${check.title} [${check.id}]: ${check.count}`);
-  console.log(`     ${check.explain}`);
+  if (!brief) console.log(`     ${check.explain}`);
   for (const id of check.offenders.slice(0, limit)) console.log(`       - ${id}`);
-  if (check.offenders.length > limit) console.log(`       ... and ${check.offenders.length - limit} more (--only ${check.id})`);
+  if (check.offenders.length > limit && !brief) console.log(`       ... and ${check.offenders.length - limit} more (--only ${check.id})`);
 }
 if (only && !report.checks.some((c) => c.id === only)) {
   console.error(`No check "${only}". Checks: ${report.checks.map((c) => c.id).join(', ')}`);

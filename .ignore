@@ -1,0 +1,20 @@
+# Skipped by ripgrep (Claude's Grep tool) in folder-wide searches.
+# Searching one of these files by its exact path still works:
+#   grep -n '"id": "pikachu"' src/data/species.json
+# Generated data (MAP.md "Data index"); learnables.json is one 1 MB line.
+src/data/species.json
+src/data/learnables.json
+src/data/bossTeams.json
+src/data/customSpecies.json
+src/data/customEvolutions.json
+src/data/moves.json
+src/data/moveAnims.json
+src/data/megaStones.json
+src/data/zMoves.json
+src/data/maxMoves.json
+src/data/abilities.json
+# Art, audio, fonts and the generated asset manifest
+public/assets/
+docs/*.png
+package-lock.json
+docs/quality/

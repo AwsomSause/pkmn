@@ -83,7 +83,7 @@ import {
   wildSpeciesWithItems,
 } from './mapItems';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type MapNode, type SideStop, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
@@ -100,6 +100,7 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
+import { planReunion, reunionPokemon } from './story/reunion';
 
 export interface NewRunOptions {
   runId: string;
@@ -111,6 +112,8 @@ export interface NewRunOptions {
   prep?: RunPrep;
   /** The profile's permanent attributes (default: none). */
   attributes?: Record<string, number>;
+  /** The profile's past Pokémon; one may come back this run (core/story/reunion.ts). */
+  pastPokemon?: readonly PastPokemon[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -157,6 +160,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
   };
+  const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
+  if (reunion) run.reunion = reunion;
   recordRunStarted(content, run);
   return run;
 }
@@ -1112,6 +1117,15 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.encountersCompleted += 1;
   count(run, 'encountersCompleted');
   run.log.battlesWon += 1;
+  // A Pokémon from a past run comes to meet you (after any caught Pokémon's decision).
+  const reunion = run.reunion;
+  if (reunion && !reunion.done && !run.victory && run.encountersCompleted >= reunion.afterEncounters) {
+    reunion.done = true;
+    const level = Math.max(...battle.enemyTeam.map((m) => m.level));
+    const mon = reunionPokemon(content, reunion.mon, level, nextUid(run, 'p'));
+    run.pending.splice(caughtPending.length, 0, { kind: 'reunion', mon, hallOfFame: reunion.mon.hallOfFame });
+    count(run, 'reunions');
+  }
   // A fished Pokémon is an extra catch: no reward draft after it.
   run.afterDecisions = battle.fishing ? 'map' : 'reward';
   continueAfterDecisions(content, run);
@@ -1231,6 +1245,7 @@ export type DecisionChoice =
   | { kind: 'addToParty' }
   | { kind: 'replace'; partyIndex: number }
   | { kind: 'release' }
+  | { kind: 'keepsake' }
   | { kind: 'teachMove'; moveIndex: number }
   | { kind: 'ppUpMove'; moveIndex: number };
 
@@ -1286,6 +1301,28 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       recordReleased(content, run, caught);
     } else {
       throw new Error('Choose what to do with the caught Pokémon');
+    }
+  } else if (decision.kind === 'reunion') {
+    const mon = decision.mon;
+    const name = speciesName(content, mon.speciesId);
+    if (choice.kind === 'addToParty') {
+      if (run.party.length >= content.balance.partyMax) throw new Error('Your party is full');
+      run.party.push(mon);
+      message = `${name} joined your party again!`;
+    } else if (choice.kind === 'replace') {
+      const old = run.party[choice.partyIndex];
+      if (!old) throw new Error('Choose a party member to replace');
+      run.party[choice.partyIndex] = mon;
+      message = `${speciesName(content, old.speciesId)} left the party. ${name} joined you again!`;
+    } else if (choice.kind === 'keepsake') {
+      const candies = candiesForRelease(content, mon.level) * content.balance.reunion.keepsakeCandyMultiplier;
+      run.candies += candies;
+      count(run, 'candiesEarned', candies);
+      message = `${name} left you a keepsake: ${candies} cand${candies === 1 ? 'y' : 'ies'}.`;
+    } else if (choice.kind === 'release') {
+      message = `${name} went on with its own journey.`;
+    } else {
+      throw new Error('Choose what to do with the past Pokémon');
     }
   } else if (decision.kind === 'teachMove') {
     const mon = run.party.find((p) => p.uid === decision.uid);

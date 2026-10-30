@@ -286,6 +286,8 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
   /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
   z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
+  /** A Pokémon from a past run wants to join (story slice 5, core/story/reunion.ts); `hallOfFame`: it won a past run with you. */
+  z.object({ kind: z.literal('reunion'), mon: PokemonInstanceSchema, hallOfFame: z.boolean() }),
   /** A PP Up or PP Max: pick which move gets the extra PP. */
   z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
 ]);
@@ -309,6 +311,20 @@ export type LoadoutPreset = z.infer<typeof LoadoutPresetSchema>;
 
 export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
+
+/** A Pokémon kept from a finished run, that may come back in a later one (core/story/reunion.ts). */
+export const PastPokemonSchema = z.object({
+  speciesId: z.string(),
+  level: z.number().int().min(1).max(100),
+  shiny: z.boolean(),
+  abilitySlot: z.number().int().min(-1),
+  moves: z.array(z.string()).min(1).max(4),
+  teraType: TypeNameSchema.optional(),
+  runId: z.string(),
+  /** It was in the party when that run was won. */
+  hallOfFame: z.boolean(),
+});
+export type PastPokemon = z.infer<typeof PastPokemonSchema>;
 
 export const RunStateSchema = z.object({
   runId: z.string(),
@@ -398,6 +414,8 @@ export const RunStateSchema = z.object({
   }),
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
+  /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
+  reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),
 });
 export type RunState = z.infer<typeof RunStateSchema>;
 
@@ -479,6 +497,8 @@ export const ProfileSchema = z.object({
   lastPrep: LoadoutPresetSchema.nullable(),
   /** Recently finalized run ids, so a run's result is never applied twice. */
   finalizedRunIds: z.array(z.string()),
+  /** Party Pokémon of past runs, newest first; one may come back to join a later run. */
+  pastPokemon: z.array(PastPokemonSchema),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

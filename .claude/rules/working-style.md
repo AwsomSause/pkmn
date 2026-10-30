@@ -3,14 +3,16 @@
 Everything loaded early is re-sent on every turn for the rest of the session. Keep the window small.
 
 ## Finding things
-- Read `MAP.md` before any `ls`/`find`. Don't re-list folders it already describes.
+- Read `STATUS.md` for the current state; `MAP.md` before any `ls`/`find`. Don't re-list folders it already describes.
+- `.ignore` makes folder-wide Grep/Glob/rg skip generated data, `public/assets/` and the lockfile. To search one of those, pass its exact path. To check an asset exists, `ls` its path or grep `src/assets/catalog.ts`.
 - Grep for the symbol, id or heading first (`grep -n`), then read a tight window (about 40–80 lines) around the hit. Never read a file over ~400 lines whole to change one function.
 - Never `cat` the big generated JSON in `src/data/` or anything under `public/assets/`. Grep, or print one entry with `node -e`.
-- Long docs (`GAME_DESIGN.md`, `CHECKLIST.md`, `docs/plans/*`): grep the `##` headings, read only the section you need.
+- Long docs (`GAME_DESIGN.md`, `CHECKLIST.md`): grep the `##` headings, read only the section you need. `docs/plans/*`: look up the line range in `docs/plans/INDEX.md`.
+- Big source files (`engine.ts`, `run.ts`, `contentSchema.ts`, `BattleScene.ts`, `HubScene.ts`): `grep -n` the function name, read its window. Never read them whole.
 - Don't re-read a file you just wrote or edited; the edit tool already confirmed it.
 
 ## Commands
-- Trim noisy output: `npm test -- --reporter=dot`, `| tail -40`, `| grep -E "FAIL|Error|✗"`, `git log --oneline -15`, `git diff --stat` before a full diff.
+- `npm run check` and Playwright already print short output. Trim other noisy output: `| tail -40`, `| grep -E "FAIL|Error|✗"`, `git log --oneline -15`, `git diff --stat` before a full diff.
 - Run one test file while iterating (`npx vitest run tests/unit/save.test.ts`, `npx playwright test tests/e2e/milestone8.spec.ts`); run the full `npm run check` once at the end.
 
 ## Subagents

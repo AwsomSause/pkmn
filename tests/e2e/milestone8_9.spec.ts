@@ -245,3 +245,39 @@ test('The Seven Emotions: a coloured heart on the party screen and the Story scr
   await page.screenshot({ path: 'test-results/m89-story-screen.png' });
   expect(errors).toEqual([]);
 });
+
+test('A Past Pokémon Wants to Join: it offers to join, and a keepsake gives candies', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/?debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.newRun('red', 'e2e-reunion-1');
+    session.chooseStarter(0);
+    const run = session.run;
+    const mon = { ...structuredClone(run.party[0]), uid: 'p99', speciesId: 'charmander', shiny: true };
+    run.pending = [{ kind: 'reunion', mon, hallOfFame: true }];
+    run.afterDecisions = 'reward';
+    run.phase = 'decision';
+    game.scene.getScenes(true)[0].scene.start('Decision');
+  });
+  await waitForScene(page, 'Decision');
+  const texts = await page.evaluate(() => {
+    const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+    return (window as any).__pkr.game.scene.getScene('Decision').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text as string);
+  });
+  expect(texts.join(' ')).toContain('Charmander never forgot you!');
+  expect(texts.join(' ')).toContain('Take a keepsake');
+  expect(texts.join(' ')).toContain('Let it go on its journey');
+  await page.screenshot({ path: 'docs/m89-reunion.png' });
+  const candiesBefore = await page.evaluate(() => (window as any).__pkr.session.run.candies);
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Reward');
+  const after = await page.evaluate(() => (window as any).__pkr.session.run);
+  expect(after.candies).toBeGreaterThan(candiesBefore);
+  expect(after.party).toHaveLength(1);
+  expect(errors).toEqual([]);
+});

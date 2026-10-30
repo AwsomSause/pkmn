@@ -2,6 +2,7 @@
 
 import type { Content } from './contentSchema';
 import { applyRunToProfile, type RunEndSummary } from './progress';
+import { archiveParty } from './story/reunion';
 import { ATTRIBUTE_NAMES, type Profile, type RunState } from './state';
 
 const FINALIZED_HISTORY = 50;
@@ -30,6 +31,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     presets: [],
     lastPrep: null,
     finalizedRunIds: [],
+    pastPokemon: [],
   };
 }
 
@@ -58,6 +60,7 @@ export function finalizeRun(
   next.stats.battlesWon += run.log.battlesWon;
   next.stats.bestEncounters = Math.max(next.stats.bestEncounters, run.encountersCompleted);
   const summary = applyRunToProfile(content, next, run, now);
+  archiveParty(content, next, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }
