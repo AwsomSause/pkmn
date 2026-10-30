@@ -20,13 +20,15 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - M9 battle animations + settings; boss teams (229 bosses).
 - Starter Sets slice 1 (plan `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md`): Starter Laboratory has 70 sets in 10 categories (all regions, 18 types, roles, player trainers, 10 villainous teams, 9 Leagues, 7 spin-off games). Pools can list evolved species, bosses or a type/region filter (`core/runPrep.ts eligibleSpecies`).
 - Trainer identity (plan Part 2a): signature types/species/set on `archetypes.json`; a signature Pokémon may take the last starter slot (50%, own seed, never forced); Cynthia (sees gym teams), Oak (+50% Research Points, sees wild Pokémon, −15% money) and N (+50% friendship) are playable.
+- M10 visual slice 1 (Aero battle): glass message bar, databoxes and command window (`src/ui/aero.ts`), glossy type-tinted buttons (opt-in `glass` on `Menu`), Essentials type/category/status art, arena ambience from EBDX scenery (`battleFx/ambience.ts`), bouncy send-out + idle breathing. Respects battleAnimations (reduced = still, off = none). Provenance: `docs/quality/asset-provenance.md`. Hub/TrainerSelect untouched.
 
 ## In progress / next
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
-- M9: Grand Region, final boss, ending, deploy. M10: visuals only.
+- M9: Grand Region, final boss, ending, deploy.
+- M10 visuals (guide 9, Visual Bible V1–V5): next slices = battle intro transitions + DBK burst/shine for transformations, EBUI move flag icons + effectiveness hint, boss/rival spectacle, then map/reward/shop/decision/run-end screens.
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
