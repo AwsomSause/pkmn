@@ -49,10 +49,13 @@ def convert(src, dest):
 
 
 done = 0
-for sid, sprite, _n, name, pf in json.load(open(listing)):
+for row in json.load(open(listing)):
+    sid, sprite, _n, name, pf = row[:5]
     if not name or not pf or pf < 2:
         continue
     for sub, prefix in targets.items():
+        if len(row) > 5 and sub not in row[5]:  # optional: only these kinds
+            continue
         f = files[sub].get(name)
         if f and convert(os.path.join(pack, sub, f), os.path.join(OUT, prefix + sprite)):
             done += 1
