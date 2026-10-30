@@ -114,6 +114,10 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
       case 'move':
         lastMove[e.side] = e.moveId;
         emit(content, run, 'moveUsed', { where, actors: active[e.side] ? [active[e.side]!] : [], data: { side: e.side, moveId: e.moveId } });
+        if (e.side === 'player' && active.player) {
+          const t = signatureMove(content, run, active.player, e.moveId, i, triggers.length, battle.kind === 'trainer');
+          if (t) triggers.push(t);
+        }
         break;
       case 'switchIn':
         active[e.side] = e.uid;
@@ -265,6 +269,28 @@ function transformMoment(content: Content, run: RunState, e: Extract<RunEvent, {
   const emotion = trigger === 'teraTrueColors' ? emotionOf(content, run, e.uid)?.id : undefined;
   const variant = emotion && def.variants[emotion] ? emotion : null;
   return { ...makeTrigger(run, def, at, order, { name: name(content, mon.speciesId), type: e.teraType ?? '' }, variant, e.uid), combat: false };
+}
+
+/**
+ * Signature Move Awakening ("It Mastered the Power Within!"): a damaging move used again and again in
+ * trainer fights awakens for the rest of the run and hits harder. Counting is deterministic, uses no
+ * random numbers and keeps the move's rules (type, accuracy, PP) as they were.
+ */
+function signatureMove(content: Content, run: RunState, uid: string, moveId: string, at: number, order: number, trainerFight: boolean): StoryTrigger | null {
+  const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'signatureAwakening');
+  const move = content.moves.get(moveId);
+  const mon = run.party.find((m) => m.uid === uid);
+  const history = run.story.histories[uid];
+  const cfg = content.story.awakening;
+  if (!def || !move || !mon || !history || !trainerFight || !move.power || mon.awakened?.includes(moveId)) return null;
+  history.moves[moveId] = (history.moves[moveId] ?? 0) + 1;
+  if (history.moves[moveId]! < cfg.uses || (mon.awakened?.length ?? 0) >= cfg.perPokemon || !mon.moves.some((m) => m.id === moveId)) return null;
+  mon.awakened = [...(mon.awakened ?? []), moveId];
+  history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
+  const names = { name: name(content, mon.speciesId), move: move.name };
+  const t = makeTrigger(run, def, at, order, names, null, uid);
+  const memory = def.memoryRecord ? { ...t, names } : t;
+  return { ...memory, combat: false };
 }
 
 function makeTrigger(

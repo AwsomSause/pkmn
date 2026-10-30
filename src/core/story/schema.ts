@@ -123,6 +123,8 @@ export const PokemonHistorySchema = z.object({
   hyper: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Battles it has fought each opposing species in this run (Heated Rivalry). */
   foes: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Times it used each damaging move in trainer fights this run (Signature Move Awakening). */
+  moves: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Times it and each teammate (by uid) took turns landing finishing blows (Friendly Competition). */
   finishTrades: z.record(z.string(), z.number().int().min(0)).default({}),
 });
@@ -306,7 +308,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -419,6 +421,8 @@ export const StoryConfigSchema = z.object({
   }),
   /** Major (cinematic) moments per battle; smaller ones are still recorded. */
   majorCuesPerBattle: z.number().int().min(0),
+  /** Signature Move Awakening: damaging-move uses in trainer fights before it awakens, and the damage multiplier it then gets (this run only). */
+  awakening: z.object({ uses: z.number().int().positive(), boost: z.number().min(1).max(2), perPokemon: z.number().int().positive() }),
   /** A hit that leaves your Pokémon at this share of its max HP or less is a close call. */
   closeCallHpShare: z.number().min(0).max(1),
   /** At or below this share of max HP a turn counts toward a low-HP stand. */

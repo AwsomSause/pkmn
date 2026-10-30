@@ -1771,6 +1771,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
+      if (user.mon.awakened?.includes(move.id)) final *= content.story.awakening.boost;
       if (foeAbility === 'fluffy' && contact) final *= 0.5;
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
