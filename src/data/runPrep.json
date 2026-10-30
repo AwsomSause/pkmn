@@ -2593,6 +2593,312 @@
     "atLeast": 800
    },
    "unlockText": "Defeat 800 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-tate-liza-gen-6",
+   "name": "Tate & Liza (Gen 6)’s Team",
+   "description": "Pokémon from Tate & Liza (Gen 6)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [],
+   "filter": {
+    "types": [
+     "psychic"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2010
+   },
+   "unlockText": "Defeat 2010 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-team-rocket",
+   "name": "Team Rocket’s Team",
+   "description": "Pokémon from Team Rocket’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "team-rocket"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2020
+   },
+   "unlockText": "Defeat 2020 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-the-royal",
+   "name": "The Royal’s Team",
+   "description": "Pokémon from The Royal’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "the-royal"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2030
+   },
+   "unlockText": "Defeat 2030 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-thorton",
+   "name": "Thorton’s Team",
+   "description": "Pokémon from Thorton’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "thorton"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2040
+   },
+   "unlockText": "Defeat 2040 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-tierno",
+   "name": "Tierno’s Team",
+   "description": "Pokémon from Tierno’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "tierno"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2050
+   },
+   "unlockText": "Defeat 2050 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-todd-snap",
+   "name": "Todd Snap’s Team",
+   "description": "Pokémon from Todd Snap’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [],
+   "species": [
+    "pikachu",
+    "bulbasaur",
+    "charmander"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2060
+   },
+   "unlockText": "Defeat 2060 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-trace",
+   "name": "Trace’s Team",
+   "description": "Pokémon from Trace’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "trace"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2070
+   },
+   "unlockText": "Defeat 2070 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-trevor",
+   "name": "Trevor’s Team",
+   "description": "Pokémon from Trevor’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "trevor"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2080
+   },
+   "unlockText": "Defeat 2080 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-valerie",
+   "name": "Valerie’s Team",
+   "description": "Pokémon from Valerie’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "valerie"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2090
+   },
+   "unlockText": "Defeat 2090 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-volkner",
+   "name": "Volkner’s Team",
+   "description": "Pokémon from Volkner’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "volkner"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2100
+   },
+   "unlockText": "Defeat 2100 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-volo",
+   "name": "Volo’s Team",
+   "description": "Pokémon from Volo’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "volo"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2110
+   },
+   "unlockText": "Defeat 2110 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-wallace-gen-6",
+   "name": "Wallace (Gen 6)’s Team",
+   "description": "Pokémon from Wallace (Gen 6)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "wallace"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2120
+   },
+   "unlockText": "Defeat 2120 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-wally",
+   "name": "Wally’s Team",
+   "description": "Pokémon from Wally’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "wally"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2130
+   },
+   "unlockText": "Defeat 2130 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-wattson",
+   "name": "Wattson’s Team",
+   "description": "Pokémon from Wattson’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "wattson"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2140
+   },
+   "unlockText": "Defeat 2140 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-whitney",
+   "name": "Whitney’s Team",
+   "description": "Pokémon from Whitney’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "whitney"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2150
+   },
+   "unlockText": "Defeat 2150 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-wicke",
+   "name": "Wicke’s Team",
+   "description": "Pokémon from Wicke’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "wicke"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2160
+   },
+   "unlockText": "Defeat 2160 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-winona-gen-6",
+   "name": "Winona (Gen 6)’s Team",
+   "description": "Pokémon from Winona (Gen 6)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "winona"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2170
+   },
+   "unlockText": "Defeat 2170 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-wulfric",
+   "name": "Wulfric’s Team",
+   "description": "Pokémon from Wulfric’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "wulfric"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2180
+   },
+   "unlockText": "Defeat 2180 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-yellow",
+   "name": "Yellow’s Team",
+   "description": "Pokémon from Yellow’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "yellow"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2190
+   },
+   "unlockText": "Defeat 2190 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-zinnia",
+   "name": "Zinnia’s Team",
+   "description": "Pokémon from Zinnia’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "zinnia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 2200
+   },
+   "unlockText": "Defeat 2200 trainers in total across your runs"
   }
  ],
  "draftRules": [

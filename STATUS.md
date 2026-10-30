@@ -69,3 +69,4 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 10, run
 - CI workflow exists but has never run on GitHub.
 
 - Berries and Pal Pad: Razz (1.5x catch), Nanab (foe loses first turn), Pinap (catch drops a cheap item), Pal Pad (+5 levels on first catch each stage) work. Shields Down now turns Minior into `minior-core` at or below half HP (the pack has no Core sprite, so it reuses Meteor's). Still pending: berry system (pouch, pots, mulches, cases), seal-bag (needs a selling feature), urge/drop items (need in-battle bag), mystery egg, some gadgets.
+- Trainers.md perks, Z-to-M thread: batch Z1 (Tate & Liza to Zinnia, 20 trainers) with new kinds critChanceBonus, bossMoneyMultiplier, catchMoneyMultiplier, moveFlagDamage, unusualDamageMultiplier, afterKoDamageMultiplier and a `legendary` filter. The other perks thread goes A to L; this one takes M to Z backwards. Limits are in `docs/plans/trainers-coverage.md`.
