@@ -32,7 +32,8 @@
     "report:check": "node tools/report-content.ts --check",
     "report:balance": "node tools/report-balance.ts",
     "data:events": "node tools/build-events.ts",
-    "data:quests": "node tools/build-quests.ts"
+    "data:quests": "node tools/build-quests.ts",
+    "data:game-events": "node tools/build-game-events.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

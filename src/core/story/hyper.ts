@@ -8,7 +8,7 @@ import { effectiveAttributes, type Attributes } from '../attributes';
 import type { HyperAttribute, HyperContext } from '../battle/hyper';
 import type { Content } from '../contentSchema';
 import { Rng } from '../rng';
-import { hyperChancePerk } from '../trainerPerks';
+import { bonusFriendship, hyperChancePerk } from '../trainerPerks';
 import type { RunState } from '../state';
 import type { HyperChance, PokemonHistory, StoryEffectSpec, StoryTriggerKind } from './schema';
 
@@ -82,7 +82,7 @@ export function buildHyperContext(content: Content, run: RunState, rng: Rng): Hy
       if (!def) return null;
       const cond = def.triggerConditions;
       const history = run.story.histories[mon.uid];
-      if (cond.minFriendship !== undefined && (mon.friendship < cond.minFriendship || friendshipOff)) return null;
+      if (cond.minFriendship !== undefined && (bonusFriendship(perks, mon.friendship) < cond.minFriendship || friendshipOff)) return null;
       if (cond.needsMemory && !cond.needsMemory.some((m) => hasMemory(history, m))) return null;
       const again = (history?.hyper[def.id] ?? 0) > 0 && def.variants.again !== undefined;
       return { def, chance: def.chance ? Math.min(1, hyperChance(def.chance, attrs, again) * hyperChancePerk(perks)) : 1, variant: again ? 'again' : null };

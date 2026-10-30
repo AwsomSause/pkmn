@@ -79,7 +79,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   expect((await profile(page)).researchPoints).toBe(350);
 
   // Preparation Desk: Johto pool, Type Focus.
-  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowLeft'); // Unlocks → Past Runs → New Run
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowLeft'); // Unlocks → Events → New Run
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');

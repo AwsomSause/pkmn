@@ -11,6 +11,7 @@ import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
+import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
@@ -19,6 +20,7 @@ import * as Exp from '../core/expedition/flow';
 import * as Mini from '../core/minigame/flow';
 import { claim } from '../core/quests';
 import * as Run from '../core/run';
+import * as Svc from '../core/services/flow';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -84,7 +86,7 @@ export class GameSession {
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, mastery: this.profile.mastery });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition) });
     this.profile = recordRunStarted(this.profile);
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));
@@ -210,6 +212,17 @@ export class GameSession {
 
     visitSide(sideId: string): string {
     const result = Run.visitSide(this.content, this.requireRun(), sideId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  serviceView(sideId: string): Svc.ServiceView {
+    return Svc.serviceView(this.content, this.requireRun(), sideId);
+  }
+
+  useService(sideId: string, optionId: string): string {
+    const result = Svc.useService(this.content, this.requireRun(), sideId, optionId);
     this.run = result.run;
     this.persistRun();
     return result.message;

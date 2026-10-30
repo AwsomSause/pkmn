@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -45,6 +45,7 @@ import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp,
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
+import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
@@ -97,6 +98,7 @@ import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRa
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
+import { placeServiceStop } from './services/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -145,6 +147,8 @@ export interface NewRunOptions {
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
   mastery?: Profile['mastery'];
+  /** Game event editions on right now (core/gameEvents.ts activeGameEvents): their rules apply to this run. */
+  gameEvents?: string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -192,12 +196,14 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     draft: null,
 
     box: [],
-    perkEffects: [],
+    // A game event's themed rules work like trainer perks for the whole run.
+    perkEffects: gameEventModifiers(content, opts.gameEvents ?? []),
     signatureApplied: {},
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
     mastery: runMasteryPerks(content, opts),
+    gameEvents: [...(opts.gameEvents ?? [])],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
@@ -393,6 +399,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeTotem(content, run);
   placeExpeditionGate(content, run);
   placeMinigameStop(content, run);
+  placeServiceStop(run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -967,6 +974,7 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
     run.pending.unshift({ kind: 'caught', mon });
   }
   run.totems.won += 1;
+  count(run, 'totemsWon');
   run.totems.done.push(def.id);
   run.totems.research += def.rewards.research;
   if (def.rewards.unlock && !run.totems.unlocks.includes(def.rewards.unlock)) run.totems.unlocks.push(def.rewards.unlock);
@@ -1013,6 +1021,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     run.pending.unshift({ kind: 'caught', mon: joined });
   }
   run.raids.won += 1;
+  count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
   run.raids.done.push(def.id);
   return { items, draftExtra: def.rewards.draftExtra, money };
@@ -1145,6 +1154,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
+  if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -1185,14 +1195,14 @@ export function healParty(content: Content, run: RunState): void {
  * and the Member Card and Wepear Berry put the next locked entries on sale early.
  * Key items you own aren't sold again.
  */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules'>> & MapItemRun): Content['shop'] {
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects'>> & MapItemRun): Content['shop'] {
   const noRevive = run.rules ? noRevives(run.rules) : false;
   const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
   const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
   const early = content.shop
     .filter((e) => !open(e) && !owned(e))
     .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
-    .slice(0, earlyStockCount(content, run));
+    .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
   return content.shop.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
@@ -1585,7 +1595,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
+  const perks = runPerks(content, run);
+  if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
@@ -1638,6 +1651,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
 
   if (battle.outcome === 'win') {
+    if (battle.rivalId) count(run, 'rivalBattlesWon');
     const { perBattleWon, perBossWon } = content.balance.friendship;
     const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
     const gainMultiplier = runAttributeEffects(content, run).friendship;

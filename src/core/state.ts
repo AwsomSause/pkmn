@@ -572,7 +572,7 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame', 'service']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
@@ -581,6 +581,8 @@ export const SideStopSchema = z.object({
   expeditionId: z.string().optional(),
   /** A minigame stop: which game (minigames.json) waits here. */
   minigameId: z.string().optional(),
+  /** A service stop: which service (services.json) waits here. */
+  serviceId: z.string().optional(),
   /** A healing stop, a fishing spot and an event work once; a shop can be visited again. */
   used: z.boolean(),
   /** An event stop's event (events.json). */
@@ -828,6 +830,8 @@ export const RunStateSchema = z.object({
   runQuest: z.string().nullable().default(null),
   /** Species Mastery unlocks for this run, by family (first-stage id): applied to each Pokémon of it that joins. */
   mastery: z.record(z.string(), MasteryPerkSchema).default({}),
+  /** Game event editions on when the run started ("rivalry-week@2026-W44"): their rules apply and the run counts for them. */
+  gameEvents: z.array(z.string()).default([]),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */
@@ -965,6 +969,8 @@ export const ProfileSchema = z.object({
   trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   /** Species Mastery (core/mastery.ts): counters for each species you met, and your picks for its family's unlocks. */
   mastery: z.record(z.string(), MasteryRecordSchema),
+  /** Game event progress (core/gameEvents.ts): counters summed over each edition's runs, by edition ("rivalry-week@2026-W44"). */
+  gameEvents: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

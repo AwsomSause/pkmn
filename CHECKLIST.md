@@ -182,7 +182,12 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 - [x] Slice 4: trainer quests + claim ledger: every trainer has a 5-step line done in order across runs (counters count only runs as that trainer); rewards are Research Points, Bank Credits, candies, titles, the trainer's starter set, and (Red, Blue, Cynthia, Giovanni, N, Oak) the Trainer Evolution unlock. One Run Quest per run (22 goals). Tests: `tests/unit/quests.test.ts`, `tests/e2e/quests.spec.ts`.
 - [x] Slice 5: Species Mastery for every species (`core/mastery.ts`, profile `mastery`): ranks Seen → Caught → Bronze → Silver → Gold → Master from each run's Pokémon histories (thresholds in `balance.mastery`); a family has its best member's rank. Unlocks for Pokémon of the family that join a run: Bronze first egg move, Silver Hidden Ability, Gold second egg move + choice of ability, Master its strongest move starts awakened. Each rank pays Research Points once (claim ledger), Master gives "<Species> Master". "Mastered" starter set (Silver species, opens at 3). Hub > Unlocks > Species Mastery (family pages, picks), catch screen preview, run-end ranks. Saves: profile v9, run v20. Tests: `tests/unit/mastery.test.ts`, `tests/e2e/mastery.spec.ts`.
 - [x] Slice 6: Trainer Evolutions (`core/trainerEvolution.ts`, `evolvedFrom` in archetypes.json): finishing Red, Blue, Cynthia, Giovanni, N or Oak's quest line unlocks their evolved form, chosen beside the base trainer each run (a sidegrade). Each has its own mechanic: Champion Red Last Stand (last Pokémon survives a KO hit once per battle), Champion Blue Smell Ya Later (moves first on a trainer battle's first turn), Champion Cynthia Champion's Aura (boss battles: lead's best stat +1), Rocket Boss Giovanni Black Market (shops sell locked stock at 1.5×), King N Voice of Pokémon (a defeated wild Pokémon may ask to join, 1 in 4), Champion Oak Field Research (₽300 per new species caught). Runs count toward the base trainer's quests. Art: pack pictures + Essentials ROCKETBOSS (`docs/quality/asset-provenance.md`). Tests: `tests/unit/trainerEvolution.test.ts`, `tests/e2e/trainerEvolution.spec.ts`.
-- [ ] Weekly events; holiday/themed events (Spooky).
+- [x] Slice 7: weekly game events (`core/gameEvents.ts`, `gameEvents.json` built by `npm run data:game-events`): 9 weekly events rotate by ISO week (PC clock, UTC): Delta Research Week, Rivalry Week, Gym Circuit, Egg Expedition, Catch Carnival, Raid Rally, Dragon Week, Market Week, Champion's Gauntlet. Each has a themed ruleset (modifiers on every run started that week), featured map events (4× as likely), 3–4 milestone objectives counted over the week's runs, a permanent reward the first time (title + starter set + RP), then a repeat reward. Claim keys `event:<edition>:<objective>`, `event:<id>:reward`, `event:<edition>:fallback`. Event Hall (Hub > Events): time left, objectives, reward, coming up, earned. New counters: raidsWon, totemsWon, rivalBattlesWon. Map events can belong to a game event (`gameEvent`). Saves: profile v10, run v21. Tests: `tests/unit/gameEvents.test.ts`, `tests/e2e/gameEvents.spec.ts`.
+- [ ] Holiday/themed events (Spooky pack and Spooky trainer).
+
+### Known limits in slice 7
+- The date is the PC's clock (no server): changing it changes which event is on. A run counts for the editions on when it started, even if it ends after.
+- Event progress counts only runs that earn progress (Standard mode, not the dev campaign).
 
 ### Known limits in slice 6
 - King N and Champion Oak reuse the base trainers' pictures (no separate art in the packs); a gold aura and EVOLVED tag mark them.
@@ -218,7 +223,9 @@ Every trainer in Trainers.md becomes a playable trainer with all its pros and co
 - [x] Batch 1 (Aaron to Bianca, 20 trainers) and the shared perk system (`core/trainerPerks.ts`).
 - [x] Batch 2 (Bill to Canari, 20 trainers) with the PC box and Rival's Answer.
 - [x] Batch 3 (Carmine to Diantha, 20 trainers) with Distortion Protocol.
-- [ ] Batches 4–11 (the other 160 trainers), then the signature mechanics (Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
+- [x] Batch 4 (Drake to Ginter, 20 trainers).
+- [x] Batch 5 (Glacia to Ingo, 20 trainers).
+- [ ] Batches 6–7 (Iono to Lysandre; the Raids thread does M–Z) and the rest (the other 120 trainers), then the signature mechanics (Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
 - Known limits: a few clauses have no effect yet and are listed per trainer in `docs/plans/trainers-coverage.md` (burns never wear off; Mega Evolution has no cost). "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
 
 ## Milestone 10 — Visuals and presentation (planned)

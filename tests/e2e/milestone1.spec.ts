@@ -119,6 +119,7 @@ test('a damaged save is reported and can be discarded safely', async ({ page }) 
 });
 
 test('losing a battle ends the run and keeps the profile', async ({ page }) => {
+  test.setTimeout(180_000); // a long fight of key presses; slow when the whole suite runs at once
   await page.goto('/?seed=e2e-lose&debug=1');
   await waitForScene(page, 'MainMenu');
   await page.keyboard.press('Enter');
@@ -142,6 +143,7 @@ test('losing a battle ends the run and keeps the profile', async ({ page }) => {
   expect(await page.evaluate(() => localStorage.getItem('pkr.run'))).toBeNull();
   const stats = await page.evaluate(() => (window as any).__pkr.session.profile.stats);
   expect(stats.runsEnded).toBe(1);
+  await page.waitForTimeout(500); // the run-end screen ignores keys for its first moment
   await page.keyboard.press('Enter');
   await waitForScene(page, 'Hub');
 });

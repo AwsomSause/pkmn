@@ -23,6 +23,7 @@ import { StarterSelectScene } from './scenes/StarterSelectScene';
 import { TrainerSelectScene } from './scenes/TrainerSelectScene';
 import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
 import { drawBackdrop } from './ui/widgets';
+import { aeroBackdrop } from './ui/aero';
 import { ArenaBackdrop } from './ui/showcase';
 import './style.css';
 
@@ -76,10 +77,13 @@ function start(): void {
         // Every screen fades in. Screens without their own scenery get a dimmed,
         // slowly changing battlefield behind them (the battle and map draw their own).
         const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
+        // Gameplay screens in the Aero look (M10) get the glossy sky-and-bubbles backdrop instead.
+        const aeroScenery = new Set(['Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'GameOver']);
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') scene.cameras.main.fadeIn(220, 14, 11, 18);
-            if (!ownScenery.has(scene.scene.key)) {
+            if (aeroScenery.has(scene.scene.key)) aeroBackdrop(scene, session.settings.battleAnimations);
+            else if (!ownScenery.has(scene.scene.key)) {
               drawBackdrop(scene);
               new ArenaBackdrop(scene, { dim: 0.68 });
             }

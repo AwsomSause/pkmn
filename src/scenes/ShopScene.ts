@@ -66,6 +66,7 @@ export class ShopScene extends Phaser.Scene {
       draw: (scene, box, w, h) => box.add(scene.add.text(16, h / 2, 'Sell items…', textStyle(22, '#f0c060')).setOrigin(0, 0.5)),
     });
     this.picker = new Picker(this, {
+      glass: true,
       title: data.notice ? `Shop  ·  ₽${run.money}  ·  ${data.notice}` : `Shop  ·  ₽${run.money}`,
       columns: 2,
       rowHeight: 52,

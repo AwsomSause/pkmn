@@ -5,6 +5,7 @@
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
+import { runPerks } from '../core/archetypes';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -91,6 +92,8 @@ export class BattleScene extends Phaser.Scene {
   private fieldBase = 0;
   /** The stage's types, for the ambience and the intro. */
   private arenaTypes: readonly string[] = [];
+  /** Raid / Totem status line (shield, phases, ally calls). */
+  private status!: Phaser.GameObjects.Text;
   private fx!: BattleFx;
   private advance: (() => void) | null = null;
   private busy = false;
@@ -172,6 +175,8 @@ export class BattleScene extends Phaser.Scene {
     this.enemyBox = this.makeInfoBox(0, 30, false);
     this.playerBox = this.makeInfoBox(GAME_WIDTH - 390, MESSAGE_Y - 132, true);
     this.header = this.add.text(GAME_WIDTH - 16, 10, '', textStyle(20, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
+    // Raid and Totem status sits under the enemy's box, away from the boss sprite.
+    this.status = this.add.text(12, 186, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 470 } }));
     this.updateHeader();
 
     // PokeRogue's message bar along the bottom, with the command window on its right.
@@ -436,6 +441,7 @@ export class BattleScene extends Phaser.Scene {
   /** The normal header, plus a raid status line (shield, phase count, charged attack, timer). */
   private updateHeader(): void {
     this.updateHeaderBase();
+    this.status.setText('');
     const totem = this.run.battle?.totem;
     if (totem) {
       const tdef = services().session.content.totems.totems.find((x) => x.id === totem.id);
@@ -443,7 +449,7 @@ export class BattleScene extends Phaser.Scene {
       const bits = ['TOTEM', tdef?.aura.text ?? ''];
       if (tdef?.ally) bits.push(out ? 'ALLY ON FIELD: defeat it' : totem.callsUsed >= tdef.ally.maxCalls ? 'no more ally calls' : `ally calls ${totem.callsUsed}/${tdef.ally.maxCalls}`);
       if (tdef && tdef.phases.length > 0) bits.push(`phase ${totem.phasesDone.length}/${tdef.phases.length}`);
-      this.header.setText(`${this.header.text}\n${bits.join('  ·  ')}`);
+      this.status.setText(bits.join('  ·  '));
       return;
     }
     const raid = this.run.battle?.raid;
@@ -455,7 +461,7 @@ export class BattleScene extends Phaser.Scene {
     if (def && def.phases.length > 0) parts.push(`phase ${raid.phasesDone.length}/${def.phases.length}`);
     if (raid.charging) parts.push('!! CHARGED ATTACK !!');
     if (raid.timerLeft !== null) parts.push(`${raid.timerLeft} turns left`);
-    this.header.setText(`${this.header.text}\n${parts.join('  ·  ')}`);
+    this.status.setText(parts.join('  ·  '));
   }
 
   private updateHeaderBase(): void {
@@ -782,7 +788,7 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics };
+    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run) };
   }
 
   private openBag(): void {
@@ -800,6 +806,7 @@ export class BattleScene extends Phaser.Scene {
     };
     this.clearMenus();
     this.picker = new Picker(this, {
+      glass: true,
       title: 'Bag',
       columns: 2,
       rowHeight: 48,
@@ -820,6 +827,7 @@ export class BattleScene extends Phaser.Scene {
     const item = content.items.get(itemId)!;
     this.clearMenus();
     this.picker = new Picker(this, {
+      glass: true,
       title: `Use ${item.name} on which Pokémon?`,
       columns: 2,
       rowHeight: 78,
@@ -836,6 +844,7 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.message.setText(forced ? 'Choose a Pokémon to send out.' : '');
     this.picker = new Picker(this, {
+      glass: true,
       title: forced ? 'Send out which Pokémon?' : 'Switch to which Pokémon?',
       columns: 2,
       rowHeight: 78,

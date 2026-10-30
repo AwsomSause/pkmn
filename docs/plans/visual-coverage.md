@@ -20,7 +20,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Keep 960×540 space and 320×180 pixel baseline | KEEP | `ui/theme.ts` |
 | Panel roles (glass, glass-low, foe/ally rims) | BUILT | `ui/aero.ts` `paintGlass` |
 | Focus / hover / disabled states | BUILT | `Menu` `glass` option (glow + bounce; disabled dimmed) |
-| Rarity and type cues paired with label/icon (never colour alone) | PART | type label art in move picker; rarity labels on reward cards TODO (V4) |
+| Rarity and type cues paired with label/icon (never colour alone) | BUILT | type label art in move picker; rarity word + rarity rim on reward cards (slice 5) |
 | Motion primitives (bounce, slide, breathe, float) respecting settings | BUILT | `ui/aero.ts` |
 | Shared components in the widget layer, not per-scene | BUILT | `aero.ts`, `widgets.ts` |
 | Trainer/Hub untouched (scope-safe variants) | BUILT | opt-in only |
@@ -80,15 +80,16 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 ## V4 — other gameplay screens (BR 5, VB 5–6, CR 6)
 | Item | Status | Where / note |
 |---|---|---|
-| Map: clear node states, icon language, risk text, travelling highlight, parallax, boss column | TODO | slice 7 |
-| Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | TODO | slice 8 |
-| Shop: money/price labels, category icons, SOLD state, focus details | TODO | slice 8 |
+| Map: clear node states, icon language, risk text, travelling highlight, parallax, boss column | BUILT | slice 6: glass header/footer and pill buttons; stage-type ambience + drifting scenery; open paths glow with travelling lights; breathing halo on reachable nodes, ✓ on visited ones; bouncy focus ring; glowing boss column; "Risk: high / boss" in the info line; a token hops to the chosen node before the battle |
+| Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | BUILT | glass cards with rarity rim, deal-in, focus lift, chosen card flies off with a burst (slice 5) |
+| Shop: money/price labels, category icons, SOLD state, focus details | PART | glass shop/bag/party lists and Aero backdrop (slice 5); category icons + SOLD stamp: slice 8 |
 | Party/detail: tabs, moves with type/category, memories | TODO | slice 9 |
-| Event choice: illustration, 2–4 options with costs, consequence ack | TODO | slice 9 |
-| League escalation, game over, run recap, victory | TODO | slice 10 |
-| Briefing, loading transitions, visual settings | TODO | slice 10 |
+| Event choice: illustration, 2–4 options with costs, consequence ack | PART | Aero backdrop + glass pickers on event/decision screens (slice 5); illustration frame: slice 9 |
+| League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); league escalation: slice 10 |
+| Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |
-| Regional progression look (new palettes per region) | TODO | slice 7 |
+| Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
+| Bond screen for the Bond Engine (traits, mood, bond level) | BUILT | map **Bonds** button: glass card per Pokémon, trait, floating mood bubble, 7 bars that fill with a bounce, hint explains the mood, practiced partners and refusal risk (`ui/bondMenu.ts`) |
 
 ## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)
 | Item | Status | Where / note |

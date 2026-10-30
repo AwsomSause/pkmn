@@ -52,7 +52,7 @@ test('a raid den shows its preview, then starts a raid fight that survives a rel
   expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Map').picker))).toBe(true);
   await page.keyboard.press('Enter'); // challenge
   await waitForScene(page, 'Battle');
-  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').header.text), { timeout: 10_000 }).toContain('RAID');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').status.text), { timeout: 10_000 }).toContain('RAID');
   expect(await page.evaluate(() => (window as any).__pkr.session.run.raids.entered)).toBe(1);
 
   // Reload mid-raid: the raid is still there, entered once, the den used.

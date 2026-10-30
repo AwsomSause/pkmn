@@ -51,6 +51,14 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   overdrivePerseverance: 'statStage',
   dualEmotion: 'heal',
   emotionalClash: 'flair',
+  understandEachOther: 'statStage',
+  wontLetFriendFight: 'statStage',
+  wantsToProve: 'statStage',
+  feelsLeftOut: 'friendship',
+  gatheringEverything: 'flair',
+  gatherUnleashed: 'enemyStage',
+  fightingBeyondLimits: 'enemyStage',
+  lostComposure: 'enemyStage',
 };
 
 export interface Moment {
@@ -130,6 +138,26 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
           flags[flagKey('streak')] = e.moveId;
           flags[flagKey('streakN')] = streak;
           if (streak >= 3 && trainerFight) fire('enemyLearned', 'enemy', enemyUid, i, { name: nameOf(foe.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId });
+        } else if (boss) {
+          // It Is Gathering Everything It Has: two set-up turns in a row are shown as a charge. Any status
+          // on it, or a knockout, breaks the charge (It Has Lost Its Composure); otherwise its next attack is stronger.
+          const setup = !(content.moves.get(e.moveId)?.power ?? 0);
+          const n = setup ? Number(flags[flagKey('setupN')] ?? 0) + 1 : 0;
+          flags[flagKey('setupN')] = n;
+          const names = { name: nameOf(foe.speciesId) };
+          if (setup && n >= 2 && !flags[flagKey('gather')]) {
+            flags[flagKey('gather')] = true;
+            fire('gatheringEverything', 'enemy', enemyUid, i, names);
+          } else if (!setup && flags[flagKey('gather')]) {
+            delete flags[flagKey('gather')];
+            fire('gatherUnleashed', 'enemy', enemyUid, i, names);
+          }
+        }
+        break;
+      case 'status':
+        if (e.side === 'enemy' && flags[flagKey('gather')]) {
+          delete flags[flagKey('gather')];
+          fire('lostComposure', 'enemy', enemyUid, i, { name: nameOf(foe.speciesId) });
         }
         break;
       case 'switchIn':
@@ -138,6 +166,15 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
           const mon = run.party.find((m) => m.uid === e.uid);
           if (mon && boss && mon.friendship >= 150) fire('makeYouProud', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
           if (mon && flags[flagKey('fell')]) fire('cameToAid', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
+          // Bond pairs (More Than Teammates): They Understand Each Other Perfectly / It Won't Let Its Friend Fight Alone.
+          for (const rel of run.story.relationships) {
+            if (!mon || !rel.open || rel.kind !== 'bond' || (rel.a.id !== mon.uid && rel.b.id !== mon.uid)) continue;
+            const friend = run.party.find((m) => m.uid === (rel.a.id === mon.uid ? rel.b.id : rel.a.id));
+            if (!friend || friend.hp <= 0) continue;
+            const names = { name: nameOf(mon.speciesId), other: nameOf(friend.speciesId) };
+            if ((run.story.histories[mon.uid]?.finishTrades[friend.uid] ?? 0) >= 2) fire('understandEachOther', 'player', mon.uid, i, names);
+            if (friend.hp <= maxHp(content, friend) * 0.25) fire('wontLetFriendFight', 'player', mon.uid, i, names);
+          }
         } else {
           enemyUid = e.uid;
           const ace = battle.enemyTeam.length > 1 && battle.enemyTeam[battle.enemyTeam.length - 1]!.uid === e.uid;
@@ -146,6 +183,8 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         }
         break;
       case 'damage': {
+        // It Is Fighting Beyond Its Limits: a boss survives a hit that took half its health.
+        if (e.side === 'enemy' && boss && e.hpAfter > 0 && e.amount >= maxHp(content, foe) * 0.5) fire('fightingBeyondLimits', 'enemy', enemyUid, i, { name: nameOf(foe.speciesId) });
         if (e.side !== 'player' || e.hpAfter <= 0 || !lead) break;
         const hits = Number(flags[flagKey('hits', lead.uid)] ?? 0) + 1;
         flags[flagKey('hits', lead.uid)] = hits;
@@ -182,6 +221,13 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     const mark = fnv1a;
     if (battle.kind === 'wild' && (foe.shiny ? mark(`${run.seed}:${foe.uid}:s`) % 5 !== 0 : mark(`${run.seed}:${foe.uid}:d`) % 60 === 0)) {
       fire('somethingDifferent', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    }
+    // It Wants to Prove Itself / It Feels Left Out…
+    const ace = run.party.find((m) => m.uid !== lead.uid && (run.story.histories[m.uid]?.bossesBeaten ?? 0) >= 2);
+    if (ace && (run.story.histories[lead.uid]?.battles ?? 99) <= 2) fire('wantsToProve', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(ace.speciesId) });
+    if (run.encountersCompleted >= 6) {
+      const idle = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && (run.story.histories[m.uid]?.battles ?? 99) <= 1);
+      if (idle) fire('feelsLeftOut', 'player', idle.uid, -1, { name: nameOf(idle.speciesId), other: nameOf(lead.speciesId) });
     }
     const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
     if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });

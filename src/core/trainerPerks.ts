@@ -5,7 +5,7 @@
 
 import type { Perks } from './archetypes';
 import type { Content, TypeName } from './contentSchema';
-import { calcStats, getSpecies, isUsableMove } from './pokemon';
+import { abilityOf, calcStats, getSpecies, isUsableMove } from './pokemon';
 import type { PokemonInstance } from './state';
 
 type Kind<K extends string> = Extract<Perks[number], { kind: K }>;
@@ -62,12 +62,30 @@ export interface DamageDealtInfo {
   userHoldsItem?: boolean;
   /** This is the first attack your side makes in the battle (false when unknown). */
   firstAttack?: boolean;
+  /** Type effectiveness of the hit (above 1 is super effective). */
+  effectiveness?: number;
+  /** Full turns the attacker has been out. */
+  turnsOut?: number;
+  moveIsZ?: boolean;
+  moveIsSpread?: boolean;
+  /** Place in the party (0 = first) and the party's size. */
+  partyIndex?: number;
+  partySize?: number;
+  userLegendary?: boolean;
+  /** `unusual` / `common`: see unusualKind. */
+  userRarity?: 'unusual' | 'common' | null;
+  moveFlags?: readonly string[];
+  /** Enemies your side has already defeated in this battle. */
+  enemiesDefeated?: number;
 }
 
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
 export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): number {
   let v = 1;
-  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)));
+  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)));
+  v *= product(perks, 'moveFlagDamage', (m) => m.flags.some((f) => i.moveFlags?.includes(f)));
+  for (const m of of(perks, 'unusualDamageMultiplier')) v *= i.userRarity === 'unusual' ? m.unusual : i.userRarity === 'common' ? m.common : 1;
+  if ((i.enemiesDefeated ?? 0) > 0) v *= product(perks, 'afterKoDamageMultiplier');
   v *= product(perks, 'lowHpDamageMultiplier', (m) => i.hpShare < m.below);
   v *= product(perks, 'levelGapDamageMultiplier', (m) => (m.foe === 'higher' ? i.targetLevel > i.userLevel : i.targetLevel < i.userLevel));
   if (i.targetIsBoss) v *= product(perks, 'bossDamageMultiplier');
@@ -75,6 +93,11 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'starterDamageMultiplier', (m) => m.starter === i.isStarter);
   for (const m of of(perks, 'battleOrderDamage')) v *= i.firstInBattle ? m.first : m.later;
   for (const m of of(perks, 'firstAttackDamage')) v *= i.firstAttack ? m.first : m.later;
+  if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveDamageMultiplier');
+  if ((i.turnsOut ?? 0) >= 1) v *= product(perks, 'stayingDamageMultiplier');
+  if (i.moveIsZ) v *= product(perks, 'zMoveDamageMultiplier');
+  v *= product(perks, 'spreadMoveDamageMultiplier', (m) => m.spread === Boolean(i.moveIsSpread));
+  v *= product(perks, 'partyPositionDamage', (m) => (m.position === 'first' ? i.partyIndex === 0 : i.partyIndex !== undefined && i.partySize !== undefined && i.partyIndex === i.partySize - 1));
   v *= product(perks, 'heldItemDamageMultiplier', (m) => m.holding === Boolean(i.userHoldsItem));
   if (i.userIsMega) v *= product(perks, 'megaDamageMultiplier');
   if (i.partyHasMega && !i.userIsMega) v *= product(perks, 'nonMegaDamageMultiplier');
@@ -90,6 +113,9 @@ export interface DamageTakenInfo {
   attackerIsBoss: boolean;
   weather: string | null;
   targetIsMega?: boolean;
+  effectiveness?: number;
+  /** Full turns the defender has been out (0 = it just came in). */
+  targetTurnsOut?: number;
 }
 
 /** Damage multiplier for a hit your Pokémon takes. */
@@ -103,6 +129,8 @@ export function damageTakenPerk(perks: Perks | undefined, i: DamageTakenInfo): n
   });
   if (i.attackerIsBoss) v *= product(perks, 'bossDamageTakenMultiplier');
   if (i.targetIsMega) v *= product(perks, 'megaDamageTakenMultiplier');
+  if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveTakenMultiplier');
+  if (i.targetTurnsOut === 0) v *= product(perks, 'switchGuard');
   const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
   if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'enemy' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
   return v;
@@ -152,8 +180,8 @@ export function statusTurnsPerk(perks: Perks | undefined, turns: number): number
   return Math.ceil(turns * product(perks, 'statusDurationMultiplier')) + sum(perks, 'statusDurationBonus', (m) => m.turns);
 }
 
-export function statusChancePerk(perks: Perks | undefined, userTypes: readonly TypeName[]): number {
-  return product(perks, 'statusChanceMultiplier', (m) => !m.type || userTypes.includes(m.type));
+export function statusChancePerk(perks: Perks | undefined, userTypes: readonly TypeName[], status?: string): number {
+  return product(perks, 'statusChanceMultiplier', (m) => (!m.type || userTypes.includes(m.type)) && (!m.status || m.status === status));
 }
 
 export function weatherTurnsBonus(perks: Perks | undefined): number {
@@ -335,4 +363,105 @@ export function eliteLevelOffset(perks: Perks | undefined): number {
 
 export function enemyHealingBlocked(perks: Perks | undefined): boolean {
   return of(perks, 'enemyHealingBlocked').length > 0;
+}
+
+/** Moves that hit every foe in the real games' double battles (the game here is singles, so this only picks the perk's damage rule). */
+const SPREAD_MOVES = new Set([
+  'earthquake', 'surf', 'rock-slide', 'blizzard', 'heat-wave', 'discharge', 'razor-leaf', 'muddy-water', 'bulldoze', 'dazzling-gleam', 'hyper-voice',
+  'icy-wind', 'snarl', 'electroweb', 'sludge-wave', 'eruption', 'water-spout', 'boomburst', 'lava-plume', 'sparkling-aria', 'origin-pulse',
+  'precipice-blades', 'petal-blizzard', 'struggle-bug', 'breaking-swipe', 'glaciate', 'mind-blown', 'self-destruct', 'explosion', 'magnitude',
+  'acid', 'powder-snow', 'swift', 'twister', 'air-cutter', 'incinerate', 'clanging-scales', 'core-enforcer', 'burning-jealousy', 'corrosive-gas',
+  'dark-void', 'parabolic-charge', 'sandsear-storm', 'wildbolt-storm', 'bleakwind-storm', 'springtide-storm', 'hyper-voice', 'misty-explosion',
+  'synchronoise', 'teatime', 'overdrive', 'disarming-voice',
+  'bubble', 'sweet-scent', 'growl', 'leer', 'tail-whip', 'captivate', 'poison-gas',
+]);
+export function isSpreadMove(moveId: string): boolean {
+  return SPREAD_MOVES.has(moveId);
+}
+
+export function turnHealPercent(perks: Perks | undefined, types: readonly TypeName[]): number {
+  return sum(perks, 'turnHeal', (m) => (types.includes(m.type) ? m.percent : 0));
+}
+
+export function healingMoveMultiplier(perks: Perks | undefined): number {
+  return product(perks, 'healingMoveMultiplier');
+}
+
+export function burnDamageTakenPerk(perks: Perks | undefined): number {
+  return product(perks, 'burnDamageTakenMultiplier');
+}
+
+export function bossMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'bossMoneyMultiplier');
+}
+
+export function statusMoveAccuracyPerk(perks: Perks | undefined): number {
+  return product(perks, 'statusMoveAccuracy');
+}
+
+export function shopEarlyStockPerk(perks: Perks | undefined): number {
+  return sum(perks, 'shopEarlyStock', (m) => m.count);
+}
+
+export function zMoveDelayTurns(perks: Perks | undefined): number {
+  return sum(perks, 'zMoveDelay', (m) => m.turns);
+}
+
+export function championMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'championMoneyMultiplier');
+}
+
+export function ordinaryMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'ordinaryMoneyMultiplier');
+}
+
+export function critChancePerk(perks: Perks | undefined): number {
+  return product(perks, 'critChanceMultiplier');
+}
+
+/** Friendship as friendship-based bonuses see it. */
+export function bonusFriendship(perks: Perks | undefined, friendship: number): number {
+  return friendship * product(perks, 'friendshipBonusMultiplier');
+}
+
+/** Added to your Pokémon's critical-hit chance. */
+export function critChanceBonusPerk(perks: Perks | undefined): number {
+  return sum(perks, 'critChanceBonus', (m) => m.value);
+}
+
+export function catchMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'catchMoneyMultiplier');
+}
+
+/** Move flags a perk can name: the data's flags plus "dance" (the dance moves, by name). */
+const DANCE_MOVES = new Set(['swords-dance', 'dragon-dance', 'quiver-dance', 'feather-dance', 'petal-dance', 'fiery-dance', 'lunar-dance', 'teeter-dance', 'revelation-dance', 'victory-dance', 'clangorous-soul-dance', 'aqua-step', 'raging-fury-dance']);
+export function moveFlagsOf(move: { id: string; flags: readonly string[] }): readonly string[] {
+  return DANCE_MOVES.has(move.id) ? [...move.flags, 'dance'] : move.flags;
+}
+
+const RARITY = new WeakMap<Content, { combo: Map<string, number>; ability: Map<string, number> }>();
+/** An ability held by this many species or more is "common"; by this few or fewer, or a type pairing this rare, is "unusual". */
+export const COMMON_ABILITY_MIN = 60;
+export const UNUSUAL_ABILITY_MAX = 12;
+export const UNUSUAL_COMBO_MAX = 6;
+
+/** Whether a Pokémon's type pairing or ability is unusual (rare among all species) or its ability very common. Counts are cached per content set. */
+export function unusualKind(content: Content, mon: PokemonInstance): 'unusual' | 'common' | null {
+  let table = RARITY.get(content);
+  if (!table) {
+    table = { combo: new Map(), ability: new Map() };
+    for (const sp of content.species.values()) {
+      const combo = [...sp.types].sort().join('/');
+      table.combo.set(combo, (table.combo.get(combo) ?? 0) + 1);
+      for (const a of new Set([...sp.abilities.normal, sp.abilities.hidden].filter((x): x is string => Boolean(x)))) table.ability.set(a, (table.ability.get(a) ?? 0) + 1);
+    }
+    RARITY.set(content, table);
+  }
+  const sp = getSpecies(content, mon.speciesId);
+  const ability = abilityOf(content, mon);
+  const abilityCount = ability ? (table.ability.get(ability) ?? 0) : 0;
+  const comboCount = table.combo.get([...sp.types].sort().join('/')) ?? 0;
+  if (abilityCount >= COMMON_ABILITY_MIN) return 'common';
+  if ((ability && abilityCount <= UNUSUAL_ABILITY_MAX) || comboCount <= UNUSUAL_COMBO_MAX) return 'unusual';
+  return null;
 }

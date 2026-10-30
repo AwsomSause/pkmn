@@ -500,6 +500,10 @@ export const BASE_COUNTER_NAMES = [
   'statsBoosted',
   /** Run Quests finished (the trainer's goal offered on the briefing screen). */
   'runQuestsDone',
+  /** Raid dens and Totems beaten, and battles won against a rival. */
+  'raidsWon',
+  'totemsWon',
+  'rivalBattlesWon',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -621,7 +625,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
   /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
-  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), legendary: z.boolean().optional(), value: z.number().positive() }),
   /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
   z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
   /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
@@ -655,7 +659,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** Extra turns of sleep or confusion on foes you inflict it on. */
   z.object({ kind: z.literal('statusDurationBonus'), turns: z.number().int().positive() }),
   /** Chance of your Pokémon's (of `type`) moves inflicting a status. */
-  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), status: StatusIdSchema.optional(), value: z.number().positive() }),
   /** Extra turns of weather your side sets up. */
   z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
   /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
@@ -724,6 +728,42 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('critDamageMultiplier'), side: z.enum(['player', 'enemy']), value: z.number().positive() }),
   /** Damage dealt by your Mega Evolved Pokémon. */
   z.object({ kind: z.literal('megaDamageMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by your Z-Moves. */
+  z.object({ kind: z.literal('zMoveDamageMultiplier'), value: z.number().positive() }),
+  /** Your Z-Move can only be used after this many turns of the battle. */
+  z.object({ kind: z.literal('zMoveDelay'), turns: z.number().int().positive() }),
+  /** Damage dealt by multi-target (spread: true) or single-target (false) moves. */
+  z.object({ kind: z.literal('spreadMoveDamageMultiplier'), spread: z.boolean(), value: z.number().positive() }),
+  /** Pokémon of a type recover this share of max HP at the end of every turn. */
+  z.object({ kind: z.literal('turnHeal'), type: TypeNameSchema, percent: z.number().positive() }),
+  /** HP restored by healing moves your Pokémon use. */
+  z.object({ kind: z.literal('healingMoveMultiplier'), value: z.number().positive() }),
+  /** Burn damage on your own Pokémon. */
+  z.object({ kind: z.literal('burnDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by the first or last Pokémon in your party order. */
+  z.object({ kind: z.literal('partyPositionDamage'), position: z.enum(['first', 'last']), value: z.number().positive() }),
+  /** Prize money from gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
+  /** Accuracy of your status moves. */
+  z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
+  /** This many more locked shop entries are for sale early. */
+  z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
+  /** Damage taken by a Pokémon on its first turn after it enters battle (switching in). */
+  z.object({ kind: z.literal('switchGuard'), value: z.number().positive() }),
+  /** Damage dealt by a Pokémon that has been out for at least a full turn. */
+  z.object({ kind: z.literal('stayingDamageMultiplier'), value: z.number().positive() }),
+  /** Prize money from champion battles. */
+  z.object({ kind: z.literal('championMoneyMultiplier'), value: z.number().positive() }),
+  /** Prize money from ordinary (non-boss) battles. */
+  z.object({ kind: z.literal('ordinaryMoneyMultiplier'), value: z.number().positive() }),
+  /** Chance of critical hits by your Pokémon. */
+  z.object({ kind: z.literal('critChanceMultiplier'), value: z.number().positive() }),
+  /** Friendship-based bonuses (Return power, friendship Hyper moments) count friendship this much higher. */
+  z.object({ kind: z.literal('friendshipBonusMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by super-effective hits of your Pokémon. */
+  z.object({ kind: z.literal('superEffectiveDamageMultiplier'), value: z.number().positive() }),
+  /** Damage your Pokémon take from super-effective hits. */
+  z.object({ kind: z.literal('superEffectiveTakenMultiplier'), value: z.number().positive() }),
   /** Elite Four members are this many levels higher (negative: lower). */
   z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
   /** Foes can't heal with moves, drains or healing effects. */
@@ -741,6 +781,16 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('blackMarket'), markup: z.number().min(1) }),
   /** King N's Voice of Pokémon: a wild Pokémon you defeat asks to join with this chance (no ball needed). */
   z.object({ kind: z.literal('voiceOfPokemon'), chance: z.number().positive().max(1) }),
+  /** Added to the chance of a critical hit for your Pokémon (0.1 = 10 percentage points). */
+  z.object({ kind: z.literal('critChanceBonus'), value: z.number().positive().max(1) }),
+  /** Prize money after catching a wild Pokémon. */
+  z.object({ kind: z.literal('catchMoneyMultiplier'), value: z.number().positive() }),
+  /** Damage of moves with one of these flags (dance and sound moves, punches...). */
+  z.object({ kind: z.literal('moveFlagDamage'), flags: z.array(z.enum(['sound', 'punch', 'bite', 'pulse', 'bullet', 'slicing', 'wind', 'contact', 'dance'])).min(1), value: z.number().positive() }),
+  /** Pokémon with an unusual type pairing or ability deal `unusual`× damage; those with a very common ability deal `common`×. */
+  z.object({ kind: z.literal('unusualDamageMultiplier'), unusual: z.number().positive(), common: z.number().positive() }),
+  /** Damage dealt once your side has defeated an enemy in the same battle. */
+  z.object({ kind: z.literal('afterKoDamageMultiplier'), value: z.number().positive() }),
   /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
   z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
 ]);
@@ -1697,6 +1747,8 @@ export const BalanceSchema = z.object({
     trainerMoneyPerLevel: z.number().int().min(0),
     /** Items the Explorer Kit can turn up. */
     explorerItems: z.array(z.string()).min(1),
+    /** Map events a running game event features (gameEvents.json mapEvents) are this many times as likely. */
+    gameEventWeight: z.number().min(1),
   }),
   attributeGrowth: z.array(
     z.object({
@@ -1966,6 +2018,61 @@ export const EventSceneSchema = z.object({
   effect: z.enum(EVENT_EFFECTS).default('none'),
 });
 
+// ---------- game events (Untitled doc §17, plan Part 4b): weekly and holiday events ----------
+
+/** One milestone of a game event, counted over the runs started while it is on. */
+export const GameEventObjectiveSchema = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
+  counter: CounterNameSchema,
+  atLeast: z.number().int().positive(),
+  reward: QuestRewardSchema,
+});
+export type GameEventObjective = z.infer<typeof GameEventObjectiveSchema>;
+
+/** A month and day, "MM-DD" (UTC). */
+const MonthDaySchema = z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+
+/**
+ * A timed account event (Untitled doc §17.4). Weekly events rotate by ISO week; holiday and themed
+ * events come back every year between two dates. Every run started while one is on plays by its
+ * rules and counts toward its objectives. Rewards use claim keys, so nothing pays twice.
+ */
+export const GameEventSchema = z.object({
+  id: z.string().min(1),
+  /** Bumped when the definition changes; a reward already earned is never taken back. */
+  version: z.number().int().min(1),
+  name: z.string().min(1),
+  kind: z.enum(['weekly', 'holiday', 'themed']),
+  description: z.string().min(1),
+  /** Weekly: one of the rotation, chosen by ISO week. Yearly: on between two dates (inclusive, may wrap the new year). */
+  schedule: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('weeklyRotation') }),
+    z.object({ kind: z.literal('yearly'), start: MonthDaySchema, end: MonthDaySchema }),
+  ]),
+  /** What makes an edition: the ISO week ("2026-W44") or the year ("2026"). */
+  seedRule: z.enum(['isoWeek', 'year']),
+  /** Which runs count: only runs that earn progress (Standard mode, not the dev campaign) when true. */
+  progressionEligibility: z.boolean().default(true),
+  /** Which runs it applies to (every mode for now). */
+  eligibility: z.object({ minRunsFinished: z.number().int().min(0).default(0) }).default({ minRunsFinished: 0 }),
+  mode: z.enum(['any']).default('any'),
+  /** The themed ruleset, in words, and the trainer modifiers it adds to every run started while it is on. */
+  ruleText: z.string().min(1),
+  modifiers: z.array(ArchetypeModifierSchema).default([]),
+  /** Map events (events.json) it features: they turn up more often. */
+  mapEvents: z.array(z.string()).default([]),
+  objectives: z.array(GameEventObjectiveSchema).min(3).max(5),
+  /** For finishing every objective, the first time ever; after that, `fallbackReward` instead. */
+  reward: QuestRewardSchema,
+  repeatPolicy: z.enum(['oncePerEvent', 'oncePerEdition']).default('oncePerEvent'),
+  fallbackReward: QuestRewardSchema,
+  visualTheme: z.object({ color: z.string().regex(/^#[0-9a-fA-F]{6}$/), icon: z.string() }),
+  contentTags: z.array(z.string()).default([]),
+});
+export type GameEvent = z.infer<typeof GameEventSchema>;
+export const GameEventsFileSchema = z.object({ events: z.array(GameEventSchema).min(1) });
+
 export const EventDefSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -1982,6 +2089,8 @@ export const EventDefSchema = z.object({
   requires: z.array(EventConditionSchema).default([]),
   /** Only appears when the player holds this key item; it is used up. */
   keyItem: z.string().optional(),
+  /** Only appears in a run started while this game event (gameEvents.json) was on, e.g. the Spooky pack. */
+  gameEvent: z.string().nullable().default(null),
   scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
   intro: z.string(),
   choices: z.array(EventChoiceSchema).min(1).max(4),
@@ -2000,6 +2109,8 @@ export interface Content {
   /** Trainer quest lines by trainer id, and Run Quests (trainerQuests.json, core/quests.ts). */
   questLines: Map<string, QuestLine>;
   runQuests: Map<string, RunQuest>;
+  /** Weekly, holiday and themed game events (gameEvents.json), in file order. */
+  gameEvents: Map<string, GameEvent>;
   starterPools: Map<string, StarterPool>;
   draftRules: Map<string, DraftRule>;
   prepTokens: Map<string, PrepToken>;

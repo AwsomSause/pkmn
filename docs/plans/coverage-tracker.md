@@ -36,7 +36,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: batches 1–3 of 11 (60 of 220 trainers, Aaron to Diantha); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | PART: batches 1–5 of 11 (100 of 220 trainers, Aaron to Ingo); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -129,9 +129,9 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 | §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
 | §2 Seven Emotions: tags, current emotion dot, Story screen; 7 Emotional Overdrives (once per battle each: Determination/Bravery/Justice +1 Attack, Kindness +1 Defense, Patience +1 Sp. Atk, Perseverance +1 Sp. Def, Integrity cures a fresh status), rare dual emotion (Determination + Kindness: heal 15%), emotional clash | 7 + 2 | DONE (limited: no drawbacks/exhaustion, no signature achievement events such as "Not Until It's Over", Kindness peaceful encounters TODO) |
 | §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
-| §3 Bond/friendship/party: Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 6 of 10 | DONE; TODO: Understand Each Other, Won't Let Friend Fight Alone, Wants to Prove Itself, Feels Left Out (need pair combos / a choice screen) |
+| §3 Bond/friendship/party (10): Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Understand Each Other (bond pair with 2+ trades), Won't Let Friend Fight Alone (bond partner under 25% HP), Wants to Prove Itself (rookie leads beside an ace), Feels Left Out (benched with 0-1 fights; +5 friendship, limited: no "ask to lead" screen), Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 10 | DONE (limited as noted) |
 | §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |
-| §3 Enemy Overdrive: Unshaken, Pure Instinct, Learned From Your Attacks, Protecting Its Trainer, Partner's Fall, Will Not Let Trainer Down, Riled Up | 7 of 10 | DONE; TODO: Gathering Everything, Fighting Beyond Limits, Lost Its Composure (need telegraphed ultimates + counterplay) |
+| §3 Enemy Overdrive (10): Unshaken, Pure Instinct, Learned From Your Attacks, Protecting Its Trainer, Partner's Fall, Will Not Let Trainer Down, Riled Up, Gathering Everything (two set-up turns = telegraphed charge; next attack +2 Attack), Lost Its Composure (a status on it breaks the charge, Defense -1), Fighting Beyond Limits (boss survives a half-health hit) | 10 | DONE |
 | §4 Hyper evolutions: Determination Evolution (memory), Mega Overdrive, All of Its Heart, A Giant Resolve, True Colors (7 emotion lines), Signature Move Awakening | 6 | DONE |
 | §5 Unusual events | 6 | DONE: 3 first-turn banners (Something Different, Waiting for This Battle, Something Watching) + 3 map "?" events (Doesn't Want to Fight, It Saw What You Did, This Place Remembers; `tools/events/overdrive.ts`). Limited: This Place Remembers fires anywhere; It Saw What You Did reads the Good/Evil meter |
 | §6 Overdrive chains: engine (`core/story/chains.ts`) + 7 chains | 7 | DONE (limited: rival chain has 3 of 5 steps; Legacy Record gives a title, not a Hall of Fame entry) |
@@ -141,7 +141,8 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 | Techno §1 Rivalry, §2 Nemesis | — | owned by the rivals threads |
 | Techno §3 Raids | — | owned by the Raids/Blueprint thread |
 | Techno §4 Protégé: accept/decline screen, 6 paths, mentorship ends on evolution/catching up; Looks Up, Learned Something Today, Student Surpassed Teacher, Teacher's Last Lesson, Different Ways, Student Becomes Teacher (`core/story/mentorship.ts`) | 6 paths + 8 stories | PART: DONE except Carried Its Mentor's Legacy (Hall of Fame), mastery sharing, mentor-taught move variants (limited: paths shape story text, not stats) |
-| Techno §5 Grand-Enemy, §6 Additional systems (Lucario example, Rival Who Wouldn't Give Up), §7 high-hype moments, §8 Memory-driven chaining | — | TODO |
+| Techno §6.1 Legacy System: Legacy Card per Pokémon (Run Ace/Mentor/Protégé/Survivor tags, signature memory, greatest moments), 8 earned titles from real history (Iron Will, Boss Slayer, Rival Breaker, Guardian, Veteran, Tested by Fire, Grown on the Road, plus the last title), run epitaph in the chronicle; shown on the Story screen | 1 | DONE (limited: no Hall of Fame screen yet; hub thread) |
+| Techno §5 Grand-Enemy, §6.2+ Additional systems (Lucario example, Rival Who Wouldn't Give Up), §7 high-hype moments, §8 Memory-driven chaining | — | TODO |
 
 ## Implementation Plan Electric
 Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-plan.md`).
@@ -177,3 +178,5 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 | Rival Interruption: a second living rival watches gym/boss/rival battles; a rival-graph tie or a rivalry step forms | DONE |
 | Emotional Turning Point: five feelings counted from real events for both sides; yours become tagged memories, a rival's trainer comments and remembers | DONE |
 | Bond screens (summary UI for the seven values), bond-based evolution/moves outside battle | TODO (UI belongs to the visual thread) |
+
+- Untitled Phase D2 (§19), slice 1: Center, Tutor, Reminder, Lab, Trade Post, Scout Tower done (services.json). Left: Specialist Mart, Dojo, Nursery, Ability Researcher, Fossil, Safari, Relic Shrine, Black Market, Auction, Garden, School, Event Hall, Rival Meeting Place, Raid Observatory, Lodge.

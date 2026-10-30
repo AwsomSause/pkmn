@@ -3,6 +3,7 @@
 // before this screen appears; the right side shows what they paid out.
 
 import { RANK_NAMES } from '../core/mastery';
+import { gameRewardText } from '../core/gameEvents';
 import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
 import Phaser from 'phaser';
@@ -10,7 +11,8 @@ import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 
 export class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -75,6 +77,10 @@ export class GameOverScene extends Phaser.Scene {
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
       if (summary.runQuestDone) lines.push('', `Run Quest done: ${summary.runQuestDone.text} (+${summary.runQuestDone.researchPoints} Research Points)`);
       for (const q of summary.questSteps) lines.push(`Quest step ${q.index + 1}/5 done: ${q.step.goal}. "${q.step.story}"`);
+      for (const g of summary.gameEvents ?? []) {
+        for (const o of g.objectives) lines.push(`${g.event.name}: ${o.text} done (+${gameRewardText(session.content, o.reward)})`);
+        if (g.final) lines.push(`${g.event.name} complete! ${g.final.fallback ? 'Repeat reward' : 'Reward'}: ${gameRewardText(session.content, g.final.reward)}`);
+      }
       const ups = summary.masteryUps ?? [];
       if (ups.length > 0) lines.push(`Mastery: ${ups.slice(0, 6).map((u) => `${session.content.species.get(u.speciesId)?.name ?? u.speciesId} ${RANK_NAMES[u.rank]}`).join(', ')}${ups.length > 6 ? ` and ${ups.length - 6} more` : ''}`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);
@@ -92,6 +98,12 @@ export class GameOverScene extends Phaser.Scene {
       color: COLORS.textLight,
       onSelect: () => this.scene.start('Hub'),
     });
-    onInputAction(this, (a) => menu.handle(a));
+    // Ignore keys mashed through the battle's last message so the summary
+    // isn't skipped the moment it appears.
+    let ready = false;
+    this.time.delayedCall(450, () => (ready = true));
+    onInputAction(this, (a) => {
+      if (ready) menu.handle(a);
+    });
   }
 }

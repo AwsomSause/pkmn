@@ -1006,5 +1006,1511 @@
    "kind": "megaDelay",
    "turns": 1
   }
+ ],
+ "drake-gen-3": [
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "type": "dragon",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "dragon",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.2
+  }
+ ],
+ "drasna": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "dragon",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "category": "special",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "dragon",
+   "value": 0.9
+  }
+ ],
+ "drayden": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "dragon",
+   "value": 0.85
+  }
+ ],
+ "elesa-gen-5-bw2": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.2
+  }
+ ],
+ "elio-usum": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "zMoveDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "zMoveDelay",
+   "turns": 1
+  }
+ ],
+ "elm": [
+  {
+   "kind": "catchLevelOffset",
+   "value": -2
+  }
+ ],
+ "emmet": [
+  {
+   "kind": "spreadMoveDamageMultiplier",
+   "spread": true,
+   "value": 1.15
+  },
+  {
+   "kind": "spreadMoveDamageMultiplier",
+   "spread": false,
+   "value": 0.9
+  }
+ ],
+ "erika-gen-3": [
+  {
+   "kind": "turnHeal",
+   "type": "grass",
+   "percent": 5
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "category": "special",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.2
+  }
+ ],
+ "erika": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMoveMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 0.9
+  }
+ ],
+ "ethan": [
+  {
+   "kind": "starterDamageMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "eusine": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "water",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "falkner": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "flying",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "flying",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.2
+  }
+ ],
+ "fantina": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "statusDurationBonus",
+   "turns": 1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "ghost",
+   "value": 0.9
+  }
+ ],
+ "flannery": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.25
+  },
+  {
+   "kind": "burnDamageTakenMultiplier",
+   "value": 1.25
+  }
+ ],
+ "flint": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "status": "brn",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "gardenia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.2
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "grass",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.2
+  }
+ ],
+ "geeta": [
+  {
+   "kind": "partyPositionDamage",
+   "position": "last",
+   "value": 1.25
+  },
+  {
+   "kind": "partyPositionDamage",
+   "position": "first",
+   "value": 0.9
+  }
+ ],
+ "ghetsis": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.25
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "ordinaryXpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "giacomo": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "statusMoveAccuracy",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.15
+  }
+ ],
+ "ginter": [
+  {
+   "kind": "shopEarlyStock",
+   "count": 1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.15
+  }
+ ],
+ "glacia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "ice",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 0.85
+  }
+ ],
+ "gladion-masters-2": [
+  {
+   "kind": "lowHpDamageMultiplier",
+   "below": 0.5,
+   "value": 1.25
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.8
+  }
+ ],
+ "gladion-stance": [
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "stayingDamageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "gloria-league": [
+  {
+   "kind": "championMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "steel",
+   "value": 1.1
+  },
+  {
+   "kind": "ordinaryMoneyMultiplier",
+   "value": 0.85
+  }
+ ],
+ "grace": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "grant": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "rock",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "rock",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "green-classic": [
+  {
+   "kind": "startingLevelOffset",
+   "value": -1
+  },
+  {
+   "kind": "moneyMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "grimsley-gen-7": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "critChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.1
+  }
+ ],
+ "grusha": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "ice",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 0.9
+  }
+ ],
+ "guzma": [
+  {
+   "kind": "damageMultiplier",
+   "type": "bug",
+   "value": 1.25
+  },
+  {
+   "kind": "critChanceMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.15
+  }
+ ],
+ "hala": [
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "fighting",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.15
+  }
+ ],
+ "hapu": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ground",
+   "value": 1.25
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "harmony": [
+  {
+   "kind": "friendshipBonusMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "hau-stance": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 0.9
+  }
+ ],
+ "hilbert": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "hilda": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "hop": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "superEffectiveDamageMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "superEffectiveTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "hugh": [
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "higher",
+   "value": 1.2
+  },
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "lower",
+   "value": 0.9
+  }
+ ],
+ "ilima": [
+  {
+   "kind": "damageMultiplier",
+   "type": "normal",
+   "value": 1.2
+  },
+  {
+   "kind": "statusMoveAccuracy",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.2
+  }
+ ],
+ "ingo": [
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "tate-liza-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "psychic",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "team-rocket": [
+  {
+   "kind": "catchMoneyMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.85
+  }
+ ],
+ "the-royal": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "thorton": [
+  {
+   "kind": "unusualDamageMultiplier",
+   "unusual": 1.2,
+   "common": 0.9
+  }
+ ],
+ "tierno": [
+  {
+   "kind": "moveFlagDamage",
+   "flags": [
+    "dance",
+    "sound"
+   ],
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "todd-snap": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.25
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.85
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "trace": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "trevor": [
+  {
+   "kind": "researchMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "valerie": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "type": "fairy",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "steel",
+   "value": 1.2
+  }
+ ],
+ "volkner": [
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.25
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.25
+  }
+ ],
+ "volo": [
+  {
+   "kind": "damageMultiplier",
+   "legendary": true,
+   "value": 1.25
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.75
+  }
+ ],
+ "wallace-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "water",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "electric",
+   "value": 1.2
+  }
+ ],
+ "wally": [
+  {
+   "kind": "afterKoDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "regionLevelOffset",
+   "value": -1
+  }
+ ],
+ "wattson": [
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.25
+  }
+ ],
+ "whitney": [
+  {
+   "kind": "damageMultiplier",
+   "type": "normal",
+   "value": 1.2
+  },
+  {
+   "kind": "critChanceBonus",
+   "value": 0.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.2
+  }
+ ],
+ "wicke": [
+  {
+   "kind": "healingMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "winona-gen-6": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "flying",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "flying",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.2
+  }
+ ],
+ "wulfric": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 0.9
+  }
+ ],
+ "yellow": [
+  {
+   "kind": "healingMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.85
+  }
+ ],
+ "zinnia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.2
+  }
+ ],
+ "sabrina-lgpe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "psychic",
+   "value": 1.25
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "dark",
+   "value": 1.2
+  }
+ ],
+ "selene": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "zMoveDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 0.95
+  }
+ ],
+ "serena": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "friendshipMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.95
+  }
+ ],
+ "shauna": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "shelly": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "grass",
+   "value": 1.2
+  }
+ ],
+ "sidney": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "critChanceBonus",
+   "value": 0.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.2
+  }
+ ],
+ "silver": [
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "higher",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "spr-hgss-silver": [
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "higher",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "skyla": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.2,
+   "type": "flying"
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "flying",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.2
+  }
+ ],
+ "sonia": [
+  {
+   "kind": "healingMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "sophocles": [
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.2
+  },
+  {
+   "kind": "heldEffectMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.2
+  }
+ ],
+ "sordward-shielbert": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "steel"
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "spr-hgss-ethan": [
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "spr-pt-barry": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.2
+  }
+ ],
+ "spr-pt-dawn": [
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": false,
+   "value": 0.9
+  }
+ ],
+ "spr-pt-looker": [
+  {
+   "kind": "rareItemWeight",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "spr-pt-lucas": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "steven-gen-6": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "steel"
+  },
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "sycamore": [
+  {
+   "kind": "megaDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "megaDelay",
+   "turns": 1
+  }
+ ],
+ "tabitha": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "weatherTurnsBonus",
+   "turns": 1
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "enemy",
+   "value": 1.2
+  }
+ ],
+ "ryuki": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "critDamageMultiplier",
+   "side": "player",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "dragon",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "roxie-masters": [
+  {
+   "kind": "damageMultiplier",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "roxanne-gen-6": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "rock"
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "rock",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "rowan": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "startingLevelOffset",
+   "value": -1
+  }
+ ],
+ "rosa": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.95
+  }
+ ],
+ "riley": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.15
+  }
+ ],
+ "rei": [
+  {
+   "kind": "damageMultiplier",
+   "speed": "fast",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "speed": "slow",
+   "value": 0.9
+  }
+ ],
+ "red-classic": [],
+ "red-masters": [
+  {
+   "kind": "damageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "raihan": [
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "player",
+   "value": 1.2
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "sun",
+   "side": "player",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.1
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "enemy",
+   "value": 1.15
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "sun",
+   "side": "enemy",
+   "value": 1.15
+  }
+ ],
+ "pryce": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "ice"
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.85,
+   "type": "ice"
+  }
+ ],
+ "plumeria": [
+  {
+   "kind": "damageMultiplier",
+   "type": "poison",
+   "value": 1.2
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "piers": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "moveFlagDamage",
+   "flags": [
+    "sound"
+   ],
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "peony": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.2,
+   "type": "steel"
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "value": 1.1,
+   "type": "steel"
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "peonia": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "phoebe-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "ghost",
+   "value": 0.9
+  }
+ ],
+ "palmer": [
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "opal": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 0.9
+  }
+ ],
+ "ortega": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "value": 1.1,
+   "type": "fairy"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "steel",
+   "value": 1.2
+  }
+ ],
+ "olympia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "psychic",
+   "value": 1.2
+  },
+  {
+   "kind": "statusDurationBonus",
+   "turns": 1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "dark",
+   "value": 1.2
+  }
  ]
 }

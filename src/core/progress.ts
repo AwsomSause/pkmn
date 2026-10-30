@@ -16,6 +16,7 @@ import { researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
+import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
@@ -121,6 +122,8 @@ export interface RunEndSummary {
   runQuestDone: RunQuest | null;
   /** Species Mastery ranks reached by this run (each paid once). */
   masteryUps: MasteryRankUp[];
+  /** Game event objectives and rewards finished by this run. */
+  gameEvents: GameEventPayout[];
 }
 
 /**
@@ -155,7 +158,8 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     researchPoints = Math.round(
       (research.perSpeciesSeen * newSpeciesSeen.length +
         research.perSpeciesCaught * newSpeciesCaught.length +
-        research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
+        research.perShiny * (run.log.counters.shiniesFound ?? 0) +
+        (run.log.counters.labResearch ?? 0)) *
         researchMultiplier(getArchetype(content, run.archetypeId)),
     ) + eventResearch(run);
     researchPoints = scaleReward(Math.round(researchPoints * researchScale(run.rules)), run.rules);
@@ -166,6 +170,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   }
   const questSteps = counts ? awardQuestSteps(content, profile, questTrainer(content, run.archetypeId), now) : [];
   const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
+  const gameEvents = counts ? awardGameEvents(content, profile, run, { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 }, now) : [];
 
   const raw = runPayout(content, run);
   // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
@@ -203,7 +208,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

@@ -1,0 +1,707 @@
+{
+ "events": [
+  {
+   "id": "delta-research-week",
+   "version": 1,
+   "name": "Delta Research Week",
+   "kind": "weekly",
+   "description": "Strange readings across the regions: find clues at events, win research battles and study rare Pokémon.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Rare Pokémon turn up 50% more often; mysteries and odd signals appear on the map more often.",
+   "modifiers": [
+    {
+     "kind": "encounterWeightMultiplier",
+     "group": "rare",
+     "value": 1.5
+    }
+   ],
+   "mapEvents": [
+    "time-rift",
+    "meteorite-crash",
+    "abandoned-lab",
+    "strange-signal",
+    "distortion-world"
+   ],
+   "objectives": [
+    {
+     "id": "clues",
+     "text": "Find 3 clues (finish 3 map events)",
+     "counter": "eventsCompleted",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 40
+     }
+    },
+    {
+     "id": "research-battles",
+     "text": "Win 15 research battles against trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "samples",
+     "text": "Catch 8 Pokémon for study",
+     "counter": "pokemonCaught",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "report",
+     "text": "Report to 3 gym leaders (beat them)",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Delta Researcher",
+    "pool": "rare"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#7a5cff",
+    "icon": "item.scanner"
+   },
+   "contentTags": [
+    "delta",
+    "research"
+   ]
+  },
+  {
+   "id": "rivalry-week",
+   "version": 1,
+   "name": "Rivalry Week",
+   "kind": "weekly",
+   "description": "Old rivals are back and hungrier than ever. Beat them, and keep winning.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Rivals come back 2 levels stronger; rival rematches appear on the map more often.",
+   "modifiers": [
+    {
+     "kind": "rivalLevelOffset",
+     "value": 2
+    }
+   ],
+   "mapEvents": [
+    "rival-rematch",
+    "blue-taunt",
+    "kieran-rivalry",
+    "mirror-match"
+   ],
+   "objectives": [
+    {
+     "id": "first-grudge",
+     "text": "Beat a rival once",
+     "counter": "rivalBattlesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 20 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 20,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "respect",
+     "text": "Beat rivals 3 times",
+     "counter": "rivalBattlesWon",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 100
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Rival of the Week",
+    "pool": "trainer-blue"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#e04848",
+    "icon": "item.leaders_crest"
+   },
+   "contentTags": [
+    "rivals"
+   ]
+  },
+  {
+   "id": "gym-circuit",
+   "version": 1,
+   "name": "Gym Circuit",
+   "kind": "weekly",
+   "description": "Tour the gyms under tournament rules: the leaders hit harder, and every badge counts.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Boss Pokémon deal 15% more damage; gym scouts and ambushes appear more often.",
+   "modifiers": [
+    {
+     "kind": "bossDamageTakenMultiplier",
+     "value": 1.15
+    }
+   ],
+   "mapEvents": [
+    "gym-scout",
+    "gym-trainer-ambush",
+    "trainers-test",
+    "champion-cup"
+   ],
+   "objectives": [
+    {
+     "id": "two-badges",
+     "text": "Win 2 gym badges",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "five-badges",
+     "text": "Win 5 gym badges",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 5,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "eight-badges",
+     "text": "Win 8 gym badges",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 120
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Circuit Champion",
+    "pool": "league-kanto"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#f0b030",
+    "icon": "item.master_ribbon"
+   },
+   "contentTags": [
+    "gyms"
+   ]
+  },
+  {
+   "id": "egg-expedition",
+   "version": 1,
+   "name": "Egg Expedition",
+   "kind": "weekly",
+   "description": "Breeders are out in force: travel far, catch plenty and watch your team grow.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Your Pokémon gain 15% more experience; nests, breeders and daycares appear more often.",
+   "modifiers": [
+    {
+     "kind": "xpMultiplier",
+     "value": 1.15
+    }
+   ],
+   "mapEvents": [
+    "egg-nest",
+    "wandering-breeder",
+    "daycare-couple",
+    "breeders-visit",
+    "pokemon-daycare-visit"
+   ],
+   "objectives": [
+    {
+     "id": "travel",
+     "text": "Finish 25 encounters",
+     "counter": "encountersCompleted",
+     "atLeast": 25,
+     "reward": {
+      "researchPoints": 40
+     }
+    },
+    {
+     "id": "catch",
+     "text": "Catch 10 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "grow",
+     "text": "Evolve 4 Pokémon",
+     "counter": "evolutions",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 250,
+    "candies": 30,
+    "title": "Egg Expedition Leader",
+    "pool": "late-bloomers"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#78c850",
+    "icon": "item.mystery_egg"
+   },
+   "contentTags": [
+    "eggs",
+    "catching"
+   ]
+  },
+  {
+   "id": "catch-carnival",
+   "version": 1,
+   "name": "Catch Carnival",
+   "kind": "weekly",
+   "description": "Every ball is a lucky ball this week. Catch, keep and catch some more.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Poké Balls work 25% better; swarms and the Safari Zone appear more often.",
+   "modifiers": [
+    {
+     "kind": "captureMultiplier",
+     "value": 1.25
+    }
+   ],
+   "mapEvents": [
+    "swarm",
+    "safari-zone",
+    "ball-factory-outlet",
+    "uncommon-breed"
+   ],
+   "objectives": [
+    {
+     "id": "ten",
+     "text": "Catch 10 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 40
+     }
+    },
+    {
+     "id": "keep",
+     "text": "Keep 5 caught Pokémon in your party",
+     "counter": "caughtKept",
+     "atLeast": 5,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "twenty-five",
+     "text": "Catch 25 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 25,
+     "reward": {
+      "researchPoints": 100
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Carnival Catcher",
+    "pool": "tricksters"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#ff70b0",
+    "icon": "ball.pb"
+   },
+   "contentTags": [
+    "catching"
+   ]
+  },
+  {
+   "id": "raid-rally",
+   "version": 1,
+   "name": "Raid Rally",
+   "kind": "weekly",
+   "description": "Giant Pokémon are stirring in dens and territories everywhere. Field medics stand by.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Healing items restore 25% more HP; sleeping giants and alpha Pokémon appear more often.",
+   "modifiers": [
+    {
+     "kind": "healingMultiplier",
+     "value": 1.25
+    }
+   ],
+   "mapEvents": [
+    "alpha-pokemon",
+    "sleeping-giant",
+    "slumbering-snorlax",
+    "legendary-shadow"
+   ],
+   "objectives": [
+    {
+     "id": "first-raid",
+     "text": "Win a raid",
+     "counter": "raidsWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "totem",
+     "text": "Beat a Totem",
+     "counter": "totemsWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "three-raids",
+     "text": "Win 3 raids",
+     "counter": "raidsWon",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 120
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Raid Rallier",
+    "pool": "bulwarks"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#c03028",
+    "icon": "item.golden_mystic_ticket"
+   },
+   "contentTags": [
+    "raids",
+    "totems"
+   ]
+  },
+  {
+   "id": "dragon-week",
+   "version": 1,
+   "name": "Dragon Week",
+   "kind": "weekly",
+   "description": "Dragons gather at the old shrines. Face them, or fly with them.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Dragon moves deal 20% more damage and Dragon-types appear twice as often.",
+   "modifiers": [
+    {
+     "kind": "typeDamageMultiplier",
+     "type": "dragon",
+     "value": 1.2
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "dragon",
+     "value": 2
+    }
+   ],
+   "mapEvents": [
+    "dragons-den",
+    "dragon-shrine"
+   ],
+   "objectives": [
+    {
+     "id": "five-dragons",
+     "text": "Defeat or catch 5 Dragon-types",
+     "counter": "defeatedOrCaught.dragon",
+     "atLeast": 5,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "dragon-boss",
+     "text": "Beat a boss with a Dragon-type leading",
+     "counter": "bossWinsLead.dragon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "fifteen-dragons",
+     "text": "Defeat or catch 15 Dragon-types",
+     "counter": "defeatedOrCaught.dragon",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 100
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Dragon Week Hero",
+    "pool": "type-dragon"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#7038f8",
+    "icon": "item.exp_charm"
+   },
+   "contentTags": [
+    "types",
+    "dragon"
+   ]
+  },
+  {
+   "id": "market-week",
+   "version": 1,
+   "name": "Market Week",
+   "kind": "weekly",
+   "description": "The merchants are in town: everything is 10% off, and the deals are everywhere.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Shop prices are 10% lower; sales and bazaars appear more often.",
+   "modifiers": [
+    {
+     "kind": "priceMultiplier",
+     "group": "all",
+     "value": 0.9
+    }
+   ],
+   "mapEvents": [
+    "department-store-sale",
+    "haggle-sale",
+    "mega-bazaar",
+    "bargain-bin"
+   ],
+   "objectives": [
+    {
+     "id": "earn",
+     "text": "Earn ₽15,000",
+     "counter": "moneyEarned",
+     "atLeast": 15000,
+     "reward": {
+      "researchPoints": 40
+     }
+    },
+    {
+     "id": "spend",
+     "text": "Spend ₽8,000",
+     "counter": "moneySpent",
+     "atLeast": 8000,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "deals",
+     "text": "Finish 6 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 6,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 200,
+    "bankCredits": 3000,
+    "title": "Market Mogul",
+    "pool": "glass-cannons"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#e0c030",
+    "icon": "item.coin_case"
+   },
+   "contentTags": [
+    "money",
+    "shops"
+   ]
+  },
+  {
+   "id": "champions-gauntlet",
+   "version": 1,
+   "name": "Champion's Gauntlet",
+   "kind": "weekly",
+   "description": "The League is holding open trials. Enemies are a little tougher, and prize money is richer.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Enemy Pokémon are 1 level higher; prize money is 20% higher.",
+   "modifiers": [
+    {
+     "kind": "enemyLevelOffset",
+     "value": 1
+    },
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.2
+    }
+   ],
+   "mapEvents": [
+    "battle-tower-floor",
+    "champion-lunch",
+    "veteran-challenge",
+    "champion-cup"
+   ],
+   "objectives": [
+    {
+     "id": "elite-two",
+     "text": "Beat 2 Elite Four members",
+     "counter": "eliteFourDefeated",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "champion",
+     "text": "Beat a champion",
+     "counter": "championsDefeated",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 120
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 30 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 30,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 400,
+    "title": "Gauntlet Victor",
+    "pool": "league-johto"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#3890f8",
+    "icon": "item.leaders_crest"
+   },
+   "contentTags": [
+    "league"
+   ]
+  }
+ ]
+}

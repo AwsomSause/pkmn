@@ -6,13 +6,15 @@ import Phaser from 'phaser';
 import { getArchetype } from '../core/archetypes';
 import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
+import { eventIdOf } from '../core/gameEvents';
 import { questTrainer, runQuestOf, stepsDone } from '../core/quests';
 import { itemsText } from '../core/runPrep';
 import { getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 import { sceneForRun } from './routing';
 
 export class BriefingScene extends Phaser.Scene {
@@ -54,6 +56,10 @@ export class BriefingScene extends Phaser.Scene {
     line('Starting with', `₽${run.money}; ${itemsText(content, run.inventory) || 'an empty Bag'}`);
     line('Rules', `${pool?.name ?? run.prep.poolId} pool, ${rule?.name ?? run.prep.draftRuleId}${run.prep.typeFocus ? ` (${capitalise(run.prep.typeFocus)})` : ''}; preparation: ${token?.name ?? 'none'}`);
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
+    for (const edition of run.gameEvents) {
+      const ge = content.gameEvents.get(eventIdOf(edition));
+      if (ge) line(ge.name, ge.ruleText);
+    }
     const quest = runQuestOf(content, run);
     if (quest) line('Run Quest', `${quest.text} (+${quest.researchPoints} Research Points)`);
     const questLine = content.questLines.get(questTrainer(content, run.archetypeId));

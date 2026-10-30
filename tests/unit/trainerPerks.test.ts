@@ -1,8 +1,8 @@
 // Trainers.md perks (batch 1: Aaron to Bianca). Pure perk maths, the data, and the run-level effects.
 
 import { describe, expect, it } from 'vitest';
-import { getArchetype } from '../../src/core/archetypes';
-import { calcStats } from '../../src/core/pokemon';
+import { getArchetype, healingMultiplier } from '../../src/core/archetypes';
+import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
 import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
 import { createBattle } from '../../src/core/battle/engine';
@@ -10,7 +10,10 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
+  startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
+  critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
 } from '../../src/core/trainerPerks';
 import { autoplay, gameplayFingerprint } from './autoplay';
 import { content } from './helpers';
@@ -276,4 +279,283 @@ describe('trainer perks, batch 2', () => {
       }
     }, 180_000);
   });
+
+  describe('batch 4 (Drake to Ginter)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+
+    it('Elio boosts and delays Z-Moves; Emmet favours spread moves', () => {
+      expect(damageDealtPerk(perks('elio-usum'), { ...base, moveIsZ: true })).toBeCloseTo(1.2);
+      expect(zMoveDelayTurns(perks('elio-usum'))).toBe(1);
+      expect(damageDealtPerk(perks('emmet'), { ...base, moveIsSpread: true })).toBeCloseTo(1.15);
+      expect(damageDealtPerk(perks('emmet'), { ...base, moveIsSpread: false })).toBeCloseTo(0.9);
+      expect(isSpreadMove('earthquake')).toBe(true);
+      expect(isSpreadMove('tackle')).toBe(false);
+    });
+
+    it('Geeta: the last Pokémon hits harder, the first one softer', () => {
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 2, partySize: 3 })).toBeCloseTo(1.25);
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 0, partySize: 3 })).toBeCloseTo(0.9);
+      expect(damageDealtPerk(perks('geeta'), { ...base, partyIndex: 1, partySize: 3 })).toBe(1);
+    });
+
+    it('Erika heals Grass-types each turn and boosts healing moves; Flannery makes burns hurt more', () => {
+      expect(turnHealPercent(perks('erika-gen-3'), ['grass'])).toBe(5);
+      expect(turnHealPercent(perks('erika-gen-3'), ['fire'])).toBe(0);
+      expect(healingMoveMultiplier(perks('erika'))).toBeCloseTo(1.15);
+      expect(burnDamageTakenPerk(perks('flannery'))).toBeCloseTo(1.25);
+    });
+
+    it('Flint raises only the burn chance; Giacomo helps status moves hit; Ghetsis pays more for bosses', () => {
+      expect(statusChancePerk(perks('flint'), ['fire'], 'brn')).toBeCloseTo(1.1);
+      expect(statusChancePerk(perks('flint'), ['fire'], 'par')).toBe(1);
+      expect(statusMoveAccuracyPerk(perks('giacomo'))).toBeCloseTo(1.15);
+      expect(bossMoneyPerk(perks('ghetsis'))).toBeCloseTo(1.2);
+    });
+
+    it("Ginter's shop has one more early entry; Elm's catches start two levels lower", () => {
+      expect(shopEarlyStockPerk(perks('ginter'))).toBe(1);
+      expect(catchLevelOffset(perks('elm'))).toBe(-2);
+    });
+
+    it('every batch-4 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of [...content.archetypes.keys()].slice(69, 89)) {
+        const play = () => autoplay({ seed: `perk4-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
+
+  describe('batch 5 (Glacia to Ingo)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+    const taken = { targetTypes: ['normal'] as const, moveType: 'normal' as const, attackerIsLegendary: false, attackerIsBoss: false, weather: null };
+
+    it('Gladion (Stance) and Ingo guard a Pokémon that just came in; Gladion hits softer once settled', () => {
+      expect(damageTakenPerk(perks('gladion-stance'), { ...taken, targetTurnsOut: 0 })).toBeCloseTo(0.9);
+      expect(damageTakenPerk(perks('gladion-stance'), { ...taken, targetTurnsOut: 1 })).toBe(1);
+      expect(damageDealtPerk(perks('gladion-stance'), { ...base, turnsOut: 1 })).toBeCloseTo(0.9);
+      expect(damageDealtPerk(perks('gladion-stance'), { ...base, turnsOut: 0 })).toBe(1);
+      expect(damageTakenPerk(perks('ingo'), { ...taken, targetTurnsOut: 0 })).toBeCloseTo(0.9);
+    });
+
+    it('Hop: super-effective hits work both ways', () => {
+      expect(damageDealtPerk(perks('hop'), { ...base, effectiveness: 2 })).toBeCloseTo(1.1);
+      expect(damageDealtPerk(perks('hop'), { ...base, effectiveness: 1 })).toBe(1);
+      expect(damageTakenPerk(perks('hop'), { ...taken, effectiveness: 2 })).toBeCloseTo(1.1);
+    });
+
+    it('money, crit chance and friendship perks', () => {
+      expect(championMoneyPerk(perks('gloria-league'))).toBeCloseTo(1.2);
+      expect(ordinaryMoneyPerk(perks('gloria-league'))).toBeCloseTo(0.85);
+      expect(critChancePerk(perks('guzma'))).toBeCloseTo(1.1);
+      expect(critChancePerk(perks('grimsley-gen-7'))).toBeCloseTo(1.15);
+      expect(bonusFriendship(perks('harmony'), 100)).toBeCloseTo(120);
+      expect(bonusFriendship(perks('red'), 100)).toBe(100);
+    });
+
+    it('Hugh trades damage by level gap; Green starts a level lower', () => {
+      expect(damageDealtPerk(perks('hugh'), { ...base, targetLevel: 20 })).toBeCloseTo(1.2);
+      expect(damageDealtPerk(perks('hugh'), { ...base, targetLevel: 5 })).toBeCloseTo(0.9);
+      expect(startingLevelOffset(perks('green-classic'))).toBe(-1);
+    });
+
+    it('every batch-5 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of ["glacia", "gladion-masters-2", "gladion-stance", "gloria-league", "grace", "grant", "green-classic", "grimsley-gen-7", "grusha", "guzma", "hala", "hapu", "harmony", "hau-stance", "hilbert", "hilda", "hop", "hugh", "ilima", "ingo"]) {
+        const play = () => autoplay({ seed: `perk5-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
+});
+
+describe('trainer perks, batch Z to T (Tate & Liza to Zinnia)', () => {
+  const Z = ['tate-liza-gen-6', 'team-rocket', 'the-royal', 'thorton', 'tierno', 'todd-snap', 'trace', 'trevor', 'valerie', 'volkner', 'volo', 'wallace-gen-6', 'wally', 'wattson', 'whitney', 'wicke', 'winona-gen-6', 'wulfric', 'yellow', 'zinnia'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+
+  it('all 20 are playable trainers', () => {
+    for (const id of Z) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('Whitney: Normal damage, +10 points of crit chance, weak to Fighting', () => {
+    expect(damageDealtPerk(perks('whitney'), info)).toBeCloseTo(1.2);
+    expect(critChanceBonusPerk(perks('whitney'))).toBeCloseTo(0.1);
+    expect(critChanceBonusPerk(perks('wicke'))).toBe(0);
+  });
+
+  it('Volo: Legendary damage only, boss and catch money', () => {
+    expect(damageDealtPerk(perks('volo'), { ...info, userLegendary: true })).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('volo'), { ...info, userLegendary: false })).toBe(1);
+    expect(bossMoneyPerk(perks('volo'))).toBeCloseTo(1.25);
+    expect(bossMoneyPerk(perks('the-royal'))).toBeCloseTo(1.15);
+  });
+
+  it('Team Rocket pays more after a catch', () => {
+    expect(catchMoneyPerk(perks('team-rocket'))).toBeCloseTo(1.25);
+    expect(catchMoneyPerk(perks('trace'))).toBe(1);
+  });
+
+  it('Tierno boosts dance and sound moves only', () => {
+    expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'dragon-dance', flags: [] }) })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'hyper-voice', flags: ['sound'] }) })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'tackle', flags: ['contact'] }) })).toBe(1);
+  });
+
+  it('Thorton: unusual Pokémon hit harder, very common abilities hit softer', () => {
+    expect(damageDealtPerk(perks('thorton'), { ...info, userRarity: 'unusual' })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('thorton'), { ...info, userRarity: 'common' })).toBeCloseTo(0.9);
+    expect(damageDealtPerk(perks('thorton'), { ...info, userRarity: null })).toBe(1);
+  });
+
+  it('the unusual / common split is sensible: some of each, most Pokémon neither', () => {
+    const counts = { unusual: 0, common: 0, none: 0 };
+    for (const sp of content.species.values()) {
+      const mon = createPokemon(content, sp.id, 20, `rar-${sp.id}`);
+      counts[unusualKind(content, mon) ?? 'none'] += 1;
+    }
+    expect(counts.unusual).toBeGreaterThan(20);
+    expect(counts.common).toBeGreaterThan(20);
+    expect(counts.none).toBeGreaterThan(counts.unusual);
+  });
+
+  it('Wally hits harder only after your side defeated an enemy', () => {
+    expect(damageDealtPerk(perks('wally'), { ...info, enemiesDefeated: 0 })).toBe(1);
+    expect(damageDealtPerk(perks('wally'), { ...info, enemiesDefeated: 1 })).toBeCloseTo(1.2);
+  });
+
+  it('type trainers: Wattson, Wulfric, Wallace, Zinnia, Valerie, Volkner, Winona', () => {
+    expect(damageDealtPerk(perks('wattson'), { ...info, userTypes: ['electric'] })).toBeCloseTo(1.25);
+    expect(statPerk(perks('wattson'), 'spe', ['electric'])).toBeCloseTo(1.15);
+    expect(statPerk(perks('wulfric'), 'def', ['ice'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('wulfric'), 'spe', ['ice'])).toBeCloseTo(0.9);
+    expect(damageDealtPerk(perks('wallace-gen-6'), { ...info, userTypes: ['water'], physical: false })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('wallace-gen-6'), { ...info, userTypes: ['water'], physical: true })).toBe(1);
+    expect(damageDealtPerk(perks('zinnia'), { ...info, userTypes: ['dragon'] })).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('valerie'), { ...info, userTypes: ['fairy'] })).toBeCloseTo(1.2);
+    expect(damageTakenPerk(perks('volkner'), { targetTypes: ['electric'], moveType: 'ground', attackerIsLegendary: false, attackerIsBoss: false, weather: null })).toBeCloseTo(1.25);
+    expect(damageTakenPerk(perks('winona-gen-6'), { targetTypes: ['flying'], moveType: 'rock', attackerIsLegendary: false, attackerIsBoss: false, weather: null })).toBeCloseTo(1.2);
+  });
+
+  it('Yellow and Wicke heal more and have more HP, with weaker attacks', () => {
+    expect(healingMultiplier(getArchetype(content, 'yellow'))).toBeCloseTo(1.25);
+    expect(statPerk(perks('wicke'), 'hp', ['normal'])).toBeCloseTo(1.1);
+    expect(damageDealtPerk(perks('yellow'), info)).toBeCloseTo(0.85);
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z) {
+      const play = () => autoplay({ seed: `perkZ-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 240_000);
+});
+
+
+describe('trainer perks, batch Z2 (Sabrina LGPE to Tabitha)', () => {
+  const Z2 = ['sabrina-lgpe', 'selene', 'serena', 'shauna', 'shelly', 'sidney', 'silver', 'spr-hgss-silver', 'skyla', 'sonia', 'sophocles', 'sordward-shielbert', 'spr-hgss-ethan', 'spr-pt-barry', 'spr-pt-dawn', 'spr-pt-looker', 'spr-pt-lucas', 'steven-gen-6', 'sycamore', 'tabitha'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'dark' | 'grass' | 'fairy' | 'rock' | 'ground') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all 20 are playable trainers', () => {
+    for (const id of Z2) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers deal more damage of their type and take more from the named type', () => {
+    expect(damageDealtPerk(perks('sabrina-lgpe'), { ...info, userTypes: ['psychic'] })).toBeCloseTo(1.25);
+    expect(taken('sabrina-lgpe', 'dark')).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('shelly'), { ...info, userTypes: ['water'] })).toBeCloseTo(1.2);
+    expect(taken('shelly', 'grass')).toBeCloseTo(1.2);
+    expect(statPerk(perks('shelly'), 'hp', ['normal'])).toBeCloseTo(1.1);
+    expect(taken('sidney', 'fairy')).toBeCloseTo(1.2);
+    expect(taken('skyla', 'rock')).toBeCloseTo(1.2);
+    expect(taken('sophocles', 'ground')).toBeCloseTo(1.2);
+    expect(statPerk(perks('skyla'), 'spe', ['flying'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('steven-gen-6'), 'def', ['steel'])).toBeCloseTo(1.2);
+  });
+
+  it('Sidney: crit chance +10 points', () => {
+    expect(critChanceBonusPerk(perks('sidney'))).toBeCloseTo(0.1);
+  });
+
+  it('Silver (both versions): more damage against higher-level foes, less experience', () => {
+    for (const id of ['silver', 'spr-hgss-silver']) {
+      expect(damageDealtPerk(perks(id), { ...info, targetLevel: 30 })).toBeCloseTo(1.2);
+      expect(damageDealtPerk(perks(id), info)).toBe(1);
+      expect(perks(id).find((m) => m.kind === 'xpMultiplier')).toMatchObject({ value: 0.85 });
+    }
+  });
+
+  it('Dawn and Ethan: starter experience differs from the rest of the team', () => {
+    expect(xpPerk(perks('spr-pt-dawn'), { types: ['normal'], baseSpeed: 70, isStarter: true, isBossBattle: false })).toBeCloseTo(1.2);
+    expect(xpPerk(perks('spr-pt-dawn'), { types: ['normal'], baseSpeed: 70, isStarter: false, isBossBattle: false })).toBeCloseTo(0.9);
+    expect(xpPerk(perks('spr-hgss-ethan'), { types: ['normal'], baseSpeed: 70, isStarter: true, isBossBattle: false })).toBeCloseTo(1.15);
+  });
+
+  it('Sycamore: Mega delay and Mega damage', () => {
+    expect(megaDelayTurns(perks('sycamore'))).toBe(1);
+    expect(megaDelayTurns(perks('tabitha'))).toBe(0);
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z2) {
+      const play = () => autoplay({ seed: `perkZ2-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 240_000);
+});
+
+describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
+  const Z3 = ['olympia', 'opal', 'ortega', 'palmer', 'peonia', 'peony', 'phoebe-gen-6', 'piers', 'plumeria', 'pryce', 'raihan', 'red-classic', 'red-masters', 'rei', 'riley', 'rosa', 'rowan', 'roxanne-gen-6', 'roxie-masters', 'ryuki'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'dark' | 'water' | 'psychic' | 'steel' | 'fairy') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all 20 are playable trainers', () => {
+    for (const id of Z3) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers deal more damage of their type', () => {
+    expect(damageDealtPerk(perks('ryuki'), { ...info, userTypes: ['dragon'] })).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('olympia'), { ...info, userTypes: ['psychic'] })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('riley'), { ...info, userTypes: ['fighting'] })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('pryce'), { ...info, userTypes: ['ice'] })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('red-masters'), info)).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('red-classic'), info)).toBe(1);
+  });
+
+  it('weaknesses to the named move types', () => {
+    expect(taken('olympia', 'dark')).toBeCloseTo(1.2);
+    expect(taken('roxanne-gen-6', 'water')).toBeCloseTo(1.2);
+    expect(taken('roxie-masters', 'psychic')).toBeCloseTo(1.2);
+    expect(taken('ortega', 'steel')).toBeCloseTo(1.2);
+    expect(taken('riley', 'fairy')).toBeCloseTo(1.15);
+  });
+
+  it('stats: Pryce, Peony, Piers, Opal', () => {
+    expect(statPerk(perks('pryce'), 'def', ['ice'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('pryce'), 'spe', ['ice'])).toBeCloseTo(0.85);
+    expect(statPerk(perks('peony'), 'atk', ['steel'])).toBeCloseTo(1.1);
+    expect(statPerk(perks('piers'), 'spe', ['dark'])).toBeCloseTo(0.9);
+    expect(statPerk(perks('opal'), 'spe', ['fairy'])).toBeCloseTo(0.9);
+  });
+
+  it('Piers: sound moves, Rei: fast and slow Pokémon', () => {
+    expect(damageDealtPerk(perks('piers'), { ...info, moveFlags: ['sound'] })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 100 })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 40 })).toBeCloseTo(0.9);
+  });
+
+  it('Palmer: boss damage; Rowan: lower start level', () => {
+    expect(damageDealtPerk(perks('palmer'), { ...info, targetIsBoss: true })).toBeCloseTo(1.2);
+    expect(perks('rowan').find((m) => m.kind === 'startingLevelOffset')).toMatchObject({ value: -1 });
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z3) {
+      const play = () => autoplay({ seed: `perkZ3-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 240_000);
 });
