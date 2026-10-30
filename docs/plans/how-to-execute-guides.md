@@ -4,7 +4,7 @@ Written 2026-10-30 after reading each guide's directive sections (the "(text)" c
 
 **Rules for every guide** (from CLAUDE.md / electric-plan): audit first, one vertical slice per PR, `src/core` never imports Phaser, named seeded RNG streams, data in validated JSON, a save migration + test for every new saved field, nothing marked "supported" unless it works in a real battle, report what ran. Start each slice from fresh `origin/main`; save versions are shared, take the next free one.
 
-**Priority note.** In this thread Kice said the Untitled document comes first. A separate roadmap note (project memory `roadmap-order`) says Kice later asked to leave it out of that thread's roadmap. Treat it as top priority *only if Kice reconfirms*; everything else below is independent of it.
+**Priority note.** Kice's decision stands: the Untitled document is top priority for this plan and wins clashes. Their later "exclude it" only removed it from the separate roadmap thread's to-do list.
 
 Status key: BUILT = already in the repo, PART = some slices done, TODO = nothing built.
 
