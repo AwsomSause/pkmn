@@ -12,6 +12,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - M8.75 parts: friendship (B), move tiers C1–C2, 188 abilities (C3, C3b-1), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
 - M8.9-0 story foundation (domain events, effect ledger, cues, histories, Story Log).
 - M8.9 Hyper Phase 1 slices 1, 2, 3, 4, 6.
+- Balancing phases 1+3 (start): audit in `docs/quality/encounter-audit.md`; `availability.json` (1025 species, "suggested", unused yet). +100/region deferred to part G.
 - Untitled doc Phase A: drafts offer ≤1 attribute item; base-stat sanity test (tier weights, Mega Stone gating already existed).
 - Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
 - M9 battle animations + settings; boss teams (229 bosses).
