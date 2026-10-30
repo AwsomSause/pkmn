@@ -40,7 +40,7 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
-import { battleTrack, victoryTrack } from '../core/presentation/battleMusic';
+import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
@@ -185,7 +185,8 @@ export class BattleScene extends Phaser.Scene {
     // Lazy music: the GB Sounds loop if owned, and the victory fanfare this battle would end with.
     if (run?.battle) {
       const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
-      queueAssets(this, [...gb, victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+      const raid = this.raidTrack(run.battle);
+      queueAssets(this, [...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
     }
   }
 
@@ -203,7 +204,7 @@ export class BattleScene extends Phaser.Scene {
     playMusic(
       this,
       battleTrack({
-        raidTrack: this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? null,
+        raidTrack: this.raidTrack(battle),
         trainer: battle.kind === 'trainer',
         gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
       }),
@@ -670,6 +671,13 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
+  /** The raid or Totem song (presentation only). */
+  private raidTrack(battle: RunState['battle'] & object): string | null {
+    const { content } = services().session;
+    const tier = battle.raid ? content.raids.raids.find((r) => r.id === battle.raid!.id)?.tier ?? 1 : null;
+    return raidMusic(tier, Boolean(battle.totem), battle.raid?.id ?? 'totem');
+  }
+
   private raidArena(battle: RunState['battle'] & object): string | null {
     const { content } = services().session;
     let key: string | null = null;

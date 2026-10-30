@@ -133,6 +133,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
   ...['ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}.mp3` })),
+  { id: 'bgm.raid.basic', kind: 'audio', category: 'music', path: 'audio/bgm/raid_basic.mp3', lazy: true },
+  // Variant battle songs from the Raid Battles pack (see asset-provenance); chosen by raid id in `raidMusic`.
+  { id: 'bgm.raid.basic2', kind: 'audio', category: 'music', path: 'audio/bgm/raid_basic_v2.mp3', lazy: true },
+  ...['ultra', 'max', 'tera'].flatMap((n) => [2, 3].map((v): AssetEntry => ({ id: `bgm.raid.${n}${v}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}_v${v}.mp3`, lazy: true }))),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
   { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },
