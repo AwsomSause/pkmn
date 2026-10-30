@@ -2820,6 +2820,45 @@
         "bravery"
       ],
       "variants": {}
+    },
+    {
+      "id": "starter-destiny",
+      "displayName": "The Starter's Destiny",
+      "messagePool": [
+        "{name} was chosen for a day like this. It will not back down from {enemy}!",
+        "Since the very beginning, {name} was meant to face {enemy}!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "starterDestiny"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 88,
+        "text": "Rose to meet {enemy}, as if it was always meant to"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd54f",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -2996,6 +3035,22 @@
         "anyMoment": [
           "comeback-revenge",
           "last-stand"
+        ]
+      }
+    },
+    {
+      "title": "Champion's Finisher",
+      "needs": {
+        "anyMoment": [
+          "champion-finisher"
+        ]
+      }
+    },
+    {
+      "title": "From Struggle to MVP",
+      "needs": {
+        "anyMoment": [
+          "champion-mvp"
         ]
       }
     }

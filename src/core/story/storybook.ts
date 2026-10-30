@@ -3,6 +3,7 @@
 // a Pokémon's run, a mentor and protégé, and the whole team. Pure.
 
 import type { Content } from '../contentSchema';
+import { circuitRanking } from './highHype';
 import { chemistryLines } from './chemistry';
 import { promiseLines } from './promises';
 import { FEELING_NAMES, rivalFeeling } from '../rivals/feelings';
@@ -92,7 +93,13 @@ function chemistryStories(content: Content, run: RunState): ChronicleStory[] {
   ];
 }
 
+function circuitStory(content: Content, run: RunState): ChronicleStory[] {
+  const rows = circuitRanking(content, run);
+  if (rows.length === 0) return [];
+  return [{ kind: 'rivalry', title: 'Rival Tournament Circuit', body: rows.slice(0, 5).map((r) => `${r.rank}. ${r.name} (${r.state})`).join('; ') + '.', tags: ['Ranking'] }];
+}
+
 /** All the stories this run can tell right now, most personal first. */
 export function chronicleStories(content: Content, run: RunState): ChronicleStory[] {
-  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...chemistryStories(content, run), ...teamStory(content, run)];
+  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...chemistryStories(content, run), ...circuitStory(content, run), ...teamStory(content, run)];
 }

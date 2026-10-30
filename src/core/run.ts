@@ -127,6 +127,8 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { finalRivalLine, tellCampfire } from './story/highHype';
+import { ultimateRival } from './rivals/ultimate';
 import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
@@ -403,6 +405,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
+  tellCampfire(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);
@@ -1137,7 +1140,8 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const trained = withTrainingEvolution(content, ret.plan.members);
       plan = { ...ret.plan, members: trained.members };
       trainingIndex = trained.index;
-      rivalNote = ret.note;
+      const finale = finalRivalLine(content, run, rivalBack.id, ultimateRival(run)?.id === rivalBack.id);
+      rivalNote = finale ? [ret.note, finale].filter(Boolean).join(' ') : ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
       run.story.flags[rivalSeenFlag(rivalBack.id)] = scheduleKey(run);

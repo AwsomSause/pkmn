@@ -29,6 +29,7 @@ import { emotionOf } from './emotions';
 import { advanceChains } from './chains';
 import { graduateMentorships } from './mentorship';
 import { awardLegacyTitles, recordEpitaph } from './legacy';
+import { noteStruggle, recordChampionMemory } from './highHype';
 import { clearMomentFlags, detectMoments } from './moments';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
@@ -502,11 +503,13 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       text: `Defeated ${role} ${trainer.name}`,
     });
     onBossBeaten(content, run, where, ended.id);
+    if (trainer.classId === CHAMPION_CLASS) recordChampionMemory(content, run, run.party[battle.activeIndex], trainer.name, where);
     noteDuos(content, run, fought, where);
     // A milestone: the story may now follow a different rival.
     const chosen = evaluateUltimate(run);
     if (chosen) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: chosen.id, outcome: 'ultimate' }, text: `${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey` });
   } else if (result === 'lose') {
+    noteStruggle(run, fought, trainer.name);
     emit(content, run, 'lostToBoss', {
       where,
       actors: fought,
