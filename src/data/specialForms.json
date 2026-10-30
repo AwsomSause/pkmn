@@ -52,8 +52,8 @@
       "note": "Spooky Season and the Event Archive: Spooky stops and Spooky wild forms (gameEvents.json, tools/events/holidays.ts). Other families have no game event yet."
     },
     "npcTrade": {
-      "status": "planned",
-      "note": "Trade Post service (Phase D2)."
+      "status": "limited",
+      "note": "The Trade Post offers a regional form about 1 trade in 4 (services.json tradeSpecialChance). Delta and Z forms are not traded."
     },
     "egg": {
       "status": "planned",

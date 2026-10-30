@@ -262,6 +262,7 @@
       "spookyChance": 0.25
     }
   ],
+  "duplicateCompensation": { "researchPoints": 8 },
   "modeRewards": [
     {
       "modeId": "daily",
