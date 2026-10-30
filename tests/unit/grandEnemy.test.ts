@@ -90,3 +90,27 @@ describe('Grand-Enemy battles', () => {
     expect(run.story.chronicle.at(-1)!.text).toContain('learned how it fights');
   });
 });
+
+describe('Grand-Enemy influence and Grudge target', () => {
+  it('stirs the wild once from escalation, and prepares a Speed boost against the Pokémon that stood against it most', async () => {
+    const g = await import('../../src/core/story/grandEnemy');
+    const { run, mon } = fresh('ge-influence');
+    const last = run.regionOrder.length - 1;
+    const rare = (r: typeof run) => (r.perkEffects ?? []).filter((e) => e.kind === 'encounterWeightMultiplier' && e.group === 'rare').length;
+    run.regionIndex = 0;
+    g.applyGrandInfluence(content, run);
+    expect(rare(run)).toBe(0);
+    run.regionIndex = Math.ceil(last * 0.6);
+    g.applyGrandInfluence(content, run);
+    g.applyGrandInfluence(content, run);
+    expect(rare(run)).toBe(1);
+
+    expect(g.grudgeTarget(run)).toBeNull();
+    run.story.flags[`ge:fought:${mon.uid}`] = 4;
+    expect(g.grudgeTarget(run)).toBe(mon.uid);
+    run.battle = { enemyStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } } as never;
+    g.startGrandBattle(content, run);
+    expect((run.battle as unknown as { enemyStages: Record<string, number> }).enemyStages.spe).toBe(1);
+  });
+});
+

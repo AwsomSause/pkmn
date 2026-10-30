@@ -131,7 +131,7 @@ import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleIte
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
-import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
+import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
@@ -411,6 +411,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   simulateRivalWorld(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
+  applyGrandInfluence(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);
