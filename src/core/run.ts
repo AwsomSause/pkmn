@@ -127,7 +127,7 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
@@ -1775,7 +1775,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
 
   const evolutions: BattleEndResult['evolutions'] = [];
-  for (const mon of run.party) {
+  for (const mon of noEvolution(run.rules) ? [] : run.party) {
     for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
@@ -2226,6 +2226,7 @@ export function useItemOutsideBattle(content: Content, current: RunState, itemId
   const regionId = current.regionOrder[current.regionIndex];
   const problem = itemUseProblem(content, item, target, regionId);
   if (problem) throw new Error(problem);
+  if (item.effect.kind === 'evolve' && noEvolution(current.rules)) throw new Error('Your No Evolution contract forbids evolving.');
   const run = structuredClone(current);
   const message = applyItemToPokemon(content, item, run.party[partyIndex]!, {
     regionId,
