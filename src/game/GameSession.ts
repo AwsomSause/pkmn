@@ -20,6 +20,7 @@ import * as Exp from '../core/expedition/flow';
 import * as Mini from '../core/minigame/flow';
 import { claim } from '../core/quests';
 import * as Run from '../core/run';
+import * as Svc from '../core/services/flow';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -211,6 +212,17 @@ export class GameSession {
 
     visitSide(sideId: string): string {
     const result = Run.visitSide(this.content, this.requireRun(), sideId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  serviceView(sideId: string): Svc.ServiceView {
+    return Svc.serviceView(this.content, this.requireRun(), sideId);
+  }
+
+  useService(sideId: string, optionId: string): string {
+    const result = Svc.useService(this.content, this.requireRun(), sideId, optionId);
     this.run = result.run;
     this.persistRun();
     return result.message;

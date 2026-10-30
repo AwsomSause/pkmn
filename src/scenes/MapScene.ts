@@ -4,6 +4,7 @@
 // After a region's last stage the same screen shows its Pokémon League: one
 // straight line of Elite Four members, then the champion.
 
+import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
@@ -53,10 +54,13 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   event: { color: 0xd89830, glyph: '!' },
   expedition: { color: 0x38b878, glyph: 'E' },
   minigame: { color: 0x58c0e8, glyph: 'G' },
+  service: { color: 0xa878e0, glyph: 'S' },
 };
-const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame' };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame', service: 'Service' };
 /** A hidden event stop: a grey "?" until you reach it. */
 const HIDDEN_STYLE = { color: 0x6b5a73, glyph: '?' };
+
+const serviceReusable = (side: SideStop): boolean => SERVICES.services.find((x) => x.id === side.serviceId)?.reusable === true;
 
 /** Something the cursor can land on. */
 type Option =
@@ -271,7 +275,7 @@ export class MapScene extends Phaser.Scene {
     const buttons: { option: Option; label: string; color: number }[] = [];
     const currentNode = stage.current ? findNode(stage.map, stage.current) : null;
     for (const side of currentNode?.sides ?? []) {
-      if (side.kind !== 'shop' && side.used) continue;
+      if (side.kind !== 'shop' && side.used && !(side.kind === 'service' && serviceReusable(side))) continue;
       buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
@@ -364,11 +368,15 @@ export class MapScene extends Phaser.Scene {
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
-        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : 'shop'));
+        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : 'shop'));
         const seen = this.previewText(n);
         return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
+        if (option.side.kind === 'service') {
+          const def = SERVICES.services.find((x) => x.id === option.side.serviceId);
+          return `${def?.name ?? 'Service'}: ${def?.blurb ?? ''}`;
+        }
         if (option.side.kind === 'expedition') return option.side.used ? 'Expedition gate: already used.' : 'Expedition gate: a branching adventure with its own party rules. Loot is kept when you extract. You never lose your own Pokémon.';
         if (option.side.kind === 'totem') return option.side.used ? 'Totem territory: already fought.' : 'Totem territory: a guardian with an aura, allies and phases. Losing never ends your run.';
         if (option.side.kind === 'raid') return option.side.used ? 'Raid den: already fought.' : 'Raid den: a boss with shields and phases. See its tier and rewards before you commit.';
@@ -446,6 +454,10 @@ export class MapScene extends Phaser.Scene {
         }
         if (option.side.kind === 'expedition') {
           if (!option.side.used) this.openExpedition(option.side.id);
+          break;
+        }
+        if (option.side.kind === 'service') {
+          this.openService(option.side.id);
           break;
         }
         if (option.side.kind === 'minigame') {
@@ -735,6 +747,38 @@ export class MapScene extends Phaser.Scene {
         const run = session.fish(sideId, i);
         this.cameras.main.fadeOut(250);
         this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
+  }
+
+  private openService(sideId: string): void {
+    const { session } = services();
+    const view = session.serviceView(sideId);
+    const rows = view.options;
+    if (rows.length === 0) return playSfx(this, 'ui.error', 0.5);
+    const picker: Picker = new Picker(this, {
+      glass: true,
+      title: `${view.service.name}  ·  ₽${view.money}`,
+      columns: 1,
+      rowHeight: 78,
+      rows: rows.map((row) => ({
+        problem: row.problem,
+        hint: row.text,
+        draw: (scene, box, w) => {
+          box.add(scene.add.text(16, 6, `${row.title}${row.cost > 0 ? `   ₽${row.cost}` : ''}`, textStyle(22)));
+          box.add(scene.add.text(16, 34, row.text, textStyle(15, '#d8d0e0', { wordWrap: { width: w - 32 } })));
+        },
+      })),
+      onSelect: (i) => {
+        picker.close();
+        this.picker = null;
+        playSfx(this, 'ui.select');
+        this.scene.restart({ notice: session.useService(sideId, rows[i]!.id), focus: 0 });
       },
       onBack: () => {
         picker.close();

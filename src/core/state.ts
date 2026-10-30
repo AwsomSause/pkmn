@@ -570,7 +570,7 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame', 'service']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
@@ -579,6 +579,8 @@ export const SideStopSchema = z.object({
   expeditionId: z.string().optional(),
   /** A minigame stop: which game (minigames.json) waits here. */
   minigameId: z.string().optional(),
+  /** A service stop: which service (services.json) waits here. */
+  serviceId: z.string().optional(),
   /** A healing stop, a fishing spot and an event work once; a shop can be visited again. */
   used: z.boolean(),
   /** An event stop's event (events.json). */
