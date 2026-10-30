@@ -120,6 +120,48 @@
    "unlockText": "Finish every Spooky Season objective (October, or when it returns from the Event Archive)"
   },
   {
+   "id": "delta-set",
+   "name": "Delta Set",
+   "description": "Delta Bulbasaur, Charmander, Squirtle, Ralts, Riolu, Dratini and Shinx.",
+   "category": "event",
+   "species": [
+    "bulbasaur-delta",
+    "charmander-delta",
+    "squirtle-delta",
+    "ralts-delta",
+    "riolu-delta",
+    "dratini-delta",
+    "shinx-delta"
+   ],
+   "specialForms": true,
+   "unlock": {
+    "kind": "claim",
+    "key": "event:delta-research-week:reward"
+   },
+   "unlockText": "Finish every Delta Research Week objective (in the weekly rotation or the Event Archive), then buy it"
+  },
+  {
+   "id": "z-set",
+   "name": "Z-Form Set",
+   "description": "Z-Form Abra, Gastly, Onix, Tangela, Voltorb, Diglett and Piplup.",
+   "category": "event",
+   "species": [
+    "abra-z",
+    "gastly-z",
+    "onix-z",
+    "tangela-z",
+    "voltorb-z",
+    "diglett-z",
+    "piplup-z"
+   ],
+   "specialForms": true,
+   "unlock": {
+    "kind": "claim",
+    "key": "event:champions-gauntlet:reward"
+   },
+   "unlockText": "Finish every Champion's Gauntlet objective (in the weekly rotation or the Event Archive), then buy it"
+  },
+  {
    "id": "rare",
    "name": "Rare",
    "description": "Rare first-stage Pokémon that grow into powerhouses.",

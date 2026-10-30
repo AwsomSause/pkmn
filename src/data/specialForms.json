@@ -73,7 +73,7 @@
     },
     "starterSet": {
       "status": "limited",
-      "note": "Earned special-form sets in the Starter Laboratory (runPrep.json `specialForms`): the Spooky Set, from Spooky Season. Delta and Z sets come later."
+      "note": "Earned special-form sets in the Starter Laboratory (runPrep.json `specialForms`): the Spooky Set (from Spooky Season), plus the Delta Set (finish Delta Research Week) and the Z-Form Set (finish the Champion's Gauntlet), which open for purchase once their event is finished."
     },
     "spookyMode": {
       "status": "supported",
