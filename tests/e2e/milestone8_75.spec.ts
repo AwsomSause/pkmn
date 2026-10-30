@@ -263,3 +263,41 @@ test('map movement items: the Items menu puts you on a Bicycle, and the Devon Sc
   await page.keyboard.press('Escape');
   expect(errors).toEqual([]);
 });
+
+test('fishing: a Good Rod spot offers two Water Pokémon and starts a battle with the one picked', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('requestfailed', (r) => errors.push(`failed: ${r.url()}`));
+  await startRun(page, 'e2e-fishing');
+  await showDraft(page, ['item:good-rod', 'item:heart-scale', 'item:big-pearl', 'item:stardust', 'item:pearl']);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  // Stand on a stop with a fishing spot beside it (a new stage would add one; this test puts it here).
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    const stage = session.run.stage;
+    const node = stage.map.nodes.find((n: any) => n.column === 1);
+    node.sides = [{ id: 'item-stop-1', kind: 'fish', used: false }];
+    stage.current = node.id;
+    stage.visited = [node.id];
+    game.scene.getScene('Map').scene.restart({ notice: 'test' });
+  });
+  const map = () => page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Map');
+    return { busy: scene.busy, options: scene.options.map((o: any) => (o.kind === 'side' ? `side:${o.side.kind}` : o.kind)) as string[] };
+  });
+  await expect.poll(async () => (await map()).busy, { timeout: 10_000 }).toBe(false);
+  const fishIndex = (await map()).options.indexOf('side:fish');
+  expect(fishIndex).toBeGreaterThanOrEqual(0);
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), fishIndex);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: 'test-results/m875-fishing.png' });
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  const after = await run(page);
+  expect(after.battle.fishing).toBe(true);
+  expect(after.stage.map.nodes.find((n: any) => n.id === after.stage.current).sides[0].used).toBe(true);
+  expect(errors).toEqual([]);
+});

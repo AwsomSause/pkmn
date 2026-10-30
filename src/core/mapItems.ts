@@ -422,3 +422,50 @@ export function voucherOf(content: Content, run: MapItemRun): { itemId: string; 
   const v = perksOf(activePerks(content, run), 'voucher')[0];
   return v ? { itemId: v.itemId, item: v.perk.item, refund: v.perk.refund } : null;
 }
+
+// ---------- extra map stops ----------
+
+/** The best Rod working now (most choices, then the stronger last one), or null. */
+export function fishingRod(content: Content, run: MapItemRun): { choices: number; rare: boolean } | null {
+  const rods = perksOf(activePerks(content, run), 'fishing').map((p) => p.perk);
+  if (rods.length === 0) return null;
+  const best = rods.reduce((a, b) => (b.choices > a.choices || (b.choices === a.choices && b.rare && !a.rare) ? b : a));
+  return { choices: best.choices, rare: best.rare };
+}
+
+/**
+ * When a stage starts: a fishing spot if the player has a Rod, plus the stops
+ * Wave, Tropic and Harbor Mail add, each beside a node picked by a generator of
+ * its own (mutates `run`). Not in the Pokémon League.
+ */
+export function addItemStops(content: Content, run: RunState): void {
+  const stage = run.stage;
+  if (!stage || stage.kind !== 'stage') return;
+  const kinds: ('heal' | 'shop' | 'fish')[] = [];
+  if (fishingRod(content, run)) kinds.push('fish');
+  for (const p of perksOf(activePerks(content, run), 'extraStop')) if (p.perk.where === 'stage') for (let i = 0; i < p.copies; i++) kinds.push(p.perk.kind);
+  if (kinds.length === 0) return;
+  const rng = new Rng(hashSeed(`${run.seed}::item-stops::${stageKey(run)}`));
+  let count = 0;
+  for (const kind of kinds) {
+    // Fishing spots sit beside wild stops; every stop avoids the gym column and nodes that already have one of its kind.
+    const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && (kind !== 'fish' || n.kind === 'wild') && !n.sides.some((s) => s.kind === kind));
+    if (candidates.length === 0) continue;
+    rng.pick(candidates).sides.push({ id: `item-stop-${++count}`, kind, used: false });
+  }
+}
+
+/** Bridge Mail: the node the player just moved to gets the stops it adds (mutates `run`). */
+export function addBridgeStops(content: Content, run: RunState, nodeId: string): void {
+  const stage = run.stage;
+  if (!stage || stage.kind !== 'stage') return;
+  const node = findNode(stage.map, nodeId);
+  if (node.column >= stage.map.columns) return; // The gym ends the stage: the bridge waits for the next one.
+  for (const p of perksOf(activePerks(content, run), 'extraStop')) {
+    if (p.perk.where !== 'nextNode') continue;
+    for (let i = 0; i < p.copies; i++) {
+      node.sides.push({ id: `bridge-${node.sides.length + 1}`, kind: p.perk.kind, used: false });
+      spendUse(run, p.itemId);
+    }
+  }
+}

@@ -54,11 +54,11 @@ describe('story foundation: random streams', () => {
   // Fingerprints of what the rules decided for these seeds, recorded on main
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
-  // effects slices 2, 3a, 3b-1 and 3b-2 (held, map, shop, money and map-movement items in drafts, bosses
+  // effects slices 2 to 3b-3a (held, map, shop, money, map-movement and map-stop items in drafts, bosses
   // holding items) and M8.75 part C3 (every Pokémon has an ability), which change
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '6625d110b85fcc02',
+    'STORY1/0': 'af8e77600b7dd924',
     'STORY2/0': '289336f1e73c4f84',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
