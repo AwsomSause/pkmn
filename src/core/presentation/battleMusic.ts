@@ -43,3 +43,9 @@ export function raidMusic(tier: number | null, totem: boolean, key: string): str
   for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   return set[h % set.length]!;
 }
+
+/** Expedition route music by expedition tier (1-4): the Raid Battles pack's adventure songs. */
+export function expeditionTrack(tier: number): string {
+  return `bgm.raid.adventure.${(['basic', 'ultra', 'max', 'tera'] as const)[Math.min(3, Math.max(0, tier - 1))]}`;
+}
+export const EXPEDITION_TRACK_IDS: readonly string[] = [1, 2, 3, 4].map(expeditionTrack);
