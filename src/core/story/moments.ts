@@ -4,6 +4,7 @@
 // them and applies a small effect through the effect ledger. Counters live in
 // run.story.flags under "m:" keys and are cleared when the battle ends.
 
+import { grandMoment } from './grandEnemy';
 import type { Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
 import { GYM_LEADER_CLASS, ELITE_FOUR_CLASS, CHAMPION_CLASS } from '../encounters';
@@ -38,6 +39,9 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   somethingDifferent: 'flair',
   waitingForBattle: 'flair',
   somethingWatching: 'flair',
+  grandOmen: 'flair',
+  grandShadow: 'enemyStage',
+  grandGrudge: 'statStage',
   studentLearned: 'statStage',
   studentSurpassed: 'flair',
   lastLesson: 'flair',
@@ -228,6 +232,10 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (run.encountersCompleted >= 6) {
       const idle = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && (run.story.histories[m.uid]?.battles ?? 99) <= 1);
       if (idle) fire('feelsLeftOut', 'player', idle.uid, -1, { name: nameOf(idle.speciesId), other: nameOf(lead.speciesId) });
+    }
+    if (boss) {
+      const g = grandMoment(content, run, lead.uid);
+      if (g) fire(g, g === 'grandShadow' ? 'enemy' : 'player', g === 'grandShadow' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     }
     const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
     if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
