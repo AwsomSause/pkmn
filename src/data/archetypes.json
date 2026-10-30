@@ -4599,8 +4599,12 @@
         "value": 1.2
       },
       {
-        "kind": "xpMultiplier",
+        "kind": "singleBattleXpMultiplier",
         "value": 0.9
+      },
+      {
+        "kind": "doubleBattleRewardMultiplier",
+        "value": 1.2
       }
     ],
     "signatureTypes": [
@@ -9629,8 +9633,12 @@
         "value": 0.9
       },
       {
-        "kind": "xpMultiplier",
+        "kind": "singleBattleXpMultiplier",
         "value": 0.9
+      },
+      {
+        "kind": "doubleBattleRewardMultiplier",
+        "value": 1.2
       }
     ],
     "signatureTypes": [],
