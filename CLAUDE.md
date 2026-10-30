@@ -1,67 +1,42 @@
-# CLAUDE.md — development directive
+# CLAUDE.md
 
-Adopted from the director's "Implementation Plan Electric" (2026-10-25; full text in `docs/plans/electric-plan.md`). Every session working in this repository follows it.
+Router for Claude sessions. Read this, then [MAP.md](MAP.md), then only what the task needs.
 
 The director, Kice (GitHub `AwsomSause`), is a beginner programmer: write reports and PR descriptions in plain language.
 
-## Mission
+## Where context lives
 
-Deliver a complete, deterministic, browser-based Pokémon roguelike with deep replayability, expressive battles, meaningful progression and polished presentation. Optimize for a working, integrated, maintainable game, not for the number of features written.
+| Need | Go to |
+|---|---|
+| What every folder and key file is | [MAP.md](MAP.md) |
+| How to work cheaply (search, reads, subagents, git) | [.claude/rules/working-style.md](.claude/rules/working-style.md) |
+| Rules for one area (core, data, saves, screens, tests) | `.claude/rules/*.md` (load by themselves when you touch those paths) |
+| What works right now, per milestone | [CHECKLIST.md](CHECKLIST.md) (grep the milestone heading) |
+| Game rules and director decisions (D1–D16) | [GAME_DESIGN.md](GAME_DESIGN.md) (grep the § you need) |
+| Milestone plan | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) |
+| Quality gates, content statuses, reports | [QUALITY_GATES.md](QUALITY_GATES.md), `docs/quality/` |
+| Full development directive (source of the rules below) | `docs/plans/electric-plan.md` (588 lines; grep, don't read whole) |
 
-## 1. Establish the truth before changing code
+## Development directive (short form)
 
-1. Read `IMPLEMENTATION_PLAN.md`, `GAME_DESIGN.md`, `CHECKLIST.md` and the design decisions that apply.
-2. Look at the real repository: git status, branch, recent commits, package scripts.
-3. Run `npm run check` (type check, unit tests, build) and the relevant `npm run test:e2e` tests.
-4. Find out which planned features really work and which are stubbed, partial, disabled or untested. A milestone marked done does not prove a feature works.
-5. Note save compatibility risks, migrations and dependencies.
-6. Write a short proposal: files affected, acceptance criteria, tests, how to roll back.
+Adopted from the director's "Implementation Plan Electric" (2026-10-25). Every session follows it.
 
-## 2. Work in vertical slices
+**Mission:** a complete, deterministic, browser-based Pokémon roguelike that is fun to replay. A working, integrated, maintainable game beats feature count.
 
-One independently verifiable slice at a time. Each slice has: core rules and validated data; UI integration; save/load where it applies; unit tests for normal, boundary and failure cases; integration tests for connected systems; browser tests for what the player does; docs and checklist updates; a clean diff. Prefer small, reversible changes. Don't start unrelated work until the slice passes.
-
-## 3. Preserve the architecture
-
-- `src/core` never imports Phaser (a unit test enforces it).
-- Strict TypeScript; Zod validation for imported data and saves.
-- Named, seeded RNG streams. A new stream must not change existing rolls.
-- Game outcomes never depend on animation timing or UI state.
-- Systems talk through explicit commands, domain events and validated effects.
-- Balance numbers live in `src/data/balance.json` or validated content data.
-- Versioned save migrations; never silently discard a save.
-- Never substitute placeholder behaviour for a requested mechanic.
-
-## 4. Make content completeness measurable
-
-Species, forms, moves, abilities, held items, evolutions, transformations and battle mechanics each carry an explicit status: fully supported, supported with documented limits, disabled pending implementation, or invalid data. Importing or passing schema validation is not "supported". Every enabled move has verified behaviour (accuracy, damage, secondary effects, targets); every enabled species has usable moves.
-
-## 5. Spectacle without breaking correctness
-
-Animation, audio, camera, dialogue and transitions go through a presentation-cue layer. A presentation failure never corrupts battle state. Support visual intensity settings, reduced motion, animation skip and audio controls. Boss phases and transformations are triggered by game state, never by animation playback.
-
-## 6. Determinism and reliability
-
-Same initial state, seed and actions give the same results. UI previews, hovers, asset loading and animations never consume gameplay RNG. No reward or event is ever applied twice (refresh, replayed animation, resumed save). Test save and reload at every meaningful checkpoint; recover safely from malformed saves.
-
-## 7. Quality gates before a slice is done
-
-1. Type check. 2. Unit and integration tests. 3. Production build. 4. Relevant Playwright runs. 5. No console errors or failed requests. 6. Rendered screens checked at several sizes. 7. Asset loading, missing files, memory and performance checked. 8. Diff reviewed for unrelated changes. 9. Docs and known limitations updated.
-
-Never claim a test passed unless it ran and you read the result. If a tool or environment limit blocks verification, say so.
-
-After a slice, review the same diff in separate passes for: gameplay correctness and edge cases; architecture; UI quality; determinism and save integrity; performance and asset loading.
-
-## 8. Report after every slice
-
-What was built; what the player can now do; files and systems changed; tests run and their results; what is still stubbed; known bugs, risks and decisions needing approval; exact commands to reproduce; the recommended next slice. No claims about commits, deploys or tests without evidence.
+1. **Establish the truth first.** Check git state and recent commits, read the CHECKLIST/plan sections that apply, run `npm run check` and the relevant e2e spec. A milestone marked done does not prove a feature works. Write a short proposal: files, acceptance criteria, tests, rollback.
+2. **Vertical slices.** One verifiable slice at a time: rules + validated data, UI, save/load, unit tests (normal, boundary, failure), integration and browser tests, docs and checklist, clean diff.
+3. **Architecture.** `src/core` never imports Phaser. Strict TS; Zod for imported data and saves. Named seeded RNG streams; a new stream never changes existing rolls. Outcomes never depend on animation or UI state. Balance numbers live in `src/data/balance.json` or validated data. Versioned save migrations; never silently discard a save. Never substitute placeholder behaviour for a requested mechanic.
+4. **Measurable content.** Every species, form, move, ability, item, evolution, transformation and mechanic has a status: fully supported, supported with documented limits, disabled pending implementation, or invalid. Passing the schema is not "supported".
+5. **Spectacle via the presentation-cue layer.** A presentation failure never corrupts battle state. Respect intensity, reduced motion, animation skip and audio settings. Boss phases are triggered by game state, never animation playback.
+6. **Determinism.** Same state, seed and actions give the same result. Previews, hovers, asset loading and animations never use gameplay RNG. No reward or event is ever applied twice. Test save/reload at every checkpoint; recover from malformed saves.
+7. **Quality gates before a slice is done:** typecheck, unit/integration tests, build, relevant Playwright, no console errors, screens checked at several sizes, assets/perf checked, diff reviewed for unrelated changes, docs and known limits updated. Then review the diff in separate passes: correctness, architecture, UI, determinism/saves, performance. Never claim a test passed unless it ran and you read the result.
+8. **Report after every slice:** what was built, what the player can now do, files changed, tests and results, what is still stubbed, risks and decisions needing approval, commands to reproduce, recommended next slice. No claims without evidence.
 
 ## Project facts
 
-- Stack: TypeScript, Phaser 3.90, Vite, Vitest, Playwright 1.63.0, Zod.
+- Stack: TypeScript, Phaser 3.90, Vite, Vitest, Playwright 1.63.0, Zod. Node 22.
+- `npm run check` = typecheck + unit tests + build + content-report gate. `npm run test:e2e` = Playwright.
 - Assets come from the director's packs (PokeRogue, AGPL-3.0, Nintendo material). The repo stays private (D4); keep provenance for every asset and dataset.
-- Playwright gotcha: the first key press right after a scene change can be dropped; e2e tests wait 250 ms after each scene change.
+- Several threads work on `main` at once: start from fresh `origin/main` and rebase before pushing (see working-style).
 
-## Definition of success
-
-The finished game is completable, deterministic, mechanically coherent, visually polished, save-safe and fun to replay. A large feature count is not a substitute for a finished game.
+**Success:** completable, deterministic, coherent, polished, save-safe and fun to replay.

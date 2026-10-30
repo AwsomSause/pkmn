@@ -36,7 +36,7 @@ import {
 } from './damage';
 import * as Held from './held';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
-import { applyTransformations, battleTypes, stabMultiplier, teraPower, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
+import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -336,11 +336,13 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   const enemyMoveIndex =
     enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
-  const enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
+  let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
   if (action.kind === 'switch') {
     events.push({ type: 'switchOut', side: 'player', uid: ctx.party[battle.activeIndex]!.uid });
+    // Switching out ends a Dynamax.
+    endDynamax(content, battle, 'player', ctx.party[battle.activeIndex]!, events as TransformStepEvent[]);
     switchIn(ctx, action.partyIndex, events);
   } else if (action.kind === 'item') {
     useItemInBattle(ctx, action.itemId, action.targetIndex, events);
@@ -355,6 +357,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     const move = action.kind === 'move' ? action : undefined;
     applyTransformations(ctx, move?.transform, events as TransformStepEvent[], move?.index);
   }
+  // A Dynamaxed Pokémon uses Max Moves.
+  enemyMove = battleMove(content, battle, enemy.mon, enemyMove);
 
   const player = (): Combatant => ({ side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false });
   const playerC = player();
@@ -363,7 +367,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (action.kind === 'move') {
     const chosen = resolveMove(content, playerC.mon, action.index);
     // A Z-Move replaces the chosen move (its Z-Power was spent above).
-    const playerMove = action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen;
+    const playerMove = battleMove(content, battle, playerC.mon, action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen);
     const order = decideOrder(ctx, rng, playerC, playerMove, enemy, enemyMove);
     const actions =
       order === 'player'
@@ -405,6 +409,9 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // A Pokémon that switched in this turn still gets its "first turn" next turn (Fake Out).
   if (action.kind !== 'switch') playerC.vol.turnsOut += 1;
   enemy.vol.turnsOut += 1;
+
+  // Dynamax turns run down (and a fainted Dynamax Pokémon shrinks back).
+  tickDynamax(content, battle, ctx.party, events as TransformStepEvent[]);
 
   // 4. Decide the outcome or replace fainted Pokémon.
   const enemyBefore = battle.enemyIndex;
@@ -952,7 +959,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     return;
   }
   // Z-Moves go through Protect for a quarter of their damage (see the damage step).
-  if (targetsEnemy && target.protected && !fx.breaksProtect && !move.flags.includes('zmove')) {
+  if (targetsEnemy && target.protected && !fx.breaksProtect && !move.flags.includes('zmove') && !move.flags.includes('max')) {
     events.push({ type: 'protected', side: target.side });
     return;
   }
@@ -1040,7 +1047,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
         Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
-      if (target.protected && move.flags.includes('zmove')) damage = Math.max(1, Math.floor(damage / 4));
+      if (target.protected && (move.flags.includes('zmove') || move.flags.includes('max'))) damage = Math.max(1, Math.floor(damage / 4));
     }
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
@@ -1086,7 +1093,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   // Secondary effects only land if the target is still standing.
   if (target.mon.hp > 0) {
     if (fx.status && rng.chance(fx.status.chance / 100)) tryInflictStatus(content, rng, target, fx.status.id, move, events, false);
-    if (fx.flinchChance && movedFirst && rng.chance(fx.flinchChance / 100)) target.flinched = true;
+    // A Dynamaxed Pokémon can't flinch.
+    if (fx.flinchChance && movedFirst && rng.chance(fx.flinchChance / 100) && !target.mon.dynamaxed) target.flinched = true;
     if (fx.confuse && rng.chance(fx.confuse.chance / 100)) tryConfuse(ctx, target, events, false);
     if (fx.bind && target.vol.bound === 0) {
       target.vol.bound = rng.int(4, 5);
@@ -1100,6 +1108,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     if (recipient.mon.hp <= 0) continue;
     if (!rolls.has(change.chance)) rolls.set(change.chance, rng.chance(change.chance / 100));
     if (rolls.get(change.chance)) changeStage(ctx, user, recipient, change.stat, change.stages, events);
+  }
+  // Max Moves set the weather after they hit (Max Flare: sun).
+  const maxWeather = move.flags.includes('max') && dealt > 0 ? maxMoveWeather(content, move.id) : null;
+  if (maxWeather && ctx.battle.weather?.id !== maxWeather) {
+    ctx.battle.weather = { id: maxWeather, turns: Held.weatherTurns(ctx, user, maxWeather, 5) };
+    events.push({ type: 'weather', weather: maxWeather });
   }
 }
 

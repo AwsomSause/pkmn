@@ -51,6 +51,8 @@ export const PokemonInstanceSchema = z.object({
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
   teraType: TypeNameSchema.optional(),
+  /** In battle only: Dynamaxed, so its HP is doubled (core/battle/transform.ts). */
+  dynamaxed: z.literal(true).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -135,10 +137,12 @@ export const BattleTransformSchema = z.object({
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
   teraTypes: z.record(z.string(), TypeNameSchema).default({}),
+  /** uid -> turns left for a Dynamaxed Pokémon. */
+  dynamax: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {} });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {} });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
@@ -187,6 +191,8 @@ export const BattleStateSchema = z.object({
   held: HeldStateSchema.default(freshHeldState),
   /** Map items in this battle: turns the wild Pokémon loses (Poké Doll), and the catch-rate items for ball throws. */
   mapItems: z.object({ freeTurns: z.number().int().min(0), thrown: z.number().int().min(0) }).optional(),
+  /** A VS Seeker rematch: double prize money. */
+  rematch: z.boolean().optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -297,6 +303,8 @@ export const RunStateSchema = z.object({
   passives: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
   itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
+  /** A bike chosen from the map's Items menu for the next move (see core/mapItems.ts). */
+  moveMode: z.enum(['bicycle', 'acroBike', 'machBike']).optional(),
   /**
    * Map, shop and money items still working (Repels, Flutes, Mail, Apricorns, Coupons...; see core/mapItems.ts):
    * wild battles, ball throws or other uses left, or the stage it lasts for ("next" until the next stage starts).
