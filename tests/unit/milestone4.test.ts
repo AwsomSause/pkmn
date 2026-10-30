@@ -56,7 +56,10 @@ function win(run: RunState, topUp = false): RunState {
       continue;
     }
     const mon = run.party[run.battle!.activeIndex]!;
-    if (topUp) mon.hp = 1_000_000;
+    if (topUp) {
+      mon.hp = 1_000_000;
+      for (const m of mon.moves) m.pp = Math.max(m.pp, 10);
+    }
     const idx = mon.moves.findIndex((m) => m.pp > 0 && (content.moves.get(m.id)!.power ?? 0) > 0);
     run = takeTurn(content, run, { kind: 'move', index: idx >= 0 ? idx : 0 }).run;
   }

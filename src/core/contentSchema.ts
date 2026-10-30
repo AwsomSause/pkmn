@@ -1667,6 +1667,12 @@ export const TrainerAiSchema = z.object({
   maxSwitches: z.number().int().min(0),
   /** It swaps when its best move is worth less than this share of the best a teammate has. */
   switchRatio: z.number().positive().max(1),
+  /** Advanced AI port: a move that should KO the target is worth this many times its score (1 = off). */
+  koBonus: z.number().min(1).default(1),
+  /** ...and a priority move that should KO while the user is the slower one, this many times more (1 = off). */
+  priorityKoBonus: z.number().min(1).default(1),
+  /** Danger switch: a smart trainer whose Pokémon would be KO'd by the player's best move swaps to a teammate that would lose at most this share of its HP (0 = off). */
+  dangerSwitch: z.number().min(0).max(1).default(0),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;

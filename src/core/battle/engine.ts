@@ -340,6 +340,19 @@ export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng, brain?: EnemyB
   return rng.pick(usable).i;
 }
 
+/** Average damage a move's score stands for (the level-based damage formula on the score, accuracy taken back out). */
+function damageFromScore(level: number, score: number, accuracy: number): number {
+  return (((2 * level) / 5 + 2) * (score / Math.max(0.05, accuracy / 100)) / 50 + 2) * 0.925;
+}
+
+/** Rough damage this attack does to the target, in HP (0 for a status move or an immune target). */
+export function estimateDamage(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
+  const move = brain.content.moves.get(moveId);
+  if (!move || move.category === 'status') return 0;
+  const score = moveValue({ ...brain, content: { ...brain.content, balance: { ...brain.content.balance, trainerAi: { ...brain.content.balance.trainerAi, koBonus: 1, priorityKoBonus: 1 } } } }, user, moveId);
+  return score > 0 ? damageFromScore(user.level, score, move.accuracy ?? 100) : 0;
+}
+
 /** Rough value of a move for a clever enemy (higher is better). */
 export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
   const { content, target, stages } = brain;
@@ -361,7 +374,15 @@ export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: stri
     const stab = userSpecies.types.includes(m.type) ? 1.5 : 1;
     return power * ((m.accuracy ?? 100) / 100) * effectiveness * stab * ratio;
   };
-  if (move.category !== 'status') return attackPower(move);
+  if (move.category !== 'status') {
+    const score = attackPower(move);
+    // Finishing blows (Advanced AI "Move Intelligence"): a move that should KO is worth more, a priority KO from the slower side most.
+    const cfg = content.balance.trainerAi;
+    if (score > 0 && damageFromScore(user.level, score, move.accuracy ?? 100) >= target.hp) {
+      return score * cfg.koBonus * (move.priority > 0 && userStats.spe < targetStats.spe ? cfg.priorityKoBonus : 1);
+    }
+    return score;
+  }
   // A status or set-up move is worth about as much as the best attack it makes possible.
   const best = Math.max(1, ...user.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m)).map(attackPower));
   const fx = move.effects;
@@ -3128,6 +3149,19 @@ function trainerAiTurn(ctx: BattleContext, enemy: Combatant, events: BattleEvent
   }
   if (battle.enemySwitches >= cfg.maxSwitches || enemy.vol.turnsOut < 1 || enemy.vol.trapped || enemy.vol.bound > 0) return false;
   const target = ctx.party[battle.activeIndex]!;
+  // Danger switch (Advanced AI "Switch Logic"): leave when the player's best move would KO, for a teammate that takes it well.
+  if (cfg.dangerSwitch > 0) {
+    const hit = (m: PokemonInstance) => Math.max(0, ...target.moves.filter((x) => x.pp > 0).map((x) => estimateDamage({ content, ai: 1, target: m, stages: battle.playerStages }, target, x.id)));
+    const spare = battle.enemyTeam
+      .map((m, i) => ({ m, i, take: hit(m) / Math.max(1, m.hp) }))
+      .filter(({ m, i, take }) => i !== battle.enemyIndex && m.hp > 0 && take <= cfg.dangerSwitch)
+      .sort((a, b) => a.take - b.take)[0];
+    if (spare && hit(mon) >= mon.hp && !(enemy.vol.turnsOut < 1)) {
+      battle.enemySwitches += 1;
+      swapInEnemy(ctx, spare.i, events);
+      return true;
+    }
+  }
   const best = (m: PokemonInstance, stages: Stages) =>
     Math.max(0, ...m.moves.filter((x) => x.pp > 0).map((x) => moveValue({ content, ai: 1, target, stages }, m, x.id)));
   const mine = best(mon, battle.enemyStages);

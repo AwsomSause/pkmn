@@ -451,6 +451,9 @@
   "healFraction": 0.5,
   "maxItems": 1,
   "maxSwitches": 2,
-  "switchRatio": 0.5
+  "switchRatio": 0.5,
+  "koBonus": 2,
+  "priorityKoBonus": 1.5,
+  "dangerSwitch": 0.5
  }
 }
