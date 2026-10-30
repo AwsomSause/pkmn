@@ -1,11 +1,35 @@
 {
-  "generatedAt": "2026-10-30T12:52:38.521Z",
+  "generatedAt": "2026-10-30T12:58:47.194Z",
   "assets": [
     {
       "id": "bg.battle",
       "kind": "image",
       "category": "background",
       "path": "images/arenas/grass_bg.png"
+    },
+    {
+      "id": "bg.raid.max",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/raid_max_bg.png"
+    },
+    {
+      "id": "bg.raid.tera",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/raid_tera_bg.png"
+    },
+    {
+      "id": "bg.raid.ultra",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/raid_ultra_bg.png"
+    },
+    {
+      "id": "bg.raid.tera2",
+      "kind": "image",
+      "category": "background",
+      "path": "images/arenas/raid_tera2_bg.png"
     },
     {
       "id": "bg.battle.player",
@@ -378,6 +402,24 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/battle_wild.mp3"
+    },
+    {
+      "id": "bgm.raid.ultra",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_ultra.mp3"
+    },
+    {
+      "id": "bgm.raid.max",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_max.mp3"
+    },
+    {
+      "id": "bgm.raid.tera",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_tera.mp3"
     },
     {
       "id": "bgm.battle_trainer",

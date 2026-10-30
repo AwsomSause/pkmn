@@ -1,86 +1,662 @@
 {
   "denChance": 0.4,
-  "tierByRegion": ["early", "mid", "mid", "late", "grand"],
+  "tierByRegion": [
+    "early",
+    "mid",
+    "mid",
+    "late",
+    "grand"
+  ],
   "failureHealFraction": 0.5,
   "totems": [
     {
-      "id": "totem-gumshoos", "name": "Totem Gumshoos", "tier": "early", "type": "normal",
+      "id": "totem-gumshoos",
+      "name": "Totem Gumshoos",
+      "tier": "early",
+      "type": "normal",
       "blurb": "A stakeout veteran guarding the trail. It stands its ground.",
-      "species": ["gumshoos"], "levelBonus": 1, "hpBoostPercent": 120,
-      "aura": { "text": "Its aura toughens its hide (Defense up).", "boost": { "def": 1 } },
-      "rewards": { "moneyPerLevel": 70, "items": [{ "item": "super-potion", "chance": 1 }], "draftExtra": 0, "rareJoin": { "species": "togedemaru", "chance": 0.35 }, "unlock": null, "research": 1 }
+      "species": [
+        "gumshoos"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 120,
+      "aura": {
+        "text": "Its aura toughens its hide (Defense up).",
+        "boost": {
+          "def": 1
+        }
+      },
+      "rewards": {
+        "moneyPerLevel": 70,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 0,
+        "rareJoin": {
+          "species": "togedemaru",
+          "chance": 0.35
+        },
+        "unlock": null,
+        "research": 1
+      }
     },
     {
-      "id": "totem-lurantis", "name": "Totem Lurantis", "tier": "early", "type": "grass",
+      "id": "totem-lurantis",
+      "name": "Totem Lurantis",
+      "tier": "early",
+      "type": "grass",
       "blurb": "Sun-drenched blades. Grassy ground heals it a little each turn.",
-      "species": ["lurantis"], "levelBonus": 1, "hpBoostPercent": 130,
-      "aura": { "text": "A bright aura fills the meadow.", "terrain": "grassy" },
-      "environment": { "text": "Home field: Grassy Terrain.", "terrain": "grassy" },
-      "ally": { "species": "ribombee", "levelOffset": -4, "triggerHp": 0.5, "maxCalls": 1, "resummon": false, "text": "Totem Lurantis called a Ribombee!", "support": { "heal": 0.15 } },
-      "rewards": { "moneyPerLevel": 70, "items": [{ "item": "super-potion", "chance": 1 }], "draftExtra": 0, "rareJoin": { "species": "ribombee", "chance": 0.35 }, "unlock": null, "research": 1 }
+      "species": [
+        "lurantis"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 130,
+      "aura": {
+        "text": "A bright aura fills the meadow.",
+        "terrain": "grassy"
+      },
+      "environment": {
+        "text": "Home field: Grassy Terrain.",
+        "terrain": "grassy"
+      },
+      "ally": {
+        "species": "ribombee",
+        "levelOffset": -4,
+        "triggerHp": 0.5,
+        "maxCalls": 1,
+        "resummon": false,
+        "text": "Totem Lurantis called a Ribombee!",
+        "support": {
+          "heal": 0.15
+        }
+      },
+      "rewards": {
+        "moneyPerLevel": 70,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 0,
+        "rareJoin": {
+          "species": "ribombee",
+          "chance": 0.35
+        },
+        "unlock": null,
+        "research": 1
+      }
     },
     {
-      "id": "totem-salazzle", "name": "Totem Salazzle", "tier": "mid", "type": "fire",
+      "id": "totem-salazzle",
+      "name": "Totem Salazzle",
+      "tier": "mid",
+      "type": "fire",
       "blurb": "Its venomous haze calls a Salandit to help.",
-      "species": ["salazzle"], "levelBonus": 2, "hpBoostPercent": 180,
-      "aura": { "text": "A hot haze: Speed up and the sun blazes.", "boost": { "spe": 1 }, "weather": "sun" },
-      "environment": { "text": "Home field: harsh sunlight.", "weather": "sun" },
-      "ally": { "species": "salandit", "levelOffset": -6, "triggerHp": 0.6, "maxCalls": 2, "resummon": true, "text": "Totem Salazzle called a Salandit!", "support": { "heal": 0.1 } },
-      "phases": [{ "atHp": 0.35, "text": "Salazzle's haze turns thick and poisonous!", "boost": { "spa": 1 } }],
-      "rewards": { "moneyPerLevel": 90, "items": [{ "item": "hyper-potion", "chance": 1 }], "draftExtra": 1, "rareJoin": { "species": "salandit", "chance": 0.4 }, "unlock": null, "research": 2 }
+      "species": [
+        "salazzle"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 180,
+      "aura": {
+        "text": "A hot haze: Speed up and the sun blazes.",
+        "boost": {
+          "spe": 1
+        },
+        "weather": "sun"
+      },
+      "environment": {
+        "text": "Home field: harsh sunlight.",
+        "weather": "sun"
+      },
+      "ally": {
+        "species": "salandit",
+        "levelOffset": -6,
+        "triggerHp": 0.6,
+        "maxCalls": 2,
+        "resummon": true,
+        "text": "Totem Salazzle called a Salandit!",
+        "support": {
+          "heal": 0.1
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.35,
+          "text": "Salazzle's haze turns thick and poisonous!",
+          "boost": {
+            "spa": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "rareJoin": {
+          "species": "salandit",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 2
+      }
     },
     {
-      "id": "totem-araquanid", "name": "Totem Araquanid", "tier": "mid", "type": "water",
+      "id": "totem-araquanid",
+      "name": "Totem Araquanid",
+      "tier": "mid",
+      "type": "water",
       "blurb": "A bubble-armoured guardian that keeps its Special Defense high.",
-      "species": ["araquanid"], "levelBonus": 2, "hpBoostPercent": 200,
-      "aura": { "text": "A bubble shell wraps it (Special Defense up).", "boost": { "spd": 1 } },
-      "environment": { "text": "Home field: rain.", "weather": "rain" },
-      "phases": [{ "atHp": 0.5, "text": "The bubbles burst into a torrent!", "boost": { "spa": 1 }, "clearPlayerStages": true }],
-      "rewards": { "moneyPerLevel": 90, "items": [{ "item": "hyper-potion", "chance": 1 }], "draftExtra": 1, "rareJoin": { "species": "dewpider", "chance": 0.4 }, "unlock": null, "research": 2 }
+      "species": [
+        "araquanid"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 200,
+      "aura": {
+        "text": "A bubble shell wraps it (Special Defense up).",
+        "boost": {
+          "spd": 1
+        }
+      },
+      "environment": {
+        "text": "Home field: rain.",
+        "weather": "rain"
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The bubbles burst into a torrent!",
+          "boost": {
+            "spa": 1
+          },
+          "clearPlayerStages": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "rareJoin": {
+          "species": "dewpider",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 2
+      }
     },
     {
-      "id": "totem-vikavolt", "name": "Totem Vikavolt", "tier": "mid", "type": "electric",
+      "id": "totem-vikavolt",
+      "name": "Totem Vikavolt",
+      "tier": "mid",
+      "type": "electric",
       "blurb": "Calls a Charjabug and fights on charged ground.",
-      "species": ["vikavolt"], "levelBonus": 2, "hpBoostPercent": 200,
-      "aura": { "text": "Electric current crackles across the ground.", "terrain": "electric" },
-      "environment": { "text": "Home field: Electric Terrain.", "terrain": "electric" },
-      "ally": { "species": "charjabug", "levelOffset": -6, "triggerHp": 0.55, "maxCalls": 1, "resummon": false, "text": "Totem Vikavolt called a Charjabug!", "support": { "screens": true } },
-      "rewards": { "moneyPerLevel": 90, "items": [{ "item": "hyper-potion", "chance": 1 }], "draftExtra": 1, "rareJoin": { "species": "charjabug", "chance": 0.4 }, "unlock": null, "research": 2 }
+      "species": [
+        "vikavolt"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 200,
+      "aura": {
+        "text": "Electric current crackles across the ground.",
+        "terrain": "electric"
+      },
+      "environment": {
+        "text": "Home field: Electric Terrain.",
+        "terrain": "electric"
+      },
+      "ally": {
+        "species": "charjabug",
+        "levelOffset": -6,
+        "triggerHp": 0.55,
+        "maxCalls": 1,
+        "resummon": false,
+        "text": "Totem Vikavolt called a Charjabug!",
+        "support": {
+          "screens": true
+        }
+      },
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "rareJoin": {
+          "species": "charjabug",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 2
+      }
     },
     {
-      "id": "totem-lycanroc", "name": "Totem Lycanroc", "tier": "late", "type": "rock",
+      "id": "totem-lycanroc",
+      "name": "Totem Lycanroc",
+      "tier": "late",
+      "type": "rock",
       "blurb": "Rocks litter the field before the fight even starts.",
-      "species": ["lycanroc"], "levelBonus": 3, "hpBoostPercent": 260,
-      "aura": { "text": "Sharp stones cover your side of the field.", "hazard": "stealthRock", "boost": { "spe": 1 } },
-      "environment": { "text": "Home field: sandstorm.", "weather": "sand" },
-      "ally": { "species": "rockruff", "levelOffset": -10, "triggerHp": 0.6, "maxCalls": 2, "resummon": true, "text": "Totem Lycanroc howled for a Rockruff!", "support": { "heal": 0.12, "weather": "sand" } },
-      "phases": [{ "atHp": 0.3, "text": "Lycanroc goes wild!", "boost": { "atk": 1, "spe": 1 }, "cleanse": true }],
-      "rewards": { "moneyPerLevel": 120, "items": [{ "item": "full-restore", "chance": 1 }, { "item": "revive", "chance": 0.4 }], "draftExtra": 2, "rareJoin": { "species": "rockruff", "chance": 0.4 }, "unlock": "route-stone-quarry", "research": 3 }
+      "species": [
+        "lycanroc"
+      ],
+      "levelBonus": 3,
+      "hpBoostPercent": 260,
+      "aura": {
+        "text": "Sharp stones cover your side of the field.",
+        "hazard": "stealthRock",
+        "boost": {
+          "spe": 1
+        }
+      },
+      "environment": {
+        "text": "Home field: sandstorm.",
+        "weather": "sand"
+      },
+      "ally": {
+        "species": "rockruff",
+        "levelOffset": -10,
+        "triggerHp": 0.6,
+        "maxCalls": 2,
+        "resummon": true,
+        "text": "Totem Lycanroc howled for a Rockruff!",
+        "support": {
+          "heal": 0.12,
+          "weather": "sand"
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.3,
+          "text": "Lycanroc goes wild!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 120,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.4
+          }
+        ],
+        "draftExtra": 2,
+        "rareJoin": {
+          "species": "rockruff",
+          "chance": 0.4
+        },
+        "unlock": "route-stone-quarry",
+        "research": 3
+      }
     },
     {
-      "id": "totem-mimikyu", "name": "Totem Mimikyu", "tier": "late", "type": "ghost",
+      "id": "totem-mimikyu",
+      "name": "Totem Mimikyu",
+      "tier": "late",
+      "type": "ghost",
       "blurb": "A haunting disguise that keeps calling friends from the dark.",
-      "species": ["mimikyu"], "levelBonus": 3, "hpBoostPercent": 260,
-      "aura": { "text": "A chill sets in: Special Defense up, and the ground is poisoned.", "boost": { "spd": 1 }, "hazard": "toxicSpikes" },
-      "ally": { "species": "gengar", "levelOffset": -8, "triggerHp": 0.65, "maxCalls": 2, "resummon": true, "text": "Totem Mimikyu called a Gengar from the shadows!", "support": { "screens": true } },
-      "phases": [
-        { "atHp": 0.5, "text": "The disguise slips...", "boost": { "atk": 1 } },
-        { "atHp": 0.25, "text": "Mimikyu is in a frenzy!", "boost": { "spe": 1 }, "clearPlayerStages": true }
+      "species": [
+        "mimikyu"
       ],
-      "rewards": { "moneyPerLevel": 120, "items": [{ "item": "full-restore", "chance": 1 }, { "item": "revive", "chance": 0.4 }], "draftExtra": 2, "rareJoin": { "species": "gengar", "chance": 0.35 }, "unlock": "route-haunted-hollow", "research": 3 }
+      "levelBonus": 3,
+      "hpBoostPercent": 260,
+      "aura": {
+        "text": "A chill sets in: Special Defense up, and the ground is poisoned.",
+        "boost": {
+          "spd": 1
+        },
+        "hazard": "toxicSpikes"
+      },
+      "ally": {
+        "species": "gengar",
+        "levelOffset": -8,
+        "triggerHp": 0.65,
+        "maxCalls": 2,
+        "resummon": true,
+        "text": "Totem Mimikyu called a Gengar from the shadows!",
+        "support": {
+          "screens": true
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The disguise slips...",
+          "boost": {
+            "atk": 1
+          }
+        },
+        {
+          "atHp": 0.25,
+          "text": "Mimikyu is in a frenzy!",
+          "boost": {
+            "spe": 1
+          },
+          "clearPlayerStages": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 120,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.4
+          }
+        ],
+        "draftExtra": 2,
+        "rareJoin": {
+          "species": "gengar",
+          "chance": 0.35
+        },
+        "unlock": "route-haunted-hollow",
+        "research": 3
+      }
     },
     {
-      "id": "totem-kommo-o", "name": "Totem Kommo-o", "tier": "grand", "type": "dragon",
+      "id": "totem-kommo-o",
+      "name": "Totem Kommo-o",
+      "tier": "grand",
+      "type": "dragon",
       "blurb": "The dragon of the Grand Region. Every part of the fight has a tell.",
-      "species": ["kommo-o"], "levelBonus": 4, "hpBoostPercent": 340,
-      "aura": { "text": "Scales ring like bells: Defense up, stones on your side.", "boost": { "def": 1 }, "hazard": "stealthRock" },
-      "environment": { "text": "Home field: harsh sunlight.", "weather": "sun" },
-      "ally": { "species": "hakamo-o", "levelOffset": -8, "triggerHp": 0.7, "maxCalls": 3, "resummon": true, "text": "Totem Kommo-o roared for a Hakamo-o!", "support": { "heal": 0.1, "screens": true } },
-      "phases": [
-        { "atHp": 0.6, "text": "The battle cry shakes the arena!", "boost": { "atk": 1 }, "clearPlayerStages": true },
-        { "atHp": 0.3, "text": "Kommo-o is fighting with everything it has!", "boost": { "spe": 1, "spa": 1 }, "cleanse": true }
+      "species": [
+        "kommo-o"
       ],
-      "rewards": { "moneyPerLevel": 180, "items": [{ "item": "full-restore", "chance": 1 }, { "item": "revive", "chance": 0.6 }], "draftExtra": 3, "rareJoin": { "species": "jangmo-o", "chance": 0.5 }, "unlock": "route-dragon-spire", "research": 5 }
+      "levelBonus": 4,
+      "hpBoostPercent": 340,
+      "aura": {
+        "text": "Scales ring like bells: Defense up, stones on your side.",
+        "boost": {
+          "def": 1
+        },
+        "hazard": "stealthRock"
+      },
+      "environment": {
+        "text": "Home field: harsh sunlight.",
+        "weather": "sun"
+      },
+      "ally": {
+        "species": "hakamo-o",
+        "levelOffset": -8,
+        "triggerHp": 0.7,
+        "maxCalls": 3,
+        "resummon": true,
+        "text": "Totem Kommo-o roared for a Hakamo-o!",
+        "support": {
+          "heal": 0.1,
+          "screens": true
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.6,
+          "text": "The battle cry shakes the arena!",
+          "boost": {
+            "atk": 1
+          },
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.3,
+          "text": "Kommo-o is fighting with everything it has!",
+          "boost": {
+            "spe": 1,
+            "spa": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 180,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.6
+          }
+        ],
+        "draftExtra": 3,
+        "rareJoin": {
+          "species": "jangmo-o",
+          "chance": 0.5
+        },
+        "unlock": "route-dragon-spire",
+        "research": 5
+      }
+    },
+    {
+      "id": "totem-marowak",
+      "name": "Totem Marowak",
+      "tier": "early",
+      "type": "fire",
+      "blurb": "A bone-club bruiser that calls its kin when hurt.",
+      "species": [
+        "marowak"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 130,
+      "aura": {
+        "text": "Its bone glows (Attack up).",
+        "boost": {
+          "atk": 1
+        }
+      },
+      "phases": [],
+      "rewards": {
+        "moneyPerLevel": 70,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 0,
+        "rareJoin": {
+          "species": "cubone",
+          "chance": 0.35
+        },
+        "unlock": null,
+        "research": 1
+      },
+      "ally": {
+        "species": "cubone",
+        "levelOffset": -6,
+        "triggerHp": 0.6,
+        "maxCalls": 1,
+        "resummon": false,
+        "text": "Totem Marowak called a Cubone!",
+        "support": {}
+      }
+    },
+    {
+      "id": "totem-togedemaru",
+      "name": "Totem Togedemaru",
+      "tier": "mid",
+      "type": "electric",
+      "blurb": "A static-charged pest that keeps the ground electrified.",
+      "species": [
+        "togedemaru"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 190,
+      "aura": {
+        "text": "Static crackles (Speed up).",
+        "boost": {
+          "spe": 1
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "Sparks fly everywhere!",
+          "boost": {
+            "spa": 1
+          },
+          "clearPlayerStages": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "rareJoin": {
+          "species": "pachirisu",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 2
+      },
+      "environment": {
+        "text": "Home field: electric terrain.",
+        "terrain": "electric"
+      }
+    },
+    {
+      "id": "totem-ribombee",
+      "name": "Totem Ribombee",
+      "tier": "late",
+      "type": "bug",
+      "blurb": "A cloud of pollen and a swarm of friends.",
+      "species": [
+        "ribombee"
+      ],
+      "levelBonus": 3,
+      "hpBoostPercent": 250,
+      "aura": {
+        "text": "Pollen thickens the air (Special Defense up).",
+        "boost": {
+          "spd": 1
+        }
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The swarm closes in!",
+          "boost": {
+            "spa": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 120,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 2,
+        "rareJoin": {
+          "species": "cutiefly",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 3
+      },
+      "ally": {
+        "species": "butterfree",
+        "levelOffset": -8,
+        "triggerHp": 0.65,
+        "maxCalls": 2,
+        "resummon": true,
+        "text": "Totem Ribombee called a Butterfree!",
+        "support": {
+          "screens": true
+        }
+      }
+    },
+    {
+      "id": "totem-golisopod",
+      "name": "Totem Golisopod",
+      "tier": "grand",
+      "type": "water",
+      "blurb": "A first-strike hunter in a hard shell. It never lets you rest.",
+      "species": [
+        "golisopod"
+      ],
+      "levelBonus": 4,
+      "hpBoostPercent": 330,
+      "aura": {
+        "text": "Its shell hardens: Defense up, and stones on your side.",
+        "boost": {
+          "def": 1
+        },
+        "hazard": "stealthRock"
+      },
+      "phases": [
+        {
+          "atHp": 0.6,
+          "text": "Golisopod snaps to attention!",
+          "boost": {
+            "atk": 1
+          }
+        },
+        {
+          "atHp": 0.3,
+          "text": "Golisopod bolts for the kill!",
+          "boost": {
+            "spe": 2
+          },
+          "clearPlayerStages": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 180,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 3,
+        "rareJoin": {
+          "species": "wimpod",
+          "chance": 0.4
+        },
+        "unlock": null,
+        "research": 4
+      },
+      "environment": {
+        "text": "Home field: rain.",
+        "weather": "rain"
+      }
     }
   ]
 }
