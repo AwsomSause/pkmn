@@ -185,6 +185,13 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 - The Preparation Desk cycles through every unlocked set one by one; no category step there yet.
 - No challenge sets with reward multipliers yet (needs a payout rule), and no Mastered set (comes with species mastery).
 
+## Trainers.md perks (director request, 2026-10-30; in progress)
+
+Every trainer in Trainers.md becomes a playable trainer with all its pros and cons, 20 per PR. List: `docs/plans/trainers-coverage.md`.
+- [x] Batch 1 (Aaron to Bianca, 20 trainers) and the shared perk system (`core/trainerPerks.ts`).
+- [ ] Batches 2–11 (the other 200 trainers), then the signature mechanics (Rival's Answer, Distortion Protocol, Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy).
+- Known limits: "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
+
 ## Milestone 10 — Visuals and presentation (planned)
 
 A milestone purely for looks: a shared visual style, redesigned screens, transitions and animations, and a final layout pass. No gameplay changes. See IMPLEMENTATION_PLAN.md §5.

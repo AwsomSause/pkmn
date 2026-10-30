@@ -12,7 +12,8 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
-import { captureMultiplier, friendshipMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
+import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
+import { encounterWeightPerk, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -34,11 +35,12 @@ import {
   planTrainer,
   planWild,
   type TrainerPlan,
+  rollLegendaryWild,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
-import { createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat } from './pokemon';
+import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -162,7 +164,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     draft: null,
     disabledMechanics: [],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
-    attributeModifiers: zeroAttributes(),
+    attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
@@ -200,8 +202,21 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [newMon(content, run, speciesId, content.balance.starterLevel, 'p')];
+  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(getArchetype(content, run.archetypeId).modifiers)), 'p')];
   run.party[0]!.friendship = content.balance.friendship.starter;
+  const perks = getArchetype(content, run.archetypeId).modifiers;
+  const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
+  if (signature && !run.party[0]!.moves.some((m) => m.id === signature)) {
+    const starter = run.party[0]!;
+    const slot = { id: signature, pp: content.moves.get(signature)!.pp };
+    if (starter.moves.length < 4) starter.moves.push(slot);
+    else {
+      // Replace the weakest move (status moves first).
+      const power = (id: string) => content.moves.get(id)?.power ?? 0;
+      const weakest = starter.moves.reduce((w, m, i) => (power(m.id) < power(starter.moves[w]!.id) ? i : w), 0);
+      starter.moves[weakest] = slot;
+    }
+  }
   run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
   recordChanges(content, current, run, 'level');
@@ -285,9 +300,24 @@ function enterLeague(content: Content, run: RunState): void {
     visited: [],
   };
   startStageEffects(run);
+  syncHpPerks(content, getArchetype(content, run.archetypeId).modifiers, run.party);
   healParty(content, run);
   run.battle = null;
   run.phase = 'map';
+}
+
+/** Moves every party Pokémon up or down by whole levels (a trainer perk); experience follows the level. */
+function shiftPartyLevels(content: Content, run: RunState, levels: number): void {
+  if (levels === 0) return;
+  for (const mon of run.party) {
+    if (levels > 0) {
+      addLevels(content, mon, levels, runLevelCap(content, run));
+      continue;
+    }
+    mon.level = Math.max(1, mon.level + levels);
+    mon.xp = xpForLevel(getSpecies(content, mon.speciesId).growthRate, mon.level);
+    mon.hp = Math.min(mon.hp, maxHp(content, mon));
+  }
 }
 
 /** Starts the next region at its first stage, or ends the run in victory after the last one (mutates `run`). */
@@ -299,11 +329,27 @@ function enterNextRegion(content: Content, run: RunState): void {
   }
   run.regionIndex += 1;
   run.log.charmUsedInRegion = false;
+  shiftPartyLevels(content, run, regionLevelOffset(getArchetype(content, run.archetypeId).modifiers));
   // Pass Orbs turn into money in each new region.
   const orbMoney = regionMoneyFromItems(content, run);
   run.money += orbMoney;
   count(run, 'moneyEarned', orbMoney);
   enterStage(content, run, 0);
+}
+
+/** Pokémon released so far this run (caught ones turned into candies). */
+export function releasesUsed(run: Pick<RunState, 'log'>): number {
+  return run.log.counters.caughtToCandies ?? 0;
+}
+
+/** Whether the trainer's release limit (Ash) has been reached. */
+export function releaseLimitReached(content: Content, run: Pick<RunState, 'log' | 'archetypeId'>): boolean {
+  const limit = releaseLimit(getArchetype(content, run.archetypeId).modifiers);
+  return limit !== null && releasesUsed(run) >= limit;
+}
+
+function assertCanRelease(content: Content, run: RunState): void {
+  if (releaseLimitReached(content, run)) throw new Error('This trainer can only release a few Pokémon per run, and you have used them all');
 }
 
 function requireStage(run: RunState): StageState {
@@ -731,7 +777,9 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
       const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
       return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
     });
-    const speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    let speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
+    if (legendary) speciesId = legendary;
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -883,7 +931,7 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
 }
 
 /** Buys one of an item at the shop. */
@@ -959,6 +1007,7 @@ export interface TurnResult {
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
 function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rng, hyperRng?: Rng): BattleContext {
   const archetype = getArchetype(content, run.archetypeId);
+  syncHpPerks(content, archetype.modifiers, run.party);
   const attributes = runAttributeEffects(content, run);
   return {
     content,
@@ -970,6 +1019,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
+    perks: archetype.modifiers,
     attributes,
     disabledMechanics: run.disabledMechanics,
     hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
@@ -1029,7 +1079,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const drama = planDrama(content, run, current.battle!, engineEvents, dialogue);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
-    revertTransformations(content, battle, run.party);
+    revertTransformations(content, battle, run.party, getArchetype(content, run.archetypeId).modifiers);
     for (const mon of run.party) endHeldBattle(mon);
   }
 
@@ -1096,6 +1146,8 @@ function countAttributeGrowth(content: Content, run: RunState, events: BattleEve
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
   const effects = runAttributeEffects(content, run);
+  const archetype = getArchetype(content, run.archetypeId);
+  const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
   const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
@@ -1122,7 +1174,9 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       // Teachy TV: Pokémon below the lead's level catch up faster.
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
       // Macho Brace: more EXP for its holder.
-      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * (1 + catchUp / 100) * expMultiplier(content, mon));
+      const monSpecies = getSpecies(content, mon.speciesId);
+      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle });
+      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const amount = participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100);
       if (amount <= 0) continue;
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
@@ -1191,7 +1245,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'win') {
     const { perBattleWon, perBossWon } = content.balance.friendship;
     const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
-    const gainMultiplier = runAttributeEffects(content, run).friendship * friendshipMultiplier(getArchetype(content, run.archetypeId));
+    const gainMultiplier = runAttributeEffects(content, run).friendship;
     for (const mon of run.party) {
       if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
     }
@@ -1199,7 +1253,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of run.party) {
-    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex])) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(getArchetype(content, run.archetypeId).modifiers))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
@@ -1457,6 +1511,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       count(run, 'caughtKept');
       message = `${speciesName(content, old.speciesId)} left the party. ${name} joined!`;
     } else if (choice.kind === 'release') {
+      assertCanRelease(content, run);
       const candies = candiesForRelease(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);

@@ -371,5 +371,774 @@
       "friend"
     ],
     "signaturePool": "trainer-n"
+  },
+  {
+    "id": "aaron",
+    "name": "Aaron",
+    "title": "The Bug Specialist",
+    "description": "Bug-types deal 20% more damage and gain 15% more EXP — Bug-types take 10% more damage.",
+    "pros": [
+      "Bug-types deal 20% more damage and gain 15% more EXP"
+    ],
+    "cons": [
+      "Bug-types take 10% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 10
+    },
+    "unlockText": "Defeat 10 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.aaron",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "bug",
+        "value": 1.2
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "type": "bug",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "bug",
+        "value": 1.1
+      }
+    ]
+  },
+  {
+    "id": "acerola",
+    "name": "Acerola",
+    "title": "The Ghost Specialist",
+    "description": "Ghost-types deal 20% more damage and have a 15% chance to survive a knockout with 1 HP — Non-Ghost Pokémon gain 15% less EXP.",
+    "pros": [
+      "Ghost-types deal 20% more damage and have a 15% chance to survive a knockout with 1 HP"
+    ],
+    "cons": [
+      "Non-Ghost Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 20
+    },
+    "unlockText": "Defeat 20 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.acerola",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "ghost",
+        "value": 1.2
+      },
+      {
+        "kind": "survivalChance",
+        "type": "ghost",
+        "chance": 0.15
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "notType": "ghost",
+        "value": 0.85
+      }
+    ]
+  },
+  {
+    "id": "adaman",
+    "name": "Adaman",
+    "title": "The Specialist",
+    "description": "Physical moves deal 15% more damage — Special moves deal 10% less damage.",
+    "pros": [
+      "Physical moves deal 15% more damage",
+      "fast Pokémon gain 10% more EXP"
+    ],
+    "cons": [
+      "Special moves deal 10% less damage",
+      "Special Defense is reduced by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 30
+    },
+    "unlockText": "Defeat 30 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.adaman",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.15
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "speed": "fast",
+        "value": 1.1
+      },
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 0.9
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spd",
+        "value": 0.9
+      }
+    ]
+  },
+  {
+    "id": "agatha-lgpe",
+    "name": "Agatha (LGPE)",
+    "title": "The Ghost Specialist",
+    "description": "Ghost-types deal 10% more damage and status effects last 20% longer — Healing items restore 20% less HP.",
+    "pros": [
+      "Ghost-types deal 10% more damage and status effects last 20% longer"
+    ],
+    "cons": [
+      "Healing items restore 20% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 40
+    },
+    "unlockText": "Defeat 40 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.agatha-lgpe",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "ghost",
+        "value": 1.1
+      },
+      {
+        "kind": "statusDurationMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.8
+      }
+    ]
+  },
+  {
+    "id": "alain",
+    "name": "Alain",
+    "title": "The Fire Specialist",
+    "description": "Fire-types deal 20% more damage — Only one Mega-Evolved Pokémon can be on your team.",
+    "pros": [
+      "Fire-types deal 20% more damage",
+      "Mega Evolution can become permanent when a Pokémon meets the required Friendship threshold"
+    ],
+    "cons": [
+      "Only one Mega-Evolved Pokémon can be on your team",
+      "non-Mega Pokémon deal 5% less damage while your team has a Mega Evolution",
+      "Fire-types take 15% more damage from Water moves"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 50
+    },
+    "unlockText": "Defeat 50 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.alain",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 1.2
+      },
+      {
+        "kind": "permanentMega",
+        "minFriendship": 220
+      },
+      {
+        "kind": "megaPartyLimit",
+        "max": 1
+      },
+      {
+        "kind": "nonMegaDamageMultiplier",
+        "value": 0.95
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "fire",
+        "moveType": "water",
+        "value": 1.15
+      }
+    ]
+  },
+  {
+    "id": "alder",
+    "name": "Alder",
+    "title": "The Specialist",
+    "description": "Pokémon below 50% HP deal 25% more damage — Pokémon evolve five levels later than normal.",
+    "pros": [
+      "Pokémon below 50% HP deal 25% more damage"
+    ],
+    "cons": [
+      "Pokémon evolve five levels later than normal"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 60
+    },
+    "unlockText": "Defeat 60 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.alder",
+    "modifiers": [
+      {
+        "kind": "lowHpDamageMultiplier",
+        "below": 0.5,
+        "value": 1.25
+      },
+      {
+        "kind": "evolutionLevelOffset",
+        "value": 5
+      }
+    ]
+  },
+  {
+    "id": "allister",
+    "name": "Allister",
+    "title": "The Specialist",
+    "description": "Ghost-types gain 20% more EXP and inflict status conditions 15% more often — Friendship gain is reduced by 20%.",
+    "pros": [
+      "Ghost-types gain 20% more EXP and inflict status conditions 15% more often"
+    ],
+    "cons": [
+      "Friendship gain is reduced by 20%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 70
+    },
+    "unlockText": "Defeat 70 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.allister",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "ghost",
+        "value": 1.2
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "type": "ghost",
+        "value": 1.15
+      },
+      {
+        "kind": "friendshipMultiplier",
+        "value": 0.8
+      }
+    ]
+  },
+  {
+    "id": "anabel-gen-7",
+    "name": "Anabel (Gen 7)",
+    "title": "The Specialist",
+    "description": "Legendary and Ultra Beast encounter rates increase by 15% — Pokémon level up 15% slower.",
+    "pros": [
+      "Legendary and Ultra Beast encounter rates increase by 15%"
+    ],
+    "cons": [
+      "Pokémon level up 15% slower"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 80
+    },
+    "unlockText": "Defeat 80 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.anabel-gen7",
+    "modifiers": [
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "legendary",
+        "value": 1.15
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ]
+  },
+  {
+    "id": "archie-gen-6",
+    "name": "Archie (Gen 6)",
+    "title": "The Water Specialist",
+    "description": "Water-types deal 20% more damage — Fire-types deal 25% less damage.",
+    "pros": [
+      "Water-types deal 20% more damage",
+      "weather effects last two extra turns"
+    ],
+    "cons": [
+      "Fire-types deal 25% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 90
+    },
+    "unlockText": "Defeat 90 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.archie-gen6",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherTurnsBonus",
+        "turns": 2
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 0.75
+      }
+    ]
+  },
+  {
+    "id": "archie-usum",
+    "name": "Archie (USUM)",
+    "title": "The Specialist",
+    "description": "Rain-boosted moves deal 25% more damage — Sun-boosted enemy attacks deal 35% more damage.",
+    "pros": [
+      "Rain-boosted moves deal 25% more damage",
+      "Water-types gain 10% HP"
+    ],
+    "cons": [
+      "Sun-boosted enemy attacks deal 35% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 100
+    },
+    "unlockText": "Defeat 100 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.archie-gen6",
+    "modifiers": [
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "rain",
+        "side": "player",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "water",
+        "value": 1.1
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "sun",
+        "side": "enemy",
+        "value": 1.35
+      }
+    ]
+  },
+  {
+    "id": "arezu",
+    "name": "Arezu",
+    "title": "The Specialist",
+    "description": "Fast Pokémon gain 15% more EXP — Slow Pokémon deal 10% less damage.",
+    "pros": [
+      "Fast Pokémon gain 15% more EXP",
+      "healing items are 5% more effective"
+    ],
+    "cons": [
+      "Slow Pokémon deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 110
+    },
+    "unlockText": "Defeat 110 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.arezu",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "speed": "fast",
+        "value": 1.15
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.05
+      },
+      {
+        "kind": "damageMultiplier",
+        "speed": "slow",
+        "value": 0.9
+      }
+    ]
+  },
+  {
+    "id": "ash-kalos",
+    "name": "Ash (Kalos)",
+    "title": "The Specialist",
+    "description": "Friendship increases 100% faster — Your rival is always five levels above you.",
+    "pros": [
+      "Friendship increases 100% faster",
+      "Hyper/Overdrive events are twice as likely to activate"
+    ],
+    "cons": [
+      "Your rival is always five levels above you",
+      "wild Pokémon are 20% harder to catch",
+      "Legendary, Mythical, and Ultra Beast opponents deal 10% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 120
+    },
+    "unlockText": "Defeat 120 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ash",
+    "modifiers": [
+      {
+        "kind": "friendshipMultiplier",
+        "value": 2
+      },
+      {
+        "kind": "hyperChanceMultiplier",
+        "value": 2
+      },
+      {
+        "kind": "rivalLevelOffset",
+        "value": 5
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 0.8
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "fromLegendary": true,
+        "value": 1.1
+      }
+    ]
+  },
+  {
+    "id": "ash",
+    "name": "Ash",
+    "title": "The Specialist",
+    "description": "Start with 20 Luck — Gym Leaders, Elite Four members, and Champions deal 10% more damage.",
+    "pros": [
+      "Start with 20 Luck",
+      "your starter always has a signature move",
+      "Friendship increases 20% faster"
+    ],
+    "cons": [
+      "Gym Leaders, Elite Four members, and Champions deal 10% more damage",
+      "you can release only six Pokémon per run"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 130
+    },
+    "unlockText": "Defeat 130 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ash",
+    "modifiers": [
+      {
+        "kind": "startingAttribute",
+        "key": "luck",
+        "value": 20
+      },
+      {
+        "kind": "starterSignatureMove"
+      },
+      {
+        "kind": "friendshipMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "bossDamageTakenMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "releaseLimit",
+        "value": 6
+      }
+    ]
+  },
+  {
+    "id": "az",
+    "name": "AZ",
+    "title": "The Specialist",
+    "description": "Pokémon gain 25% HP and deal 15% more damage — Your team starts three levels higher than normal.",
+    "pros": [
+      "Pokémon gain 25% HP and deal 15% more damage"
+    ],
+    "cons": [
+      "Your team starts three levels higher than normal",
+      "EXP gain is reduced by 30%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 140
+    },
+    "unlockText": "Defeat 140 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.az",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 1.25
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "startingLevelOffset",
+        "value": 3
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.7
+      }
+    ]
+  },
+  {
+    "id": "ball-guy",
+    "name": "Ball Guy",
+    "title": "The Specialist",
+    "description": "Poké Balls and capture items cost 40% less — All other items cost 30% more.",
+    "pros": [
+      "Poké Balls and capture items cost 40% less",
+      "capture chance increases by 10%"
+    ],
+    "cons": [
+      "All other items cost 30% more"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 150
+    },
+    "unlockText": "Defeat 150 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ballguy",
+    "modifiers": [
+      {
+        "kind": "priceMultiplier",
+        "group": "balls",
+        "value": 0.6
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "otherItems",
+        "value": 1.3
+      }
+    ]
+  },
+  {
+    "id": "barry",
+    "name": "Barry",
+    "title": "The Specialist",
+    "description": "Pokémon gain 20% Speed and EXP — Shop prices increase by 20%.",
+    "pros": [
+      "Pokémon gain 20% Speed and EXP"
+    ],
+    "cons": [
+      "Shop prices increase by 20%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 160
+    },
+    "unlockText": "Defeat 160 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.barry",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.2
+      }
+    ]
+  },
+  {
+    "id": "bea",
+    "name": "Bea",
+    "title": "The Fighting Specialist",
+    "description": "Fighting-types deal 25% more physical damage — Your team's Special Defense is reduced by 15%.",
+    "pros": [
+      "Fighting-types deal 25% more physical damage"
+    ],
+    "cons": [
+      "Your team's Special Defense is reduced by 15%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 170
+    },
+    "unlockText": "Defeat 170 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bea",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fighting",
+        "category": "physical",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spd",
+        "value": 0.85
+      }
+    ]
+  },
+  {
+    "id": "bede",
+    "name": "Bede",
+    "title": "The Psychic / fairy Specialist",
+    "description": "Psychic- and Fairy-types deal 20% more damage — Friendship bonuses are disabled.",
+    "pros": [
+      "Psychic- and Fairy-types deal 20% more damage"
+    ],
+    "cons": [
+      "Friendship bonuses are disabled"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 180
+    },
+    "unlockText": "Defeat 180 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bede",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "types": [
+          "psychic",
+          "fairy"
+        ],
+        "value": 1.2
+      },
+      {
+        "kind": "friendshipBonusesDisabled"
+      }
+    ]
+  },
+  {
+    "id": "benga",
+    "name": "Benga",
+    "title": "The Specialist",
+    "description": "Pokémon deal 15% more damage against bosses — Ordinary encounters grant 20% less EXP.",
+    "pros": [
+      "Pokémon deal 15% more damage against bosses"
+    ],
+    "cons": [
+      "Ordinary encounters grant 20% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 190
+    },
+    "unlockText": "Defeat 190 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.benga",
+    "modifiers": [
+      {
+        "kind": "bossDamageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "ordinaryXpMultiplier",
+        "value": 0.8
+      }
+    ]
+  },
+  {
+    "id": "bianca-pwt",
+    "name": "Bianca (PWT)",
+    "title": "The Specialist",
+    "description": "Pokémon gain 20% more EXP — Your party's average level is reduced by one at the beginning of each region.",
+    "pros": [
+      "Pokémon gain 20% more EXP",
+      "healing items restore 15% more HP"
+    ],
+    "cons": [
+      "Your party's average level is reduced by one at the beginning of each region"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 200
+    },
+    "unlockText": "Defeat 200 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bianca-pwt",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "regionLevelOffset",
+        "value": -1
+      }
+    ]
   }
 ]

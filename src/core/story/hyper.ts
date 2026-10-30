@@ -7,6 +7,7 @@ import { effectiveAttributes, type Attributes } from '../attributes';
 import type { HyperAttribute, HyperContext } from '../battle/hyper';
 import type { Content } from '../contentSchema';
 import { Rng } from '../rng';
+import { hyperChancePerk } from '../trainerPerks';
 import type { RunState } from '../state';
 import type { HyperChance, PokemonHistory, StoryEffectSpec, StoryTriggerKind } from './schema';
 
@@ -71,6 +72,8 @@ export function hasMemory(history: PokemonHistory | undefined, key: string): boo
 /** Builds the engine's view of the run for one turn. `rng` is the run's "hyper" stream (its state is saved by the caller). */
 export function buildHyperContext(content: Content, run: RunState, rng: Rng): HyperContext {
   const attrs = effectiveAttributes(content, run);
+  const perks = content.archetypes.get(run.archetypeId)?.modifiers;
+  const friendshipOff = (perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled');
   return {
     rng,
     eligibility(trigger, mon) {
@@ -78,10 +81,10 @@ export function buildHyperContext(content: Content, run: RunState, rng: Rng): Hy
       if (!def) return null;
       const cond = def.triggerConditions;
       const history = run.story.histories[mon.uid];
-      if (cond.minFriendship !== undefined && mon.friendship < cond.minFriendship) return null;
+      if (cond.minFriendship !== undefined && (mon.friendship < cond.minFriendship || friendshipOff)) return null;
       if (cond.needsMemory && !cond.needsMemory.some((m) => hasMemory(history, m))) return null;
       const again = (history?.hyper[def.id] ?? 0) > 0 && def.variants.again !== undefined;
-      return { def, chance: def.chance ? hyperChance(def.chance, attrs, again) : 1, variant: again ? 'again' : null };
+      return { def, chance: def.chance ? Math.min(1, hyperChance(def.chance, attrs, again) * hyperChancePerk(perks)) : 1, variant: again ? 'again' : null };
     },
     attributeShare(attribute) {
       return Math.min(1, attributePoints(attrs, attribute) / content.balance.attributeMax);

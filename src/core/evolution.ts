@@ -38,12 +38,12 @@ export function applicableBranches(content: Content, mon: PokemonInstance, branc
  * Fainted Pokémon don't evolve. When several branches apply (Wurmple, Burmy,
  * Rockruff, ...) one is picked from the Pokémon's id, so it is always the same.
  */
-export function evolutionTarget(content: Content, mon: PokemonInstance, regionId?: string): string | null {
+export function evolutionTarget(content: Content, mon: PokemonInstance, regionId?: string, levelOffset = 0): string | null {
   if (mon.hp <= 0) return null;
   const species = getSpecies(content, mon.speciesId);
   const byFriendship = friendshipReady(content, mon);
   const friendshipItem = content.balance.friendship.evolutionItem;
-  const ready = species.evolutions.filter((e) => (e.level !== undefined && mon.level >= e.level) || (byFriendship && e.item === friendshipItem));
+  const ready = species.evolutions.filter((e) => (e.level !== undefined && mon.level >= e.level + levelOffset) || (byFriendship && e.item === friendshipItem));
   const branches = applicableBranches(content, mon, ready, regionId);
   if (branches.length === 0) return null;
   return branches[uidHash(mon.uid) % branches.length]!.to;
@@ -91,12 +91,12 @@ export function evolve(content: Content, mon: PokemonInstance, to: string): Evol
 }
 
 /** Repeats level and friendship evolution while possible (e.g. a Rare Candy past two thresholds). */
-export function evolveFully(content: Content, mon: PokemonInstance, regionId?: string): EvolutionResult[] {
+export function evolveFully(content: Content, mon: PokemonInstance, regionId?: string, levelOffset = 0): EvolutionResult[] {
   const results: EvolutionResult[] = [];
   // An Everstone stops evolution.
   if (blocksEvolution(content, mon)) return results;
   for (let guard = 0; guard < 3; guard++) {
-    const to = evolutionTarget(content, mon, regionId);
+    const to = evolutionTarget(content, mon, regionId, levelOffset);
     if (!to) break;
     results.push(evolve(content, mon, to));
   }

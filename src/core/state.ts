@@ -54,6 +54,8 @@ export const PokemonInstanceSchema = z.object({
   held: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
   statBoosts: z.partialRecord(StatNameSchema, z.number().int().min(0)).optional(),
+  /** Max HP bonus in percent from the trainer's HP perks (core/trainerPerks.ts syncHpPerks keeps it current). */
+  perkHp: z.number().int().optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */

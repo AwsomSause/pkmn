@@ -25,7 +25,10 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 
+- Trainers.md perks, batch 1 (Aaron to Bianca, 20 of 220): shared perk system `core/trainerPerks.ts` + 30 new modifier kinds (type/category/speed damage, damage taken, stat and HP, group EXP, status chance/length, survival, weather, boss/level-gap damage, Mega rules, legendary wild encounters (new, region 2+), release limit, starter signature move, level offsets). Trainers unlock by total trainers defeated (10 + 10 per trainer); Trainer Select pages 12 at a time. Importer: `npm run data:trainer-perks`; list: `docs/plans/trainers-coverage.md`. Save: `PokemonInstance.perkHp` (optional, no version bump).
+
 ## In progress / next
+- Trainers.md perks: batches 2–11 (one PR per 20 trainers, then signature mechanics).
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
