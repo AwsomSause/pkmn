@@ -63,6 +63,8 @@ import {
   earlyStockCount,
   fishingRod,
   hiddenItemFound,
+  catchDrop,
+  palPadLevels,
   hiddenItemNode,
   hasPerk,
   mapItemRng,
@@ -968,6 +970,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
     const setup = wildBattleSetup(content, run, mods);
+    if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
     if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
     useWildBattleCharges(run);
@@ -1477,7 +1480,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'caught') {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
-    shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)));
+    shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)) + palPadLevels(content, run));
     caughtSpeciesId = caught.speciesId;
     count(run, 'pokemonCaught');
     // Photo Album: a species caught for the first time this run gives Love.
@@ -1575,6 +1578,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Itemfinder: the hidden item at this stage's marked wild stop.
   const hidden = battle.kind === 'wild' ? hiddenItemFound(content, run, stock) : null;
   if (hidden) itemsFound.push(hidden);
+  const dropped = battle.kind === 'wild' ? catchDrop(run, stock, outcome === 'caught') : null;
+  if (dropped) itemsFound.push(dropped);
   for (const id of itemsFound) addItem(run.inventory, id, 1);
   if (outcome === 'win') {
     count(run, 'battlesWon');

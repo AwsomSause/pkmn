@@ -111,7 +111,7 @@ export function payout(content: Content, run: RunState, def: MinigameDef, tier: 
   const log = run.minigames;
   if (log.stage !== stage.index) Object.assign(log, { stage: stage.index, money: 0, items: 0, plays: {}, effects: 0 });
   const medal = medalFor(def, score, max);
-  const lines = [`Score ${score} / ${max} — ${medal === 'none' ? 'no medal' : `${medal} medal`}.`];
+  const lines = [`Score ${score} / ${max}: ${medal === 'none' ? 'no medal' : `${medal} medal`}.`];
   let money = 0;
   let item: string | null = null;
   const plays = log.plays[def.id] ?? 0;

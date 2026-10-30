@@ -1,90 +1,647 @@
 {
   "denChance": 0.45,
-  "tiersByRegion": [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]],
+  "tiersByRegion": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ]
+  ],
   "failureHealFraction": 0.5,
   "raids": [
     {
-      "id": "sleeping-snorlax", "name": "Sleeping Giant", "tier": 1,
+      "id": "sleeping-snorlax",
+      "name": "Sleeping Giant",
+      "tier": 1,
       "blurb": "A huge Snorlax blocks the path. It wakes up angry when it gets hurt.",
-      "species": ["snorlax"], "levelBonus": 0, "hpBoostPercent": 150, "entryCost": 0,
+      "species": [
+        "snorlax"
+      ],
+      "levelBonus": 0,
+      "hpBoostPercent": 150,
+      "entryCost": 0,
       "shield": null,
-      "phases": [{ "atHp": 0.5, "text": "The giant wakes up and gets serious!", "boost": { "atk": 1, "spa": 1 } }],
-      "rewards": { "moneyPerLevel": 60, "items": [{ "item": "super-potion", "chance": 1 }], "draftExtra": 0, "joinChance": 0.5 }
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The giant wakes up and gets serious!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 60,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 0,
+        "joinChance": 0.5
+      }
     },
     {
-      "id": "den-arcanine", "name": "Pack Leader", "tier": 2,
+      "id": "den-arcanine",
+      "name": "Pack Leader",
+      "tier": 2,
       "blurb": "The leader of a fiery pack. It howls and speeds up when it is hurt.",
-      "species": ["arcanine"], "levelBonus": 1, "hpBoostPercent": 200, "entryCost": 100,
+      "species": [
+        "arcanine"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 200,
+      "entryCost": 100,
       "shield": null,
-      "phases": [{ "atHp": 0.6, "text": "The pack leader howls! Its speed rises.", "boost": { "spe": 2 }, "weather": "sun" }],
-      "rewards": { "moneyPerLevel": 80, "items": [{ "item": "hyper-potion", "chance": 1 }], "draftExtra": 1, "joinChance": 0.5 }
+      "phases": [
+        {
+          "atHp": 0.6,
+          "text": "The pack leader howls! Its speed rises.",
+          "boost": {
+            "spe": 2
+          },
+          "weather": "sun"
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 80,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.5
+      }
     },
     {
-      "id": "storm-gyarados", "name": "Storm Caller", "tier": 3,
+      "id": "storm-gyarados",
+      "name": "Storm Caller",
+      "tier": 3,
       "blurb": "A Gyarados raging inside its own storm. Break the shield before the big wave.",
-      "species": ["gyarados"], "levelBonus": 2, "hpBoostPercent": 250, "entryCost": 200,
-      "shield": { "at": [0.5], "points": 0.2 },
-      "phases": [{ "atHp": 0.5, "text": "The storm howls louder!", "boost": { "atk": 1 } }],
-      "telegraph": { "everyTurns": 4, "boost": 1.5, "text": "Gyarados is gathering a giant wave!" },
+      "species": [
+        "gyarados"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 250,
+      "entryCost": 200,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The storm howls louder!",
+          "boost": {
+            "atk": 1
+          }
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 4,
+        "boost": 1.5,
+        "text": "Gyarados is gathering a giant wave!"
+      },
       "weather": "rain",
-      "rewards": { "moneyPerLevel": 100, "items": [{ "item": "hyper-potion", "chance": 1 }, { "item": "revive", "chance": 0.5 }], "draftExtra": 1, "joinChance": 0.5 }
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.5
+      }
     },
     {
-      "id": "crystal-golem", "name": "Crystal Golem", "tier": 3,
+      "id": "crystal-golem",
+      "name": "Crystal Golem",
+      "tier": 3,
       "blurb": "Regirock's stone shell cracks only after a shield falls.",
-      "species": ["regirock"], "levelBonus": 2, "hpBoostPercent": 250, "entryCost": 200,
-      "shield": { "at": [0.5], "points": 0.25 },
-      "phases": [{ "atHp": 0.5, "text": "The crystals shine! The golem hardens.", "boost": { "def": 1, "spd": 1 } }],
+      "species": [
+        "regirock"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 250,
+      "entryCost": 200,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.25
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The crystals shine! The golem hardens.",
+          "boost": {
+            "def": 1,
+            "spd": 1
+          }
+        }
+      ],
       "weather": "sand",
-      "rewards": { "moneyPerLevel": 100, "items": [{ "item": "hyper-potion", "chance": 1 }], "draftExtra": 1, "joinChance": 0.4 }
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.4
+      }
     },
     {
-      "id": "sandstorm-tyranitar", "name": "Sandstorm Tyrant", "tier": 4,
+      "id": "sandstorm-tyranitar",
+      "name": "Sandstorm Tyrant",
+      "tier": 4,
       "blurb": "Two shields, one rage. Hit hard, hit smart.",
-      "species": ["tyranitar"], "levelBonus": 3, "hpBoostPercent": 300, "entryCost": 400,
-      "shield": { "at": [0.66, 0.33], "points": 0.15 },
-      "phases": [
-        { "atHp": 0.66, "text": "The tyrant stomps and the sand rises!", "weather": "sand", "clearPlayerStages": true },
-        { "atHp": 0.33, "text": "The tyrant is enraged!", "boost": { "atk": 1, "spe": 1 }, "cleanse": true }
+      "species": [
+        "tyranitar"
       ],
-      "telegraph": { "everyTurns": 4, "boost": 1.5, "text": "Tyranitar's eyes glow red..." },
+      "levelBonus": 3,
+      "hpBoostPercent": 300,
+      "entryCost": 400,
+      "shield": {
+        "at": [
+          0.66,
+          0.33
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.66,
+          "text": "The tyrant stomps and the sand rises!",
+          "weather": "sand",
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.33,
+          "text": "The tyrant is enraged!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 4,
+        "boost": 1.5,
+        "text": "Tyranitar's eyes glow red..."
+      },
       "weather": "sand",
-      "rewards": { "moneyPerLevel": 130, "items": [{ "item": "hyper-potion", "chance": 1 }, { "item": "revive", "chance": 0.3 }], "draftExtra": 2, "joinChance": 0.4 }
+      "rewards": {
+        "moneyPerLevel": 130,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.4
+      }
     },
     {
-      "id": "dragon-ascent", "name": "Dragon's Ascent", "tier": 4,
+      "id": "dragon-ascent",
+      "name": "Dragon's Ascent",
+      "tier": 4,
       "blurb": "Dragonite takes a second swing when it is nearly beaten.",
-      "species": ["dragonite"], "levelBonus": 3, "hpBoostPercent": 300, "entryCost": 400,
-      "shield": { "at": [0.5], "points": 0.2 },
-      "phases": [{ "atHp": 0.5, "text": "The dragon spreads its wings!", "boost": { "spa": 1, "spe": 1 } }],
-      "extraActions": { "belowHp": 0.35, "max": 3 },
-      "rewards": { "moneyPerLevel": 130, "items": [{ "item": "revive", "chance": 0.3 }], "draftExtra": 2, "joinChance": 0.4 }
-    },
-    {
-      "id": "steel-mind", "name": "Steel Mind", "tier": 5,
-      "blurb": "Metagross thinks ahead: shields, a charged attack and a bonus move.",
-      "species": ["metagross"], "levelBonus": 4, "hpBoostPercent": 400, "entryCost": 700,
-      "shield": { "at": [0.75, 0.4], "points": 0.15 },
-      "phases": [{ "atHp": 0.4, "text": "The steel mind calculates your weakness.", "boost": { "atk": 1, "def": 1 }, "clearPlayerStages": true }],
-      "telegraph": { "everyTurns": 3, "boost": 1.6, "text": "Metagross is calculating a crushing blow!" },
-      "extraActions": { "belowHp": 0.4, "max": 2 },
-      "timerTurns": 30,
-      "rewards": { "moneyPerLevel": 170, "items": [{ "item": "full-restore", "chance": 1 }], "draftExtra": 2, "joinChance": 0.35 }
-    },
-    {
-      "id": "sky-pillar-apex", "name": "Sky Pillar Apex", "tier": 6,
-      "blurb": "The apex raid: three shields, three phases, a charged attack, a bonus move and a timer.",
-      "species": ["rayquaza"], "levelBonus": 5, "hpBoostPercent": 500, "entryCost": 1000,
-      "shield": { "at": [0.75, 0.5, 0.25], "points": 0.12 },
-      "phases": [
-        { "atHp": 0.75, "text": "The sky darkens.", "weather": "hail" },
-        { "atHp": 0.5, "text": "The Sky Monarch roars!", "boost": { "atk": 1, "spa": 1 }, "clearPlayerStages": true },
-        { "atHp": 0.25, "text": "The apex is unleashed!", "boost": { "spe": 2 }, "cleanse": true }
+      "species": [
+        "dragonite"
       ],
-      "telegraph": { "everyTurns": 3, "boost": 1.7, "text": "Rayquaza is gathering the sky's power!" },
-      "extraActions": { "belowHp": 0.5, "max": 3 },
+      "levelBonus": 3,
+      "hpBoostPercent": 300,
+      "entryCost": 400,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The dragon spreads its wings!",
+          "boost": {
+            "spa": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "extraActions": {
+        "belowHp": 0.35,
+        "max": 3
+      },
+      "rewards": {
+        "moneyPerLevel": 130,
+        "items": [
+          {
+            "item": "revive",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.4
+      }
+    },
+    {
+      "id": "steel-mind",
+      "name": "Steel Mind",
+      "tier": 5,
+      "blurb": "Metagross thinks ahead: shields, a charged attack and a bonus move.",
+      "species": [
+        "metagross"
+      ],
+      "levelBonus": 4,
+      "hpBoostPercent": 400,
+      "entryCost": 700,
+      "shield": {
+        "at": [
+          0.75,
+          0.4
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.4,
+          "text": "The steel mind calculates your weakness.",
+          "boost": {
+            "atk": 1,
+            "def": 1
+          },
+          "clearPlayerStages": true
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 3,
+        "boost": 1.6,
+        "text": "Metagross is calculating a crushing blow!"
+      },
+      "extraActions": {
+        "belowHp": 0.4,
+        "max": 2
+      },
+      "timerTurns": 30,
+      "rewards": {
+        "moneyPerLevel": 170,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.35
+      }
+    },
+    {
+      "id": "sky-pillar-apex",
+      "name": "Sky Pillar Apex",
+      "tier": 6,
+      "blurb": "The apex raid: three shields, three phases, a charged attack, a bonus move and a timer.",
+      "species": [
+        "rayquaza"
+      ],
+      "levelBonus": 5,
+      "hpBoostPercent": 500,
+      "entryCost": 1000,
+      "shield": {
+        "at": [
+          0.75,
+          0.5,
+          0.25
+        ],
+        "points": 0.12
+      },
+      "phases": [
+        {
+          "atHp": 0.75,
+          "text": "The sky darkens.",
+          "weather": "hail"
+        },
+        {
+          "atHp": 0.5,
+          "text": "The Sky Monarch roars!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          },
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.25,
+          "text": "The apex is unleashed!",
+          "boost": {
+            "spe": 2
+          },
+          "cleanse": true
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 3,
+        "boost": 1.7,
+        "text": "Rayquaza is gathering the sky's power!"
+      },
+      "extraActions": {
+        "belowHp": 0.5,
+        "max": 3
+      },
       "timerTurns": 40,
-      "rewards": { "moneyPerLevel": 250, "items": [{ "item": "full-restore", "chance": 1 }, { "item": "revive", "chance": 0.5 }], "draftExtra": 3, "joinChance": 0.3 }
+      "rewards": {
+        "moneyPerLevel": 250,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 3,
+        "joinChance": 0.3
+      }
+    },
+    {
+      "id": "garden-guardian",
+      "name": "Garden Guardian",
+      "tier": 1,
+      "blurb": "Venusaur shrugs off early hits behind a wall of leaves.",
+      "species": [
+        "venusaur"
+      ],
+      "levelBonus": 0,
+      "hpBoostPercent": 150,
+      "entryCost": 0,
+      "shield": null,
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The flowers bloom! Its defenses rise.",
+          "boost": {
+            "def": 1,
+            "spd": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 60,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 0,
+        "joinChance": 0.5
+      },
+      "weather": "sun"
+    },
+    {
+      "id": "venom-reef",
+      "name": "Venom Reef",
+      "tier": 2,
+      "blurb": "Toxapex hides behind a toxic shell.",
+      "species": [
+        "toxapex"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 200,
+      "entryCost": 100,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The reef bubbles with poison!",
+          "boost": {
+            "spd": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 80,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          },
+          {
+            "item": "ether",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.45
+      }
+    },
+    {
+      "id": "midnight-haunt",
+      "name": "Midnight Haunt",
+      "tier": 3,
+      "blurb": "Gengar fades in and out of the dark and winds up a Shadow Ball.",
+      "species": [
+        "gengar"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 230,
+      "entryCost": 200,
+      "shield": {
+        "at": [
+          0.6
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The room goes cold...",
+          "boost": {
+            "spa": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.4
+      },
+      "telegraph": {
+        "everyTurns": 4,
+        "boost": 1.5,
+        "text": "Gengar is gathering shadows!"
+      }
+    },
+    {
+      "id": "sand-sovereign",
+      "name": "Sand Sovereign",
+      "tier": 5,
+      "blurb": "Garchomp rules the dunes and strikes again when cornered.",
+      "species": [
+        "garchomp"
+      ],
+      "levelBonus": 4,
+      "hpBoostPercent": 380,
+      "entryCost": 700,
+      "shield": {
+        "at": [
+          0.7,
+          0.35
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.7,
+          "text": "A sandstorm answers the sovereign's roar.",
+          "weather": "sand",
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.35,
+          "text": "The sovereign is furious!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 170,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.4
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.35
+      },
+      "extraActions": {
+        "belowHp": 0.3,
+        "max": 2
+      }
+    },
+    {
+      "id": "mind-zenith",
+      "name": "Mind Zenith",
+      "tier": 6,
+      "blurb": "Mewtwo reads every move and answers with a crushing blow.",
+      "species": [
+        "mewtwo"
+      ],
+      "levelBonus": 5,
+      "hpBoostPercent": 480,
+      "entryCost": 1000,
+      "shield": {
+        "at": [
+          0.75,
+          0.5,
+          0.25
+        ],
+        "points": 0.12
+      },
+      "phases": [
+        {
+          "atHp": 0.75,
+          "text": "Mewtwo's mind opens.",
+          "boost": {
+            "spa": 1
+          }
+        },
+        {
+          "atHp": 0.5,
+          "text": "Psychic force fills the arena!",
+          "boost": {
+            "spa": 1,
+            "spe": 1
+          },
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.25,
+          "text": "Mewtwo breaks its own limits!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 250,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 3,
+        "joinChance": 0.3
+      },
+      "telegraph": {
+        "everyTurns": 3,
+        "boost": 1.7,
+        "text": "Mewtwo is focusing a crushing blow!"
+      }
     }
   ]
 }

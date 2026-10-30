@@ -279,7 +279,7 @@ export class MapScene extends Phaser.Scene {
     for (const b of buttons) {
       const bxPos = x;
       drawPanel(this, bxPos, 444, 92, 52, { fill: b.color, border: b.color === COLORS.panel ? COLORS.border : mixColor(b.color, 0xffffff, 0.35) });
-      this.add.text(bxPos + 46, 470, b.label, textStyle(22, '#ffffff')).setOrigin(0.5);
+      this.add.text(bxPos + 46, 470, b.label, textStyle(b.label.length > 7 ? 16 : 22, '#ffffff')).setOrigin(0.5);
       this.addOption(b.option, () => this.boxCursor(bxPos, 444, 92, 52), { x: bxPos, y: 444, w: 92, h: 52 });
       x += 100;
     }
@@ -548,7 +548,7 @@ export class MapScene extends Phaser.Scene {
     const { session } = services();
     const pv = minigamePreview(session.content, session.run!, sideId);
     const picker: Picker = new Picker(this, {
-      title: `${pv.name} — ${pv.attemptsLeft} attempt${pv.attemptsLeft === 1 ? '' : 's'} left`,
+      title: `${pv.name} - ${pv.attemptsLeft} attempt${pv.attemptsLeft === 1 ? '' : 's'} left`,
       columns: 1,
       rowHeight: 120,
       rows: pv.tiers.map((t) => ({
@@ -582,7 +582,7 @@ export class MapScene extends Phaser.Scene {
     const { session } = services();
     const pv = expeditionPreview(session.content, session.run!, sideId);
     const picker: Picker = new Picker(this, {
-      title: `Expedition — Tier ${pv.tier}: ${pv.name}`,
+      title: `Expedition - Tier ${pv.tier}: ${pv.name}`,
       columns: 1,
       rowHeight: 190,
       rows: [
@@ -622,7 +622,7 @@ export class MapScene extends Phaser.Scene {
     const pv = totemPreview(content, session.run!, sideId);
     const species = content.species.get(pv.speciesId)!;
     const picker: Picker = new Picker(this, {
-      title: `Totem — ${pv.name}`,
+      title: `Totem - ${pv.name}`,
       columns: 1,
       rowHeight: 170,
       rows: [
@@ -663,7 +663,7 @@ export class MapScene extends Phaser.Scene {
     const species = content.species.get(pv.speciesId)!;
     const poor = session.run!.money < pv.entryCost;
     const picker: Picker = new Picker(this, {
-      title: `Raid — Tier ${pv.tier}: ${pv.name}`,
+      title: `Raid - Tier ${pv.tier}: ${pv.name}`,
       columns: 1,
       rowHeight: 150,
       rows: [

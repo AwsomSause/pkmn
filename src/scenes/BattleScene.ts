@@ -91,6 +91,8 @@ export class BattleScene extends Phaser.Scene {
   private fieldBase = 0;
   /** The stage's types, for the ambience and the intro. */
   private arenaTypes: readonly string[] = [];
+  /** Raid / Totem status line (shield, phases, ally calls). */
+  private status!: Phaser.GameObjects.Text;
   private fx!: BattleFx;
   private advance: (() => void) | null = null;
   private busy = false;
@@ -132,7 +134,7 @@ export class BattleScene extends Phaser.Scene {
     const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
-    playMusic(this, battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle');
+    playMusic(this, this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? (battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle'));
     this.menu = null;
     this.picker = null;
     this.advance = null;
@@ -146,7 +148,8 @@ export class BattleScene extends Phaser.Scene {
     const boss = this.boss();
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
     const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
-    const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
+    const raidArena = this.raidArena(battle);
+    const bg = raidArena ?? (arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
     else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
@@ -171,6 +174,8 @@ export class BattleScene extends Phaser.Scene {
     this.enemyBox = this.makeInfoBox(0, 30, false);
     this.playerBox = this.makeInfoBox(GAME_WIDTH - 390, MESSAGE_Y - 132, true);
     this.header = this.add.text(GAME_WIDTH - 16, 10, '', textStyle(20, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
+    // Raid and Totem status sits under the enemy's box, away from the boss sprite.
+    this.status = this.add.text(12, 186, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 470 } }));
     this.updateHeader();
 
     // PokeRogue's message bar along the bottom, with the command window on its right.
@@ -420,9 +425,22 @@ export class BattleScene extends Phaser.Scene {
     if (this.motion === 'full') this.tweens.add({ targets: g, alpha: 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
+  /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
+  private raidArena(battle: RunState['battle'] & object): string | null {
+    const { content } = services().session;
+    let key: string | null = null;
+    if (battle.raid) {
+      const tier = content.raids.raids.find((r) => r.id === battle.raid!.id)?.tier ?? 1;
+      key = tier <= 2 ? 'ultra' : tier <= 4 ? 'max' : 'tera';
+    } else if (battle.totem) key = 'tera2';
+    const id = key ? `bg.raid.${key}` : null;
+    return id && this.textures.exists(id) ? id : null;
+  }
+
   /** The normal header, plus a raid status line (shield, phase count, charged attack, timer). */
   private updateHeader(): void {
     this.updateHeaderBase();
+    this.status.setText('');
     const totem = this.run.battle?.totem;
     if (totem) {
       const tdef = services().session.content.totems.totems.find((x) => x.id === totem.id);
@@ -430,7 +448,7 @@ export class BattleScene extends Phaser.Scene {
       const bits = ['TOTEM', tdef?.aura.text ?? ''];
       if (tdef?.ally) bits.push(out ? 'ALLY ON FIELD: defeat it' : totem.callsUsed >= tdef.ally.maxCalls ? 'no more ally calls' : `ally calls ${totem.callsUsed}/${tdef.ally.maxCalls}`);
       if (tdef && tdef.phases.length > 0) bits.push(`phase ${totem.phasesDone.length}/${tdef.phases.length}`);
-      this.header.setText(`${this.header.text}\n${bits.join('  ·  ')}`);
+      this.status.setText(bits.join('  ·  '));
       return;
     }
     const raid = this.run.battle?.raid;
@@ -442,7 +460,7 @@ export class BattleScene extends Phaser.Scene {
     if (def && def.phases.length > 0) parts.push(`phase ${raid.phasesDone.length}/${def.phases.length}`);
     if (raid.charging) parts.push('!! CHARGED ATTACK !!');
     if (raid.timerLeft !== null) parts.push(`${raid.timerLeft} turns left`);
-    this.header.setText(`${this.header.text}\n${parts.join('  ·  ')}`);
+    this.status.setText(parts.join('  ·  '));
   }
 
   private updateHeaderBase(): void {

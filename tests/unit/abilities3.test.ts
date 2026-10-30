@@ -87,6 +87,12 @@ describe('form changes', () => {
     d.go();
     expect(d.enemy.speciesId).toBe('darmanitan-zen');
   });
+  it('Shields Down turns Minior into its Core form below half HP', () => {
+    const d = duel({ enemy: 'minior', pMove: 'tackle' });
+    d.enemy.hp = Math.floor(d.enemy.hp / 3);
+    d.go();
+    expect(d.enemy.speciesId).toBe('minior-core');
+  });
   it('Desolate Land makes water moves fail and keeps the weather', () => {
     const d = duel({ eAbility: 'desolate-land', pMove: 'water-gun' });
     const es = d.go();
