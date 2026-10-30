@@ -68,6 +68,8 @@ export interface DamageDealtInfo {
   turnsOut?: number;
   /** The target has a status condition. */
   targetStatused?: boolean;
+  /** Encore!: the Hype boost is running. */
+  hypeActive?: boolean;
   moveIsZ?: boolean;
   moveIsSpread?: boolean;
   /** Place in the party (0 = first) and the party's size. */
@@ -98,6 +100,7 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveDamageMultiplier');
   if ((i.turnsOut ?? 0) >= 1) v *= product(perks, 'stayingDamageMultiplier');
   if (i.targetStatused) v *= product(perks, 'statusedFoeDamageMultiplier');
+  if (i.hypeActive) for (const m of of(perks, 'hypeMeter')) v *= m.damage;
   if (i.moveIsZ) v *= product(perks, 'zMoveDamageMultiplier');
   v *= product(perks, 'spreadMoveDamageMultiplier', (m) => m.spread === Boolean(i.moveIsSpread));
   v *= product(perks, 'partyPositionDamage', (m) => (m.position === 'first' ? i.partyIndex === 0 : i.partyIndex !== undefined && i.partySize !== undefined && i.partyIndex === i.partySize - 1));
@@ -476,4 +479,13 @@ export function poisonDamagePerk(perks: Perks | undefined): number {
 /** Enemy accuracy against one of your Pokémon is divided by this. */
 export function evasionPerk(perks: Perks | undefined, types: readonly TypeName[]): number {
   return product(perks, 'evasionMultiplier', (m) => !m.type || types.includes(m.type));
+}
+
+export function hypeMeterOf(perks: Perks | undefined): { needed: number; damage: number; turns: number; missPenalty: number } | null {
+  const m = of(perks, 'hypeMeter')[0];
+  return m ? { needed: m.needed, damage: m.damage, turns: m.turns, missPenalty: m.missPenalty } : null;
+}
+
+export function thirdBossLevels(perks: Perks | undefined): number {
+  return sum(perks, 'thirdBossLevels', (m) => m.value);
 }

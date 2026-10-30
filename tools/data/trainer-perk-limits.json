@@ -18,7 +18,6 @@
  "team-rocket": "Stolen Pokémon and illicit captures grant 25% more rewards is read as: the prize money after catching a wild Pokémon is 25% higher.",
  "thorton": "Unusual means a type pairing held by 6 or fewer species or an ability held by 12 or fewer; common means an ability held by 60 or more.",
  "tierno": "Dance moves are listed by name (Swords Dance, Dragon Dance, Quiver Dance and the other dances); sound moves use the data's sound flag.",
- "todd-snap": "Newly documented species advance Field Research milestones (Perfect Shot) is not built: that mechanic belongs to Champion Oak for now.",
  "trevor": "Pokédex rewards increase by 20% is read as: Research Points at the end of a run are 20% higher.",
  "volo": "Legendary, Mythical and Ultra Beast Pokémon deal the bonus damage.",
  "wally": "After defeating an enemy is read as: once your side has defeated an enemy in the same trainer battle. It has no effect in wild battles.",
@@ -35,5 +34,6 @@
  "morty": "Ghost-types gaining 10% evasion is not built (no evasion perk yet).",
  "marley": "Pokémon gaining 15% evasion is not built (no evasion perk yet).",
  "mallow": "Food bonuses lasting 25% longer is not built (no food bonus yet).",
- "lana": "Fishing encounters with better rare Pokémon odds is not built (no fishing yet)."
+ "lana": "Fishing encounters with better rare Pokémon odds is not built (no fishing yet).",
+ "zinnia": "Every third boss gains a random secondary type or additional combat modifier: built as the 'additional combat modifier' half (+3 levels on every third boss); the random secondary type is not built (a boss's types come from its species)."
 }

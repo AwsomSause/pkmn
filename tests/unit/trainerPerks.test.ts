@@ -3,14 +3,14 @@
 import { describe, expect, it } from 'vitest';
 import { getArchetype, healingMultiplier } from '../../src/core/archetypes';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
-import { chooseStarter, createRun, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
+import { chooseStarter, createRun, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
 import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
-import { createBattle } from '../../src/core/battle/engine';
+import { applyHype, createBattle } from '../../src/core/battle/engine';
 import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
-  poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  hypeMeterOf, thirdBossLevels, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
@@ -195,7 +195,7 @@ describe('trainer perks, batch 2', () => {
     const decisions = signatureDecisions(content, run, battle);
     expect(decisions).toHaveLength(1);
     run.pending = decisions;
-    const message = chooseSignatureOption(run, 0);
+    const message = chooseSignatureOption(run, 0).message;
     expect(message).toMatch(/Fire/);
     expect(run.perkEffects).toEqual([{ kind: 'damageVsTypeMultiplier', foeType: 'fire', value: 1.1 }]);
     const first = damageDealtPerk([...perks('blue-gen-3-champion'), ...run.perkEffects], { userTypes: ['normal'], physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal', userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['fire'] });
@@ -666,4 +666,85 @@ describe('trainer perks, batch L (Lana to Lysandre)', () => {
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }
   }, 300_000);
+
+  describe('signature mechanics (Encore!, Perfect Shot, The Final Revelation, Meteor\'s Prophecy)', () => {
+    const start = (archetypeId: string) => chooseStarter(content, createRun(content, { runId: 't', seed: 'sig', archetypeId }), 0);
+    const foe = (run: ReturnType<typeof start>) => ({ ...run.party[0]!, uid: 'e1', speciesId: 'charizard', level: 30 });
+    const bossWin = (run: ReturnType<typeof start>, classId = 'gym-leader') => {
+      const b = createBattle('trainer', [foe(run)], 0, run.party[0]!.uid, { classId, name: 'Boss', leaderId: 'brock' });
+      b.outcome = 'win';
+      return b;
+    };
+
+    it('Encore!: crits build Hype, five Hype starts a 30% boost for two turns, misses cost two, a boss resets it', () => {
+      const run = start('ryuki');
+      const meter = hypeMeterOf(perks('ryuki'));
+      expect(meter).toEqual({ needed: 5, damage: 1.3, turns: 2, missPenalty: 2 });
+      const battle = createBattle('trainer', [foe(run)], 0, run.party[0]!.uid, { classId: 'youngster', name: 'Joey', leaderId: null });
+      const ctx = { battle, perks: perks('ryuki') } as never;
+      const crit = { type: 'damage', side: 'enemy', amount: 5, hpAfter: 1, effectiveness: 1, crit: true } as never;
+      applyHype(ctx, [crit, crit, crit]);
+      expect(battle.hype).toBe(3);
+      applyHype(ctx, [{ type: 'miss', side: 'player' } as never]);
+      expect(battle.hype).toBe(1);
+      applyHype(ctx, [crit, crit, crit, crit]);
+      expect(battle.hype).toBe(0);
+      expect(battle.hypeTurns).toBe(2);
+      applyHype(ctx, []);
+      expect(battle.hypeTurns).toBe(1);
+      const hit = { userTypes: ['dragon'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'dragon' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+      expect(damageDealtPerk(perks('ryuki'), { ...hit, hypeActive: true }) / damageDealtPerk(perks('ryuki'), hit)).toBeCloseTo(1.3);
+    });
+
+    it('The Final Revelation: every third boss offers a relic and hardens later bosses, up to three times', () => {
+      const run = start('volo');
+      run.log.counters.gymLeadersDefeated = 1;
+      expect(signatureDecisions(content, run, bossWin(run))).toHaveLength(0);
+      run.log.counters.gymLeadersDefeated = 2;
+      run.pending = signatureDecisions(content, run, bossWin(run));
+      expect(run.pending).toHaveLength(1);
+      chooseSignatureOption(run, 0);
+      expect(run.perkEffects).toEqual([{ kind: 'damageMultiplier', value: 1.1 }, { kind: 'bossDamageTakenMultiplier', value: 1.1 }]);
+      for (let i = 0; i < 4; i++) {
+        run.pending = signatureDecisions(content, run, bossWin(run));
+        chooseSignatureOption(run, 1);
+      }
+      expect(run.perkEffects.filter((m) => m.kind === 'bossDamageTakenMultiplier' && m.value === 1.1)).toHaveLength(3);
+    });
+
+    it("Meteor's Prophecy: a temporary prophecy runs out after its battle; the Dragon relic stays", () => {
+      const run = start('zinnia');
+      expect(thirdBossLevels(perks('zinnia'))).toBe(3);
+      run.log.counters.gymLeadersDefeated = 2;
+      run.pending = signatureDecisions(content, run, bossWin(run));
+      chooseSignatureOption(run, 2);
+      expect(run.tempEffects).toHaveLength(1);
+      expect(run.perkEffects).toHaveLength(2);
+      tickTempEffects(run, createBattle('trainer', [foe(run)], 0, run.party[0]!.uid, { classId: 'youngster', name: 'Joey', leaderId: null }), false);
+      expect(run.perkEffects).toHaveLength(2);
+      tickTempEffects(run, bossWin(run), true);
+      expect(run.perkEffects).toHaveLength(0);
+      expect(run.tempEffects).toHaveLength(0);
+      run.pending = signatureDecisions(content, run, bossWin(run));
+      chooseSignatureOption(run, 1);
+      expect(run.perkEffects).toHaveLength(2);
+    });
+
+    it('Perfect Shot: every third newly caught species offers a choice', () => {
+      const run = start('todd-snap');
+      const catchBattle = (speciesId: string) => {
+        const b = createBattle('wild', [{ ...foe(run), speciesId }], 0, run.party[0]!.uid, null);
+        b.outcome = 'caught';
+        return b;
+      };
+      run.log.speciesCaught = ['pidgey', 'rattata'];
+      expect(signatureDecisions(content, run, catchBattle('pidgey'))).toHaveLength(0);
+      run.log.speciesCaught = ['pidgey', 'rattata', 'zubat'];
+      expect(signatureDecisions(content, run, catchBattle('rattata'))).toHaveLength(0);
+      run.pending = signatureDecisions(content, run, catchBattle('zubat'));
+      expect(run.pending).toHaveLength(1);
+      const res = chooseSignatureOption(run, 1);
+      expect(res.grant).toEqual({ partyLevels: 1 });
+    });
+  });
 });

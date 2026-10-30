@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk, thirdBossLevels } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -202,6 +202,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     // A game event's themed rules work like trainer perks for the whole run.
     perkEffects: gameEventModifiers(content, opts.gameEvents ?? []),
     signatureApplied: {},
+    hype: 0,
+    tempEffects: [],
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
@@ -436,6 +438,21 @@ function enterLeague(content: Content, run: RunState): void {
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
+}
+
+/** Signature effects that run out: counts this battle against each and removes the finished ones from the run's perks (mutates `run`). */
+export function tickTempEffects(run: RunState, battle: BattleState, boss: boolean): void {
+  const kept: RunState['tempEffects'] = [];
+  for (const temp of run.tempEffects) {
+    const counts = temp.until === 'battle' || (temp.until === 'boss' && boss) || (temp.until === 'wild' && battle.kind === 'wild' && !battle.trainer);
+    if (counts && temp.battles <= 1) {
+      for (const effect of temp.effects) {
+        const at = run.perkEffects.findIndex((m) => JSON.stringify(m) === JSON.stringify(effect));
+        if (at >= 0) run.perkEffects.splice(at, 1);
+      }
+    } else kept.push(counts ? { ...temp, battles: temp.battles - 1 } : temp);
+  }
+  run.tempEffects = kept;
 }
 
 /** Moves every party Pokémon up or down by whole levels (a trainer perk); experience follows the level. */
@@ -1087,6 +1104,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
+    // Meteor's Prophecy: every third boss is stronger.
+    const bossLevels = thirdBossLevels(runPerks(content, run));
+    if (bossLevels > 0 && (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion')) {
+      const c = run.log.counters;
+      if (((c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + 1) % 3 === 0) plan = { ...plan, members: plan.members.map((m) => ({ ...m, level: m.level + bossLevels })) };
+    }
     // A trainer that vowed to return takes the place of the first ordinary trainer of a later stage.
     const rule = node.kind === 'trainer' && !rematch ? rematchRule(content) : null;
     const back = rule ? waitingTrainer(run) : null;
@@ -1344,6 +1367,11 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
   const archetype = runArchetype(content, run);
   syncHpPerks(content, archetype.modifiers, run.party);
   const attributes = runAttributeEffects(content, run);
+  // Encore!: the run's Hype goes into the battle once.
+  if (!run.battle!.hypeLoaded) {
+    run.battle!.hype = run.hype;
+    run.battle!.hypeLoaded = true;
+  }
   return {
     content,
     battle: run.battle!,
@@ -1740,6 +1768,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
     }
   }
+  // Encore! Hype carries between battles and resets after a boss battle.
+  run.hype = isBossClass(classId) ? 0 : battle.hype;
+  tickTempEffects(run, battle, isBossClass(classId));
   if (won) {
     const share = postBattleHealShare(runArchetype(content, run).modifiers);
     if (share > 0) for (const mon of run.party) if (mon.hp > 0) mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.ceil(maxHp(content, mon) * share));
@@ -2020,7 +2051,10 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     }
   } else if (decision.kind === 'signature') {
     if (choice.kind !== 'signature') throw new Error('Choose one of the options');
-    message = chooseSignatureOption(run, choice.optionIndex);
+    const chosen = chooseSignatureOption(run, choice.optionIndex);
+    message = chosen.message;
+    for (const [itemId, qty] of Object.entries(chosen.grant?.items ?? {})) addItem(run.inventory, itemId, qty);
+    if (chosen.grant?.partyLevels) shiftPartyLevels(content, run, chosen.grant.partyLevels);
   } else {
     const mon = run.party.find((p) => p.uid === decision.uid);
     if (!mon) {

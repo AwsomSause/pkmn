@@ -4823,7 +4823,7 @@
     "signatureSpecies": [],
     "signaturePool": "trainer-todd-snap",
     "eventTags": [],
-    "signatureMechanic": null
+    "signatureMechanic": "perfect-shot"
   },
   {
     "id": "trace",
@@ -5059,7 +5059,7 @@
     ],
     "signaturePool": "trainer-volo",
     "eventTags": [],
-    "signatureMechanic": null
+    "signatureMechanic": "final-revelation"
   },
   {
     "id": "wallace-gen-6",
@@ -5481,6 +5481,26 @@
         "kind": "encounterWeightMultiplier",
         "group": "legendary",
         "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.8
+      },
+      {
+        "kind": "priceMultiplier",
+        "items": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-restore",
+          "full-heal",
+          "revive"
+        ],
+        "value": 1.15
+      },
+      {
+        "kind": "thirdBossLevels",
+        "value": 3
       }
     ],
     "signatureTypes": [
@@ -5494,7 +5514,7 @@
     ],
     "signaturePool": "trainer-zinnia",
     "eventTags": [],
-    "signatureMechanic": null
+    "signatureMechanic": "meteors-prophecy"
   },
   {
     "id": "sabrina-lgpe",
@@ -7348,6 +7368,13 @@
         "type": "dragon",
         "moveType": "ice",
         "value": 1.15
+      },
+      {
+        "kind": "hypeMeter",
+        "needed": 5,
+        "damage": 1.3,
+        "turns": 2,
+        "missPenalty": 2
       }
     ],
     "signatureTypes": [
@@ -7361,7 +7388,7 @@
     ],
     "signaturePool": "trainer-ryuki",
     "eventTags": [],
-    "signatureMechanic": null
+    "signatureMechanic": "encore"
   },
   {
     "id": "magnus",
