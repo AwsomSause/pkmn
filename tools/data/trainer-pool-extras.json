@@ -68,5 +68,40 @@
   "totodile",
   "sneasel",
   "gastly"
+ ],
+ "red-classic": [
+  "bulbasaur",
+  "charmander",
+  "squirtle"
+ ],
+ "rei": [
+  "pikachu",
+  "eevee",
+  "vulpix"
+ ],
+ "peonia": [
+  "eevee",
+  "pikachu",
+  "bulbasaur"
+ ],
+ "rowan": [
+  "starly",
+  "bidoof",
+  "shinx"
+ ],
+ "rosa": [
+  "snivy",
+  "tepig",
+  "oshawott"
+ ],
+ "red-masters": [
+  "pikachu",
+  "charmander",
+  "squirtle"
+ ],
+ "palmer": [
+  "spiritomb",
+  "gible",
+  "garchomp"
  ]
 }
