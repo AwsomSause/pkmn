@@ -38,7 +38,9 @@ import { bossVictory } from '../ui/battleFx/victoryLook';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
-import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
+import { battleTrack, victoryTrack } from '../core/presentation/battleMusic';
+import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { wouldRefuse } from '../core/bond';
@@ -177,6 +179,11 @@ export class BattleScene extends Phaser.Scene {
     const enemyForms = (run?.battle?.enemyTeam ?? []).flatMap((m) => [...stoneForms(content, m.speciesId, false), ...stoneForms(content, m.speciesId, true)].map((o) => o.formId));
     preloadPokemon(this, formsOf(partyForms), { back: true, shiny: true, cry: true });
     preloadPokemon(this, formsOf(enemyForms), { front: true, shiny: true, cry: true });
+    // Lazy music: the GB Sounds loop if owned, and the victory fanfare this battle would end with.
+    if (run?.battle) {
+      const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
+      queueAssets(this, [...gb, victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+    }
   }
 
   create(): void {
@@ -190,7 +197,14 @@ export class BattleScene extends Phaser.Scene {
     const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
-    playMusic(this, this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? (battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle'));
+    playMusic(
+      this,
+      battleTrack({
+        raidTrack: this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? null,
+        trainer: battle.kind === 'trainer',
+        gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
+      }),
+    );
     this.startProceduralAudio(battle);
     this.menu = null;
     this.picker = null;
@@ -1289,6 +1303,10 @@ export class BattleScene extends Phaser.Scene {
   private async finish(result: TurnResult, trainer: string | null, bossWin: { boss: BossInfo; art: { assetId: string; label: string } | null; turn: number; active: number } | null = null): Promise<void> {
     const content = services().session.content;
     const end = result.end!;
+    if (end.outcome === 'win') {
+      stopProceduralAudio();
+      playMusic(this, victoryTrack({ trainer: Boolean(trainer), boss: Boolean(bossWin) }));
+    }
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
     if (end.outcome === 'win' && trainer) {
       await this.playBeat(stamp(this, 'VICTORY!', trainer, this.foeRim(), this.motion));

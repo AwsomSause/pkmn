@@ -157,4 +157,10 @@ describe('Attract and held story items', () => {
     d.go();
     expect(d.p.speciesId).toBe('giratina-origin');
   });
+  it('Keldeo Resolution turns Keldeo into its Resolute form in battle', () => {
+    const d = duel('keldeo', 'snorlax', ['splash']);
+    d.p.held = { 'keldeo-resolution': 1 };
+    d.go();
+    expect(d.p.speciesId).toBe('keldeo-resolute');
+  });
 });

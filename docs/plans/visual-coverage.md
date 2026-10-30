@@ -61,7 +61,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Champion framing, ace indicator, unique motif | PART | role rims (gym gold, Elite violet, champion pale gold) + ACE beat (slice 4); unique champion arena: slice 10 |
 | Phase-change banner with written rule | BUILT | `phaseBanner` in `battleFx/spectacle.ts`: raid/totem phase events (slice 7) |
 | Ace entry beat | BUILT | last Pokémon of a trainer team: burst + ACE! stamp (slice 4) |
-| Victory pose / particles / Chronicle stamp | BUILT | hop + VICTORY!/BADGE GET!/CHAMPION! stamps with sparkles (slice 4) |
+| Victory pose / particles / Chronicle stamp | BUILT | hop + VICTORY!/BADGE GET!/CHAMPION! stamps with sparkles (slice 4); victory fanfare per battle kind (slice 21) |
 | Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | BUILT | full cinematics (slice 8c, `battleFx/cinematics.ts`); before: DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
 | Evolution sequence | BUILT | slice 10: the Pokémon turns to light, pulses faster and faster with rays and rising motes, then bursts into its new form (after battle and mid-battle); before: burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
 | Rival callouts from real memory | BUILT | rival lines come from Drama/rival memory and show in the speech bubble (slice 7) |
