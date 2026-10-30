@@ -1127,63 +1127,63 @@
    "name": "The Neglected Ace",
    "group": "Relationship-centered arcs",
    "text": "A powerful Pokémon receives little care outside battle. | The trainer changes their behavior, the Pokémon withdraws, or the relationship is restructured.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-outgrows-its-trainer",
    "name": "The Pokémon Who Outgrows Its Trainer",
    "group": "Relationship-centered arcs",
    "text": "A partner becomes more capable and independent. | The trainer adapts, resents the change, or learns to become a better partner.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "team-divided",
    "name": "The Team Divided",
    "group": "Relationship-centered arcs",
    "text": "Two Pokémon compete for attention or status. | The trainer restores balance or allows the conflict to deepen.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fearful-partner",
    "name": "The Fearful Partner",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon struggles with a particular battle situation. | Gradual confidence, continued accommodation, or a difficult separation from that role.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overprotective-trainer",
    "name": "The Overprotective Trainer",
    "group": "Relationship-centered arcs",
    "text": "Refuses to let Pokémon take reasonable risks. | Learns to trust their judgment—or remains unable to accept uncertainty.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unlikely-pair",
    "name": "The Unlikely Pair",
    "group": "Relationship-centered arcs",
    "text": "Trainer and Pokémon have contrasting personalities. | They find complementary roles or discover that affection cannot solve every incompatibility.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "partner-who-stayed",
    "name": "The Partner Who Stayed",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon remains loyal through repeated hardship. | The trainer finally recognizes the sacrifices that loyalty involved.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "independent-ace",
    "name": "The Independent Ace",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon increasingly acts on its own instincts. | The pair develops mutual trust or becomes unable to work together.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-recovery",
    "name": "The Shared Recovery",
    "group": "Relationship-centered arcs",
    "text": "Trainer and Pokémon both struggle after a crisis. | They rebuild together, potentially unlocking a distinctive controlled Hyper/Overdrive expression.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "friends-become-rivals",
@@ -1253,70 +1253,70 @@
    "name": "The Uncontrolled Prodigy",
    "group": "Overdrive-specific character arcs",
    "text": "enormous potential, insufficient control. Their progress depends on discipline and honest feedback.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "trainer-who-feared-overdrive",
    "name": "The Trainer Who Feared Overdrive",
    "group": "Overdrive-specific character arcs",
    "text": "avoids the mechanic after witnessing a frightening incident. Their arc may involve careful reintroduction or a principled refusal to use it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-refuses",
    "name": "The Pokémon Who Refuses",
    "group": "Overdrive-specific character arcs",
    "text": "a Pokémon stops cooperating with a trainer's attempts to force a power breakthrough. The trainer must address the relationship, not grind a hidden meter.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "perfect-synchronization",
    "name": "The Perfect Synchronization",
    "group": "Overdrive-specific character arcs",
    "text": "a pair with exceptional trust develops precise control, but must learn how to cope when one partner's condition changes.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "artificial-shortcut",
    "name": "The Artificial Shortcut",
    "group": "Overdrive-specific character arcs",
    "text": "a trainer pursues an external shortcut to power. The story can explore unstable results, ethical compromises, or the eventual rejection of the shortcut.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overdrive-addict",
    "name": "The Overdrive Addict",
    "group": "Overdrive-specific character arcs",
    "text": "a trainer becomes obsessed with spectacular power surges, ignoring ordinary fundamentals and the welfare of their team.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "late-awakening",
    "name": "The Late Awakening",
    "group": "Overdrive-specific character arcs",
    "text": "a seemingly ordinary Pokémon discovers an unusual expression after years of accumulated experience.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-saves-the-trainer",
    "name": "The Pokémon Who Saves the Trainer",
    "group": "Overdrive-specific character arcs",
    "text": "a crisis reveals that the Pokémon's motivation is protecting its trainer rather than winning.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "broken-synchronization",
    "name": "The Broken Synchronization",
    "group": "Overdrive-specific character arcs",
    "text": "a major betrayal damages a previously reliable pairing. The duo must rebuild trust or accept that their old style no longer works.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "power-without-a-bond",
    "name": "The Power Without a Bond",
    "group": "Overdrive-specific character arcs",
    "text": "a rival can trigger an impressive state through exceptional skill or an unusual mechanism, but struggles with its consistency, meaning, or consequences.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "mechanics": [

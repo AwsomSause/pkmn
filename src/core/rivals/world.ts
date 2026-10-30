@@ -8,7 +8,7 @@ import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
 import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
-import { advanceArc } from './arcs';
+import { advanceArc, startTriggeredArc } from './arcs';
 import { simulateOffscreen } from './bonds';
 import { mostUsedType } from './adapt';
 import { formAlliances, grudgeType, mentorType, pokemonInfluence, trainingExchange } from './relations';
@@ -46,6 +46,7 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       // Background simulation: one bond event per stage, with its cause on record.
       const ev = simulateOffscreen(content, run, r, `${run.regionIndex}.${stage}`);
       if (ev?.visibility === 'rumor') rumor ??= `${title(content, r)}: ${ev.text}`;
+      startTriggeredArc(content, run, r);
     }
     if (!isHostile(r)) continue;
     const backed = rivalSponsorRoll(content, run, r, `${run.regionIndex}.${stage}`);
