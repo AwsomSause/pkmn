@@ -773,6 +773,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
   /** Prize money from double battles. */
   z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
+  z.object({ kind: z.literal('singleBattleXpMultiplier'), value: z.number().positive() }),
   /** Pokémon hatched from Eggs start this many levels higher. */
   z.object({ kind: z.literal('hatchLevelOffset'), value: z.number().int() }),
   /** Experience for Pokémon hatched from Eggs. */

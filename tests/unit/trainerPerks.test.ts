@@ -11,7 +11,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
-  hypeMeterOf, thirdBossLevels, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  hypeMeterOf, thirdBossLevels, doubleBattleRewardPerk, singleBattleXpPerk, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind, bonusRewardChancePerk, fishingRareTriesPerk,
@@ -710,6 +710,14 @@ describe('trainer perks, batch L (Lana to Lysandre)', () => {
         chooseSignatureOption(run, 1);
       }
       expect(run.perkEffects.filter((m) => m.kind === 'bossDamageTakenMultiplier' && m.value === 1.1)).toHaveLength(3);
+    });
+
+    it('Ingo and Tate & Liza: double battles pay 20% more, single battles give 10% less EXP', () => {
+      for (const id of ['ingo', 'tate-liza-gen-6']) {
+        expect(doubleBattleRewardPerk(perks(id))).toBeCloseTo(1.2);
+        expect(singleBattleXpPerk(perks(id))).toBeCloseTo(0.9);
+      }
+      expect(singleBattleXpPerk(perks('hop'))).toBe(1);
     });
 
     it("Meteor's Prophecy: a bonus type adds a second type without duplicating or touching the species", () => {
