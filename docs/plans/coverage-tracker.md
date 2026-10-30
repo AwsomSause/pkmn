@@ -216,3 +216,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D2 (§19), slice 4: Nursery done (buys a Mystery Egg, one per stop; hatching is the existing egg system). Left: Ability Researcher, Fossil, Safari, Black Market, Garden, School.
 - Untitled Phase D2 (§19), slice 5: Fossil Restoration done (two seeded fossils per stop, paid, revived at the party's average level). Left: Ability Researcher, Safari, Black Market, Garden, School.
 - Untitled Phase D2 (§19), slice 6: Training School done (+2 levels for one Pokémon, once per stop, level cap respected). Left: Ability Researcher, Safari, Black Market, Garden.
+- Untitled Phase D2 (§19), slice 7: Black Market done (three seeded shop items your badges haven't opened, at 2x; one buy). Left: Ability Researcher, Safari, Garden.

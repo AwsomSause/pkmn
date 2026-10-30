@@ -130,6 +130,13 @@ function fossilLots(content: Content, run: RunState, sideId: string): { id: stri
   return rng.shuffle(pool).slice(0, 2).map((e) => ({ id: e.id, name: e.name, species: (e.effect as { species: string }).species }));
 }
 
+/** Up to three shop items your badges haven't unlocked, fixed by the seed, with their marked-up prices. */
+function marketLots(content: Content, run: RunState, sideId: string): [Item, number][] {
+  const locked = content.shop.filter((e) => e.minBadges > run.badges.length && content.items.has(e.item)).sort((a, b) => a.item.localeCompare(b.item));
+  const rng = new Rng(hashSeed(`${run.seed}::market::${sideId}`));
+  return rng.shuffle(locked).slice(0, 3).map((e) => [content.items.get(e.item)!, Math.round(price(run, e.price) * C.marketMarkup)]);
+}
+
 function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
   const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
   const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
@@ -226,6 +233,12 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
     case 'school':
       for (const m of run.party) add(`class:${m.uid}`, `Enrol ${monName(content, m)}`, `+${C.schoolLevels} levels (now ${m.level}, cap ${runLevelCap(content, run)}).`, price(run, C.schoolPrice), side.used ? 'The school has closed for the day.' : m.hp <= 0 ? 'It has fainted.' : m.level >= runLevelCap(content, run) ? 'Already at the level cap.' : null);
       break;
+    case 'market': {
+      const lots = marketLots(content, run, sideId);
+      for (const [it, cost] of lots) add(`buy:${it.id}`, it.name, `${it.description}. Sold at ${C.marketMarkup}x the shop price.`, cost, side.used ? 'The dealer has packed up.' : null);
+      if (lots.length === 0) add('none', 'Nothing off the books', 'Your badges already open everything the shop sells.', 0, 'Nothing to sell you.');
+      break;
+    }
     case 'relic':
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
       break;
@@ -330,6 +343,11 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'rest': {
       changeFriendship(content, mon!, C.lodgeFriendship);
       message = `${monName(content, mon!)} had a lovely rest and trusts you more.`;
+      break;
+    }
+    case 'buy': {
+      addItem(run.inventory, uid!, 1);
+      message = `You slip the dealer your money and take the ${content.items.get(uid!)?.name ?? uid}.`;
       break;
     }
     case 'class': {
