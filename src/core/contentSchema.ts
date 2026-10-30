@@ -160,7 +160,7 @@ export const MoveSchema = z.object({
    * contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them).
    * `zmove`, `max`: a Z-Move or Max Move made in battle (battle/transform.ts); they hit through Protect for a quarter of their damage.
    */
-  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
+  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max', 'contact', 'punch', 'bite', 'pulse', 'sound', 'bullet', 'slicing', 'wind'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no

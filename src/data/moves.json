@@ -462,7 +462,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -476,7 +478,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -686,7 +690,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "hitsSemi": {
     "semi": "air",
@@ -1084,7 +1090,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1126,7 +1134,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "flinchChance": 20,
    "hitsSemi": {
@@ -1262,7 +1272,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1277,7 +1288,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -1413,7 +1426,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1522,7 +1536,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1748,7 +1764,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -1765,7 +1783,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1890,7 +1909,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1914,7 +1935,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1943,7 +1965,10 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing",
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -2017,7 +2042,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -2114,7 +2141,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "pulse"
+   "pulse",
+   "bullet"
   ],
   "effects": {}
  },
@@ -2152,7 +2180,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "drain": 0.5
   }
@@ -2212,7 +2242,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "frz",
@@ -2844,7 +2876,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "status": {
@@ -2890,7 +2923,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -3318,7 +3352,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -3355,7 +3391,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3670,7 +3708,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3934,7 +3974,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -4279,7 +4321,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -4472,7 +4515,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -4584,7 +4629,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -4644,7 +4691,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4713,7 +4762,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4921,7 +4972,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5015,7 +5068,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -5159,7 +5214,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -5202,7 +5259,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -5257,7 +5316,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "statChanges": [
@@ -5385,7 +5445,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -5638,7 +5700,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "psn",
@@ -6454,7 +6518,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -6469,7 +6534,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -6568,7 +6635,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6675,7 +6744,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -7174,7 +7245,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "confuse": {
     "chance": 30
@@ -7280,7 +7353,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -7532,7 +7607,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -7571,7 +7648,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "recharge": true
   }
@@ -7588,7 +7667,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "ignoreStages": true
@@ -7621,7 +7701,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "targetsDefense": true
   }
@@ -8569,7 +8651,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "charge": {
@@ -8622,7 +8705,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "weatherBall": true
   }
@@ -9051,7 +9136,9 @@
   "priority": -3,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "beakBlast": true
   }
@@ -9102,7 +9189,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "powerRule": "doubleDynamax"
@@ -9228,7 +9316,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -9496,7 +9586,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "sideMove": "spikes"
   }
@@ -10376,7 +10468,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "powerRule": "userSpeed"
   }
@@ -11980,7 +12074,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "bullet"
   ],
   "effects": {
    "powerRule": "targetSpeed"
@@ -12321,7 +12416,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "bullet"
   ],
   "effects": {
    "powerRule": "rollout"
@@ -14187,7 +14283,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -14217,7 +14315,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "hits": [
     10,
@@ -14394,7 +14494,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "powerRule": "electricTerrainBoost"
   }
@@ -15052,7 +15154,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -15946,7 +16050,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {},
   "supported": false,
   "needs": "Boosts user's stats in Incarnate Forme, or lowers opponent's stats in Therian Forme."
@@ -16078,7 +16184,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "sideMove": "stealthRock"
   }
@@ -16341,7 +16449,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "syrupBomb": true,
    "statChanges": [
@@ -16365,7 +16475,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "hits": [
     2,
@@ -16384,7 +16496,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "self",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "sideMove": "tailwind"
   }
@@ -17304,7 +17418,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "forceSwitch": true
   }
@@ -17374,7 +17490,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "par",

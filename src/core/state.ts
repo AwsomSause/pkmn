@@ -224,6 +224,8 @@ export const VolatileSchema = z.object({
   plannedMove: z.string().nullable().default(null),
   /** Grudge: the move that knocks it out loses its PP. */
   grudge: z.boolean().default(false),
+  /** Morpeko's Hunger Switch: currently in the Hangry mode. */
+  hangry: z.boolean().default(false),
   /** Roost: Flying type lost until the turn ends. */
   roost: z.boolean().default(false),
   /** Throat Chop: sound moves blocked for this many turns. */
@@ -300,6 +302,7 @@ export const freshVolatile = (): Volatile => ({
   mimicked: null,
   plannedMove: null,
   grudge: false,
+  hangry: false,
   roost: false,
   throat: 0,
   lostTypes: [],
@@ -328,7 +331,7 @@ export const BattleTransformSchema = z.object({
   /** The mechanics each side has already used this battle (each works once per battle). */
   used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
   /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
-  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax']), from: z.string() })),
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax', 'ability']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
@@ -349,6 +352,7 @@ export const freshExtra = () => ({
   delayed: [] as { side: 'player' | 'enemy'; turns: number; userUid: string; userSide: 'player' | 'enemy'; moveId: string }[],
   ionDeluge: false,
   wonderRoom: 0,
+  brokenFace: [] as string[],
   fairyLock: -9,
   passSub: { player: 0, enemy: 0 },
   healingWish: { player: 'none' as 'none' | 'wish' | 'dance', enemy: 'none' as 'none' | 'wish' | 'dance' },
@@ -387,7 +391,7 @@ export const BattleStateSchema = z.object({
   playerVolatile: VolatileSchema.default(freshVolatile),
   enemyVolatile: VolatileSchema.default(freshVolatile),
   /** The weather and how many turns it has left. */
-  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0), primal: z.string().optional() }).nullable().default(null),
   /** The terrain and how many turns it has left. */
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** Field-wide effects and their turns left. */
@@ -400,6 +404,8 @@ export const BattleStateSchema = z.object({
     delayed: z.array(z.object({ side: z.enum(['player', 'enemy']), turns: z.number().int(), userUid: z.string(), userSide: z.enum(['player', 'enemy']), moveId: z.string() })).default([]),
     ionDeluge: z.boolean().default(false),
     wonderRoom: z.number().int().default(0),
+    /** Pokémon whose Disguise / Ice Face is already used up. */
+    brokenFace: z.array(z.string()).default([]),
     fairyLock: z.number().int().default(-9),
     passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),
     healingWish: z.object({ player: z.enum(['none', 'wish', 'dance']).default('none'), enemy: z.enum(['none', 'wish', 'dance']).default('none') }).default({ player: 'none', enemy: 'none' }),
