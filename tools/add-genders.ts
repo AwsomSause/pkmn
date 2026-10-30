@@ -35,5 +35,27 @@ for (const s of species) {
   }
   s.femaleRatio = ratio.get(key)!;
 }
+
+// Gender-bound evolutions and the male / female forms.
+const byId = new Map(species.map((s) => [s.id, s as typeof s & { evolutions: { to: string; gender?: string }[] }]));
+const bind = (from: string, targets: string[], gender: 'male' | 'female') => {
+  for (const e of byId.get(from)?.evolutions ?? []) if (targets.includes(e.to)) e.gender = gender;
+};
+bind('espurr', ['meowstic'], 'male');
+bind('espurr', ['meowstic-female'], 'female');
+bind('basculin-white-striped', ['basculegion'], 'male');
+bind('basculin-white-striped', ['basculegion-female'], 'female');
+bind('lechonk', ['oinkologne'], 'male');
+bind('lechonk', ['oinkologne-female'], 'female');
+bind('kirlia', ['gallade'], 'male');
+bind('snorunt', ['froslass'], 'female');
+bind('burmy', ['mothim'], 'male');
+bind('burmy', ['wormadam', 'wormadam-sandy', 'wormadam-trash'], 'female');
+bind('combee', ['vespiquen'], 'female');
+bind('salandit', ['salazzle'], 'female');
+for (const base of ['meowstic', 'indeedee', 'basculegion', 'oinkologne']) {
+  byId.get(base)!.femaleRatio = 0;
+  byId.get(`${base}-female`)!.femaleRatio = 1;
+}
 writeFileSync(path, JSON.stringify(species, null, 1) + '\n');
 console.log(`Genders added to ${species.length - missing} species (${missing} without a ratio).`);
