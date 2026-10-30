@@ -84,6 +84,8 @@ export const SpeciesSchema = z.object({
   catchRate: z.number().int().min(1).max(255),
   /** Weight in kg for Low Kick, Grass Knot, Heavy Slam and Heat Crash (50 when missing). */
   weight: z.number().positive().optional(),
+  /** Share of this species that is female (1 = always, 0 = never); null = genderless; missing = an even mix. */
+  femaleRatio: z.number().min(0).max(1).nullable().optional(),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
   /**
@@ -358,8 +360,10 @@ export const MoveSchema = z.object({
       needsStatus: StatusIdSchema.optional(),
       /** Hidden Power: the type comes from the user (a fixed roll per Pokémon, since there are no IVs). */
       hiddenPower: z.boolean().optional(),
-      /** Attract: the target falls in love and half the time can't move (there are no genders in this game). */
+      /** Attract: the target falls in love and half the time can't move (only opposite genders). */
       attract: z.literal(true).optional(),
+      /** Captivate: only works on a target of the opposite gender. */
+      oppositeGender: z.literal(true).optional(),
       /** Springtide Storm: 30% to raise the user's Attack (Incarnate) or lower the foe's (Therian). */
       formStorm: z.boolean().optional(),
       /** Beat Up: one hit for each healthy party member, powered by that member's Attack. */

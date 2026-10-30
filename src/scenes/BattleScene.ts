@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
@@ -527,7 +528,7 @@ export class BattleScene extends Phaser.Scene {
     const max = calcStats(content, mon).hp;
     if (!box.container.visible) slideIn(this, box.container, box.isPlayer ? 420 : -420, 0, this.motion);
     box.container.setVisible(true);
-    box.name.setText(`${this.speciesName(mon)}${mon.shiny ? ' ★' : ''}`);
+    box.name.setText(`${this.speciesName(mon)}${genderSign(content, mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
     box.hpText?.setText(`${Math.max(0, mon.hp)}/${max}`);
     box.statusBadge?.destroy();

@@ -9561,7 +9561,8 @@
      "target": "enemy",
      "chance": 100
     }
-   ]
+   ],
+   "oppositeGender": true
   }
  },
  {
