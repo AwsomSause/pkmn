@@ -251,8 +251,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (def.effect?.kind === 'item' && !content.items.has(def.effect.itemId)) problems.push(`story.json "${def.id}" gives unknown item "${def.effect.itemId}"`);
     // Hyper moments are decided by the battle engine, which only knows one effect for each trigger.
     const expected = HYPER_EFFECTS[def.triggerConditions.trigger];
-    if (def.effect?.kind !== expected || def.duration !== 'battle') {
-      problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and battle duration`);
+    const duration = expected === 'rematch' ? 'run' : 'battle';
+    if (def.effect?.kind !== expected || def.duration !== duration) {
+      problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and ${duration} duration`);
     }
     for (const m of def.triggerConditions.needsMemory ?? []) {
       if (!HISTORY_MEMORIES.includes(m) && !storyIds.has(m)) problems.push(`story.json "${def.id}" needs unknown memory "${m}"`);

@@ -145,22 +145,26 @@ describe('story foundation: records and limits', () => {
     expect(topMoments(run.story, 1)[0]!.text).toBe('close call 7');
   });
 
-  it('caps open relationships at 12 and recurring enemies at 6 per run, 3 per region', () => {
+  it('caps open relationships at 12 and recurring enemies at 40 per run, 4 per region', () => {
     const run = freshRun('caps');
     const cause = emit(content, run, 'storyMoment');
     let made = 0;
     for (let i = 0; i < 20; i++) if (openRelationship(content, run, 'rivalry', { kind: 'pokemon', id: 'p1' }, { kind: 'trainer', id: `t${i}` }, cause)) made++;
     expect(made).toBe(12);
     expect(openRelationship(content, run, 'bond', { kind: 'pokemon', id: 'p1' }, { kind: 'pokemon', id: 'p2' }, cause)).toBeNull();
+    expect(content.story.limits).toMatchObject({ enemyProfilesPerRun: 40, enemyProfilesPerRegion: 4 });
     const enemy = (i: number) => ({ id: `en${i}`, name: `Enemy ${i}`, trainerId: null, team: [] });
     let enemies = 0;
-    for (let i = 0; i < 5; i++) if (createEnemyProfile(content, run, enemy(i))) enemies++;
-    expect(enemies).toBe(3);
-    run.regionIndex = 1;
-    for (let i = 5; i < 10; i++) if (createEnemyProfile(content, run, enemy(i))) enemies++;
-    expect(enemies).toBe(6);
-    run.regionIndex = 2;
-    expect(createEnemyProfile(content, run, enemy(11))).toBeNull();
+    for (let i = 0; i < 6; i++) if (createEnemyProfile(content, run, enemy(i))) enemies++;
+    expect(enemies).toBe(4);
+    // Fill ten regions: the run's limit stops the eleventh.
+    for (let region = 1; region < 10; region++) {
+      run.regionIndex = region;
+      for (let i = 0; i < 4; i++) if (createEnemyProfile(content, run, enemy(region * 10 + i))) enemies++;
+    }
+    expect(enemies).toBe(40);
+    run.regionIndex = 10;
+    expect(createEnemyProfile(content, run, enemy(999))).toBeNull();
   });
 });
 
