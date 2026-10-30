@@ -6,7 +6,7 @@ import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
-import { StoryStateSchema } from './story/schema';
+import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
 import { freshHyperBattle } from './battle/hyper';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -855,6 +855,8 @@ export const RunStateSchema = z.object({
   }),
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
+  /** An earlier run's rival whose character may shape one of this run's rivals (picked at the start from the account archive; null: none). */
+  legacyRival: ArchivedRivalSchema.nullable().default(null),
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
   /** Totem record this run, the unlocks they gave and research points. */
   /** The expedition in progress, and the ones finished or unlocked this run. */
@@ -960,6 +962,8 @@ export const ProfileSchema = z.object({
   lastPrep: LoadoutPresetSchema.nullable(),
   /** Recently finalized run ids, so a run's result is never applied twice. */
   finalizedRunIds: z.array(z.string()),
+  /** Rivals from finished runs (core/rivals/legacy.ts). */
+  rivalArchive: z.array(ArchivedRivalSchema).default([]),
   /** Party Pokémon of past runs, newest first; one may come back to join a later run. */
   pastPokemon: z.array(PastPokemonSchema),
   /** The claim ledger: every one-time reward paid, by key ("quest:misty:3"), so nothing pays twice. */

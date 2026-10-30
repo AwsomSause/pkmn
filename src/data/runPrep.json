@@ -99,6 +99,27 @@
    "unlockText": "raise 3 species to Silver mastery"
   },
   {
+   "id": "spooky",
+   "name": "Spooky Set",
+   "description": "The Spooky pack's starters: Spooky Litwick, Timburr, Emolga, Snorunt, Ponyta, Sinistea and Tangela.",
+   "category": "event",
+   "species": [
+    "litwick-spooky",
+    "timburr-spooky",
+    "emolga-spooky",
+    "snorunt-spooky",
+    "ponyta-spooky",
+    "sinistea-spooky",
+    "tangela-spooky"
+   ],
+   "specialForms": true,
+   "unlock": {
+    "kind": "claim",
+    "key": "event:spooky-season:reward"
+   },
+   "unlockText": "Finish every Spooky Season objective (October, or when it returns from the Event Archive)"
+  },
+  {
    "id": "rare",
    "name": "Rare",
    "description": "Rare first-stage Pokémon that grow into powerhouses.",
@@ -3582,6 +3603,444 @@
     "atLeast": 1800
    },
    "unlockText": "Defeat 1800 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-magnus",
+   "name": "Magnus’s Team",
+   "description": "Pokémon from Magnus’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "magnus"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1350
+   },
+   "unlockText": "Defeat 1350 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-mallow",
+   "name": "Mallow’s Team",
+   "description": "Pokémon from Mallow’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "mallow"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1360
+   },
+   "unlockText": "Defeat 1360 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-marley",
+   "name": "Marley’s Team",
+   "description": "Pokémon from Marley’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "marley"
+   ],
+   "species": [
+    "sneasel",
+    "vulpix",
+    "eevee"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1370
+   },
+   "unlockText": "Defeat 1370 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-marlon",
+   "name": "Marlon’s Team",
+   "description": "Pokémon from Marlon’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "marlon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1380
+   },
+   "unlockText": "Defeat 1380 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-marnie-masters-4",
+   "name": "Marnie (Masters 4)’s Team",
+   "description": "Pokémon from Marnie (Masters 4)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "marnie"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1390
+   },
+   "unlockText": "Defeat 1390 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-matt",
+   "name": "Matt’s Team",
+   "description": "Pokémon from Matt’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "matt"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1400
+   },
+   "unlockText": "Defeat 1400 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-maxie-gen-6",
+   "name": "Maxie (Gen 6)’s Team",
+   "description": "Pokémon from Maxie (Gen 6)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "maxie"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1410
+   },
+   "unlockText": "Defeat 1410 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-may-emerald",
+   "name": "May (Emerald)’s Team",
+   "description": "Pokémon from May (Emerald)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "may"
+   ],
+   "species": [
+    "treecko",
+    "torchic",
+    "mudkip"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1420
+   },
+   "unlockText": "Defeat 1420 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-may-ruby-sapphire",
+   "name": "May (Ruby/Sapphire)’s Team",
+   "description": "Pokémon from May (Ruby/Sapphire)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "may"
+   ],
+   "species": [
+    "treecko",
+    "torchic",
+    "mudkip"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1430
+   },
+   "unlockText": "Defeat 1430 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-maylene",
+   "name": "Maylene’s Team",
+   "description": "Pokémon from Maylene’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "maylene"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1440
+   },
+   "unlockText": "Defeat 1440 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-melony",
+   "name": "Melony’s Team",
+   "description": "Pokémon from Melony’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "melony"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1450
+   },
+   "unlockText": "Defeat 1450 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-milo",
+   "name": "Milo’s Team",
+   "description": "Pokémon from Milo’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "milo"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1460
+   },
+   "unlockText": "Defeat 1460 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-mina",
+   "name": "Mina’s Team",
+   "description": "Pokémon from Mina’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "mina"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1470
+   },
+   "unlockText": "Defeat 1470 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-misty-classic",
+   "name": "Misty’s Team",
+   "description": "Pokémon from Misty’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "misty"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1480
+   },
+   "unlockText": "Defeat 1480 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-molayne",
+   "name": "Molayne’s Team",
+   "description": "Pokémon from Molayne’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "molayne"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1490
+   },
+   "unlockText": "Defeat 1490 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-morty",
+   "name": "Morty’s Team",
+   "description": "Pokémon from Morty’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "morty"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1500
+   },
+   "unlockText": "Defeat 1500 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-mr-fuji-gen-3",
+   "name": "Mr. Fuji (Gen 3)’s Team",
+   "description": "Pokémon from Mr. Fuji (Gen 3)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "mr-fuji"
+   ],
+   "species": [
+    "clefairy",
+    "jigglypuff",
+    "chansey"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1510
+   },
+   "unlockText": "Defeat 1510 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-n-classic",
+   "name": "N’s Team",
+   "description": "Pokémon from N’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "n"
+   ],
+   "species": [
+    "snivy",
+    "tepig",
+    "oshawott"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1520
+   },
+   "unlockText": "Defeat 1520 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-nanu",
+   "name": "Nanu’s Team",
+   "description": "Pokémon from Nanu’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "nanu"
+   ],
+   "species": [
+    "meowth",
+    "persian",
+    "umbreon"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1530
+   },
+   "unlockText": "Defeat 1530 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-nate",
+   "name": "Nate’s Team",
+   "description": "Pokémon from Nate’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "nate"
+   ],
+   "species": [
+    "snivy",
+    "tepig",
+    "oshawott"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1540
+   },
+   "unlockText": "Defeat 1540 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-nemona-v",
+   "name": "Nemona (V)’s Team",
+   "description": "Pokémon from Nemona (V)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "nemona"
+   ],
+   "species": [
+    "sprigatito",
+    "fuecoco",
+    "quaxly"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1550
+   },
+   "unlockText": "Defeat 1550 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-nessa",
+   "name": "Nessa’s Team",
+   "description": "Pokémon from Nessa’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "nessa"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1560
+   },
+   "unlockText": "Defeat 1560 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-noland",
+   "name": "Noland’s Team",
+   "description": "Pokémon from Noland’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "noland"
+   ],
+   "species": [
+    "porygon",
+    "ditto",
+    "smeargle"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1570
+   },
+   "unlockText": "Defeat 1570 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-norman",
+   "name": "Norman’s Team",
+   "description": "Pokémon from Norman’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "norman"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1580
+   },
+   "unlockText": "Defeat 1580 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-oak-classic",
+   "name": "Oak’s Team",
+   "description": "Pokémon from Oak’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [],
+   "species": [
+    "bulbasaur",
+    "charmander",
+    "squirtle"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1590
+   },
+   "unlockText": "Defeat 1590 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-olivia",
+   "name": "Olivia’s Team",
+   "description": "Pokémon from Olivia’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "olivia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1600
+   },
+   "unlockText": "Defeat 1600 trainers in total across your runs"
   },
   {
    "id": "trainer-glacia",

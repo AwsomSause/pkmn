@@ -58,6 +58,10 @@ export function requirementProgress(profile: Profile, req: Requirement): Require
       current = profile.achievements[req.id] ? 1 : 0;
       target = 1;
       break;
+    case 'claim':
+      current = profile.claims?.[req.key] ? 1 : 0;
+      target = 1;
+      break;
   }
   return { current: Math.min(current, target), target, met: current >= target };
 }

@@ -5,6 +5,7 @@ import type { RunState } from '../state';
 import type { DomainEvent, Where } from '../story/schema';
 import type { Rival, Traits } from '../story/schema';
 import { TRAIT_KEYS } from '../story/schema';
+import { applyLegacy } from './legacy';
 import { RIVAL_ARCS, RIVAL_CONFIG, RIVAL_PATHS, RIVAL_PROFILES } from './schema';
 
 export interface SparkInput {
@@ -81,6 +82,7 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
   };
   const arc = RIVAL_ARCS.arcs.find((a) => a.personalities.includes(personalityId) || a.styles.includes(styleId) || a.paths.includes(path.id));
   if (arc) rival.arc = { id: arc.id, stage: 0, ticks: 0, resolution: null };
+  applyLegacy(run, rival);
   rivals.push(rival);
   return rival;
 }

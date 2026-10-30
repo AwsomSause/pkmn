@@ -46,7 +46,7 @@ import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } fr
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
-import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
+import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -126,7 +126,8 @@ import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from 
 import { createStoryState } from './story/record';
 import { extendEndless, spookyWild, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
-import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
+import { pickLegacyRival } from './rivals/legacy';
+import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
@@ -143,6 +144,8 @@ export interface NewRunOptions {
   attributes?: Record<string, number>;
   /** The profile's past Pokémon; one may come back this run (core/story/reunion.ts). */
   pastPokemon?: readonly PastPokemon[];
+  /** The account's archived rivals; one may shape a rival this run (core/rivals/legacy.ts). */
+  rivalArchive?: Profile['rivalArchive'];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
@@ -210,6 +213,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
+    legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
@@ -1055,7 +1059,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
-    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`);
+    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`, spookyEncounterChance(runPerks(content, run)));
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -1102,6 +1106,8 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       rivalNote = ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
+      run.story.flags[rivalSeenFlag(rivalBack.id)] = scheduleKey(run);
+      run.story.flags[RIVAL_SEEN_ANY] = scheduleKey(run);
       rivalBack.away = 0;
     }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.

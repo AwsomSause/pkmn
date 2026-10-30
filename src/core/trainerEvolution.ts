@@ -63,3 +63,8 @@ export function evolvedFormOf(content: Content, trainerId: string): Archetype | 
 export function unlockedEvolutions(content: Content, profile: Profile): Archetype[] {
   return [...content.archetypes.values()].filter((a) => a.evolvedFrom && profile.claims?.[`evolution:${a.evolvedFrom}`]);
 }
+
+/** The Spooky pack (Hex Maniac, Spooky Season): the extra share of wild Pokémon that turn into Spooky forms. */
+export function spookyEncounterChance(perks: Perks | undefined): number {
+  return (perks ?? []).reduce((sum, m) => sum + (m.kind === 'spookyEncounters' ? m.chance : 0), 0);
+}

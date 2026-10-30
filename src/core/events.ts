@@ -11,7 +11,7 @@
 
 import { featuredMapEvents, runGameEventIds } from './gameEvents';
 import { eventChanceScale } from './rules';
-import { getArchetype } from './archetypes';
+import { getArchetype, runPerks } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
 import { createBattle } from './battle/engine';
 import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TypeName } from './contentSchema';
@@ -88,16 +88,23 @@ export function conditionText(content: Content, c: EventCondition): string {
   }
 }
 
+/** The game events whose own stops this run can meet: the editions it started in, and its trainer's eventStops perks. */
+function eventPacks(content: Content, run: RunState): Set<string> {
+  const own = (runPerks(content, run) ?? []).flatMap((m) => (m.kind === 'eventStops' ? [m.gameEvent] : []));
+  return new Set([...runGameEventIds(run), ...own]);
+}
+
 /** Events that can appear on the current stage (key-item events only while the key item is held). */
 export function eligibleEvents(content: Content, run: RunState): EventDef[] {
   const n = stageNumber(content, run);
+  const packs = eventPacks(content, run);
   return [...content.events.values()].filter(
     (e) =>
       !e.keyItem &&
       e.stop !== 'rest' &&
       e.minStage <= n &&
-      // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on.
-      (!e.gameEvent || runGameEventIds(run).includes(e.gameEvent)) &&
+      // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on (or a trainer who brings them).
+      (!e.gameEvent || packs.has(e.gameEvent)) &&
       !(run.itemCounters?.[`event-seen:${e.id}`]) &&
       e.requires.every((c) => conditionMet(content, run, c)),
   );
@@ -345,6 +352,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return 'skip ahead to the gym';
     case 'formChange':
       return 'a Pokémon changes form';
+    case 'count':
+      return e.counter === 'eventClues' ? (e.amount === 1 ? 'a clue' : `${e.amount} clues`) : e.counter === 'eventBossesWon' ? 'an event boss beaten' : 'the event finale won';
   }
 }
 
@@ -483,6 +492,9 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       discover(run, e.to, true);
       return `${to.name} appears!`;
     }
+    case 'count':
+      count(run, e.counter, e.amount);
+      return effectWords(content, e);
     case 'betterDraft':
       run.itemCounters = { ...run.itemCounters, 'better-draft': 1, ...(e.extra ? { 'draft-extra': (run.itemCounters?.['draft-extra'] ?? 0) + e.extra } : {}) };
       return effectWords(content, e);

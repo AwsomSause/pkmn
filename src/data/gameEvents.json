@@ -702,6 +702,1081 @@
    "contentTags": [
     "league"
    ]
+  },
+  {
+   "id": "spooky-season",
+   "version": 1,
+   "name": "Spooky Season",
+   "kind": "holiday",
+   "description": "The Spooky pack: haunted stops, Spooky forms in the wild, the Pumpkin King and the Midnight Parade.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "10-01",
+    "end": "11-07"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "About 1 in 7 wild Pokémon turn into Spooky forms and Ghost-types appear twice as often; Spooky stops appear on the map.",
+   "modifiers": [
+    {
+     "kind": "spookyEncounters",
+     "chance": 0.15
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "ghost",
+     "value": 2
+    }
+   ],
+   "mapEvents": [
+    "spooky-haunted-mansion",
+    "spooky-pumpkin-patch",
+    "spooky-candle-vigil",
+    "spooky-lost-spirit",
+    "spooky-trick-or-treat",
+    "spooky-graveyard-dig",
+    "spooky-pumpkin-king",
+    "spooky-midnight-finale",
+    "spooky-festival",
+    "ghost-train",
+    "haunted-house",
+    "graveyard-vigil"
+   ],
+   "objectives": [
+    {
+     "id": "stages",
+     "text": "Clear 3 stages (beat 3 gym leaders)",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "clues",
+     "text": "Collect 8 clues at Spooky stops",
+     "counter": "eventClues",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 60,
+      "candies": 10
+     }
+    },
+    {
+     "id": "pumpkin-king",
+     "text": "Beat a special boss (the Pumpkin King)",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "ghosts",
+     "text": "Defeat or catch 15 Ghost-types",
+     "counter": "defeatedOrCaught.ghost",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "finale",
+     "text": "Win the final encounter (the Midnight Parade)",
+     "counter": "eventFinalesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 150
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 400,
+    "title": "Spooky Champion",
+    "pool": "spooky",
+    "trainer": "hex-maniac"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#ff7a1a",
+    "icon": "item.reaper_cloth"
+   },
+   "contentTags": [
+    "spooky",
+    "holiday",
+    "ghost"
+   ]
+  },
+  {
+   "id": "harvest-festival",
+   "version": 1,
+   "name": "Harvest Festival",
+   "kind": "themed",
+   "description": "Farmers bring in the harvest: berries, fairs and well-fed Pokémon.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "11-14",
+    "end": "11-30"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Healing items restore 20% more HP and Grass-types appear 50% more often.",
+   "modifiers": [
+    {
+     "kind": "healingMultiplier",
+     "value": 1.2
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "grass",
+     "value": 1.5
+    }
+   ],
+   "mapEvents": [
+    "harvest-berry-fair",
+    "berry-patch",
+    "berry-tree",
+    "berries-abound",
+    "berry-merchant"
+   ],
+   "objectives": [
+    {
+     "id": "fairs",
+     "text": "Find 4 clues at the Berry Fair and harvest stops",
+     "counter": "eventClues",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "grass",
+     "text": "Defeat or catch 15 Grass-types",
+     "counter": "defeatedOrCaught.grass",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "events",
+     "text": "Finish 8 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "candies": 20,
+    "title": "Harvest Hero",
+    "pool": "type-grass"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#d09030",
+    "icon": "item.sweet_apple"
+   },
+   "contentTags": [
+    "holiday",
+    "berries"
+   ]
+  },
+  {
+   "id": "winter-festival",
+   "version": 1,
+   "name": "Winter Festival",
+   "kind": "holiday",
+   "description": "Snow, lights and gifts for everyone. The Frost King waits on the road.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "12-15",
+    "end": "01-05"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Ice moves deal 15% more damage, Ice-types appear twice as often and prize money is 10% higher.",
+   "modifiers": [
+    {
+     "kind": "typeDamageMultiplier",
+     "type": "ice",
+     "value": 1.15
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "ice",
+     "value": 2
+    },
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "winter-gift-exchange",
+    "winter-frost-king",
+    "frozen-lake",
+    "blizzard-pass",
+    "candice-snowball",
+    "ice-training"
+   ],
+   "objectives": [
+    {
+     "id": "gifts",
+     "text": "Swap 4 gifts (clues at the Gift Exchange)",
+     "counter": "eventClues",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 50,
+      "candies": 10
+     }
+    },
+    {
+     "id": "frost-king",
+     "text": "Beat the Frost King",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "ice",
+     "text": "Defeat or catch 12 Ice-types",
+     "counter": "defeatedOrCaught.ice",
+     "atLeast": 12,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "badges",
+     "text": "Win 4 gym badges",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Winter Star",
+    "pool": "type-ice"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#80c8ff",
+    "icon": "item.ice_stone"
+   },
+   "contentTags": [
+    "holiday",
+    "ice",
+    "gifts"
+   ]
+  },
+  {
+   "id": "new-year-countdown",
+   "version": 1,
+   "name": "New Year Countdown",
+   "kind": "holiday",
+   "description": "Ring in the new year with fireworks, wishes and one last big battle.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "12-29",
+    "end": "01-07"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Prize money is 25% higher; your Pokémon gain 10% more experience.",
+   "modifiers": [
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.25
+    },
+    {
+     "kind": "xpMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "new-year-countdown",
+    "lottery-booth",
+    "wishing-well",
+    "prize-wheel"
+   ],
+   "objectives": [
+    {
+     "id": "countdown",
+     "text": "Win the Countdown battle",
+     "counter": "eventFinalesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "earn",
+     "text": "Earn ₽20,000",
+     "counter": "moneyEarned",
+     "atLeast": 20000,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "travel",
+     "text": "Finish 30 encounters",
+     "counter": "encountersCompleted",
+     "atLeast": 30,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "bankCredits": 2026,
+    "title": "Fresh Start"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#f0d050",
+    "icon": "item.pair_of_tickets"
+   },
+   "contentTags": [
+    "holiday",
+    "money"
+   ]
+  },
+  {
+   "id": "lunar-new-year",
+   "version": 1,
+   "name": "Lantern Festival",
+   "kind": "holiday",
+   "description": "Red lanterns, dragon dances and lucky envelopes for the Lunar New Year.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "01-25",
+    "end": "02-12"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Fire and Dragon moves deal 10% more damage; prize money is 15% higher.",
+   "modifiers": [
+    {
+     "kind": "typeDamageMultiplier",
+     "type": "fire",
+     "value": 1.1
+    },
+    {
+     "kind": "typeDamageMultiplier",
+     "type": "dragon",
+     "value": 1.1
+    },
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.15
+    }
+   ],
+   "mapEvents": [
+    "lunar-lantern-walk",
+    "dragon-shrine",
+    "firebreather-show",
+    "dragons-den"
+   ],
+   "objectives": [
+    {
+     "id": "lanterns",
+     "text": "Light 3 lanterns (clues on the Lantern Walk)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "dragons",
+     "text": "Defeat or catch 8 Dragon-types",
+     "counter": "defeatedOrCaught.dragon",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "fire",
+     "text": "Defeat or catch 12 Fire-types",
+     "counter": "defeatedOrCaught.fire",
+     "atLeast": 12,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Lucky Lantern",
+    "pool": "type-fire"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#e03030",
+    "icon": "item.fire_stone"
+   },
+   "contentTags": [
+    "holiday",
+    "dragon",
+    "fire"
+   ]
+  },
+  {
+   "id": "friendship-festival",
+   "version": 1,
+   "name": "Friendship Festival",
+   "kind": "holiday",
+   "description": "A festival of hearts: picnics, sweets and teams that stick together.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "02-07",
+    "end": "02-21"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Your Pokémon gain 50% more friendship; Fairy-types appear 50% more often.",
+   "modifiers": [
+    {
+     "kind": "friendshipMultiplier",
+     "value": 1.5
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "fairy",
+     "value": 1.5
+    }
+   ],
+   "mapEvents": [
+    "friendship-picnic",
+    "fairy-tea",
+    "bond-ceremony",
+    "wild-tea-party"
+   ],
+   "objectives": [
+    {
+     "id": "picnics",
+     "text": "Share 3 picnics (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "keep",
+     "text": "Keep 6 caught Pokémon in your party",
+     "counter": "caughtKept",
+     "atLeast": 6,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "evolve",
+     "text": "Evolve 4 Pokémon",
+     "counter": "evolutions",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "candies": 20,
+    "title": "Best Friends",
+    "pool": "type-fairy"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#ff80b0",
+    "icon": "item.soothe_bell"
+   },
+   "contentTags": [
+    "holiday",
+    "friendship"
+   ]
+  },
+  {
+   "id": "pokemon-day",
+   "version": 1,
+   "name": "Anniversary Week",
+   "kind": "themed",
+   "description": "Celebrate where it all began: starters, parades and old friends.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "02-24",
+    "end": "03-03"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Your Pokémon gain 15% more experience and your starter deals 10% more damage.",
+   "modifiers": [
+    {
+     "kind": "xpMultiplier",
+     "value": 1.15
+    },
+    {
+     "kind": "starterDamageMultiplier",
+     "starter": true,
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "pokemon-day-parade",
+    "professors-lab",
+    "gift-from-mom",
+    "ash-training"
+   ],
+   "objectives": [
+    {
+     "id": "parade",
+     "text": "March in 2 parades (clues)",
+     "counter": "eventClues",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "starter",
+     "text": "Clear a region with your starter still in the party",
+     "counter": "regionsClearedWithStarter",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 120
+     }
+    },
+    {
+     "id": "battles",
+     "text": "Win 30 battles",
+     "counter": "battlesWon",
+     "atLeast": 30,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Day One Fan",
+    "pool": "classic"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#f0c020",
+    "icon": "item.master_ribbon"
+   },
+   "contentTags": [
+    "themed",
+    "starters"
+   ]
+  },
+  {
+   "id": "spring-bloom",
+   "version": 1,
+   "name": "Spring Bloom",
+   "kind": "holiday",
+   "description": "Flowers open, eggs hide in the meadows and the Bloom Guardian wakes.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "03-20",
+    "end": "04-12"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Grass and Fairy-types appear 50% more often; Poké Balls work 10% better.",
+   "modifiers": [
+    {
+     "kind": "typeEncounterWeight",
+     "type": "grass",
+     "value": 1.5
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "fairy",
+     "value": 1.5
+    },
+    {
+     "kind": "captureMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "spring-egg-hunt",
+    "spring-bloom-guardian",
+    "cherry-blossom",
+    "flower-garden",
+    "egg-nest",
+    "lucky-egg-hunt"
+   ],
+   "objectives": [
+    {
+     "id": "eggs",
+     "text": "Find 5 eggs (clues at the Egg Hunt)",
+     "counter": "eventClues",
+     "atLeast": 5,
+     "reward": {
+      "researchPoints": 50,
+      "candies": 10
+     }
+    },
+    {
+     "id": "guardian",
+     "text": "Beat the Bloom Guardian",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "catch",
+     "text": "Catch 12 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 12,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Spring Sprout",
+    "pool": "late-bloomers"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#90e070",
+    "icon": "item.mystery_egg"
+   },
+   "contentTags": [
+    "holiday",
+    "eggs",
+    "catching"
+   ]
+  },
+  {
+   "id": "earth-week",
+   "version": 1,
+   "name": "Earth Week",
+   "kind": "themed",
+   "description": "Clean up the routes and meet the Pokémon of rock, earth and forest.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "04-18",
+    "end": "04-28"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Ground, Rock and Grass-types appear 50% more often; research pays 20% more.",
+   "modifiers": [
+    {
+     "kind": "typeEncounterWeight",
+     "type": "ground",
+     "value": 1.5
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "rock",
+     "value": 1.5
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "grass",
+     "value": 1.5
+    },
+    {
+     "kind": "researchMultiplier",
+     "value": 1.2
+    }
+   ],
+   "mapEvents": [
+    "earth-week-cleanup",
+    "volunteer-cleanup",
+    "fossil-dig",
+    "ancient-forest",
+    "trash-to-treasure"
+   ],
+   "objectives": [
+    {
+     "id": "cleanup",
+     "text": "Help 3 cleanups (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "ground",
+     "text": "Defeat or catch 10 Ground-types",
+     "counter": "defeatedOrCaught.ground",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "rock",
+     "text": "Defeat or catch 10 Rock-types",
+     "counter": "defeatedOrCaught.rock",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Earth Keeper",
+    "pool": "type-ground"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#a08050",
+    "icon": "item.leaf_stone"
+   },
+   "contentTags": [
+    "themed",
+    "nature"
+   ]
+  },
+  {
+   "id": "summer-splash",
+   "version": 1,
+   "name": "Summer Splash",
+   "kind": "holiday",
+   "description": "Beaches, tide pools and the biggest beach tournament of the year.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "06-21",
+    "end": "07-20"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Water moves deal 15% more damage and Water-types appear twice as often.",
+   "modifiers": [
+    {
+     "kind": "typeDamageMultiplier",
+     "type": "water",
+     "value": 1.15
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "water",
+     "value": 2
+    }
+   ],
+   "mapEvents": [
+    "summer-beach-tournament",
+    "tide-pools",
+    "surf-rescue",
+    "misty-swim",
+    "fishing-derby",
+    "hot-spring"
+   ],
+   "objectives": [
+    {
+     "id": "tournament",
+     "text": "Win the Beach Tournament",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "water",
+     "text": "Defeat or catch 20 Water-types",
+     "counter": "defeatedOrCaught.water",
+     "atLeast": 20,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "events",
+     "text": "Finish 6 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 6,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Summer Splasher",
+    "pool": "type-water"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#30b0f0",
+    "icon": "item.water_stone"
+   },
+   "contentTags": [
+    "holiday",
+    "water"
+   ]
+  },
+  {
+   "id": "stargazing-nights",
+   "version": 1,
+   "name": "Stargazing Nights",
+   "kind": "themed",
+   "description": "Meteor showers light the sky. Rare Pokémon come out to watch.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "08-08",
+    "end": "08-20"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Rare Pokémon turn up 50% more often and your Hyper moments come twice as often.",
+   "modifiers": [
+    {
+     "kind": "encounterWeightMultiplier",
+     "group": "rare",
+     "value": 1.5
+    },
+    {
+     "kind": "hyperChanceMultiplier",
+     "value": 2
+    }
+   ],
+   "mapEvents": [
+    "stargazing-meteor-watch",
+    "meteor-shower",
+    "starry-camp",
+    "meteorite-crash",
+    "moonlit-path"
+   ],
+   "objectives": [
+    {
+     "id": "meteors",
+     "text": "Chase 3 meteors (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "psychic",
+     "text": "Defeat or catch 10 Psychic-types",
+     "counter": "defeatedOrCaught.psychic",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "catch",
+     "text": "Catch 10 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Stargazer",
+    "pool": "type-psychic"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#6060e0",
+    "icon": "item.moon_stone"
+   },
+   "contentTags": [
+    "themed",
+    "rare"
+   ]
+  },
+  {
+   "id": "trainer-academy",
+   "version": 1,
+   "name": "Trainer Academy",
+   "kind": "themed",
+   "description": "Back to school! Exams on the road, study halls and tougher trainers.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "09-01",
+    "end": "09-14"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Research pays 25% more; trainers are 1 level higher.",
+   "modifiers": [
+    {
+     "kind": "researchMultiplier",
+     "value": 1.25
+    },
+    {
+     "kind": "enemyLevelOffset",
+     "value": 1
+    }
+   ],
+   "mapEvents": [
+    "academy-exam",
+    "study-hall",
+    "library",
+    "quiz-master",
+    "trainers-test"
+   ],
+   "objectives": [
+    {
+     "id": "exams",
+     "text": "Pass 3 exams (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "examiner",
+     "text": "Beat an Academy Examiner",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 20 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 20,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Honor Student",
+    "pool": "research"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#5080c0",
+    "icon": "item.wise_glasses"
+   },
+   "contentTags": [
+    "themed",
+    "research"
+   ]
   }
  ]
 }
