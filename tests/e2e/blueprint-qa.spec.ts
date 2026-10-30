@@ -94,16 +94,47 @@ test('Blueprint screens render at three sizes without console errors', async ({ 
   await shots(page, 'raid-battle');
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.length)).toBeGreaterThan(0);
 
-  // A minigame on the generic screen, then its result.
+  // The Totem fight, then the expedition route screen (both from the same map).
+  const backToMap = async (from: string) => {
+    await page.evaluate((f) => {
+      const { session } = (window as any).__pkr;
+      session.run.battle = null;
+      session.run.phase = 'map';
+      void (window as any).__pkr.game.scene.getScene(f).scene.start('Map', { focus: 0 });
+    }, from);
+    await waitForScene(page, 'Map');
+    await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  };
+  const standOn = (sideId: string) =>
+    page.evaluate((id) => {
+      const run = (window as any).__pkr.session.run;
+      run.stage.current = run.stage.map.nodes.find((n: any) => n.sides.some((s: any) => s.id === id)).id;
+      (window as any).__pkr.game.scene.getScene('Map').scene.restart({ focus: 0 });
+    }, sideId);
+  await backToMap('Battle');
+  await standOn('q-totem');
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').openTotem('q-totem'));
+  await page.waitForTimeout(300);
+  await shots(page, 'totem-preview');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.waitForTimeout(1500);
+  await shots(page, 'totem-battle');
+  await backToMap('Battle');
+  await standOn('q-exp');
+  await waitForScene(page, 'Map');
   await page.evaluate(() => {
     const { session } = (window as any).__pkr;
-    const run = session.run;
-    run.battle = null;
-    run.phase = 'map';
-    session.run = run;
+    session.beginExpedition('q-exp');
+    void (window as any).__pkr.game.scene.getScene('Map').scene.start('Expedition');
   });
-  await page.evaluate(() => void (window as any).__pkr.game.scene.getScene('Battle').scene.start('Map', { focus: 0 }));
-  await waitForScene(page, 'Map');
+  await waitForScene(page, 'Expedition');
+  await shots(page, 'expedition-route');
+  await backToMap('Expedition');
+
+  // A minigame on the generic screen, then its result.
   await page.evaluate(() => {
     const { session } = (window as any).__pkr;
     const run = session.run;
