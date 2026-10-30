@@ -612,6 +612,10 @@ describe('Dynamax in battle', () => {
     const normal = setup([mon('pidgey', 30, 'p1', 'tackle')], [mon('snorlax', 90, 'e1', 'growl')], BAND);
     resolveTurn(normal.ctx, MAX);
     expect(normal.battle.enemyStages.spe).toBe(-1);
+    // Max Lightning (and the other terrain Max Moves) set their terrain.
+    const volt = setup([mon('jolteon', 30, 'p1', 'thunder-shock')], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    resolveTurn(volt.ctx, MAX);
+    expect(volt.battle.terrain?.id).toBe('electric');
     for (const seed of ['a', 'b', 'c', 'd', 'e', 'f']) {
       const { ctx } = setup([mon('pikachu', 30, 'p1', 'zap-cannon')], [mon('snorlax', 90, 'e1', 'growl')], BAND, `max-acc-${seed}`);
       expect(resolveTurn(ctx, MAX).some((x) => x.type === 'miss')).toBe(false);

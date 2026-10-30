@@ -18,7 +18,7 @@
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
-import type { BoostStat, Content, Move, Semi, StatusId, TransformKind, TypeName, Weather } from '../contentSchema';
+import type { BoostStat, Content, Move, Semi, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
@@ -56,12 +56,12 @@ import {
   TYPE_CHANGE,
   WEATHER_DAMAGE_IMMUNE,
   WEATHER_EVASION,
-  WEATHER_SETTERS,
+  TERRAIN_SETTERS, WEATHER_SETTERS,
   WEATHER_SPEED,
 } from './abilities';
 import * as Held from './held';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
-import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
+import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -107,6 +107,8 @@ export type BattleEvent =
   | { type: 'fatigue'; side: Side }
   | { type: 'weather'; weather: Weather }
   | { type: 'weatherEnd'; weather: Weather }
+  | { type: 'terrain'; terrain: Terrain }
+  | { type: 'terrainEnd'; terrain: Terrain }
   | { type: 'weatherDamage'; side: Side; weather: Weather; amount: number; hpAfter: number }
   | { type: 'wake'; side: Side }
   | { type: 'thaw'; side: Side }
@@ -200,6 +202,7 @@ export function createBattle(
     playerVolatile: freshVolatile(),
     enemyVolatile: freshVolatile(),
     weather: null,
+    terrain: null,
     pendingEntry: ['player', 'enemy'],
     participants: [activeUid],
     needsSwitch: false,
@@ -346,6 +349,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   battle.playerVolatile ??= freshVolatile();
   battle.enemyVolatile ??= freshVolatile();
   battle.weather ??= null;
+  battle.terrain ??= null;
   battle.pendingEntry ??= [];
   battle.held ??= freshHeldState();
   // X items and Dire Hit take effect when a Pokémon is first in battle.
@@ -427,6 +431,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // 3. End of turn: weather (and Rain Dish), Shed Skin, then burn, poison, binding and Leech Seed, then Speed Boost.
   if (!anyFainted(playerC, enemy)) {
     applyWeather(ctx, [playerC, enemy], events);
+    applyTerrain(ctx, [playerC, enemy], events);
     recordFaints(ctx, playerC, enemy, events);
   }
   if (!anyFainted(playerC, enemy)) {
@@ -647,6 +652,14 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
     announce(c, ability, events);
     ctx.battle.weather = { id: weather, turns: 5 };
     events.push({ type: 'weather', weather });
+    return;
+  }
+  const terrain = TERRAIN_SETTERS[ability];
+  if (terrain) {
+    if (ctx.battle.terrain?.id === terrain) return;
+    announce(c, ability, events);
+    ctx.battle.terrain = { id: terrain, turns: 5 };
+    events.push({ type: 'terrain', terrain });
     return;
   }
   if (ability === 'intimidate' && other.mon.hp > 0) {
@@ -1211,6 +1224,12 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   const fx = move.effects;
   const weather = ctx.battle.weather?.id ?? null;
 
+  // Psychic Terrain: a grounded Pokémon can't be hit by a move with priority.
+  if (ctx.battle.terrain?.id === 'psychic' && user.side !== target.side && priorityOf(ctx, user, move) > 0 && isGrounded(ctx, target)) {
+    events.push({ type: 'fail', side: user.side });
+    return;
+  }
+
   if (fx.firstTurnOnly && user.vol.turnsOut > 0) {
     events.push({ type: 'fail', side: user.side });
     return;
@@ -1228,6 +1247,16 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       for (const change of fx.charge.boosts ?? []) applyStageChange(ctx, user, change.stat, change.stages, events);
       return;
     }
+  }
+
+  if (fx.terrain) {
+    if (ctx.battle.terrain?.id === fx.terrain) {
+      events.push({ type: 'fail', side: user.side });
+    } else {
+      ctx.battle.terrain = { id: fx.terrain, turns: 5 };
+      events.push({ type: 'terrain', terrain: fx.terrain });
+    }
+    return;
   }
 
   if (fx.weather) {
@@ -1427,6 +1456,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       });
       damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
       const itemMultiplier =
+        terrainMultiplier(ctx, user, target, moveType) *
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
         Held.defenseMultiplier(ctx, target, moveType, effectiveness, ctx.battle.kind === 'wild' && target.side === 'player', events as Held.HeldEvent[]);
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
@@ -1515,6 +1545,11 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   if (maxWeather && ctx.battle.weather?.id !== maxWeather) {
     ctx.battle.weather = { id: maxWeather, turns: Held.weatherTurns(ctx, user, maxWeather, 5) };
     events.push({ type: 'weather', weather: maxWeather });
+  }
+  const maxTerrain = move.flags.includes('max') && dealt > 0 ? maxMoveTerrain(content, move.id) : null;
+  if (maxTerrain && ctx.battle.terrain?.id !== maxTerrain) {
+    ctx.battle.terrain = { id: maxTerrain, turns: 5 };
+    events.push({ type: 'terrain', terrain: maxTerrain });
   }
 
   if (landed > 0) afterHitAbilities(ctx, user, target, move, moveType, contact, anyCrit, events);
@@ -1654,6 +1689,7 @@ function canGetStatus(ctx: BattleContext, source: Combatant, target: Combatant, 
   if (target.mon.status || target.mon.hp <= 0) return false;
   if (isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
   if (Held.statusBlocked({ content: ctx.content }, target, status)) return false;
+  if (terrainBlocksStatus(ctx, target, status)) return false;
   return statusAbilityBlock(ctx, source, target, status) === null;
 }
 
@@ -1682,7 +1718,7 @@ function tryInflictStatus(
   const { content, rng } = ctx;
   const types = getSpecies(content, target.mon.speciesId).types;
   const blocker = target.mon.status ? null : statusAbilityBlock(ctx, source, target, status);
-  if (target.mon.status || isStatusImmune(status, types, move) || blocker || Held.statusBlocked({ content }, target, status)) {
+  if (target.mon.status || isStatusImmune(status, types, move) || blocker || Held.statusBlocked({ content }, target, status) || terrainBlocksStatus(ctx, target, status)) {
     if (announceFailure && blocker) announce(target, blocker, events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
@@ -1771,6 +1807,50 @@ export function weatherMultiplier(weather: Weather | null, type: TypeName): numb
  * don't spare, and weather abilities act (Rain Dish, Ice Body, Dry Skin, Solar
  * Power); then the weather counts down.
  */
+/** On the ground: not a Flying type and without Levitate (and not hiding in the air or underground). */
+function isGrounded(ctx: BattleContext, c: Combatant): boolean {
+  if (c.vol.semi === 'air' || c.vol.semi === 'underground' || c.vol.semi === 'underwater') return false;
+  if (abilityIn(ctx, c) === 'levitate') return false;
+  return !getSpecies(ctx.content, c.mon.speciesId).types.includes('flying');
+}
+
+const TERRAIN_BOOST: Record<Terrain, TypeName> = { electric: 'electric', grassy: 'grass', psychic: 'psychic', misty: 'dragon' };
+
+/** Electric, Grassy and Psychic Terrain: ×1.3 for a grounded user's moves of that type; Misty Terrain: ×0.5 for Dragon moves against a grounded target. */
+function terrainMultiplier(ctx: BattleContext, user: Combatant, target: Combatant, moveType: TypeName): number {
+  const terrain = ctx.battle.terrain?.id;
+  if (!terrain || TERRAIN_BOOST[terrain] !== moveType) return 1;
+  if (terrain === 'misty') return isGrounded(ctx, target) ? 0.5 : 1;
+  return isGrounded(ctx, user) ? 1.3 : 1;
+}
+
+/** Electric Terrain stops sleep and Misty Terrain every status, for a grounded Pokémon. */
+function terrainBlocksStatus(ctx: BattleContext, target: Combatant, status: StatusId): boolean {
+  const terrain = ctx.battle.terrain?.id;
+  if (terrain !== 'misty' && !(terrain === 'electric' && status === 'slp')) return false;
+  return isGrounded(ctx, target);
+}
+
+/** End of turn: Grassy Terrain heals a grounded Pokémon 1/16 of its HP; the terrain runs down. */
+function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
+  const terrain = ctx.battle.terrain;
+  if (!terrain) return;
+  if (terrain.id === 'grassy') {
+    for (const c of sides) {
+      const max = calcStats(ctx.content, c.mon).hp;
+      if (c.mon.hp <= 0 || c.mon.hp >= max || !isGrounded(ctx, c)) continue;
+      const amount = Math.min(max - c.mon.hp, Math.max(1, Math.floor(max / 16)));
+      c.mon.hp += amount;
+      events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+    }
+  }
+  terrain.turns -= 1;
+  if (terrain.turns <= 0) {
+    ctx.battle.terrain = null;
+    events.push({ type: 'terrainEnd', terrain: terrain.id });
+  }
+}
+
 function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
   const weather = ctx.battle.weather;
   if (!weather) return;

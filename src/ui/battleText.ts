@@ -1,7 +1,7 @@
 // Turns battle events into the sentences shown in the battle message box.
 
 import type { Side } from '../core/battle/engine';
-import type { Content, Weather } from '../core/contentSchema';
+import type { Content, Terrain, Weather } from '../core/contentSchema';
 import type { RunEvent } from '../core/run';
 
 const STAT_NAMES: Record<string, string> = {
@@ -17,6 +17,13 @@ const WEATHER_START: Record<Weather, string> = {
 };
 const WEATHER_END: Record<Weather, string> = {
   rain: 'The rain stopped.', sun: 'The harsh sunlight faded.', sand: 'The sandstorm subsided.', snow: 'The snow stopped.', hail: 'The hail stopped.',
+};
+
+const TERRAIN_START: Record<Terrain, string> = {
+  electric: 'Electric current ran across the battlefield!', grassy: 'Grass grew to cover the battlefield!', misty: 'Mist swirled around the battlefield!', psychic: 'The battlefield got weird!',
+};
+const TERRAIN_END: Record<Terrain, string> = {
+  electric: 'The electric current disappeared.', grassy: 'The grass disappeared.', misty: 'The mist disappeared.', psychic: 'The weirdness disappeared.',
 };
 
 export interface Names {
@@ -203,6 +210,10 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return WEATHER_START[e.weather];
     case 'weatherEnd':
       return WEATHER_END[e.weather];
+    case 'terrain':
+      return TERRAIN_START[e.terrain];
+    case 'terrainEnd':
+      return TERRAIN_END[e.terrain];
     case 'weatherDamage':
       return `${who(e.side)} is buffeted by the ${e.weather === 'sand' ? 'sandstorm' : 'hail'}!`;
     case 'switchOut':

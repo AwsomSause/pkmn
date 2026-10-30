@@ -12,8 +12,8 @@
 //   move has one, otherwise Showdown's table on the move's power (a lower
 //   table for Fighting and Poison moves). Status moves become Max Guard.
 // - Max Move side effects this game can run: weather (Max Flare, Geyser,
-//   Rockfall, Hailstorm) and stat changes. The terrain Max Moves (Lightning,
-//   Overgrowth, Mindstorm, Starfall) only deal damage until terrain exists.
+//   Rockfall, Hailstorm), terrain (Lightning, Overgrowth, Mindstorm, Starfall)
+//   and stat changes.
 // - A G-Max Move replaces its type's Max Move for that Gigantamax Pokémon,
 //   with the same power (or Showdown's fixed 160 for Drum Solo, Fireball and
 //   Hydrosnipe). Its side effect is kept only when the game can run it
@@ -56,6 +56,7 @@ const BY_TYPE: Record<string, string> = {
 type StatChange = { stat: string; stages: number; target: 'self' | 'enemy' };
 interface MaxEffect {
   weather?: string;
+  terrain?: string;
   statChanges?: StatChange[];
   status?: string;
   confuse?: true;
@@ -74,6 +75,10 @@ const EFFECTS: Record<string, MaxEffect> = {
   'max-flutterby': foe('spa'),
   'max-phantasm': foe('def'),
   'max-steelspike': self('def'),
+  'max-lightning': { terrain: 'electric' },
+  'max-overgrowth': { terrain: 'grassy' },
+  'max-mindstorm': { terrain: 'psychic' },
+  'max-starfall': { terrain: 'misty' },
   'max-flare': { weather: 'sun' },
   'max-geyser': { weather: 'rain' },
   'max-hailstorm': { weather: 'hail' },

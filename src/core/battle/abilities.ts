@@ -9,7 +9,7 @@
 //   pending   - not built yet: a Pokémon can have it, but it does nothing
 //               until it is built (the list is in CHECKLIST.md, part C3)
 
-import type { BoostStat, StatusId, TypeName, Weather } from '../contentSchema';
+import type { BoostStat, StatusId, Terrain, TypeName, Weather } from '../contentSchema';
 
 export type AbilityStatus = 'supported' | 'noEffect' | 'pending';
 
@@ -18,6 +18,9 @@ export const PINCH: Record<string, TypeName> = { overgrow: 'grass', blaze: 'fire
 
 /** Weather set when the Pokémon comes in. */
 export const WEATHER_SETTERS: Record<string, Weather> = { drizzle: 'rain', drought: 'sun', 'sand-stream': 'sand', 'snow-warning': 'snow' };
+
+/** Terrain set when the Pokémon comes in. */
+export const TERRAIN_SETTERS: Record<string, Terrain> = { 'electric-surge': 'electric', 'grassy-surge': 'grassy', 'misty-surge': 'misty', 'psychic-surge': 'psychic' };
 
 /** Speed doubles in this weather. */
 export const WEATHER_SPEED: Record<string, Weather[]> = { 'swift-swim': ['rain'], chlorophyll: ['sun'], 'sand-rush': ['sand'], 'slush-rush': ['snow', 'hail'] };
@@ -123,6 +126,7 @@ export const HIT_BOOST: Record<string, { types?: TypeName[]; physical?: true; ch
 const SUPPORTED = new Set<string>([
   ...Object.keys(PINCH),
   ...Object.keys(WEATHER_SETTERS),
+  ...Object.keys(TERRAIN_SETTERS),
   ...Object.keys(WEATHER_SPEED),
   ...Object.keys(WEATHER_EVASION),
   ...Object.keys(WEATHER_DAMAGE_IMMUNE),

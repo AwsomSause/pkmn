@@ -702,6 +702,18 @@
           "target": "enemy"
         }
       ]
+    },
+    "max-lightning": {
+      "terrain": "electric"
+    },
+    "max-overgrowth": {
+      "terrain": "grassy"
+    },
+    "max-mindstorm": {
+      "terrain": "psychic"
+    },
+    "max-starfall": {
+      "terrain": "misty"
     }
   },
   "gmax": {
