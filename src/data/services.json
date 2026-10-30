@@ -94,6 +94,15 @@
       "blurb": "Rest and bond with one Pokémon: friendship rises. Once per stop, no combat buff."
     },
     {
+      "id": "nursery",
+      "name": "Nursery",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 1,
+      "reusable": false,
+      "blurb": "Buy a Mystery Egg. It hatches into a first-stage Pokémon after 3 stages. One per stop."
+    },
+    {
       "id": "relic",
       "name": "Relic Shrine",
       "status": "supported",
@@ -151,6 +160,7 @@
     "auctionHighBid": 1.6,
     "relicGain": 2,
     "relicLoss": 1,
-    "lodgeFriendship": 25
+    "lodgeFriendship": 25,
+    "eggPrice": 450
   }
 }

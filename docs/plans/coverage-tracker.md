@@ -200,3 +200,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Rival world slice B: 19 bond/Overdrive arcs (`rivalBondArcs.test.ts`: each fits its trigger, none repeats, a running arc is never replaced). Left: Pokémon transfer and unscheduled challenge (slice C).
 
 - Rival world slice C: Pokémon transfer + unscheduled challenge (`rivalTransfer.test.ts`). All 24 §8 mechanics now run.
+- Untitled Phase D2 (§19), slice 4: Nursery done (buys a Mystery Egg, one per stop; hatching is the existing egg system). Left: Ability Researcher, Fossil, Safari, Black Market, Garden, School.
