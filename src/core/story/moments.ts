@@ -33,6 +33,9 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   protectingTrainer: 'enemyStage',
   partnerFall: 'enemyStage',
   willNotLetDown: 'enemyStage',
+  somethingDifferent: 'flair',
+  waitingForBattle: 'flair',
+  somethingWatching: 'flair',
 };
 
 export interface Moment {
@@ -42,6 +45,13 @@ export interface Moment {
   /** Index in the turn's events it is told after. */
   at: number;
   names: Record<string, string>;
+}
+
+/** A small string hash (FNV-1a), so "unusual" flavour is fixed by the seed and never draws from a random stream. */
+function fnv1a(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
+  return h;
 }
 
 const flagKey = (...parts: (string | number)[]) => `m:${parts.join(':')}`;
@@ -137,6 +147,20 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         break;
     }
   });
+
+  // Unusual events (blueprint §5) that need no choice: told on the first turn, from the run's seed, never from a gameplay stream.
+  if (prior.turn === 1 && lead) {
+    const mark = fnv1a;
+    if (battle.kind === 'wild' && (foe.shiny ? mark(`${run.seed}:${foe.uid}:s`) % 5 !== 0 : mark(`${run.seed}:${foe.uid}:d`) % 60 === 0)) {
+      fire('somethingDifferent', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    }
+    const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
+    if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    if (mark(`${run.seed}:watch:${run.encountersCompleted}`) % 14 === 0 && run.encountersCompleted > 0) {
+      run.story.flags['lead:watcher'] = Number(run.story.flags['lead:watcher'] ?? 0) + 1;
+      fire('somethingWatching', 'player', lead.uid, -1, { name: nameOf(lead.speciesId) });
+    }
+  }
 
   // End of the turn: states rather than events.
   if (lead && lead.hp > 0) {
