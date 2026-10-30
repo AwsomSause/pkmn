@@ -273,6 +273,11 @@ export function maxMoveWeather(content: Content, moveId: string): MaxEffect['wea
   return content.maxMoves.effects[moveId]?.weather ?? null;
 }
 
+/** The terrain a Max Move sets after it hits (Max Lightning: Electric Terrain), or null. */
+export function maxMoveTerrain(content: Content, moveId: string): MaxEffect['terrain'] | null {
+  return content.maxMoves.effects[moveId]?.terrain ?? null;
+}
+
 /** The move a Pokémon really uses this turn: its Max Move while Dynamaxed, otherwise the move itself. */
 export function battleMove(content: Content, battle: BattleState, mon: PokemonInstance, move: Move): Move {
   return battle.transform.dynamax[mon.uid] !== undefined ? (maxMoveFor(content, mon.speciesId, move) ?? move) : move;

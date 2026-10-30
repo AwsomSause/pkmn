@@ -112,6 +112,10 @@ export type Ability = z.infer<typeof AbilitySchema>;
 
 export const WEATHERS = ['rain', 'sun', 'sand', 'snow', 'hail'] as const;
 export const WeatherSchema = z.enum(WEATHERS);
+/** Terrains (Electric, Grassy, Misty, Psychic): they last 5 turns and affect Pokémon standing on the ground. */
+export const TERRAINS = ['electric', 'grassy', 'misty', 'psychic'] as const;
+export const TerrainSchema = z.enum(TERRAINS);
+export type Terrain = z.infer<typeof TerrainSchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
 /** Where a Pokémon is during the first turn of Fly, Dig, Dive or Phantom Force. */
 export const SemiSchema = z.enum(['air', 'underground', 'underwater', 'vanished']);
@@ -203,6 +207,8 @@ export const MoveSchema = z.object({
       lockIn: z.literal(true).optional(),
       /** Status move: sets the weather for 5 turns. */
       weather: WeatherSchema.optional(),
+      /** Status move: sets the terrain for 5 turns (Electric, Grassy, Misty and Psychic Terrain). */
+      terrain: TerrainSchema.optional(),
       /** Weather Ball: its type and power follow the weather. */
       weatherBall: z.literal(true).optional(),
       /** Healing follows the weather: 2/3 in sun, 1/4 in other weather (Synthesis). */
@@ -1266,6 +1272,7 @@ export type ZMoveData = z.infer<typeof ZMoveDataSchema>;
 /** What a Max or G-Max Move does after it hits (maxMoves.json). */
 const MaxEffectSchema = z.object({
   weather: WeatherSchema.optional(),
+  terrain: TerrainSchema.optional(),
   statChanges: z.array(StatChangeSchema.omit({ chance: true })).optional(),
   status: StatusIdSchema.optional(),
   confuse: z.literal(true).optional(),

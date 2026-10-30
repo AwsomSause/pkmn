@@ -59,6 +59,7 @@ type Effects = {
   hitsSemi?: { semi: Semi; double: boolean };
   lockIn?: true;
   weather?: 'rain' | 'sun' | 'sand' | 'snow' | 'hail';
+  terrain?: 'electric' | 'grassy' | 'misty' | 'psychic';
   weatherBall?: true;
   healWeather?: true;
   healSand?: true;
@@ -392,7 +393,7 @@ for (const row of list) {
   const ok = sentences.every((s) => applySentence(move, s, row.chance));
   // A status move has to do something the engine understands.
   const fx = move.effects;
-  const doesSomething = move.category !== 'status' || fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather;
+  const doesSomething = move.category !== 'status' || fx.status || fx.statChanges?.length || fx.heal || fx.protect || fx.confuse || fx.seed || fx.weather || fx.terrain;
   if (!ok || !doesSomething) {
     addUnsupported(row, id, row.effect || '(no effect text)');
     continue;

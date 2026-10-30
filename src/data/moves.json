@@ -10224,11 +10224,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents all Pokémon from falling asleep for 5 turns."
+  "effects": {
+   "terrain": "electric"
+  }
  },
  {
   "id": "electrify",
@@ -11658,11 +11658,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Restores a little HP of all Pokémon for 5 turns."
+  "effects": {
+   "terrain": "grassy"
+  }
  },
  {
   "id": "grav-apple",
@@ -13396,11 +13396,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the field from status conditions for 5 turns."
+  "effects": {
+   "terrain": "misty"
+  }
  },
  {
   "id": "moongeist-beam",
@@ -14126,11 +14126,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents priority moves from being used for 5 turns."
+  "effects": {
+   "terrain": "psychic"
+  }
  },
  {
   "id": "psycho-shift",

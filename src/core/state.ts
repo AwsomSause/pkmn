@@ -3,7 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { z } from 'zod';
-import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
+import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { StoryStateSchema } from './story/schema';
 import { freshHyperBattle } from './battle/hyper';
@@ -175,6 +175,8 @@ export const BattleStateSchema = z.object({
   enemyVolatile: VolatileSchema.default(freshVolatile),
   /** The weather and how many turns it has left. */
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** The terrain and how many turns it has left. */
+  terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** Sides whose Pokémon just came in and whose entry ability (Intimidate, Drizzle) hasn't happened yet. */
   pendingEntry: z.array(z.enum(['player', 'enemy'])).default([]),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
