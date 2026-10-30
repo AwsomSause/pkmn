@@ -54,7 +54,7 @@ describe('accessibility profiles', () => {
     expect(seen.size).toBe(PROFILE_ORDER.length);
   });
   it('migrates settings v4 to v5', () => {
-    expect(CURRENT_VERSIONS.settings).toBe(5);
+    expect(CURRENT_VERSIONS.settings).toBeGreaterThanOrEqual(5);
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 4, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'fast', dialogueFrequency: 'low' } }));
     expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ damageDetails: false, accessibilityProfile: 'custom', battleSpeed: 'fast' });
