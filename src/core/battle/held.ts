@@ -612,6 +612,33 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
   }
 }
 
+/** Eats the holder's first Berry now, whatever its trigger (Stuff Cheeks, Teatime). Returns false if it holds none. */
+export function forceEatBerry(ctx: HeldContext, holder: Holder, events: HeldEvent[]): boolean {
+  const { content, rng } = ctx;
+  const mon = holder.mon;
+  for (const { itemId, hook } of hooksOf(ctx, mon, holder.side)) {
+    if (content.catalog.get(itemId)?.family.startsWith('Berries') !== true) continue;
+    eat(mon, itemId);
+    if (hook.hook === 'berryHeal') {
+      heal(content, mon, (hook.flat ?? maxHpOf(content, mon) * (hook.fraction ?? 0)) * healingMultiplier(ctx, mon, holder.side));
+      events.push({ type: 'held', side: holder.side, itemId, what: 'heal', hpAfter: mon.hp });
+    } else if (hook.hook === 'berryStat') {
+      const stat: BoostStat = hook.stat === 'crit' ? 'atk' : hook.stat === 'random' ? rng.pick(['atk', 'def', 'spa', 'spd', 'spe'] as const) : hook.stat;
+      raiseStage(holder, stat, hook.stages, itemId, events);
+    } else if (hook.hook === 'berryCure') {
+      mon.status = null;
+      holder.vol.confusion = 0;
+      events.push({ type: 'held', side: holder.side, itemId, what: 'cure' });
+    } else if (hook.hook === 'berryPp') {
+      const slot = mon.moves.find((m) => m.pp === 0) ?? mon.moves[0];
+      if (slot) slot.pp = Math.min(slot.pp + hook.amount, 99);
+      events.push({ type: 'held', side: holder.side, itemId, what: 'pp' });
+    } else events.push({ type: 'held', side: holder.side, itemId, what: 'cure' });
+    return true;
+  }
+  return false;
+}
+
 // ---------- turns, switching, knockouts ----------
 
 /** When a Pokémon comes into battle: its X items and Dire Hit take effect. */

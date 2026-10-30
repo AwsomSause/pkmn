@@ -690,6 +690,7 @@ const PERSISTENT_FORMS = new Set(['palafin-hero', 'greninja-ash', 'zygarde-compl
 function switchOutAbility(ctx: BattleContext, mon: PokemonInstance): void {
   if (mon.hp <= 0) return;
   const ability = abilityOf(ctx.content, mon);
+  restoreMoves(ctx, mon);
   const rec = ctx.battle.transform.forms[mon.uid];
   if (rec?.kind === 'ability' && !PERSISTENT_FORMS.has(mon.speciesId)) {
     const oldMax = calcStats(ctx.content, mon).hp;
@@ -800,6 +801,32 @@ function primalCheck(ctx: BattleContext, player: Combatant, enemy: Combatant, ev
   events.push({ type: 'weatherEnd', weather: w.id });
 }
 
+/** Puts back the moves Mimic or Transform replaced. */
+function restoreMoves(ctx: BattleContext, mon: PokemonInstance): void {
+  const rec = ctx.battle.extra.mimic[mon.uid];
+  if (!rec) return;
+  if (rec.kind === 'mimic') {
+    const orig = rec.moves[rec.slot];
+    if (orig && mon.moves[rec.slot]) mon.moves[rec.slot] = { ...orig };
+  } else mon.moves = rec.moves.map((m) => ({ ...m }));
+  delete ctx.battle.extra.mimic[mon.uid];
+}
+
+/** Transform and Imposter: the user becomes a copy of the target (form, moves with 5 PP, ability and stat changes) until it leaves the battle. */
+function transformInto(ctx: BattleContext, user: Combatant, target: Combatant, events: BattleEvent[]): boolean {
+  if (target.mon.hp <= 0 || target.vol.substitute > 0 || ctx.battle.extra.mimic[user.mon.uid]?.kind === 'transform' || ctx.battle.extra.mimic[target.mon.uid]?.kind === 'transform') return false;
+  const ability = abilityIn(ctx, target);
+  const moves = target.mon.moves.map((m) => ({ id: m.id, pp: Math.min(5, m.pp > 0 ? 5 : 5) }));
+  if (ctx.battle.extra.mimic[user.mon.uid]) restoreMoves(ctx, user.mon);
+  ctx.battle.extra.mimic[user.mon.uid] = { kind: 'transform', slot: -1, moves: user.mon.moves.map((m) => ({ ...m })) };
+  user.mon.moves = moves;
+  swapForm(ctx, user, target.mon.speciesId, events);
+  user.vol.abilityOverride = ability;
+  for (const k of Object.keys(user.stages) as BoostStat[]) user.stages[k] = target.stages[k];
+  events.push({ type: 'selfState', side: user.side, state: 'transformed' });
+  return true;
+}
+
 /** Changes a Pokémon's form for an ability (Zen Mode, Disguise...). It keeps its ability and scales its HP; the battle's end reverts it. */
 function swapForm(ctx: BattleContext, c: Combatant, to: string, events: BattleEvent[]): void {
   const { battle, content } = ctx;
@@ -865,6 +892,11 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
   const ability = abilityIn(ctx, c);
   if (!ability) return;
   syncForms(ctx, c, events, false);
+  if (ability === 'imposter') {
+    announce(c, ability, events);
+    transformInto(ctx, c, other, events);
+    return;
+  }
   const primal = ability === 'desolate-land' ? 'sun' : ability === 'primordial-sea' ? 'rain' : null;
   if (primal) {
     announce(c, ability, events);
@@ -1593,6 +1625,13 @@ function executeMove(
 let presentPower = 40;
 let flingPower = 30;
 
+/** Weight in kg (Heavy Metal doubles it, Light Metal halves it). */
+function weightOf(ctx: BattleContext, c: Combatant): number {
+  const base = getSpecies(ctx.content, c.mon.speciesId).weight ?? 50;
+  const ability = abilityIn(ctx, c);
+  return Math.max(0.1, ability === 'heavy-metal' ? base * 2 : ability === 'light-metal' ? base / 2 : base);
+}
+
 function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: Combatant, target: Combatant, userStats: { hp: number; spe: number }, targetStats: { hp: number; spe: number }, movedFirst: boolean, hit = 0): number | null {
   const positive = (st: Record<string, number>) => Object.values(st).reduce((n, v) => n + Math.max(0, v), 0);
   const terrain = ctx.battle.terrain?.id;
@@ -1643,6 +1682,14 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'trumpCard': {
       const pp = user.mon.moves.find((m) => m.id === user.vol.lastMove)?.pp ?? 5;
       return pp <= 0 ? 200 : pp === 1 ? 80 : pp === 2 ? 60 : pp === 3 ? 50 : 40;
+    }
+    case 'targetWeight': {
+      const kg = weightOf(ctx, target);
+      return kg < 10 ? 20 : kg < 25 ? 40 : kg < 50 ? 60 : kg < 100 ? 80 : kg < 200 ? 100 : 120;
+    }
+    case 'weightRatio': {
+      const ratio = weightOf(ctx, user) / weightOf(ctx, target);
+      return ratio >= 5 ? 120 : ratio >= 4 ? 100 : ratio >= 3 ? 80 : ratio >= 2 ? 60 : 40;
     }
     case 'hardPress': return Math.max(1, Math.floor((100 * target.mon.hp) / targetStats.hp));
     case 'acrobatics': return Object.keys(Held.effectiveHeld(ctx, user.mon)).length === 0 ? base * 2 : base;
@@ -1782,12 +1829,18 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
 
   // Two-turn moves: charge (and maybe hide) this turn, attack next turn.
   if (fx.charge) {
+    if (fx.charge.grab && user.vol.charging !== move.id && (battleTypes(content, ctx.battle, target.mon).includes('flying') || weightOf(ctx, target) >= 200 || target.vol.substitute > 0)) {
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
     if (user.vol.charging === move.id) {
       user.vol.charging = null;
       user.vol.semi = null;
+      if (fx.charge.grab) target.flinched = true;
     } else if (!(fx.charge.sunSkips && weather === 'sun') && !Held.usePowerHerb(ctx, user, events as Held.HeldEvent[])) {
       user.vol.charging = move.id;
       user.vol.semi = fx.charge.semi ?? null;
+      if (fx.charge.grab) target.flinched = true;
       events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
       for (const change of fx.charge.boosts ?? []) applyStageChange(ctx, user, change.stat, change.stages, events);
       return;
@@ -2011,7 +2064,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   const hasExtra = Boolean(fx.status || fx.flinchChance || fx.confuse || changes.some((c) => c.target === 'enemy' || c.chance < 100));
   const sheerForce = userAbility === 'sheer-force' && hasExtra;
   const parental = userAbility === 'parental-bond' && !fx.hits && !fx.ohko && !fx.fixedDamage && !fx.counter && !fx.halveTarget && !fx.endeavor && !fx.userFaint;
-  const hits = fx.hits ? (userAbility === 'skill-link' ? fx.hits[1] : multiHitCount(fx.hits, rng)) : parental ? 2 : 1;
+  const beaters = fx.beatUp ? (user.side === 'player' ? ctx.party : ctx.battle.enemyTeam).filter((m) => m.hp > 0 && !m.status) : [];
+  const hits = fx.beatUp ? Math.max(1, beaters.length) : fx.hits ? (userAbility === 'skill-link' ? fx.hits[1] : multiHitCount(fx.hits, rng)) : parental ? 2 : 1;
   let dealt = 0;
   let landed = 0;
   let anyCrit = false;
@@ -2042,6 +2096,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (crit) user.vol.laserFocus = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
+      if (fx.beatUp && beaters.length > 0) power = Math.floor(getSpecies(content, beaters[Math.min(hit, beaters.length - 1)]!.speciesId).baseStats.atk / 10) + 5;
       if (fx.powerRule) power = powerFromRule(ctx, fx.powerRule, power, user, target, userStats, targetStats, movedFirst, hit) ?? power;
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
       let stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
@@ -2191,7 +2246,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       ctx.battle.hyper.superEffective[target.mon.uid] = (ctx.battle.hyper.superEffective[target.mon.uid] ?? 0) + 1;
     }
   }
-  if (fx.hits) events.push({ type: 'hits', side: target.side, count: landed });
+  if (fx.hits || fx.beatUp) events.push({ type: 'hits', side: target.side, count: landed });
   if (dealt > 0) {
     if (move.category === 'physical') target.vol.tookPhysical += dealt;
     else if (move.category === 'special') target.vol.tookSpecial += dealt;
@@ -2808,6 +2863,16 @@ function specialMoveType(ctx: BattleContext, user: Combatant, move: Move, _weath
       case 'morpeko': return id.includes('hangry') ? 'dark' : 'electric';
     }
   }
+  if (fx.hiddenPower) {
+    const types = TYPE_NAMES.filter((t) => t !== 'normal' && t !== 'fairy');
+    let h = 0;
+    for (const ch of `hidden-power:${user.mon.uid}`) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return types[h % types.length]!;
+  }
+  if (fx.itemMove === 'naturalGift') {
+    const berry = firstItem(Held.effectiveHeld(ctx, user.mon), (i) => i in BERRY_TYPE);
+    return berry ? BERRY_TYPE[berry]! : null;
+  }
   if (fx.itemMove === 'itemType') {
     for (const { hook } of Held.hooksOf(ctx, user.mon, user.side)) {
       if (hook.hook === 'drive') return hook.type;
@@ -2851,10 +2916,23 @@ let flungItem: string | null = null;
 function firstItem(items: Record<string, number>, only?: (id: string) => boolean): string | null {
   return Object.keys(items).filter((id) => (items[id] ?? 0) > 0 && (!only || only(id))).sort()[0] ?? null;
 }
+/** The type and power-80 hit Natural Gift gets from each Berry. */
+const BERRY_TYPE: Record<string, TypeName> = Object.fromEntries(
+  Object.entries({
+    fire: 'cheri bluk watmel occa', water: 'chesto nanab durin passho', electric: 'pecha wepear belue wacan', grass: 'rawst pinap rindo', ice: 'aspear pomeg yache',
+    fighting: 'leppa kelpsy chople', poison: 'oran qualot kebia', ground: 'persim hondew shuca', flying: 'lum grepa coba', psychic: 'sitrus tamato payapa',
+    bug: 'figy cornn tanga', rock: 'wiki magost charti', ghost: 'mago rabuta kasib', dragon: 'aguav nomel haban', dark: 'iapapa spelon colbur', steel: 'razz pamtre babiri',
+    normal: 'chilan', fairy: 'roseli',
+  }).flatMap(([type, names]) => names.split(' ').map((n) => [`${n}-berry`, type as TypeName])),
+);
 const isBerry = (ctx: BattleContext, id: string): boolean => Boolean(ctx.content.catalog.get(id)?.family.startsWith('Berries'));
 
 /** Moves that handle items before damage: Fling picks the item and its power. Returns false if the move fails. */
 function preItemMove(ctx: BattleContext, user: Combatant, move: Move): boolean {
+  if (move.effects.itemMove === 'naturalGift') {
+    if (!firstItem(Held.effectiveHeld(ctx, user.mon), (i) => i in BERRY_TYPE)) return false;
+    flingPower = 80;
+  }
   if (move.effects.itemMove === 'fling') {
     flungItem = firstItem(Held.effectiveHeld(ctx, user.mon));
     if (!flungItem) return false;
@@ -2869,6 +2947,10 @@ function postHitExtras(ctx: BattleContext, user: Combatant, target: Combatant, m
   if (fx.rage) user.vol.raging = true;
   else user.vol.raging = false;
   if (landed <= 0) return;
+  if (fx.formStorm && target.mon.hp > 0 && ctx.rng.chance(0.3)) {
+    if (user.mon.speciesId.includes('therian')) applyStageChange(ctx, target, 'atk', -1, events, user);
+    else applyStageChange(ctx, user, 'atk', 1, events);
+  }
   if ((move.id === 'surf' || move.id === 'dive') && abilityIn(ctx, user) === 'gulp-missile' && user.mon.speciesId === 'cramorant') {
     swapForm(ctx, user, user.mon.hp * 2 > calcStats(ctx.content, user.mon).hp ? 'cramorant-gulping' : 'cramorant-gorging', events);
   }
@@ -2921,6 +3003,11 @@ function postHitExtras(ctx: BattleContext, user: Combatant, target: Combatant, m
           Held.takeItem(ctx, target.mon, id);
           events.push({ type: 'selfState', side: target.side, state: 'knocked' });
         }
+        break;
+      }
+      case 'naturalGift': {
+        const berry = firstItem(Held.effectiveHeld(ctx, user.mon), (i) => i in BERRY_TYPE);
+        if (berry) Held.takeItem(ctx, user.mon, berry);
         break;
       }
       case 'fling':
@@ -3149,6 +3236,22 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     }
     return;
   }
+  if (fx.transform) {
+    if (!transformInto(ctx, user, target, events)) events.push({ type: 'fail', side: user.side });
+    return;
+  }
+  if (fx.mimic) {
+    const copied = target.vol.lastMove;
+    const slot = user.mon.moves.findIndex((m) => m.id === move.id);
+    const blocked = new Set([ctx.content.ruleset.struggleMoveId, 'mimic', 'transform', 'sketch', 'chatter', 'metronome']);
+    if (!copied || slot < 0 || blocked.has(copied) || user.mon.moves.some((m) => m.id === copied) || !ctx.content.moves.has(copied) || ctx.battle.extra.mimic[user.mon.uid]) {
+      return void events.push({ type: 'fail', side: user.side });
+    }
+    ctx.battle.extra.mimic[user.mon.uid] = { kind: 'mimic', slot, moves: user.mon.moves.map((m) => ({ ...m })) };
+    user.mon.moves[slot] = { id: copied, pp: Math.min(5, ctx.content.moves.get(copied)!.pp) };
+    events.push({ type: 'selfState', side: user.side, state: 'mimicked' });
+    return;
+  }
   if (fx.needsStatus && target.mon.status?.id !== fx.needsStatus) return void events.push({ type: 'fail', side: user.side });
   if (fx.hpCost) {
     const max = calcStats(content, user.mon).hp;
@@ -3282,6 +3385,18 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     const theirsI = Held.effectiveHeld(ctx, target.mon);
     const itemFail = () => void events.push({ type: 'fail', side: user.side });
     switch (fx.itemMove) {
+      case 'stuffCheeks': {
+        if (!Held.forceEatBerry(ctx, user, events as Held.HeldEvent[])) return itemFail();
+        applyStageChange(ctx, user, 'def', 2, events);
+        return;
+      }
+      case 'teatime': {
+        const both = activeCombatants(ctx);
+        let any = false;
+        for (const c of [both.player, both.enemy]) if (c.mon.hp > 0 && Held.forceEatBerry(ctx, c, events as Held.HeldEvent[])) any = true;
+        if (!any) itemFail();
+        return;
+      }
       case 'swap': {
         const a = Held.carriedItems(ctx, user.mon);
         const b = Held.carriedItems(ctx, target.mon);

@@ -503,6 +503,14 @@ export function revertTransformations(content: Content, battle: BattleState, par
     const max = calcStats(content, mon).hp;
     mon.hp = record.kind === 'ability' && mon.hp > 0 ? Math.max(1, Math.min(max, Math.round((mon.hp * max) / oldMax))) : Math.min(mon.hp, max);
   }
+  for (const [uid, rec] of Object.entries(battle.extra.mimic)) {
+    const mon = [...party, ...battle.enemyTeam].find((m) => m.uid === uid);
+    if (!mon) continue;
+    if (rec.kind === 'mimic') {
+      if (rec.moves[rec.slot] && mon.moves[rec.slot]) mon.moves[rec.slot] = { ...rec.moves[rec.slot]! };
+    } else mon.moves = rec.moves.map((m) => ({ ...m }));
+  }
+  battle.extra.mimic = {};
   battle.transform.forms = {};
   battle.transform.teraTypes = {};
   battle.transform.dynamax = {};

@@ -36,7 +36,7 @@ const check = (c: Content, id: string, over: Partial<ReportInputs> = {}) => buil
 
 describe('support status', () => {
   it('an unsupported move is disabled, a move with a known limit is limited, others are supported', () => {
-    expect(moveStatus(content, content.moves.get('sky-drop')!).status).toBe('disabled');
+    expect(moveStatus(content, content.moves.get('catastropika')!).status).toBe('disabled');
     expect(moveStatus(content, content.moves.get('surf')!)).toMatchObject({ status: 'limited' });
     expect(moveStatus(content, content.moves.get('tackle')!)).toEqual({ kind: 'move', id: 'tackle', status: 'supported', notes: [] });
   });
@@ -46,7 +46,9 @@ describe('support status', () => {
     expect(speciesStatus(content, content.species.get('venusaur-mega')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'limited' });
     expect(speciesStatus(content, content.species.get('tatsugiri-droopy-mega')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'disabled' });
     expect(speciesStatus(content, content.species.get('venusaur-gmax')!, { assetExists: everyFileExists }, owners, owners)).toMatchObject({ kind: 'form', status: 'limited' });
-    expect(speciesStatus(content, content.species.get('ditto')!, { assetExists: everyFileExists }, owners, owners).status).toBe('disabled');
+    const c2 = structuredClone(content);
+    c2.species.get('ditto')!.learnset = [{ level: 1, move: 'max-guard' }];
+    expect(speciesStatus(c2, c2.species.get('ditto')!, { assetExists: everyFileExists }, owners, owners).status).toBe('disabled');
     expect(speciesStatus(content, content.species.get('bulbasaur')!, { assetExists: everyFileExists }, owners, owners).status).toBe('supported');
   });
 
@@ -76,7 +78,7 @@ describe('content report checks', () => {
   it('finds a meetable species that lost all its usable moves', () => {
     expect(check(content, 'meetable-species-no-usable-moves').count).toBe(0);
     const c = structuredClone(content);
-    c.species.get('bulbasaur')!.learnset = [{ level: 1, move: 'sky-drop' }];
+    c.species.get('bulbasaur')!.learnset = [{ level: 1, move: 'max-guard' }];
     expect(check(c, 'meetable-species-no-usable-moves').offenders).toContain('bulbasaur');
   });
 

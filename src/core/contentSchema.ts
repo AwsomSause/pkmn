@@ -78,6 +78,8 @@ export const SpeciesSchema = z.object({
   types: z.array(TypeNameSchema).min(1).max(2),
   baseStats: StatBlockSchema,
   catchRate: z.number().int().min(1).max(255),
+  /** Weight in kg for Low Kick, Grass Knot, Heavy Slam and Heat Crash (50 when missing). */
+  weight: z.number().positive().optional(),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
   /**
@@ -122,7 +124,7 @@ export const PowerRuleSchema = z.enum([
   'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
   'perHit', 'magnitude', 'sunBoost', 'doubleTargetHurt', 'doubleRandom', 'stockpile',
   'rageFist', 'stompingTantrum', 'lashOut', 'retaliate', 'echoedVoice', 'rollout', 'fusionFire', 'fusionElectric', 'present', 'trumpCard', 'hardPress',
-  'acrobatics', 'doubleDynamax', 'knockOff', 'terrainPulse', 'flingItem',
+  'acrobatics', 'doubleDynamax', 'knockOff', 'terrainPulse', 'flingItem', 'targetWeight', 'weightRatio',
 ]);
 export type PowerRule = z.infer<typeof PowerRuleSchema>;
 
@@ -340,6 +342,8 @@ export const MoveSchema = z.object({
       beakBlast: z.literal(true).optional(),
       glaiveRush: z.literal(true).optional(),
       mimic: z.literal(true).optional(),
+      /** Transform: become a copy of the target. */
+      transform: z.literal(true).optional(),
       /** Hits two turns later for the damage this move would do then (Future Sight, Doom Desire). */
       delayed: z.literal(true).optional(),
       /** Cures this status on the target after the hit (Sparkling Aria cures burns). */
@@ -348,6 +352,12 @@ export const MoveSchema = z.object({
       together: z.literal(true).optional(),
       /** Only does anything to a target with this status (Venom Drench). */
       needsStatus: StatusIdSchema.optional(),
+      /** Hidden Power: the type comes from the user (a fixed roll per Pokémon, since there are no IVs). */
+      hiddenPower: z.boolean().optional(),
+      /** Springtide Storm: 30% to raise the user's Attack (Incarnate) or lower the foe's (Therian). */
+      formStorm: z.boolean().optional(),
+      /** Beat Up: one hit for each healthy party member, powered by that member's Attack. */
+      beatUp: z.boolean().optional(),
       /** Moves that touch held items. */
       itemMove: z.enum(['steal', 'swap', 'knock', 'bestow', 'embargo', 'magicRoom', 'remove', 'burnBerry', 'pluckBerry', 'fling', 'recycle', 'stuffCheeks', 'teatime', 'naturalGift', 'itemType']).optional(),
       /** Spectral Thief: takes the target's stat boosts first. */
@@ -408,7 +418,7 @@ export const MoveSchema = z.object({
        * raises its stats); the second attacks. `sunSkips`: no charging in sun,
        * half power in other weather (Solar Beam).
        */
-      charge: z.object({ semi: SemiSchema.optional(), sunSkips: z.literal(true).optional(), boosts: z.array(StatChangeSchema).optional() }).optional(),
+      charge: z.object({ semi: SemiSchema.optional(), sunSkips: z.literal(true).optional(), grab: z.literal(true).optional(), boosts: z.array(StatChangeSchema).optional() }).optional(),
       /** Can hit a target hiding this way (Earthquake on Dig), doubling its power if `double`. */
       hitsSemi: z.object({ semi: SemiSchema, double: z.boolean() }).optional(),
       /** Attacks for 2–3 turns in a row, then the user becomes confused (Thrash). */

@@ -58,7 +58,7 @@ describe('story foundation: random streams', () => {
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '91d007a2492449b1',
+    'STORY1/0': '2a6ecc19bae9532d',
     'STORY2/0': '040c98628b8950ed',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '12279333d1452fa0',

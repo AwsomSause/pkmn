@@ -353,6 +353,7 @@ export const freshExtra = () => ({
   ionDeluge: false,
   wonderRoom: 0,
   brokenFace: [] as string[],
+  mimic: {} as Record<string, { kind: 'mimic' | 'transform'; slot: number; moves: { id: string; pp: number }[] }>,
   fairyLock: -9,
   passSub: { player: 0, enemy: 0 },
   healingWish: { player: 'none' as 'none' | 'wish' | 'dance', enemy: 'none' as 'none' | 'wish' | 'dance' },
@@ -406,6 +407,7 @@ export const BattleStateSchema = z.object({
     wonderRoom: z.number().int().default(0),
     /** Pokémon whose Disguise / Ice Face is already used up. */
     brokenFace: z.array(z.string()).default([]),
+    mimic: z.record(z.string(), z.object({ kind: z.enum(['mimic', 'transform']), slot: z.number().int(), moves: z.array(z.object({ id: z.string(), pp: z.number().int() })) })).default({}),
     fairyLock: z.number().int().default(-9),
     passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),
     healingWish: z.object({ player: z.enum(['none', 'wish', 'dance']).default('none'), enemy: z.enum(['none', 'wish', 'dance']).default('none') }).default({ player: 'none', enemy: 'none' }),

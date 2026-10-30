@@ -9148,16 +9148,16 @@
   "name": "Beat Up",
   "type": "dark",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Each Pokémon in user's party attacks."
+  "effects": {
+   "beatUp": true
+  }
  },
  {
   "id": "behemoth-bash",
@@ -11895,7 +11895,7 @@
   "name": "Grass Knot",
   "type": "grass",
   "category": "special",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -11904,9 +11904,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the opponent, the stronger the attack."
+  "effects": {
+   "powerRule": "targetWeight"
+  }
  },
  {
   "id": "grass-pledge",
@@ -12218,7 +12218,7 @@
   "name": "Heat Crash",
   "type": "fire",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
@@ -12227,16 +12227,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the user, the stronger the attack."
+  "effects": {
+   "powerRule": "weightRatio"
+  }
  },
  {
   "id": "heavy-slam",
   "name": "Heavy Slam",
   "type": "steel",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
@@ -12245,9 +12245,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the user, the stronger the attack."
+  "effects": {
+   "powerRule": "weightRatio"
+  }
  },
  {
   "id": "helping-hand",
@@ -12293,9 +12293,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type and power depends on user's IVs."
+  "effects": {
+   "hiddenPower": true
+  }
  },
  {
   "id": "high-horsepower",
@@ -12869,7 +12869,7 @@
   "name": "Low Kick",
   "type": "fighting",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -12878,9 +12878,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the opponent, the stronger the attack."
+  "effects": {
+   "powerRule": "targetWeight"
+  }
  },
  {
   "id": "lucky-chant",
@@ -13643,9 +13643,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Copies the opponent's last move."
+  "effects": {
+   "mimic": true
+  }
  },
  {
   "id": "mind-blown",
@@ -13850,16 +13850,17 @@
   "name": "Natural Gift",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 15,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power and type depend on the user's held berry."
+  "effects": {
+   "powerRule": "flingItem",
+   "itemMove": "naturalGift"
+  }
  },
  {
   "id": "nature-power",
@@ -15598,9 +15599,12 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Takes opponent into the air on first turn, drops them on second turn."
+  "effects": {
+   "charge": {
+    "semi": "air",
+    "grab": true
+   }
+  }
  },
  {
   "id": "sleep-talk",
@@ -16053,9 +16057,9 @@
   "flags": [
    "wind"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosts user's stats in Incarnate Forme, or lowers opponent's stats in Therian Forme."
+  "effects": {
+   "formStorm": true
+  }
  },
  {
   "id": "stealth-rock",
@@ -16233,11 +16237,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user eats its held Berry, then sharply raises its Defense stat."
+  "effects": {
+   "itemMove": "stuffCheeks"
+  }
  },
  {
   "id": "substitute",
@@ -16606,9 +16610,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Forces all Pokémon on the field to eat their berries."
+  "effects": {
+   "itemMove": "teatime"
+  }
  },
  {
   "id": "techno-blast",
@@ -16958,9 +16962,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User takes on the form and attacks of the opponent."
+  "effects": {
+   "transform": true
+  }
  },
  {
   "id": "tri-attack",

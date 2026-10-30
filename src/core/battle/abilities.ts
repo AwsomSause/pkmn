@@ -182,7 +182,7 @@ const SUPPORTED = new Set<string>([
   'bulletproof', 'sharpness', 'wind-rider', 'wind-power', 'electromorphosis', 'desolate-land', 'primordial-sea', 'forecast', 'flower-gift',
   'mimicry', 'zen-mode', 'schooling', 'stance-change', 'power-construct', 'hunger-switch', 'battle-bond', 'disguise',
   'ice-face', 'gulp-missile', 'zero-to-hero', 'tera-shift', 'stakeout', 'stall', 'quick-draw', 'parental-bond', 'mirror-armor', 'opportunist',
-  'soul-heart', 'gorilla-tactics', 'mycelium-might', 'mega-sol', 'protosynthesis', 'quark-drive', 'tera-shell', 'poison-puppeteer', 'innards-out', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
+  'soul-heart', 'imposter', 'gorilla-tactics', 'mycelium-might', 'mega-sol', 'protosynthesis', 'quark-drive', 'tera-shell', 'poison-puppeteer', 'innards-out', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
   'cloud-nine', 'air-lock', 'trace', 'protean', 'libero', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',
