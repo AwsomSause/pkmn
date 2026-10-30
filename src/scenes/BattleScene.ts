@@ -962,7 +962,7 @@ export class BattleScene extends Phaser.Scene {
             mon!.speciesId = e.to;
             if (e.kind === 'dynamaxEnd') delete mon!.dynamaxed;
             else if (dynamaxChange) mon!.dynamaxed = true;
-            if (dynamaxChange && mon!.hp > 0) mon!.hp = Math.max(1, Math.round((mon!.hp * calcStats(content, mon!).hp) / before));
+            if ((dynamaxChange || e.kind === 'ability') && mon!.hp > 0) mon!.hp = Math.max(1, Math.round((mon!.hp * calcStats(content, mon!).hp) / before));
             this.showSprite(e.side, mon!, e.kind !== 'dynamaxEnd');
           }
           this.applyTeraTint(e.side, mon!);

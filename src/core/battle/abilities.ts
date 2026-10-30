@@ -88,9 +88,10 @@ export const DROP_GUARD: Record<string, BoostStat | 'all'> = {
 export const INTIMIDATE_GUARD = new Set(['inner-focus', 'own-tempo', 'oblivious', 'scrappy']);
 
 /** Moves with this flag are this much stronger. */
-export const FLAG_BOOST: Record<string, { flag: 'contact' | 'punch' | 'bite' | 'pulse' | 'sound'; multiplier: number }> = {
+export const FLAG_BOOST: Record<string, { flag: 'contact' | 'punch' | 'bite' | 'pulse' | 'sound' | 'slicing'; multiplier: number }> = {
   'tough-claws': { flag: 'contact', multiplier: 1.3 },
   'iron-fist': { flag: 'punch', multiplier: 1.2 },
+  sharpness: { flag: 'slicing', multiplier: 1.5 },
   'strong-jaw': { flag: 'bite', multiplier: 1.5 },
   'mega-launcher': { flag: 'pulse', multiplier: 1.5 },
   'punk-rock': { flag: 'sound', multiplier: 1.3 },
@@ -135,7 +136,7 @@ export const ENTRY_BOOST: Record<string, BoostStat> = { 'intrepid-sword': 'atk',
 export const PRIORITY_GUARD = new Set(['queenly-majesty', 'dazzling', 'armor-tail']);
 
 /** Trace can't copy these; Mummy and Lingering Aroma don't overwrite them. */
-export const UNTRACEABLE = new Set(['trace', 'multitype', 'stance-change', 'schooling', 'shields-down', 'disguise', 'battle-bond', 'power-construct', 'rks-system', 'zen-mode', 'imposter', 'illusion', 'comatose', 'receiver', 'power-of-alchemy', 'neutralizing-gas', 'gulp-missile', 'hunger-switch', 'ice-face', 'zero-to-hero', 'tera-shift', 'terashell', 'teraform-zero', 'commander', 'as-one-glastrier', 'as-one-spectrier']);
+export const UNTRACEABLE = new Set(['trace', 'stance-change', 'schooling', 'disguise', 'battle-bond', 'power-construct', 'rks-system', 'zen-mode', 'imposter', 'illusion', 'comatose', 'receiver', 'power-of-alchemy', 'neutralizing-gas', 'gulp-missile', 'hunger-switch', 'ice-face', 'zero-to-hero', 'tera-shift', 'terashell', 'teraform-zero', 'commander', 'as-one-glastrier', 'as-one-spectrier']);
 
 /** A contact move on it gives the attacker this ability. */
 export const SPREADS_ON_CONTACT = new Set(['mummy', 'lingering-aroma']);
@@ -177,7 +178,11 @@ const SUPPORTED = new Set<string>([
   ...TRAPPERS,
   ...Object.keys(HALF_HP_BOOST),
   'neutralizing-gas', 'eelevate', 'guard-dog', 'color-change', 'cursed-body', 'perish-body', 'cotton-down', 'toxic-debris',
-  'piercing-drill', 'unseen-fist', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
+  'piercing-drill', 'unseen-fist',
+  'bulletproof', 'sharpness', 'wind-rider', 'wind-power', 'electromorphosis', 'desolate-land', 'primordial-sea', 'forecast', 'flower-gift',
+  'mimicry', 'zen-mode', 'schooling', 'stance-change', 'power-construct', 'hunger-switch', 'battle-bond', 'disguise',
+  'ice-face', 'gulp-missile', 'zero-to-hero', 'tera-shift', 'stakeout', 'stall', 'quick-draw', 'parental-bond', 'mirror-armor', 'opportunist',
+  'soul-heart', 'imposter', 'gorilla-tactics', 'mycelium-might', 'mega-sol', 'protosynthesis', 'quark-drive', 'tera-shell', 'poison-puppeteer', 'innards-out', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
   'cloud-nine', 'air-lock', 'trace', 'protean', 'libero', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',
@@ -203,7 +208,7 @@ const NO_EFFECT = new Set<string>([
   'healer', 'friend-guard', 'telepathy', 'plus', 'minus', 'battery', 'power-spot', 'steely-spirit', 'curious-medicine',
   'cute-charm', 'rivalry', 'suction-cups', 'unnerve', 'flower-veil', 'aroma-veil', 'receiver', 'power-of-alchemy',
   'costar', 'commander', 'dancer', 'stalwart', 'propeller-tail', 'hospitality', 'supersweet-syrup', 'emergency-exit', 'wimp-out',
-  'heavy-metal', 'light-metal', 'infiltrator', 'screen-cleaner',
+  'heavy-metal', 'light-metal', 'infiltrator', 'screen-cleaner', 'rks-system',
 ]);
 
 export function abilityStatus(id: string): AbilityStatus {
