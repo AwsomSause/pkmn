@@ -8,7 +8,8 @@ import { baseStatTotal, wildEligibleSpecies } from '../themes';
 import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, partyCapacity, requireStage } from '../run';
 import { runLevelCap } from '../regions';
-import { createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
+import { evolveFully } from '../evolution';
+import { addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
 import { applyCatalog, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
@@ -222,6 +223,9 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
     case 'fossil':
       for (const f of fossilLots(content, run, sideId)) add(`fossil:${f.id}`, `Restore the ${f.name}`, `Brings back ${getSpecies(content, f.species).name} at your party's average level.`, price(run, C.fossilPrice), side.used ? 'The restorer has finished for today.' : null);
       break;
+    case 'school':
+      for (const m of run.party) add(`class:${m.uid}`, `Enrol ${monName(content, m)}`, `+${C.schoolLevels} levels (now ${m.level}, cap ${runLevelCap(content, run)}).`, price(run, C.schoolPrice), side.used ? 'The school has closed for the day.' : m.hp <= 0 ? 'It has fainted.' : m.level >= runLevelCap(content, run) ? 'Already at the level cap.' : null);
+      break;
     case 'relic':
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
       break;
@@ -326,6 +330,14 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'rest': {
       changeFriendship(content, mon!, C.lodgeFriendship);
       message = `${monName(content, mon!)} had a lovely rest and trusts you more.`;
+      break;
+    }
+    case 'class': {
+      const result = addLevels(content, mon!, C.schoolLevels, runLevelCap(content, run));
+      changeFriendship(content, mon!, content.balance.friendship.perLevel * result.levelsGained);
+      const evolved = evolveFully(content, mon!, run.regionOrder[run.regionIndex], 0);
+      for (const evo of evolved) count(run, 'evolutions');
+      message = `${monName(content, mon!)} reached level ${result.newLevel}.${evolved.length ? ` It evolved into ${evolved.map((e) => getSpecies(content, e.to).name).join(', then ')}!` : ''}${result.skippedMoves.length ? ' It had no room for some new moves.' : ''}`;
       break;
     }
     case 'fossil': {

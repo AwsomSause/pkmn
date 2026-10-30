@@ -18,7 +18,7 @@ export const ServiceDefSchema = z.object({
 export type ServiceDef = z.infer<typeof ServiceDefSchema>;
 
 export const ServicesSchema = z.object({ note: z.string(), stopChance: z.number().min(0).max(1),
-  costs: z.object({ regionScale: z.number().min(0), healPerMon: z.number(), curePerMon: z.number(), revivePerMon: z.number(), tutor: z.number(), reminder: z.number(), researchPrice: z.number(), researchPoints: z.number().int(), scan: z.number(), tradeFee: z.number(), scout: z.number(), tradeSpecialChance: z.number().min(0).max(1), tradeBstSpread: z.number().min(0), evolutionItem: z.number(), dojo: z.number(), truce: z.number(), auctionReserve: z.number(), auctionHighBid: z.number(), relicGain: z.number().int(), relicLoss: z.number().int(), lodgeFriendship: z.number().int(), eggPrice: z.number(), fossilPrice: z.number() }),
+  costs: z.object({ regionScale: z.number().min(0), healPerMon: z.number(), curePerMon: z.number(), revivePerMon: z.number(), tutor: z.number(), reminder: z.number(), researchPrice: z.number(), researchPoints: z.number().int(), scan: z.number(), tradeFee: z.number(), scout: z.number(), tradeSpecialChance: z.number().min(0).max(1), tradeBstSpread: z.number().min(0), evolutionItem: z.number(), dojo: z.number(), truce: z.number(), auctionReserve: z.number(), auctionHighBid: z.number(), relicGain: z.number().int(), relicLoss: z.number().int(), lodgeFriendship: z.number().int(), eggPrice: z.number(), fossilPrice: z.number(), schoolPrice: z.number(), schoolLevels: z.number().int().positive() }),
   services: z.array(ServiceDefSchema).min(1) });
 export const SERVICES = ServicesSchema.parse(json);
 

@@ -215,3 +215,4 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Rival world slice C: Pokémon transfer + unscheduled challenge (`rivalTransfer.test.ts`). All 24 §8 mechanics now run.
 - Untitled Phase D2 (§19), slice 4: Nursery done (buys a Mystery Egg, one per stop; hatching is the existing egg system). Left: Ability Researcher, Fossil, Safari, Black Market, Garden, School.
 - Untitled Phase D2 (§19), slice 5: Fossil Restoration done (two seeded fossils per stop, paid, revived at the party's average level). Left: Ability Researcher, Safari, Black Market, Garden, School.
+- Untitled Phase D2 (§19), slice 6: Training School done (+2 levels for one Pokémon, once per stop, level cap respected). Left: Ability Researcher, Safari, Black Market, Garden.

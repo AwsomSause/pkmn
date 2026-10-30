@@ -112,6 +112,15 @@
       "blurb": "Pay to restore one of two fossils into a living Pokémon. It joins the party, or the PC if the party is full."
     },
     {
+      "id": "school",
+      "name": "Training School",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 1,
+      "reusable": false,
+      "blurb": "Pay for a crash course: one Pokémon gains levels, up to the level cap. Moves it cannot fit are skipped."
+    },
+    {
       "id": "relic",
       "name": "Relic Shrine",
       "status": "supported",
@@ -171,6 +180,8 @@
     "relicLoss": 1,
     "lodgeFriendship": 25,
     "eggPrice": 450,
-    "fossilPrice": 650
+    "fossilPrice": 650,
+    "schoolPrice": 500,
+    "schoolLevels": 2
   }
 }
