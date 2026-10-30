@@ -51,6 +51,14 @@ export const DramaBattleSchema = z.object({
   /** Enemy Pokémon (uids) allowed to evolve in this battle, and those that already did. */
   evolvable: z.array(z.string()).default([]),
   evolved: z.array(z.string()).default([]),
+  /** Bond Engine, once per battle: Pokémon that refused a command, took initiative, practiced pairs that handed over, Pokémon that revealed a move. */
+  refused: z.array(z.string()).default([]),
+  initiated: z.array(z.string()).default([]),
+  combos: z.array(z.string()).default([]),
+  revealed: z.array(z.string()).default([]),
+  /** What each Pokémon felt this battle, and the emotions already turned into a turning point. */
+  feelings: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
+  turned: z.array(z.string()).default([]),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
 export const freshDrama = (): DramaBattle => DramaBattleSchema.parse({});

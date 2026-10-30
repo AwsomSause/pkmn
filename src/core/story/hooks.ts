@@ -451,7 +451,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const rivalBack = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
-    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId) };
+    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
     if (result === 'win') {
       const before = rivalBack.state;
       const outcome = applyDefeat(rivalBack, sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) }));

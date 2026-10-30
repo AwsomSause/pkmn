@@ -160,6 +160,12 @@ export type BattleEvent =
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
   /** A trainer's Pokémon evolved between turns (core/drama/evolution.ts). */
+  /** Bond Engine (core/bond): a Pokémon acted on its own before the turn. */
+  | { type: 'refused'; side: Side; uid: string; moveId: string }
+  | { type: 'initiative'; side: Side; uid: string; from: string; to: string }
+  | { type: 'combo'; side: Side; from: string; to: string; stat: 'atk' | 'spa' }
+  | { type: 'newMove'; side: Side; uid: string; moveId: string; replaced: string | null }
+  | { type: 'turningPoint'; side: Side; uid: string; emotion: string }
   | { type: 'evolved'; side: Side; uid: string; from: string; to: string; hpAfter: number }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
@@ -172,7 +178,9 @@ export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
   | { kind: 'move'; index: number; transform?: TransformRequest }
   | { kind: 'switch'; partyIndex: number }
-  | { kind: 'item'; itemId: string; targetIndex?: number };
+  | { kind: 'item'; itemId: string; targetIndex?: number }
+  /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
+  | { kind: 'idle' };
 
 interface Combatant {
   side: Side;
@@ -735,7 +743,7 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
-  } else {
+  } else if (action.kind === 'item') {
     const problem = itemProblem(ctx, action.itemId, action.targetIndex);
     if (problem) throw new Error(problem);
   }
