@@ -169,6 +169,37 @@ export const ChronicleEntrySchema = MemorySchema.extend({ actors: z.array(z.stri
 export type ChronicleEntry = z.infer<typeof ChronicleEntrySchema>;
 
 /** The story layer's part of a saved run. */
+// ---------- rivals (src/core/rivals) ----------
+
+export const TRAIT_KEYS = ['ambition', 'pride', 'empathy', 'adaptability', 'vindictiveness', 'resilience'] as const;
+export const TraitsSchema = z.object({ ambition: z.number().int().min(0).max(100), pride: z.number().int().min(0).max(100), empathy: z.number().int().min(0).max(100), adaptability: z.number().int().min(0).max(100), vindictiveness: z.number().int().min(0).max(100), resilience: z.number().int().min(0).max(100) });
+export type Traits = z.infer<typeof TraitsSchema>;
+
+export const RivalSchema = z.object({
+  id: z.string(),
+  /** The trainer's class id and name when the rivalry began. */
+  classId: z.string(),
+  name: z.string(),
+  archetype: z.string(),
+  style: z.string(),
+  traits: TraitsSchema,
+  /** The hidden score: how much this trainer wants to beat you. */
+  rivalPotential: z.number().min(0),
+  origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.literal('spark') }),
+  /** What it remembers of its last battle with you. */
+  memory: z.object({
+    lastBattle: z.object({
+      eventId: z.string(),
+      result: z.enum(['win', 'lose']),
+      hpLeftShare: z.number().min(0).max(1),
+      turns: z.number().int().min(0),
+      /** Its team that day, for later counter-adaptation. */
+      team: z.array(z.string()).max(6),
+    }),
+  }),
+});
+export type Rival = z.infer<typeof RivalSchema>;
+
 export const StoryStateSchema = z.object({
   /** Last sequence number used (event ids are seed + seq). */
   seq: z.number().int().min(0),
@@ -177,6 +208,8 @@ export const StoryStateSchema = z.object({
   histories: z.record(z.string(), PokemonHistorySchema),
   relationships: z.array(RelationshipRecordSchema),
   enemyProfiles: z.array(EnemyProfileSchema),
+  /** Rivals born this run (src/core/rivals). */
+  rivals: z.array(RivalSchema),
   chronicle: z.array(ChronicleEntrySchema),
   /** Ids of run-scope effects already applied: applying one again does nothing. */
   appliedEffects: z.array(z.string()),
