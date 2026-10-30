@@ -10,6 +10,7 @@ import { GYM_LEADER_CLASS, ELITE_FOUR_CLASS, CHAMPION_CLASS } from '../encounter
 import { maxHp } from '../pokemon';
 import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
+import { emotionOf } from './emotions';
 import { mentorshipOf } from './mentorship';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
@@ -41,6 +42,15 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   studentSurpassed: 'flair',
   lastLesson: 'flair',
   differentWays: 'flair',
+  overdriveDetermination: 'statStage',
+  overdriveBravery: 'statStage',
+  overdriveJustice: 'statStage',
+  overdriveKindness: 'statStage',
+  overdrivePatience: 'statStage',
+  overdriveIntegrity: 'cure',
+  overdrivePerseverance: 'statStage',
+  dualEmotion: 'heal',
+  emotionalClash: 'flair',
 };
 
 export interface Moment {
@@ -187,6 +197,32 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     const h = run.story.histories[lead.uid];
     if (h && Object.keys(h.hyper).length >= 3) fire('somethingAwakened', 'player', lead.uid, lastAt, leadNames());
   }
+  // Emotional Overdrives (blueprint §2): the Pokémon's current emotion plus a dramatic moment, once per battle.
+  if (lead && lead.hp > 0 && !flags[flagKey('eo', lead.uid)]) {
+    const em = emotionOf(content, run, lead.uid)?.id;
+    const max = maxHp(content, lead);
+    const hurtAlly = run.party.some((m) => m.uid !== lead.uid && m.hp > 0 && m.hp <= maxHp(content, m) * 0.3);
+    const fallen = run.party.some((m) => m.hp <= 0);
+    const names = leadNames();
+    const go = (trigger: StoryTriggerKind) => {
+      const before = out.length;
+      fire(trigger, 'player', lead.uid, lastAt, names);
+      if (out.length > before) flags[flagKey('eo', lead.uid)] = true;
+    };
+    const justice = events.some((e) => e.type === 'faint' && e.side === 'enemy') && run.story.events.some((k) => k.type === 'knockout' && k.data.side === 'player' && k.actors[1] === (events.find((e) => e.type === 'faint' && e.side === 'enemy') as { uid?: string } | undefined)?.uid);
+    const status = events.some((e) => e.type === 'status' && e.side === 'player') && Boolean(lead.status);
+    if (em === 'determination' && lead.hp <= max * 0.25 && hurtAlly) go('dualEmotion');
+    else if (em === 'determination' && lead.hp <= max * 0.25) go('overdriveDetermination');
+    else if (em === 'bravery' && foe.level >= lead.level + 5 && prior.turn >= 2) go('overdriveBravery');
+    else if (em === 'justice' && justice) go('overdriveJustice');
+    else if (em === 'kindness' && hurtAlly) go('overdriveKindness');
+    else if (em === 'patience' && prior.turn >= 5 && lead.hp >= max * 0.5) go('overdrivePatience');
+    else if (em === 'integrity' && status) go('overdriveIntegrity');
+    else if (em === 'perseverance' && prior.turn >= 5 && (lead.status || fallen)) go('overdrivePerseverance');
+    // Emotional clash: a Brave lead hurt while a Kind teammate watches.
+    else if (em === 'bravery' && lead.hp <= max * 0.5 && run.party.some((m) => m.uid !== lead.uid && m.hp > 0 && emotionOf(content, run, m.uid)?.id === 'kindness')) go('emotionalClash');
+  }
+
   // The Teacher Has One Last Lesson / They Have Different Ways of Fighting.
   for (const rel of run.story.relationships) {
     if (!rel.open || rel.kind !== 'mentorship') continue;
