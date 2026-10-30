@@ -89,7 +89,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ),
   // Enhanced Battle UI: move flag icons and the effectiveness tags (unknown, immune, weak, super, normal).
   { id: 'pack.ebui.effectiveness', kind: 'image', category: 'ui', path: 'images/packs/ebui/move_effectiveness.png' },
-  ...['Contact', 'Sound', 'Biting', 'Powder', 'Pulse', 'Punching', 'HighCriticalHitRate', 'ZMove', 'DynamaxMove'].map(
+  ...['Contact', 'Sound', 'Biting', 'Powder', 'Pulse', 'Punching', 'HighCriticalHitRate', 'ZMove', 'DynamaxMove', 'Bomb', 'Dance', 'ElectrocuteUser', 'NoMirrorMove', 'NoProtect', 'Slicing', 'ThawsUser', 'TramplesMinimize', 'Wind'].map(
     (name): AssetEntry => ({ id: `pack.ebui.flag.${name}`, kind: 'image', category: 'ui', path: `images/packs/ebui/flags/${name}.png` }),
   ),
   ...['cloud1', 'cloud2', 'bubble', 'bubbleDark', 'snow', 'star', 'sun', 'lightA', 'lightB', 'fog'].map(

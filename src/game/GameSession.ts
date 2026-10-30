@@ -10,6 +10,7 @@ import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { setCardFrame } from '../core/wardrobe';
+import { buyNote } from '../core/researchNotes';
 import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
@@ -402,6 +403,13 @@ export class GameSession {
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
     return paid;
+  }
+
+  /** Buys a Research Room field note with Research Points (throws with the reason when it can't). */
+  buyResearchNote(id: string): void {
+    this.profile = buyNote(this.content, this.profile, id, new Date().toISOString());
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
   }
 
   savePreset(slot: number, preset: LoadoutPreset): void {
