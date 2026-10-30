@@ -183,7 +183,7 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
           ? {
               ...battle,
               storyEffects: ((battle.storyEffects as string[]) ?? []).map((k) => k.replace(/^love-hung-on@/, 'toughened-it-out@')),
-              hyper: battle.hyper ?? { lowHp: null, superEffective: {} },
+              hyper: battle.hyper ?? { lowHp: null, superEffective: {}, rage: {} },
             }
           : null,
         story: { ...story, histories },

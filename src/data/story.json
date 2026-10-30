@@ -254,6 +254,76 @@
           ]
         }
       }
+    },
+    {
+      "id": "enemy-riled-up",
+      "displayName": "The Enemy Is Getting Riled Up!",
+      "messagePool": [
+        "The foe's {name} is getting riled up! Its next attack will be stronger.",
+        "The foe's {name} is getting riled up! Calm it down before it strikes!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "enemyRiledUp",
+        "hits": 3
+      },
+      "chance": null,
+      "effect": {
+        "kind": "rage",
+        "stats": {
+          "atk": 1,
+          "spa": 1
+        },
+        "uncontrollable": {
+          "def": -1
+        }
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": null,
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff5a3c",
+        "sound": "se.hit_strong",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [
+        "enemy"
+      ],
+      "variants": {
+        "uncontrollable": {
+          "displayName": "Its Rage Is Uncontrollable!",
+          "messagePool": [
+            "The foe's {name} is losing control! Its next attack will be much stronger, but it's leaving itself open."
+          ]
+        },
+        "unleashed": {
+          "displayName": "Riled Up!",
+          "messagePool": [
+            "The foe's {name} unleashed its rage!"
+          ],
+          "major": false
+        },
+        "unleashedUncontrollable": {
+          "displayName": "Uncontrollable Rage!",
+          "messagePool": [
+            "The foe's {name} lashed out in an uncontrollable rage!"
+          ],
+          "major": false
+        },
+        "calmed": {
+          "displayName": "Calmed Down",
+          "messagePool": [
+            "The foe's {name} calmed down!",
+            "{enemy} broke the foe's {name}'s rage!"
+          ],
+          "major": false
+        }
+      }
     }
   ]
 }

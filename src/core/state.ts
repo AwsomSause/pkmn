@@ -167,7 +167,16 @@ export const BattleStateSchema = z.object({
   storyEffects: z.array(z.string()),
   /** Hyper counters: the current low-HP stand and super-effective hits survived (core/battle/hyper.ts). */
   hyper: z
-    .object({ lowHp: z.object({ uid: z.string(), turns: z.number().int().min(0) }).nullable(), superEffective: z.record(z.string(), z.number().int().min(0)) })
+    .object({
+      lowHp: z.object({ uid: z.string(), turns: z.number().int().min(0) }).nullable(),
+      superEffective: z.record(z.string(), z.number().int().min(0)),
+      rage: z
+        .record(
+          z.string(),
+          z.object({ hits: z.number().int().min(0), state: z.enum(['calm', 'warned', 'spent']), uncontrollable: z.boolean(), denied: z.boolean() }),
+        )
+        .default({}),
+    })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
   /** How each enemy's level was worked out (shown in the debug panel). */

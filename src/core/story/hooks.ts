@@ -113,9 +113,15 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         break;
       }
       case 'hyper': {
-        if (e.side !== 'player') break;
         const def = content.story.definitions.find((d) => d.id === e.defId);
         if (!def) break;
+        if (e.side === 'enemy') {
+          // The enemy's rage: told from its side ({enemy} is your Pokémon). The engine keeps its own
+          // one-per-turn limit for each side, so it never competes with your moment in the queue.
+          const t = makeTrigger(run, def, i, triggers.length, { name: speciesOf(e.uid), enemy: speciesOf(active.player) }, e.variant, e.uid);
+          triggers.push({ ...t, side: 'enemy', combat: false });
+          break;
+        }
         const history = run.story.histories[e.uid];
         if (history) history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
         const kind = def.effect?.kind;
@@ -189,12 +195,13 @@ function makeTrigger(
   return {
     defId: def.id,
     uid,
+    side: 'player',
     title: shown.displayName,
     message: fill(line, names),
     priority: def.priority,
     combat: def.effect !== null,
     at,
-    cue: def.visualCue,
+    cue: 'major' in shown && shown.major !== undefined ? { ...def.visualCue, major: shown.major } : def.visualCue,
     order,
     names,
   };

@@ -14,8 +14,9 @@ import { PRIORITY_TIERS, type PresentationCueSpec, type PriorityTier } from './s
 /** One story event that fired this turn, waiting to be resolved. */
 export interface StoryTrigger {
   defId: string;
-  /** The Pokémon it happened to. */
+  /** The Pokémon it happened to, and whose side it is on. */
   uid: string;
+  side: 'player' | 'enemy';
   title: string;
   /** The line shown for it (names already filled in). */
   message: string;
@@ -35,6 +36,8 @@ export interface StoryTrigger {
 export interface PresentationCue {
   /** Show it while playing the turn's event at this index (-1: before the first). */
   at: number;
+  /** Whose Pokémon it is about (where the aura goes). */
+  side: 'player' | 'enemy';
   /** Banner text (several titles merged with " · "). */
   title: string;
   /** Lines to show instead of the event's own text. */
@@ -95,6 +98,7 @@ export function resolveQueue(triggers: StoryTrigger[], majorBudgetLeft: number):
     }
     cues.push({
       at: t.at,
+      side: t.side,
       title: t.title,
       messages: [t.message],
       color: t.cue.color,
