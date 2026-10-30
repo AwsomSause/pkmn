@@ -10,7 +10,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Item | Count | Status |
 |---|---|---|
 | Rival slice 1 Spark, slice 2 return + adaptation, slice 3 Story screen | 3 slices | DONE |
-| Rival paths (Examples §1) | 30 | DATA (Spark path only runs) |
+| Rival paths (Examples §1) | 30 | PART: 13 run as origins chosen from the battle and the rival's character (dominant win, close win, repeated loss, personality, region); 17 need systems that don't exist yet (sponsors, mentors, factions, debts, family, disasters, contests) |
 | Personalities (§2) | 40 | PART: all 40 run as profiles (6 traits; vindictiveness changes the return level, low adaptability never adapts). Their special story behaviours wait for arcs/events |
 | Battle styles (§3) | 32 | PART: all 32 run as AI sharpness + stat bias + adaptation cap. Style tricks (berserker rage, trapping, copying) wait for battle hooks |
 | Off-screen events (§6; the doc says 40 but skips #19) | 39 | DATA |

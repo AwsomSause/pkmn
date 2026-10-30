@@ -3,7 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { RIVAL_CONFIG, RIVAL_PROFILES } from '../../src/core/rivals/schema';
+import { maybeSpark, type SparkInput } from '../../src/core/rivals/manager';
+import { RIVAL_CONFIG, RIVAL_PATHS, RIVAL_PROFILES } from '../../src/core/rivals/schema';
 import { sparkGain } from '../../src/core/rivals/manager';
 import { nextChoices } from '../../src/core/map';
 import type { TrainerPlan } from '../../src/core/encounters';
@@ -47,7 +48,7 @@ describe('rival Spark', () => {
     expect(run.story.rivals).toHaveLength(1);
     const rival = run.story.rivals[0]!;
     expect(RivalSchema.parse(rival)).toEqual(rival);
-    expect(rival).toMatchObject({ name: 'Joey', classId: 'youngster', origin: { path: 'spark' } });
+    expect(rival).toMatchObject({ name: 'Joey', classId: 'youngster', origin: { path: expect.any(String) } });
     expect(Object.keys(RIVAL_PROFILES.personalities)).toContain(rival.archetype);
     expect(RIVAL_PROFILES.personalities[rival.archetype]!.styles).toContain(rival.style);
     expect(rival.memory.lastBattle).toMatchObject({ result: 'win', team: ['rattata'] });
@@ -317,5 +318,59 @@ describe('the rivals\' world', () => {
     expect(waitingRival(run)).toBeNull();
     run.story.rivals[0]!.cooldown = 0;
     expect(waitingRival(run)?.id).toBe('cd');
+  });
+});
+
+describe('rival paths', () => {
+  const emptyRun = () => structuredClone(chooseStarter(content, createRun(content, { runId: 'pa', seed: 'pa', archetypeId: 'red' }), 0));
+  const where = { region: 0, stage: 0, level: 1, node: null, battle: 3, turn: null };
+  const input = (over: Partial<SparkInput> = {}): SparkInput => ({
+    where,
+    classId: 'youngster',
+    name: 'Joey',
+    team: ['rattata'],
+    ended: { id: 'pa#9', seq: 9, type: 'battleEnded', where, actors: [], data: {} },
+    hpLeftShare: 0.2,
+    turns: 6,
+    flawless: true,
+    ...over,
+  });
+  /** The paths a spark can take across many seeds. */
+  function pathsSeen(over: Partial<SparkInput>, setup: (run: RunState) => void = () => undefined): Set<string> {
+    const seen = new Set<string>();
+    for (let i = 0; i < 300; i++) {
+      const run = emptyRun();
+      run.seed = `paths-${i}`;
+      setup(run);
+      const rival = maybeSpark(run, input({ ended: { ...input().ended, id: `paths-${i}#9` }, ...over }));
+      if (rival) seen.add(rival.origin.path);
+    }
+    return seen;
+  }
+
+  it('a dominant win becomes public humiliation (proud rival) or a merciful victory; a close win never does', () => {
+    const seen = pathsSeen({ hpLeftShare: 0.95, turns: 3 });
+    expect([...seen].every((p) => ['public-humiliation', 'merciful-victor', 'family-legacy', 'self-made-challenger', 'researcher', 'collector-s-rival', 'ideological-opponent', 'fallen-prodigy'].includes(p) || p === 'unexpected-nemesis')).toBe(true);
+    expect(seen.has('public-humiliation') || seen.has('merciful-victor')).toBe(true);
+    expect(pathsSeen({ hpLeftShare: 0.2 }).has('public-humiliation')).toBe(false);
+  });
+
+  it('a trainer who lost again after vowing to return is a rival you neglected', () => {
+    expect(pathsSeen({ returning: true })).toEqual(new Set(['rival-you-neglected']));
+  });
+
+  it('a rival who turns up in a later region is a world traveller; a second one in a region is an accidental competitor', () => {
+    expect(pathsSeen({ where: { ...where, region: 2 }, hpLeftShare: 0.2 }).has('world-traveler')).toBe(true);
+    const second = pathsSeen({}, (run) => {
+      run.story.rivals = structuredClone(win(trainerBattle('pa-first')).story.rivals);
+    });
+    expect(second.has('accidental-competitor')).toBe(true);
+  });
+
+  it('a path nudges traits and adds potential, and every path in the data is in the catalog', () => {
+    for (const p of RIVAL_PATHS.paths) expect(catalog.paths.map((c) => c.id), p.id).toContain(p.id);
+    const humiliated = RIVAL_PATHS.paths.find((p) => p.id === 'public-humiliation')!;
+    expect(humiliated.potentialBonus).toBeGreaterThan(0);
+    expect(RIVAL_PATHS.paths.at(-1)!.id).toBe('unexpected-nemesis');
   });
 });

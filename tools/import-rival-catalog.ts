@@ -63,6 +63,9 @@ for (const [key, want] of Object.entries(expected)) {
 const profiles = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalProfiles.json'), 'utf8')) as { personalities: Record<string, { status: Entry['status'] }>; styles: Record<string, { status: Entry['status'] }>; mechanics: Record<string, { status: Entry['status'] }> };
 for (const e of sections.personalities!) e.status = profiles.personalities[e.id]?.status ?? e.status;
 for (const e of sections.styles!) e.status = profiles.styles[e.id]?.status ?? e.status;
+const paths = JSON.parse(readFileSync(join(root, 'src', 'data', 'rivalPaths.json'), 'utf8')) as { paths: { id: string }[] };
+const pathIds = new Set(paths.paths.map((x) => x.id));
+for (const e of sections.paths!) if (pathIds.has(e.id)) e.status = 'limited';
 for (const e of sections.mechanics!) e.status = profiles.mechanics[e.id]?.status ?? e.status;
 writeFileSync(join(root, 'src', 'data', 'rivalCatalog.json'), JSON.stringify({ source: 'A Living Rivalry Engine - Examples, Possibilities, and Guidence.md', ...sections }, null, 1) + '\n');
 console.log(Object.entries(sections).map(([k, v]) => `${k}: ${v.length}`).join(', '));

@@ -30,6 +30,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
+- Rival paths: 13 of 30 run as rival origins (`rivalPaths.json`); the rest need sponsors, mentors, factions, debts, family or disasters.
 - Rivals slice 5: up to 3 rivals; off-screen world sim each stage (`rivals/world.ts`): wins/defeats/private goals/cooldowns, rival graph, rumours; 11 catalog mechanics now "limited".
 - Rivals slice 4: ladder (recognized→contender), outcomes (grew/shaken/ally/retired), Ultimate Rival score evaluated at rival fights and boss wins (`rivals/outcome.ts`, `ultimate.ts`; flag `ultimateRival`).
 - Rival Examples doc: all lists stored in `rivalCatalog.json`; 40 personalities + 32 styles now run (`rivalProfiles.json`, status "limited"); paths, events, arcs, mechanics still "planned". Progress: `docs/plans/coverage-tracker.md`.

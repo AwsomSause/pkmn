@@ -1,0 +1,177 @@
+{
+ "note": "How a rival's origin is chosen (Examples \u00a71 paths). First matching path wins; unexpected-nemesis is the default. The paths needing sponsors, mentors, factions, families, debts or disasters wait for those systems.",
+ "paths": [
+  {
+   "id": "public-humiliation",
+   "when": {
+    "dominant": true,
+    "minPride": 60
+   },
+   "traitNudge": {
+    "vindictiveness": 8,
+    "pride": -5
+   },
+   "potentialBonus": 6,
+   "line": "{who} was humbled in front of everyone and wants a rematch"
+  },
+  {
+   "id": "merciful-victor",
+   "when": {
+    "dominant": true
+   },
+   "traitNudge": {
+    "empathy": 6,
+    "pride": -6
+   },
+   "potentialBonus": 2,
+   "line": "{who} noticed you went easy on them, and doesn't know how to feel about it"
+  },
+  {
+   "id": "rival-you-neglected",
+   "when": {
+    "returning": true
+   },
+   "traitNudge": {
+    "vindictiveness": 6,
+    "ambition": 4
+   },
+   "potentialBonus": 8,
+   "line": "{who} has lost to you again and again, and thinks you barely notice"
+  },
+  {
+   "id": "late-bloomer",
+   "when": {
+    "personalities": [
+     "underdog",
+     "natural-talent",
+     "burnout",
+     "reluctant-battler"
+    ],
+    "close": true
+   },
+   "traitNudge": {
+    "resilience": 8,
+    "ambition": 4
+   },
+   "potentialBonus": 4,
+   "line": "{who} lost narrowly, and swears the next time will be different"
+  },
+  {
+   "id": "fallen-prodigy",
+   "when": {
+    "personalities": [
+     "prodigy",
+     "perpetual-runner-up",
+     "self-saboteur",
+     "burnout"
+    ]
+   },
+   "traitNudge": {
+    "ambition": 6,
+    "resilience": -4
+   },
+   "potentialBonus": 4,
+   "line": "{who} used to be the best, and your win stings more than most"
+  },
+  {
+   "id": "researcher",
+   "when": {
+    "personalities": [
+     "scholar",
+     "naturalist",
+     "quiet-observer",
+     "tactician"
+    ]
+   },
+   "traitNudge": {
+    "adaptability": 8
+   },
+   "potentialBonus": 3,
+   "line": "{who} started taking notes on how you battle"
+  },
+  {
+   "id": "collector-s-rival",
+   "when": {
+    "personalities": [
+     "collector"
+    ]
+   },
+   "traitNudge": {
+    "ambition": 4
+   },
+   "potentialBonus": 3,
+   "line": "{who} wants every rare find you get"
+  },
+  {
+   "id": "ideological-opponent",
+   "when": {
+    "personalities": [
+     "idealist",
+     "pragmatist",
+     "traditionalist",
+     "innovator",
+     "fallen-idealist",
+     "spiritualist",
+     "nihilist"
+    ]
+   },
+   "traitNudge": {
+    "pride": 5,
+    "vindictiveness": 3
+   },
+   "potentialBonus": 4,
+   "line": "{who} thinks your way of training is wrong"
+  },
+  {
+   "id": "family-legacy",
+   "when": {
+    "minPride": 85,
+    "minAmbition": 70
+   },
+   "traitNudge": {
+    "pride": 5,
+    "ambition": 5
+   },
+   "potentialBonus": 5,
+   "line": "{who} carries a family name and cannot afford to lose to you"
+  },
+  {
+   "id": "self-made-challenger",
+   "when": {
+    "minAmbition": 80
+   },
+   "traitNudge": {
+    "ambition": 4
+   },
+   "potentialBonus": 4,
+   "line": "{who} decided you are the one to beat"
+  },
+  {
+   "id": "world-traveler",
+   "when": {
+    "minRegion": 1
+   },
+   "traitNudge": {
+    "adaptability": 5
+   },
+   "potentialBonus": 3,
+   "line": "{who} has travelled far and picked you as the next challenge"
+  },
+  {
+   "id": "accidental-competitor",
+   "when": {
+    "secondInRegion": true
+   },
+   "traitNudge": {},
+   "potentialBonus": 2,
+   "line": "{who} keeps turning up wherever you go"
+  },
+  {
+   "id": "unexpected-nemesis",
+   "when": {},
+   "traitNudge": {},
+   "potentialBonus": 0,
+   "line": "{who} took the loss personally and began preparing for you"
+  }
+ ]
+}
