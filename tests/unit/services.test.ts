@@ -236,6 +236,17 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(out.run.money).toBe(50000 - opt.cost);
     expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
   });
+  it('the berry garden hands its seeded berry to one Pokémon, once', () => {
+    const run = stopRun('garden');
+    run.money = 5000;
+    const view = serviceView(content, run, 'svc-test');
+    const opt = view.options.find((o) => !o.problem)!;
+    expect(opt).toBeDefined();
+    const out = useService(content, run, 'svc-test', opt.id);
+    expect(out.run.money).toBeLessThan(5000);
+    expect(Object.keys(out.run.party.find((m) => m.uid === opt.id.split(':')[1])!.held ?? {})).toHaveLength(1);
+    expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
