@@ -417,7 +417,7 @@ const fishing: MinigameModule<FishState> = {
     const r = new Rng(rs);
     const fish = Array.from({ length: p.rounds! }, () => {
       const rarity = r.weighted([{ item: 1, weight: 5 }, { item: 2, weight: 3 }, { item: 3, weight: 1 }]);
-      return { rarity, stamina: 6 + rarity * 3 };
+      return { rarity, stamina: 8 + rarity * 4 };
     });
     return { ...base(r.state), fish, round: 0, tension: 50, stamina: fish[0]!.stamina, ticksLeft: p.ticks!, score: 0 };
   },
@@ -434,7 +434,7 @@ const fishing: MinigameModule<FishState> = {
   act(_c, s, id) {
     if (s.done) return;
     if (id === 'reel') {
-      s.tension += 14;
+      s.tension += 20;
       s.stamina -= 3;
     } else if (id === 'ease') s.tension -= 14;
     settleFish(s);
@@ -442,9 +442,9 @@ const fishing: MinigameModule<FishState> = {
   tick(_c, s) {
     if (s.done) return;
     const r = rng(s);
-    s.tension += r.int(-10, 12);
+    s.tension += r.int(-14, 16);
     keep(s, r);
-    if (s.tension >= 30 && s.tension <= 70) s.stamina -= 1;
+    if (s.tension >= 42 && s.tension <= 58) s.stamina -= 1;
     s.ticksLeft -= 1;
     settleFish(s);
     if (s.ticksLeft <= 0) s.done = true;
@@ -725,7 +725,7 @@ const hunt: MinigameModule<HuntState> = {
   start(_c, p, rs) {
     const r = new Rng(rs);
     const forks = Array.from({ length: p.forks! }, () => {
-      const pays = r.chance(0.55);
+      const pays = r.chance(0.45);
       const truthful = r.chance(0.7);
       const says = truthful ? pays : !pays;
       return { pays, hint: says ? 'Fresh footprints lead down the risky path.' : 'The risky path looks loose and broken.' };

@@ -92,7 +92,7 @@ import {
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
-import { placeMinigameStop } from './minigame/gate';
+import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -195,7 +195,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
     minigame: null,
-    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} },
+    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -1106,7 +1106,7 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
+  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
 }
 
 /** Buys one of an item at the shop. */

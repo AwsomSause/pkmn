@@ -100,10 +100,11 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 - DONE the six recommended games: Pokémon Memory, Catching Challenge, Rhythm Challenge, Berry Foraging, Knowledge Quiz (questions built from real species/type/ability data), Fossil Excavation.
 - DONE the eight extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
 - DONE economy: money cap per stage, repeats pay less, items only from the Normal tier up and capped per stage, failing costs nothing, leaving forfeits the attempt, reward paid once (stored outcome), save v19, play with the keyboard/mouse, slow mode (S) and pause (T) for timed games.
-- TODO: rewards other than money/items (recovery, research progress, temporary advantages); minigame art/sfx beyond the shared menu look; balance simulation of payouts.
+- DONE bonus rewards: silver/gold can also heal the party (never revive), add Totem research points, or give a shop discount for the stage (data: `effect` in `rewardTable`; capped by `effectCapPerStage`). Medal art bounces in at the end; sounds reuse the pack sounds already in the game (no new binary assets).
+- DONE balance: `tests/unit/blueprintBalance.test.ts` runs the real data and flow (prize money vs gym leaders for raids/Totems/expeditions, 300-seed expedition route mix, random-player minigame medals and payouts) and writes `docs/plans/balance-report.md`. Fishing and Treasure Hunt were retuned because a random player got gold too often.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; M6–M8 content expansion, balance sims and the manual QA checklist TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; balance sims DONE (data-level, not full battle sims); M6–M8 content expansion and the manual QA checklist TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |
