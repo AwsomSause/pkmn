@@ -1,6 +1,9 @@
 // Shown when a run ends, in defeat or in victory (the last champion beaten).
 // The run's results were already applied to the permanent profile (once)
 // before this screen appears; the right side shows what they paid out.
+// The last party stands either side of the title (Visual Bible: "one memorable
+// composition centered on the last party"): in victory they hop in and gold
+// confetti falls; in defeat they settle in quietly, a little dimmed.
 
 import { RANK_NAMES } from '../core/mastery';
 import { contractRewardText } from '../core/contracts';
@@ -11,16 +14,23 @@ import { buildRecap } from '../core/recap';
 import { encodeSeedCode } from '../core/seedCode';
 import { campaignCounts, getMode } from '../core/rules';
 import Phaser from 'phaser';
+import type { Species } from '../core/contentSchema';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu } from '../ui/widgets';
 import { glassPanel as drawPanel } from '../ui/aero';
+import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { pokemonIcon } from '../ui/sprites';
 
 export class GameOverScene extends Phaser.Scene {
   constructor() {
     super('GameOver');
+  }
+
+  preload(): void {
+    preloadPokemon(this, partySpecies(), { icon: true });
   }
 
   create(): void {
@@ -28,7 +38,8 @@ export class GameOverScene extends Phaser.Scene {
     const { session } = services();
     const run = session.run;
     const won = run?.victory ?? false;
-    this.add.text(GAME_WIDTH / 2, 38, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 44 : 50, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
+    const title = this.add.text(GAME_WIDTH / 2, 38, won ? 'You conquered every region!' : 'Your run has ended', textStyle(won ? 40 : 44, won ? '#f0d060' : COLORS.textLight)).setOrigin(0.5);
+    this.lineup(partySpecies(), title.width, won, session.settings.battleAnimations);
     // Left: the run. Right: what it earned for the permanent profile.
     drawPanel(this, 24, 72, 440, 286);
     drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
@@ -124,12 +135,45 @@ export class GameOverScene extends Phaser.Scene {
         this.scene.start('Hub');
       },
     });
+    if (won && session.settings.battleAnimations === 'full') this.confetti();
     // Ignore keys mashed through the battle's last message so the summary
     // isn't skipped the moment it appears.
     let ready = false;
     this.time.delayedCall(450, () => (ready = true));
     onInputAction(this, (a) => {
       if (ready) menu.handle(a);
+    });
+  }
+
+  /** The last party, split either side of the title. */
+  private lineup(species: Species[], titleWidth: number, won: boolean, motion: string): void {
+    const half = Math.ceil(species.length / 2);
+    species.forEach((sp, i) => {
+      const left = i < half;
+      const k = left ? half - 1 - i : i - half;
+      const x = GAME_WIDTH / 2 + (left ? -1 : 1) * (titleWidth / 2 + 34 + k * 50);
+      const icon = pokemonIcon(this, sp, x, 36, 1.4) as Phaser.GameObjects.Image;
+      icon.setName('runend-party');
+      if (!won) icon.setTint(0xa8b4c8);
+      if (motion === 'off') return;
+      icon.setY(won ? -30 : 52).setAlpha(0);
+      this.tweens.add({ targets: icon, y: 36, alpha: 1, duration: motion === 'full' ? 600 : 200, delay: motion === 'full' ? 200 + i * 120 : 0, ease: won ? 'Bounce.easeOut' : 'Sine.easeOut' });
+      if (won && motion === 'full') this.tweens.add({ targets: icon, y: 28, duration: 360, yoyo: true, repeat: -1, repeatDelay: 900 + i * 90, delay: 1200 + i * 120, ease: 'Quad.easeOut' });
+    });
+  }
+
+  /** Gold and white confetti drifting down behind the panels (presentation only). */
+  private confetti(): void {
+    let n = 0;
+    this.time.addEvent({
+      delay: 70,
+      repeat: 80,
+      callback: () => {
+        n++;
+        const x = (n * 197) % GAME_WIDTH;
+        const piece = this.add.rectangle(x, -10, 6, 10, n % 3 === 0 ? 0xffffff : n % 3 === 1 ? 0xf0d060 : 0x7fd8ff, 0.9).setDepth(-1);
+        this.tweens.add({ targets: piece, y: 560, angle: 360 * (n % 2 ? 1 : -1), x: x + ((n * 37) % 80) - 40, duration: 2600 + (n % 5) * 300, ease: 'Sine.easeIn', onComplete: () => piece.destroy() });
+      },
     });
   }
 }

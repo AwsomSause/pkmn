@@ -127,7 +127,11 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
   const r = await run(page);
   expect(r.victory).toBe(true);
   expect(r.regionsCleared).toHaveLength(1);
+  await page.waitForTimeout(1500); // the party hops in, confetti falls
   await page.screenshot({ path: 'test-results/m4-victory.png' });
+  // The last party stands beside the title.
+  const party = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('GameOver').children.list.filter((o: any) => o.name === 'runend-party').length);
+  expect(party).toBe(r.party.length);
   // The credits roll from the victory screen and return to it.
   await page.evaluate(() => {
     (window as any).__pkr.game.scene.getScene('GameOver').scene.start('Credits');
