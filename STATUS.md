@@ -61,6 +61,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 4: wild Pokémon first impressions (7 behaviours, `core/wildBehavior.ts`, narrative only, own hashed seed), territorial warning, two rescue events and a 3-link chain via `eventSeen` (`tools/events/wild.ts`, 353 events).
 - Catalog slice 5a: Quick Route (shorter practice campaign), Solo Run (party of 1) and Contract: No Evolution (`noEvolution` in `rules.ts`) on the Preparation Desk.
 - Catalog slice 6b: Shadow Pokémon arc as a 4-link event chain (sighting, sanctuary, stabilize, purified; `tools/events/wild.ts`, 378 events).
+- Catalog slice 6c: Boss Remix contract on the Preparation Desk (`bossRemix` in `rules.ts`, `remixMembers` in `encounters.ts`; map previews match the fight).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).

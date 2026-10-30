@@ -127,7 +127,7 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
@@ -786,7 +786,7 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
   const teamFrom = teamItem ? source('gymTeam', teamItem) : (source('gymTeam', null) ?? (eventGymPreview(run) ? { itemId: null, source: 'Your scouting' } : null));
   if (gym && teamFrom) {
     const campaign = getCampaign(content, run.campaignId);
-    const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
+    const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index, bossRemix(run.rules));
     const shown = perks('gymTeam') || !teamItem ? species : species.slice(-1);
     out[gym.id] = { ...teamFrom, team: shown.map((speciesId) => ({ speciesId, level: null })), trainerName: null };
   }
@@ -1120,14 +1120,14 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let plan: TrainerPlan = roll((r) => {
       switch (node.kind) {
         case 'gym':
-          return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r);
+          return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r, bossRemix(run.rules));
         case 'elite': {
           const memberId = stage.eliteFour[node.column - 1];
           if (!memberId) throw new Error(`No Elite Four member for column ${node.column}`);
-          return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r);
+          return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r, bossRemix(run.rules));
         }
         case 'champion':
-          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r);
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules));
         default:
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
