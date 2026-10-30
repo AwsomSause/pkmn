@@ -2412,10 +2412,16 @@
   "max": 1,
   "how": "held",
   "icon": "light-clay",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "lightClay",
+     "turns": 8
+    }
+   ]
+  }
  },
  {
   "id": "heat-rock",
@@ -2703,25 +2709,35 @@
   "max": 1,
   "how": "held",
   "icon": "red-card",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "redCard"
+    }
+   ]
+  }
  },
  {
   "id": "eject-button",
   "name": "Eject Button",
   "family": "Battle held items",
-  "description": "When hit, the holder switches out to a party member you pick (one use per battle)",
+  "description": "When hit, the holder switches out (one use per battle)",
   "rarity": "uncommon",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "eject-button",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "ejectButton"
+    }
+   ]
+  }
  },
  {
   "id": "shed-shell",
@@ -2850,16 +2866,21 @@
   "id": "mental-herb",
   "name": "Mental Herb",
   "family": "Battle held items",
-  "description": "Cures infatuation, Taunt and Encore once per battle",
+  "description": "Cures a Taunt on the holder once per battle",
   "rarity": "common",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "mental-herb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "mentalHerb"
+    }
+   ]
+  }
  },
  {
   "id": "destiny-knot",

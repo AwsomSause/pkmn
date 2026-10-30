@@ -93,3 +93,40 @@ describe('stage 4 abilities', () => {
     expect(r.events.filter((e: any) => e.type === 'stat').length).toBeGreaterThan(0);
   });
 });
+
+describe('stage 5 held items', () => {
+  function trainerWith(item: string, playerMove = 'tackle', turns = 1) {
+    const player = createPokemon(content, 'rattata', 50, 'p');
+    player.moves = [{ id: playerMove, pp: content.moves.get(playerMove)!.pp }];
+    const bench = createPokemon(content, 'pidgey', 50, 'b');
+    const a = createPokemon(content, 'snorlax', 50, 'e1');
+    a.held = { [item]: 1 };
+    a.moves = [{ id: 'splash', pp: 40 }];
+    const b = createPokemon(content, 'snorlax', 50, 'e2');
+    const battle = createBattle('trainer', [a, b], 0, player.uid);
+    const ctx: BattleContext = { content, battle, party: [player, bench], inventory: {}, rng: new Rng(hashSeed('m5')), captureRng: new Rng(hashSeed('m5c')), catchMultiplier: 1 };
+    const events = [];
+    for (let i = 0; i < turns; i++) events.push(...resolveTurn(ctx, { kind: 'move', index: 0 }));
+    return { ctx, battle, events };
+  }
+  it('Eject Button sends the holder out when hit', () => {
+    const r = trainerWith('eject-button');
+    expect(r.events.some((e) => e.type === 'switchIn' && e.side === 'enemy')).toBe(true);
+    expect(r.battle.enemyTeam[r.battle.enemyIndex]!.uid).toBe('e2');
+  });
+  it('Red Card forces the attacker out', () => {
+    const r = trainerWith('red-card');
+    expect(r.battle.needsSwitch || r.battle.activeIndex === 1).toBe(true);
+  });
+  it('Light Clay stretches Reflect to eight turns', () => {
+    const player = createPokemon(content, 'rattata', 50, 'p');
+    player.moves = [{ id: 'reflect', pp: 20 }];
+    player.held = { 'light-clay': 1 };
+    const enemy = createPokemon(content, 'snorlax', 50, 'e');
+    enemy.moves = [{ id: 'splash', pp: 40 }];
+    const battle = createBattle('wild', [enemy], 0, player.uid);
+    const ctx: BattleContext = { content, battle, party: [player], inventory: {}, rng: new Rng(hashSeed('m5l')), captureRng: new Rng(hashSeed('m5lc')), catchMultiplier: 1 };
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(battle.sideEffects.player.reflect).toBeGreaterThanOrEqual(7);
+  });
+});

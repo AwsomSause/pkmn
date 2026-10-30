@@ -671,6 +671,14 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('powerHerb') }),
   /** Lowered stats are restored once per battle (White Herb). */
   z.object({ hook: z.literal('whiteHerb') }),
+  /** Reflect, Light Screen and Aurora Veil the holder sets last longer (Light Clay). */
+  z.object({ hook: z.literal('lightClay'), turns: z.number().int().positive() }),
+  /** When hit, the attacker is forced out, once per battle (Red Card). */
+  z.object({ hook: z.literal('redCard') }),
+  /** When hit, the holder switches out, once per battle (Eject Button). */
+  z.object({ hook: z.literal('ejectButton') }),
+  /** A Taunt on the holder is cured at once, once per battle (Mental Herb). */
+  z.object({ hook: z.literal('mentalHerb') }),
   /** Damage taken changes: from wild Pokémon only, from super-effective hits only, or when the holder is a type. */
   z.object({
     hook: z.literal('damageTaken'),

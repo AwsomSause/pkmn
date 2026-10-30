@@ -1837,6 +1837,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     ctx.battle.terrain = null;
   }
   Held.afterHit(ctx, user, target, move, moveType, effectiveness, dealt, movedFirst, events as Held.HeldEvent[]);
+  if (dealt > 0 && target.mon.hp > 0 && user.mon.hp > 0) {
+    if (Held.triggerOnce(ctx, target, 'redCard', events as Held.HeldEvent[])) forceOut(ctx, user, events);
+    else if (Held.triggerOnce(ctx, target, 'ejectButton', events as Held.HeldEvent[])) target.vol.pivot = { baton: false };
+  }
   if (target.mon.hp <= 0) Held.onKnockout(ctx, user, events as Held.HeldEvent[]);
   if (fx.ohko && target.mon.hp <= 0) events.push({ type: 'ohko', side: target.side });
   if (fx.recharge) user.vol.recharge = true;
@@ -2180,6 +2184,10 @@ function disrupt(ctx: BattleContext, user: Combatant, target: Combatant, kind: N
     case 'taunt':
       if (target.vol.taunt > 0) return fail();
       target.vol.taunt = 3;
+      if (Held.triggerOnce(ctx, target, 'mentalHerb', events as Held.HeldEvent[])) {
+        target.vol.taunt = 0;
+        return true;
+      }
       break;
     case 'healBlock':
       if (target.vol.healBlock > 0) return fail();
@@ -2272,12 +2280,12 @@ function applySideMove(ctx: BattleContext, user: Combatant, move: SideMove, even
     case 'auroraVeil': {
       const w = weatherNow(ctx);
       if (fx.auroraVeil > 0 || (w !== 'snow' && w !== 'hail')) return false;
-      fx.auroraVeil = SIDE_TURNS.auroraVeil!;
+      fx.auroraVeil = Held.lightClayTurns(ctx, user) ?? SIDE_TURNS.auroraVeil!;
       break;
     }
     default:
       if (fx[move] > 0) return false;
-      fx[move] = SIDE_TURNS[move]!;
+      fx[move] = (move === 'reflect' || move === 'lightScreen' ? Held.lightClayTurns(ctx, user) : null) ?? SIDE_TURNS[move]!;
   }
   events.push({ type: 'sideEffect', side, effect: move, on: true });
   return true;
