@@ -47,7 +47,7 @@ import { teraTypeOf } from '../items';
 import type { Perks } from '../archetypes';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import { effectiveHeld } from './held';
-import { megaDelayTurns, megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
+import { zMoveDelayTurns, megaDelayTurns, megaPartyLimit, permanentMegaFriendship } from '../trainerPerks';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
@@ -194,6 +194,7 @@ function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: nu
   if (ctx.disabledMechanics?.includes('zmove')) return 'Z-Moves are switched off for this run.';
   if (!hasKeyItem(content, inventory, 'zmove')) return 'You need a Z-Ring to use a Z-Move.';
   if (battle.transform.used.player.includes('zmove')) return 'You have already used a Z-Move this battle.';
+  if (battle.turn <= zMoveDelayTurns(ctx.perks)) return 'The Z-Power is still charging.';
   if (oncePerPokemon(ctx, mon)) return oncePerPokemon(ctx, mon);
   const slot = mon.moves[moveIndex];
   const move = slot ? content.moves.get(slot.id) : undefined;

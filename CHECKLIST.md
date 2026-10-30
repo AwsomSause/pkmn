@@ -218,7 +218,8 @@ Every trainer in Trainers.md becomes a playable trainer with all its pros and co
 - [x] Batch 1 (Aaron to Bianca, 20 trainers) and the shared perk system (`core/trainerPerks.ts`).
 - [x] Batch 2 (Bill to Canari, 20 trainers) with the PC box and Rival's Answer.
 - [x] Batch 3 (Carmine to Diantha, 20 trainers) with Distortion Protocol.
-- [ ] Batches 4–11 (the other 160 trainers), then the signature mechanics (Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
+- [x] Batch 4 (Drake to Ginter, 20 trainers).
+- [ ] Batches 5–11 (the other 140 trainers), then the signature mechanics (Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
 - Known limits: a few clauses have no effect yet and are listed per trainer in `docs/plans/trainers-coverage.md` (burns never wear off; Mega Evolution has no cost). "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
 
 ## Milestone 10 — Visuals and presentation (planned)

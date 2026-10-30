@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -1095,14 +1095,14 @@ export function healParty(content: Content, run: RunState): void {
  * and the Member Card and Wepear Berry put the next locked entries on sale early.
  * Key items you own aren't sold again.
  */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules'>> & MapItemRun): Content['shop'] {
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects'>> & MapItemRun): Content['shop'] {
   const noRevive = run.rules ? noRevives(run.rules) : false;
   const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
   const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
   const early = content.shop
     .filter((e) => !open(e) && !owned(e))
     .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
-    .slice(0, earlyStockCount(content, run));
+    .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
   return content.shop.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
@@ -1462,7 +1462,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) : 1) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);

@@ -25,7 +25,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isBossClass, isLegendaryLike } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -544,6 +544,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // 3. End of turn: weather (and Rain Dish), Shed Skin, then burn, poison, binding and Leech Seed, then Speed Boost.
   if (!anyFainted(playerC, enemy)) {
     applyWeather(ctx, [playerC, enemy], events);
+    applyTurnHeal(ctx, playerC, events);
     applyTerrain(ctx, [playerC, enemy], events);
     tickSides(ctx, events);
     recordFaints(ctx, playerC, enemy, events);
@@ -1405,7 +1406,7 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move
  * by them) and the attributes (Strength, Intelligence, Rage, Peace). A hit
  * always does at least 1 damage.
  */
-function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean, moveType: TypeName): number {
+function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combatant, effectiveness: number, damage: number, physical: boolean, moveType: TypeName, move: Move): number {
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
   const perks = ctx.perks;
@@ -1434,6 +1435,10 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
       userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
+      moveIsZ: move.flags.includes('zmove'),
+      moveIsSpread: isSpreadMove(move.id),
+      partyIndex: ctx.party.findIndex((p) => p.uid === user.mon.uid),
+      partySize: ctx.party.length,
     });
   }
   if (target.side === 'player') {
@@ -2238,6 +2243,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
   const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
+  const perkAccuracy = user.side === 'player' && move.category === 'status' ? statusMoveAccuracyPerk(ctx.perks) : 1;
   const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst, move) : 1;
   let accuracy: number;
   if (itemAccuracy === null) {
@@ -2249,7 +2255,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     const accStage = foeAbility === 'unaware' ? 0 : user.stages.acc;
     const keenEye = (userAbility === 'keen-eye' || userAbility === 'minds-eye') && target.stages.eva > 0;
     const evaStage = fx.ignoreStages || userAbility === 'unaware' || keenEye ? 0 : target.stages.eva;
-    accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy;
+    accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy * perkAccuracy;
     if (baseAccuracy !== null) {
       if (userAbility === 'compound-eyes') accuracy *= 1.3;
       if (userAbility === 'victory-star') accuracy *= 1.1;
@@ -2465,7 +2471,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
         weather: weatherMultiplier(userAbility === 'mega-sol' ? 'sun' : weather, moveType),
         final,
       });
-      damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical, moveType);
+      damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical, moveType, move);
       const itemMultiplier =
         terrainMultiplier(ctx, user, target, moveType) *
         Held.attackMultiplier(ctx, user, target, move, moveType, effectiveness, events as Held.HeldEvent[]) *
@@ -2602,14 +2608,14 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   // Extra effects only land if the target is still standing. Serene Grace doubles their chances; Shield Dust blocks them.
   const chanceMult = userAbility === 'serene-grace' ? 2 : 1;
   const shielded = foeAbility === 'shield-dust';
-  const perkChance = user.side === 'player' ? statusChancePerk(ctx.perks, getSpecies(ctx.content, user.mon.speciesId).types) : 1;
-  const roll = (percent: number) => rng.chance(Math.min(100, percent * chanceMult * perkChance) / 100);
+  const userTypes = getSpecies(ctx.content, user.mon.speciesId).types;
+  const roll = (percent: number, statusId?: string) => rng.chance(Math.min(100, percent * chanceMult * (user.side === 'player' ? statusChancePerk(ctx.perks, userTypes, statusId) : 1)) / 100);
   if (target.mon.hp > 0 && !sheerForce && !shielded) {
     if (fx.randomStatus && roll(fx.randomStatus.chance)) {
       const id = fx.randomStatus.ids[rng.int(0, fx.randomStatus.ids.length - 1)]!;
       tryInflictStatus(ctx, user, target, id, move, events, false);
     }
-    if (fx.status && roll(fx.status.chance)) tryInflictStatus(ctx, user, target, fx.status.id, move, events, false);
+    if (fx.status && roll(fx.status.chance, fx.status.id)) tryInflictStatus(ctx, user, target, fx.status.id, move, events, false);
     if (fx.flinchChance && movedFirst && roll(fx.flinchChance)) flinch(ctx, user, target);
     else if (!fx.flinchChance && userAbility === 'stench' && movedFirst && rng.chance(0.1)) flinch(ctx, user, target);
     if (fx.confuse && roll(fx.confuse.chance)) tryConfuse(ctx, user, target, events, false);
@@ -4016,7 +4022,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     let fraction = fx.heal;
     if (fx.healWeather && weather) fraction = weather === 'sun' ? 2 / 3 : 1 / 4;
     if (fx.healSand && weather === 'sand') fraction = 2 / 3;
-    const amount = Math.min(max - user.mon.hp, Math.max(1, Math.floor(max * fraction)));
+    const amount = Math.min(max - user.mon.hp, Math.max(1, Math.floor(max * fraction * (user.side === 'player' ? healingMoveMultiplier(ctx.perks) : 1))));
     if (amount > 0) {
       user.mon.hp += amount;
       events.push({ type: 'heal', side: user.side, amount, hpAfter: user.mon.hp });
@@ -4260,6 +4266,18 @@ function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEven
   }
 }
 
+/** End of turn: Pokémon of a perk's type recover a share of their max HP (Erika, Gen 3). */
+function applyTurnHeal(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
+  const percent = turnHealPercent(ctx.perks, getSpecies(ctx.content, c.mon.speciesId).types);
+  if (percent <= 0 || c.mon.hp <= 0 || enemyHealingBlockedFor(ctx, c)) return;
+  const max = calcStats(ctx.content, c.mon).hp;
+  const amount = Math.min(max - c.mon.hp, Math.max(1, Math.floor((max * percent) / 100)));
+  if (amount <= 0 || c.vol.healBlock > 0) return;
+  c.mon.hp += amount;
+  events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+}
+const enemyHealingBlockedFor = (ctx: BattleContext, c: Combatant) => c.side === 'enemy' && enemyHealingBlocked(ctx.perks);
+
 function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
   const weather = ctx.battle.weather;
   if (!weather) return;
@@ -4337,7 +4355,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
   };
   const status = ability === 'poison-heal' && c.mon.status?.id === 'psn' ? undefined : c.mon.status?.id;
   const burn = content.ruleset.burnResidualFraction / (ability === 'heatproof' ? 2 : 1);
-  let fraction = status === 'brn' ? burn * (c.side === 'enemy' ? burnDamagePerk(ctx.perks) : 1) : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
+  let fraction = status === 'brn' ? burn * (c.side === 'enemy' ? burnDamagePerk(ctx.perks) : burnDamageTakenPerk(ctx.perks)) : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
   if (status === 'psn' && c.mon.status?.bad) {
     // Toxic: 1/16 more of max HP each turn, up to 15/16.
     c.mon.status.turns = Math.min(15, (c.mon.status.turns ?? 0) + 1);

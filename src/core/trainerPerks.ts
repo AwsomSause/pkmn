@@ -62,6 +62,11 @@ export interface DamageDealtInfo {
   userHoldsItem?: boolean;
   /** This is the first attack your side makes in the battle (false when unknown). */
   firstAttack?: boolean;
+  moveIsZ?: boolean;
+  moveIsSpread?: boolean;
+  /** Place in the party (0 = first) and the party's size. */
+  partyIndex?: number;
+  partySize?: number;
 }
 
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
@@ -75,6 +80,9 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'starterDamageMultiplier', (m) => m.starter === i.isStarter);
   for (const m of of(perks, 'battleOrderDamage')) v *= i.firstInBattle ? m.first : m.later;
   for (const m of of(perks, 'firstAttackDamage')) v *= i.firstAttack ? m.first : m.later;
+  if (i.moveIsZ) v *= product(perks, 'zMoveDamageMultiplier');
+  v *= product(perks, 'spreadMoveDamageMultiplier', (m) => m.spread === Boolean(i.moveIsSpread));
+  v *= product(perks, 'partyPositionDamage', (m) => (m.position === 'first' ? i.partyIndex === 0 : i.partyIndex !== undefined && i.partySize !== undefined && i.partyIndex === i.partySize - 1));
   v *= product(perks, 'heldItemDamageMultiplier', (m) => m.holding === Boolean(i.userHoldsItem));
   if (i.userIsMega) v *= product(perks, 'megaDamageMultiplier');
   if (i.partyHasMega && !i.userIsMega) v *= product(perks, 'nonMegaDamageMultiplier');
@@ -152,8 +160,8 @@ export function statusTurnsPerk(perks: Perks | undefined, turns: number): number
   return Math.ceil(turns * product(perks, 'statusDurationMultiplier')) + sum(perks, 'statusDurationBonus', (m) => m.turns);
 }
 
-export function statusChancePerk(perks: Perks | undefined, userTypes: readonly TypeName[]): number {
-  return product(perks, 'statusChanceMultiplier', (m) => !m.type || userTypes.includes(m.type));
+export function statusChancePerk(perks: Perks | undefined, userTypes: readonly TypeName[], status?: string): number {
+  return product(perks, 'statusChanceMultiplier', (m) => (!m.type || userTypes.includes(m.type)) && (!m.status || m.status === status));
 }
 
 export function weatherTurnsBonus(perks: Perks | undefined): number {
@@ -335,4 +343,46 @@ export function eliteLevelOffset(perks: Perks | undefined): number {
 
 export function enemyHealingBlocked(perks: Perks | undefined): boolean {
   return of(perks, 'enemyHealingBlocked').length > 0;
+}
+
+/** Moves that hit every foe in the real games' double battles (the game here is singles, so this only picks the perk's damage rule). */
+const SPREAD_MOVES = new Set([
+  'earthquake', 'surf', 'rock-slide', 'blizzard', 'heat-wave', 'discharge', 'razor-leaf', 'muddy-water', 'bulldoze', 'dazzling-gleam', 'hyper-voice',
+  'icy-wind', 'snarl', 'electroweb', 'sludge-wave', 'eruption', 'water-spout', 'boomburst', 'lava-plume', 'sparkling-aria', 'origin-pulse',
+  'precipice-blades', 'petal-blizzard', 'struggle-bug', 'breaking-swipe', 'glaciate', 'mind-blown', 'self-destruct', 'explosion', 'magnitude',
+  'acid', 'powder-snow', 'swift', 'twister', 'air-cutter', 'incinerate', 'clanging-scales', 'core-enforcer', 'burning-jealousy', 'corrosive-gas',
+  'dark-void', 'parabolic-charge', 'sandsear-storm', 'wildbolt-storm', 'bleakwind-storm', 'springtide-storm', 'hyper-voice', 'misty-explosion',
+  'synchronoise', 'teatime', 'overdrive', 'disarming-voice',
+  'bubble', 'sweet-scent', 'growl', 'leer', 'tail-whip', 'captivate', 'poison-gas',
+]);
+export function isSpreadMove(moveId: string): boolean {
+  return SPREAD_MOVES.has(moveId);
+}
+
+export function turnHealPercent(perks: Perks | undefined, types: readonly TypeName[]): number {
+  return sum(perks, 'turnHeal', (m) => (types.includes(m.type) ? m.percent : 0));
+}
+
+export function healingMoveMultiplier(perks: Perks | undefined): number {
+  return product(perks, 'healingMoveMultiplier');
+}
+
+export function burnDamageTakenPerk(perks: Perks | undefined): number {
+  return product(perks, 'burnDamageTakenMultiplier');
+}
+
+export function bossMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'bossMoneyMultiplier');
+}
+
+export function statusMoveAccuracyPerk(perks: Perks | undefined): number {
+  return product(perks, 'statusMoveAccuracy');
+}
+
+export function shopEarlyStockPerk(perks: Perks | undefined): number {
+  return sum(perks, 'shopEarlyStock', (m) => m.count);
+}
+
+export function zMoveDelayTurns(perks: Perks | undefined): number {
+  return sum(perks, 'zMoveDelay', (m) => m.turns);
 }

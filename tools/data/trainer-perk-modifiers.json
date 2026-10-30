@@ -1006,5 +1006,308 @@
    "kind": "megaDelay",
    "turns": 1
   }
+ ],
+ "drake-gen-3": [
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "type": "dragon",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "dragon",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.2
+  }
+ ],
+ "drasna": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "dragon",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "category": "special",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "dragon",
+   "value": 0.9
+  }
+ ],
+ "drayden": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "dragon",
+   "value": 0.85
+  }
+ ],
+ "elesa-gen-5-bw2": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.2
+  }
+ ],
+ "elio-usum": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "zMoveDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "zMoveDelay",
+   "turns": 1
+  }
+ ],
+ "elm": [
+  {
+   "kind": "catchLevelOffset",
+   "value": -2
+  }
+ ],
+ "emmet": [
+  {
+   "kind": "spreadMoveDamageMultiplier",
+   "spread": true,
+   "value": 1.15
+  },
+  {
+   "kind": "spreadMoveDamageMultiplier",
+   "spread": false,
+   "value": 0.9
+  }
+ ],
+ "erika-gen-3": [
+  {
+   "kind": "turnHeal",
+   "type": "grass",
+   "percent": 5
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "category": "special",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.2
+  }
+ ],
+ "erika": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMoveMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 0.9
+  }
+ ],
+ "ethan": [
+  {
+   "kind": "starterDamageMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "eusine": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "water",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "falkner": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "flying",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "flying",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.2
+  }
+ ],
+ "fantina": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "statusDurationBonus",
+   "turns": 1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "ghost",
+   "value": 0.9
+  }
+ ],
+ "flannery": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.25
+  },
+  {
+   "kind": "burnDamageTakenMultiplier",
+   "value": 1.25
+  }
+ ],
+ "flint": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "status": "brn",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "gardenia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.2
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "grass",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.2
+  }
+ ],
+ "geeta": [
+  {
+   "kind": "partyPositionDamage",
+   "position": "last",
+   "value": 1.25
+  },
+  {
+   "kind": "partyPositionDamage",
+   "position": "first",
+   "value": 0.9
+  }
+ ],
+ "ghetsis": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.25
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "ordinaryXpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "giacomo": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "statusMoveAccuracy",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.15
+  }
+ ],
+ "ginter": [
+  {
+   "kind": "shopEarlyStock",
+   "count": 1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.15
+  }
  ]
 }

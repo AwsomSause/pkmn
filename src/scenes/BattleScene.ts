@@ -5,6 +5,7 @@
 import Phaser from 'phaser';
 import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
+import { runPerks } from '../core/archetypes';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
@@ -787,7 +788,7 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics };
+    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run) };
   }
 
   private openBag(): void {
