@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T22:50:48.017Z",
+  "generatedAt": "2026-10-30T23:43:21.793Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -890,6 +890,48 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/raid_adventure_tera.mp3",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.blue",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_blue.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.green",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_green.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.orange",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_orange.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.pink",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_pink.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.purple",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_purple.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bar.top.red",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/pause/top_red.png",
       "lazy": true
     },
     {

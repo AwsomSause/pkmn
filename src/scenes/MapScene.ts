@@ -13,6 +13,7 @@ import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { pinnedObjective } from '../core/objectives';
 import { regionIdentity } from '../core/presentation/regionIdentity';
+import { FRAME_ASSET_IDS, headerBar } from '../ui/frames';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
 import { boxCapacity } from '../core/trainerPerks';
@@ -123,7 +124,7 @@ export class MapScene extends Phaser.Scene {
       if (side.kind === 'fish' && !side.used) shown.push(...fishingOffer(session.content, run!, side.id).flatMap((o) => session.content.species.get(o.speciesId) ?? []));
     }
     preloadPokemon(this, [...partySpecies(), ...shown], { icon: true });
-    if (run?.eggs.length) queueAssets(this, ['pack.ebdx.egg']);
+    queueAssets(this, [...FRAME_ASSET_IDS, ...(run?.eggs.length ? ['pack.ebdx.egg'] : [])]);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -163,6 +164,7 @@ export class MapScene extends Phaser.Scene {
     // ---------- header ----------
     drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.92 });
     const column = currentColumn(stage);
+    headerBar(this, identity.accent, this.motion, 8, 6, GAME_WIDTH - 16, 64); // UIE pause-menu strip in the region's colour
     // The region's accent stripe under the header (catalog 62).
     this.add.rectangle(20, 67, GAME_WIDTH - 40, 3, identity.accent, 0.9).setOrigin(0).setName('region-accent');
     if (league) {
