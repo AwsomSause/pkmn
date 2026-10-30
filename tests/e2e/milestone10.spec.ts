@@ -1,0 +1,102 @@
+import { expect, test, type Page } from '@playwright/test';
+
+// Milestone 10 visual slice 1: the Aero battle screen (glass panels, glossy
+// buttons, Essentials type/category/status art, arena ambience) and its
+// motion settings.
+
+const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
+
+async function waitForScene(page: Page, key: string, timeout = 20_000) {
+  await expect.poll(() => scene(page), { timeout }).toBe(key);
+  await page.waitForTimeout(250);
+}
+
+async function startBattle(page: Page) {
+  await page.keyboard.press('Enter'); // Enter the Hub
+  await waitForScene(page, 'Hub');
+  await page.keyboard.press('Enter'); // Start a run
+  await waitForScene(page, 'TrainerSelect');
+  await page.keyboard.press('Enter'); // Red
+  await waitForScene(page, 'RunPrep');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'StarterSelect');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Briefing');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+}
+
+/** Waits until the battle shows its action menu. */
+async function waitForMenu(page: Page) {
+  await expect.poll(() => page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu)), { timeout: 20_000 }).toBe(true);
+  await page.waitForTimeout(200);
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+});
+
+/** Texture keys of everything drawn on the battle field (arena, ambience, sprites). */
+const fieldKeys = (page: Page) =>
+  page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.map((o: any) => o.texture?.key ?? null).filter(Boolean));
+
+test('the battle screen uses the Aero look and pack art', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.setViewportSize({ width: 960, height: 540 });
+  await page.goto('/?seed=m10-visual&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  // Ambience layers from the EBDX scenery sit on the field.
+  expect((await fieldKeys(page)).some((k: string) => k.startsWith('pack.'))).toBe(true);
+  // The command menu is glossy buttons.
+  expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu.config.glass))).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-battle.png' });
+
+  // Fight: the focused move shows Essentials' type label and category icon.
+  await page.keyboard.press('Enter');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges?.list.map((o: any) => o.texture.key))).toEqual(['pack.ebdx.types', 'pack.ebdx.category']);
+  await page.screenshot({ path: 'test-results/m10-moves.png' });
+
+  // A status shows Essentials' status icon in the foe's databox.
+  await page.evaluate(() => {
+    const pkr = (window as any).__pkr;
+    pkr.session.run.battle.enemyTeam[0].status = { id: 'par', turns: 0 };
+    pkr.game.scene.getScene('Battle').scene.restart();
+  });
+  await waitForScene(page, 'Battle');
+  await waitForMenu(page);
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').enemyBox.statusBadge.list[0].texture.key)).toBe('pack.ebdx.status');
+
+  // Smaller and narrow windows still fit the whole 960×540 game.
+  for (const [w, h] of [[800, 450], [480, 800]] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `test-results/m10-battle-${w}x${h}.png` });
+  }
+  expect(errors).toEqual([]);
+});
+
+test('with battle animations off the arena has no ambience', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-still&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    (window as any).__pkr.session.settings.battleAnimations = 'off';
+  });
+  await startBattle(page);
+  await waitForMenu(page);
+  expect((await fieldKeys(page)).some((k: string) => k.startsWith('pack.'))).toBe(false);
+  await page.keyboard.press('Enter');
+  await waitForMenu(page);
+  await page.keyboard.press('Enter');
+  await waitForMenu(page);
+  expect(errors).toEqual([]);
+});

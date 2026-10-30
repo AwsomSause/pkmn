@@ -20,6 +20,10 @@ export const HYPER_EFFECTS: Record<StoryTriggerKind, StoryEffectSpec['kind']> = 
   heatedRivalry: 'rivalry',
   friendlyCompetition: 'rivalry',
   trainerReturns: 'rematch',
+  megaOverdrive: 'flair',
+  zHeart: 'flair',
+  dynamaxResolve: 'flair',
+  teraTrueColors: 'flair',
 };
 
 /** Memories a trigger can ask for besides other Hyper moments (see PokemonHistory). */

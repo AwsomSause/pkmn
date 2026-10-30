@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T23:36:52.968Z",
+  "generatedAt": "2026-10-30T09:57:59.858Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -42,6 +42,102 @@
       "kind": "image",
       "category": "ui",
       "path": "images/ui/bg.png"
+    },
+    {
+      "id": "pack.ebdx.types",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/types2.png"
+    },
+    {
+      "id": "pack.ebdx.category",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/category.png"
+    },
+    {
+      "id": "pack.ebdx.status",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/status.png"
+    },
+    {
+      "id": "pack.ebdx.cloud1",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/cloud1.png"
+    },
+    {
+      "id": "pack.ebdx.cloud2",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/cloud2.png"
+    },
+    {
+      "id": "pack.ebdx.bubble",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/bubble.png"
+    },
+    {
+      "id": "pack.ebdx.snow",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/snow.png"
+    },
+    {
+      "id": "pack.ebdx.star",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/star.png"
+    },
+    {
+      "id": "pack.ebdx.sun",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/sun.png"
+    },
+    {
+      "id": "pack.ebdx.lightA",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/lightA.png"
+    },
+    {
+      "id": "pack.ebdx.lightB",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/lightB.png"
+    },
+    {
+      "id": "pack.ebdx.fog",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/fog.png"
+    },
+    {
+      "id": "pack.dbk.burst",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/burst.png"
+    },
+    {
+      "id": "pack.dbk.shine",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/shine.png"
+    },
+    {
+      "id": "pack.dbk.particle",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/particle.png"
+    },
+    {
+      "id": "pack.dbk.pulse",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/pulse.png"
     },
     {
       "id": "item.scanner",

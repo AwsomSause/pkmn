@@ -73,6 +73,16 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.pbinfo_player', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_player.png' },
   { id: 'ui.pbinfo_enemy', kind: 'image', category: 'ui', path: 'images/ui/pbinfo_enemy_mini.png' },
   { id: 'ui.message_bg', kind: 'image', category: 'ui', path: 'images/ui/bg.png' },
+  // Battle art from the director's Essentials packs (see docs/quality/asset-provenance.md).
+  { id: 'pack.ebdx.types', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/types2.png' },
+  { id: 'pack.ebdx.category', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/category.png' },
+  { id: 'pack.ebdx.status', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/status.png' },
+  ...['cloud1', 'cloud2', 'bubble', 'snow', 'star', 'sun', 'lightA', 'lightB', 'fog'].map(
+    (name): AssetEntry => ({ id: `pack.ebdx.${name}`, kind: 'image', category: 'background', path: `images/packs/ebdx/elements/${name}.png` }),
+  ),
+  ...['burst', 'shine', 'particle', 'pulse'].map(
+    (name): AssetEntry => ({ id: `pack.dbk.${name}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png` }),
+  ),
   // Item pictures used as menu icons (the Hub's tiles and currency counters).
   ...MENU_ICON_ITEMS.map((name) => itemEntry(`item.${name}`)),
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
