@@ -6,6 +6,7 @@ One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone
 Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 11, run 22, settings 4, meta 1. Next free versions: run 23, profile 12 (check `origin/main` first; another thread may have taken them).
 
 ## Done
+- Quality items (Electric plan §4, §7, §9): `npm run report:dashboard` writes `docs/quality/dashboard.html` (counts, offending ids, vs baseline, mechanics) and `CONTENT_REPORT.md`; new `mechanic` kind (`src/quality/mechanics.json`, 42 entries, each with its code and unit tests, check `mechanics-without-proof`); `tests/e2e/viewports.spec.ts` (4 window sizes, no console errors); SYSTEMS_AUDIT, FEATURE_INTERACTION_MATRIX, QUALITY_GATES refreshed. GitHub Actions has still never run (Kice must switch it on).
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
 - M7 attributes and luck; M8 custom forms (255 Delta, Z-Forms, Spooky); M8.6 audit + content/balance reports + `report:check` gate.
 - M8.5 Mega, Primal, Tera, Z-Moves, Dynamax/G-Max (PokeRogue-style limits).
