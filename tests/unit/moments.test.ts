@@ -76,3 +76,26 @@ describe('enemy moments', () => {
     expect(run.battle!.enemyStages.def).toBe(1);
   });
 });
+
+describe('Overdrive chains', () => {
+  it('a chain moves only when its next step happens, and finishing it earns a title', async () => {
+    const { advanceChains, chainProgress } = await import('../../src/core/story/chains');
+    const { run, lead } = setup('chain-test');
+    const chain = content.story.chains.find((c) => c.id === 'perseverance-legacy')!;
+    // Out-of-order steps do nothing.
+    expect(advanceChains(content, run, chain.steps[1]!, lead.uid)).toEqual([]);
+    expect(chainProgress(run, chain.id)).toBe(0);
+    chain.steps.slice(0, -1).forEach((s) => expect(advanceChains(content, run, s, lead.uid)).toEqual([]));
+    expect(chainProgress(run, chain.id)).toBe(chain.steps.length - 1);
+    expect(advanceChains(content, run, chain.steps.at(-1)!, lead.uid)).toContain(chain.id);
+    expect(run.story.histories[lead.uid]!.titles).toContain(chain.title);
+    // Done once.
+    expect(advanceChains(content, run, chain.steps[0]!, lead.uid)).toEqual([]);
+  });
+
+  it('every chain step is a real story event or a known milestone', () => {
+    const milestones = new Set(['reunion', 'avenged', 'determination-evolution']);
+    const ids = new Set(content.story.definitions.map((d) => d.id));
+    for (const c of content.story.chains) for (const s of c.steps) expect(ids.has(s) || milestones.has(s), `${c.id}:${s}`).toBe(true);
+  });
+});
