@@ -1,4 +1,4 @@
-// Milestone 8.75, slice 3b-3b: draft items. Dowsing Machine and Bloom Mail add
+// Milestone 8.75, slices 3b-3b and 4: draft items, and RSVP Mail's rival. Dowsing Machine and Bloom Mail add
 // a choice to the draft; Cornn Berry re-rolls one choice; Lock Capsule and
 // Favored Mail carry a choice into the next draft; TM Case shows more TM moves.
 
@@ -144,5 +144,28 @@ describe('TM Case', () => {
     const after = applyCatalog(content, withCase, tm, withCase.party[0], opts()).pending[0]!;
     expect(before.kind === 'teachMove' && before.moveIds.length).toBe(TM_CHOICES);
     expect(after.kind === 'teachMove' && after.moveIds.length).toBe(TM_CHOICES + 1);
+  });
+});
+
+describe('RSVP Mail: a rival', () => {
+  it('next stage, the first ordinary trainer is a stronger rival; beating it gives gym odds and one more choice; only once', () => {
+    const run = nextStage(take(newRun('rsvp'), 'rsvp-mail'));
+    const trainers = run.stage!.map.nodes.filter((n) => n.kind === 'trainer' && n.column > 1);
+    const enter = (r: RunState, id: string) => {
+      r.stage!.current = r.stage!.map.nodes.find((n) => n.next.includes(id))!.id;
+      return chooseNode(content, r, id);
+    };
+    const plain = enter(structuredClone(newRun('rsvp')), trainers[0]!.id);
+    expect(plain.battle!.rival).toBeUndefined();
+    const fight = enter(run, trainers[0]!.id);
+    expect(fight.battle!.rival).toBe(true);
+    expect(fight.battle!.trainer?.name ?? '').toBeDefined();
+    const after = win(fight).run;
+    expect(after.phase).toBe('reward');
+    expect(after.draft).toHaveLength(size + 1);
+    // The rival comes once per stage: the next trainer is ordinary.
+    const next = takeAnyReward(after);
+    const second = enter(next, trainers[1] ? trainers[1].id : trainers[0]!.id);
+    expect(second.battle!.rival).toBeUndefined();
   });
 });
