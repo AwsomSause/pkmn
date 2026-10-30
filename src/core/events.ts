@@ -18,7 +18,7 @@ import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
-import { addLevels, maxHp } from './pokemon';
+import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, discover } from './progress';
 import { getCampaign, runLevelCap } from './regions';
 import { hashSeed, Rng } from './rng';
@@ -51,6 +51,10 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return (run.inventory[c.id] ?? 0) > 0 || (run.passives?.[c.id] ?? 0) > 0;
     case 'partyType':
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
+    case 'partySpecies':
+      return run.party.some((m) => m.speciesId === c.species);
+    case 'eventSeen':
+      return (run.itemCounters?.[`event-seen:${c.id}`] ?? 0) > 0;
     case 'noTrainerTag':
       return !getArchetype(content, run.archetypeId).eventTags.includes(c.tag);
   }
@@ -73,6 +77,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a ${content.catalog.get(c.id)?.name ?? content.items.get(c.id)?.name ?? c.id}`;
     case 'partyType':
       return `Needs a ${c.type.charAt(0).toUpperCase()}${c.type.slice(1)}-type in your party`;
+    case 'partySpecies':
+      return `Needs ${content.species.get(c.species)?.name ?? c.species} in your party`;
+    case 'eventSeen':
+      return `Needs an earlier delivery`;
     case 'noTrainerTag':
       return `Your trainer won't do this`;
   }
@@ -322,6 +330,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.stop === 'heal' ? 'a healing spot opens here' : e.stop === 'shop' ? 'a shop opens here' : 'a fishing spot opens here';
     case 'skipAhead':
       return 'skip ahead to the gym';
+    case 'formChange':
+      return 'a Pokémon changes form';
   }
 }
 
@@ -444,6 +454,21 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       count(run, 'pokemonCaught');
       run.pending.push({ kind: 'caught', mon });
       return `${content.species.get(mon.speciesId)?.name ?? mon.speciesId} wants to join you!`;
+    }
+    case 'formChange': {
+      const mon = run.party.find((m) => m.speciesId === e.from);
+      const to = content.species.get(e.to);
+      if (!mon || !to) return '';
+      if (e.consume) {
+        const gone = run.party.findIndex((m) => m.speciesId === e.consume);
+        if (gone < 0) return '';
+        run.party.splice(gone, 1);
+      }
+      const before = calcStats(content, mon).hp;
+      mon.speciesId = e.to;
+      mon.hp = Math.max(1, Math.min(calcStats(content, mon).hp, Math.round((mon.hp * calcStats(content, mon).hp) / before)));
+      discover(run, e.to, true);
+      return `${to.name} appears!`;
     }
     case 'betterDraft':
       run.itemCounters = { ...run.itemCounters, 'better-draft': 1, ...(e.extra ? { 'draft-extra': (run.itemCounters?.['draft-extra'] ?? 0) + e.extra } : {}) };

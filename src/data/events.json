@@ -20155,6 +20155,794 @@
      }
     }
    ]
+  },
+  {
+   "id": "deliver-oaks-parcel",
+   "name": "Oak's Parcel",
+   "group": "Story items",
+   "keyItem": "oaks-parcel",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "boss.oak"
+    ],
+    "effect": "glint"
+   },
+   "intro": "A clerk at the Poké Mart waves. \"Is that parcel for Professor Oak? He told us to expect it!\"",
+   "choices": [
+    {
+     "label": "Hand it over",
+     "success": {
+      "text": "\"Thank you! Here, for your trouble.\"",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "poke-ball",
+        "count": 5
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-letter",
+   "name": "A Letter to Deliver",
+   "group": "Story items",
+   "keyItem": "letter",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "A shopkeeper reads the address on your letter and gasps. \"That is for me!\"",
+   "choices": [
+    {
+     "label": "Hand it over",
+     "success": {
+      "text": "He pays you and tells everyone about your kindness.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-parcel",
+   "name": "A Parcel for the Nurse",
+   "group": "Story items",
+   "keyItem": "parcel",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#302018",
+    "effect": "glint"
+   },
+   "intro": "The healer at the clinic eyes your parcel. \"I have been waiting for that!\"",
+   "choices": [
+    {
+     "label": "Hand it over",
+     "success": {
+      "text": "She gives you something from her shelf.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-devon-goods",
+   "name": "Devon Goods",
+   "group": "Story items",
+   "keyItem": "devon-goods",
+   "rarity": "rare",
+   "scene": {
+    "cast": [],
+    "effect": "sparkle"
+   },
+   "intro": "A Devon Corp. agent is waiting. \"Those goods! Let me return the favour at half price.\"",
+   "choices": [
+    {
+     "label": "Buy an Epic item (₽2500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 2500
+      }
+     ],
+     "success": {
+      "text": "A rare piece from Devon Corp.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -2500
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "relic-statue",
+         "relic-crown",
+         "ruby",
+         "sapphire",
+         "sacred-ash"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take a payment instead",
+     "success": {
+      "text": "A fair fee.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1200
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "trade-scanner",
+   "name": "The Scanner Collector",
+   "group": "Story items",
+   "keyItem": "scanner",
+   "rarity": "rare",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "A collector at the dock spots your Scanner. \"I will trade you something fine for it.\"",
+   "choices": [
+    {
+     "label": "Trade for an Epic item",
+     "success": {
+      "text": "He hands over a treasure.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "relic-statue",
+         "relic-crown",
+         "ruby",
+         "sapphire",
+         "sacred-ash"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sell it",
+     "success": {
+      "text": "Easy money.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 2500
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "return-gold-teeth",
+   "name": "The Gold Teeth",
+   "group": "Story items",
+   "keyItem": "gold-teeth",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#302810",
+    "effect": "sparkle"
+   },
+   "intro": "The old Safari warden is tapping his jaw. \"My teeth! You found my gold teeth!\"",
+   "choices": [
+    {
+     "label": "Return them",
+     "success": {
+      "text": "He pays you and grins.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-gram-1",
+   "name": "Gram 1",
+   "group": "Story items",
+   "keyItem": "gram-1",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "A Gram clerk looks up. \"Gram 1! One piece of the set.\"",
+   "choices": [
+    {
+     "label": "Deliver it",
+     "success": {
+      "text": "He pays you for it.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-gram-2",
+   "name": "Gram 2",
+   "group": "Story items",
+   "keyItem": "gram-2",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "The clerk's friend smiles. \"Gram 2! You are kind to bring it.\"",
+   "choices": [
+    {
+     "label": "Deliver it",
+     "success": {
+      "text": "You feel good about it.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "deliver-gram-3",
+   "name": "Gram 3",
+   "group": "Story items",
+   "keyItem": "gram-3",
+   "rarity": "rare",
+   "scene": {
+    "cast": [],
+    "effect": "sparkle"
+   },
+   "intro": "Both clerks stand together. \"Gram 3! With the other two, the set is complete.\"",
+   "choices": [
+    {
+     "label": "Deliver the last Gram (after Grams 1 and 2)",
+     "requires": [
+      {
+       "kind": "eventSeen",
+       "id": "deliver-gram-1"
+      },
+      {
+       "kind": "eventSeen",
+       "id": "deliver-gram-2"
+      }
+     ],
+     "success": {
+      "text": "The whole set is theirs, and they pay handsomely.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 3000
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep the secret and leave",
+     "success": {
+      "text": "You walk away with a lighter heart.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fix-machine-part",
+   "name": "The Broken Machine",
+   "group": "Story items",
+   "keyItem": "machine-part",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "A shop's register is jammed. \"If only I had that machine part!\"",
+   "choices": [
+    {
+     "label": "Fix the shop machine",
+     "success": {
+      "text": "The shop reopens, and the owner knocks the price down for you.",
+      "effects": [
+       {
+        "kind": "addStop",
+        "stop": "shop"
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "return-lost-item",
+   "name": "The Lost Item",
+   "group": "Story items",
+   "keyItem": "lost-item",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "The Lost and Found counter spots the item in your bag. \"Someone has been looking for that.\"",
+   "choices": [
+    {
+     "label": "Return it",
+     "success": {
+      "text": "The owner is grateful.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "file-data-card",
+   "name": "The Data Card",
+   "group": "Story items",
+   "keyItem": "data-card",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#103040",
+    "effect": "glint"
+   },
+   "intro": "A researcher scans your Data Card. \"This helps the whole Pokédex project.\"",
+   "choices": [
+    {
+     "label": "Upload it",
+     "success": {
+      "text": "The research team credits you.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 15
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "odd-keystone-spiritomb",
+   "name": "The Odd Keystone",
+   "group": "Story items",
+   "keyItem": "odd-keystone",
+   "rarity": "rare",
+   "scene": {
+    "cast": [],
+    "pokemon": "spiritomb",
+    "tint": "#181028",
+    "effect": "fog"
+   },
+   "intro": "The Odd Keystone hums. 108 spirits whisper from inside it.",
+   "choices": [
+    {
+     "label": "Break the keystone",
+     "success": {
+      "text": "A Spiritomb follows you out of the mist.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "spiritomb"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Put it back",
+     "success": {
+      "text": "The whispers fade.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "meteorite-deoxys",
+   "name": "The Meteorite",
+   "group": "Story items",
+   "keyItem": "meteorite",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "deoxys",
+    "tint": "#100820",
+    "effect": "sparkle"
+   },
+   "intro": "The Meteorite shakes. A Deoxys in your party glows.",
+   "choices": [
+    {
+     "label": "Attack Forme",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "deoxys"
+      }
+     ],
+     "success": {
+      "text": "Deoxys changes to its Attack Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "deoxys",
+        "to": "deoxys-attack"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Defense Forme",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "deoxys"
+      }
+     ],
+     "success": {
+      "text": "Deoxys changes to its Defense Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "deoxys",
+        "to": "deoxys-defense"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Speed Forme",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "deoxys"
+      }
+     ],
+     "success": {
+      "text": "Deoxys changes to its Speed Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "deoxys",
+        "to": "deoxys-speed"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Put it away",
+     "success": {
+      "text": "The meteorite goes quiet.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "kyurem-black",
+   "name": "The Dark Stone Fusion",
+   "group": "Story items",
+   "keyItem": "kyurem-black",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "kyurem-black",
+    "tint": "#080818",
+    "effect": "spin"
+   },
+   "intro": "Kyurem and Zekrom call to each other.",
+   "choices": [
+    {
+     "label": "Fuse them",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "kyurem"
+      },
+      {
+       "kind": "partySpecies",
+       "species": "zekrom"
+      }
+     ],
+     "success": {
+      "text": "Kyurem fuses with Zekrom into Black Kyurem!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "kyurem",
+        "to": "kyurem-black",
+        "consume": "zekrom"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "The stones go quiet.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "kyurem-white",
+   "name": "The Light Stone Fusion",
+   "group": "Story items",
+   "keyItem": "kyurem-white",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "kyurem-white",
+    "tint": "#181830",
+    "effect": "spin"
+   },
+   "intro": "Kyurem and Reshiram call to each other.",
+   "choices": [
+    {
+     "label": "Fuse them",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "kyurem"
+      },
+      {
+       "kind": "partySpecies",
+       "species": "reshiram"
+      }
+     ],
+     "success": {
+      "text": "Kyurem fuses with Reshiram into White Kyurem!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "kyurem",
+        "to": "kyurem-white",
+        "consume": "reshiram"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not now",
+     "success": {
+      "text": "The stones go quiet.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tornadus-mirror",
+   "name": "The Reveal Glass: Tornadus",
+   "group": "Story items",
+   "keyItem": "tornadus-therian",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "tornadus-therian",
+    "effect": "float"
+   },
+   "intro": "The mirror shows Tornadus as it truly is.",
+   "choices": [
+    {
+     "label": "Show the true form",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "tornadus"
+      }
+     ],
+     "success": {
+      "text": "Tornadus becomes Therian Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "tornadus",
+        "to": "tornadus-therian"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look away",
+     "success": {
+      "text": "The glass clouds over.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "thundurus-mirror",
+   "name": "The Reveal Glass: Thundurus",
+   "group": "Story items",
+   "keyItem": "thundurus-therian",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "thundurus-therian",
+    "effect": "sparkle"
+   },
+   "intro": "The mirror shows Thundurus as it truly is.",
+   "choices": [
+    {
+     "label": "Show the true form",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "thundurus"
+      }
+     ],
+     "success": {
+      "text": "Thundurus becomes Therian Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "thundurus",
+        "to": "thundurus-therian"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look away",
+     "success": {
+      "text": "The glass clouds over.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "landorus-mirror",
+   "name": "The Reveal Glass: Landorus",
+   "group": "Story items",
+   "keyItem": "landorus-therian",
+   "rarity": "epic",
+   "scene": {
+    "cast": [],
+    "pokemon": "landorus-therian",
+    "effect": "shake"
+   },
+   "intro": "The mirror shows Landorus as it truly is.",
+   "choices": [
+    {
+     "label": "Show the true form",
+     "requires": [
+      {
+       "kind": "partySpecies",
+       "species": "landorus"
+      }
+     ],
+     "success": {
+      "text": "Landorus becomes Therian Forme!",
+      "effects": [
+       {
+        "kind": "formChange",
+        "from": "landorus",
+        "to": "landorus-therian"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look away",
+     "success": {
+      "text": "The glass clouds over.",
+      "effects": []
+     }
+    }
+   ]
   }
  ]
 }
