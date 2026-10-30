@@ -4,6 +4,8 @@
 // them and applies a small effect through the effect ledger. Counters live in
 // run.story.flags under "m:" keys and are cleared when the battle ends.
 
+import { chemistryOf } from './chemistry';
+import { lossesTo, noteLoss, promiseDoneFlag, promiseOf } from './promises';
 import { openingFor, rivalFeeling } from '../rivals/feelings';
 import { grandMoment } from './grandEnemy';
 import type { Side } from '../battle/engine';
@@ -43,6 +45,13 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   rivalResentment: 'enemyStage',
   rivalFear: 'enemyStage',
   rivalRespect: 'flair',
+  sacrificeStand: 'statStage',
+  lastStand: 'statStage',
+  comebackRevenge: 'flair',
+  promiseKept: 'flair',
+  wildAmbush: 'enemyStage',
+  wildKin: 'flair',
+  chemistryPerfect: 'statStage',
   grandOmen: 'flair',
   grandShadow: 'enemyStage',
   grandGrudge: 'statStage',
@@ -84,6 +93,9 @@ function fnv1a(text: string): number {
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
   return h;
 }
+
+/** Moves that put the user between a teammate and danger. */
+const SHIELDING = new Set(['protect', 'detect', 'endure', 'spiky-shield', 'kings-shield', 'baneful-bunker', 'wide-guard', 'quick-guard', 'mat-block', 'substitute', 'follow-me', 'rage-powder', 'helping-hand']);
 
 const flagKey = (...parts: (string | number)[]) => `m:${parts.join(':')}`;
 
@@ -145,6 +157,11 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       case 'move':
         if (e.side === 'player') {
           lastMoveByLead = e.moveId;
+          // It Stood Between Its Friend and Danger: a defensive move while a teammate is down or nearly down.
+          if (lead && SHIELDING.has(e.moveId)) {
+            const friend = run.party.find((m) => m.uid !== lead.uid && m.hp <= maxHp(content, m) * 0.3);
+            if (friend) fire('sacrificeStand', 'player', lead.uid, i, { name: nameOf(lead.speciesId), other: nameOf(friend.speciesId) });
+          }
           // It Remembered Its Training: a move that finished a boss before, used again.
           // It Learned Something Today: a protégé's first use of a move its mentor has used often.
           const rel = leadUid ? mentorshipOf(run, leadUid) : undefined;
@@ -220,12 +237,25 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         break;
       }
       case 'faint':
-        if (e.side === 'player') flags[flagKey('fell')] = true;
-        else {
+        if (e.side === 'player') {
+          flags[flagKey('fell')] = true;
+          const fellUid = (e as { uid?: string }).uid;
+          if (fellUid) noteLoss(run, fellUid, foe.speciesId);
+        } else {
           flags[flagKey('enemyFell')] = true;
           const dead = battle.enemyTeam.find((m) => m.uid === e.uid);
           if (lead && dead && dead.level >= lead.level + 10) fire('brokeLimits', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
           if (boss && leadUid && lastMoveByLead) flags[`fin:${leadUid}`] = lastMoveByLead;
+          // Comeback and Promise: beating a species that has beaten this Pokémon before.
+          if (lead && dead) {
+            const promised = promiseOf(run, lead.uid);
+            if (promised === dead.speciesId) {
+              flags[promiseDoneFlag(lead.uid, dead.speciesId)] = true;
+              fire('promiseKept', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
+            } else if (lossesTo(run, lead.uid, dead.speciesId) >= 1) {
+              fire('comebackRevenge', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
+            }
+          }
           // The Student Has Surpassed the Teacher: a protégé beats a species that once knocked out its mentor.
           const rel = lead ? mentorshipOf(run, lead.uid) : undefined;
           const h = lead ? run.story.histories[lead.uid] : undefined;
@@ -260,6 +290,15 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       const g = grandMoment(content, run, lead.uid);
       if (g) fire(g, g === 'grandShadow' ? 'enemy' : 'player', g === 'grandShadow' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     }
+    // Wild Encounter Recognition: a species that beat your team ambushes; a wild kin of a party member is recognised.
+    if (battle.kind === 'wild') {
+      if (run.party.some((m) => lossesTo(run, m.uid, foe.speciesId) >= 1)) fire('wildAmbush', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });
+      const kin = run.party.find((m) => m.uid !== lead.uid && m.speciesId === foe.speciesId);
+      if (kin) fire('wildKin', 'player', kin.uid, -1, { name: nameOf(kin.speciesId), enemy: nameOf(foe.speciesId) });
+    }
+    // Team Chemistry: Perfect Timing partners open together with a lift.
+    const timed = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && chemistryOf(content, run, lead.uid, m.uid) === 'perfectTiming');
+    if (timed) fire('chemistryPerfect', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(timed.speciesId) });
     const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
     if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     if (mark(`${run.seed}:watch:${run.encountersCompleted}`) % 14 === 0 && run.encountersCompleted > 0) {
@@ -269,6 +308,9 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
   }
 
   // End of the turn: states rather than events.
+  if (lead && lead.hp > 0 && boss && run.party.length > 1 && run.party.every((m) => m.uid === lead.uid || m.hp <= 0) && lead.hp <= maxHp(content, lead) * 0.4) {
+    fire('lastStand', 'player', lead.uid, lastAt, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+  }
   if (lead && lead.hp > 0) {
     if (prior.turn >= 8 && lead.hp <= maxHp(content, lead) / 2) fire('secondWind', 'player', lead.uid, lastAt, leadNames());
     const h = run.story.histories[lead.uid];

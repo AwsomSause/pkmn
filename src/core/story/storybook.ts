@@ -3,6 +3,8 @@
 // a Pokémon's run, a mentor and protégé, and the whole team. Pure.
 
 import type { Content } from '../contentSchema';
+import { chemistryLines } from './chemistry';
+import { promiseLines } from './promises';
 import { FEELING_NAMES, rivalFeeling } from '../rivals/feelings';
 import { legacyCard } from './legacy';
 import type { RunState } from '../state';
@@ -81,7 +83,16 @@ function teamStory(content: Content, run: RunState): ChronicleStory[] {
   ];
 }
 
+function chemistryStories(content: Content, run: RunState): ChronicleStory[] {
+  const lines = chemistryLines(content, run);
+  const promises = promiseLines(content, run);
+  return [
+    ...(lines.length > 0 ? [{ kind: 'team' as const, title: 'Team Chemistry', body: `${lines.join('. ')}.`, tags: ['Chemistry'] }] : []),
+    ...(promises.length > 0 ? [{ kind: 'team' as const, title: 'Open Promises', body: `${promises.join('. ')}. Bring them into the rematch.`, tags: ['Promise'] }] : []),
+  ];
+}
+
 /** All the stories this run can tell right now, most personal first. */
 export function chronicleStories(content: Content, run: RunState): ChronicleStory[] {
-  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...teamStory(content, run)];
+  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...chemistryStories(content, run), ...teamStory(content, run)];
 }

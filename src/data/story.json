@@ -2561,6 +2561,265 @@
         "integrity"
       ],
       "variants": {}
+    },
+    {
+      "id": "stood-between",
+      "displayName": "It Stood Between Its Friend and Danger!",
+      "messagePool": [
+        "{name} stood between {other} and danger!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "sacrificeStand"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Stood between {other} and danger"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "last-stand",
+      "displayName": "Its Final Move Created an Opening!",
+      "messagePool": [
+        "{name} refused to leave its teammates behind!",
+        "{name}'s last stand creates an opening!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "lastStand"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Made a last stand against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffb347",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "comeback-revenge",
+      "displayName": "The Score Is Settled!",
+      "messagePool": [
+        "{name} finally beat the {enemy} that beat it before!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "comebackRevenge"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Beat {enemy}, which had defeated it before"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffd54f",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "promise-kept",
+      "displayName": "A Promise Kept!",
+      "messagePool": [
+        "{name} kept its promise and beat {enemy}!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "promiseKept"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 90,
+        "text": "Kept its promise to beat {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffd54f",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "wild-ambush",
+      "displayName": "The Wild Pokémon Remembers!",
+      "messagePool": [
+        "A wild {name} remembers beating your team, and ambushes!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "wildAmbush"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Was ambushed by a wild Pokémon that remembered"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff4f6a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "wild-kin",
+      "displayName": "A Familiar Face",
+      "messagePool": [
+        "{name} recognises the wild {enemy} as one of its own kind."
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "wildKin"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Recognised a wild {enemy} as kin"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "perfect-timing",
+      "displayName": "Perfect Timing!",
+      "messagePool": [
+        "{name} and {other} move in perfect time!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "chemistryPerfect"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Moved in perfect time with {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -2722,6 +2981,23 @@
       "needs": {
         "victory": true
       }
+    },
+    {
+      "title": "Promise Keeper",
+      "needs": {
+        "anyMoment": [
+          "promise-kept"
+        ]
+      }
+    },
+    {
+      "title": "Comeback Kid",
+      "needs": {
+        "anyMoment": [
+          "comeback-revenge",
+          "last-stand"
+        ]
+      }
     }
   ],
   "grandEnemy": {
@@ -2748,7 +3024,8 @@
       "studentSurpassed",
       "lastLesson",
       "grandGrudge",
-      "rivalRespect"
+      "rivalRespect",
+      "promiseKept"
     ]
   }
 }

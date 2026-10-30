@@ -759,6 +759,8 @@ export const PastPokemonSchema = z.object({
   runId: z.string(),
   /** It was in the party when that run was won. */
   hallOfFame: z.boolean(),
+  /** The legacy titles it earned in that run (Techno §6.9): it comes back remembered. */
+  titles: z.array(z.string()).optional(),
 });
 export type PastPokemon = z.infer<typeof PastPokemonSchema>;
 

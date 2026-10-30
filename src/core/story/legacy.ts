@@ -50,6 +50,8 @@ export function legacyCard(content: Content, run: RunState, uid: string): Legacy
   if (protege) tags.push('Protégé');
   if (history.survivedFatal > 0) tags.push('Survivor');
   if (history.evolutions.length > 0) tags.push('Evolved on the road');
+  if ((history.hyper['comeback-revenge'] ?? 0) > 0 || (history.hyper['last-stand'] ?? 0) > 0) tags.push('Comeback Record');
+  if ((history.hyper['promise-kept'] ?? 0) > 0) tags.push('Promise Kept');
   return {
     uid,
     speciesId: history.speciesId,

@@ -24,6 +24,7 @@ export function archiveParty(content: Content, profile: Profile, run: RunState):
     ...(m.teraType ? { teraType: m.teraType } : {}),
     runId: run.runId,
     hallOfFame: run.victory,
+    titles: run.story.histories[m.uid]?.titles ?? [],
   }));
   profile.pastPokemon = [...kept, ...profile.pastPokemon].slice(0, content.balance.reunion.archiveSize);
 }
