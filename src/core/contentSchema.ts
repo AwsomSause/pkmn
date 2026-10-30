@@ -963,6 +963,8 @@ export const PrepTokenSchema = z.object({
   license: z.string().nullable().default(null),
   money: z.number().int().min(0).default(0),
   items: z.record(z.string(), z.number().int().positive()).default({}),
+  /** Draft archetype (catalog 97): reward families in these categories are drawn `weight` times as often, for the whole run. Chance, not a guarantee. */
+  draftBias: z.object({ categories: z.array(z.string()).min(1), weight: z.number().gt(1).max(3) }).nullable().default(null),
 });
 export type PrepToken = z.infer<typeof PrepTokenSchema>;
 
@@ -1598,6 +1600,8 @@ export const RewardEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('attribute'), attribute: AttributeKeySchema, amount: z.number().int() }),
   /** An item from the item catalog (itemCatalog.json); its effect is the entry's. */
   z.object({ kind: z.literal('catalog'), entry: z.string() }),
+  /** Draft personality (catalog 94): a bundle (cost 0, chance 1), a bargain (pay `cost` money) or a risk (`chance` below 1; a miss gives nothing, and the card says so). */
+  z.object({ kind: z.literal('deal'), cost: z.number().int().min(0), chance: z.number().gt(0).max(1), items: z.array(z.object({ item: z.string(), quantity: z.number().int().positive() })).min(1) }),
 ]);
 export type RewardEffect = z.infer<typeof RewardEffectSchema>;
 

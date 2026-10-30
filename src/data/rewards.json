@@ -1829,5 +1829,132 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.fairium_z"
+ },
+ {
+  "id": "deal-field-bundle",
+  "name": "Field Bundle",
+  "description": "A bundle: 2 Super Potions, a Revive and 3 Great Balls, all at once.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "family": "deal",
+  "effect": {
+   "kind": "deal",
+   "cost": 0,
+   "chance": 1,
+   "items": [
+    {
+     "item": "super-potion",
+     "quantity": 2
+    },
+    {
+     "item": "revive",
+     "quantity": 1
+    },
+    {
+     "item": "great-ball",
+     "quantity": 3
+    }
+   ]
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.revive"
+ },
+ {
+  "id": "deal-trapper-bundle",
+  "name": "Trapper Bundle",
+  "description": "A bundle: 5 Great Balls and 2 Ultra Balls.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "family": "deal",
+  "effect": {
+   "kind": "deal",
+   "cost": 0,
+   "chance": 1,
+   "items": [
+    {
+     "item": "great-ball",
+     "quantity": 5
+    },
+    {
+     "item": "ultra-ball",
+     "quantity": 2
+    }
+   ]
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "ball.ub"
+ },
+ {
+  "id": "deal-ball-bargain",
+  "name": "Ball Bargain",
+  "description": "A bargain: pay ₽600, get 8 Ultra Balls.",
+  "category": "consumable",
+  "rarity": "uncommon",
+  "family": "deal",
+  "effect": {
+   "kind": "deal",
+   "cost": 600,
+   "chance": 1,
+   "items": [
+    {
+     "item": "ultra-ball",
+     "quantity": 8
+    }
+   ]
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "ball.ub"
+ },
+ {
+  "id": "deal-medic-bargain",
+  "name": "Medic Bargain",
+  "description": "A bargain: pay ₽500, get 3 Revives.",
+  "category": "consumable",
+  "rarity": "rare",
+  "family": "deal",
+  "effect": {
+   "kind": "deal",
+   "cost": 500,
+   "chance": 1,
+   "items": [
+    {
+     "item": "revive",
+     "quantity": 3
+    }
+   ]
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.revive"
+ },
+ {
+  "id": "deal-medic-gamble",
+  "name": "Medic Gamble",
+  "description": "A risk: 50% to win 4 Hyper Potions, otherwise you get nothing.",
+  "category": "consumable",
+  "rarity": "rare",
+  "family": "deal",
+  "effect": {
+   "kind": "deal",
+   "cost": 0,
+   "chance": 0.5,
+   "items": [
+    {
+     "item": "hyper-potion",
+     "quantity": 4
+    }
+   ]
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.revive"
  }
 ]
