@@ -26,7 +26,7 @@ export type Cue =
   /** A marker on the user before its move: its type colour, bigger for strong or priority moves. */
   | { kind: 'telegraph'; side: Side; color: string; style: 'normal' | 'strong' | 'quick' }
   /** Play the move's animation file (with the short fallback if it can't load). */
-  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; alt?: string; color: string; family: FamilyId }
+  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; alt?: string; color: string; family: FamilyId; moveType?: string }
   /** The reduced-motion stand-in for a move animation: a soft tint on the target. */
   | { kind: 'pulse'; side: Side; color: string }
   /** A hit landing: freeze, shake, flash, then the HP bar drains. */
@@ -82,7 +82,7 @@ export function planCues(
         cues.push({ kind: 'telegraph', side: e.side, color, style: look.telegraph });
         if (!connects) break;
         const target = move.target === 'self' ? e.side : other(e.side);
-        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, ...animChoice(look), color, family: moveFamily(move, look) });
+        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, ...animChoice(look), color, family: moveFamily(move, look), moveType: move.type });
         else cues.push({ kind: 'pulse', side: target, color });
         break;
       }

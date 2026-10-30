@@ -13,6 +13,7 @@
 // missed reward can still be earned; a repeat pays the fallback (duplicate compensation).
 // Limitation (no server): changing the PC's clock changes which events are on.
 
+import { grantUnlocks } from './unlocks';
 import type { ArchetypeModifier, Content, GameEvent, GameEventObjective, QuestReward } from './contentSchema';
 import { claim, isClaimed } from './quests';
 import type { Profile, RunState } from './state';
@@ -188,9 +189,7 @@ function pay(profile: Profile, reward: QuestReward): void {
   profile.lifetimeBankCredits += reward.bankCredits;
   profile.researchPoints += reward.researchPoints;
   profile.candies += reward.candies;
-  if (reward.title && !profile.titles.includes(reward.title)) profile.titles.push(reward.title);
-  if (reward.pool && !profile.unlockedPools.includes(reward.pool)) profile.unlockedPools.push(reward.pool);
-  if (reward.trainer && !profile.unlockedArchetypes.includes(reward.trainer)) profile.unlockedArchetypes.push(reward.trainer);
+  grantUnlocks(profile, { pool: reward.pool, trainer: reward.trainer, title: reward.title });
 }
 
 export interface GameEventPayout {

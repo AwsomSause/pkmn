@@ -17,3 +17,9 @@ These hashes say "the rules decided the same thing for these seeds". A red one m
 - **Not a legit re-pin:** the slice only added UI, data that isn't drawn in the first 600 steps, or a new RNG stream. Then something moved an existing roll: fix that instead (new streams must never change old rolls).
 - Fetch `origin/main` first: if another thread already re-pinned, take their value and re-run; two threads re-pinning the same line is the usual cause of a red main.
 - Never re-pin to make an unexplained failure go away.
+
+## Which tests to run where (GitHub CI is on since 2026-10-30)
+- Locally: `npm run check` once, plus only the e2e specs your slice touches (`npx playwright test tests/e2e/<spec>.spec.ts`). Don't run the full `npm run test:e2e` (about 15 min) before every PR.
+- GitHub CI runs the full e2e suite on every PR. Wait for it to be green before merging; a red spec you didn't touch is either a real regression from your change or red on main (check main's last run before blaming yourself).
+- If your change is wide (core rules, save format, shared UI like Menu or Reward), also run the specs for the screens it affects.
+- A full local sweep is for the e2e-health owner after batches of PRs land.
