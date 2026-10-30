@@ -372,11 +372,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const pool of content.starterPools.values()) {
     checkRequirement(pool.unlock, `starter pool "${pool.id}"`);
     checkLicense(pool.license, `starter pool "${pool.id}"`);
-    // Species that aren't in the game yet are allowed (they arrive with the full Pokédex); known ones must be first-stage.
-    for (const id of pool.species) {
-      const s = content.species.get(id);
-      if (s && s.evolutionStage !== 1) problems.push(`starter pool "${pool.id}" lists "${id}", which is not a first-stage species`);
-    }
+    // Listed species may be evolved (they stand for their first stage) but must exist; so must bosses and the filter's region.
+    for (const id of pool.species) if (!content.species.has(id)) problems.push(`starter pool "${pool.id}" lists unknown species "${id}"`);
+    for (const id of pool.bosses) if (!content.bosses.has(id)) problems.push(`starter pool "${pool.id}" lists unknown boss "${id}"`);
+    if (pool.filter?.region && !content.regions.has(pool.filter.region)) problems.push(`starter pool "${pool.id}" filters on unknown region "${pool.filter.region}"`);
   }
   const startingPools = [...content.starterPools.values()].filter((pool) => pool.unlockedByDefault);
   if (startingPools.length === 0) problems.push('runPrep.json has no starter pool unlocked from the start');

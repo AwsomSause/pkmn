@@ -483,11 +483,21 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare'] as const;
+export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
+
 export const StarterPoolSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  species: z.array(z.string()).min(1),
+  /** The Starter Laboratory groups pools by category. */
+  category: z.enum(STARTER_POOL_CATEGORIES).default('classic'),
+  /** Listed species; an evolved one stands for its first stage (Charizard means Charmander). */
+  species: z.array(z.string()).default([]),
+  /** Adds the signature Pokémon of these bosses (as first stages). */
+  bosses: z.array(z.string()).default([]),
+  /** Adds every starter-eligible species of these types, or native to this region. */
+  filter: z.object({ types: z.array(TypeNameSchema).optional(), region: z.string().optional() }).optional(),
   unlockedByDefault: z.boolean().default(false),
   /** What must happen before the pool can be bought (null: nothing). */
   unlock: RequirementSchema.nullable().default(null),
@@ -496,7 +506,7 @@ export const StarterPoolSchema = z.object({
   license: z.string().nullable().default(null),
   /** Research Points to unlock the pool. */
   researchCost: z.number().int().min(0).default(0),
-});
+}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined, { message: 'a starter pool needs species, bosses or a filter' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
