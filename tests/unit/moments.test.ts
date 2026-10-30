@@ -8,6 +8,11 @@ import { recordBattleTurn } from '../../src/core/story/hooks';
 import { MOMENT_EFFECTS } from '../../src/core/story/moments';
 import { content, toBattle } from './helpers';
 
+const REAL_RARITY = { ...content.story.rarity };
+/** Rules of each moment are tested with the rarity gate open; the gate itself is tested at the bottom with the real numbers. */
+const openGate = () => Object.assign(content.story.rarity, { momentChance: 1, flairChance: 1, perBattle: 99, perBossBattle: 99, cooldownBattles: 0 });
+openGate();
+
 function setup(seed: string) {
   const run = structuredClone(toBattle(chooseStarter(content, createRun(content, { runId: seed, seed, archetypeId: 'red' }), 0)));
   run.battle!.kind = 'trainer';
@@ -224,5 +229,40 @@ describe('last §3 events', () => {
     run.story.histories.bench = { ...run.story.histories[run.party[0]!.uid]!, uid: 'bench', battles: 0 };
     const cues = recordBattleTurn(content, structuredClone(run), run, []);
     expect(titles(cues)).toContain('It Feels Left Out…');
+  });
+});
+
+describe('rarity', () => {
+  it('with the real numbers most seeds see no moment, and never more than the per-battle limit', () => {
+    Object.assign(content.story.rarity, REAL_RARITY);
+    try {
+      let any = 0;
+      for (let n = 0; n < 60; n++) {
+        const { run, lead } = setup(`rare-${n}`);
+        lead.hp = Math.floor(maxHp(content, lead) * 0.4);
+        run.battle!.turn = 9;
+        const cues = recordBattleTurn(content, structuredClone(run), run, []);
+        if (cues.length > 0) any += 1;
+        expect(run.story.flags['m:helped'] ?? 0).toBeLessThanOrEqual(REAL_RARITY.perBattle);
+      }
+      expect(any).toBeLessThan(30);
+    } finally {
+      openGate();
+    }
+  });
+
+  it('is decided by the seed alone: the same run gives the same answer', () => {
+    Object.assign(content.story.rarity, REAL_RARITY);
+    try {
+      const once = () => {
+        const { run, lead } = setup('rare-same');
+        lead.hp = Math.floor(maxHp(content, lead) * 0.4);
+        run.battle!.turn = 9;
+        return titles(recordBattleTurn(content, structuredClone(run), run, []));
+      };
+      expect(once()).toEqual(once());
+    } finally {
+      openGate();
+    }
   });
 });

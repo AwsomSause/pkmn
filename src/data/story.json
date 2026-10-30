@@ -2564,9 +2564,9 @@
     }
   ],
   "awakening": {
-    "uses": 8,
+    "uses": 14,
     "boost": 1.2,
-    "perPokemon": 2
+    "perPokemon": 1
   },
   "chains": [
     {
@@ -2663,7 +2663,7 @@
     }
   ],
   "mentorship": {
-    "mentorBattles": 6,
+    "mentorBattles": 10,
     "levelGap": 8,
     "graduateGap": 1
   },
@@ -2730,5 +2730,25 @@
     "contactFrom": 0.25,
     "escalationFrom": 0.4,
     "grudgeAfter": 1
+  },
+  "rarity": {
+    "momentChance": 0.3,
+    "flairChance": 0.5,
+    "perBattle": 1,
+    "perBossBattle": 2,
+    "cooldownBattles": 2,
+    "hyperScale": 0.4,
+    "exempt": [
+      "megaOverdrive",
+      "zHeart",
+      "dynamaxResolve",
+      "teraTrueColors",
+      "signatureAwakening",
+      "evolvedBeyond",
+      "studentSurpassed",
+      "lastLesson",
+      "grandGrudge",
+      "rivalRespect"
+    ]
   }
 }

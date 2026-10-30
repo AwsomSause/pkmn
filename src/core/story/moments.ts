@@ -112,8 +112,24 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     flags[key] = true;
     return true;
   };
+  const rarity = content.story.rarity;
   const fire = (trigger: StoryTriggerKind, side: Side, uid: string, at: number, names: Record<string, string>) => {
-    if (content.story.definitions.some((d) => d.triggerConditions.trigger === trigger) && once(trigger, uid)) out.push({ trigger, side, uid, at, names });
+    if (!content.story.definitions.some((d) => d.triggerConditions.trigger === trigger) || !once(trigger, uid)) return;
+    // Rarity: a moment that helps your side must be earned by a seeded roll, and only so many per battle, spaced apart.
+    if (side === 'player' && !rarity.exempt.includes(trigger)) {
+      const helps = MOMENT_EFFECTS[trigger] !== 'flair';
+      const roll = (fnv1a(`${run.seed}:rare:${trigger}:${uid}:${run.encountersCompleted}`) % 1000) / 1000;
+      if (roll >= (helps ? rarity.momentChance : rarity.flairChance)) return;
+      if (helps) {
+        const used = Number(flags[flagKey('helped')] ?? 0);
+        const last = flags['rare:last'];
+        if (used >= (boss ? rarity.perBossBattle : rarity.perBattle)) return;
+        if (!boss && used === 0 && typeof last === 'number' && run.encountersCompleted - last < rarity.cooldownBattles) return;
+        flags[flagKey('helped')] = used + 1;
+        flags['rare:last'] = run.encountersCompleted;
+      }
+    }
+    out.push({ trigger, side, uid, at, names });
   };
   const lead = run.party[battle.activeIndex];
   const leadBefore = before.party[prior.activeIndex];

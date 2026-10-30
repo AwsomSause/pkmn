@@ -15,7 +15,7 @@ function team(seed: string) {
   run.party.push(rookie);
   openHistory(content, run, rookie.uid, rookie.speciesId, 'caught');
   const h = run.story.histories[mentor.uid]!;
-  h.battles = 8;
+  h.battles = 12;
   h.bossesBeaten = 2;
   return { run, mentor, rookie };
 }
