@@ -77,6 +77,8 @@ test('baseline screens: reward, shop, event, League map and run end', async ({ p
   await shoot(page, 'event');
 
   await open(page, 'Map', 'session.debugJumpToLeague();');
+  // Catalog 62: the region's accent stripe under the map header.
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').children.list.some((o: any) => o.name === 'region-accent'))).toBe(true);
   await shoot(page, 'league');
 
   await open(page, 'GameOver', 'session.run.victory = true;');

@@ -27,12 +27,14 @@ import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx } from '../ui/audio';
-import { setAmbience, setMusicState, playMotif, stopProceduralAudio } from '../ui/procAudio';
+import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
+import { regionIdentity } from '../core/presentation/regionIdentity';
 import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
-import { itemVisual, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
+import { itemVisual, pokemonIcon, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
+import { bossVictory } from '../ui/battleFx/victoryLook';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
@@ -44,8 +46,12 @@ import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
+import { addEnvironment } from '../ui/battleFx/environment';
+import { environmentStory } from '../core/presentation/environmentStory';
+import { crisisLevel } from '../core/story/crisis';
+import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
-import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
+import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
@@ -214,11 +220,22 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    // Environmental storytelling (catalog 67): crisis weather, villain banners, ruins, lab panels, Shadow miasma.
+    const envEvent = run.battle?.event ? session.content.events.get(run.battle.event.eventId) : undefined;
+    const envFoe = run.battle ? run.battle.enemyTeam[run.battle.enemyIndex] : undefined;
+    addEnvironment(this, this.field, this.field.length, environmentStory({
+      crisis: crisisLevel(run),
+      legendClues: Number(run.story.flags['ev:legend-clue'] ?? 0),
+      themeName: run.stage ? getTheme(session.content, run.stage.themeId).name : '',
+      event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
+      shadowFoe: Boolean(envFoe?.shadow),
+    }), this.motion);
     this.fieldBase = this.field.length;
     this.fx = new BattleFx(this, {
       field: this.field,
       backgroundIndex: () => this.fieldBase,
       sprite: (side) => (side === 'player' ? this.playerSprite : this.enemySprite),
+      mastery: (moveId) => moveRank(session.profile.moveUses?.[moveId] ?? 0),
     });
 
     this.shown = { player: structuredClone(run.party[battle.activeIndex]!), enemy: structuredClone(currentEnemy(battle)) };
@@ -874,6 +891,7 @@ export class BattleScene extends Phaser.Scene {
     const foe = currentEnemy(battle);
     const me = this.activeMon();
     const share = (m: PokemonInstance) => m.hp / Math.max(1, calcStats(services().session.content, m).hp);
+    setRegionKey(regionIdentity(this.run.regionOrder[this.run.regionIndex]).key);
     setMusicState(this, musicState({
       boss: Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId))),
       lastFoe: battle.enemyIndex >= battle.enemyTeam.length - 1 && battle.enemyTeam.length > 1,
@@ -1229,6 +1247,8 @@ export class BattleScene extends Phaser.Scene {
     const { session } = services();
     const before = structuredClone(session.run!);
     const trainer = this.trainerTitle();
+    // Who the boss was, read before the turn ends the battle (catalog 91 victory card).
+    const bossWin = this.boss() ? { boss: this.boss()!, art: this.trainerArt(), turn: before.battle?.turn ?? 1, active: before.battle?.activeIndex ?? 0 } : null;
     let result: TurnResult;
     try {
       result = session.takeTurn(action);
@@ -1242,7 +1262,7 @@ export class BattleScene extends Phaser.Scene {
     await this.playEvents(result.events, before, trainer, result.cues, result.drama);
 
     if (result.end) {
-      await this.finish(result, trainer);
+      await this.finish(result, trainer, bossWin);
       return;
     }
     if (result.raidFailed) {
@@ -1266,12 +1286,22 @@ export class BattleScene extends Phaser.Scene {
     this.nextPrompt();
   }
 
-  private async finish(result: TurnResult, trainer: string | null): Promise<void> {
+  private async finish(result: TurnResult, trainer: string | null, bossWin: { boss: BossInfo; art: { assetId: string; label: string } | null; turn: number; active: number } | null = null): Promise<void> {
     const content = services().session.content;
     const end = result.end!;
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
     if (end.outcome === 'win' && trainer) {
       await this.playBeat(stamp(this, 'VICTORY!', trainer, this.foeRim(), this.motion));
+      if (bossWin) {
+        const party = result.run.party;
+        const v = bossVictory(content, bossWin.boss, party, bossWin.turn, party[bossWin.active] ?? null);
+        const art = bossWin.art;
+        await this.playBeat(
+          bossVictoryCard(this, v, TYPE_COLORS[v.accentType] ?? ROLE_RIMS[bossWin.boss.role], this.motion, art ? (x, y) => trainerVisual(this, art.assetId, art.label, x, y, 2.5) : null, (i, x, y) =>
+            pokemonIcon(this, getSpecies(content, v.lineup[i]!.speciesId), x, y, 1.6),
+          ),
+        );
+      }
       await this.say(`You defeated ${trainer}!`);
     }
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);

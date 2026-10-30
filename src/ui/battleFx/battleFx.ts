@@ -9,6 +9,7 @@
 // touched. Animation files are loaded the first time a move is used.
 
 import Phaser from 'phaser';
+import { MASTERY_VFX, type MoveRank } from '../../core/moveMastery';
 import { animAssetIds } from '../../assets/catalog';
 import type { Side } from '../../core/battle/engine';
 import { CompactAnimSchema, type CompactAnim } from '../../core/presentation/animFormat';
@@ -33,6 +34,8 @@ export interface FxOptions {
   /** Index in `field` just above the arena art (where animation backgrounds go). */
   backgroundIndex: () => number;
   sprite: (side: Side) => Visual | null;
+  /** The player's Move Mastery rank for a move (#107 VFX variants); none when left out. */
+  mastery?: (moveId: string) => MoveRank;
 }
 
 const BADGES: Record<string, { label: string; color: string }> = {
@@ -115,7 +118,9 @@ export class BattleFx {
       case 'telegraph':
         return this.telegraph(cue.side, cue.color, cue.style);
       case 'moveAnim':
-        return this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType);
+        await this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType);
+        if (cue.user === 'player' && cue.moveId && !this.skipping) this.masteryFlourish(cue.target, this.opts.mastery?.(cue.moveId) ?? 'none');
+        return;
       case 'pulse':
         return this.pulse(cue.side, cue.color);
       case 'commonAnim':
@@ -234,6 +239,24 @@ export class BattleFx {
     this.current = null;
     // Z-Moves and Max Moves borrow another move's animation; their signature burst goes on top.
     if (family === 'signature' && !this.skipping) await this.familyFallback(userVisual, targetVisual, color, family);
+  }
+
+  /** A mastered move's flourish on the target: sparks in the rank colour, a shine ring at gold. Never blocks. */
+  private masteryFlourish(target: Side, rank: MoveRank): void {
+    if (rank === 'none' || this.settings.battleAnimations !== 'full') return;
+    const visual = this.opts.sprite(target);
+    if (!visual) return;
+    const vfx = MASTERY_VFX[rank];
+    const { x, y } = this.centre(visual);
+    for (let i = 0; i < vfx.sparks; i++) {
+      const a = (Math.PI * 2 * i) / vfx.sparks;
+      const star = this.scene.add.star(x, y, 4, 2, 7, vfx.color, 1).setDepth(900).setBlendMode('ADD').setName(`mastery-${rank}`);
+      this.scene.tweens.add({ targets: star, x: x + Math.cos(a) * 70, y: y + Math.sin(a) * 50, angle: 180, alpha: 0, duration: 520, ease: 'Cubic.easeOut', onComplete: () => star.destroy() });
+    }
+    if (vfx.ring) {
+      const ring = this.scene.add.circle(x, y, 20).setStrokeStyle(4, vfx.color, 1).setDepth(900).setName(`mastery-${rank}`);
+      this.scene.tweens.add({ targets: ring, scale: 3.2, alpha: 0, duration: 600, ease: 'Quad.easeOut', onComplete: () => ring.destroy() });
+    }
   }
 
   private async commonAnim(side: Side, name: string, alt?: string): Promise<void> {

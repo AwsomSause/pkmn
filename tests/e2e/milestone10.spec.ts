@@ -168,6 +168,8 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   });
   await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 6000, intervals: [100] }).toBe(true);
   await page.screenshot({ path: 'test-results/m10-boss-title.png' });
+  // Catalog 67: this seed's first stage is The Chemical Plant, so lab light panels hang behind the battle.
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.some((o: any) => o.name === 'env-lab'))).toBe(true);
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
   // A move can miss, so attack (first move, Enter twice) until the banner shows.
@@ -191,6 +193,17 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   await attackUntil('VICTORY!');
   expect(await showsText(page, 'VICTORY!')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-victory.png' });
+  // Catalog 91: the boss victory card with its Chronicle stamp follows the stamp.
+  const victoryTexts = () =>
+    page.evaluate(() => {
+      const out: string[] = [];
+      const walk = (o: any) => (typeof o.text === 'string' && out.push(o.text), o.list?.forEach(walk));
+      (window as any).__pkr.game.scene.getScene('Battle').children.list.filter((o: any) => o.name === 'boss-victory').forEach(walk);
+      return out;
+    });
+  await expect.poll(async () => (await victoryTexts()).includes('Gym Leader Brock defeated!'), { timeout: 8000, intervals: [100] }).toBe(true);
+  expect((await victoryTexts()).some((t) => t.startsWith('Chronicle · Turn'))).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-boss-victory.png' });
   expect(errors).toEqual([]);
 });
 
@@ -395,5 +408,33 @@ test('slice 10: a Pokémon evolves after battle with the light-pulse sequence', 
   await page.waitForTimeout(900);
   await page.screenshot({ path: 'test-results/m10-evolution.png' });
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId), { timeout: 10_000 }).toBe('charmeleon');
+  expect(errors).toEqual([]);
+});
+
+test('catalog 107: a gold-mastered move plays its mastery flourish', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-mastery&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    const lead = session.run.party[session.run.battle.activeIndex];
+    lead.moves = [{ id: 'tackle', pp: 35 }];
+    session.profile.moveUses = { ...(session.profile.moveUses ?? {}), tackle: 100 };
+  });
+  // Watch for the gold sparks while the move plays.
+  await page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Battle');
+    (window as any).__sawMastery = false;
+    scene.events.on('postupdate', () => {
+      if (scene.children.list.some((o: any) => o.name === 'mastery-gold')) (window as any).__sawMastery = true;
+    });
+  });
+  await page.keyboard.press('Enter'); // Fight
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Enter'); // Tackle
+  await expect.poll(() => page.evaluate(() => (window as any).__sawMastery), { timeout: 15_000 }).toBe(true);
   expect(errors).toEqual([]);
 });

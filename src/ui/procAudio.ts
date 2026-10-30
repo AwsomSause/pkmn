@@ -22,7 +22,17 @@ function context(scene: Phaser.Scene): AudioContext | null {
   return c ?? null;
 }
 
-const hz = (semis: number) => ROOT_HZ * Math.pow(2, semis / 12);
+/** The current region's key (catalog 62 "soundtrack family"), in semitones above the root. */
+let regionKey = 0;
+const hz = (semis: number) => ROOT_HZ * Math.pow(2, (semis + regionKey) / 12);
+
+/** Moves the procedural layers and motifs into a region's key; layers already playing are rebuilt in it. */
+export function setRegionKey(semis: number): void {
+  if (semis === regionKey) return;
+  regionKey = semis;
+  for (const v of layerVoices.values()) v.stop();
+  layerVoices = new Map();
+}
 
 function osc(c: AudioContext, type: OscillatorType, freq: number, out: AudioNode): OscillatorNode {
   const o = c.createOscillator();

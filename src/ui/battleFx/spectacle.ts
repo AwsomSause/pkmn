@@ -251,6 +251,61 @@ export function stamp(scene: Phaser.Scene, title: string, sub: string, rim: numb
   return beat(scene, objs, 1600);
 }
 
+/**
+ * A boss victory card (catalog 91): the boss slides back in a defeated pose,
+ * a glass card in the boss's accent colour names the win and its Chronicle
+ * stamp, and the team lineup hops in along the bottom (fainted members dimmed).
+ * `portrait` and `icon` draw the art, so this file needs no sprite code.
+ */
+export function bossVictoryCard(
+  scene: Phaser.Scene,
+  v: { title: string; stamp: string; lineup: { fainted: boolean }[] },
+  accent: number,
+  motion: MotionLevel,
+  portrait: ((x: number, y: number) => Phaser.GameObjects.GameObject) | null,
+  icon: (i: number, x: number, y: number) => Phaser.GameObjects.GameObject,
+): Beat {
+  if (motion === 'off') return noBeat();
+  const W = scene.scale.width;
+  const objs: Phaser.GameObjects.GameObject[] = [];
+  const root = scene.add.container(0, 0).setDepth(965).setName('boss-victory');
+  objs.push(root);
+  const veil = scene.add.rectangle(0, 0, W, scene.scale.height, 0x061428, 0.55).setOrigin(0);
+  root.add(veil);
+  const rays = scene.add.star(250, 220, 14, 30, 260, accent, 0.18).setBlendMode('ADD');
+  root.add(rays);
+  if (portrait) {
+    const p = portrait(250, 300) as Phaser.GameObjects.Image;
+    root.add(p);
+    // The defeated pose: it leans back and steps away a little.
+    if (motion === 'full') scene.tweens.add({ targets: p, angle: -8, x: 220, alpha: 0.85, duration: 600, ease: 'Back.easeOut' });
+    else p.setAngle(-8).setAlpha(0.85);
+  }
+  const card = scene.add.container(W - 300, 190);
+  card.add(paintGlass(scene.add.graphics(), -260, -105, 520, 210, { rim: accent, tint: 0x0b1f3a, radius: 24 }));
+  card.add(scene.add.text(0, -66, v.title, textStyle(30, '#ffffff', { stroke: '#10203a', strokeThickness: 6, align: 'center', wordWrap: { width: 490 } })).setOrigin(0.5));
+  card.add(scene.add.text(0, -10, v.stamp, textStyle(16, '#ffe8a0', { backgroundColor: '#0c2a44', padding: { x: 10, y: 4 }, align: 'center', wordWrap: { width: 480 } })).setOrigin(0.5).setAngle(-2).setName('boss-victory-stamp'));
+  root.add(card);
+  const n = v.lineup.length;
+  v.lineup.forEach((m, i) => {
+    const x = W - 300 + (i - (n - 1) / 2) * 76;
+    const o = icon(i, x, 245) as Phaser.GameObjects.Image;
+    if (m.fainted) o.setAlpha(0.45);
+    root.add(o);
+    if (motion === 'full' && !m.fainted) scene.tweens.add({ targets: o, y: 233, duration: 260, yoyo: true, repeat: 2, delay: 500 + i * 120, ease: 'Quad.easeOut' });
+  });
+  if (motion === 'reduced') {
+    root.setAlpha(0);
+    scene.tweens.add({ targets: root, alpha: 1, duration: 160, yoyo: true, hold: 1700 });
+    return beat(scene, objs, 2100);
+  }
+  card.setScale(0.4).setAlpha(0);
+  scene.tweens.add({ targets: card, scale: 1, alpha: 1, duration: 420, ease: 'Back.easeOut' });
+  scene.tweens.add({ targets: rays, angle: 90, duration: 2800 });
+  scene.tweens.add({ targets: root, alpha: 0, duration: 300, delay: 2500 });
+  return beat(scene, objs, 2800);
+}
+
 /** Two glass shutters close over the screen when the battle ends. */
 export function exitWipe(scene: Phaser.Scene, motion: MotionLevel): Promise<void> {
   if (motion === 'off') return Promise.resolve();

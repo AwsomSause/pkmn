@@ -12,6 +12,7 @@ import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { pinnedObjective } from '../core/objectives';
+import { regionIdentity } from '../core/presentation/regionIdentity';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
 import { boxCapacity } from '../core/trainerPerks';
@@ -96,6 +97,7 @@ export class MapScene extends Phaser.Scene {
   private notice: Phaser.GameObjects.Text | null = null;
   private busy = false;
   private colSpacing = COL_SPACING;
+  private accent: number = COLORS.border;
   /** What map items show about nodes (Devon Scope, Town Map, Rule Book, Orange Mail). */
   private previews: Record<string, NodePreview> = {};
   /** Where each node is drawn inside the scrolling map layer (for the travel animation). */
@@ -133,6 +135,8 @@ export class MapScene extends Phaser.Scene {
     const league = stage.kind === 'league';
     const leader = bossInfo(content, league ? 'champion' : 'gym', stage.leaderId);
     const region = currentRegion(content, run);
+    const identity = regionIdentity(region.id);
+    this.accent = identity.accent;
     const cap = runLevelCap(content, run);
     this.options = [];
     this.cursors = [];
@@ -159,6 +163,8 @@ export class MapScene extends Phaser.Scene {
     // ---------- header ----------
     drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.92 });
     const column = currentColumn(stage);
+    // The region's accent stripe under the header (catalog 62).
+    this.add.rectangle(20, 67, GAME_WIDTH - 40, 3, identity.accent, 0.9).setOrigin(0).setName('region-accent');
     if (league) {
       this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
       this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#d8d0e0'));
@@ -404,7 +410,7 @@ export class MapScene extends Phaser.Scene {
         const size = getCampaign(content, run.campaignId).eliteFourSize;
         this.showBanner(region.name, 'Pokémon League', `Elite Four ×${size}, then ${leader.title}  ·  Healed after every battle`);
       } else if (stage.index === 0) {
-        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${blindMap(run.rules) ? '???' : theme.name}  ·  ${leader.title}`);
+        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}  ·  ${identity.motif}`, region.name, `Level cap ${cap}  ·  Stage 1: ${blindMap(run.rules) ? '???' : theme.name}  ·  ${leader.title}`);
       } else {
         this.showBanner(`Stage ${stage.index + 1}`, blindMap(run.rules) ? '???' : theme.name, `${blindMap(run.rules) ? 'Blind Research' : theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
       }
@@ -980,7 +986,7 @@ export class MapScene extends Phaser.Scene {
     // A banner band across the screen, like a Pokémon game's location sign.
     const band = this.add.graphics();
     band.fillStyle(0x181818, 0.95).fillRect(0, 168, GAME_WIDTH, 168);
-    band.fillStyle(COLORS.border, 1).fillRect(0, 174, GAME_WIDTH, 6).fillRect(0, 324, GAME_WIDTH, 6);
+    band.fillStyle(this.accent, 1).fillRect(0, 174, GAME_WIDTH, 6).fillRect(0, 324, GAME_WIDTH, 6);
     layer.add(band);
     layer.add(this.add.text(GAME_WIDTH / 2, 208, top, textStyle(26, COLORS.gold)).setOrigin(0.5));
     layer.add(this.add.text(GAME_WIDTH / 2, 254, title, textStyle(56, COLORS.textLight)).setOrigin(0.5));
