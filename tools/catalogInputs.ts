@@ -18,10 +18,11 @@ export function readCatalogInputs(): CatalogInputs {
   const catalogIcons = (readJson('itemCatalog.json') as { icon: string | null }[]).map((e) => `item.gen5/${e.icon ?? '0'}`);
   const trainers = readJson('trainers.json') as { spriteAssetId: string }[];
   const bosses = readJson('bosses.json') as { sprites: Record<string, string> }[];
+  const events = (readJson('events.json') as { events: { scene: { cast: string[] } }[] }).events;
   const themes = readJson('themes.json') as { arenas: Record<string, string> };
   return {
     pokemon: species.map((s) => s.assets),
-    trainerAssetIds: [...archetypes, ...trainers].map((a) => a.spriteAssetId).concat(bosses.flatMap((b) => Object.values(b.sprites))),
+    trainerAssetIds: [...archetypes, ...trainers].map((a) => a.spriteAssetId).concat(bosses.flatMap((b) => Object.values(b.sprites)), events.flatMap((e) => e.scene.cast)),
     itemAssetIds: [...new Set([...rewards, ...items].map((r) => r.iconAssetId).concat(catalogIcons))],
     backgroundAssetIds: Object.values(themes.arenas),
     battleAnims: animCatalogInputs(parseMoveAnims(readJson('moveAnims.json'))),

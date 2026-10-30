@@ -5,7 +5,7 @@
 //   *Multiplier kinds multiply together (start at 1).
 //   *Offset kinds add together (start at 0).
 
-import type { Archetype, ArchetypeModifierKind, Content, TypeName } from './contentSchema';
+import type { Archetype, ArchetypeModifier, ArchetypeModifierKind, Content, TypeName } from './contentSchema';
 
 export function getArchetype(content: Content, id: string): Archetype {
   const archetype = content.archetypes.get(id);
@@ -17,8 +17,9 @@ export function modifierValue(archetype: Archetype, kind: ArchetypeModifierKind)
   const isOffset = kind.endsWith('Offset');
   let value = isOffset ? 0 : 1;
   for (const mod of archetype.modifiers) {
-    if (mod.kind !== kind || !('value' in mod)) continue;
-    value = isOffset ? value + mod.value : value * mod.value;
+    if (mod.kind !== kind) continue;
+    const v = (mod as { value?: number }).value ?? 0;
+    value = isOffset ? value + v : value * v;
   }
   return value;
 }
@@ -68,9 +69,12 @@ export function shopUnlockOffset(archetype: Archetype): number {
 }
 
 /** The trainer's multiplier on one shop item's price (several entries multiply together). */
-export function priceMultiplier(archetype: Archetype, itemId: string): number {
+export function priceMultiplier(archetype: Archetype, itemId: string, isBall = false): number {
   let value = 1;
-  for (const mod of archetype.modifiers) if (mod.kind === 'priceMultiplier' && mod.items.includes(itemId)) value *= mod.value;
+  for (const mod of archetype.modifiers) {
+    if (mod.kind !== 'priceMultiplier') continue;
+    if (mod.items?.includes(itemId) || mod.group === 'all' || (mod.group === 'balls' && isBall) || (mod.group === 'otherItems' && !isBall)) value *= mod.value;
+  }
   return value;
 }
 
@@ -90,3 +94,6 @@ export function typeModifiers(archetype: Archetype): TypeModifiers {
   }
   return out;
 }
+
+/** The trainer's modifier list: battle code reads perks through the helpers in trainerPerks.ts. */
+export type Perks = readonly ArchetypeModifier[];

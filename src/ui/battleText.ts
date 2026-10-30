@@ -260,6 +260,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} learned ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
     case 'wantsMove':
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
+    case 'evolved':
+      return `What? The ${foe} ${species(e.from)} is evolving!\nIt evolved into ${species(e.to)}!`;
     case 'transform': {
       const before = e.side === 'player' ? species(e.from) : `The ${foe} ${species(e.from)}`;
       if (e.kind === 'tera') return `${before} Terastallized into the ${e.teraType![0]!.toUpperCase()}${e.teraType!.slice(1)} type!`;
@@ -268,6 +270,7 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       if (e.kind === 'dynamax') return `${before} Dynamaxed!`;
       if (e.kind === 'gigantamax') return `${before} Gigantamaxed into ${species(e.to)}!`;
       if (e.kind === 'dynamaxEnd') return `${before} returned to its normal size!`;
+      if (e.kind === 'ability') return `${before} changed form into ${species(e.to)}!`;
       return `${before} has Mega Evolved into ${species(e.to)}!`;
     }
   }

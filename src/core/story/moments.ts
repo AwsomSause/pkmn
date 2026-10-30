@@ -10,6 +10,7 @@ import { GYM_LEADER_CLASS, ELITE_FOUR_CLASS, CHAMPION_CLASS } from '../encounter
 import { maxHp } from '../pokemon';
 import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
+import { mentorshipOf } from './mentorship';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
 /** The one effect each moment trigger may carry (checked when content loads). */
@@ -33,6 +34,13 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   protectingTrainer: 'enemyStage',
   partnerFall: 'enemyStage',
   willNotLetDown: 'enemyStage',
+  somethingDifferent: 'flair',
+  waitingForBattle: 'flair',
+  somethingWatching: 'flair',
+  studentLearned: 'statStage',
+  studentSurpassed: 'flair',
+  lastLesson: 'flair',
+  differentWays: 'flair',
 };
 
 export interface Moment {
@@ -42,6 +50,13 @@ export interface Moment {
   /** Index in the turn's events it is told after. */
   at: number;
   names: Record<string, string>;
+}
+
+/** A small string hash (FNV-1a), so "unusual" flavour is fixed by the seed and never draws from a random stream. */
+function fnv1a(text: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
+  return h;
 }
 
 const flagKey = (...parts: (string | number)[]) => `m:${parts.join(':')}`;
@@ -89,6 +104,13 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         if (e.side === 'player') {
           lastMoveByLead = e.moveId;
           // It Remembered Its Training: a move that finished a boss before, used again.
+          // It Learned Something Today: a protégé's first use of a move its mentor has used often.
+          const rel = leadUid ? mentorshipOf(run, leadUid) : undefined;
+          const mentorH = rel ? run.story.histories[rel.a.id] : undefined;
+          const proteH = leadUid ? run.story.histories[leadUid] : undefined;
+          if (rel && lead && mentorH && proteH && (mentorH.moves[e.moveId] ?? 0) >= 5 && proteH.moves[e.moveId] === 1) {
+            fire('studentLearned', 'player', lead.uid, i, { name: nameOf(lead.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId, other: nameOf(run.party.find((m) => m.uid === rel.a.id)?.speciesId ?? '') });
+          }
           const memory = leadUid ? flags[`fin:${leadUid}`] : undefined;
           if (leadUid && memory === e.moveId && trainerFight && lead?.uid === leadUid) {
             fire('rememberedTraining', 'player', leadUid, i, { name: nameOf(lead.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId });
@@ -131,6 +153,13 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
           const dead = battle.enemyTeam.find((m) => m.uid === e.uid);
           if (lead && dead && dead.level >= lead.level + 10) fire('brokeLimits', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
           if (boss && leadUid && lastMoveByLead) flags[`fin:${leadUid}`] = lastMoveByLead;
+          // The Student Has Surpassed the Teacher: a protégé beats a species that once knocked out its mentor.
+          const rel = lead ? mentorshipOf(run, lead.uid) : undefined;
+          const h = lead ? run.story.histories[lead.uid] : undefined;
+          if (rel && lead && dead && h && !h.hyper['student-surpassed'] && run.story.events.some((k) => k.type === 'knockout' && k.actors[0] === rel.a.id && k.data.bySpeciesId === dead.speciesId)) {
+            h.hyper['student-surpassed'] = 1;
+            fire('studentSurpassed', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId), other: nameOf(run.party.find((m) => m.uid === rel.a.id)?.speciesId ?? '') });
+          }
         }
         break;
       default:
@@ -138,11 +167,43 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     }
   });
 
+  // Unusual events (blueprint §5) that need no choice: told on the first turn, from the run's seed, never from a gameplay stream.
+  if (prior.turn === 1 && lead) {
+    const mark = fnv1a;
+    if (battle.kind === 'wild' && (foe.shiny ? mark(`${run.seed}:${foe.uid}:s`) % 5 !== 0 : mark(`${run.seed}:${foe.uid}:d`) % 60 === 0)) {
+      fire('somethingDifferent', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    }
+    const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
+    if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    if (mark(`${run.seed}:watch:${run.encountersCompleted}`) % 14 === 0 && run.encountersCompleted > 0) {
+      run.story.flags['lead:watcher'] = Number(run.story.flags['lead:watcher'] ?? 0) + 1;
+      fire('somethingWatching', 'player', lead.uid, -1, { name: nameOf(lead.speciesId) });
+    }
+  }
+
   // End of the turn: states rather than events.
   if (lead && lead.hp > 0) {
     if (prior.turn >= 8 && lead.hp <= maxHp(content, lead) / 2) fire('secondWind', 'player', lead.uid, lastAt, leadNames());
     const h = run.story.histories[lead.uid];
     if (h && Object.keys(h.hyper).length >= 3) fire('somethingAwakened', 'player', lead.uid, lastAt, leadNames());
+  }
+  // The Teacher Has One Last Lesson / They Have Different Ways of Fighting.
+  for (const rel of run.story.relationships) {
+    if (!rel.open || rel.kind !== 'mentorship') continue;
+    const mentor = run.party.find((m) => m.uid === rel.a.id);
+    const prote = run.party.find((m) => m.uid === rel.b.id);
+    if (!mentor || !prote) continue;
+    if (lead?.uid === mentor.uid && mentor.hp > 0 && mentor.hp <= maxHp(content, mentor) * 0.2 && prote.hp > 0) {
+      fire('lastLesson', 'player', mentor.uid, lastAt, { name: nameOf(mentor.speciesId), other: nameOf(prote.speciesId) });
+    }
+    const mh = run.story.histories[mentor.uid];
+    const ph = run.story.histories[prote.uid];
+    const top = (hist?: { moves: Record<string, number> }) => Object.entries(hist?.moves ?? {}).sort((a, b) => b[1] - a[1])[0];
+    const pt = top(ph);
+    if (ph && !ph.hyper['different-ways'] && pt && pt[1] >= 6 && pt[0] !== top(mh)?.[0]) {
+      ph.hyper['different-ways'] = 1;
+      fire('differentWays', 'player', prote.uid, lastAt, { name: nameOf(prote.speciesId), other: nameOf(mentor.speciesId) });
+    }
   }
   if (trainerFight && foe.hp > 0) {
     const share = foe.hp / maxHp(content, foe);

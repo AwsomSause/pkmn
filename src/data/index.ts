@@ -6,6 +6,8 @@ import { z } from 'zod';
 import {
   AbilitySchema,
   AchievementSchema,
+  ATTRIBUTE_KEYS,
+  EventsFileSchema,
   RunPrepFileSchema,
   ArchetypeSchema,
   BalanceSchema,
@@ -58,7 +60,11 @@ import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
 import raidsJson from './raids.json';
+import totemsJson from './totems.json';
+import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
+import eventsJson from './events.json';
+import { isGiftable } from '../core/events';
 
 export class ContentError extends Error {
   constructor(public readonly problems: string[]) {
@@ -89,6 +95,8 @@ export interface RawContent {
   balance: unknown;
   story: unknown;
   raids: unknown;
+  events: unknown;
+  totems: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -133,6 +141,8 @@ export const RAW_CONTENT: RawContent = {
   balance: balanceJson,
   story: storyJson,
   raids: raidsJson,
+  events: eventsJson,
+  totems: totemsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -180,9 +190,11 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
+  const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
+  const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !raids || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!eventsFile || !story || !raids || !totems || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -212,6 +224,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     balance,
     story,
     raids,
+    events: toMap(eventsFile.events, 'events.json', problems),
+    totems,
     zMoves,
     maxMoves,
   };
@@ -258,6 +272,15 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const r of raid.rewards.items) if (!content.items.has(r.item)) problems.push(`raids.json "${raid.id}" gives unknown item "${r.item}"`);
     if (raid.shield && raid.shield.at.length * raid.shield.points >= 0.9) problems.push(`raids.json "${raid.id}" shields are too big`);
     if (raid.phases.some((p, i) => i > 0 && p.atHp >= raid.phases[i - 1]!.atHp)) problems.push(`raids.json "${raid.id}" phases must go down in HP`);
+  }
+  for (const t of totems.totems) {
+    for (const id of [...t.species, t.ally?.species, t.rewards.rareJoin?.species]) if (id && !content.species.has(id)) problems.push(`totems.json "${t.id}" has unknown species "${id}"`);
+    for (const r of t.rewards.items) if (!content.items.has(r.item)) problems.push(`totems.json "${t.id}" gives unknown item "${r.item}"`);
+    // An aura is one or two stages in total; several big boosts at once make a fight about the boosts, not the mechanic.
+    const stages = Object.values(t.aura.boost ?? {}).reduce((a, b) => a + b, 0);
+    if (stages > 2) problems.push(`totems.json "${t.id}" aura boosts more than 2 stages`);
+    if (t.phases.some((p, i) => i > 0 && p.atHp >= t.phases[i - 1]!.atHp)) problems.push(`totems.json "${t.id}" phases must go down in HP`);
+    if (t.tier === 'early' && (t.phases.length > 0 || (t.ally && t.ally.maxCalls > 1))) problems.push(`totems.json "${t.id}": early Totems have one aura and at most one weak ally call`);
   }
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {
@@ -375,12 +398,43 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (!a.unlockedByDefault && !a.unlock) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
     for (const id of Object.keys(a.startingItems)) if (!content.items.has(id)) problems.push(`trainer "${a.id}" starts with unknown item "${id}"`);
     for (const m of a.modifiers) {
-      if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
+      if (m.kind === 'startingAttribute' && !(ATTRIBUTE_KEYS as readonly string[]).includes(m.key)) problems.push(`trainer "${a.id}" starts with unknown attribute "${m.key}"`);
+      if (m.kind === 'priceMultiplier' && !m.items && !m.group) problems.push(`trainer "${a.id}" has a price perk with no items or group`);
+      if (m.kind === 'priceMultiplier') for (const id of m.items ?? []) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
     for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
     if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
+  // Map events: every id they mention must exist.
+  const knownItem = (id: string) => content.items.has(id) || content.catalog.has(id);
+  for (const e of content.events.values()) {
+    const where = `event "${e.id}"`;
+    const effects = e.choices.flatMap((c) => [c.success, ...(c.failure ? [c.failure] : [])]).flatMap((o) => [...o.effects, ...(o.battle?.win ?? [])]);
+    for (const f of effects) {
+      if (f.kind === 'item' && !knownItem(f.id)) problems.push(`${where} gives unknown item "${f.id}"`);
+      if (f.kind === 'loseItem' && f.id && !knownItem(f.id)) problems.push(`${where} uses unknown item "${f.id}"`);
+      if (f.kind === 'itemFrom') for (const id of f.ids) if (!knownItem(id)) problems.push(`${where} gives unknown item "${id}"`);
+      if (f.kind === 'join') for (const id of f.species) if (!content.species.has(id)) problems.push(`${where} offers unknown species "${id}"`);
+    }
+    for (const c of e.choices) {
+      for (const o of [c.success, c.failure]) {
+        const b = o?.battle;
+        if (b?.kind === 'wild') for (const id of b.species) if (!content.species.has(id)) problems.push(`${where} battles unknown species "${id}"`);
+        if (b?.kind === 'trainer' && b.bossId && !content.bosses.has(b.bossId)) problems.push(`${where} battles unknown boss "${b.bossId}"`);
+        if (b?.kind === 'trainer' && b.classId && !content.trainers.has(b.classId)) problems.push(`${where} battles unknown trainer class "${b.classId}"`);
+      }
+      for (const r of [...c.requires, ...e.requires]) if (r.kind === 'item' && !knownItem(r.id)) problems.push(`${where} needs unknown item "${r.id}"`);
+    }
+    if (e.keyItem && !knownItem(e.keyItem)) problems.push(`${where} needs unknown key item "${e.keyItem}"`);
+    if (e.scene.pokemon && !content.species.has(e.scene.pokemon)) problems.push(`${where} shows unknown species "${e.scene.pokemon}"`);
+  }
+  for (const id of balance.events.explorerItems) if (!isGiftable(content, id)) problems.push(`balance.events.explorerItems has "${id}", which isn't a working item`);
+  for (const entry of content.catalog.values()) {
+    if (entry.effect?.kind !== 'perk') continue;
+    for (const p of entry.effect.perks) if (p.perk === 'favorSpecies' && !content.species.has(p.species)) problems.push(`item "${entry.id}" favours unknown species "${p.species}"`);
+    if (entry.effect.perks.some((p) => p.perk === 'eventKey') && ![...content.events.values()].some((e) => e.keyItem === entry.id)) problems.push(`key item "${entry.id}" opens no event`);
+  }
   // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
   const checkLicense = (id: string | null, where: string) => {
     if (id !== null && !content.licenses.has(id)) problems.push(`${where} needs unknown license "${id}"`);

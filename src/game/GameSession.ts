@@ -10,6 +10,7 @@ import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { makeRandomSeed } from '../core/rng';
+import { chooseEvent, type EventResult } from '../core/events';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
@@ -132,6 +133,21 @@ export class GameSession {
   /** Pays for a raid den and starts the boss fight. */
   enterRaid(sideId: string): RunState {
     this.run = Run.enterRaid(this.content, this.requireRun(), sideId);
+    this.persistRun();
+    return this.run;
+  }
+
+  /** Makes a choice at an event ("?") stop; a battle outcome starts the battle. */
+  chooseEvent(sideId: string, choiceIndex: number): EventResult {
+    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex);
+    this.run = result.run;
+    this.persistRun();
+    return result;
+  }
+
+  /** Starts the fight with a Totem. */
+  enterTotem(sideId: string): RunState {
+    this.run = Run.enterTotem(this.content, this.requireRun(), sideId);
     this.persistRun();
     return this.run;
   }

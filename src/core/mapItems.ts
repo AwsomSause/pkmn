@@ -10,6 +10,7 @@
 // seed and the map node, so a run that doesn't use these items plays exactly
 // as before, and the items never change another stream's rolls.
 
+import { bridgeEventStop } from './events';
 import type { CatalogEffect, CatalogEntry, Content, EncounterMod, Perk, Theme, TypeName } from './contentSchema';
 import { hooksOf } from './battle/held';
 import { findNode } from './map';
@@ -441,7 +442,7 @@ export function fishingRod(content: Content, run: MapItemRun): { choices: number
 export function addItemStops(content: Content, run: RunState): void {
   const stage = run.stage;
   if (!stage || stage.kind !== 'stage') return;
-  const kinds: ('heal' | 'shop' | 'fish')[] = [];
+  const kinds: ('heal' | 'shop' | 'fish' | 'event')[] = [];
   if (fishingRod(content, run)) kinds.push('fish');
   for (const p of perksOf(activePerks(content, run), 'extraStop')) if (p.perk.where === 'stage') for (let i = 0; i < p.copies; i++) kinds.push(p.perk.kind);
   if (kinds.length === 0) return;
@@ -451,7 +452,9 @@ export function addItemStops(content: Content, run: RunState): void {
     // Fishing spots sit beside wild stops; every stop avoids the gym column and nodes that already have one of its kind.
     const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && (kind !== 'fish' || n.kind === 'wild') && !n.sides.some((s) => s.kind === kind));
     if (candidates.length === 0) continue;
-    rng.pick(candidates).sides.push({ id: `item-stop-${++count}`, kind, used: false });
+    const node = rng.pick(candidates);
+    const stop = kind === 'event' ? bridgeEventStop(content, run, node) : { id: `item-stop-${++count}`, kind, used: false };
+    if (stop) node.sides.push(stop);
   }
 }
 
@@ -464,7 +467,8 @@ export function addBridgeStops(content: Content, run: RunState, nodeId: string):
   for (const p of perksOf(activePerks(content, run), 'extraStop')) {
     if (p.perk.where !== 'nextNode') continue;
     for (let i = 0; i < p.copies; i++) {
-      node.sides.push({ id: `bridge-${node.sides.length + 1}`, kind: p.perk.kind, used: false });
+      const stop = p.perk.kind === 'event' ? bridgeEventStop(content, run, node) : { id: `bridge-${node.sides.length + 1}`, kind: p.perk.kind, used: false };
+      if (stop) node.sides.push(stop);
       spendUse(run, p.itemId);
     }
   }

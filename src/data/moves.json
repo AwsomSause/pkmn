@@ -462,7 +462,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -476,7 +478,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -686,7 +690,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "hitsSemi": {
     "semi": "air",
@@ -1084,7 +1090,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1126,7 +1134,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "flinchChance": 20,
    "hitsSemi": {
@@ -1262,7 +1272,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1277,7 +1288,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -1413,7 +1426,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1522,7 +1536,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1748,7 +1764,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "flinchChance": 30
   }
@@ -1765,7 +1783,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1890,7 +1909,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -1914,7 +1935,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -1943,7 +1965,10 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing",
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -2017,7 +2042,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -2114,7 +2141,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "pulse"
+   "pulse",
+   "bullet"
   ],
   "effects": {}
  },
@@ -2152,7 +2180,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "drain": 0.5
   }
@@ -2212,7 +2242,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "frz",
@@ -2844,7 +2876,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "status": {
@@ -2890,7 +2923,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -3318,7 +3352,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -3355,7 +3391,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3670,7 +3708,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -3934,7 +3974,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -4279,7 +4321,8 @@
   "critStage": 1,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -4472,7 +4515,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -4584,7 +4629,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -4644,7 +4691,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4713,7 +4762,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -4921,7 +4972,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -5015,7 +5068,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {}
  },
  {
@@ -5159,7 +5214,9 @@
   "priority": 0,
   "critStage": 1,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -5202,7 +5259,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -5257,7 +5316,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "statChanges": [
@@ -5385,7 +5445,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -5638,7 +5700,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "psn",
@@ -6454,7 +6518,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {}
  },
@@ -6469,7 +6534,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -6568,7 +6635,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -6675,7 +6744,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -7174,7 +7245,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "confuse": {
     "chance": 30
@@ -7280,7 +7353,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {}
  },
  {
@@ -7532,7 +7607,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "hits": [
     2,
@@ -7571,7 +7648,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "recharge": true
   }
@@ -7588,7 +7667,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "ignoreStages": true
@@ -7621,7 +7701,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "targetsDefense": true
   }
@@ -8569,7 +8651,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
   "effects": {
    "charge": {
@@ -8622,7 +8705,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "weatherBall": true
   }
@@ -8673,9 +8758,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Stronger when the user does not have a held item."
+  "effects": {
+   "powerRule": "acrobatics"
+  }
  },
  {
   "id": "acupressure",
@@ -8687,11 +8772,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sharply raises a random stat."
+  "effects": {
+   "randomStat": 2
+  }
  },
  {
   "id": "after-you",
@@ -8883,9 +8968,17 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes type based on Morpeko's Mode."
+  "effects": {
+   "formType": "morpeko",
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "aurora-veil",
@@ -9043,26 +9136,28 @@
   "priority": -3,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user first heats up its beak, and then it attacks the target. Making direct contact with the Pokémon while it's heating up its beak results in a burn."
+  "flags": [
+   "bullet"
+  ],
+  "effects": {
+   "beakBlast": true
+  }
  },
  {
   "id": "beat-up",
   "name": "Beat Up",
   "type": "dark",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Each Pokémon in user's party attacks."
+  "effects": {
+   "beatUp": true
+  }
  },
  {
   "id": "behemoth-bash",
@@ -9078,9 +9173,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Damage doubles if target is Dynamaxed."
+  "effects": {
+   "powerRule": "doubleDynamax"
+  }
  },
  {
   "id": "behemoth-blade",
@@ -9094,11 +9189,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "slicing"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Damage doubles if target is Dynamaxed."
+  "effects": {
+   "powerRule": "doubleDynamax"
+  }
  },
  {
   "id": "belch",
@@ -9112,9 +9208,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User must have consumed a Berry."
+  "effects": {
+   "precondition": "ateBerry"
+  }
  },
  {
   "id": "belly-drum",
@@ -9126,11 +9222,19 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User loses 50% of its max HP, but Attack raises to maximum."
+  "effects": {
+   "hpCost": {
+    "fraction": 0.5,
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 12
+     }
+    ]
+   }
+  }
  },
  {
   "id": "bestow",
@@ -9144,27 +9248,27 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Gives the user's held item to the target."
+  "effects": {
+   "itemMove": "bestow"
+  }
  },
  {
   "id": "bide",
   "name": "Bide",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": null,
   "pp": 10,
   "priority": 1,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "User takes damage for two turns then strikes back double."
+  "effects": {
+   "bide": true
+  }
  },
  {
   "id": "black-hole-eclipse",
@@ -9212,7 +9316,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "statChanges": [
     {
@@ -9377,9 +9483,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type."
+  "effects": {
+   "typeEdit": {
+    "mode": "lose",
+    "type": "fire"
+   }
+  }
  },
  {
   "id": "burning-bulwark",
@@ -9412,9 +9521,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits all opponents, and burns any that have had their stats boosted."
+  "effects": {
+   "statusIfBoosted": "brn"
+  }
  },
  {
   "id": "camouflage",
@@ -9477,7 +9586,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "sideMove": "spikes"
   }
@@ -9508,11 +9619,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises user's Special Defense and next Electric move's power increases."
+  "effects": {
+   "electricCharge": true
+  }
  },
  {
   "id": "chilly-reception",
@@ -9559,13 +9670,37 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises all user's stats but loses HP."
+  "effects": {
+   "hpCost": {
+    "fraction": 0.33,
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 1
+     },
+     {
+      "stat": "def",
+      "stages": 1
+     },
+     {
+      "stat": "spa",
+      "stages": 1
+     },
+     {
+      "stat": "spd",
+      "stages": 1
+     },
+     {
+      "stat": "spe",
+      "stages": 1
+     }
+    ]
+   }
+  }
  },
  {
   "id": "clangorous-soulblaze",
@@ -9737,11 +9872,13 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User changes type to become resistant to opponent's last move."
+  "effects": {
+   "typeEdit": {
+    "mode": "resist"
+   }
+  }
  },
  {
   "id": "copycat",
@@ -9771,9 +9908,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Suppresses the target's ability if the target has already moved."
+  "effects": {
+   "suppressIfMoved": true
+  }
  },
  {
   "id": "corkscrew-crash",
@@ -9803,9 +9940,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes opponent's items."
+  "effects": {
+   "itemMove": "remove"
+  }
  },
  {
   "id": "counter",
@@ -9855,9 +9992,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent's item is stolen by the user."
+  "effects": {
+   "itemMove": "steal"
+  }
  },
  {
   "id": "crafty-shield",
@@ -9869,11 +10006,11 @@
   "pp": 10,
   "priority": 3,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the Pokémon from status moves."
+  "effects": {
+   "shield": "status"
+  }
  },
  {
   "id": "crush-grip",
@@ -9905,9 +10042,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ghosts lose 50% of max HP and curse the opponent; Non-Ghosts raise Attack, Defense and lower Speed."
+  "effects": {
+   "curse": true
+  }
  },
  {
   "id": "dark-void",
@@ -9921,9 +10058,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Puts all adjacent opponents to sleep."
+  "effects": {
+   "status": {
+    "id": "slp",
+    "chance": 100
+   }
+  }
  },
  {
   "id": "defog",
@@ -10032,9 +10172,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes the abilities of the user and its teammates to that of the target."
+  "effects": {
+   "copyAbility": true
+  }
  },
  {
   "id": "doom-desire",
@@ -10048,9 +10188,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damage occurs 2 turns later."
+  "effects": {
+   "delayed": true
+  }
  },
  {
   "id": "double-iron-bash",
@@ -10087,9 +10227,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "After using this move, the user will no longer be Electric type."
+  "effects": {
+   "typeEdit": {
+    "mode": "lose",
+    "type": "electric"
+   }
+  }
  },
  {
   "id": "dragon-cheer",
@@ -10242,9 +10385,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damage doubles if opponent is Dynamaxed."
+  "effects": {
+   "powerRule": "doubleDynamax"
+  }
  },
  {
   "id": "echoed-voice",
@@ -10260,9 +10403,9 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases each turn."
+  "effects": {
+   "powerRule": "echoedVoice"
+  }
  },
  {
   "id": "eerie-spell",
@@ -10278,9 +10421,9 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage and reduces opponent's PP."
+  "effects": {
+   "disrupt": "spite"
+  }
  },
  {
   "id": "electric-terrain",
@@ -10310,9 +10453,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes the target's move to Electric type."
+  "effects": {
+   "electrify": "target"
+  }
  },
  {
   "id": "electro-ball",
@@ -10325,7 +10468,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {
    "powerRule": "userSpeed"
   }
@@ -10358,9 +10503,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot use items."
+  "effects": {
+   "itemMove": "embargo"
+  }
  },
  {
   "id": "encore",
@@ -10520,11 +10665,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents fleeing in the next turn."
+  "effects": {
+   "fairyLock": true
+  }
  },
  {
   "id": "feint",
@@ -10587,27 +10732,43 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers HP but sharply boosts Attack, Special Attack, and Speed."
+  "effects": {
+   "hpCost": {
+    "fraction": 0.5,
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 2
+     },
+     {
+      "stat": "spa",
+      "stages": 2
+     },
+     {
+      "stat": "spe",
+      "stages": 2
+     }
+    ]
+   }
+  }
  },
  {
   "id": "final-gambit",
   "name": "Final Gambit",
   "type": "fighting",
   "category": "special",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 5,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts damage equal to the user's remaining HP. User faints."
+  "effects": {
+   "userFaint": "finalGambit"
+  }
  },
  {
   "id": "fire-lash",
@@ -10646,9 +10807,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Added effects appear if combined with Grass Pledge or Water Pledge."
+  "effects": {}
  },
  {
   "id": "fishious-rend",
@@ -10714,16 +10873,17 @@
   "name": "Fling",
   "type": "dark",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power depends on held item."
+  "effects": {
+   "itemMove": "fling",
+   "powerRule": "flingItem"
+  }
  },
  {
   "id": "flip-turn",
@@ -10755,9 +10915,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user restores the target's HP by up to half of its max HP. It restores more HP when the terrain is grass."
+  "effects": {
+   "healTarget": 0.5
+  }
  },
  {
   "id": "flower-shield",
@@ -10769,11 +10929,21 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sharply raises Defense of all Grass-type Pokémon on the field."
+  "effects": {
+   "fieldBoost": {
+    "types": [
+     "grass"
+    ],
+    "stats": [
+     {
+      "stat": "def",
+      "stages": 1
+     }
+    ]
+   }
+  }
  },
  {
   "id": "flower-trick",
@@ -10805,9 +10975,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals Fighting and Flying type damage."
+  "effects": {
+   "secondType": "flying"
+  }
  },
  {
   "id": "focus-energy",
@@ -10872,9 +11042,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Resets opponent's Evasiveness, and allows Normal- and Fighting-type attacks to hit Ghosts."
+  "effects": {
+   "identify": "ghost"
+  }
  },
  {
   "id": "forests-curse",
@@ -10888,9 +11058,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Adds Grass type to opponent."
+  "effects": {
+   "typeEdit": {
+    "mode": "add",
+    "type": "grass"
+   }
+  }
  },
  {
   "id": "foul-play",
@@ -10922,9 +11095,13 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May freeze opponent. Super-effective against Water types."
+  "effects": {
+   "superAgainst": "water",
+   "status": {
+    "id": "frz",
+    "chance": 10
+   }
+  }
  },
  {
   "id": "freezy-frost",
@@ -10972,9 +11149,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases if Fusion Flare is used in the same turn."
+  "effects": {
+   "powerRule": "fusionElectric"
+  }
  },
  {
   "id": "fusion-flare",
@@ -10988,9 +11165,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases if Fusion Bolt is used in the same turn."
+  "effects": {
+   "powerRule": "fusionFire"
+  }
  },
  {
   "id": "future-sight",
@@ -11004,9 +11181,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damage occurs 2 turns later."
+  "effects": {
+   "delayed": true
+  }
  },
  {
   "id": "g-max-befuddle",
@@ -11562,11 +11739,26 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user engages its gears to raise the Attack and Sp. Atk stats of ally Pokémon with the Plus or Minus Ability."
+  "effects": {
+   "fieldBoost": {
+    "abilities": [
+     "plus",
+     "minus"
+    ],
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 1
+     },
+     {
+      "stat": "spa",
+      "stages": 1
+     }
+    ]
+   }
+  }
  },
  {
   "id": "genesis-supernova",
@@ -11594,11 +11786,31 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second."
+  "effects": {
+   "charge": {},
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spd",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "gigaton-hammer",
@@ -11658,9 +11870,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Attacks from opposing Pokémon during the next turn cannot miss and will inflict double damage."
+  "effects": {
+   "glaiveRush": true
+  }
  },
  {
   "id": "glitzy-glow",
@@ -11683,7 +11895,7 @@
   "name": "Grass Knot",
   "type": "grass",
   "category": "special",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -11692,9 +11904,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the opponent, the stronger the attack."
+  "effects": {
+   "powerRule": "targetWeight"
+  }
  },
  {
   "id": "grass-pledge",
@@ -11708,9 +11920,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Added effects appear if preceded by Water Pledge or succeeded by Fire Pledge."
+  "effects": {}
  },
  {
   "id": "grassy-glide",
@@ -11798,11 +12008,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "If the users faints after using this move, the PP for the opponent's last move is depleted."
+  "effects": {
+   "grudge": true
+  }
  },
  {
   "id": "guard-split",
@@ -11816,9 +12026,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Averages Defense and Special Defense with the target."
+  "effects": {
+   "statOverride": "splitDef"
+  }
  },
  {
   "id": "guard-swap",
@@ -11864,7 +12074,8 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "bullet"
   ],
   "effects": {
    "powerRule": "targetSpeed"
@@ -11891,16 +12102,16 @@
   "name": "Hard Press",
   "type": "steel",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "(variable power)"
+  "effects": {
+   "powerRule": "hardPress"
+  }
  },
  {
   "id": "haze",
@@ -11966,9 +12177,9 @@
   "flags": [
    "pulse"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Restores half the target's max HP."
+  "effects": {
+   "healTarget": 0.5
+  }
  },
  {
   "id": "healing-wish",
@@ -11980,11 +12191,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user faints and the next Pokémon released is fully healed."
+  "effects": {
+   "userFaint": "healingWish"
+  }
  },
  {
   "id": "heart-swap",
@@ -12007,7 +12218,7 @@
   "name": "Heat Crash",
   "type": "fire",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
@@ -12016,16 +12227,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the user, the stronger the attack."
+  "effects": {
+   "powerRule": "weightRatio"
+  }
  },
  {
   "id": "heavy-slam",
   "name": "Heavy Slam",
   "type": "steel",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
@@ -12034,9 +12245,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the user, the stronger the attack."
+  "effects": {
+   "powerRule": "weightRatio"
+  }
  },
  {
   "id": "helping-hand",
@@ -12082,9 +12293,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type and power depends on user's IVs."
+  "effects": {
+   "hiddenPower": true
+  }
  },
  {
   "id": "high-horsepower",
@@ -12205,11 +12416,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "contact",
+   "bullet"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Doubles in power each turn for 5 turns."
+  "effects": {
+   "powerRule": "rollout"
+  }
  },
  {
   "id": "ice-hammer",
@@ -12261,11 +12473,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent is unable to use moves that the user also knows."
+  "effects": {
+   "imprison": true
+  }
  },
  {
   "id": "incinerate",
@@ -12279,9 +12491,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Destroys the target's held berry."
+  "effects": {
+   "itemMove": "burnBerry"
+  }
  },
  {
   "id": "infernal-parade",
@@ -12357,11 +12569,11 @@
   "pp": 25,
   "priority": 1,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes Normal-type moves to Electric-type."
+  "effects": {
+   "electrify": "field"
+  }
  },
  {
   "id": "ivy-cudgel",
@@ -12375,9 +12587,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "High critical hit ratio. Type changes based on form."
+  "effects": {
+   "formType": "ogerpon"
+  }
  },
  {
   "id": "jaw-lock",
@@ -12410,9 +12622,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type depends on the Arceus Plate being held."
+  "effects": {
+   "itemMove": "itemType"
+  }
  },
  {
   "id": "jump-kick",
@@ -12483,9 +12695,10 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes opponent's held item for the rest of the battle."
+  "effects": {
+   "itemMove": "knock",
+   "powerRule": "knockOff"
+  }
  },
  {
   "id": "laser-focus",
@@ -12517,9 +12730,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Double power if stats were lowered during the turn."
+  "effects": {
+   "powerRule": "lashOut"
+  }
  },
  {
   "id": "last-resort",
@@ -12535,9 +12748,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Can only be used after all other moves are used."
+  "effects": {
+   "precondition": "allOthers"
+  }
  },
  {
   "id": "last-respects",
@@ -12656,7 +12869,7 @@
   "name": "Low Kick",
   "type": "fighting",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 20,
   "priority": 0,
@@ -12665,9 +12878,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The heavier the opponent, the stronger the attack."
+  "effects": {
+   "powerRule": "targetWeight"
+  }
  },
  {
   "id": "lucky-chant",
@@ -12735,11 +12948,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user faints but the next Pokémon released is fully healed."
+  "effects": {
+   "userFaint": "lunarDance"
+  }
  },
  {
   "id": "lunge",
@@ -12776,11 +12989,11 @@
   "pp": 15,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Reflects moves that cause status conditions back to the attacker."
+  "effects": {
+   "magicCoat": true
+  }
  },
  {
   "id": "magic-powder",
@@ -12810,11 +13023,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Suppresses the effects of held items for five turns."
+  "effects": {
+   "itemMove": "magicRoom"
+  }
  },
  {
   "id": "magical-torque",
@@ -12860,11 +13073,26 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Defense and Sp. Defense of Plus/Minus Pokémon."
+  "effects": {
+   "fieldBoost": {
+    "abilities": [
+     "plus",
+     "minus"
+    ],
+    "stats": [
+     {
+      "stat": "def",
+      "stages": 1
+     },
+     {
+      "stat": "spd",
+      "stages": 1
+     }
+    ]
+   }
+  }
  },
  {
   "id": "magnitude",
@@ -12955,7 +13183,7 @@
   "target": "self",
   "flags": [],
   "effects": {
-   "noop": true
+   "shield": "damage"
   }
  },
  {
@@ -13292,11 +13520,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User copies the opponent's attack with 1.5× power."
+  "effects": {
+   "meFirst": true
+  }
  },
  {
   "id": "mean-look",
@@ -13326,9 +13554,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User faints, sharply lowers opponent's Attack and Special Attack."
+  "effects": {
+   "userFaint": "memento"
+  }
  },
  {
   "id": "menacing-moonraze-maelstrom",
@@ -13415,9 +13643,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Copies the opponent's last move."
+  "effects": {
+   "mimic": true
+  }
  },
  {
   "id": "mind-blown",
@@ -13463,9 +13691,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Resets opponent's Evasiveness, removes Dark's Psychic immunity."
+  "effects": {
+   "identify": "dark"
+  }
  },
  {
   "id": "mirror-coat",
@@ -13615,25 +13843,24 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Type matches Memory item held."
+  "effects": {}
  },
  {
   "id": "natural-gift",
   "name": "Natural Gift",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 100,
   "pp": 15,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Power and type depend on the user's held berry."
+  "effects": {
+   "powerRule": "flingItem",
+   "itemMove": "naturalGift"
+  }
  },
  {
   "id": "nature-power",
@@ -13695,9 +13922,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The sleeping opponent loses 25% of its max HP each turn."
+  "effects": {
+   "nightmare": true
+  }
  },
  {
   "id": "no-retreat",
@@ -13709,11 +13936,36 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises all stats but user cannot switch out."
+  "effects": {
+   "hpCost": {
+    "fraction": 0,
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 1
+     },
+     {
+      "stat": "def",
+      "stages": 1
+     },
+     {
+      "stat": "spa",
+      "stages": 1
+     },
+     {
+      "stat": "spd",
+      "stages": 1
+     },
+     {
+      "stat": "spe",
+      "stages": 1
+     }
+    ],
+    "trapSelf": true
+   }
+  }
  },
  {
   "id": "noxious-torque",
@@ -13798,9 +14050,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Defense and Special Defense every turn, and they cannot flee or switch out."
+  "effects": {
+   "octolock": true
+  }
  },
  {
   "id": "odor-sleuth",
@@ -13814,9 +14066,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Resets opponent's Evasiveness, and allows Normal- and Fighting-type attacks to hit Ghosts."
+  "effects": {
+   "identify": "ghost"
+  }
  },
  {
   "id": "order-up",
@@ -13830,9 +14082,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosts Attack/Defense/Speed depending on ally Tatsugiri."
+  "effects": {}
  },
  {
   "id": "pain-split",
@@ -13979,9 +14229,9 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes Normal-type moves to Electric-type moves."
+  "effects": {
+   "electrify": "field"
+  }
  },
  {
   "id": "pluck",
@@ -13997,9 +14247,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "If the opponent is holding a berry, its effect is stolen by user."
+  "effects": {
+   "itemMove": "pluckBerry"
+  }
  },
  {
   "id": "poison-fang",
@@ -14034,7 +14284,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "bullet"
+  ],
   "effects": {}
  },
  {
@@ -14049,9 +14301,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Fails if the target doesn’t have an item."
+  "effects": {
+   "precondition": "targetHasItem"
+  }
  },
  {
   "id": "population-bomb",
@@ -14064,7 +14316,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "hits": [
     10,
@@ -14086,9 +14340,9 @@
   "flags": [
    "powder"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Damages Pokémon using Fire type moves."
+  "effects": {
+   "powder": true
+  }
  },
  {
   "id": "power-shift",
@@ -14100,11 +14354,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Switches Attack and Defense stats."
+  "effects": {
+   "statOverride": "swapAtkDef"
+  }
  },
  {
   "id": "power-split",
@@ -14118,9 +14372,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Averages Attack and Special Attack with the target."
+  "effects": {
+   "statOverride": "splitAtk"
+  }
  },
  {
   "id": "power-swap",
@@ -14148,11 +14402,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's own Attack and Defense switch."
+  "effects": {
+   "statOverride": "swapAtkDef"
+  }
  },
  {
   "id": "power-trip",
@@ -14203,16 +14457,16 @@
   "name": "Present",
   "type": "normal",
   "category": "physical",
-  "power": null,
+  "power": 1,
   "accuracy": 90,
   "pp": 15,
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Either deals damage or heals."
+  "effects": {
+   "powerRule": "present"
+  }
  },
  {
   "id": "prismatic-laser",
@@ -14226,9 +14480,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user shoots powerful lasers using the power of a prism. The user can't move on the next turn."
+  "effects": {
+   "recharge": true
+  }
  },
  {
   "id": "psyblade",
@@ -14241,7 +14495,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "powerRule": "electricTerrainBoost"
   }
@@ -14421,11 +14677,11 @@
   "pp": 15,
   "priority": 3,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Protects the user's team from high-priority moves."
+  "effects": {
+   "shield": "priority"
+  }
  },
  {
   "id": "rage",
@@ -14441,9 +14697,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises user's Attack when hit."
+  "effects": {
+   "rage": true
+  }
  },
  {
   "id": "rage-fist",
@@ -14457,9 +14713,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The more times the user has been hit by attacks, the greater the move's power."
+  "effects": {
+   "powerRule": "rageFist"
+  }
  },
  {
   "id": "rage-powder",
@@ -14491,9 +14747,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type depends on the user’s form. Breaks through Reflect and Light Screen barriers."
+  "effects": {
+   "formType": "tauros"
+  }
  },
  {
   "id": "rapid-spin",
@@ -14531,11 +14787,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's used hold item is restored."
+  "effects": {
+   "itemMove": "recycle"
+  }
  },
  {
   "id": "reflect",
@@ -14563,11 +14819,13 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User becomes the target's type."
+  "effects": {
+   "typeEdit": {
+    "mode": "reflect"
+   }
+  }
  },
  {
   "id": "refresh",
@@ -14636,9 +14894,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Inflicts double damage if a teammate fainted on the last turn."
+  "effects": {
+   "powerRule": "retaliate"
+  }
  },
  {
   "id": "return",
@@ -14670,9 +14928,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type changes based on Oricorio's form."
+  "effects": {
+   "formType": "oricorio"
+  }
  },
  {
   "id": "revenge",
@@ -14702,11 +14960,11 @@
   "pp": 1,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Revives a fainted party Pokémon to half HP."
+  "effects": {
+   "revivalBlessing": true
+  }
  },
  {
   "id": "rising-voltage",
@@ -14772,9 +15030,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Doubles in power each turn for 5 turns."
+  "effects": {
+   "powerRule": "rollout"
+  }
  },
  {
   "id": "roost",
@@ -14786,11 +15044,11 @@
   "pp": 5,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers half of its max HP and loses the Flying type temporarily."
+  "effects": {
+   "roost": true
+  }
  },
  {
   "id": "rototiller",
@@ -14802,11 +15060,25 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Attack and Special Attack of Grass-types."
+  "effects": {
+   "fieldBoost": {
+    "types": [
+     "grass"
+    ],
+    "stats": [
+     {
+      "stat": "atk",
+      "stages": 1
+     },
+     {
+      "stat": "spa",
+      "stages": 1
+     }
+    ]
+   }
+  }
  },
  {
   "id": "round",
@@ -14822,9 +15094,7 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Power increases if teammates use it in the same turn."
+  "effects": {}
  },
  {
   "id": "ruination",
@@ -14870,9 +15140,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage each turn; Steel and Water types are more affected."
+  "effects": {
+   "saltCure": true
+  }
  },
  {
   "id": "sandsear-storm",
@@ -14885,7 +15155,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "brn",
@@ -14905,9 +15177,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Drains HP from opponent each turn."
+  "effects": {
+   "seed": true
+  }
  },
  {
   "id": "savage-spin-out",
@@ -15009,9 +15281,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Effects of the attack vary with the location."
+  "effects": {
+   "terrainSecondary": true
+  }
  },
  {
   "id": "shattered-psyche",
@@ -15039,11 +15311,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Creates a substitute, then swaps places with a party Pokémon in waiting."
+  "effects": {
+   "shedTail": true
+  }
  },
  {
   "id": "shell-side-arm",
@@ -15057,9 +15329,13 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May poison opponent. Inflicts either Special or Physical damage, whichever is better."
+  "effects": {
+   "autoCategory": true,
+   "status": {
+    "id": "psn",
+    "chance": 20
+   }
+  }
  },
  {
   "id": "shell-smash",
@@ -15185,9 +15461,40 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May raise all stats of user at once."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 10
+    }
+   ]
+  }
  },
  {
   "id": "simple-beam",
@@ -15292,9 +15599,12 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Takes opponent into the air on first turn, drops them on second turn."
+  "effects": {
+   "charge": {
+    "semi": "air",
+    "grab": true
+   }
+  }
  },
  {
   "id": "sleep-talk",
@@ -15306,11 +15616,12 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User performs one of its own moves while sleeping."
+  "effects": {
+   "sleepTalk": true,
+   "asleepOnly": true
+  }
  },
  {
   "id": "smack-down",
@@ -15372,11 +15683,11 @@
   "pp": 10,
   "priority": 4,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Steals the effects of the opponent's next move."
+  "effects": {
+   "snatch": true
+  }
  },
  {
   "id": "snipe-shot",
@@ -15406,9 +15717,10 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Can only be used if asleep. May cause flinching."
+  "effects": {
+   "asleepOnly": true,
+   "flinchChance": 30
+  }
  },
  {
   "id": "soak",
@@ -15474,9 +15786,9 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Heals the burns of its target."
+  "effects": {
+   "cureTarget": "brn"
+  }
  },
  {
   "id": "sparkly-swirl",
@@ -15508,9 +15820,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user hides in the target's shadow, steals the target's stat boosts, and then attacks."
+  "effects": {
+   "stealBoosts": true
+  }
  },
  {
   "id": "speed-swap",
@@ -15524,9 +15836,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user exchanges Speed stats with the target."
+  "effects": {
+   "statOverride": "swapSpe"
+  }
  },
  {
   "id": "spicy-extract",
@@ -15742,10 +16054,12 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Boosts user's stats in Incarnate Forme, or lowers opponent's stats in Therian Forme."
+  "flags": [
+   "wind"
+  ],
+  "effects": {
+   "formStorm": true
+  }
  },
  {
   "id": "stealth-rock",
@@ -15859,9 +16173,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Driven by frustration, the user attacks the target. If the user's previous move has failed, the power of this move doubles."
+  "effects": {
+   "powerRule": "stompingTantrum"
+  }
  },
  {
   "id": "stone-axe",
@@ -15874,7 +16188,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "sideMove": "stealthRock"
   }
@@ -15921,11 +16237,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user eats its held Berry, then sharply raises its Defense stat."
+  "effects": {
+   "itemMove": "stuffCheeks"
+  }
  },
  {
   "id": "substitute",
@@ -16106,9 +16422,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Swaps held items with the opponent."
+  "effects": {
+   "itemMove": "swap"
+  }
  },
  {
   "id": "synchronoise",
@@ -16122,9 +16438,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits any Pokémon that shares a type with the user."
+  "effects": {
+   "synchronoise": true
+  }
  },
  {
   "id": "syrup-bomb",
@@ -16137,10 +16453,20 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Speed each turn for 3 turns."
+  "flags": [
+   "bullet"
+  ],
+  "effects": {
+   "syrupBomb": true,
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "tachyon-cutter",
@@ -16153,7 +16479,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "slicing"
+  ],
   "effects": {
    "hits": [
     2,
@@ -16172,7 +16500,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "self",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "sideMove": "tailwind"
   }
@@ -16219,9 +16549,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers the opponent's Speed and makes them weaker to Fire-type moves."
+  "effects": {
+   "tarShot": true
+  }
  },
  {
   "id": "taunt",
@@ -16280,9 +16610,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Forces all Pokémon on the field to eat their berries."
+  "effects": {
+   "itemMove": "teatime"
+  }
  },
  {
   "id": "techno-blast",
@@ -16296,9 +16626,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Type depends on the Drive being held."
+  "effects": {
+   "itemMove": "itemType"
+  }
  },
  {
   "id": "tectonic-rage",
@@ -16326,11 +16656,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses all Pokémon."
+  "effects": {
+   "confuseBoth": true
+  }
  },
  {
   "id": "telekinesis",
@@ -16344,9 +16674,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores opponent's Evasiveness for three turns, add Ground immunity."
+  "effects": {
+   "telekinesis": true
+  }
  },
  {
   "id": "teleport",
@@ -16376,9 +16706,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Changes type when the user has Terastallized."
+  "effects": {
+   "teraBlast": true
+  }
  },
  {
   "id": "terrain-pulse",
@@ -16394,9 +16724,10 @@
   "flags": [
    "pulse"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Type and power change depending on the Terrain in effect."
+  "effects": {
+   "terrainPulse": true,
+   "powerRule": "terrainPulse"
+  }
  },
  {
   "id": "thief",
@@ -16412,9 +16743,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Also steals opponent's held item."
+  "effects": {
+   "itemMove": "steal"
+  }
  },
  {
   "id": "thousand-arrows",
@@ -16462,9 +16793,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents use of sound moves for two turns."
+  "effects": {
+   "disrupt": "throatChop"
+  }
  },
  {
   "id": "thunder-cage",
@@ -16478,9 +16809,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Deals damage and traps opponent, damaging them for 4-5 turns."
+  "effects": {
+   "bind": true
+  }
  },
  {
   "id": "thunderclap",
@@ -16572,9 +16903,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Badly poisons opponent."
+  "effects": {
+   "toxic": true
+  }
  },
  {
   "id": "toxic-spikes",
@@ -16631,9 +16962,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User takes on the form and attacks of the opponent."
+  "effects": {
+   "transform": true
+  }
  },
  {
   "id": "tri-attack",
@@ -16670,9 +17001,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Swaps held items with the opponent."
+  "effects": {
+   "itemMove": "swap"
+  }
  },
  {
   "id": "trick-room",
@@ -16702,9 +17033,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Adds Ghost type to opponent."
+  "effects": {
+   "typeEdit": {
+    "mode": "add",
+    "type": "ghost"
+   }
+  }
  },
  {
   "id": "triple-arrows",
@@ -16798,7 +17132,7 @@
   "name": "Trump Card",
   "type": "normal",
   "category": "special",
-  "power": null,
+  "power": 1,
   "accuracy": null,
   "pp": 5,
   "priority": 0,
@@ -16807,9 +17141,9 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The lower the PP, the higher the power."
+  "effects": {
+   "powerRule": "trumpCard"
+  }
  },
  {
   "id": "twinkle-tackle",
@@ -16857,9 +17191,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Strikes before a target's priority move."
+  "effects": {
+   "upperHand": true,
+   "flinchChance": 100
+  }
  },
  {
   "id": "uproar",
@@ -16875,9 +17210,9 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks for 3 turns and prevents sleep."
+  "effects": {
+   "uproar": true
+  }
  },
  {
   "id": "veevee-volley",
@@ -16909,9 +17244,23 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers poisoned opponent's Special Attack and Speed."
+  "effects": {
+   "needsStatus": "psn",
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "venoshock",
@@ -17028,9 +17377,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Added effects appear if preceded by Fire Pledge or succeeded by Grass Pledge."
+  "effects": {}
  },
  {
   "id": "water-sport",
@@ -17075,7 +17422,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "forceSwitch": true
   }
@@ -17145,7 +17494,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "wind"
+  ],
   "effects": {
    "status": {
     "id": "par",
@@ -17179,11 +17530,11 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Swaps every Pokémon's Defense and Special Defense for 5 turns."
+  "effects": {
+   "wonderRoom": true
+  }
  },
  {
   "id": "worry-seed",

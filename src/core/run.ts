@@ -12,7 +12,8 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
-import { captureMultiplier, friendshipMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
+import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
+import { encounterWeightPerk, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -34,12 +35,14 @@ import {
   planTrainer,
   planWild,
   type TrainerPlan,
+  rollLegendaryWild,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
-import { createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat } from './pokemon';
+import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
+import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
@@ -86,6 +89,8 @@ import {
 } from './mapItems';
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
+import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
+import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
@@ -102,12 +107,14 @@ import {
 } from './story/hooks';
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
+import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { disabledByRules, makeRules, startScale, wantsCheckpoint, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
+import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
 
 export interface NewRunOptions {
@@ -168,12 +175,13 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     disabledMechanics: disabledByRules(rules),
     rules,
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
-    attributeModifiers: zeroAttributes(),
+    attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
+    totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -214,14 +222,14 @@ function assertPhase(run: RunState, ...phases: RunState['phase'][]): void {
   if (!phases.includes(run.phase)) throw new Error(`Action needs phase "${phases.join('" or "')}" but run is in "${run.phase}"`);
 }
 
-function nextUid(run: RunState, prefix: string): string {
+export function nextUid(run: RunState, prefix: string): string {
   const uid = `${prefix}${run.nextUid}`;
   run.nextUid += 1;
   return uid;
 }
 
 /** A new Pokémon for this run; its ability comes from the run seed and its uid. */
-function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
+export function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
   const uid = nextUid(run, prefix);
   // Difficulty: every enemy's level (the rules were fixed when the run started).
   const shown = prefix === 'e' ? Math.max(1, Math.min(100, level + run.rules.enemyLevelBonus)) : level;
@@ -237,8 +245,21 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [newMon(content, run, speciesId, content.balance.starterLevel, 'p')];
+  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(getArchetype(content, run.archetypeId).modifiers)), 'p')];
   run.party[0]!.friendship = content.balance.friendship.starter;
+  const perks = getArchetype(content, run.archetypeId).modifiers;
+  const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
+  if (signature && !run.party[0]!.moves.some((m) => m.id === signature)) {
+    const starter = run.party[0]!;
+    const slot = { id: signature, pp: content.moves.get(signature)!.pp };
+    if (starter.moves.length < 4) starter.moves.push(slot);
+    else {
+      // Replace the weakest move (status moves first).
+      const power = (id: string) => content.moves.get(id)?.power ?? 0;
+      const weakest = starter.moves.reduce((w, m, i) => (power(m.id) < power(starter.moves[w]!.id) ? i : w), 0);
+      starter.moves[weakest] = slot;
+    }
+  }
   run.log.starterUid = run.party[0]!.uid;
   enterStage(content, run, 0);
   recordChanges(content, current, run, 'level');
@@ -293,9 +314,11 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   startStageEffects(run);
   simulateRivalWorld(content, run);
-  // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map.
+  // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
+  addEventStops(content, run);
   placeRaidDens(content, run);
+  placeTotem(content, run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -323,10 +346,25 @@ function enterLeague(content: Content, run: RunState): void {
     visited: [],
   };
   startStageEffects(run);
+  syncHpPerks(content, getArchetype(content, run.archetypeId).modifiers, run.party);
   healParty(content, run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
+}
+
+/** Moves every party Pokémon up or down by whole levels (a trainer perk); experience follows the level. */
+function shiftPartyLevels(content: Content, run: RunState, levels: number): void {
+  if (levels === 0) return;
+  for (const mon of run.party) {
+    if (levels > 0) {
+      addLevels(content, mon, levels, runLevelCap(content, run));
+      continue;
+    }
+    mon.level = Math.max(1, mon.level + levels);
+    mon.xp = xpForLevel(getSpecies(content, mon.speciesId).growthRate, mon.level);
+    mon.hp = Math.min(mon.hp, maxHp(content, mon));
+  }
 }
 
 /** Starts the next region at its first stage, or ends the run in victory after the last one (mutates `run`). */
@@ -338,11 +376,27 @@ function enterNextRegion(content: Content, run: RunState): void {
   }
   run.regionIndex += 1;
   run.log.charmUsedInRegion = false;
+  shiftPartyLevels(content, run, regionLevelOffset(getArchetype(content, run.archetypeId).modifiers));
   // Pass Orbs turn into money in each new region.
   const orbMoney = regionMoneyFromItems(content, run);
   run.money += orbMoney;
   count(run, 'moneyEarned', orbMoney);
   enterStage(content, run, 0);
+}
+
+/** Pokémon released so far this run (caught ones turned into candies). */
+export function releasesUsed(run: Pick<RunState, 'log'>): number {
+  return run.log.counters.caughtToCandies ?? 0;
+}
+
+/** Whether the trainer's release limit (Ash) has been reached. */
+export function releaseLimitReached(content: Content, run: Pick<RunState, 'log' | 'archetypeId'>): boolean {
+  const limit = releaseLimit(getArchetype(content, run.archetypeId).modifiers);
+  return limit !== null && releasesUsed(run) >= limit;
+}
+
+function assertCanRelease(content: Content, run: RunState): void {
+  if (releaseLimitReached(content, run)) throw new Error('This trainer can only release a few Pokémon per run, and you have used them all');
 }
 
 function requireStage(run: RunState): StageState {
@@ -553,7 +607,7 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
   }
   const gym = stage.map.nodes.find((n) => n.kind === 'gym');
   const teamItem = perks('gymTeam') ?? perks('gymAce');
-  const teamFrom = teamItem ? source('gymTeam', teamItem) : source('gymTeam', null);
+  const teamFrom = teamItem ? source('gymTeam', teamItem) : (source('gymTeam', null) ?? (eventGymPreview(run) ? { itemId: null, source: 'Your scouting' } : null));
   if (gym && teamFrom) {
     const campaign = getCampaign(content, run.campaignId);
     const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
@@ -706,16 +760,96 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
   return run;
 }
 
+/** Totem territory preview. */
+export function totemPreview(content: Content, current: RunState, sideId: string): TotemPreview {
+  const { node, side } = totemDen(current, sideId);
+  const def = getTotem(content, side.totemId!);
+  const { speciesId, level } = totemBoss(content, current, def, node.id + sideId);
+  return {
+    id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, aura: def.aura.text,
+    environment: def.environment?.text ?? null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
+  };
+}
+
+function totemDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
+  const stage = requireStage(run);
+  if (stage.current === null) throw new Error('Choose a node first');
+  const node = findNode(stage.map, stage.current);
+  const side = node.sides.find((x) => x.id === sideId && x.kind === 'totem' && x.totemId);
+  if (!side) throw new Error(`No Totem territory "${sideId}" here`);
+  return { node, side };
+}
+
+function totemBoss(content: Content, run: RunState, def: TotemDef, key: string): { speciesId: string; level: number } {
+  const stage = requireStage(run);
+  const campaign = getCampaign(content, run.campaignId);
+  const scale = levelScale(content, campaign, run.regionIndex, stage.index, campaign.columns);
+  return { speciesId: totemSpecies(def, run, key), level: totemLevel(def, scale.end, scale.cap) };
+}
+
+/** Starts the Totem fight. The territory is used up at once, so a reload can't repeat it or its rewards. */
+export function enterTotem(content: Content, current: RunState, sideId: string): RunState {
+  assertPhase(current, 'map');
+  const { node, side } = totemDen(current, sideId);
+  if (side.used) throw new Error('This Totem has already been fought');
+  const def = getTotem(content, side.totemId!);
+  const activeIndex = current.party.findIndex((p) => p.hp > 0);
+  if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
+  const run = structuredClone(current);
+  totemDen(run, sideId).side.used = true;
+  const { speciesId, level } = totemBoss(content, run, def, node.id + sideId);
+  const boss = newMon(content, run, speciesId, level, 'e');
+  applyTotemHp(def, boss);
+  boss.hp = maxHp(content, boss);
+  run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
+  run.battle.ai = 0.6;
+  run.battle.totem = freshTotemBattle(def, boss.uid);
+  run.totems.entered += 1;
+  discover(run, boss.speciesId, false);
+  run.phase = 'battle';
+  recordBattleStarted(content, run);
+  return run;
+}
+
+/** Totem victory: money, items, draft choices, a rare Pokémon, an unlock and research (once: the battle is cleared right after). */
+function claimTotemRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
+  const def = getTotem(content, battle.totem!.id);
+  const totem = battle.enemyTeam.find((m) => m.uid === battle.totem!.uid) ?? currentEnemy(battle);
+  const money = def.rewards.moneyPerLevel * totem.level;
+  run.money += money;
+  count(run, 'moneyEarned', money);
+  const rng = new Rng(hashSeed(`${run.seed}::totem-reward::${def.id}:${run.encountersCompleted}`));
+  const items = def.rewards.items.filter((i) => rng.chance(i.chance)).map((i) => i.item);
+  const rare = def.rewards.rareJoin;
+  if (rare && rng.chance(rare.chance)) {
+    const mon = newMon(content, run, rare.species, Math.max(2, totem.level - 2), 'p');
+    count(run, 'pokemonCaught');
+    discover(run, mon.speciesId, true);
+    run.pending.unshift({ kind: 'caught', mon });
+  }
+  run.totems.won += 1;
+  run.totems.done.push(def.id);
+  run.totems.research += def.rewards.research;
+  if (def.rewards.unlock && !run.totems.unlocks.includes(def.rewards.unlock)) run.totems.unlocks.push(def.rewards.unlock);
+  return { items, draftExtra: def.rewards.draftExtra, money };
+}
+
 /** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
 function failRaid(content: Content, run: RunState): void {
-  const raidId = run.battle!.raid!.id;
-  const frac = content.raids.failureHealFraction;
+  const battle = run.battle!;
+  const raidId = battle.raid?.id ?? battle.totem!.id;
+  const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
   for (const mon of run.party) {
     mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
     mon.status = null;
   }
-  run.raids.lost += 1;
-  run.raids.done.push(raidId);
+  if (battle.totem) {
+    run.totems.lost += 1;
+    run.totems.done.push(raidId);
+  } else {
+    run.raids.lost += 1;
+    run.raids.done.push(raidId);
+  }
   run.battle = null;
   run.phase = 'map';
 }
@@ -770,7 +904,9 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
       const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
       return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
     });
-    const speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    let speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
+    if (legendary) speciesId = legendary;
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -807,9 +943,12 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const rivalBack = rule && !back ? waitingRival(run) : null;
     let rivalNote: string | null = null;
+    let trainingIndex = -1;
     if (rule && rivalBack) {
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
-      plan = ret.plan;
+      const trained = withTrainingEvolution(content, ret.plan.members);
+      plan = { ...ret.plan, members: trained.members };
+      trainingIndex = trained.index;
       rivalNote = ret.note;
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
@@ -834,6 +973,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
@@ -859,6 +999,8 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal' && side.used) throw new Error('This healing stop has already been used');
   if (side.kind === 'fish') throw new Error('Choose a Pokémon to fish for (fishingOffer, then fish)');
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
+  if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
+  if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -886,7 +1028,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   return { run, message: 'Welcome to the shop!' };
 }
 
-function healParty(content: Content, run: RunState): void {
+export function healParty(content: Content, run: RunState): void {
   for (const mon of run.party) {
     mon.hp = maxHp(content, mon);
     mon.status = null;
@@ -923,7 +1065,7 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item) * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
+  return Math.round(entry.price * priceMultiplier(getArchetype(content, run.archetypeId), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
 }
 
 /** Buys one of an item at the shop. */
@@ -978,6 +1120,8 @@ export interface BattleEndResult {
   badge: string | null;
   /** The region's id when this win beat its champion. */
   regionCleared: string | null;
+  /** What an event battle you won paid out, in words. */
+  eventRewards: string[];
   /** True when this win beat the last champion and so won the run. */
   victory: boolean;
 }
@@ -1001,6 +1145,7 @@ export interface TurnResult {
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
 function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rng, hyperRng?: Rng): BattleContext {
   const archetype = getArchetype(content, run.archetypeId);
+  syncHpPerks(content, archetype.modifiers, run.party);
   const attributes = runAttributeEffects(content, run);
   return {
     content,
@@ -1012,6 +1157,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
+    perks: archetype.modifiers,
     attributes,
     disabledMechanics: run.disabledMechanics,
     hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
@@ -1066,12 +1212,15 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   }
 
   const events = awardExperience(content, run, engineEvents);
+  // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
+  const evolved = midBattleEvolution(content, run);
+  if (evolved) events.push(evolved);
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
-  const drama = planDrama(content, run, current.battle!, engineEvents, dialogue);
+  const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
-    revertTransformations(content, battle, run.party);
+    revertTransformations(content, battle, run.party, getArchetype(content, run.archetypeId).modifiers);
     for (const mon of run.party) endHeldBattle(mon);
   }
 
@@ -1082,7 +1231,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     recordChanges(content, current, run, 'battle');
     return { run, events, end, defeated: false, cues, drama };
   }
-  if (battle.outcome === 'lose' && battle.raid) {
+  if (battle.outcome === 'lose' && (battle.raid || battle.totem)) {
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
@@ -1144,6 +1293,8 @@ function countAttributeGrowth(content: Content, run: RunState, events: BattleEve
 function awardExperience(content: Content, run: RunState, events: BattleEvent[]): RunEvent[] {
   const battle = run.battle!;
   const effects = runAttributeEffects(content, run);
+  const archetype = getArchetype(content, run.archetypeId);
+  const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
   const multiplier = xpMultiplier(getArchetype(content, run.archetypeId)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
@@ -1170,7 +1321,9 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       // Teachy TV: Pokémon below the lead's level catch up faster.
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
       // Macho Brace: more EXP for its holder.
-      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * (1 + catchUp / 100) * expMultiplier(content, mon));
+      const monSpecies = getSpecies(content, mon.speciesId);
+      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle });
+      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const amount = participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100);
       if (amount <= 0) continue;
       const result = gainXp(content, mon, amount, runLevelCap(content, run));
@@ -1205,8 +1358,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   } else if (classId === CHAMPION_CLASS) {
     base = money.championPerLevel * topLevel;
   } else if (battle.kind === 'trainer' && battle.trainer) {
-    const trainerClass = content.trainers.get(battle.trainer.classId)!;
-    base = trainerClass.moneyPerLevel * topLevel;
+    // An event's trainer (no trainer class) pays the events' rate.
+    base = (content.trainers.get(battle.trainer.classId)?.moneyPerLevel ?? content.balance.events.trainerMoneyPerLevel) * topLevel;
   } else {
     base = content.balance.money.wildPerEnemyLevel * currentEnemy(battle).level;
   }
@@ -1239,7 +1392,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'win') {
     const { perBattleWon, perBossWon } = content.balance.friendship;
     const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
-    const gainMultiplier = runAttributeEffects(content, run).friendship * friendshipMultiplier(getArchetype(content, run.archetypeId));
+    const gainMultiplier = runAttributeEffects(content, run).friendship;
     for (const mon of run.party) {
       if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
     }
@@ -1247,7 +1400,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of run.party) {
-    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex])) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(getArchetype(content, run.archetypeId).modifiers))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
@@ -1257,7 +1410,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.pending = [...caughtPending, ...run.pending];
 
   const outcome = battle.outcome as 'win' | 'caught';
-  const raidWin = battle.raid && outcome === 'win' ? claimRaidRewards(content, run, battle) : null;
+  const raidWin = battle.raid && outcome === 'win' ? claimRaidRewards(content, run, battle) : battle.totem && outcome === 'win' ? claimTotemRewards(content, run, battle) : null;
   if (raidWin) {
     itemsFoundByRaid.push(...raidWin.items);
     moneyGained += raidWin.money;
@@ -1338,10 +1491,16 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     run.pending.splice(caughtPending.length, 0, { kind: 'reunion', mon, hallOfFame: reunion.mon.hallOfFame });
     count(run, 'reunions');
   }
-  // A fished Pokémon is an extra catch: no reward draft after it.
-  run.afterDecisions = battle.fishing ? 'map' : 'reward';
+  // A veteran may offer to mentor a younger teammate.
+  graduateMentorships(content, run);
+  const mentorOffer = !run.victory ? planMentorship(content, run) : null;
+  if (mentorOffer) run.pending.push({ kind: 'mentorship', ...mentorOffer });
+  // An event battle you won pays its own rewards.
+  const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
+  // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
+  run.afterDecisions = battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards };
 }
 
 /**
@@ -1362,7 +1521,7 @@ function prunePending(run: RunState): void {
 }
 
 /** Moves on once no decisions are pending: to the reward draft, or to the next battle. */
-function continueAfterDecisions(content: Content, run: RunState): void {
+export function continueAfterDecisions(content: Content, run: RunState): void {
   prunePending(run);
   if (run.pending.length > 0) {
     run.phase = 'decision';
@@ -1459,7 +1618,8 @@ export type DecisionChoice =
   | { kind: 'release' }
   | { kind: 'keepsake' }
   | { kind: 'teachMove'; moveIndex: number }
-  | { kind: 'ppUpMove'; moveIndex: number };
+  | { kind: 'ppUpMove'; moveIndex: number }
+  | { kind: 'mentor'; accept: boolean };
 
 export interface DecisionResult {
   run: RunState;
@@ -1505,6 +1665,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       count(run, 'caughtKept');
       message = `${speciesName(content, old.speciesId)} left the party. ${name} joined!`;
     } else if (choice.kind === 'release') {
+      assertCanRelease(content, run);
       const candies = candiesForRelease(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);
@@ -1536,6 +1697,9 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else {
       throw new Error('Choose what to do with the past Pokémon');
     }
+  } else if (decision.kind === 'mentorship') {
+    if (choice.kind !== 'mentor') throw new Error('Accept or decline the mentorship');
+    message = answerMentorship(content, run, decision, choice.accept);
   } else if (decision.kind === 'teachMove') {
     const mon = run.party.find((p) => p.uid === decision.uid);
     if (!mon) {

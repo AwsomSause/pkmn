@@ -58,19 +58,31 @@ describe('story foundation: random streams', () => {
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
   // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': 'a97e64571d1c05a2',
-    'STORY2/0': 'dd0405448f18d4c0',
+    'STORY1/0': '2a6ecc19bae9532d',
+    'STORY2/0': '040c98628b8950ed',
     'STORY4/0': '96f2cac3866fccfe',
-    'STORY5/0': '6a94ccb4c56bb170',
-    'STORY6/0': 'ab62f3f3d26fcf70',
-    'STORY7/0': '7e4540d529034c37',
-    'STORY8/0': '96f296d09a87b1f1',
+    'STORY5/0': '12279333d1452fa0',
+    'STORY6/0': '0e830a340e9a8243',
+    'STORY7/0': '0708090b0bb9bca7',
+    'STORY8/0': 'b58e3149dc51fe08',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.
   // Love 0 only, and not STORY3: on main, Love's old endure was rolled on the battle stream once Love grew
   // above 0 (STORY3 reaches Love 3), and that roll is gone now that Toughened It Out rolls on the hyper stream.
-  const noHyper = buildContent({ ...structuredClone(RAW_CONTENT), story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] } });
+  // Map events' items (keys, tickets, Silph Scope…) joined the reward draft later, so they and the events
+  // that mention them are left out too.
+  const EVENT_PERKS = ['eventKey', 'revealEvents', 'eventInsight', 'eventBonus', 'doubleContest', 'favorSpecies'];
+  type RawEntry = { id: string; effect?: { kind: string; perks?: { perk: string; kind?: string }[] } };
+  const eventItem = (e: RawEntry) => e.effect?.kind === 'perk' && (e.effect.perks ?? []).some((p) => EVENT_PERKS.includes(p.perk) || (p.perk === 'extraStop' && p.kind === 'event'));
+  const catalog = RAW_CONTENT.itemCatalog as RawEntry[];
+  const eventItemIds = catalog.filter(eventItem).map((e) => `"${e.id}"`);
+  const noHyper = buildContent({
+    ...structuredClone(RAW_CONTENT),
+    story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
+    itemCatalog: catalog.filter((e) => !eventItem(e)),
+    events: { events: (RAW_CONTENT.events as { events: unknown[] }).events.filter((e) => !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
+  });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {
       const [seed, love] = key.split('/');

@@ -14,8 +14,11 @@
 // it is in battle.
 
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
+import type { Perks } from '../archetypes';
 import { calcStats, getSpecies } from '../pokemon';
+import { statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
 import type { Rng } from '../rng';
+import { freshHeldState } from '../state';
 import type { BattleState, HeldState, PokemonInstance, Stages, Volatile } from '../state';
 import { clampStage } from './damage';
 
@@ -36,6 +39,8 @@ export interface HeldContext {
   rng: Rng;
   /** The player's team items (run.passives): Plates count for every team member. */
   teamItems?: Record<string, number>;
+  /** The trainer's perks (Trainers.md): stat multipliers for the player's side. */
+  perks?: Perks;
 }
 
 /** What happened, for the battle text. */
@@ -86,12 +91,58 @@ export interface ActiveHook {
 }
 
 function stateOf(battle: BattleState): HeldState {
-  battle.held ??= { used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {} };
+  battle.held ??= freshHeldState();
   return battle.held;
 }
 
 /** Every hook on this Pokémon: its own held items, plus the team items for the player's side. */
-export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): ActiveHook[] {
+/** What the Pokémon holds right now: its items, less any lost this battle, plus any it took; nothing under Embargo or Magic Room. */
+export function effectiveHeld(ctx: { battle?: BattleState }, mon: PokemonInstance): Record<string, number> {
+  const h = ctx.battle?.held;
+  if (!h) return mon.held ?? {};
+  if ((h.embargo[mon.uid] ?? 0) > 0 || h.magicRoom > 0) return {};
+  const out: Record<string, number> = { ...(mon.held ?? {}) };
+  for (const id of h.lost[mon.uid] ?? []) delete out[id];
+  for (const [id, n] of Object.entries(h.gained[mon.uid] ?? {})) if (n > 0) out[id] = (out[id] ?? 0) + n;
+  return out;
+}
+
+/** Every item the Pokémon carries, ignoring Embargo (for moves that take or swap items). */
+export function carriedItems(ctx: { battle?: BattleState }, mon: PokemonInstance): Record<string, number> {
+  const h = ctx.battle?.held;
+  const out: Record<string, number> = { ...(mon.held ?? {}) };
+  if (!h) return out;
+  for (const id of h.lost[mon.uid] ?? []) delete out[id];
+  for (const [id, n] of Object.entries(h.gained[mon.uid] ?? {})) if (n > 0) out[id] = (out[id] ?? 0) + n;
+  return out;
+}
+
+/** Takes an item away for the rest of the battle; returns it to a taker if given. */
+export function takeItem(ctx: { battle: BattleState }, from: PokemonInstance, itemId: string, to?: PokemonInstance): void {
+  const h = stateOf(ctx.battle);
+  const gained = h.gained[from.uid];
+  if (gained?.[itemId]) {
+    gained[itemId]! -= 1;
+  } else {
+    h.lost[from.uid] = [...(h.lost[from.uid] ?? []), itemId];
+  }
+  if (to) h.gained[to.uid] = { ...h.gained[to.uid], [itemId]: (h.gained[to.uid]?.[itemId] ?? 0) + 1 };
+}
+
+export function setEmbargo(battle: BattleState, uid: string, turns: number): void {
+  stateOf(battle).embargo[uid] = turns;
+}
+export function setMagicRoom(battle: BattleState, turns: number): void {
+  stateOf(battle).magicRoom = turns;
+}
+/** End of turn: Embargo and Magic Room tick down. */
+export function tickItemRooms(battle: BattleState): void {
+  const h = stateOf(battle);
+  for (const k of Object.keys(h.embargo)) if (h.embargo[k]! > 0) h.embargo[k]! -= 1;
+  if (h.magicRoom > 0) h.magicRoom -= 1;
+}
+
+export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'> & { battle?: BattleState }, mon: PokemonInstance, side: Side): ActiveHook[] {
   const out: ActiveHook[] = [];
   const add = (items: Record<string, number> | undefined, teamOnly: boolean) => {
     for (const [itemId, copies] of Object.entries(items ?? {})) {
@@ -104,7 +155,7 @@ export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: Po
       }
     }
   };
-  add(mon.held, false);
+  add(effectiveHeld(ctx, mon), false);
   if (side === 'player') add(ctx.teamItems, true);
   return out;
 }
@@ -149,8 +200,8 @@ function heal(content: Content, mon: PokemonInstance, amount: number): number {
 // ---------- stats, speed, critical hits, accuracy ----------
 
 /** Multiplier on a stat from held items (Choice items, Eviolite, Light Ball, Iron Ball, Everstone...). */
-export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side, stat: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
-  let m = 1;
+export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems' | 'perks'>, mon: PokemonInstance, side: Side, stat: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
+  let m = side === 'player' ? statPerk(ctx.perks, stat, getSpecies(ctx.content, mon.speciesId).types) : 1;
   for (const { hook } of hooks(hooksOf(ctx, mon, side), 'stat')) {
     if (hook.stat !== stat && hook.stat !== 'all') continue;
     if (hook.canEvolve && getSpecies(ctx.content, mon.speciesId).evolutions.length === 0) continue;
@@ -321,6 +372,15 @@ export function survive(ctx: HeldContext, target: Holder, damage: number, events
     events.push({ type: 'held', side: target.side, itemId, what: 'survive' });
     return target.mon.hp - 1;
   }
+  // A trainer perk (Acerola): a chance to hang on at 1 HP, once per Pokémon per battle.
+  if (target.side === 'player' && timesUsed(ctx, target.mon.uid, 'perk-survive') === 0) {
+    const chance = survivalChance(ctx.perks, getSpecies(ctx.content, target.mon.speciesId).types);
+    if (chance > 0 && ctx.rng.chance(chance)) {
+      markUsed(ctx, target.mon.uid, 'perk-survive');
+      events.push({ type: 'held', side: target.side, itemId: 'perk-survive', what: 'survive' });
+      return target.mon.hp - 1;
+    }
+  }
   return damage;
 }
 
@@ -344,7 +404,8 @@ export function healingMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'
 
 /** How long weather the holder starts lasts (Heat Rock and friends), or `base`. */
 export function weatherTurns(ctx: HeldContext, holder: Holder, weather: Weather, base: number): number {
-  return hooks(hooksOf(ctx, holder.mon, holder.side), 'weatherTurns').reduce((t, h) => (h.hook.weathers.includes(weather) ? Math.max(t, h.hook.turns) : t), base);
+  const turns = hooks(hooksOf(ctx, holder.mon, holder.side), 'weatherTurns').reduce((t, h) => (h.hook.weathers.includes(weather) ? Math.max(t, h.hook.turns) : t), base);
+  return holder.side === 'player' ? turns + weatherTurnsBonus(ctx.perks) : turns;
 }
 
 /** A two-turn move fires at once (Power Herb, once per battle). */
@@ -563,6 +624,33 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
     events.push({ type: 'held', side: holder.side, itemId, what: 'pp' });
     break;
   }
+}
+
+/** Eats the holder's first Berry now, whatever its trigger (Stuff Cheeks, Teatime). Returns false if it holds none. */
+export function forceEatBerry(ctx: HeldContext, holder: Holder, events: HeldEvent[]): boolean {
+  const { content, rng } = ctx;
+  const mon = holder.mon;
+  for (const { itemId, hook } of hooksOf(ctx, mon, holder.side)) {
+    if (content.catalog.get(itemId)?.family.startsWith('Berries') !== true) continue;
+    eat(mon, itemId);
+    if (hook.hook === 'berryHeal') {
+      heal(content, mon, (hook.flat ?? maxHpOf(content, mon) * (hook.fraction ?? 0)) * healingMultiplier(ctx, mon, holder.side));
+      events.push({ type: 'held', side: holder.side, itemId, what: 'heal', hpAfter: mon.hp });
+    } else if (hook.hook === 'berryStat') {
+      const stat: BoostStat = hook.stat === 'crit' ? 'atk' : hook.stat === 'random' ? rng.pick(['atk', 'def', 'spa', 'spd', 'spe'] as const) : hook.stat;
+      raiseStage(holder, stat, hook.stages, itemId, events);
+    } else if (hook.hook === 'berryCure') {
+      mon.status = null;
+      holder.vol.confusion = 0;
+      events.push({ type: 'held', side: holder.side, itemId, what: 'cure' });
+    } else if (hook.hook === 'berryPp') {
+      const slot = mon.moves.find((m) => m.pp === 0) ?? mon.moves[0];
+      if (slot) slot.pp = Math.min(slot.pp + hook.amount, 99);
+      events.push({ type: 'held', side: holder.side, itemId, what: 'pp' });
+    } else events.push({ type: 'held', side: holder.side, itemId, what: 'cure' });
+    return true;
+  }
+  return false;
 }
 
 // ---------- turns, switching, knockouts ----------
