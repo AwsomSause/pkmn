@@ -12,6 +12,7 @@ import { ExpeditionScene } from './scenes/ExpeditionScene';
 import { MinigameScene } from './scenes/MinigameScene';
 import { DecisionScene } from './scenes/DecisionScene';
 import { GameOverScene } from './scenes/GameOverScene';
+import { HallOfFameScene } from './scenes/HallOfFameScene';
 import { HubScene } from './scenes/HubScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
 import { MapScene } from './scenes/MapScene';
@@ -70,7 +71,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene],
+    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, HallOfFameScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
@@ -78,7 +79,7 @@ function start(): void {
         // slowly changing battlefield behind them (the battle and map draw their own).
         const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
         // Gameplay screens in the Aero look (M10) get the glossy sky-and-bubbles backdrop instead.
-        const aeroScenery = new Set(['Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'GameOver']);
+        const aeroScenery = new Set(['Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'GameOver', 'HallOfFame']);
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') scene.cameras.main.fadeIn(220, 14, 11, 18);

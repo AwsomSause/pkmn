@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 11, run 22, settings 5, meta 1. Next free versions: run 23, profile 12 (check `origin/main` first; another thread may have taken them).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run 22, settings 5, meta 1. Next free versions: run 23, profile 13, settings 6 (check `origin/main` first; another thread may have taken them).
 
 ## Done
 - Quality items (Electric plan §4, §7, §9): `npm run report:dashboard` writes `docs/quality/dashboard.html` (counts, offending ids, vs baseline, mechanics) and `CONTENT_REPORT.md`; new `mechanic` kind (`src/quality/mechanics.json`, 42 entries, each with its code and unit tests, check `mechanics-without-proof`); `tests/e2e/viewports.spec.ts` (4 window sizes, no console errors); SYSTEMS_AUDIT, FEATURE_INTERACTION_MATRIX, QUALITY_GATES refreshed. GitHub Actions has still never run (Kice must switch it on).
@@ -36,6 +36,9 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 11, run
 - M10 visual slice 5: Aero look off the battle screen. Reward cards are glass with a rarity rim, deal in, lift on focus and fly off when picked; shop, bag, party, decision, briefing and run-end panels are glass; those screens get a moving Aero sky. The run-end screen ignores mashed keys for 0.45 s.
 - Bond screen (map **Bonds** button): each party Pokémon's trait, mood (Wary/Steady/Devoted) and its seven bond values as animated bars, with a hint on what the mood means.
 - M10 visual slice 6: Aero map. Glass header/footer and pill buttons, the stage's type ambience over slowly drifting scenery, glowing open paths with travelling lights, breathing halos on nodes you can reach, ✓ on visited nodes, a glowing boss column, "Risk: high / boss" in the info line, and a token that hops to the node you pick.
+- M10 visual slice 7: trainer lines also show in a glass speech bubble by the foe; raid and Totem phase changes show a NEW PHASE banner with the phase's rule.
+- Hall of Fame (Hub **Events → Hall of Fame**): records, champion teams with their epitaphs, unusual wins, shiny Pokémon and Legacy Cards. Profile save **v12**: each Run History entry now keeps its epitaph, Legacy Cards and which Pokémon were shiny (older runs get none).
+- Text fit (Kice, 2026-10-30): the campaign briefing picks the largest font that fits its panel, the title menu fits all its options in the box, and a trainer's details shrink to fit the left panel.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 

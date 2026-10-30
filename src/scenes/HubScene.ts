@@ -25,7 +25,7 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'events' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'events' | 'fame' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -40,6 +40,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, their objectives and rewards (Enter)." },
+  { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -111,7 +112,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history'], blurb: "This week's event, holiday events, and your past runs." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame'], blurb: "This week's event, holiday events, your past runs and the Hall of Fame." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -521,6 +522,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'events':
         this.openEventHall();
+        break;
+      case 'fame':
+        this.scene.start('HallOfFame');
         break;
       case 'save':
         this.openSaveData();

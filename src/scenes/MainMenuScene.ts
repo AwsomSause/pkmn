@@ -91,12 +91,14 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.toggleDetails(),
     });
 
+    const rowH = Math.min(46, Math.floor(272 / options.length));
     this.menu = new Menu(this, {
       x: 78,
       y: 206,
       options: options.map((o) => o.option),
-      itemHeight: options.length > 8 ? 30 : 46,
-      fontSize: options.length > 8 ? 20 : 28,
+      // Fit every option inside the panel (186–486), however many settings there are.
+      itemHeight: rowH,
+      fontSize: rowH >= 40 ? 28 : rowH >= 34 ? 24 : 20,
       onSelect: (i) => options[i]!.action(),
     });
     if (data?.focus) this.menu.focus(data.focus, false);

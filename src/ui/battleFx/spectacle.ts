@@ -267,3 +267,62 @@ export function exitWipe(scene: Phaser.Scene, motion: MotionLevel): Promise<void
     scene.tweens.add({ targets: bottom, y: 0, duration: 260, ease: 'Bounce.easeOut', onComplete: () => scene.time.delayedCall(120, () => resolve()) });
   });
 }
+
+/**
+ * A trainer's speech bubble: glass, with a tail pointing at the speaker, that
+ * pops in with a bounce. The line is also in the message box, so this is extra;
+ * the caller removes it when the line is done.
+ */
+export function speechBubble(scene: Phaser.Scene, toX: number, toY: number, speaker: string, text: string, rim: number, motion: MotionLevel): Phaser.GameObjects.Container {
+  const W = scene.scale.width;
+  const w = 360;
+  const body = scene.add.text(0, 0, `“${text}”`, textStyle(17, '#ffffff', { wordWrap: { width: w - 32 }, lineSpacing: 2 }));
+  const h = Math.max(64, body.height + 44);
+  // Right of the foe's databox (which ends near x 490), above the foe.
+  const x = Math.min(W - w / 2 - 8, Math.max(toX + 30, 500 + w / 2));
+  const y = Math.max(h / 2 + 60, toY - 120 - h / 2);
+  const c = scene.add.container(x, y).setDepth(940).setName('speech-bubble');
+  const g = scene.add.graphics();
+  // The tail: a little glass triangle toward the speaker.
+  const tx = Math.max(-w / 2 + 30, Math.min(w / 2 - 30, toX - x));
+  g.fillStyle(0x0b1f3a, 0.92).fillTriangle(tx - 14, h / 2 - 2, tx + 14, h / 2 - 2, tx + 24, h / 2 + 22);
+  g.lineStyle(2, rim, 0.9).lineBetween(tx - 14, h / 2, tx + 24, h / 2 + 22).lineBetween(tx + 24, h / 2 + 22, tx + 14, h / 2);
+  paintGlass(g, -w / 2, -h / 2, w, h, { rim, tint: 0x0b1f3a, radius: 20 });
+  body.setPosition(-w / 2 + 16, -h / 2 + 30);
+  c.add([g, scene.add.text(-w / 2 + 16, -h / 2 + 8, speaker, textStyle(15, '#7ff3ff')), body]);
+  if (motion === 'full') {
+    c.setScale(0.2).setAlpha(0);
+    scene.tweens.add({ targets: c, scale: 1, alpha: 1, duration: 320, ease: 'Back.easeOut' });
+    scene.tweens.add({ targets: c, y: y - 4, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: 320 });
+  } else if (motion === 'reduced') {
+    c.setAlpha(0);
+    scene.tweens.add({ targets: c, alpha: 1, duration: 150 });
+  }
+  return c;
+}
+
+/**
+ * A boss phase change: a glass ribbon sweeps across with "NEW PHASE" and the
+ * phase's written rule, holds, then sweeps out (any key skips).
+ */
+export function phaseBanner(scene: Phaser.Scene, rule: string, rim: number, motion: MotionLevel): Beat {
+  if (motion === 'off') return noBeat();
+  const W = scene.scale.width;
+  const c = scene.add.container(W / 2, 150).setDepth(955).setName('phase-banner');
+  const sub = scene.add.text(0, 18, rule, textStyle(18, '#ffe9f0', { wordWrap: { width: W - 140 }, align: 'center' })).setOrigin(0.5, 0);
+  const h = 70 + sub.height;
+  c.add(paintGlass(scene.add.graphics(), -W / 2 + 30, -h / 2 + 10, W - 60, h, { rim, tint: 0x2a0b2a, radius: 22, glow: true }));
+  c.add(scene.add.text(0, -h / 2 + 34, 'NEW PHASE', textStyle(34, '#ffffff', { stroke: '#3a0b2a', strokeThickness: 6 })).setOrigin(0.5));
+  sub.setY(-h / 2 + 58);
+  c.add(sub);
+  if (motion === 'reduced') {
+    c.setAlpha(0);
+    scene.tweens.add({ targets: c, alpha: 1, duration: 150, yoyo: true, hold: 1300 });
+    return beat(scene, [c], 1650);
+  }
+  c.x = W * 1.6;
+  scene.tweens.add({ targets: c, x: W / 2, duration: 380, ease: 'Back.easeOut' });
+  scene.tweens.add({ targets: c, scaleY: 1.06, duration: 160, yoyo: true, delay: 380 });
+  scene.tweens.add({ targets: c, x: -W * 0.6, duration: 260, delay: 1900, ease: 'Cubic.easeIn' });
+  return beat(scene, [c], 2200);
+}

@@ -34,7 +34,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
 | Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
 | Held item / ability badges when supported | TODO | slice 5 (party/detail info panel, Enhanced Battle UI `info_*` art) |
-| Boss phase indicator | PART | raids/totems show phase in the header (other thread); visual banner: slice 6 with effect families |
+| Boss phase indicator | BUILT | header phase count (other thread) + NEW PHASE banner with the phase's rule (slice 7) |
 | Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
 | Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
 | Move flag icons (Enhanced Battle UI, 18) | PART | 9 shown (slice 3): every flag our move data has (contact, sound, bite, powder, pulse, punch, Z, Max) + high crit. Slicing, wind, dance, bomb, no-protect, thaw, electrocute, minimize, no-mirror: our data has no such flag yet |
@@ -55,16 +55,16 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 ## V3 — signature moments (BR 4, VB 4.7–4.8, CR 6 gyms/E4/champion)
 | Item | Status | Where / note |
 |---|---|---|
-| Trainer reaction cue from real events | TODO | slice 5: speech bubble for Battle Drama lines (Drama Engine thread owns the lines) |
+| Trainer reaction cue from real events | BUILT | every Battle Drama line also shows in a glass speech bubble by the foe (slice 7) |
 | Moment hierarchy: line → callout → bond/Hyper → signature/phase | PART | Hyper moments exist; slice 4 |
 | Boss intro title/role card + field transition + music | PART | Skull VS screen + title card "Gym Leader Brock · Rock specialist" (slice 4); boss music: needs tracks (Raid Battles pack BGM later) |
 | Champion framing, ace indicator, unique motif | PART | role rims (gym gold, Elite violet, champion pale gold) + ACE beat (slice 4); unique champion arena: slice 10 |
-| Phase-change banner with written rule | TODO | slice 6 (raid/totem phases now exist in core) |
+| Phase-change banner with written rule | BUILT | `phaseBanner` in `battleFx/spectacle.ts`: raid/totem phase events (slice 7) |
 | Ace entry beat | BUILT | last Pokémon of a trainer team: burst + ACE! stamp (slice 4) |
 | Victory pose / particles / Chronicle stamp | BUILT | hop + VICTORY!/BADGE GET!/CHAMPION! stamps with sparkles (slice 4) |
 | Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
 | Evolution sequence | PART | burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
-| Rival callouts from real memory | PART | rival note line exists; bubble: slice 4 |
+| Rival callouts from real memory | BUILT | rival lines come from Drama/rival memory and show in the speech bubble (slice 7) |
 | Gym leader intro and defeat sequence, gym motif | PART | intro card, badge stamp (slice 4); per-gym motif = type ambience of the leader's type |
 
 ## Effect pipeline (BR 3, VB 4.4, VB 7, CR 5.3)
@@ -89,6 +89,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |
 | Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
+| Hall of Fame screen (champion teams, unusual wins, rare forms, records, Legacy Cards, epitaphs) | BUILT | Hub **Events → Hall of Fame**: glass rows for records, champion teams with epitaph and why a win was unusual, shiny Pokémon, Legacy Cards with titles; icons bob, shinies sparkle (`core/hallOfFame.ts`, `scenes/HallOfFameScene.ts`). Runs from before profile v12 have no epitaph or cards |
 | Bond screen for the Bond Engine (traits, mood, bond level) | BUILT | map **Bonds** button: glass card per Pokémon, trait, floating mood bubble, 7 bars that fill with a bounce, hint explains the mood, practiced partners and refusal risk (`ui/bondMenu.ts`) |
 
 ## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)
