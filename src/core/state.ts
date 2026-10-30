@@ -233,6 +233,8 @@ export const VolatileSchema = z.object({
   hangry: z.boolean().default(false),
   /** Sky Drop: true while the user of Sky Drop holds this Pokémon in the air. */
   skyHeld: z.boolean().default(false),
+  /** Attract: half the time it can't move. */
+  infatuated: z.boolean().default(false),
   /** Illusion: the species this Pokémon looks like until a damaging move hits it. */
   illusion: z.string().nullable().default(null),
   /** Roost: Flying type lost until the turn ends. */
@@ -313,6 +315,7 @@ export const freshVolatile = (): Volatile => ({
   grudge: false,
   hangry: false,
   skyHeld: false,
+  infatuated: false,
   illusion: null,
   roost: false,
   throat: 0,

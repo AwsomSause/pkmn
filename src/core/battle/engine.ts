@@ -90,7 +90,7 @@ export type BattleEvent =
   | { type: 'status'; side: Side; status: StatusId }
   | { type: 'stat'; side: Side; stat: BoostStat; change: number }
   | { type: 'statLimit'; side: Side; stat: BoostStat; up: boolean }
-  | { type: 'cant'; side: Side; reason: 'slp' | 'frz' | 'par' | 'flinch' | 'recharge' | 'truant' }
+  | { type: 'cant'; side: Side; reason: 'slp' | 'frz' | 'par' | 'flinch' | 'recharge' | 'truant' | 'infatuation' }
   /** Its ability did something (shown as "Gyarados's Intimidate!" before the effect). */
   | { type: 'ability'; side: Side; ability: string }
   /** Its status was cured (Shed Skin, Hydration). */
@@ -573,6 +573,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!anyFainted(playerC, enemy)) {
     Held.endOfTurn(ctx, playerC, events as Held.HeldEvent[]);
     Held.endOfTurn(ctx, enemy, events as Held.HeldEvent[]);
+    pokeFlute(ctx, playerC, events);
     recordFaints(ctx, playerC, enemy, events);
   }
 
@@ -939,6 +940,16 @@ function setWeather(ctx: BattleContext, id: Weather, turns: number, primal?: str
 }
 
 /** Ends a primal weather once nobody on the field has the ability that holds it. */
+/** Poké Flute: once per battle, wakes every sleeping Pokémon in the team at the end of a turn. */
+function pokeFlute(ctx: BattleContext, player: Combatant, events: BattleEvent[]): void {
+  const flute = Held.hooksOf(ctx, player.mon, 'player').find(({ hook }) => hook.hook === 'wakeAll');
+  if (!flute) return;
+  const sleepers = ctx.party.filter((m) => m.hp > 0 && m.status?.id === 'slp');
+  if (sleepers.length === 0 || !Held.firstUse(ctx, 'team', flute.itemId)) return;
+  for (const m of sleepers) m.status = null;
+  events.push({ type: 'held', side: 'player', itemId: flute.itemId, what: 'cure' });
+}
+
 function primalCheck(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
   if (ctx.battle.extra.delta && ![player, enemy].some((c) => c.mon.hp > 0 && abilityIn(ctx, c) === 'delta-stream')) ctx.battle.extra.delta = false;
   const w = ctx.battle.weather;
@@ -1005,6 +1016,12 @@ const FORECAST_FORMS: Partial<Record<Weather, string>> = { sun: 'castform-sunny'
 /** Moves a Pokémon into or out of the form its ability asks for. `endOfTurn` lets Hunger Switch flip. */
 function syncForms(ctx: BattleContext, c: Combatant, events: BattleEvent[], endOfTurn: boolean): void {
   if (c.mon.hp <= 0) return;
+  for (const { hook } of Held.hooksOf(ctx, c.mon, c.side)) {
+    if (hook.hook === 'formHeld' && (c.mon.speciesId === hook.from || c.mon.speciesId === hook.to)) {
+      swapForm(ctx, c, hook.to, events);
+      return;
+    }
+  }
   const ability = abilityIn(ctx, c);
   if (!ability) return;
   const max = calcStats(ctx.content, c.mon).hp;
@@ -1321,6 +1338,13 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move
       events.push({ type: 'thaw', side: user.side });
     } else {
       events.push({ type: 'cant', side: user.side, reason: 'frz' });
+      return false;
+    }
+  }
+  if (user.vol.infatuated) {
+    events.push({ type: 'selfState', side: user.side, state: 'inLove' });
+    if (rng.chance(0.5)) {
+      events.push({ type: 'cant', side: user.side, reason: 'infatuation' });
       return false;
     }
   }
@@ -3479,6 +3503,15 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     }
     return;
   }
+  if (fx.attract) {
+    if (target.vol.infatuated || abilityIn(ctx, target) === 'oblivious' || Held.statusBlocked(ctx, target, 'infatuation')) {
+      if (abilityIn(ctx, target) === 'oblivious') announce(target, 'oblivious', events);
+      return void events.push({ type: 'fail', side: user.side });
+    }
+    target.vol.infatuated = true;
+    events.push({ type: 'selfState', side: target.side, state: 'infatuated' });
+    return;
+  }
   if (fx.transform) {
     if (!transformInto(ctx, user, target, events)) events.push({ type: 'fail', side: user.side });
     return;
@@ -4033,7 +4066,7 @@ function canGetStatus(ctx: BattleContext, source: Combatant, target: Combatant, 
   if (status === 'slp' && (source.vol.uproar > 0 || target.vol.uproar > 0 || (source === target ? false : false))) return false;
   const corrosive = status === 'psn' && abilityIn(ctx, source) === 'corrosion' && source !== target;
   if (!corrosive && isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
-  if (Held.statusBlocked({ content: ctx.content }, target, status)) return false;
+  if (Held.statusBlocked(ctx, target, status)) return false;
   if (terrainBlocksStatus(ctx, target, status)) return false;
   if (source !== target && source.side !== target.side && ctx.battle.sideEffects[target.side].safeguard > 0) return false;
   return statusAbilityBlock(ctx, source, target, status) === null;
@@ -4066,7 +4099,7 @@ function tryInflictStatus(
   const types = getSpecies(content, target.mon.speciesId).types;
   const blocker = target.mon.status ? null : statusAbilityBlock(ctx, source, target, status);
   const corrosive = status === 'psn' && abilityIn(ctx, source) === 'corrosion' && source !== target;
-  if (target.mon.status || (!corrosive && isStatusImmune(status, types, move)) || blocker || Held.statusBlocked({ content }, target, status) || terrainBlocksStatus(ctx, target, status) || (source.side !== target.side && ctx.battle.sideEffects[target.side].safeguard > 0)) {
+  if (target.mon.status || (!corrosive && isStatusImmune(status, types, move)) || blocker || Held.statusBlocked(ctx, target, status) || terrainBlocksStatus(ctx, target, status) || (source.side !== target.side && ctx.battle.sideEffects[target.side].safeguard > 0)) {
     if (announceFailure && blocker) announce(target, blocker, events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
@@ -4257,6 +4290,7 @@ function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEven
       if (getSpecies(ctx.content, c.mon.speciesId).types.some((t) => immune.includes(t))) continue;
       const ability = abilityIn(ctx, c);
       if (ability && WEATHER_DAMAGE_IMMUNE[ability]?.includes(weather.id)) continue;
+      if (Held.hooksOf(ctx, c.mon, c.side).some(({ hook }) => hook.hook === 'weatherImmune' && hook.weathers.includes(weather.id))) continue;
       const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(calcStats(ctx.content, c.mon).hp / 16)));
       events.push({ type: 'weatherDamage', side: c.side, weather: weather.id, amount: lost, hpAfter: c.mon.hp });
       if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });

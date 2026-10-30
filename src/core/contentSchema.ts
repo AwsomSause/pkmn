@@ -358,6 +358,8 @@ export const MoveSchema = z.object({
       needsStatus: StatusIdSchema.optional(),
       /** Hidden Power: the type comes from the user (a fixed roll per Pokémon, since there are no IVs). */
       hiddenPower: z.boolean().optional(),
+      /** Attract: the target falls in love and half the time can't move (there are no genders in this game). */
+      attract: z.literal(true).optional(),
       /** Springtide Storm: 30% to raise the user's Attack (Incarnate) or lower the foe's (Therian). */
       formStorm: z.boolean().optional(),
       /** Beat Up: one hit for each healthy party member, powered by that member's Attack. */
@@ -1004,6 +1006,14 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('dodgeFirst') }),
   /** Wild Pokémon's status moves aimed at the holder miss this much more often, in percent (Pure Incense). */
   z.object({ hook: z.literal('statusShield'), percent: z.number().positive().max(100) }),
+  /** The holder can't get these statuses (Lunar Wing: sleep). */
+  /** Takes no damage from these weathers (Go-Goggles: sandstorm). */
+  z.object({ hook: z.literal('weatherImmune'), weathers: z.array(WeatherSchema).min(1) }),
+  /** Once per battle, wakes the whole team at the end of a turn (Poké Flute). */
+  z.object({ hook: z.literal('wakeAll') }),
+  z.object({ hook: z.literal('statusImmune'), statuses: z.array(StatusIdSchema).min(1) }),
+  /** While held, this species takes another form in battle (Griseous Orb, Gracidea). */
+  z.object({ hook: z.literal('formHeld'), from: z.string(), to: z.string() }),
   // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
   /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
   z.object({
@@ -1039,7 +1049,7 @@ export const BattleBoostSchema = z.discriminatedUnion('kind', [
   /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
   z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
   /** Can't get this status (or confusion) during its next battle. */
-  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion']) }),
+  z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion', 'infatuation']) }),
 ]);
 export type BattleBoost = z.infer<typeof BattleBoostSchema>;
 
@@ -1792,6 +1802,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('meter'), key: z.enum(['ragePeace', 'goodEvil']), side: z.enum(['positive', 'negative']), atLeast: z.number().int().min(0) }),
   z.object({ kind: z.literal('item'), id: z.string() }),
   z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
+  /** A species in the party. */
+  z.object({ kind: z.literal('partySpecies'), species: z.string() }),
+  /** An event that has already been played this run. */
+  z.object({ kind: z.literal('eventSeen'), id: z.string() }),
   /** The trainer must not carry this tag (N is "pacifist": no aggressive choices). */
   z.object({ kind: z.literal('noTrainerTag'), tag: z.string() }),
 ]);
@@ -1826,6 +1840,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('gymPreview') }),
   /** Every hidden "?" stop on this stage shows what it is. */
   z.object({ kind: z.literal('revealStops') }),
+  /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
+  z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 
