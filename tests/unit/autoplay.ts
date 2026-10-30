@@ -29,6 +29,8 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
   switch (run.phase) {
     case 'expedition':
       throw new Error('Autoplay does not enter expeditions');
+    case 'minigame':
+      throw new Error('Autoplay does not enter minigames');
     case 'starter':
       return { run: chooseStarter(content, run, 0), turn: null };
     case 'map':

@@ -170,6 +170,26 @@
    "countsForProgress": true
   },
   {
+   "id": "boss-rush",
+   "name": "Boss Rush",
+   "regularRegions": 9,
+   "grandRegion": true,
+   "stagesPerRegion": 4,
+   "columns": 12,
+   "trainerColumns": [
+    [
+     3,
+     5
+    ],
+    [
+     7,
+     10
+    ]
+   ],
+   "eliteFourSize": 4,
+   "countsForProgress": true
+  },
+  {
    "id": "dev",
    "name": "Developer campaign (short)",
    "regularRegions": 2,
@@ -252,9 +272,17 @@
   "luckDraftVariety": 1.0
  },
  "events": {
-  "perStage": [3, 5],
+  "perStage": [
+   3,
+   5
+  ],
   "hiddenShare": 0.34,
-  "rarityWeights": { "common": 60, "uncommon": 25, "rare": 12, "epic": 3 },
+  "rarityWeights": {
+   "common": 60,
+   "uncommon": 25,
+   "rare": 12,
+   "epic": 3
+  },
   "themeWeight": 2,
   "checkBase": 40,
   "checkMin": 5,
@@ -263,7 +291,13 @@
   "soldGift": 500,
   "restPerStage": 2,
   "trainerMoneyPerLevel": 24,
-  "explorerItems": ["potion", "super-potion", "poke-ball", "great-ball", "full-heal"]
+  "explorerItems": [
+   "potion",
+   "super-potion",
+   "poke-ball",
+   "great-ball",
+   "full-heal"
+  ]
  },
  "attributeGrowth": [
   {

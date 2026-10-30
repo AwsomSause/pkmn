@@ -1,0 +1,91 @@
+// The one screen every minigame uses: a HUD, a prompt and a grid of choices drawn from the game's view (core/minigame).
+// Timed games advance on a timer; "S" slows it and "T" pauses it (the accessibility options). Rewards are paid by the
+// rules code the moment the game ends; this screen only shows the outcome.
+
+import Phaser from 'phaser';
+import { getMinigame, minigameView } from '../core/minigame/flow';
+import { services } from '../game/services';
+import { onInputAction } from '../ui/input';
+import { playSfx } from '../ui/audio';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
+import { drawPanel, Menu } from '../ui/widgets';
+import { sceneForRun } from './routing';
+
+export class MinigameScene extends Phaser.Scene {
+  private menu!: Menu;
+  private slow = false;
+  private paused = false;
+
+  constructor() {
+    super('Minigame');
+  }
+
+  create(data?: { focus?: number; slow?: boolean; paused?: boolean }): void {
+    const { session } = services();
+    const run = session.run!;
+    if (run.phase !== 'minigame' || !run.minigame) {
+      this.scene.start(sceneForRun(run), { notice: '', focus: 0 });
+      return;
+    }
+    this.slow = data?.slow ?? false;
+    this.paused = data?.paused ?? false;
+    const def = getMinigame(session.content, run.minigame.id);
+    const view = minigameView(session.content, run);
+    const outcome = run.minigame.outcome;
+    this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  ${def.difficultyTiers[run.minigame.tier]!.label}`, textStyle(30, COLORS.textLight)).setOrigin(0.5);
+    drawPanel(this, 16, 48, GAME_WIDTH - 32, 96, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    this.add.text(28, 54, view.hud.join('   ·   '), textStyle(16, '#f0e0a0', { wordWrap: { width: GAME_WIDTH - 56 } }));
+    this.add.text(28, 84, outcome ? outcome.lines.join(' ') : view.prompt, textStyle(17, outcome ? '#a0f0a0' : COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 56 } }));
+
+    const options = outcome
+      ? [{ label: 'Done', detail: 'back to the map', disabled: false }]
+      : view.cells.map((c) => ({ label: c.label, detail: c.detail, disabled: c.disabled }));
+    const cols = outcome ? 1 : Math.max(1, view.cols);
+    const rows = Math.ceil(options.length / cols);
+    const itemH = Math.min(52, Math.floor((GAME_HEIGHT - 190 - 30) / rows));
+    this.menu = new Menu(this, {
+      x: 24, y: 156, columns: cols, itemWidth: Math.floor((GAME_WIDTH - 48) / cols), itemHeight: itemH, fontSize: itemH < 40 ? 16 : 19, color: COLORS.textLight,
+      options,
+      onSelect: (i) => {
+        if (outcome) {
+          this.leave();
+          return;
+        }
+        const cell = view.cells[i]!;
+        if (cell.disabled) return;
+        playSfx(this, 'ui.select');
+        session.minigameAct(cell.id);
+        this.scene.restart({ focus: i, slow: this.slow, paused: this.paused });
+      },
+      onBack: () => this.leave(),
+    });
+    if (data?.focus !== undefined && !outcome) this.menu.index = Math.min(data.focus, options.length - 1);
+
+    const tickMs = def.uiConfiguration.tickMs;
+    if (!outcome && tickMs > 0 && !view.done) {
+      const delay = tickMs * (this.slow ? def.accessibilityOptions.slowFactor : 1);
+      if (!this.paused) {
+        this.time.delayedCall(delay, () => {
+          session.minigameTick();
+          this.scene.restart({ focus: this.menu.index, slow: this.slow, paused: this.paused });
+        });
+      }
+    }
+    const hints = ['Enter choose', 'Esc leave (forfeits)'];
+    if (tickMs > 0) hints.push(this.slow ? 'S normal speed' : 'S slow down');
+    if (tickMs > 0 && def.accessibilityOptions.noTimerOption) hints.push(this.paused ? 'T resume' : 'T pause');
+    this.add.text(16, GAME_HEIGHT - 22, hints.join('  ·  '), textStyle(14, '#8a7f96'));
+    this.input.keyboard?.on('keydown-S', () => this.scene.restart({ focus: this.menu.index, slow: !this.slow, paused: this.paused }));
+    this.input.keyboard?.on('keydown-T', () => {
+      if (def.accessibilityOptions.noTimerOption) this.scene.restart({ focus: this.menu.index, slow: this.slow, paused: !this.paused });
+    });
+    onInputAction(this, (a) => this.menu.handle(a));
+  }
+
+  private leave(): void {
+    const { session } = services();
+    const finished = session.run!.minigame?.outcome != null;
+    const run = session.leaveMinigame();
+    this.scene.start(sceneForRun(run), { notice: finished ? '' : 'You left the minigame.', focus: 0 });
+  }
+}
