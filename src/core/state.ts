@@ -109,6 +109,53 @@ export const VolatileSchema = z.object({
   typeShift: TypeNameSchema.nullable().default(null),
   /** Trace / Mummy: the ability it has now instead of its own (until it switches out). */
   abilityOverride: z.string().nullable().default(null),
+  /** Focus Energy: critical hits are two stages likelier. */
+  focusEnergy: z.boolean().default(false),
+  /** Laser Focus: the next attack is a critical hit. */
+  laserFocus: z.boolean().default(false),
+  /** Lock-On / Mind Reader: the next attack can't miss. */
+  sureHit: z.boolean().default(false),
+  /** Ingrain / Aqua Ring: heals 1/16 each turn (Ingrain also holds it in place). */
+  regen: z.enum(['ingrain', 'aquaRing']).nullable().default(null),
+  /** Endure: it can't be knocked out this turn. */
+  endure: z.boolean().default(false),
+  /** Mean Look and friends: it can't be switched out. */
+  trapped: z.boolean().default(false),
+  /** The move it used last (for Disable, Encore, Spite, Copycat, Torment). */
+  lastMove: z.string().nullable().default(null),
+  /** Disable: this move can't be used for `turns` more turns. */
+  disabled: z.object({ moveId: z.string(), turns: z.number().int().min(0) }).nullable().default(null),
+  /** Torment: it can't use the same move twice in a row. */
+  torment: z.boolean().default(false),
+  /** Taunt: turns left in which it can only use attacks. */
+  taunt: z.number().int().min(0).default(0),
+  /** Heal Block: turns left in which it can't heal. */
+  healBlock: z.number().int().min(0).default(0),
+  /** Wish: turns until it heals (0 = none) and the amount. */
+  wish: z.object({ turns: z.number().int().min(0), amount: z.number().int().min(0) }).nullable().default(null),
+  /** Damage it took from the foe's physical and special moves this turn (Counter, Mirror Coat). */
+  tookPhysical: z.number().int().min(0).default(0),
+  tookSpecial: z.number().int().min(0).default(0),
+  /** What it chose to do this turn: an attack or not (Sucker Punch, Thunderclap). */
+  plannedAttack: z.boolean().default(false),
+  /** It leaves the field after this turn (U-turn, Baton Pass); `baton` passes its stat changes on. */
+  pivot: z.object({ baton: z.boolean() }).nullable().default(null),
+  /** The move before the last one (Blood Moon can't be used twice in a row). */
+  prevMove: z.string().nullable().default(null),
+  /** Substitute: HP left in the decoy (0 = none). */
+  substitute: z.number().int().min(0).default(0),
+  /** Destiny Bond: whoever knocks it out this turn faints too. */
+  destinyBond: z.boolean().default(false),
+  /** Perish Song: turns until it faints (0 = not counting). */
+  perish: z.number().int().min(0).default(0),
+  /** Yawn: turns until it falls asleep (0 = not drowsy). */
+  yawn: z.number().int().min(0).default(0),
+  /** Magnet Rise: turns left floating. */
+  magnetRise: z.number().int().min(0).default(0),
+  /** Smack Down: brought to the ground. */
+  smackedDown: z.boolean().default(false),
+  /** Stockpile: times stored (0–3). */
+  stockpile: z.number().int().min(0).max(3).default(0),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -125,6 +172,30 @@ export const freshVolatile = (): Volatile => ({
   truant: false,
   typeShift: null,
   abilityOverride: null,
+  focusEnergy: false,
+  laserFocus: false,
+  sureHit: false,
+  regen: null,
+  endure: false,
+  trapped: false,
+  lastMove: null,
+  disabled: null,
+  torment: false,
+  taunt: 0,
+  healBlock: 0,
+  wish: null,
+  tookPhysical: 0,
+  tookSpecial: 0,
+  plannedAttack: false,
+  pivot: null,
+  prevMove: null,
+  substitute: 0,
+  destinyBond: false,
+  perish: 0,
+  yawn: 0,
+  magnetRise: 0,
+  smackedDown: false,
+  stockpile: 0,
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -164,6 +235,23 @@ export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
 export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
 
+/** What is set up on one side of the field: screens and other turn counters, and entry hazards. */
+export const SideEffectsSchema = z.object({
+  reflect: z.number().int().min(0).default(0),
+  lightScreen: z.number().int().min(0).default(0),
+  auroraVeil: z.number().int().min(0).default(0),
+  tailwind: z.number().int().min(0).default(0),
+  safeguard: z.number().int().min(0).default(0),
+  mist: z.number().int().min(0).default(0),
+  luckyChant: z.number().int().min(0).default(0),
+  spikes: z.number().int().min(0).max(3).default(0),
+  toxicSpikes: z.number().int().min(0).max(2).default(0),
+  stealthRock: z.boolean().default(false),
+  stickyWeb: z.boolean().default(false),
+});
+export type SideEffects = z.infer<typeof SideEffectsSchema>;
+export const freshSideEffects = (): SideEffects => SideEffectsSchema.parse({});
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -183,6 +271,12 @@ export const BattleStateSchema = z.object({
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** The terrain and how many turns it has left. */
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** Field-wide effects and their turns left. */
+  field: z.object({ gravity: z.number().int().min(0).default(0), trickRoom: z.number().int().min(0).default(0), waterSport: z.number().int().min(0).default(0), mudSport: z.number().int().min(0).default(0) }).default(() => ({ gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 })),
+  /** Baton Pass: the stat changes the next Pokémon inherits. */
+  batonStages: StagesSchema.nullable().default(null),
+  /** Screens, Tailwind and entry hazards on each side. */
+  sideEffects: z.object({ player: SideEffectsSchema.default(freshSideEffects), enemy: SideEffectsSchema.default(freshSideEffects) }).default(() => ({ player: freshSideEffects(), enemy: freshSideEffects() })),
   /** Sides whose Pokémon just came in and whose entry ability (Intimidate, Drizzle) hasn't happened yet. */
   pendingEntry: z.array(z.enum(['player', 'enemy'])).default([]),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
@@ -191,6 +285,9 @@ export const BattleStateSchema = z.object({
   needsSwitch: z.boolean(),
   /** The Last Stand Charm can only save the player once per battle. */
   lastStandUsed: z.boolean(),
+  /** A smart trainer's potions and deliberate switches so far this battle. */
+  enemyItemsUsed: z.number().int().min(0).default(0),
+  enemySwitches: z.number().int().min(0).default(0),
   /** Battle-scope story effects already used this battle (e.g. "toughened-it-out@p1"); see core/story/ledger.ts. */
   storyEffects: z.array(z.string()),
   /** Hyper counters: the current low-HP stand and super-effective hits survived (core/battle/hyper.ts). */

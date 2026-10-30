@@ -66,8 +66,9 @@ describe('support status', () => {
   });
 
   it('bosses only count as meetable when asked (they bring their own moves and cannot be caught)', () => {
-    expect(meetableSpecies(content).has('smeargle')).toBe(false);
-    expect(meetableSpecies(content, true).has('smeargle')).toBe(true);
+    // Smeargle's Sketch works now, so it is meetable in the wild; asking for bosses never takes anyone away.
+    const wild = meetableSpecies(content);
+    for (const id of wild) expect(meetableSpecies(content, true).has(id)).toBe(true);
   });
 });
 

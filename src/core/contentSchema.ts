@@ -114,6 +114,19 @@ export const WEATHERS = ['rain', 'sun', 'sand', 'snow', 'hail'] as const;
 export const WeatherSchema = z.enum(WEATHERS);
 /** Terrains (Electric, Grassy, Misty, Psychic): they last 5 turns and affect Pokémon standing on the ground. */
 export const TERRAINS = ['electric', 'grassy', 'misty', 'psychic'] as const;
+export const PowerRuleSchema = z.enum([
+  'userSpeed', 'targetSpeed', 'userHp', 'targetHp',
+  'doubleTargetStatus', 'doubleUserStatus', 'doubleTargetPoison', 'doubleTargetParalyzed', 'doubleTargetAsleep',
+  'doubleUserFirst', 'doubleUserSecond',
+  'electricTerrainDouble', 'electricTerrainBoost', 'mistyTerrainBoost', 'psychicTerrainBoost', 'needsTerrain',
+  'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
+  'perHit', 'magnitude', 'sunBoost', 'doubleTargetHurt', 'doubleRandom', 'stockpile',
+]);
+export type PowerRule = z.infer<typeof PowerRuleSchema>;
+
+export const SideMoveSchema = z.enum(['reflect', 'lightScreen', 'auroraVeil', 'tailwind', 'safeguard', 'mist', 'luckyChant', 'spikes', 'toxicSpikes', 'stealthRock', 'stickyWeb']);
+export type SideMove = z.infer<typeof SideMoveSchema>;
+
 export const TerrainSchema = z.enum(TERRAINS);
 export type Terrain = z.infer<typeof TerrainSchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
@@ -166,7 +179,101 @@ export const MoveSchema = z.object({
       /** Fraction of the user's max HP it loses after using the move. */
       recoilMaxHp: z.number().positive().max(1).optional(),
       /** Deals damage equal to the user's level, ignoring stats. */
-      fixedDamage: z.literal('level').optional(),
+      fixedDamage: z.union([z.literal('level'), z.literal('psywave'), z.number().int().positive()]).optional(),
+      /** Takes off half of the target's current HP (Super Fang). */
+      halveTarget: z.literal(true).optional(),
+      /** Brings the target's HP down to the user's (Endeavor); fails if it is already lower. */
+      endeavor: z.literal(true).optional(),
+      /** How the move's power is worked out from the battle (see powerFromRule in the engine). */
+      powerRule: PowerRuleSchema.optional(),
+      /** Does nothing at all (Splash, Celebrate). */
+      noop: z.literal(true).optional(),
+      /** Status move: puts the user in a state (Focus Energy, Laser Focus, Lock-On, Ingrain, Aqua Ring, Endure). */
+      selfState: z.enum(['focusEnergy', 'laserFocus', 'lockOn', 'ingrain', 'aquaRing', 'endure']).optional(),
+      /** Rest: sleeps for two turns and heals fully. */
+      rest: z.literal(true).optional(),
+      /** Wish: heals half the user's max HP at the end of the next turn. */
+      wish: z.literal(true).optional(),
+      /** Pain Split: both sides end up with the average of their HP. */
+      painSplit: z.literal(true).optional(),
+      /** Haze / Freezy Frost reset every stat change; Clear Smog resets the target's after its hit. */
+      resetStages: z.enum(['both', 'target']).optional(),
+      /** Psych Up copies the target's stat changes; Topsy-Turvy flips the target's; the swaps trade stages. */
+      stageTrick: z.enum(['copy', 'invert', 'swapAll', 'swapDefense', 'swapOffense']).optional(),
+      /** Cures status in the whole party (Heal Bell) or just the user (Refresh). */
+      cure: z.enum(['party', 'self']).optional(),
+      /** The user leaves the field after the turn (U-turn, Baton Pass: also passes its stat changes). */
+      switchOut: z.enum(['switch', 'baton']).optional(),
+      /** Drags the target out (Roar, Dragon Tail): a trainer sends another Pokémon, the player's is swapped for a random one. */
+      forceSwitch: z.literal(true).optional(),
+      /** The target can't be switched out (Mean Look, Block). */
+      trap: z.literal(true).optional(),
+      /** The user is hurt for half its max HP if the move misses or has no effect (Jump Kick). */
+      crashOnMiss: z.literal(true).optional(),
+      /** Always a critical hit. */
+      alwaysCrit: z.literal(true).optional(),
+      /** If the move knocks the target out, the user's stat rises (Fell Stinger). */
+      koBoost: z.object({ stat: BoostStatSchema, stages: z.number().int() }).optional(),
+      /** Takes hold of the target's last move or its moves (Disable, Encore, Torment, Taunt, Heal Block, Spite). */
+      disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite']).optional(),
+      /** Uses another move: a random one (Metronome), the target's last (Mirror Move), or the last one used by anyone (Copycat). */
+      callMove: z.enum(['metronome', 'mirrorMove', 'copycat']).optional(),
+      /** Which stat the attack uses: the target's Attack (Foul Play), the user's Defense (Body Press), or the higher of Atk and Sp. Atk (Photon Geyser). */
+      attackFrom: z.enum(['targetAtk', 'def', 'best']).optional(),
+      /** Only works on a sleeping target (Dream Eater). */
+      requiresSleepingTarget: z.literal(true).optional(),
+      /** Fails unless the target chose an attack and the user moved first (Sucker Punch, Thunderclap). */
+      suckerPunch: z.literal(true).optional(),
+      /** A protecting move that punishes contact: a stat change, a status, or damage (King's Shield, Baneful Bunker, Spiky Shield). */
+      protectContact: z.object({ stat: BoostStatSchema.optional(), stages: z.number().int().optional(), status: StatusIdSchema.optional(), hurt: z.number().positive().optional() }).optional(),
+      /** Becomes (or makes the target) a single type: Soak, Magic Powder, Camouflage (by terrain), Conversion (the first move's type). */
+      setType: z.enum(['water', 'psychic', 'terrain', 'firstMove']).optional(),
+      /** Ability tricks: Role Play, Skill Swap, Simple Beam, Worry Seed, Entrainment, Gastro Acid. */
+      abilityChange: z.enum(['rolePlay', 'skillSwap', 'simple', 'insomnia', 'entrainment', 'suppress']).optional(),
+      /** Field-wide effects for five turns. */
+      field: z.enum(['gravity', 'trickRoom', 'waterSport', 'mudSport']).optional(),
+      /** Swaps everything set up on the two sides (Court Change). */
+      courtChange: z.literal(true).optional(),
+      /** Substitute: the user pays a quarter of its max HP for a decoy that takes hits. */
+      substitute: z.literal(true).optional(),
+      /** Destiny Bond: whoever knocks the user out this turn goes down too. */
+      destinyBond: z.literal(true).optional(),
+      /** Perish Song: both Pokémon faint in three turns unless they switch out. */
+      perishSong: z.literal(true).optional(),
+      /** Yawn: the target falls asleep at the end of the next turn. */
+      yawn: z.literal(true).optional(),
+      /** Magnet Rise: the user floats for five turns. */
+      magnetRise: z.literal(true).optional(),
+      /** Smack Down / Thousand Arrows: the target is brought to the ground. */
+      smackDown: z.literal(true).optional(),
+      /** Stockpile and Swallow. */
+      stockpile: z.enum(['store', 'swallow']).optional(),
+      /** Strength Sap: heals by the target's Attack, then lowers it. */
+      strengthSap: z.literal(true).optional(),
+      /** Psycho Shift passes the user's status on; Purify cures the target and heals the user. */
+      statusTrick: z.enum(['shift', 'purify']).optional(),
+      /** Sketch: permanently learns the target's last move. */
+      sketch: z.literal(true).optional(),
+      /** Assist uses a move from a party member; Nature Power one chosen by the terrain. */
+      callFrom: z.enum(['assist', 'nature']).optional(),
+      /** 4/3 power against a type it is super effective on (Collision Course). */
+      superEffectiveBoost: z.literal(true).optional(),
+      /** Can't be used twice in a row (Blood Moon). */
+      noRepeat: z.literal(true).optional(),
+      /** Fails if the user was hit first (Focus Punch), or unless it was hit by a physical move first (Shell Trap). */
+      focus: z.enum(['unhit', 'hitPhysical']).optional(),
+      /** One of these statuses at this chance, picked at random (Tri Attack). */
+      randomStatus: z.object({ chance: z.number().min(1).max(100), ids: z.array(StatusIdSchema).min(2) }).optional(),
+      /** Priority bonus while this terrain is up (Grassy Glide). */
+      terrainPriority: z.object({ terrain: TerrainSchema, bonus: z.number().int() }).optional(),
+      /** Ignores the target's ability (Sunsteel Strike). */
+      ignoreAbility: z.literal(true).optional(),
+      /** Counter and Mirror Coat (and Metal Burst for both): returns the damage the user took this turn, times this. */
+      counter: z.enum(['physical', 'special', 'both']).optional(),
+      /** Sets up something on a side of the field: screens, Tailwind, Safeguard on the user's side; hazards on the foe's. */
+      sideMove: SideMoveSchema.optional(),
+      /** Clears entry hazards: from the user's side (Rapid Spin) or both sides (Defog, Tidy Up). */
+      clearHazards: z.enum(['self', 'both']).optional(),
       /** Confuses the target (chance in percent). */
       confuse: z.object({ chance: z.number().min(1).max(100) }).optional(),
       /** Hits this many times: [2, 5] rolls 2–5 hits (35/35/15/15%), [2, 2] always twice. */
@@ -564,6 +671,14 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('powerHerb') }),
   /** Lowered stats are restored once per battle (White Herb). */
   z.object({ hook: z.literal('whiteHerb') }),
+  /** Reflect, Light Screen and Aurora Veil the holder sets last longer (Light Clay). */
+  z.object({ hook: z.literal('lightClay'), turns: z.number().int().positive() }),
+  /** When hit, the attacker is forced out, once per battle (Red Card). */
+  z.object({ hook: z.literal('redCard') }),
+  /** When hit, the holder switches out, once per battle (Eject Button). */
+  z.object({ hook: z.literal('ejectButton') }),
+  /** A Taunt on the holder is cured at once, once per battle (Mental Herb). */
+  z.object({ hook: z.literal('mentalHerb') }),
   /** Damage taken changes: from wild Pokémon only, from super-effective hits only, or when the holder is a type. */
   z.object({
     hook: z.literal('damageTaken'),
@@ -1027,7 +1142,21 @@ export const RulesetSchema = z.object({
 });
 export type Ruleset = z.infer<typeof RulesetSchema>;
 
+export const TrainerAiSchema = z.object({
+  /** A smart trainer (a boss) heals once its Pokémon is under this share of its max HP. */
+  healBelow: z.number().min(0).max(1),
+  /** The share of max HP a trainer's potion restores. */
+  healFraction: z.number().positive().max(1),
+  /** Potions a smart trainer may use in one battle. */
+  maxItems: z.number().int().min(0),
+  /** Times a smart trainer may swap its Pokémon out on purpose in one battle. */
+  maxSwitches: z.number().int().min(0),
+  /** It swaps when its best move is worth less than this share of the best a teammate has. */
+  switchRatio: z.number().positive().max(1),
+});
+
 export const BalanceSchema = z.object({
+  trainerAi: TrainerAiSchema,
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

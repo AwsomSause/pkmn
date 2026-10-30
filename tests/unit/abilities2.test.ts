@@ -95,4 +95,13 @@ describe('second batch of abilities', () => {
     turn(ctx);
     expect(battle.playerVolatile.abilityOverride).toBe('mummy');
   });
+
+  it('Cloud Nine switches off weather damage', () => {
+    const a = setup(plain('rattata', 'tackle'), mon('golduck', 'cloud-nine', 'tackle'));
+    a.battle.weather = { id: 'sand', turns: 5 };
+    expect(turn(a.ctx).some((e) => e.type === 'weatherDamage')).toBe(false);
+    const b = setup(plain('rattata', 'tackle'), plain('geodude', 'tackle'));
+    b.battle.weather = { id: 'sand', turns: 5 };
+    expect(turn(b.ctx).some((e) => e.type === 'weatherDamage' && e.side === 'player')).toBe(true);
+  });
 });
