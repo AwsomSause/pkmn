@@ -721,7 +721,14 @@
       "forms": [
         "butterfree-gmax"
       ],
-      "type": "bug"
+      "type": "bug",
+      "effects": {
+        "randomStatus": [
+          "par",
+          "psn",
+          "slp"
+        ]
+      }
     },
     "g-max-cannonade": {
       "forms": [
@@ -767,7 +774,10 @@
       "forms": [
         "alcremie-gmax"
       ],
-      "type": "fairy"
+      "type": "fairy",
+      "effects": {
+        "heal": 0.1667
+      }
     },
     "g-max-fireball": {
       "forms": [
@@ -896,13 +906,22 @@
         "toxtricity-amped-gmax",
         "toxtricity-low-key-gmax"
       ],
-      "type": "electric"
+      "type": "electric",
+      "effects": {
+        "randomStatus": [
+          "par",
+          "psn"
+        ]
+      }
     },
     "g-max-sweetness": {
       "forms": [
         "appletun-gmax"
       ],
-      "type": "grass"
+      "type": "grass",
+      "effects": {
+        "cureUser": true
+      }
     },
     "g-max-tartness": {
       "forms": [
