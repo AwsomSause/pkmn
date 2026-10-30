@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T14:50:24.263Z",
+  "generatedAt": "2026-10-30T15:52:37.112Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -77971,6 +77971,1567 @@
       "lazy": true
     },
     {
+      "id": "anim.data.ess-absorb",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-absorb.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-acid",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-acid.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-acid-armor",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-acid-armor.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-acid-spray",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-acid-spray.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-acrobatics",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-acrobatics.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-acupressure",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-acupressure.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-aerial-ace",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-aerial-ace.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-agility",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-agility.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ally-switch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ally-switch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-amnesia",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-amnesia.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ancient-power",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ancient-power.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-aqua-ring",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-aqua-ring.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-aromatherapy",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-aromatherapy.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-aurora-beam",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-aurora-beam.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-barrier",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-barrier.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-beat-up",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-beat-up.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bind",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bind.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bite",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bite.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-blast-burn",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-blast-burn.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-block",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-block.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-blue-flare",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-blue-flare.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-body-slam",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-body-slam.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-brick-break",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-brick-break.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bubble",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bubble.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bubble-beam",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bubble-beam.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bulk-up",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bulk-up.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bullet-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bullet-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-bullet-seed",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-bullet-seed.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-charge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-charge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-charm",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-charm.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-clear-smog",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-clear-smog.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-close-combat",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-close-combat.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-comet-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-comet-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-burn",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-burn.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-confusion",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-confusion.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-frozen",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-frozen.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-hail",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-hail.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-healthup",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-healthup.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-paralysis",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-paralysis.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-poison",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-poison.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-rain",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-rain.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-sandstorm",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-sandstorm.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-sleep",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-sleep.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-common-sun",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-common-sun.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-confuse-ray",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-confuse-ray.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-cotton-guard",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-cotton-guard.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-cotton-spore",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-cotton-spore.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-counter",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-counter.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-crunch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-crunch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-crush-claw",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-crush-claw.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-curse",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-curse.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-cut",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-cut.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-defense-curl",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-defense-curl.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-detect",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-detect.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-disable",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-disable.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dizzy-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dizzy-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-double-edge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-double-edge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-double-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-double-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-double-slap",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-double-slap.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dragon-breath",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dragon-breath.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dragon-claw",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dragon-claw.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dragon-dance",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dragon-dance.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dragon-rage",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dragon-rage.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-dynamic-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-dynamic-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ember",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ember.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-encore",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-encore.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-energy-ball",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-energy-ball.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-eruption",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-eruption.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-explosion",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-explosion.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fake-out",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fake-out.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fake-tears",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fake-tears.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fiery-dance",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fiery-dance.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-final-gambit",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-final-gambit.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fire-blast",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fire-blast.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fire-fang",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fire-fang.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fire-pledge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fire-pledge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fire-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fire-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fire-spin",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fire-spin.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flail",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flail.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flame-burst",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flame-burst.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flame-charge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flame-charge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flame-wheel",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flame-wheel.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flamethrower",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flamethrower.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-flash",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-flash.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fly",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fly.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-focus-energy",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-focus-energy.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-follow-me",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-follow-me.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-foresight",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-foresight.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-frenzy-plant",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-frenzy-plant.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fury-attack",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fury-attack.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fury-cutter",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fury-cutter.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-fury-swipes",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-fury-swipes.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-future-sight",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-future-sight.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-gastro-acid",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-gastro-acid.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-giga-drain",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-giga-drain.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-glare",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-glare.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-grass-whistle",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-grass-whistle.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-growl",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-growl.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-grudge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-grudge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-gust",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-gust.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-hail",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-hail.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-harden",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-harden.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-headbutt",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-headbutt.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-heat-wave",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-heat-wave.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-high-jump-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-high-jump-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-horn-attack",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-horn-attack.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-hydro-pump",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-hydro-pump.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-hyper-fang",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-hyper-fang.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ice-ball",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ice-ball.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ice-fang",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ice-fang.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-ice-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-ice-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-icicle-spear",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-icicle-spear.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-icy-wind",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-icy-wind.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-inferno",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-inferno.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-iron-head",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-iron-head.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-jump-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-jump-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-karate-chop",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-karate-chop.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-kinesis",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-kinesis.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-leaf-blade",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-leaf-blade.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-leech-life",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-leech-life.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-leech-seed",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-leech-seed.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-leer",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-leer.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-lick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-lick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-light-screen",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-light-screen.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-lock-on",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-lock-on.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-lovely-kiss",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-lovely-kiss.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-low-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-low-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-lucky-chant",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-lucky-chant.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mach-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mach-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-magic-coat",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-magic-coat.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mean-look",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mean-look.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mega-drain",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mega-drain.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mega-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mega-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mega-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mega-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-megahorn",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-megahorn.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-metal-claw",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-metal-claw.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-meteor-mash",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-meteor-mash.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-metronome",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-metronome.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mist",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mist.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-mist-ball",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-mist-ball.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-moonlight",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-moonlight.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-morning-sun",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-morning-sun.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-nightmare",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-nightmare.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-outrage",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-outrage.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-overheat",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-overheat.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-pay-day",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-pay-day.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-petal-dance",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-petal-dance.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-pin-missile",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-pin-missile.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-poison-fang",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-poison-fang.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-poison-gas",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-poison-gas.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-poison-powder",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-poison-powder.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-poison-sting",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-poison-sting.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-poison-tail",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-poison-tail.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-pound",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-pound.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-psychic",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-psychic.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-psycho-cut",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-psycho-cut.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-quick-attack",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-quick-attack.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-rain-dance",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-rain-dance.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-razor-leaf",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-razor-leaf.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-reflect",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-reflect.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-rest",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-rest.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-roar",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-roar.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-rock-smash",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-rock-smash.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-rock-throw",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-rock-throw.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-rolling-kick",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-rolling-kick.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sand-attack",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sand-attack.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sandstorm",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sandstorm.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-scary-face",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-scary-face.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-scratch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-scratch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-screech",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-screech.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-self-destruct",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-self-destruct.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-shadow-ball",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-shadow-ball.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-signal-beam",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-signal-beam.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-silver-wind",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-silver-wind.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sing",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sing.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sketch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sketch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-slam",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-slam.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-slash",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-slash.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sleep-powder",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sleep-powder.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sludge",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sludge.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sludge-bomb",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sludge-bomb.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-smog",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-smog.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-smokescreen",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-smokescreen.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-spider-web",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-spider-web.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-spike-cannon",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-spike-cannon.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-spikes",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-spikes.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-splash",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-splash.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-spore",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-spore.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-stealth-rock",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-stealth-rock.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-stomp",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-stomp.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-string-shot",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-string-shot.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-struggle",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-struggle.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-stun-spore",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-stun-spore.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sunny-day",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sunny-day.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-supersonic",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-supersonic.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-swagger",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-swagger.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-sweet-kiss",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-sweet-kiss.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-swift",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-swift.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-swords-dance",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-swords-dance.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-tackle",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-tackle.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-tail-glow",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-tail-glow.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-tail-whip",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-tail-whip.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-teleport",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-teleport.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunder",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunder.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunder-fang",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunder-fang.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunder-punch",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunder-punch.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunder-shock",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunder-shock.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunder-wave",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunder-wave.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-thunderbolt",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-thunderbolt.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-toxic",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-toxic.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-trick-room",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-trick-room.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-twineedle",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-twineedle.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-twister",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-twister.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-vine-whip",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-vine-whip.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-water-gun",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-water-gun.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-water-pulse",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-water-pulse.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-whirlwind",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-whirlwind.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-will-o-wisp",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-will-o-wisp.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-wing-attack",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-wing-attack.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-wrap",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-wrap.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-wring-out",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-wring-out.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-x-scissor",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-x-scissor.json",
+      "lazy": true
+    },
+    {
+      "id": "anim.data.ess-zap-cannon",
+      "kind": "json",
+      "category": "animation",
+      "path": "battle-anims/ess-zap-cannon.json",
+      "lazy": true
+    },
+    {
       "id": "anim.data.eternabeam",
       "kind": "json",
       "category": "animation",
@@ -82571,6 +84132,1086 @@
       "lazy": true
     },
     {
+      "id": "anim.sheet.ess-",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01-h200",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01-h200.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01-h230",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01-h230.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01-h310",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01-h310.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01-h330",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01-h330.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-003-attack01-h50",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-003-attack01-h50.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-004-attack02",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-004-attack02.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-007-weapon02-h350",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-007-weapon02-h350.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-008-weapon03",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-008-weapon03.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-008-weapon03-h210",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-008-weapon03-h210.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-009-weapon04",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-009-weapon04.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-011-weapon06",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-011-weapon06.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-015-fire01-h200",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-015-fire01-h200.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-016-ice01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-016-ice01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-017-thunder01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-017-thunder01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-018-water01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-018-water01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-022-darkness01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-022-darkness01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-023-burst01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-023-burst01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-028-state01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-028-state01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-030-explosion01-h340",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-030-explosion01-h340.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-aerial-ace",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-aerial-ace.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-ancient-powerfilesheet",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-ancient-powerfilesheet.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anim-sheet",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anim-sheet.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anim-sheet-2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anim-sheet-2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anim-sheet-2-h224",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anim-sheet-2-h224.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anim-sheet-h338",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anim-sheet-h338.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anim-sheet-h5",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anim-sheet-h5.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anima-1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anima-1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-anima-2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-anima-2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-animsheet",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-animsheet.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-babacometro",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-babacometro.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-block",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-block.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-confused",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-confused.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-cosmo-01",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-cosmo-01.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-crunch",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-crunch.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-divine-smash",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-divine-smash.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-dragon-claw",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-dragon-claw.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-earth1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-earth1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-efftest4-h80",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-efftest4-h80.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-electric1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-electric1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-electric2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-electric2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-element-fangs",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-element-fangs.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-element-fangs-h180",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-element-fangs-h180.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-element-fangs-h226",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-element-fangs-h226.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-element-fangs-h304",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-element-fangs-h304.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-estranho",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-estranho.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-face-and-eye",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-face-and-eye.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fakeout",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fakeout.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-finger-spoon",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-finger-spoon.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire-blast",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire-blast.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire3",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire3.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire4",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire4.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire5",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire5.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire5-h180",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire5-h180.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fire5-h300",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fire5-h300.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-firebird",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-firebird.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-firepoison",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-firepoison.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-flames",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-flames.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fly-copy",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fly-copy.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fly-copy-h261",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fly-copy-h261.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fly-copy-h267",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fly-copy-h267.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fly-copy-h270",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fly-copy-h270.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-fogo-01-h360",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-fogo-01-h360.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-ghost1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-ghost1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-ghost2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-ghost2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-grass",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-grass.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-grass2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-grass2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-growl",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-growl.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-growl-h230",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-growl-h230.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-gust",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-gust.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-heal3",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-heal3.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-heal5-h20",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-heal5-h20.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-ice1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-ice1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-icewater",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-icewater.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-iron-head",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-iron-head.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-leech-seed",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-leech-seed.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-leer",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-leer.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-light1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-light1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-many",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-many.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-many-h80",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-many-h80.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-mixed",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-mixed.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-mixed-status",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-mixed-status.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-normal1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-normal1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-normal1-h320",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-normal1-h320.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-normal1-h70",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-normal1-h70.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-normal2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-normal2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poi-hear-mus",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poi-hear-mus.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poi-hear-mus-h201",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poi-hear-mus-h201.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison-h150",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison-h150.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison-h20",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison-h20.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison3",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison3.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison3-h140",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison3-h140.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison3-h160",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison3-h160.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-poison4",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-poison4.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-psycho-cut",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-psycho-cut.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-punches",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-punches.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-punches-h359",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-punches-h359.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-rock-tomb",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-rock-tomb.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-rockice",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-rockice.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-rockice-h260",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-rockice-h260.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-rockice-h280",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-rockice-h280.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-sand-attack",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-sand-attack.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-scratch-shadow-claw",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-scratch-shadow-claw.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-scratchbattle",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-scratchbattle.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-special5",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-special5.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-special5-h100",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-special5-h100.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-special5-h150",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-special5-h150.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-special5-h290",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-special5-h290.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-special5-h90",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-special5-h90.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-state1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-state1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-state1-h100",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-state1-h100.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-state1-h130",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-state1-h130.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-struggle",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-struggle.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-struggle-h160",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-struggle-h160.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-struggle-h230",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-struggle-h230.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-struggle-h30",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-struggle-h30.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-struggle-h90",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-struggle-h90.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-sword5-h90",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-sword5-h90.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-sword6",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-sword6.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-t-shock",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-t-shock.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-tackle-b",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-tackle-b.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-teeth",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-teeth.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-thunder2",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-thunder2.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-trovao",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-trovao.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-ultra-beam-h300",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-ultra-beam-h300.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-water-pulse",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-water-pulse.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-water3",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-water3.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-weather",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-weather.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-wind1",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-wind1.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-wind1-h110",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-wind1-h110.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-x-scizzor",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-x-scizzor.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
+      "id": "anim.sheet.ess-zan03-h80",
+      "kind": "spritesheet",
+      "category": "animation",
+      "path": "images/battle_anims/ess-zan03-h80.png",
+      "frameSize": 96,
+      "lazy": true
+    },
+    {
       "id": "anim.sheet.fire5",
       "kind": "spritesheet",
       "category": "animation",
@@ -86429,6 +89070,937 @@
       "kind": "audio",
       "category": "animation",
       "path": "audio/battle_anims/earth5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-absorb2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-absorb2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-ace",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-ace.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-acupressure",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-acupressure.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-applause",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-applause.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-battle1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-battle1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-blow7",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-blow7.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-bow1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-bow1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-buzzer",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-buzzer.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-collapse1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-collapse1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-comet-punch",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-comet-punch.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-confuse",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-confuse.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-crash",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-crash.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-damage1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-damage1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-darkness2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-darkness2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-darkness6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-darkness6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-defense-curl",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-defense-curl.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-dizzy-punch",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-dizzy-punch.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-earth1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-earth1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-earth3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-earth3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-earth4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-earth4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-earth5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-earth5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-explosion7",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-explosion7.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fire6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fire6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-flail",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-flail.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-flash2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-flash2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fog2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fog2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-follow-me",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-follow-me.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-fury-swipes",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-fury-swipes.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-gust",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-gust.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-harden",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-harden.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-hit",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-hit.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-ice2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-ice2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-ice5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-ice5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-ice8",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-ice8.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-knock",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-knock.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-lock-on",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-lock-on.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-lovely-kiss",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-lovely-kiss.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-lucky-chant",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-lucky-chant.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-mega-punch",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-mega-punch.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-metal",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-metal.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-metronome",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-metronome.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-miningcollapse",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-miningcollapse.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-miningping",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-miningping.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-natural-gift",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-natural-gift.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-normaldamage",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-normaldamage.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-paralyze1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-paralyze1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-paralyze3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-paralyze3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-poison",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-poison.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-pollen",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-pollen.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-present-heal",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-present-heal.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-psych-up",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-psych-up.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-psycho-cut",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-psycho-cut.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-punch5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-punch5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-recovery",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-recovery.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-refresh",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-refresh.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint7",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint7.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint8",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint8.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-saint9",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-saint9.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sand",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sand.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-scary-face",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-scary-face.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-select",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-select.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-shell-smash",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-shell-smash.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sing",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sing.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slam",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slam.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash10",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash10.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash11",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash11.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash6",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash6.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash8",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash8.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-slash9",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-slash9.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sleep",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sleep.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-smokescreen",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-smokescreen.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-snore",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-snore.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sound2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sound2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-stare",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-stare.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-substitute",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-substitute.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-super-fang",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-super-fang.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-superdamage",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-superdamage.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-swagger",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-swagger.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sweet-scent",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sweet-scent.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sword1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sword1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-sword2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-sword2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-swords-dance",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-swords-dance.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-take-down",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-take-down.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-teleport",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-teleport.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-throw",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-throw.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-thunder1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-thunder1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-thunder3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-thunder3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-thunder4",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-thunder4.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-thunder9",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-thunder9.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-trump-card",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-trump-card.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-twine",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-twine.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-up",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-up.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-uproar",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-uproar.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-vice-grip",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-vice-grip.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-voltorb-flip-explosion",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-voltorb-flip-explosion.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-voltorb-flip-mark",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-voltorb-flip-mark.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-water1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-water1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-water2",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-water2.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-water3",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-water3.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-water5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-water5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-weatherball",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-weatherball.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-whirlwind",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-whirlwind.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-wind1",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-wind1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-wind5",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-wind5.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-wind7",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-wind7.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-wind8",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-wind8.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-work-up",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-work-up.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-wring-out",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-wring-out.m4a",
+      "lazy": true
+    },
+    {
+      "id": "anim.sound.ess-yawn",
+      "kind": "audio",
+      "category": "animation",
+      "path": "audio/battle_anims/ess-yawn.m4a",
       "lazy": true
     },
     {

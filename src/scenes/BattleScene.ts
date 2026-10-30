@@ -32,7 +32,7 @@ import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { wouldRefuse } from '../core/bond';
-import { presentationFor } from '../core/presentation/moveAnims';
+import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
@@ -480,7 +480,7 @@ export class BattleScene extends Phaser.Scene {
   /** Starts loading the animations of a Pokémon's moves while the player reads. */
   private prefetchMoves(mon: PokemonInstance): void {
     const data = moveAnims();
-    this.fx.prefetch(mon.moves.map((m) => presentationFor(data, m.id).anim));
+    this.fx.prefetch(mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim));
   }
 
   /**
