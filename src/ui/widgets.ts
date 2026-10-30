@@ -307,29 +307,47 @@ export class Menu {
   }
 }
 
-/** A horizontal bar (HP or XP) that animates to new values. */
+/** B2W2 HP gauge colours (top highlight, body, lower shade): green above half, yellow above a fifth, red below. */
+const HP_GAUGE = {
+  high: [0x9cf890, 0x38c838, 0x1f8a28],
+  medium: [0xfff08a, 0xf0c010, 0xb08a08],
+  low: [0xff9a88, 0xe03828, 0x982018],
+} as const;
+
+/** A horizontal bar (HP or XP) that animates to new values. HP draws as a B2W2-style pill gauge; XP stays a thin two-tone strip. */
 export class Bar {
-  private readonly bg: Phaser.GameObjects.Rectangle;
-  private readonly fill: Phaser.GameObjects.Rectangle;
-  /** The lighter top half of the bar (PokeRogue's bars are two-tone). */
-  private readonly shine: Phaser.GameObjects.Rectangle;
-  /** HP bars: the pale strip showing the HP just lost, which catches up after the bar drains. */
-  private readonly ghost: Phaser.GameObjects.Rectangle | null;
+  private readonly bg: Phaser.GameObjects.Rectangle | null;
+  private readonly fill: Phaser.GameObjects.Rectangle | null;
+  /** The lighter top half of the XP bar. */
+  private readonly shine: Phaser.GameObjects.Rectangle | null;
+  /** HP gauge: one graphics object (track, lost-HP strip, fill) redrawn on every change. */
+  private readonly gauge: Phaser.GameObjects.Graphics | null;
+  /** HP gauge: the pale strip showing the HP just lost, which catches up after the bar drains. */
+  private readonly ghost = { w: 0 };
+  private readonly h: number;
   private ratio = 1;
 
   constructor(
     private readonly scene: Phaser.Scene,
-    x: number,
-    y: number,
+    private readonly x: number,
+    private readonly y: number,
     private readonly width: number,
     height: number,
     private readonly kind: 'hp' | 'xp',
   ) {
-    this.bg = scene.add.rectangle(x, y, width, height, 0x212121).setOrigin(0, 0.5);
-    this.ghost = kind === 'hp' ? scene.add.rectangle(x, y, width, height, 0xf8e0c0).setOrigin(0, 0.5) : null;
-    const shades = kind === 'xp' ? BAR_SHADES.xp : BAR_SHADES.high;
-    this.fill = scene.add.rectangle(x, y, width, height, shades[1]).setOrigin(0, 0.5);
-    this.shine = scene.add.rectangle(x, y - height / 2, width, Math.ceil(height / 2), shades[0]).setOrigin(0, 0);
+    // The gauge is taller than the old strip so the rounded ends and the highlight read.
+    this.h = kind === 'hp' ? Math.max(height, 10) : height;
+    if (kind === 'hp') {
+      this.gauge = scene.add.graphics();
+      this.bg = this.fill = this.shine = null;
+      this.ghost.w = width;
+      this.draw();
+    } else {
+      this.gauge = null;
+      this.bg = scene.add.rectangle(x, y, width, height, 0x212121).setOrigin(0, 0.5);
+      this.fill = scene.add.rectangle(x, y, width, height, BAR_SHADES.xp[1]).setOrigin(0, 0.5);
+      this.shine = scene.add.rectangle(x, y - height / 2, width, Math.ceil(height / 2), BAR_SHADES.xp[0]).setOrigin(0, 0);
+    }
   }
 
   set(ratio: number, animate = false): Promise<void> {
@@ -344,7 +362,7 @@ export class Bar {
       // Bigger changes take a little longer, so the drain reads as one smooth motion.
       const duration = Math.round(250 + 450 * Math.abs(target - this.ratio));
       const dropping = target < this.ratio;
-      if (this.ghost && dropping) this.ghost.width = this.fill.width;
+      if (this.gauge && dropping) this.ghost.w = this.width * this.ratio;
       this.scene.tweens.add({
         targets: from,
         r: target,
@@ -353,8 +371,8 @@ export class Bar {
         onUpdate: () => this.apply(from.r, !dropping),
         onComplete: () => {
           this.apply(target, !dropping);
-          if (this.ghost && dropping) {
-            this.scene.tweens.add({ targets: this.ghost, width: this.fill.width, delay: 180, duration: 320, ease: 'Quad.easeIn' });
+          if (this.gauge && dropping) {
+            this.scene.tweens.add({ targets: this.ghost, w: this.width * target, delay: 180, duration: 320, ease: 'Quad.easeIn', onUpdate: () => this.draw() });
           }
           resolve();
         },
@@ -364,21 +382,40 @@ export class Bar {
 
   private apply(ratio: number, moveGhost = true): void {
     this.ratio = ratio;
-    this.fill.width = Math.max(0, this.width * ratio);
-    this.shine.width = this.fill.width;
-    if (this.ghost && moveGhost) {
-      this.scene.tweens.killTweensOf(this.ghost);
-      this.ghost.width = this.fill.width;
+    if (this.gauge) {
+      if (moveGhost) {
+        this.scene.tweens.killTweensOf(this.ghost);
+        this.ghost.w = this.width * ratio;
+      }
+      this.draw();
+      return;
     }
-    if (this.kind === 'hp') {
-      const shades = ratio > 0.5 ? BAR_SHADES.high : ratio > 0.2 ? BAR_SHADES.medium : BAR_SHADES.low;
-      this.shine.fillColor = shades[0];
-      this.fill.fillColor = shades[1];
-    }
+    this.fill!.width = Math.max(0, this.width * ratio);
+    this.shine!.width = this.fill!.width;
+  }
+
+  /** Track (dark pill, pale rim), lost-HP strip, then the three-band fill with rounded ends. */
+  private draw(): void {
+    const g = this.gauge!;
+    const { x, y, width, h } = this;
+    const top = y - h / 2;
+    g.clear();
+    g.fillStyle(0xf0f0e8, 1).fillRoundedRect(x - 2, top - 2, width + 4, h + 4, h / 2 + 2);
+    g.fillStyle(0x303838, 1).fillRoundedRect(x - 1, top - 1, width + 2, h + 2, h / 2 + 1);
+    g.fillStyle(0x182020, 1).fillRoundedRect(x, top, width, h, h / 2);
+    const fillW = this.width * this.ratio;
+    if (this.ghost.w > fillW + 0.5) g.fillStyle(0xf8e0c0, 1).fillRoundedRect(x, top, this.ghost.w, h, Math.min(h / 2, this.ghost.w / 2));
+    if (fillW < 1) return;
+    const shades = this.ratio > 0.5 ? HP_GAUGE.high : this.ratio > 0.2 ? HP_GAUGE.medium : HP_GAUGE.low;
+    const r = Math.min(h / 2, fillW / 2);
+    g.fillStyle(shades[2], 1).fillRoundedRect(x, top, fillW, h, r);
+    g.fillStyle(shades[1], 1).fillRoundedRect(x, top, fillW, h - 2, r);
+    if (fillW > 6) g.fillStyle(shades[0], 1).fillRoundedRect(x + 2, top + 1, fillW - 4, Math.max(2, Math.floor(h / 3)), 1);
   }
 
   addTo(container: Phaser.GameObjects.Container): void {
-    container.add([this.bg, ...(this.ghost ? [this.ghost] : []), this.fill, this.shine]);
+    if (this.gauge) container.add(this.gauge);
+    else container.add([this.bg!, this.fill!, this.shine!]);
   }
 }
 

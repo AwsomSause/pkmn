@@ -6,6 +6,7 @@ One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone
 Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run 24, settings 6, meta 1. Next free versions: run 25, profile 13, settings 7 (check `origin/main` first; another thread may have taken them).
 
 ## Done
+- Battle HP bars restyled B2W2-style (`ui/widgets.ts` `Bar`, `BattleScene.makeInfoBox`): rounded pill gauge with pale rim, three-band fill (green above 50%, yellow above 20%, red below), lost-HP strip that catches up, dark `HP` tag. Drawn originally (no copied art). Also used by the party panel. XP bar unchanged.
 - Playtest (PR #259): `node tools/playtest.ts <from> <count> [out] [--heal]` plays the smart bot through runs picked from a number (trainer, mode, difficulty, modifiers). 500 runs in `docs/quality/playtest/runs.jsonl`: 0 crashes/stuck after fixing a double-KO softlock (`core/run.ts`) and the bot's Monotype crash. Findings: ~20% of runs lose the first fight (Nightmare most), Adventure never ends for a losing bot, Quick Route ends near fight 9. Not played: expeditions, minigames.
 - New title logo (`drawLogo` in `ui/showcase.ts`): original "POCKET RAIDERS" wordmark with a glossy diamond crest and spark, bobbing only when motion is Full. Used on the title screen and Hub. No official Pokémon logo shapes.
 - Full-campaign bot walk (opt-in, `npm run test:walk`): a god-mode bot clears all 9 regions using every heal, shop, event and service stop; 7 seeds won with no softlocks. Not part of `check`. Test `tests/unit/fullCampaignWalk.test.ts`.
