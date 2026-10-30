@@ -149,13 +149,13 @@ describe('TM Case', () => {
 
 describe('RSVP Mail: a rival', () => {
   it('next stage, the first ordinary trainer is a stronger rival; beating it gives gym odds and one more choice; only once', () => {
-    const run = nextStage(take(newRun('rsvp'), 'rsvp-mail'));
+    const run = nextStage(take(newRun('rsvp-c'), 'rsvp-mail'));
     const trainers = run.stage!.map.nodes.filter((n) => n.kind === 'trainer' && n.column > 1);
     const enter = (r: RunState, id: string) => {
       r.stage!.current = r.stage!.map.nodes.find((n) => n.next.includes(id))!.id;
       return chooseNode(content, r, id);
     };
-    const plain = enter(structuredClone(newRun('rsvp')), trainers[0]!.id);
+    const plain = enter(structuredClone(newRun('rsvp-c')), trainers[0]!.id);
     expect(plain.battle!.rival).toBeUndefined();
     const fight = enter(run, trainers[0]!.id);
     expect(fight.battle!.rival).toBe(true);

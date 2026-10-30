@@ -154,3 +154,5 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §4 Campaign dramatic arcs, route consequence engine | TODO |
 | §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
+
+- Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.

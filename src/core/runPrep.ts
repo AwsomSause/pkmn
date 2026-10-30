@@ -3,6 +3,7 @@
 // and the Run Build Summary. These choices open up options; none of them
 // makes the player's Pokémon stronger.
 
+import { isSpecialForm } from './specialForms';
 import { getArchetype } from './archetypes';
 import { attributesLine, readAttributes } from './attributes';
 import type { Archetype, Content, DraftRule, License, PrepToken, Species, StarterPool, TypeName } from './contentSchema';
@@ -28,6 +29,7 @@ export function firstStage(content: Content, id: string): Species | undefined {
 function isStarterEligible(content: Content, s: Species): boolean {
   if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
   if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
+  if (isSpecialForm(s)) return false;
   return baseStatTotal(s) <= content.balance.wildMaxBaseStats;
 }
 
