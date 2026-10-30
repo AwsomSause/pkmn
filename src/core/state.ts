@@ -166,7 +166,6 @@ export const VolatileSchema = z.object({
   smackedDown: z.boolean().default(false),
   /** Stockpile: times stored (0–3). */
   stockpile: z.number().int().min(0).max(3).default(0),
-<<<<<<< HEAD
   /** Full type override (Reflect Type, Forest's Curse, Burn Up...). */
   typeList: z.array(z.string()).nullable().default(null),
   /** Stats replaced for this stay (Power Trick, Speed Swap, the Splits). */
@@ -235,8 +234,6 @@ export const VolatileSchema = z.object({
   throat: z.number().int().min(0).default(0),
   /** Types lost (Burn Up, Double Shock). */
   lostTypes: z.array(z.string()).default([]),
-=======
->>>>>>> origin/claude/project-thread-h47l6h
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -277,7 +274,6 @@ export const freshVolatile = (): Volatile => ({
   magnetRise: 0,
   smackedDown: false,
   stockpile: 0,
-<<<<<<< HEAD
   typeList: null,
   statOverride: {},
   charged: false,
@@ -312,8 +308,6 @@ export const freshVolatile = (): Volatile => ({
   roost: false,
   throat: 0,
   lostTypes: [],
-=======
->>>>>>> origin/claude/project-thread-h47l6h
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -353,7 +347,6 @@ export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
 export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
 
-<<<<<<< HEAD
 export const freshExtra = () => ({
   allyFaintedTurn: { player: -9, enemy: -9 },
   echo: { n: 0, turn: -9 },
@@ -368,8 +361,6 @@ export const freshExtra = () => ({
   healingWish: { player: 'none' as 'none' | 'wish' | 'dance', enemy: 'none' as 'none' | 'wish' | 'dance' },
 });
 
-=======
->>>>>>> origin/claude/project-thread-h47l6h
 /** What is set up on one side of the field: screens and other turn counters, and entry hazards. */
 export const SideEffectsSchema = z.object({
   reflect: z.number().int().min(0).default(0),
@@ -387,7 +378,6 @@ export const SideEffectsSchema = z.object({
 export type SideEffects = z.infer<typeof SideEffectsSchema>;
 export const freshSideEffects = (): SideEffects => SideEffectsSchema.parse({});
 
-<<<<<<< HEAD
 /** The changing state of a raid fight (rules in core/raid/raid.ts). */
 export const RaidBattleSchema = z.object({
   id: z.string(),
@@ -409,8 +399,6 @@ export const RaidBattleSchema = z.object({
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
-=======
->>>>>>> origin/claude/project-thread-h47l6h
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -432,7 +420,6 @@ export const BattleStateSchema = z.object({
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** Field-wide effects and their turns left. */
   field: z.object({ gravity: z.number().int().min(0).default(0), trickRoom: z.number().int().min(0).default(0), waterSport: z.number().int().min(0).default(0), mudSport: z.number().int().min(0).default(0) }).default(() => ({ gravity: 0, trickRoom: 0, waterSport: 0, mudSport: 0 })),
-<<<<<<< HEAD
   /** Smaller battle-wide counters for the rarer moves (see core/battle/engine.ts). */
   extra: z.object({
     allyFaintedTurn: z.object({ player: z.number().int().default(-9), enemy: z.number().int().default(-9) }).default({ player: -9, enemy: -9 }),
@@ -448,8 +435,6 @@ export const BattleStateSchema = z.object({
     passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),
     healingWish: z.object({ player: z.enum(['none', 'wish', 'dance']).default('none'), enemy: z.enum(['none', 'wish', 'dance']).default('none') }).default({ player: 'none', enemy: 'none' }),
   }).default(() => freshExtra()),
-=======
->>>>>>> origin/claude/project-thread-h47l6h
   /** Baton Pass: the stat changes the next Pokémon inherits. */
   batonStages: StagesSchema.nullable().default(null),
   /** Screens, Tailwind and entry hazards on each side. */

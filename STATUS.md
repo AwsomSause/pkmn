@@ -9,11 +9,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
 - M7 attributes and luck; M8 custom forms (255 Delta, Z-Forms, Spooky); M8.6 audit + content/balance reports + `report:check` gate.
 - M8.5 Mega, Primal, Tera, Z-Moves, Dynamax/G-Max (PokeRogue-style limits).
-<<<<<<< HEAD
 - M8.75 parts: "everything left" PR (about 270 more moves, 30 more abilities, Light Clay/Red Card/Eject Button/Mental Herb, smart boss trainers: potion + deliberate switching), friendship (B), move tiers C1–C2, about 230 abilities (C3, C3b-1, C3b-2, form-change and primal-weather batch), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
-=======
-- M8.75 parts: "everything left" PR (about 270 more moves, 30 more abilities, Light Clay/Red Card/Eject Button/Mental Herb, smart boss trainers: potion + deliberate switching), friendship (B), move tiers C1–C2, 190 abilities (C3, C3b-1, C3b-2), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
->>>>>>> origin/claude/project-thread-h47l6h
 - M8.9-0 story foundation (domain events, effect ledger, cues, histories, Story Log).
 - M8.9 Hyper Phase 1 slices 1, 2, 3, 4, 6. Hyper evolutions (Overdrive §4): Mega Overdrive, All of Its Heart (Z), A Giant Resolve (Dynamax), Its True Colors (Tera, 7 emotion lines), Determination Evolution memory. Signature Move Awakening (Overdrive §4 + "Mastered the Power Within"): a damaging move used 8 times in trainer fights awakens for the run (+20% damage, 2 per Pokémon). §3/§5/§6/§7 events still open.
 - Balancing phases 1+3 (start): audit in `docs/quality/encounter-audit.md`; `availability.json` (1025 species, "suggested", unused yet). +100/region deferred to part G.
@@ -37,7 +33,6 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M10 visuals (guide 9, Visual Bible V1–V5): next slices = battle intro transitions + DBK burst/shine for transformations, EBUI move flag icons + effectiveness hint, boss/rival spectacle, then map/reward/shop/decision/run-end screens.
 
 ## Biggest known gaps
-<<<<<<< HEAD
 - 87 move rows are unsupported on purpose: Z-Moves, Max Moves and G-Max Moves are only used through the Z/Dynamax systems, never picked directly. All other moves work (Mimic, Transform, Sky Drop, Beat Up, weight moves included). Known limits: Beat Up uses the user's Attack, Hidden Power's type is a fixed roll per Pokémon (no IVs), Sky Drop only stops a slower target. 6 abilities pending: Illusion, Delta Stream, Multitype, Shields Down, Aura Guard, Teraform Zero. 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
 - Rival bonds (run save v12): each rival Pokémon has 8 bond dimensions, a trait and habits; one of 39 off-screen events runs per rival each stage (`rivalBonds.json`, `rivals/bonds.ts`, built by `tools/build-rival-bonds.mjs`); bonds change the return level and show up as a pre-battle line and on the Story screen. Hyper/Overdrive and the 9 bond arcs wait.
 - Rival arcs: 27 of 46 run (`rivalArcs.json`, `rivals/arcs.ts`); bond and Overdrive arcs wait for those systems.
@@ -46,9 +41,5 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Rivals slice 4: ladder (recognized→contender), outcomes (grew/shaken/ally/retired), Ultimate Rival score evaluated at rival fights and boss wins (`rivals/outcome.ts`, `ultimate.ts`; flag `ultimateRival`).
 - Rival Examples doc: all lists stored in `rivalCatalog.json`; 40 personalities + 32 styles now run (`rivalProfiles.json`, status "limited"); paths, events, arcs, mechanics still "planned". Progress: `docs/plans/coverage-tracker.md`.
 - Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Slice 2: the rival returns once per region in place of the first ordinary trainer, with its old team stronger and ONE telegraphed counter-pick (resists your most-used attack type; shown before the battle). Slice 3: rivals are listed at the top of the Story screen (`rivals/chronicle.ts`). Next: slice 4 promotion/setback and Ultimate Rival, Battle Drama. Relationships/nemesis records are still only created by rivalries and returning trainers.
-=======
-- 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Slice 2: the rival returns once per region in place of the first ordinary trainer, with its old team stronger and ONE telegraphed counter-pick (resists your most-used attack type; shown before the battle). Next: slice 3 Chronicle screen. Relationships/nemesis records are still only created by rivalries and returning trainers.
->>>>>>> origin/claude/project-thread-h47l6h
 - Event types `traded`, `trainerEscaped`, `transformed`, `eventChoice` are defined but never emitted.
 - CI workflow exists but has never run on GitHub.

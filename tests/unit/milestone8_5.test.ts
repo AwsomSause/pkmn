@@ -376,11 +376,7 @@ describe('Z-Move data', () => {
     const z = zMoveFor(content, content.moves.get('quick-attack')!)!;
     expect(z).toMatchObject({ id: 'breakneck-blitz', name: 'Breakneck Blitz', type: 'normal', category: 'physical', power: 100, accuracy: null, priority: 0, flags: ['zmove'], effects: {} });
     expect(zMoveFor(content, content.moves.get('swords-dance')!)!.id).toBe('swords-dance');
-<<<<<<< HEAD
     expect(zMoveFor(content, content.moves.get('max-guard')!)).toBeNull(); // not supported in this game yet
-=======
-    expect(zMoveFor(content, content.moves.get('core-enforcer')!)).toBeNull(); // not supported in this game yet
->>>>>>> origin/claude/project-thread-h47l6h
     expect(zMoveFor(content, z)).toBeNull();
   });
 });

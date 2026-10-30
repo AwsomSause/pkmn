@@ -178,15 +178,11 @@ const SUPPORTED = new Set<string>([
   ...TRAPPERS,
   ...Object.keys(HALF_HP_BOOST),
   'neutralizing-gas', 'eelevate', 'guard-dog', 'color-change', 'cursed-body', 'perish-body', 'cotton-down', 'toxic-debris',
-<<<<<<< HEAD
   'piercing-drill', 'unseen-fist',
   'bulletproof', 'sharpness', 'wind-rider', 'wind-power', 'electromorphosis', 'desolate-land', 'primordial-sea', 'forecast', 'flower-gift',
   'mimicry', 'zen-mode', 'schooling', 'stance-change', 'power-construct', 'hunger-switch', 'battle-bond', 'disguise',
   'ice-face', 'gulp-missile', 'zero-to-hero', 'tera-shift', 'stakeout', 'stall', 'quick-draw', 'parental-bond', 'mirror-armor', 'opportunist',
   'soul-heart', 'imposter', 'gorilla-tactics', 'mycelium-might', 'mega-sol', 'protosynthesis', 'quark-drive', 'tera-shell', 'poison-puppeteer', 'innards-out', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
-=======
-  'piercing-drill', 'unseen-fist', 'supreme-overlord', 'normalize', 'liquid-voice', 'moody', 'wandering-spirit', 'magic-bounce',
->>>>>>> origin/claude/project-thread-h47l6h
   'cloud-nine', 'air-lock', 'trace', 'protean', 'libero', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',

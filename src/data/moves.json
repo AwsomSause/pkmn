@@ -9586,13 +9586,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "slicing"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "sideMove": "spikes"
   }
@@ -10472,13 +10468,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "bullet"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "powerRule": "userSpeed"
   }
@@ -13191,11 +13183,7 @@
   "target": "self",
   "flags": [],
   "effects": {
-<<<<<<< HEAD
    "shield": "damage"
-=======
-   "noop": true
->>>>>>> origin/claude/project-thread-h47l6h
   }
  },
  {
@@ -14296,13 +14284,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "bullet"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {}
  },
  {
@@ -14332,13 +14316,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "slicing"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "hits": [
     10,
@@ -14515,13 +14495,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "slicing"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "powerRule": "electricTerrainBoost"
   }
@@ -16212,13 +16188,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "slicing"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "sideMove": "stealthRock"
   }
@@ -16528,13 +16500,9 @@
   "priority": 0,
   "critStage": 0,
   "target": "self",
-<<<<<<< HEAD
   "flags": [
    "wind"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "sideMove": "tailwind"
   }
@@ -17454,13 +17422,9 @@
   "priority": -6,
   "critStage": 0,
   "target": "enemy",
-<<<<<<< HEAD
   "flags": [
    "wind"
   ],
-=======
-  "flags": [],
->>>>>>> origin/claude/project-thread-h47l6h
   "effects": {
    "forceSwitch": true
   }
