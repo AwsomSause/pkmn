@@ -13,3 +13,22 @@ What each pack holds and how much of it the game uses. Statuses: BUILT, PART, TO
 | `SOS Battles.zip` | ally call PBS + code | TODO |
 
 Opening the .rar: no unrar/7z in the container, so `node-unrar-js` (npm, WASM) lists and extracts it.
+
+## Slices shipped from this tracker
+| Slice | What | Status |
+|---|---|---|
+| Z1 | 8 raid/Totem battle songs (Basic/Ultra/Max/Tera sets, picked by raid id) | BUILT (#274) |
+| Z2 | Battle weather overlays (rain, hail, snow, sand, sun) from UIE `Graphics/Weather` | BUILT (#274); checked in a browser screenshot |
+| Z3 | Expedition route music (Raid adventure songs, by tier) | BUILT (#276) |
+| Z4 | `public/assets/manifest.json` was stale: raid songs and weather art never loaded in-game. Regenerated; a unit test now fails when a fixed catalog asset is missing from it | BUILT |
+
+## Not built, and why
+| Item | Status | Note |
+|---|---|---|
+| Raid "capture" jingles (4 tracks) | SKIP | no raid-capture moment to play them at (a raid win gives the boss as a reward card) |
+| `Graphics/Custom UI` (pause bars, trainer card, load/options backgrounds) | TODO | needs a layout pass per screen; Aero glass style is the current look |
+| `Graphics/Transitions` masks (hexa, computer, battle1-4) | TODO | VS/wild wipes already use EBDX art; masks would add variety |
+| `Graphics/Windowskins` | SKIP | RPG-Maker dialogue frames; the Aero message bar replaces them |
+| SOS Battles (wild calls for help) | TODO | needs a wild-fight ally rule: catching/XP/flee while an ally is out, plus a run-save change; Totem ally calls are the model (`totemCallAlly`). `CallRateSOS` per species is in the pack's `pokemon.txt` |
+| Advanced AI System (47 scripts) | TODO | gameplay AI; belongs with the smarter-trainers work |
+| UIE Pokémon sprites, item icons | OTHER THREAD | sprite-swap and item-audit threads |
