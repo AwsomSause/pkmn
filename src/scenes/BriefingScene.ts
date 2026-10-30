@@ -40,12 +40,9 @@ export class BriefingScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, 30, 'Campaign briefing', textStyle(40, COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, 24, 64, GAME_WIDTH - 48, 370, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
 
-    let y = 80;
-    const line = (label: string, text: string) => {
-      this.add.text(48, y, label, textStyle(18, '#f0e0a0'));
-      const t = this.add.text(240, y, text, textStyle(18, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 300 } }));
-      y += Math.max(t.height, 22) + 10;
-    };
+    // The lines are collected first, then laid out in the largest font that fits the panel.
+    const rows: [string, string][] = [];
+    const line = (label: string, text: string) => void rows.push([label, text]);
     const regions = run.regionOrder.map((id) => content.regions.get(id)?.name ?? id);
     line('Trainer', `${archetype.name}${archetype.title ? `, ${archetype.title}` : ''} with ${content.species.get(lead.speciesId)?.name ?? lead.speciesId} (Lv${lead.level})`);
     line('Campaign', `${campaign.name}: ${regions.length} regions, ${campaign.stagesPerRegion} stages each, then the Pokémon League`);
@@ -69,6 +66,8 @@ export class BriefingScene extends Phaser.Scene {
     if (questLine && done < questLine.steps.length) line('Trainer quest', `${questLine.name}, step ${done + 1}/5: ${questLine.steps[done]!.goal}`);
     line('Seed', `${run.seed}   (the same seed replays the same run)`);
 
+    this.layoutRows(rows);
+
     this.status = this.add.text(GAME_WIDTH / 2, 444, '', textStyle(16, '#f0e0a0')).setOrigin(0.5, 0);
     this.menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 200,
@@ -82,6 +81,32 @@ export class BriefingScene extends Phaser.Scene {
     });
     this.add.text(16, GAME_HEIGHT - 22, '←/→ choose  ·  Enter select', textStyle(14, '#8a7f96'));
     onInputAction(this, (a) => this.menu.handle(a));
+  }
+
+  /** Label/text rows inside the panel (y 76–426): the biggest font that fits, shrunk as a last resort. */
+  private layoutRows(rows: [string, string][]): void {
+    const TOP = 78;
+    const ROOM = 344;
+    for (const size of [18, 16, 15, 14, 13]) {
+      const box = this.add.container(0, 0);
+      const gap = size >= 16 ? 8 : 5;
+      const labelW = size >= 16 ? 192 : 170;
+      let y = TOP;
+      for (const [label, text] of rows) {
+        box.add(this.add.text(48, y, label, textStyle(size, '#f0e0a0')));
+        const t = this.add.text(48 + labelW, y, text, textStyle(size, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 108 - labelW } }));
+        box.add(t);
+        y += Math.max(t.height, size + 4) + gap;
+      }
+      const used = y - gap - TOP;
+      if (used <= ROOM) return;
+      if (size === 13) {
+        const k = ROOM / used;
+        box.setScale(k).setPosition(48 * (1 - k), TOP * (1 - k));
+        return;
+      }
+      box.destroy(true);
+    }
   }
 
   private copySeed(seed: string): void {

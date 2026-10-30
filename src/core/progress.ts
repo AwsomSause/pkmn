@@ -9,6 +9,7 @@
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
 import { directiveProgress, type DirectiveProgress } from './directive';
+import { legacyCard, runEpitaph } from './story/legacy';
 import { getArchetype, researchMultiplier } from './archetypes';
 import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
@@ -295,12 +296,17 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       badges: run.badges.length,
       encounters: run.encountersCompleted,
       defeatedBy: run.log.defeatedBy,
-      party: run.party.map((m) => ({ speciesId: m.speciesId, level: m.level })),
+      party: run.party.map((m) => ({ speciesId: m.speciesId, level: m.level, shiny: m.shiny })),
       bankCredits: payout.total,
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
       moments: topMoments(run.story).map((m) => m.text),
       journal: finalJournal(content, run),
+      epitaph: runEpitaph(content, run),
+      legacy: run.party.flatMap((m) => {
+        const card = legacyCard(content, run, m.uid);
+        return card ? [{ speciesId: m.speciesId, level: m.level, shiny: m.shiny, titles: card.titles, tags: card.tags, signature: card.signature }] : [];
+      }),
     },
     ...profile.runHistory,
   ].slice(0, content.balance.runHistorySize);

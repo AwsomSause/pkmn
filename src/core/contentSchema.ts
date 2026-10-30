@@ -69,6 +69,8 @@ export const EvolutionSchema = z
     item: z.string().optional(),
     region: z.string().optional(),
     condition: z.enum(['atkGtDef', 'atkLtDef', 'atkEqDef']).optional(),
+    /** Only a male or only a female Pokémon takes this branch (Kirlia to Gallade, Burmy to Mothim). */
+    gender: z.enum(['male', 'female']).optional(),
   })
   .refine((e) => (e.level === undefined) !== (e.item === undefined), { message: 'an evolution needs exactly one of level or item' });
 export type Evolution = z.infer<typeof EvolutionSchema>;
@@ -828,6 +830,10 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('moveStyleDamage'), style: z.enum(['agile', 'strong']), value: z.number().positive() }),
   /** Food (Berries and Honey) bought as map items lasts this much longer, rounded up (Mallow). */
   z.object({ kind: z.literal('foodDurationMultiplier'), value: z.number().positive() }),
+  /** Fishing offers pick the strongest of this many more tries at each choice, so rare Pokémon turn up more often (Lana). */
+  z.object({ kind: z.literal('fishingRareTries'), tries: z.number().int().positive() }),
+  /** Every won battle has this chance (0-1) of one more reward choice (Looker). */
+  z.object({ kind: z.literal('bonusRewardChance'), chance: z.number().positive().max(1) }),
   /** Each stage has this chance (0-1) of a hidden Bag item at one wild stop, with no Itemfinder needed (Looker). */
   z.object({ kind: z.literal('hiddenItemChance'), chance: z.number().positive().max(1) }),
   /** Damage of moves with one of these flags (dance and sound moves, punches...). */

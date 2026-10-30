@@ -5,6 +5,7 @@
 import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
+import { wildBehavior } from '../core/wildBehavior';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
@@ -35,7 +36,7 @@ import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
-import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind } from '../ui/battleFx/spectacle';
+import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
@@ -776,6 +777,12 @@ export class BattleScene extends Phaser.Scene {
     }
     // Entry abilities (Intimidate, Drizzle) of the first two Pokémon.
     const { session } = services();
+    // A wild Pokémon's first impression (presentation only; a reload may show it again).
+    const framing = battle.kind === 'wild' && battle.turn === 1 ? wildBehavior(session.content, session.run!) : null;
+    if (framing) {
+      await this.say(framing.sign);
+      await this.say(framing.line);
+    }
     for (const line of session.battleOpening()) await this.sayTrainer(line);
     if ((battle.pendingEntry ?? []).length > 0 && !battle.needsSwitch) {
       const before = structuredClone(session.run!);
@@ -1273,7 +1280,12 @@ export class BattleScene extends Phaser.Scene {
     if (title && battleAnimations !== 'off') {
       this.showMoment({ at: -1, side: 'enemy', title, messages: [], color: line.category === 'signature' ? '#ffb020' : '#7a5cff', sound: 'se.shiny', music: null, major: true, cutIn: false, shake: false }, battleAnimations === 'full' && effectIntensity > 0);
     }
+    // A speech bubble by the foe while the line is up (the message box still has it).
+    const at = this.enemySprite ?? { x: ENEMY_POS.x, y: ENEMY_POS.y };
+    const bubble = speechBubble(this, at.x, at.y, line.speaker, line.text, this.foeRim(), battleAnimations);
     await this.say(`${line.speaker}: “${line.text}”`);
+    this.tweens.killTweensOf(bubble);
+    bubble.destroy();
   }
 
   private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, storyCues: PresentationCue[] = [], drama: DramaLine[] = []): Promise<void> {
@@ -1452,6 +1464,8 @@ export class BattleScene extends Phaser.Scene {
         if (real) this.shown.player.status = real.status;
         await this.refreshInfoBox(this.playerBox, this.shown.player, true);
       }
+      // A raid/totem phase change gets a banner with its written rule.
+      if (e.type === 'raid' && e.tone === 'phase') await this.playBeat(phaseBanner(this, e.text, 0xff4fd8, this.motion));
       // A story moment replaces the event's own line with its own (and a banner when it is a major one).
       const cue = storyCues.find((c) => c.at === index);
       if (cue) {

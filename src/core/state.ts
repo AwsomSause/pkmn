@@ -944,6 +944,17 @@ export const PayoutSchema = z.object({
 export type Payout = z.infer<typeof PayoutSchema>;
 
 /** One finished run, kept in the Run History. */
+/** A Legacy Card kept in the Hall of Fame (core/story/legacy.ts). */
+export const LegacyRecordSchema = z.object({
+  speciesId: z.string(),
+  level: z.number().int(),
+  shiny: z.boolean(),
+  titles: z.array(z.string()),
+  tags: z.array(z.string()),
+  signature: z.string().nullable(),
+});
+export type LegacyRecord = z.infer<typeof LegacyRecordSchema>;
+
 export const RunRecordSchema = z.object({
   runId: z.string(),
   endedAt: z.string(),
@@ -956,7 +967,7 @@ export const RunRecordSchema = z.object({
   badges: z.number().int().min(0),
   encounters: z.number().int().min(0),
   defeatedBy: z.object({ speciesId: z.string(), level: z.number().int(), trainer: z.string().nullable() }).nullable(),
-  party: z.array(z.object({ speciesId: z.string(), level: z.number().int() })),
+  party: z.array(z.object({ speciesId: z.string(), level: z.number().int(), shiny: z.boolean().default(false) })),
   bankCredits: z.number().int().min(0),
   researchPoints: z.number().int().min(0),
   achievements: z.array(z.string()),
@@ -964,6 +975,10 @@ export const RunRecordSchema = z.object({
   moments: z.array(z.string()),
   /** Journal: the run's map, stage by stage (empty without the Journal). */
   journal: z.array(z.string()).default([]),
+  /** Hall of Fame: the run's epitaph (null when nothing stood out). */
+  epitaph: z.string().nullable().default(null),
+  /** Hall of Fame: each party Pokémon's Legacy Card when the run ended. */
+  legacy: z.array(LegacyRecordSchema).default([]),
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 

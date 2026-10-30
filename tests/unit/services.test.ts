@@ -205,6 +205,26 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     run.party[0]!.hp = 0;
     expect(serviceView(content, run, 'svc-test').options[0]!.problem).toMatch(/fainted/);
   });
+  it('fossil restoration revives one of two fossils, to the PC when the party is full, once per stop', () => {
+    const run = stopRun('fossil');
+    run.money = 5000;
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options).toHaveLength(2);
+    expect(serviceView(content, run, 'svc-test').options.map((o) => o.id)).toEqual(view.options.map((o) => o.id));
+    const out = useService(content, run, 'svc-test', view.options[0]!.id);
+    expect(out.run.party.length + out.run.box.length).toBe(run.party.length + run.box.length + 1);
+    expect(out.run.money).toBeLessThan(5000);
+    expect(() => useService(content, out.run, 'svc-test', view.options[1]!.id)).toThrow();
+  });
+  it('the training school adds levels once, never past the cap or for a fainted Pokémon', () => {
+    const run = stopRun('school');
+    run.money = 5000;
+    run.party[0]!.level = 5;
+    const out = useService(content, run, 'svc-test', `class:${run.party[0]!.uid}`);
+    expect(out.run.party[0]!.level).toBeGreaterThanOrEqual(5 + SERVICES.costs.schoolLevels);
+    expect(out.run.money).toBeLessThan(5000);
+    expect(() => useService(content, out.run, 'svc-test', `class:${run.party[0]!.uid}`)).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
