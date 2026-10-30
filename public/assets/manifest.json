@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T12:43:11.482Z",
+  "generatedAt": "2026-10-30T12:48:23.001Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -75526,12 +75526,6 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/kyurem-black.png"
-    },
-    {
-      "id": "item.gen5/kyurem-white",
-      "kind": "image",
-      "category": "item",
-      "path": "images/items/gen5/kyurem-white.png"
     },
     {
       "id": "item.gen5/tornadus-therian",
