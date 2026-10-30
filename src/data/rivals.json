@@ -61,5 +61,27 @@
   "triangleMinVindictiveness": 55,
   "substituteStrain": 60,
   "legacyCloseNote": true
+ },
+ "scheduler": {
+  "intervals": {
+   "recognized": 999,
+   "recurring": 3,
+   "active": 2,
+   "nemesis": 4,
+   "contender": 2
+  },
+  "minGap": 2,
+  "anyGap": 1
+ },
+ "legacy": {
+  "chance": 0.4,
+  "minEncounters": 2,
+  "states": [
+   "active",
+   "nemesis",
+   "contender"
+  ],
+  "archiveMax": 20,
+  "traitBlend": 0.6
  }
 }
