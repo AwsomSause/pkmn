@@ -69,6 +69,15 @@ test('the Pokémon League map leads to an Elite Four introduction', async ({ pag
   const r = await run(page);
   expect(r.stage.kind).toBe('league');
   await page.screenshot({ path: 'test-results/m4-league-map.png' });
+  // Escalation: one glass step per battle, gold rays behind the champion.
+  const look = await page.evaluate(() => {
+    const out: string[] = [];
+    const walk = (o: any) => (o.name && out.push(o.name), o.list?.forEach(walk));
+    (window as any).__pkr.game.scene.getScene('Map').children.list.forEach(walk);
+    return out;
+  });
+  expect(look.filter((n) => n === 'league-step').length).toBe(r.stage.map.columns);
+  expect(look).toContain('league-rays');
   await page.keyboard.press('Enter'); // the first Elite Four member
   await waitForScene(page, 'Battle');
   expect((await run(page)).battle.trainer.classId).toBe('elite-four');

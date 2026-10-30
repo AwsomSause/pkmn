@@ -91,7 +91,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Shop: money/price labels, category icons, SOLD state, focus details | BUILT | slice 12: Essentials bag-pocket icons, red price when you can't afford it, BOUGHT stamp on the row just bought (stock is unlimited, so it stays listed), focus hint with category, who can use it and how many you own (`ui/shopLook.ts`) |
 | Party/detail: tabs, moves with type/category, memories | BUILT | slice 9: map → Summary (`ui/summaryMenu.ts`): Info & stats page, Moves & story page per Pokémon |
 | Event choice: illustration, 2–4 options with costs, consequence ack | BUILT | slice 11: glass illustration frame with data-driven motif (rarity rim, group pill, emblem bubble when no cast), cards with the kind of risk and sure costs (`choiceRisk`), sparkle/shudder chips and a money pill that rolls to the new total |
-| League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); league escalation: slice 10 |
+| League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); **league escalation BUILT (slice 13: rising glass steps, growing tokens, champion gold rays)**; run-end composition: next |
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |
 | Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
