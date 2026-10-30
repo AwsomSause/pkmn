@@ -14113,5 +14113,362 @@
    "kind": "nature",
    "nature": "timid"
   }
+ },
+ {
+  "id": "fighting-memory",
+  "name": "Fighting Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Fighting type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "fighting-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "fighting"
+    }
+   ]
+  }
+ },
+ {
+  "id": "flying-memory",
+  "name": "Flying Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Flying type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "flying-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "flying"
+    }
+   ]
+  }
+ },
+ {
+  "id": "poison-memory",
+  "name": "Poison Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Poison type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "poison-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "poison"
+    }
+   ]
+  }
+ },
+ {
+  "id": "ground-memory",
+  "name": "Ground Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Ground type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "ground-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "ground"
+    }
+   ]
+  }
+ },
+ {
+  "id": "rock-memory",
+  "name": "Rock Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Rock type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "rock-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "rock"
+    }
+   ]
+  }
+ },
+ {
+  "id": "bug-memory",
+  "name": "Bug Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Bug type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "bug-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "bug"
+    }
+   ]
+  }
+ },
+ {
+  "id": "ghost-memory",
+  "name": "Ghost Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Ghost type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "ghost-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "ghost"
+    }
+   ]
+  }
+ },
+ {
+  "id": "steel-memory",
+  "name": "Steel Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Steel type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "steel-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "steel"
+    }
+   ]
+  }
+ },
+ {
+  "id": "fire-memory",
+  "name": "Fire Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Fire type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "fire-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "fire"
+    }
+   ]
+  }
+ },
+ {
+  "id": "water-memory",
+  "name": "Water Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Water type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "water-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "water"
+    }
+   ]
+  }
+ },
+ {
+  "id": "grass-memory",
+  "name": "Grass Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Grass type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "grass-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "grass"
+    }
+   ]
+  }
+ },
+ {
+  "id": "electric-memory",
+  "name": "Electric Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Electric type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "electric-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "electric"
+    }
+   ]
+  }
+ },
+ {
+  "id": "psychic-memory",
+  "name": "Psychic Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Psychic type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "psychic-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "psychic"
+    }
+   ]
+  }
+ },
+ {
+  "id": "ice-memory",
+  "name": "Ice Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Ice type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "ice-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "ice"
+    }
+   ]
+  }
+ },
+ {
+  "id": "dragon-memory",
+  "name": "Dragon Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Dragon type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "dragon-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "dragon"
+    }
+   ]
+  }
+ },
+ {
+  "id": "dark-memory",
+  "name": "Dark Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Dark type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "dark-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "dark"
+    }
+   ]
+  }
+ },
+ {
+  "id": "fairy-memory",
+  "name": "Fairy Memory",
+  "family": "Memories",
+  "description": "Silvally becomes Fairy type while held, and Multi-Attack uses it",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "fairy-memory",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "memory",
+     "type": "fairy"
+    }
+   ]
+  }
  }
 ]
