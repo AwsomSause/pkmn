@@ -366,7 +366,22 @@ export class BattleScene extends Phaser.Scene {
     return box.hpBar.set(mon.hp / max, animate);
   }
 
+  /** The normal header, plus a raid status line (shield, phase count, charged attack, timer). */
   private updateHeader(): void {
+    this.updateHeaderBase();
+    const raid = this.run.battle?.raid;
+    if (!raid) return;
+    const content = services().session.content;
+    const def = content.raids.raids.find((r) => r.id === raid.id);
+    const parts = [`RAID T${def?.tier ?? '?'}`];
+    parts.push(raid.shieldHp > 0 ? `SHIELD ${raid.shieldHp}/${raid.shieldMax}` : raid.pendingShields.length > 0 ? `${raid.pendingShields.length} shield${raid.pendingShields.length > 1 ? 's' : ''} to come` : 'no shield');
+    if (def && def.phases.length > 0) parts.push(`phase ${raid.phasesDone.length}/${def.phases.length}`);
+    if (raid.charging) parts.push('!! CHARGED ATTACK !!');
+    if (raid.timerLeft !== null) parts.push(`${raid.timerLeft} turns left`);
+    this.header.setText(`${this.header.text}\n${parts.join('  ·  ')}`);
+  }
+
+  private updateHeaderBase(): void {
     const run = this.run;
     const stage = run.stage;
     if (!stage) {
@@ -713,6 +728,11 @@ export class BattleScene extends Phaser.Scene {
 
     if (result.end) {
       await this.finish(result, trainer);
+      return;
+    }
+    if (result.raidFailed) {
+      await this.say('The raid is over... your Pokémon were pulled back to safety.');
+      this.scene.start(sceneForRun(result.run));
       return;
     }
     if (result.defeated) {

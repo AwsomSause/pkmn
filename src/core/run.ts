@@ -84,8 +84,10 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
+import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import type { RaidDef } from './raid/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
@@ -164,6 +166,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
+    raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -254,6 +257,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   simulateRivalWorld(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map.
   addItemStops(content, run);
+  placeRaidDens(content, run);
   run.battle = null;
   run.phase = 'map';
 }
@@ -611,6 +615,96 @@ export function fish(content: Content, current: RunState, sideId: string, index:
   return run;
 }
 
+/** Raid dens: what the player may review before paying (rules in core/raid). */
+export function raidPreview(content: Content, current: RunState, sideId: string): RaidPreview {
+  const { node, side } = raidDen(current, sideId);
+  const def = getRaid(content, side.raidId!);
+  const { speciesId, level } = raidBoss(content, current, def, node.id + sideId);
+  return { id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
+}
+
+function raidDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
+  const stage = requireStage(run);
+  if (stage.current === null) throw new Error('Choose a node first');
+  const node = findNode(stage.map, stage.current);
+  const side = node.sides.find((x) => x.id === sideId && x.kind === 'raid' && x.raidId);
+  if (!side) throw new Error(`No raid den "${sideId}" here`);
+  return { node, side };
+}
+
+function raidBoss(content: Content, run: RunState, def: RaidDef, key: string): { speciesId: string; level: number } {
+  const stage = requireStage(run);
+  const campaign = getCampaign(content, run.campaignId);
+  const scale = levelScale(content, campaign, run.regionIndex, stage.index, campaign.columns);
+  return { speciesId: raidSpecies(def, run, key), level: raidLevel(def, scale.end, scale.cap) };
+}
+
+/** Pays the entry cost and starts the raid battle. The den is used up at once, so a reload can't charge or reward twice. */
+export function enterRaid(content: Content, current: RunState, sideId: string): RunState {
+  assertPhase(current, 'map');
+  const { node, side } = raidDen(current, sideId);
+  if (side.used) throw new Error('This raid has already been fought');
+  const def = getRaid(content, side.raidId!);
+  if (current.money < def.entryCost) throw new Error(`You need ₽${def.entryCost} to enter this raid`);
+  const activeIndex = current.party.findIndex((p) => p.hp > 0);
+  if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
+  const run = structuredClone(current);
+  raidDen(run, sideId).side.used = true;
+  run.money -= def.entryCost;
+  const { speciesId, level } = raidBoss(content, run, def, node.id + sideId);
+  const boss = newMon(content, run, speciesId, level, 'e');
+  applyBossHp(def, boss);
+  boss.hp = maxHp(content, boss);
+  run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
+  run.battle.ai = 0.6;
+  run.battle.raid = freshRaidBattle(def);
+  if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
+  run.raids.entered += 1;
+  discover(run, boss.speciesId, false);
+  run.phase = 'battle';
+  recordBattleStarted(content, run);
+  return run;
+}
+
+/** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
+function failRaid(content: Content, run: RunState): void {
+  const raidId = run.battle!.raid!.id;
+  const frac = content.raids.failureHealFraction;
+  for (const mon of run.party) {
+    mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
+    mon.status = null;
+  }
+  run.raids.lost += 1;
+  run.raids.done.push(raidId);
+  run.battle = null;
+  run.phase = 'map';
+}
+
+/** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
+function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
+  const def = getRaid(content, battle.raid!.id);
+  const boss = currentEnemy(battle);
+  const money = def.rewards.moneyPerLevel * boss.level;
+  run.money += money;
+  count(run, 'moneyEarned', money);
+  const rng = new Rng(hashSeed(`${run.seed}::raid-reward::${def.id}:${run.encountersCompleted}`));
+  const items = def.rewards.items.filter((i) => rng.chance(i.chance)).map((i) => i.item);
+  if (rng.chance(def.rewards.joinChance)) {
+    const joined = structuredClone(boss);
+    joined.uid = nextUid(run, 'p');
+    delete joined.statBoosts;
+    joined.hp = maxHp(content, joined);
+    joined.status = null;
+    count(run, 'pokemonCaught');
+    discover(run, joined.speciesId, true);
+    run.pending.unshift({ kind: 'caught', mon: joined });
+  }
+  run.raids.won += 1;
+  run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
+  run.raids.done.push(def.id);
+  return { items, draftExtra: def.rewards.draftExtra, money };
+}
+
 /**
  * Sets up the battle for a map node (mutates `run`). A VS Seeker rematch passes
  * a generator of its own, so the encounter stream (and every later battle) is unchanged.
@@ -724,6 +818,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (!side) throw new Error(`No side stop "${sideId}" here`);
   if (side.kind === 'heal' && side.used) throw new Error('This healing stop has already been used');
   if (side.kind === 'fish') throw new Error('Choose a Pokémon to fish for (fishingOffer, then fish)');
+  if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -854,6 +949,8 @@ export interface TurnResult {
   defeated: boolean;
   /** Story moments to show while playing `events` (presentation only: never saved, never read by the rules). */
   cues: PresentationCue[];
+  /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
+  raidFailed?: boolean;
 }
 
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
@@ -929,6 +1026,11 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     if (end.outcome === 'caught' && caught?.kind === 'caught') recordCaught(content, run, caught.mon);
     recordChanges(content, current, run, 'battle');
     return { run, events, end, defeated: false, cues };
+  }
+  if (battle.outcome === 'lose' && battle.raid) {
+    failRaid(content, run);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, raidFailed: true };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
@@ -1054,12 +1156,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  const moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
   let caughtSpeciesId: string | null = null;
   const caughtPending: PendingDecision[] = [];
+  const itemsFoundByRaid: string[] = [];
   if (battle.outcome === 'caught') {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
@@ -1093,6 +1196,11 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.pending = [...caughtPending, ...run.pending];
 
   const outcome = battle.outcome as 'win' | 'caught';
+  const raidWin = battle.raid && outcome === 'win' ? claimRaidRewards(content, run, battle) : null;
+  if (raidWin) {
+    itemsFoundByRaid.push(...raidWin.items);
+    moneyGained += raidWin.money;
+  }
   const won = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
   const badge = won && classId === GYM_LEADER_CLASS ? won : null;
   if (badge) {
@@ -1112,7 +1220,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
   }
   // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
-  let extraChoices = 0;
+  let extraChoices = raidWin?.draftExtra ?? 0;
   // RSVP Mail: beating the rival gives the gym leader's odds and one more choice.
   if (outcome === 'win' && battle.rival) {
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
@@ -1129,7 +1237,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const itemsFound =
     outcome === 'win' && battle.kind === 'trainer'
       ? afterTrainerWin(content, run, stock, new Rng(hashSeed(`${run.seed}::trainer-loot::${run.encountersCompleted}`)))
-      : [];
+      : [...itemsFoundByRaid];
   // Itemfinder: the hidden item at this stage's marked wild stop.
   const hidden = battle.kind === 'wild' ? hiddenItemFound(content, run, stock) : null;
   if (hidden) itemsFound.push(hidden);

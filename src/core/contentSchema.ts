@@ -4,6 +4,7 @@
 
 import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
+import type { RaidFile } from './raid/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -1494,6 +1495,8 @@ export interface Content {
   balance: Balance;
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
+  /** Raid bosses and den placement (raids.json, core/raid). */
+  raids: RaidFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }
