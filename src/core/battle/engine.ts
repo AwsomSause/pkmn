@@ -212,6 +212,8 @@ export interface BattleContext {
   typeModifiers?: TypeModifiers;
   /** The trainer's perks (Trainers.md): see core/trainerPerks.ts. */
   perks?: Perks;
+  /** The Empty Bag Challenge Contract: only Poké Balls can be used. */
+  noBattleItems?: boolean;
   /** The run's starter (starter perks). */
   starterUid?: string | null;
   /** The player's attributes (damage, Speed, damage taken). */
@@ -753,9 +755,10 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
 }
 
 /** Why this item can't be used right now, or null if it can. */
-export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party' | 'inventory'>, itemId: string, targetIndex?: number): string | null {
+export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party' | 'inventory' | 'noBattleItems'>, itemId: string, targetIndex?: number): string | null {
   const item = ctx.content.items.get(itemId);
   if (!item) return `Unknown item "${itemId}".`;
+  if (ctx.noBattleItems && item.category !== 'ball') return 'Your Empty Bag contract allows only Poké Balls in battle.';
   if (itemCount(ctx.inventory, itemId) <= 0) return `You have no ${item.name} left.`;
   if (!item.usableInBattle) return `${item.name} can't be used in battle.`;
   if (item.effect.kind === 'catch') {

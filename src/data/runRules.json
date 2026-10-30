@@ -159,6 +159,24 @@
       "blurb": "Only one Pokémon of each evolution line in your party.",
       "noDuplicates": true,
       "group": "party"
+    },
+    {
+      "id": "no-battle-items",
+      "name": "Contract: Empty Bag",
+      "status": "supported",
+      "bonus": 0.3,
+      "blurb": "Challenge Contract: only Poké Balls can be used in battle.",
+      "noBattleItems": true,
+      "group": "contract-bag"
+    },
+    {
+      "id": "no-heal-stops",
+      "name": "Contract: No Rest",
+      "status": "supported",
+      "bonus": 0.2,
+      "blurb": "Challenge Contract: healing stops on the map can't be used.",
+      "noHealStops": true,
+      "group": "contract-rest"
     }
   ],
   "modes": [

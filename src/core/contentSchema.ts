@@ -1628,6 +1628,8 @@ export const BalanceSchema = z.object({
    * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
    * and the Research Points each rank pays once.
    */
+  /** The Research Directive (plan Part 5): defeat or catch this many of the studied type for these Research Points. */
+  directive: z.object({ target: z.number().int().min(1), researchPoints: z.number().int().min(0) }),
   mastery: z.object({
     bronzeBattles: z.number().int().min(1),
     silverBattles: z.number().int().min(1),

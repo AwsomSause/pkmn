@@ -8,6 +8,7 @@
 //   claim       — achievements are claimed automatically when a run ends;
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
+import { directiveProgress, type DirectiveProgress } from './directive';
 import { getArchetype, researchMultiplier } from './archetypes';
 import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
@@ -128,6 +129,8 @@ export interface RunEndSummary {
   masteryUps: MasteryRankUp[];
   /** Game event objectives and rewards finished by this run. */
   gameEvents: GameEventPayout[];
+  /** The Research Directive and how far it got (null: none, or the run doesn't count). */
+  directive: DirectiveProgress | null;
 }
 
 /**
@@ -148,6 +151,8 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   // The Run Quest: done when its counter reached the goal; it pays Research Points and counts for quest lines.
   const runQuest = runQuestOf(content, run);
   const runQuestDone = counts && runQuest !== null && runQuestProgress(content, run)!.met;
+  // The Research Directive: the studied type's counter reached the goal.
+  const directive = counts ? directiveProgress(content, run) : null;
   if (counts) {
     const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0, ...(runQuestDone ? { runQuestsDone: (run.log.counters.runQuestsDone ?? 0) + 1 } : {}) };
     for (const [name, value] of Object.entries(runCounters)) {
@@ -168,6 +173,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     ) + eventResearch(run);
     researchPoints = scaleReward(Math.round(researchPoints * researchScale(run.rules)), run.rules);
     if (runQuestDone) researchPoints += runQuest.researchPoints;
+    if (directive?.done) researchPoints += directive.researchPoints;
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
     addTrainerCounters(profile, questTrainer(content, run.archetypeId), runCounters);
@@ -212,7 +218,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, directive };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

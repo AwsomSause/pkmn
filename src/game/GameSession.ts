@@ -9,6 +9,7 @@
 import type { Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
+import { setCardFrame } from '../core/wardrobe';
 import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
@@ -390,6 +391,12 @@ export class GameSession {
 
   setActiveTitle(title: string | null): void {
     this.profile = setActiveTitle(this.profile, title);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  setCardFrame(id: string): void {
+    this.profile = setCardFrame(this.profile, id);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }

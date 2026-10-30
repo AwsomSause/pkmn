@@ -23,6 +23,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     achievements: {},
     titles: [],
     activeTitle: null,
+    cardFrame: 'classic',
     lifetimeBankCredits: 0,
     runHistory: [],
     lastPayout: null,

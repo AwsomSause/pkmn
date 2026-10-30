@@ -41,6 +41,8 @@ Update this file when you add, move or delete a folder or a key file.
 | `src/core/events.ts` | Map events ("!"/"?" stops): placement, choices, checks, effects, event battles. Data: `src/data/events.json`, built from `tools/events/*.ts` by `npm run data:events`. Screen: `src/scenes/EventScene.ts`. |
 | `src/core/mastery.ts` | Species Mastery: per-species counters and ranks (Seen → Master), family view, unlocks applied to joining Pokémon (`run.mastery`), the Mastered starter set. |
 | `src/core/gameEvents.ts` | Weekly/holiday game events: ISO-week rotation, yearly windows, the Event Archive, holiday calendar, edition keys, themed rules for runs, objectives and once-only rewards (`gameEvents.json`, `npm run data:game-events`). |
+| `src/core/directive.ts` | Research Directive: the studied type's progress and bonus (`balance.directive`). |
+| `src/core/wardrobe.ts` | Wardrobe card frames (`src/data/wardrobe.json`): which are open, putting one on. |
 | `src/core/trainerEvolution.ts` | Trainer Evolutions: the six evolved trainers' mechanics (Last Stand, first strike, Champion's Aura, Black Market, Voice of Pokémon, Field Research). |
 | `src/core/quests.ts` | Trainer quests and the claim ledger: quest lines (`trainerQuests.json`, built by `npm run data:quests`), Run Quests, `claim()` pays a key once. |
 | `src/core/totem/` | Totems: `schema` (totems.json shape), `totem.ts` (placement, ally rules, previews; the engine runs aura, ally calls and phases). |
