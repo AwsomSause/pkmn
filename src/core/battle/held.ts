@@ -181,6 +181,13 @@ function markUsed(ctx: HeldContext, uid: string, itemId: string): void {
   used[uid] = { ...used[uid], [itemId]: (used[uid]?.[itemId] ?? 0) + 1 };
 }
 
+/** True the first time it is asked for this uid and item in a battle (then marks it used). */
+export function firstUse(ctx: HeldContext, uid: string, itemId: string): boolean {
+  if (timesUsed(ctx, uid, itemId) > 0) return false;
+  markUsed(ctx, uid, itemId);
+  return true;
+}
+
 /** Eats one copy of a berry (or other eaten item) for good. */
 function eat(mon: PokemonInstance, itemId: string): void {
   const left = (mon.held?.[itemId] ?? 0) - 1;
@@ -529,8 +536,9 @@ function raiseStage(holder: Holder, stat: BoostStat, stages: number, itemId: str
 }
 
 /** Whether a status (or confusion) is blocked for this battle by a status healer's after-effect. */
-export function statusBlocked(_ctx: Pick<HeldContext, 'content'>, holder: Pick<Holder, 'mon'>, status: StatusId | 'confusion'): boolean {
-  return (holder.mon.boosts ?? []).some((b) => b.kind === 'immune' && b.status === status);
+export function statusBlocked(ctx: Pick<HeldContext, 'content' | 'teamItems'> & { battle?: BattleState }, holder: Pick<Holder, 'mon' | 'side'>, status: StatusId | 'confusion' | 'infatuation'): boolean {
+  if ((holder.mon.boosts ?? []).some((b) => b.kind === 'immune' && b.status === status)) return true;
+  return status !== 'confusion' && status !== 'infatuation' && hooks(hooksOf(ctx, holder.mon, holder.side), 'statusImmune').some(({ hook }) => hook.statuses.includes(status));
 }
 
 /** Guard Spec.: the opponent can't lower this Pokémon's stats. */

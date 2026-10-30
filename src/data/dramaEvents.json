@@ -18,24 +18,31 @@
   {
    "id": "refusal",
    "name": "The Refusal",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
+   "cooldownBattles": 1,
+   "chance": 100,
    "records": false,
-   "requires": "Needs bond/autonomy data and an established refusal mechanic",
-   "lines": []
+   "requires": "A willful Pokémon (autonomy 60+) that distrusts you (trust 35 or less) refuses a reckless command (one that would faint it), once per battle. Foreshadowed by the 'wary' mood",
+   "lines": [
+    "Your {foe} would not follow that order. It doesn't trust you to ask that of it.",
+    "Did your {foe} just refuse you? That kind of order costs trust."
+   ]
   },
   {
    "id": "newMove",
    "name": "The New Move",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Needs enemy move-learning during a battle",
-   "lines": []
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "A Pokémon at half HP reveals the strongest valid learnset move it doesn't know (yours: trust 70+ and sync 60+; a rival's: a confident Pokémon)",
+   "lines": [
+    "Where did that move come from? It was keeping it hidden!",
+    "So that is what they have been working on."
+   ],
+   "remember": "I have been working on {foeMove} ever since our last battle."
   },
   {
    "id": "tacticalRevelation",
@@ -98,13 +105,16 @@
   {
    "id": "unplannedCombination",
    "name": "The Unplanned Combination",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
+   "cooldownBattles": 1,
+   "chance": 100,
    "records": false,
-   "requires": "Needs team chemistry data from the bond engine",
-   "lines": []
+   "requires": "A practiced pair (open Bond relationship, sync 50+ each) hands over after a faint: the partner starts with +1 in its attacking stat, once per pair per battle",
+   "lines": [
+    "That hand-over was practiced. They moved as one!",
+    "A coordinated switch, and it was not for show."
+   ]
   },
   {
    "id": "failedTechnique",
@@ -129,24 +139,32 @@
   {
    "id": "overdriveBreakthrough",
    "name": "The Overdrive Breakthrough",
-   "status": "planned",
+   "status": "limited",
    "severity": "climactic",
    "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Owned by the Overdrive/Hyper thread",
-   "lines": []
+   "chance": 100,
+   "records": true,
+   "requires": "One of your Pokémon has an Overdrive or Hyper moment this turn",
+   "lines": [
+    "That glow... that's Overdrive!",
+    "So you've found it too. Show me everything you have!",
+    "{name}, brace yourself. That is no ordinary power."
+   ]
   },
   {
    "id": "overdriveMisfire",
    "name": "The Overdrive Misfire",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
    "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Owned by the Overdrive/Hyper thread",
-   "lines": []
+   "chance": 100,
+   "records": true,
+   "requires": "The enemy's Overdrive is calmed or broken this turn",
+   "lines": [
+    "No! {name}, focus! Don't lose it now!",
+    "It slipped away... steady, {name}.",
+    "Too wild, too fast. {name}, breathe!"
+   ]
   },
   {
    "id": "veteransAdjustment",
@@ -184,13 +202,16 @@
   {
    "id": "rivalInterruption",
    "name": "The Rival Interruption",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Needs a second rival present (world sim witness events)",
-   "lines": []
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "A big battle (gym, boss or rival) with another living rival who is not on cooldown; they meet and form a lasting relationship",
+   "lines": [
+    "So this is the battle everyone is talking about. Don't mind me, I'm only watching.",
+    "I heard about this one. I had to see how it ends."
+   ]
   },
   {
    "id": "unfinishedGrudge",
@@ -277,13 +298,16 @@
   {
    "id": "takesInitiative",
    "name": "The Pokémon Takes Initiative",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
+   "cooldownBattles": 1,
+   "chance": 100,
    "records": false,
-   "requires": "Needs autonomy/synchronization data",
-   "lines": []
+   "requires": "A Pokémon with sync 70+ and trust 60+ swaps a command that cannot hurt the foe for its best move that can, in the same turn, once per battle",
+   "lines": [
+    "Your {foe} did not wait to be told. It changed the move itself!",
+    "They don't even need orders. That Pokémon read the situation."
+   ]
   },
   {
    "id": "rematchReversal",
@@ -326,24 +350,31 @@
   {
    "id": "pokemonRecognition",
    "name": "Pokémon Recognition",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Needs Pokémon-to-Pokémon history across battles",
-   "lines": []
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "The rival's Pokémon was on the team you fought last time, and your active Pokémon fought it that day",
+   "lines": [
+    "{name} stares at {foe}. Those two have met before.",
+    "That look... {name} has not forgotten {foe}."
+   ]
   },
   {
    "id": "emotionalTurningPoint",
    "name": "The Emotional Turning Point",
-   "status": "planned",
+   "status": "limited",
    "severity": "major",
-   "cooldownBattles": 5,
-   "chance": 0,
-   "records": false,
-   "requires": "Needs Seven Emotions for enemy Pokémon",
-   "lines": []
+   "cooldownBattles": 1,
+   "chance": 100,
+   "records": true,
+   "requires": "A Pokémon felt the same thing three times in this battle (determination, bravery, perseverance, justice or patience)",
+   "lines": [
+    "Something changed in {name}. It's a different Pokémon now!",
+    "{name}, I can see it in your eyes!"
+   ],
+   "remember": "You saw it, didn't you? The moment my partner found its {foeMove}."
   },
   {
    "id": "midBattleEvolution",

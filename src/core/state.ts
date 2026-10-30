@@ -233,6 +233,8 @@ export const VolatileSchema = z.object({
   hangry: z.boolean().default(false),
   /** Sky Drop: true while the user of Sky Drop holds this Pokémon in the air. */
   skyHeld: z.boolean().default(false),
+  /** Attract: half the time it can't move. */
+  infatuated: z.boolean().default(false),
   /** Illusion: the species this Pokémon looks like until a damaging move hits it. */
   illusion: z.string().nullable().default(null),
   /** Roost: Flying type lost until the turn ends. */
@@ -313,6 +315,7 @@ export const freshVolatile = (): Volatile => ({
   grudge: false,
   hangry: false,
   skyHeld: false,
+  infatuated: false,
   illusion: null,
   roost: false,
   throat: 0,
@@ -691,6 +694,8 @@ export const RunRulesSchema = z.object({
   lockType: z.string().nullable().default(null),
   /** Single Region Dex: the generation the run draws from. */
   lockGeneration: z.number().int().min(1).max(9).nullable().default(null),
+  /** Endless: laps of the regions finished so far. */
+  loops: z.number().int().min(0).default(0),
   /** Times a wipe sent the run back to its checkpoint. */
   wipes: z.number().int().min(0),
 });

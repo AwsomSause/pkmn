@@ -25,6 +25,7 @@ import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
+import { wouldRefuse } from '../core/bond';
 import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
@@ -687,7 +688,7 @@ export class BattleScene extends Phaser.Scene {
       return z ? (z.category === 'status' ? `Z-${name}` : z.name) : name;
     };
     const options = anyPp
-      ? mon.moves.map((slot, i) => ({ label: zLabel(i, content.moves.get(slot.id)!.name), disabled: slot.pp <= 0 || (zMoves !== null && !zMoves[i]) }))
+      ? mon.moves.map((slot, i) => ({ label: zLabel(i, content.moves.get(slot.id)!.name) + (wouldRefuse(content, this.run, mon, slot.id) ? ' (may refuse)' : ''), disabled: slot.pp <= 0 || (zMoves !== null && !zMoves[i]) }))
       : [{ label: 'Struggle' }];
     // Moves fill the message bar; the command window shows the focused move's details.
     this.message.setVisible(false);

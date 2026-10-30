@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { finalizeRun, createProfile } from '../../src/core/profile';
 import { chooseStarter, createRun, debugReplaceEnemy, resolveDecision, shopStock, takeTurn } from '../../src/core/run';
 import { isRewardEligible } from '../../src/core/rewards';
-import { joinProblem, lockSpecies, partyCap, pickGeneration, randomDraft } from '../../src/core/rules';
+import { dailyClaimKey, dailySeed, extendEndless, joinProblem, lockSpecies, partyCap, pickGeneration, randomDraft, spookyWild } from '../../src/core/rules';
+import { specialFamily } from '../../src/core/specialForms';
+import { getSpecies } from '../../src/core/pokemon';
 import { createPokemon } from '../../src/core/pokemon';
 import { makeRules, rewardMultiplier, rulesLines, rulesProblem, RUN_RULES, STANDARD_CHOICE, type RulesChoice } from '../../src/core/rules';
 import type { RunState } from '../../src/core/state';
@@ -33,7 +35,8 @@ describe('rules data and multiplier', () => {
     expect(rewardMultiplier({ ...STANDARD_CHOICE, modeId: 'adventure' })).toBe(0);
     expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['monotype'] })).toBeNull();
     expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['monotype', 'limited-party'] })).toContain('cannot be combined');
-    expect(rulesProblem({ ...STANDARD_CHOICE, modeId: 'daily' })).toContain('not available');
+    expect(rulesProblem({ ...STANDARD_CHOICE, modeId: 'daily' })).toBeNull();
+    expect(rulesProblem({ ...STANDARD_CHOICE, modeId: 'nope' })).toContain('Unknown');
     expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['scarce-supplies', 'scarce-supplies'] })).toContain('twice');
     expect(() => makeRules({ ...STANDARD_CHOICE, difficultyId: 'nope' })).toThrow();
   });
@@ -211,5 +214,42 @@ describe('the 10 other modifiers', () => {
   it('Difficulty reaches trainers and bosses, not only wild Pokémon', () => {
     const level = (r: RunState) => Math.max(...toBattle(toBattle(r)).battle!.enemyTeam.map((m) => m.level));
     expect(level(start('lvt', { difficultyId: 'nightmare' }))).toBeGreaterThanOrEqual(level(start('lvt')));
+  });
+});
+
+describe('Daily Run, Endless and Spooky modes', () => {
+  it('the daily seed is the date and a second run that day earns nothing', () => {
+    expect(dailySeed('2026-10-30T23:59:00Z')).toBe('daily-2026-10-30');
+    expect(dailyClaimKey('2026-10-30T01:00:00Z')).toBe('daily:2026-10-30');
+    const choice = { modeId: 'daily', difficultyId: 'standard', modifierIds: [], deathBlock: false };
+    expect(makeRules(choice).progressionEligible).toBe(true);
+    const again = makeRules({ ...choice, noRewards: true });
+    expect(again.progressionEligible).toBe(false);
+    expect(again.rewardMultiplier).toBe(0);
+  });
+
+  it('Endless adds a lap and raises enemy levels instead of ending; other modes do not', () => {
+    const run = { rules: makeRules({ modeId: 'endless', difficultyId: 'standard', modifierIds: [], deathBlock: false }), regionOrder: ['a', 'b'] };
+    const before = run.rules.enemyLevelBonus;
+    expect(extendEndless(run)).toBe(true);
+    expect(run.regionOrder).toEqual(['a', 'b', 'a', 'b']);
+    expect(run.rules.loops).toBe(1);
+    expect(run.rules.enemyLevelBonus).toBe(before + 5);
+    expect(extendEndless(run)).toBe(true);
+    expect(run.regionOrder).toHaveLength(6);
+    expect(extendEndless({ rules: makeRules(STANDARD_CHOICE), regionOrder: ['a'] })).toBe(false);
+  });
+
+  it('Spooky swaps some wild Pokémon for Spooky forms, the same way every time', () => {
+    
+    const run = { seed: 's1', rules: makeRules({ modeId: 'spooky', difficultyId: 'standard', modifierIds: [], deathBlock: false }) };
+    const out = Array.from({ length: 200 }, (_, i) => spookyWild(content, run, 'pidgey', `n${i}`));
+    const swapped = out.filter((id) => id !== 'pidgey');
+    expect(swapped.length).toBeGreaterThan(20);
+    expect(swapped.length).toBeLessThan(90);
+    for (const id of swapped) expect(specialFamily(getSpecies(content, id))).toBe('spooky');
+    expect(Array.from({ length: 200 }, (_, i) => spookyWild(content, run, 'pidgey', `n${i}`))).toEqual(out);
+    const std = { seed: 's1', rules: makeRules(STANDARD_CHOICE) };
+    expect(spookyWild(content, std, 'pidgey', 'n1')).toBe('pidgey');
   });
 });

@@ -19,8 +19,11 @@ const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
 export const NEUTRAL_BOND: Bond = { trust: 50, affection: 50, respect: 50, synchronization: 50, confidence: 50, autonomy: 50, strain: 0 };
 
-export function rivalBond(rival: Rival | undefined): Bond {
+export function rivalBond(rival: Rival | undefined, speciesId?: string): Bond {
   if (!rival) return NEUTRAL_BOND;
+  // The rival Pokémon's own bond (core/rivals/bonds.ts) when it has one; otherwise what its trainer's traits imply.
+  const real = speciesId ? rival.bonds?.[speciesId] : undefined;
+  if (real) return { trust: clamp(real.trust), affection: clamp(real.affection), respect: clamp(real.respect), synchronization: clamp(real.synchronization), confidence: clamp(real.confidence), autonomy: clamp(real.autonomy), strain: clamp(real.strain) };
   const t = rival.traits;
   return {
     trust: clamp(t.empathy),

@@ -82,6 +82,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
           return `${who(e.side)} flinched and couldn't move!`;
         case 'recharge':
           return `${who(e.side)} must recharge!`;
+        case 'infatuation':
+          return `${who(e.side)} is immobilized by love!`;
         case 'truant':
           return `${who(e.side)} is loafing around!`;
       }
@@ -262,6 +264,16 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${names.nameOf(e.uid)} learned ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
     case 'wantsMove':
       return `${names.nameOf(e.uid)} wants to learn ${content.moves.get(e.moveId)?.name ?? e.moveId}.`;
+    case 'refused':
+      return `${names.nameOf(e.uid)} refused to use ${content.moves.get(e.moveId)?.name ?? 'the move'}! It doesn't trust that order.`;
+    case 'initiative':
+      return `${names.nameOf(e.uid)} took the initiative and used ${content.moves.get(e.to)?.name ?? 'another move'} instead!`;
+    case 'combo':
+      return `${names.nameOf(e.to)} takes over exactly as practiced! Its ${e.stat === 'atk' ? 'Attack' : 'Sp. Atk'} rose!`;
+    case 'newMove':
+      return `${names.nameOf(e.uid)} showed a move it had been working on: ${content.moves.get(e.moveId)?.name ?? e.moveId}!`;
+    case 'turningPoint':
+      return `${names.nameOf(e.uid)} found its ${e.emotion}!`;
     case 'evolved':
       return `What? The ${foe} ${species(e.from)} is evolving!\nIt evolved into ${species(e.to)}!`;
     case 'transform': {
@@ -337,4 +349,39 @@ const SELF_STATE: Record<string, (who: string) => string> = {
   abilityChanged: (w) => `${w}'s ability changed!`,
   typeChanged: (w) => `${w}'s type changed!`,
   sketched: (w) => `${w} sketched the move!`,
+  infatuated: (w) => `${w} fell in love!`,
+  inLove: (w) => `${w} is in love with its foe!`,
+  mimicked: (w) => `${w} learned a new move!`,
+  transformed: (w) => `${w} transformed!`,
+  charged: (w) => `${w} began charging power!`,
+  bide: (w) => `${w} is storing energy!`,
+  calm: (w) => `${w} became calm!`,
+  foreseen: (w) => `${w} foresaw an attack!`,
+  foresight: (w) => `${w} was identified!`,
+  identified: (w) => `${w} was identified!`,
+  knocked: (w) => `${w} lost its item!`,
+  stole: (w) => `${w} stole an item!`,
+  swappedItems: (w) => `${w} switched items!`,
+  bestowed: (w) => `${w} was handed an item!`,
+  embargo: (w) => `${w} can't use items!`,
+  recycled: (w) => `${w} got its item back!`,
+  statsChanged: (w) => `${w}'s stats changed!`,
+  snatched: (w) => `${w} snatched a move!`,
+  snatch: (w) => `${w} waits for a move to snatch!`,
+  nightmare: (w) => `${w} began having a nightmare!`,
+  cursed: (w) => `${w} was cursed!`,
+  imprison: (w) => `${w} sealed the foe's moves!`,
+  fairyLock: (w) => `${w} locked the field!`,
+  magicCoat: (w) => `${w} shrouded itself in a magic coat!`,
+  powder: (w) => `${w} was covered in powder!`,
+  tarred: (w) => `${w} was covered in tar!`,
+  ionDeluge: (w) => `${w} charged the air with electricity!`,
+  electrified: (w) => `${w}'s next move turns electric!`,
+  telekinesis: (w) => `${w} was hurled into the air!`,
+  syrup: (w) => `${w} was covered in sticky syrup!`,
+  saltCure: (w) => `${w} is being salt cured!`,
+  grudge: (w) => `${w} bears a grudge!`,
+  revived: (w) => `${w} was revived!`,
+  octolock: (w) => `${w} can't escape!`,
+  shield: (w) => `${w} protected itself!`,
 };

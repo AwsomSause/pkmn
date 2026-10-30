@@ -134,3 +134,27 @@ describe('limits removed', () => {
     expect(d.battle.enemyStages.atk).toBe(-1);
   });
 });
+
+describe('Attract and held story items', () => {
+  it('Attract makes the target miss turns now and then', () => {
+    const d = duel('machop', 'snorlax', ['attract'], ['splash']);
+    d.go();
+    expect(d.battle.enemyVolatile.infatuated).toBe(true);
+    let stuck = 0;
+    for (let i = 0; i < 12; i++) if (d.go().some((e) => e.type === 'cant' && e.reason === 'infatuation')) stuck++;
+    expect(stuck).toBeGreaterThan(0);
+    expect(stuck).toBeLessThan(12);
+  });
+  it('Oblivious ignores Attract', () => {
+    const d = duel('machop', 'snorlax', ['attract']);
+    d.battle.enemyVolatile.abilityOverride = 'oblivious';
+    d.go();
+    expect(d.battle.enemyVolatile.infatuated).toBe(false);
+  });
+  it('Griseous Orb turns Giratina into Origin Forme in battle', () => {
+    const d = duel('giratina', 'snorlax', ['splash']);
+    d.p.held = { 'griseous-orb': 1 };
+    d.go();
+    expect(d.p.speciesId).toBe('giratina-origin');
+  });
+});

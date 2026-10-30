@@ -114,9 +114,12 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
+import { rivalBond } from './drama/bond';
+import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
+import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { extendEndless, spookyWild, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -950,6 +953,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
+    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`);
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
@@ -1254,7 +1258,20 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const captureRng = new Rng(run.rng.capture);
   const hyperRng = new Rng(run.rng.hyper);
   const targetUid = currentEnemy(battle).uid;
-  const engineEvents = resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), action);
+  // Bond Engine: a willful Pokémon may refuse a reckless order, a synced one may step in (before the turn).
+  const shaped = shapeAction(content, run, action);
+  const wasForced = battle.needsSwitch;
+  const outgoing = run.party[battle.activeIndex]?.uid;
+  const enemyBefore = battle.enemyIndex;
+  const engineEvents: BattleEvent[] = [...shaped.events, ...resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), shaped.action)];
+  // A practiced pair hands over after a faint (yours, or a rival's).
+  if (wasForced && action.kind === 'switch' && outgoing) {
+    const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
+    if (combo) engineEvents.push(combo);
+  }
+  const enemyCombo_ = enemyCombo(content, run, enemyBefore);
+  if (enemyCombo_) engineEvents.push(enemyCombo_);
+  updateBondsTurn(run, engineEvents);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   run.rng.hyper = hyperRng.state;
@@ -1273,6 +1290,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
   const evolved = midBattleEvolution(content, run);
   if (evolved) events.push(evolved);
+  // Bond Engine: a Pokémon at half HP may reveal a move it was ready to learn; a feeling may take hold.
+  const rivalHere = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
+  const reveal = [revealMove(content, run, 'player', false), revealMove(content, run, 'enemy', Boolean(rivalHere) && rivalBond(rivalHere, currentEnemy(battle).speciesId).confidence >= 40)];
+  for (const r of reveal) if (r) events.push(r);
+  events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
+  if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
@@ -1564,7 +1587,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     count(run, 'regionsCleared');
     if (!run.log.charmUsedInRegion) count(run, 'regionsClearedNoCharm');
     if (run.log.starterUid && run.party.some((m) => m.uid === run.log.starterUid)) count(run, 'regionsClearedWithStarter');
-    if (run.regionIndex + 1 >= run.regionOrder.length) run.victory = true;
+    if (run.regionIndex + 1 >= run.regionOrder.length && !extendEndless(run)) run.victory = true;
   }
   run.battle = null;
   run.encountersCompleted += 1;

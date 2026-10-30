@@ -3514,10 +3514,28 @@
   "max": 1,
   "how": "held",
   "icon": "griseous-orb",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "ghost",
+      "dragon"
+     ],
+     "percent": 20,
+     "species": [
+      "giratina"
+     ]
+    },
+    {
+     "hook": "formHeld",
+     "from": "giratina",
+     "to": "giratina-origin"
+    }
+   ]
+  }
  },
  {
   "id": "gracidea",
@@ -3529,10 +3547,17 @@
   "max": 1,
   "how": "held",
   "icon": "gracidea",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "formHeld",
+     "from": "shaymin",
+     "to": "shaymin-sky"
+    }
+   ]
+  }
  },
  {
   "id": "red-orb",
@@ -3544,10 +3569,8 @@
   "max": 1,
   "how": "held",
   "icon": "red-orb",
-  "status": "pending",
-  "needs": [
-   "m8.5"
-  ]
+  "status": "existing",
+  "existing": "red-orb"
  },
  {
   "id": "blue-orb",
@@ -3559,25 +3582,36 @@
   "max": 1,
   "how": "held",
   "icon": "blue-orb",
-  "status": "pending",
-  "needs": [
-   "m8.5"
-  ]
+  "status": "existing",
+  "existing": "blue-orb"
  },
  {
   "id": "jade-orb",
   "name": "Jade Orb",
   "family": "Species items",
-  "description": "Rayquaza: Dragon and Flying moves +20%; later its Mega key",
+  "description": "Rayquaza: Dragon and Flying moves +20%",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "jade-orb",
-  "status": "pending",
-  "needs": [
-   "m8.5"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "dragon",
+      "flying"
+     ],
+     "percent": 20,
+     "species": [
+      "rayquaza"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "fire-stone",
@@ -7200,10 +7234,16 @@
   "max": null,
   "how": "use",
   "icon": "red-flute",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "immune",
+     "status": "infatuation"
+    }
+   ]
+  }
  },
  {
   "id": "yellow-flute",
@@ -7234,12 +7274,17 @@
   "rarity": "uncommon",
   "stacksOn": "team",
   "max": 1,
-  "how": "passive",
+  "how": "held",
   "icon": "poke-flute",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "wakeAll"
+    }
+   ]
+  }
  },
  {
   "id": "rock-incense",
@@ -7851,12 +7896,20 @@
   "rarity": "common",
   "stacksOn": "team",
   "max": 1,
-  "how": "passive",
+  "how": "held",
   "icon": "go-goggles",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherImmune",
+     "weathers": [
+      "sand"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "vs-seeker",
@@ -10219,12 +10272,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "oaks-parcel",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "oaks-letter",
@@ -10257,12 +10318,20 @@
   "rarity": "common",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "letter",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "parcel",
@@ -10272,12 +10341,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "parcel",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "devon-goods",
@@ -10287,12 +10364,20 @@
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "devon-goods",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "ss-ticket",
@@ -10578,12 +10663,20 @@
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "scanner",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "galactic-key",
@@ -10798,14 +10891,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Deoxys: change Forme from the Bag",
   "rarity": "rare",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "meteorite",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "odd-keystone",
@@ -10817,25 +10918,80 @@
   "max": 1,
   "how": "passive",
   "icon": "odd-keystone",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "enigma-stone",
   "name": "Enigma Stone",
   "family": "Key items: tickets, keys and story items",
-  "description": "Latios or Latias in your party: +10% to all stats",
+  "description": "Latios or Latias: +10% to all stats while it is in the team",
   "rarity": "epic",
   "stacksOn": "team",
   "max": 1,
-  "how": "passive",
+  "how": "held",
   "icon": "enigma-stone",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "atk",
+     "multiplier": 1.1,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "def",
+     "multiplier": 1.1,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spa",
+     "multiplier": 1.1,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spd",
+     "multiplier": 1.1,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 1.1,
+     "species": [
+      "latios",
+      "latias"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "tidal-bell",
@@ -10889,16 +11045,693 @@
   "id": "god-stone",
   "name": "God Stone",
   "family": "Key items: tickets, keys and story items",
-  "description": "Legendary Pokémon in your party: +5% to all stats",
+  "description": "Legendary and mythical Pokémon: +5% to all stats while they are in the team",
   "rarity": "epic",
   "stacksOn": "team",
   "max": 1,
-  "how": "passive",
+  "how": "held",
   "icon": "god-stone",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "atk",
+     "multiplier": 1.05,
+     "species": [
+      "articuno",
+      "articuno-galar",
+      "zapdos",
+      "zapdos-galar",
+      "moltres",
+      "moltres-galar",
+      "mewtwo",
+      "mew",
+      "raikou",
+      "entei",
+      "suicune",
+      "lugia",
+      "ho-oh",
+      "celebi",
+      "regirock",
+      "regice",
+      "registeel",
+      "latias",
+      "latios",
+      "kyogre",
+      "groudon",
+      "rayquaza",
+      "jirachi",
+      "deoxys",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed",
+      "uxie",
+      "mesprit",
+      "azelf",
+      "dialga",
+      "dialga-origin",
+      "palkia",
+      "palkia-origin",
+      "heatran",
+      "regigigas",
+      "giratina",
+      "giratina-origin",
+      "cresselia",
+      "phione",
+      "manaphy",
+      "darkrai",
+      "shaymin",
+      "shaymin-sky",
+      "arceus",
+      "victini",
+      "cobalion",
+      "terrakion",
+      "virizion",
+      "tornadus",
+      "tornadus-therian",
+      "thundurus",
+      "thundurus-therian",
+      "reshiram",
+      "zekrom",
+      "landorus",
+      "landorus-therian",
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white",
+      "keldeo",
+      "meloetta",
+      "meloetta-pirouette",
+      "genesect",
+      "xerneas",
+      "yveltal",
+      "zygarde",
+      "zygarde-complete",
+      "zygarde-10",
+      "diancie",
+      "hoopa",
+      "hoopa-unbound",
+      "volcanion",
+      "type-null",
+      "silvally",
+      "tapu-koko",
+      "tapu-lele",
+      "tapu-bulu",
+      "tapu-fini",
+      "cosmog",
+      "cosmoem",
+      "solgaleo",
+      "lunala",
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn",
+      "necrozma-ultra",
+      "magearna",
+      "marshadow",
+      "zeraora",
+      "meltan",
+      "melmetal",
+      "zacian",
+      "zacian-crowned",
+      "zamazenta",
+      "zamazenta-crowned",
+      "eternatus",
+      "eternatus-eternamax",
+      "kubfu",
+      "urshifu",
+      "urshifu-rapid-strike",
+      "zarude",
+      "regieleki",
+      "regidrago",
+      "glastrier",
+      "spectrier",
+      "calyrex",
+      "calyrex-ice",
+      "calyrex-shadow",
+      "enamorus",
+      "enamorus-therian",
+      "wo-chien",
+      "chien-pao",
+      "ting-lu",
+      "chi-yu",
+      "koraidon",
+      "miraidon",
+      "okidogi",
+      "munkidori",
+      "fezandipiti",
+      "ogerpon",
+      "ogerpon-wellspring-mask",
+      "ogerpon-hearthflame-mask",
+      "ogerpon-cornerstone-mask",
+      "terapagos",
+      "terapagos-terastal",
+      "terapagos-stellar",
+      "pecharunt"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "def",
+     "multiplier": 1.05,
+     "species": [
+      "articuno",
+      "articuno-galar",
+      "zapdos",
+      "zapdos-galar",
+      "moltres",
+      "moltres-galar",
+      "mewtwo",
+      "mew",
+      "raikou",
+      "entei",
+      "suicune",
+      "lugia",
+      "ho-oh",
+      "celebi",
+      "regirock",
+      "regice",
+      "registeel",
+      "latias",
+      "latios",
+      "kyogre",
+      "groudon",
+      "rayquaza",
+      "jirachi",
+      "deoxys",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed",
+      "uxie",
+      "mesprit",
+      "azelf",
+      "dialga",
+      "dialga-origin",
+      "palkia",
+      "palkia-origin",
+      "heatran",
+      "regigigas",
+      "giratina",
+      "giratina-origin",
+      "cresselia",
+      "phione",
+      "manaphy",
+      "darkrai",
+      "shaymin",
+      "shaymin-sky",
+      "arceus",
+      "victini",
+      "cobalion",
+      "terrakion",
+      "virizion",
+      "tornadus",
+      "tornadus-therian",
+      "thundurus",
+      "thundurus-therian",
+      "reshiram",
+      "zekrom",
+      "landorus",
+      "landorus-therian",
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white",
+      "keldeo",
+      "meloetta",
+      "meloetta-pirouette",
+      "genesect",
+      "xerneas",
+      "yveltal",
+      "zygarde",
+      "zygarde-complete",
+      "zygarde-10",
+      "diancie",
+      "hoopa",
+      "hoopa-unbound",
+      "volcanion",
+      "type-null",
+      "silvally",
+      "tapu-koko",
+      "tapu-lele",
+      "tapu-bulu",
+      "tapu-fini",
+      "cosmog",
+      "cosmoem",
+      "solgaleo",
+      "lunala",
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn",
+      "necrozma-ultra",
+      "magearna",
+      "marshadow",
+      "zeraora",
+      "meltan",
+      "melmetal",
+      "zacian",
+      "zacian-crowned",
+      "zamazenta",
+      "zamazenta-crowned",
+      "eternatus",
+      "eternatus-eternamax",
+      "kubfu",
+      "urshifu",
+      "urshifu-rapid-strike",
+      "zarude",
+      "regieleki",
+      "regidrago",
+      "glastrier",
+      "spectrier",
+      "calyrex",
+      "calyrex-ice",
+      "calyrex-shadow",
+      "enamorus",
+      "enamorus-therian",
+      "wo-chien",
+      "chien-pao",
+      "ting-lu",
+      "chi-yu",
+      "koraidon",
+      "miraidon",
+      "okidogi",
+      "munkidori",
+      "fezandipiti",
+      "ogerpon",
+      "ogerpon-wellspring-mask",
+      "ogerpon-hearthflame-mask",
+      "ogerpon-cornerstone-mask",
+      "terapagos",
+      "terapagos-terastal",
+      "terapagos-stellar",
+      "pecharunt"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spa",
+     "multiplier": 1.05,
+     "species": [
+      "articuno",
+      "articuno-galar",
+      "zapdos",
+      "zapdos-galar",
+      "moltres",
+      "moltres-galar",
+      "mewtwo",
+      "mew",
+      "raikou",
+      "entei",
+      "suicune",
+      "lugia",
+      "ho-oh",
+      "celebi",
+      "regirock",
+      "regice",
+      "registeel",
+      "latias",
+      "latios",
+      "kyogre",
+      "groudon",
+      "rayquaza",
+      "jirachi",
+      "deoxys",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed",
+      "uxie",
+      "mesprit",
+      "azelf",
+      "dialga",
+      "dialga-origin",
+      "palkia",
+      "palkia-origin",
+      "heatran",
+      "regigigas",
+      "giratina",
+      "giratina-origin",
+      "cresselia",
+      "phione",
+      "manaphy",
+      "darkrai",
+      "shaymin",
+      "shaymin-sky",
+      "arceus",
+      "victini",
+      "cobalion",
+      "terrakion",
+      "virizion",
+      "tornadus",
+      "tornadus-therian",
+      "thundurus",
+      "thundurus-therian",
+      "reshiram",
+      "zekrom",
+      "landorus",
+      "landorus-therian",
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white",
+      "keldeo",
+      "meloetta",
+      "meloetta-pirouette",
+      "genesect",
+      "xerneas",
+      "yveltal",
+      "zygarde",
+      "zygarde-complete",
+      "zygarde-10",
+      "diancie",
+      "hoopa",
+      "hoopa-unbound",
+      "volcanion",
+      "type-null",
+      "silvally",
+      "tapu-koko",
+      "tapu-lele",
+      "tapu-bulu",
+      "tapu-fini",
+      "cosmog",
+      "cosmoem",
+      "solgaleo",
+      "lunala",
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn",
+      "necrozma-ultra",
+      "magearna",
+      "marshadow",
+      "zeraora",
+      "meltan",
+      "melmetal",
+      "zacian",
+      "zacian-crowned",
+      "zamazenta",
+      "zamazenta-crowned",
+      "eternatus",
+      "eternatus-eternamax",
+      "kubfu",
+      "urshifu",
+      "urshifu-rapid-strike",
+      "zarude",
+      "regieleki",
+      "regidrago",
+      "glastrier",
+      "spectrier",
+      "calyrex",
+      "calyrex-ice",
+      "calyrex-shadow",
+      "enamorus",
+      "enamorus-therian",
+      "wo-chien",
+      "chien-pao",
+      "ting-lu",
+      "chi-yu",
+      "koraidon",
+      "miraidon",
+      "okidogi",
+      "munkidori",
+      "fezandipiti",
+      "ogerpon",
+      "ogerpon-wellspring-mask",
+      "ogerpon-hearthflame-mask",
+      "ogerpon-cornerstone-mask",
+      "terapagos",
+      "terapagos-terastal",
+      "terapagos-stellar",
+      "pecharunt"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spd",
+     "multiplier": 1.05,
+     "species": [
+      "articuno",
+      "articuno-galar",
+      "zapdos",
+      "zapdos-galar",
+      "moltres",
+      "moltres-galar",
+      "mewtwo",
+      "mew",
+      "raikou",
+      "entei",
+      "suicune",
+      "lugia",
+      "ho-oh",
+      "celebi",
+      "regirock",
+      "regice",
+      "registeel",
+      "latias",
+      "latios",
+      "kyogre",
+      "groudon",
+      "rayquaza",
+      "jirachi",
+      "deoxys",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed",
+      "uxie",
+      "mesprit",
+      "azelf",
+      "dialga",
+      "dialga-origin",
+      "palkia",
+      "palkia-origin",
+      "heatran",
+      "regigigas",
+      "giratina",
+      "giratina-origin",
+      "cresselia",
+      "phione",
+      "manaphy",
+      "darkrai",
+      "shaymin",
+      "shaymin-sky",
+      "arceus",
+      "victini",
+      "cobalion",
+      "terrakion",
+      "virizion",
+      "tornadus",
+      "tornadus-therian",
+      "thundurus",
+      "thundurus-therian",
+      "reshiram",
+      "zekrom",
+      "landorus",
+      "landorus-therian",
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white",
+      "keldeo",
+      "meloetta",
+      "meloetta-pirouette",
+      "genesect",
+      "xerneas",
+      "yveltal",
+      "zygarde",
+      "zygarde-complete",
+      "zygarde-10",
+      "diancie",
+      "hoopa",
+      "hoopa-unbound",
+      "volcanion",
+      "type-null",
+      "silvally",
+      "tapu-koko",
+      "tapu-lele",
+      "tapu-bulu",
+      "tapu-fini",
+      "cosmog",
+      "cosmoem",
+      "solgaleo",
+      "lunala",
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn",
+      "necrozma-ultra",
+      "magearna",
+      "marshadow",
+      "zeraora",
+      "meltan",
+      "melmetal",
+      "zacian",
+      "zacian-crowned",
+      "zamazenta",
+      "zamazenta-crowned",
+      "eternatus",
+      "eternatus-eternamax",
+      "kubfu",
+      "urshifu",
+      "urshifu-rapid-strike",
+      "zarude",
+      "regieleki",
+      "regidrago",
+      "glastrier",
+      "spectrier",
+      "calyrex",
+      "calyrex-ice",
+      "calyrex-shadow",
+      "enamorus",
+      "enamorus-therian",
+      "wo-chien",
+      "chien-pao",
+      "ting-lu",
+      "chi-yu",
+      "koraidon",
+      "miraidon",
+      "okidogi",
+      "munkidori",
+      "fezandipiti",
+      "ogerpon",
+      "ogerpon-wellspring-mask",
+      "ogerpon-hearthflame-mask",
+      "ogerpon-cornerstone-mask",
+      "terapagos",
+      "terapagos-terastal",
+      "terapagos-stellar",
+      "pecharunt"
+     ]
+    },
+    {
+     "hook": "stat",
+     "stat": "spe",
+     "multiplier": 1.05,
+     "species": [
+      "articuno",
+      "articuno-galar",
+      "zapdos",
+      "zapdos-galar",
+      "moltres",
+      "moltres-galar",
+      "mewtwo",
+      "mew",
+      "raikou",
+      "entei",
+      "suicune",
+      "lugia",
+      "ho-oh",
+      "celebi",
+      "regirock",
+      "regice",
+      "registeel",
+      "latias",
+      "latios",
+      "kyogre",
+      "groudon",
+      "rayquaza",
+      "jirachi",
+      "deoxys",
+      "deoxys-attack",
+      "deoxys-defense",
+      "deoxys-speed",
+      "uxie",
+      "mesprit",
+      "azelf",
+      "dialga",
+      "dialga-origin",
+      "palkia",
+      "palkia-origin",
+      "heatran",
+      "regigigas",
+      "giratina",
+      "giratina-origin",
+      "cresselia",
+      "phione",
+      "manaphy",
+      "darkrai",
+      "shaymin",
+      "shaymin-sky",
+      "arceus",
+      "victini",
+      "cobalion",
+      "terrakion",
+      "virizion",
+      "tornadus",
+      "tornadus-therian",
+      "thundurus",
+      "thundurus-therian",
+      "reshiram",
+      "zekrom",
+      "landorus",
+      "landorus-therian",
+      "kyurem",
+      "kyurem-black",
+      "kyurem-white",
+      "keldeo",
+      "meloetta",
+      "meloetta-pirouette",
+      "genesect",
+      "xerneas",
+      "yveltal",
+      "zygarde",
+      "zygarde-complete",
+      "zygarde-10",
+      "diancie",
+      "hoopa",
+      "hoopa-unbound",
+      "volcanion",
+      "type-null",
+      "silvally",
+      "tapu-koko",
+      "tapu-lele",
+      "tapu-bulu",
+      "tapu-fini",
+      "cosmog",
+      "cosmoem",
+      "solgaleo",
+      "lunala",
+      "necrozma",
+      "necrozma-dusk",
+      "necrozma-dawn",
+      "necrozma-ultra",
+      "magearna",
+      "marshadow",
+      "zeraora",
+      "meltan",
+      "melmetal",
+      "zacian",
+      "zacian-crowned",
+      "zamazenta",
+      "zamazenta-crowned",
+      "eternatus",
+      "eternatus-eternamax",
+      "kubfu",
+      "urshifu",
+      "urshifu-rapid-strike",
+      "zarude",
+      "regieleki",
+      "regidrago",
+      "glastrier",
+      "spectrier",
+      "calyrex",
+      "calyrex-ice",
+      "calyrex-shadow",
+      "enamorus",
+      "enamorus-therian",
+      "wo-chien",
+      "chien-pao",
+      "ting-lu",
+      "chi-yu",
+      "koraidon",
+      "miraidon",
+      "okidogi",
+      "munkidori",
+      "fezandipiti",
+      "ogerpon",
+      "ogerpon-wellspring-mask",
+      "ogerpon-hearthflame-mask",
+      "ogerpon-cornerstone-mask",
+      "terapagos",
+      "terapagos-terastal",
+      "terapagos-stellar",
+      "pecharunt"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "dark-stone",
@@ -10950,16 +11783,25 @@
   "id": "dragon-skull",
   "name": "Dragon Skull",
   "family": "Key items: tickets, keys and story items",
-  "description": "Dragon-type team members +5% damage",
+  "description": "Team: Dragon moves +5% damage",
   "rarity": "rare",
   "stacksOn": "team",
   "max": 1,
-  "how": "passive",
+  "how": "held",
   "icon": "dragon-skull",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "dragon"
+     ],
+     "percent": 5
+    }
+   ]
+  }
  },
  {
   "id": "kyurem-black",
@@ -10967,14 +11809,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Kyurem + Zekrom: fuse into Black Kyurem",
   "rarity": "epic",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "kyurem-black",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "kyurem-white",
@@ -10982,14 +11832,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Kyurem + Reshiram: fuse into White Kyurem",
   "rarity": "epic",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
-  "icon": "kyurem-white",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "how": "passive",
+  "icon": null,
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "tornadus-therian",
@@ -10997,14 +11855,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Tornadus: switch to Therian Forme",
   "rarity": "epic",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "tornadus-therian",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "thundurus-therian",
@@ -11012,14 +11878,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Thundurus: switch to Therian Forme",
   "rarity": "epic",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "thundurus-therian",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "landorus-therian",
@@ -11027,14 +11901,22 @@
   "family": "Key items: tickets, keys and story items",
   "description": "Landorus: switch to Therian Forme",
   "rarity": "epic",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "landorus-therian",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "gold-teeth",
@@ -11044,12 +11926,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "gold-teeth",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "old-charm",
@@ -11096,16 +11986,24 @@
   "id": "lunar-wing",
   "name": "Lunar Wing",
   "family": "Key items: tickets, keys and story items",
-  "description": "Holder can't fall asleep; also opens the Cresselia event",
+  "description": "Holder can't fall asleep",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 1,
   "how": "held",
   "icon": "lunar-wing",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "statusImmune",
+     "statuses": [
+      "slp"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "rainbow-wing",
@@ -11157,16 +12055,28 @@
   "id": "keldeo-resolution",
   "name": "Keldeo Resolution",
   "family": "Key items: tickets, keys and story items",
-  "description": "Keldeo: Resolute Form, Fighting moves +20%",
+  "description": "Keldeo: Fighting moves +20% (no Resolute sprite yet)",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 1,
-  "how": "use",
+  "how": "held",
   "icon": "keldeo-resolution",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "fighting"
+     ],
+     "percent": 20,
+     "species": [
+      "keldeo"
+     ]
+    }
+   ]
+  }
  },
  {
   "id": "gram-1",
@@ -11176,12 +12086,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "gram-1",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "gram-2",
@@ -11191,12 +12109,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "gram-2",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "gram-3",
@@ -11206,12 +12132,20 @@
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "gram-3",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "machine-part",
@@ -11221,12 +12155,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "machine-part",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "lost-item",
@@ -11236,12 +12178,20 @@
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
-  "how": "use",
+  "how": "passive",
   "icon": "lost-item",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "data-card",
@@ -11253,10 +12203,18 @@
   "max": 3,
   "how": "passive",
   "icon": "data-card",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "unown-report",
@@ -11293,10 +12251,19 @@
   "max": 1,
   "how": "passive",
   "icon": "pass",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "earlyStock",
+     "count": 4
+    }
+   ]
+  }
  },
  {
   "id": "tri-pass",
