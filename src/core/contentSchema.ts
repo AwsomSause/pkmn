@@ -69,6 +69,8 @@ export const EvolutionSchema = z
     item: z.string().optional(),
     region: z.string().optional(),
     condition: z.enum(['atkGtDef', 'atkLtDef', 'atkEqDef']).optional(),
+    /** Only a male or only a female Pokémon takes this branch (Kirlia to Gallade, Burmy to Mothim). */
+    gender: z.enum(['male', 'female']).optional(),
   })
   .refine((e) => (e.level === undefined) !== (e.item === undefined), { message: 'an evolution needs exactly one of level or item' });
 export type Evolution = z.infer<typeof EvolutionSchema>;

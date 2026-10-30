@@ -3,6 +3,7 @@
 // trades, friendship, ...) is an item used from the Bag. Friendship
 // evolutions also happen on their own once friendship is high enough.
 
+import { genderOf } from './gender';
 import type { Content, Evolution } from './contentSchema';
 import { blocksEvolution } from './battle/held';
 import { friendshipReady } from './friendship';
@@ -28,6 +29,11 @@ export function applicableBranches(content: Content, mon: PokemonInstance, branc
     const { atk, def } = calcStats(content, mon);
     const holds = (c: Evolution['condition']) => (c === 'atkGtDef' ? atk > def : c === 'atkLtDef' ? atk < def : c === 'atkEqDef' ? atk === def : true);
     list = list.filter((e) => holds(e.condition));
+  }
+  // Gender-bound branches (Gallade, Froslass, Mothim, Meowstic's forms ...).
+  if (list.some((e) => e.gender)) {
+    const gender = genderOf(content, mon);
+    list = list.filter((e) => !e.gender || e.gender === gender);
   }
   return list;
 }

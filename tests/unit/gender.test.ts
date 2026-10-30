@@ -1,6 +1,7 @@
 // Genders: stable per Pokémon, match the species ratio, and drive Attract, Cute Charm, Rivalry, Captivate and Love Ball.
 
 import { describe, expect, it } from 'vitest';
+import { evolutionTarget, itemEvolutionTargets } from '../../src/core/evolution';
 import { genderOf, oppositeGender, sameGender } from '../../src/core/gender';
 import { createBattle, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon } from '../../src/core/pokemon';
@@ -95,5 +96,41 @@ describe('gender mechanics', () => {
     for (let i = 0; i < 20; i++) if (catches(`x${i}`)) opposite++;
     expect(opposite).toBeGreaterThan(0);
     expect(opposite).toBeLessThan(20);
+  });
+});
+
+describe('gender-bound evolutions and forms', () => {
+  const evolveTarget = (speciesId: string, uid: string, level = 50) => {
+    const mon = createPokemon(content, speciesId, level, uid);
+    return { mon, to: evolutionTarget(content, mon) };
+  };
+  it('Espurr becomes the Meowstic of its own gender', () => {
+    const results = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      const { mon, to } = evolveTarget('espurr', `esp${i}`);
+      const g = genderOf(content, mon);
+      expect(to).toBe(g === 'female' ? 'meowstic-female' : 'meowstic');
+      results.add(to!);
+    }
+    expect(results.size).toBe(2);
+    expect(genderOf(content, { uid: 'z', speciesId: 'meowstic-female' })).toBe('female');
+    expect(genderOf(content, { uid: 'z', speciesId: 'meowstic' })).toBe('male');
+  });
+  it('Combee only becomes Vespiquen when female; Burmy is Mothim or Wormadam by gender', () => {
+    for (let i = 0; i < 40; i++) {
+      const combee = evolveTarget('combee', `c${i}`, 30);
+      expect(combee.to).toBe(genderOf(content, combee.mon) === 'female' ? 'vespiquen' : null);
+      const burmy = evolveTarget('burmy', `b${i}`, 30);
+      if (genderOf(content, burmy.mon) === 'male') expect(burmy.to).toBe('mothim');
+      else expect(burmy.to).toMatch(/^wormadam/);
+    }
+  });
+  it('the Dawn Stone makes only male Kirlia into Gallade and only female Snorunt into Froslass', () => {
+    for (let i = 0; i < 40; i++) {
+      const k = createPokemon(content, 'kirlia', 30, `k${i}`);
+      expect(itemEvolutionTargets(content, k, 'dawn-stone').includes('gallade')).toBe(genderOf(content, k) === 'male');
+      const s = createPokemon(content, 'snorunt', 30, `s${i}`);
+      expect(itemEvolutionTargets(content, s, 'dawn-stone').includes('froslass')).toBe(genderOf(content, s) === 'female');
+    }
   });
 });
