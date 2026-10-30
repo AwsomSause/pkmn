@@ -4,7 +4,11 @@ import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { content } from './helpers';
+import { getArchetype } from '../../src/core/archetypes';
+import { planTrainer } from '../../src/core/encounters';
+import { content, scaleAt } from './helpers';
+
+const RED = getArchetype(content, 'red');
 
 function run(move: string, seed = 'moves2') {
   const player = createPokemon(content, 'rattata', 50, 'p');
@@ -34,5 +38,16 @@ describe('moves added in the catch-up', () => {
   });
   it('Ice Hammer lowers the user\'s Speed', () => {
     expect(run('ice-hammer').playerStages.spe).toBe(-1);
+  });
+});
+
+describe('smarter ordinary trainers', () => {
+  it('pick their best move more often in later stages, up to a cap', () => {
+    const theme = [...content.themes.values()][0]!;
+    const aiAt = (stage: number) => planTrainer(content, RED, theme, stage, scaleAt(0, 5), new Rng(hashSeed('ai'))).ai;
+    const { base, max } = content.balance.trainerAi;
+    expect(aiAt(1)).toBeCloseTo(base);
+    expect(aiAt(5)).toBeGreaterThan(aiAt(1));
+    expect(aiAt(500)).toBe(max);
   });
 });
