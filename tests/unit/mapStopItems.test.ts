@@ -14,7 +14,7 @@ import { content, takeAnyReward } from './helpers';
 function newRun(seed = 'stop-items'): RunState {
   // Past the gentle opening, whose weaker wild Pokémon would hide what these items change.
   const run = chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0);
-  run.encountersCompleted = 2;
+  run.encountersCompleted = content.balance.opening.encounters;
   return run;
 }
 
