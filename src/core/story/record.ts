@@ -14,6 +14,7 @@ import type {
   DomainEvent,
   DomainEventType,
   EnemyProfile,
+  Emotion,
   EntityRef,
   Memory,
   PokemonHistory,
@@ -59,6 +60,8 @@ export interface EmitOptions {
   text?: string;
   /** Overrides the place (e.g. the turn a fact belongs to). */
   where?: Where;
+  /** Seven Emotions tags for the memory (default: story.json's emotions.byEvent for the type). */
+  emotions?: Emotion[];
 }
 
 /**
@@ -84,7 +87,8 @@ export function emit(content: Content, run: RunState, type: DomainEventType, opt
   updateCounters(story, event);
   const importance = opts.importance ?? cfg.importance[type];
   if (opts.text && importance > 0) {
-    const memory: Memory = { eventId: event.id, seq: event.seq, type, importance, text: opts.text, where: event.where };
+    const emotions = opts.emotions ?? cfg.emotions.byEvent[type] ?? [];
+    const memory: Memory = { eventId: event.id, seq: event.seq, type, importance, text: opts.text, where: event.where, emotions };
     for (const uid of event.actors) {
       const history = story.histories[uid];
       if (history) addMemory(history, memory, cfg.limits.memoriesPerPokemon);

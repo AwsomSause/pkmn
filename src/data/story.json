@@ -53,6 +53,41 @@
     "trainerVowedReturn": 50,
     "runEnded": 90
   },
+  "emotions": {
+    "window": 10,
+    "colors": {
+      "determination": "#e83838",
+      "bravery": "#f08828",
+      "justice": "#f0d030",
+      "kindness": "#48b848",
+      "patience": "#68c8f0",
+      "integrity": "#3858c8",
+      "perseverance": "#9848c8"
+    },
+    "byEvent": {
+      "survivedFatal": [
+        "determination"
+      ],
+      "lostToBoss": [
+        "determination"
+      ],
+      "closeCall": [
+        "perseverance"
+      ],
+      "bossBeaten": [
+        "bravery"
+      ],
+      "rivalryFormed": [
+        "bravery"
+      ],
+      "trainerVowedReturn": [
+        "perseverance"
+      ],
+      "friendshipMilestone": [
+        "kindness"
+      ]
+    }
+  },
   "definitions": [
     {
       "id": "toughened-it-out",
@@ -96,6 +131,9 @@
       },
       "priority": "knockoutPrevention",
       "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
       "variants": {
         "again": {
           "displayName": "Toughened It Out Again!",
@@ -155,6 +193,9 @@
       },
       "priority": "knockoutPrevention",
       "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
       "variants": {}
     },
     {
@@ -205,6 +246,9 @@
       },
       "priority": "bondRivalry",
       "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
       "variants": {}
     },
     {
@@ -248,6 +292,9 @@
       },
       "priority": "emotionalOverdrive",
       "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
       "variants": {
         "wouldntStayDown": {
           "displayName": "Wouldn't Stay Down!",
@@ -296,6 +343,7 @@
       "eligibilityTags": [
         "enemy"
       ],
+      "emotions": [],
       "variants": {
         "uncontrollable": {
           "displayName": "Its Rage Is Uncontrollable!",
@@ -362,6 +410,9 @@
       },
       "priority": "bondRivalry",
       "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
       "variants": {
         "again": {
           "displayName": "It Recognizes Its Rival!",
@@ -413,6 +464,9 @@
       },
       "priority": "bondRivalry",
       "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
       "variants": {
         "outdo": {
           "displayName": "It Won't Be Outdone!",
@@ -458,6 +512,9 @@
       "priority": "memory",
       "eligibilityTags": [
         "enemy"
+      ],
+      "emotions": [
+        "perseverance"
       ],
       "variants": {}
     }

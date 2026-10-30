@@ -13,7 +13,7 @@ import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
-import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { openBagMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
@@ -50,7 +50,8 @@ type Option =
   | { kind: 'side'; side: SideStop }
   | { kind: 'party' }
   | { kind: 'bag' }
-  | { kind: 'items' };
+  | { kind: 'items' }
+  | { kind: 'story' };
 
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
@@ -257,7 +258,7 @@ export class MapScene extends Phaser.Scene {
       buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
-    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel });
+    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
       const bxPos = x;
@@ -358,6 +359,8 @@ export class MapScene extends Phaser.Scene {
         return 'Use medicine or evolution items on your Pokémon.';
       case 'items':
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
+      case 'story':
+        return 'Read the story of your run so far, with the feelings each moment left.';
     }
   }
 
@@ -415,6 +418,9 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'items':
         this.openItems();
+        break;
+      case 'story':
+        openStoryMenu(this.fieldHost());
         break;
     }
   }

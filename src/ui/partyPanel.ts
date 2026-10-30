@@ -5,6 +5,8 @@ import Phaser from 'phaser';
 import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
 import { friendshipHearts } from '../core/friendship';
+import { emotionOf } from '../core/story/emotions';
+import { services } from '../game/services';
 import { abilityStatus } from '../core/battle/abilities';
 import { abilityOf, calcStats, getSpecies } from '../core/pokemon';
 import type { PokemonInstance } from '../core/state';
@@ -196,11 +198,20 @@ export function heldSummary(content: Content, mon: PokemonInstance): string {
     .join(', ');
 }
 
+/** A Seven Emotions marker: a dot in the emotion's colour (the pixel font's heart is too small to read). */
+export function emotionDot(scene: Phaser.Scene, x: number, y: number, color: string): Phaser.GameObjects.Arc {
+  return scene.add.circle(x, y, 7, Number.parseInt(color.slice(1), 16)).setStrokeStyle(2, 0x18141d);
+}
+
 /** One party row: icon, name, level, HP bar, status, held items and friendship hearts. */
 export function partyRow(content: Content, mon: PokemonInstance, problem: string | null, opts: { tag?: string; hint?: string } = {}): PickerRow {
   const holding = heldSummary(content, mon);
   const boosts = mon.boosts?.length ? `${mon.boosts.length} battle boost${mon.boosts.length > 1 ? 's' : ''} ready` : '';
-  const extra = [holding && `Holding: ${holding}.`, boosts && `${boosts}.`].filter(Boolean).join(' ');
+  // The Seven Emotions: its current emotion from its memories this run (none outside a run).
+  const run = services().session.run;
+  const emotion = run ? emotionOf(content, run, mon.uid) : null;
+  const feeling = emotion ? `Feeling: ${emotion.name}.` : '';
+  const extra = [holding && `Holding: ${holding}.`, boosts && `${boosts}.`, feeling].filter(Boolean).join(' ');
   return {
     problem,
     hint: [opts.hint ?? abilityHint(content, mon), extra].filter(Boolean).join('  ') || undefined,
@@ -209,7 +220,13 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       const max = calcStats(content, mon).hp;
       box.add(pokemonIcon(scene, species, 34, 36, 1.5));
       const shiny = mon.shiny ? ' ★' : '';
-      box.add(scene.add.text(72, 6, `${species.name}${shiny}`, textStyle(26)));
+      const nameText = scene.add.text(72, 6, `${species.name}${shiny}`, textStyle(26));
+      box.add(nameText);
+      if (emotion) {
+        const x = 72 + nameText.width + 14;
+        box.add(emotionDot(scene, x, 20, emotion.color).setName(`emotion-${emotion.id}`));
+        box.add(scene.add.text(x + 12, 12, emotion.name, textStyle(14, emotion.color)));
+      }
       box.add(scene.add.text(w - 12, 8, `Lv${mon.level}`, textStyle(22)).setOrigin(1, 0));
       const bar = new Bar(scene, 72, 46, w - 200, 12, 'hp');
       bar.addTo(box);

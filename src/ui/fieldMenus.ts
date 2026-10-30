@@ -7,8 +7,10 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { canCashIn } from '../core/run';
+import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
-import { bagRow, partyRows, Picker, speciesRow } from './partyPanel';
+import { bagRow, emotionDot, partyRows, Picker, speciesRow } from './partyPanel';
+import { textStyle } from './theme';
 
 export interface FieldMenuHost {
   scene: Phaser.Scene;
@@ -37,6 +39,48 @@ export function openPartyMenu(host: FieldMenuHost): void {
       close(host, picker);
       host.changed(`${name} will lead the next battle.`);
     },
+    onBack: () => close(host, picker),
+  });
+  host.setPicker(picker);
+}
+
+/** How many of the newest chronicle entries the Story screen lists. */
+const STORY_ROWS = 60;
+
+/**
+ * The Story screen: the run's chronicle, newest first. Each entry shows a dot for each of
+ * its Seven Emotions tags in that emotion's colour, who it happened to, and where.
+ */
+export function openStoryMenu(host: FieldMenuHost): void {
+  const { session } = services();
+  const run = session.run!;
+  const content = session.content;
+  const colors = content.story.emotions.colors;
+  const entries = [...run.story.chronicle].sort((a, b) => b.seq - a.seq).slice(0, STORY_ROWS);
+  const who = (uid: string) => {
+    const speciesId = run.story.histories[uid]?.speciesId ?? run.party.find((m) => m.uid === uid)?.speciesId;
+    return speciesId ? content.species.get(speciesId)?.name : undefined;
+  };
+  const rows = entries.map((entry) => {
+    const names = entry.actors.map(who).filter(Boolean).join(' & ');
+    const where = `Region ${entry.where.region + 1}${entry.where.stage !== null ? ` · Stage ${entry.where.stage + 1}` : ''}`;
+    const feelings = entry.emotions.map((e) => EMOTION_NAMES[e]).join(', ');
+    return {
+      problem: null,
+      hint: [where, feelings && `Feelings: ${feelings}.`].filter(Boolean).join('  ·  '),
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        entry.emotions.forEach((e, i) => box.add(emotionDot(scene, 22 + i * 18, 20, colors[e])));
+        box.add(scene.add.text(52, 8, `${names ? `${names}: ` : ''}${entry.text}`, textStyle(20, '#ffffff', { fixedWidth: w - 200 })));
+        box.add(scene.add.text(w - 12, 10, where, textStyle(16, '#a69cb4')).setOrigin(1, 0));
+      },
+    };
+  });
+  const picker: Picker = new Picker(host.scene, {
+    title: rows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
+    columns: 1,
+    rowHeight: 40,
+    rows,
+    onSelect: () => undefined,
     onBack: () => close(host, picker),
   });
   host.setPicker(picker);

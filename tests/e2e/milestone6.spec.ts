@@ -36,8 +36,8 @@ async function startRun(page: Page, seed: string) {
 
 /** Opens the map's Bag (the last option) with the keyboard. */
 async function openBag(page: Page) {
-  const options = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').options.length as number);
-  for (let i = 0; i < options - 1; i++) await page.keyboard.press('ArrowDown');
+  const bag = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').options.findIndex((o: any) => o.kind === 'bag') as number);
+  for (let i = 0; i < bag; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(200);
 }

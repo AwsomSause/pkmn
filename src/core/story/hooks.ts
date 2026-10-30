@@ -185,11 +185,15 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         const other: Side = e.side === 'player' ? 'enemy' : 'player';
         const by = active[other];
         const move = lastMove[other];
+        // Justice: knocking out the foe that knocked out one of your Pokémon.
+        const avenged = e.side === 'enemy' && run.story.events.some((k) => k.type === 'knockout' && k.data.side === 'player' && k.actors[1] === e.uid);
         emit(content, run, 'knockout', {
           where,
           actors: by ? [e.uid, by] : [e.uid],
           data: { side: e.side, moveId: move, speciesId: mon(e.uid)?.speciesId ?? null },
-          text: e.side === 'player' ? `Fainted to ${speciesOf(by)}` : `Knocked out ${speciesOf(e.uid)}`,
+          text: e.side === 'player' ? `Fainted to ${speciesOf(by)}` : avenged ? `Avenged a fallen teammate by knocking out ${speciesOf(e.uid)}` : `Knocked out ${speciesOf(e.uid)}`,
+          importance: avenged ? content.story.importance.closeCall : undefined,
+          emotions: avenged ? ['justice'] : undefined,
         });
         if (e.side === 'enemy' && by) noteFinisher(by, i);
         break;
@@ -295,6 +299,7 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
       data: { def: def.id, suppressed },
       importance: def.memoryRecord?.importance ?? 0,
       text: def.memoryRecord ? fill(def.memoryRecord.text, t.names) : undefined,
+      emotions: def.emotions,
     });
     // Effects the engine has not already applied (it decides every Hyper moment's effect itself).
     if (!suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind)) {
