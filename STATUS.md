@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 13, settings 4, meta 1. Next free run version: 14 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 14, settings 4, meta 1. Next free run version: 15 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -25,6 +25,8 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - M10 visual slice 2: EBDX intro wipe (wild) and VS screens (trainer/rival/boss), skippable; ambience preset for all 18 types (+ second-type accents); DBK burst reveal for transformations, evolution and catches (replaces full-screen flashes); low-HP glow; victory hop. Tracker: `docs/plans/visual-coverage.md`.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
+
+- Blueprint slice 2 Totems: 8 Totems (`totems.json`, `core/totem/`) on stage maps, aura, ally calls (ally takes the field in the Totem's place), phases, home-field weather/terrain/hazards, rare-Pokémon rewards, unlocks. Next: Expeditions, Minigames.
 
 ## In progress / next
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.

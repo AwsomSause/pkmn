@@ -22,7 +22,7 @@ import type { AttributeEffects } from '../attributes';
 import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
-import { abilityOf, calcStats, getSpecies } from '../pokemon';
+import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -71,6 +71,8 @@ import {
 } from './abilities';
 import * as Held from './held';
 import { absorbHit, advanceRaid, chargedDamage, takeExtraAction } from '../raid/raid';
+import type { RaidPhase } from '../raid/schema';
+import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
@@ -422,6 +424,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   battle.hyper ??= freshHyperBattle();
   // Entry abilities still waiting from the start of the battle (the battle screen normally plays them first, see startBattle).
   resolveEntries(ctx, events);
+  if (battle.totem) {
+    totemAura(ctx, events);
+    totemCallAlly(ctx, events);
+  }
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
@@ -535,6 +541,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
+  if (battle.totem && !battle.outcome) totemPhases(ctx, enemy, events);
 
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -582,18 +589,7 @@ function raidEndOfTurn(ctx: BattleContext, player: Combatant, enemy: Combatant, 
       timeout = true;
       events.push({ type: 'raid', tone: 'warn', text: 'Time is up! The raid boss slips away...' });
     } else {
-      const p = a.phase;
-      events.push({ type: 'raid', tone: 'phase', text: p.text });
-      for (const [stat, n] of Object.entries(p.boost ?? {})) applyStageChange(ctx, enemy, stat as BoostStat, n, events);
-      if (p.weather) {
-        battle.weather = { id: p.weather, turns: 5 };
-        events.push({ type: 'weather', weather: p.weather });
-      }
-      if (p.clearPlayerStages) for (const k of Object.keys(battle.playerStages)) battle.playerStages[k as BoostStat] = 0;
-      if (p.cleanse) {
-        enemy.mon.status = null;
-        for (const k of Object.keys(battle.enemyStages)) if (battle.enemyStages[k as BoostStat] < 0) battle.enemyStages[k as BoostStat] = 0;
-      }
+      applyBossPhase(ctx, enemy, a.phase, events);
     }
   }
   // A bonus attack (strictly limited by the raid's `max`).
@@ -606,6 +602,92 @@ function raidEndOfTurn(ctx: BattleContext, player: Combatant, enemy: Combatant, 
     }
   }
   return timeout;
+}
+
+/** A raid or Totem phase starts: its message, stat boosts, weather, and the optional cleanses. */
+function applyBossPhase(ctx: BattleContext, enemy: Combatant, p: RaidPhase, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  events.push({ type: 'raid', tone: 'phase', text: p.text });
+  for (const [stat, n] of Object.entries(p.boost ?? {})) applyStageChange(ctx, enemy, stat as BoostStat, n, events);
+  if (p.weather) {
+    battle.weather = { id: p.weather, turns: 5 };
+    events.push({ type: 'weather', weather: p.weather });
+  }
+  if (p.clearPlayerStages) for (const k of Object.keys(battle.playerStages)) battle.playerStages[k as BoostStat] = 0;
+  if (p.cleanse) {
+    enemy.mon.status = null;
+    for (const k of Object.keys(battle.enemyStages)) if (battle.enemyStages[k as BoostStat] < 0) battle.enemyStages[k as BoostStat] = 0;
+  }
+}
+
+/** Totem aura (once, when the Totem first takes the field) and the home-field environment. */
+function totemAura(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const t = battle.totem;
+  if (!t || t.auraDone) return;
+  const mon = currentEnemy(battle);
+  if (mon.uid !== t.uid) return;
+  t.auraDone = true;
+  const def = getTotem(content, t.id);
+  const enemy: Combatant = { side: 'enemy', mon, stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  events.push({ type: 'raid', tone: 'phase', text: def.aura.text });
+  for (const [stat, n] of Object.entries(def.aura.boost ?? {})) applyStageChange(ctx, enemy, stat as BoostStat, n, events);
+  const weather = def.aura.weather ?? def.environment?.weather;
+  if (weather) {
+    battle.weather = { id: weather, turns: 999 };
+    events.push({ type: 'weather', weather });
+  }
+  const terrain = def.aura.terrain ?? def.environment?.terrain;
+  if (terrain) {
+    battle.terrain = { id: terrain, turns: 999 };
+    events.push({ type: 'terrain', terrain });
+  }
+  const hazard = def.aura.hazard;
+  if (hazard === 'stealthRock') battle.sideEffects.player.stealthRock = true;
+  else if (hazard === 'stickyWeb') battle.sideEffects.player.stickyWeb = true;
+  else if (hazard === 'spikes') battle.sideEffects.player.spikes = 1;
+  else if (hazard === 'toxicSpikes') battle.sideEffects.player.toxicSpikes = 1;
+  if (def.environment) events.push({ type: 'raid', tone: 'info', text: def.environment.text });
+}
+
+/** Start of a turn: a Totem below its HP line calls its ally, which takes the field in its place (capped, no loops). */
+function totemCallAlly(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const t = battle.totem;
+  if (!t) return;
+  const totemMon = currentEnemy(battle);
+  if (!allyDue(content, battle, totemMon)) return;
+  const def = getTotem(content, t.id);
+  const a = def.ally!;
+  const ally = createPokemon(content, a.species, allyLevel(def, totemMon.level), `${t.uid}-ally${t.callsUsed + 1}`);
+  t.callsUsed += 1;
+  t.allyUid = ally.uid;
+  events.push({ type: 'raid', tone: 'phase', text: a.text });
+  if (a.support.heal) totemMon.hp = Math.min(maxHp(content, totemMon), totemMon.hp + Math.ceil(maxHp(content, totemMon) * a.support.heal));
+  if (a.support.weather) {
+    battle.weather = { id: a.support.weather, turns: 5 };
+    events.push({ type: 'weather', weather: a.support.weather });
+  }
+  if (a.support.screens) {
+    battle.sideEffects.enemy.reflect = 5;
+    battle.sideEffects.enemy.lightScreen = 5;
+  }
+  battle.enemyTeam.push(ally);
+  swapInEnemy(ctx, battle.enemyTeam.length - 1, events);
+  resolveEntries(ctx, events);
+}
+
+/** End of a turn while the Totem itself is on the field: behaviour phases at their HP lines. */
+function totemPhases(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const t = battle.totem;
+  if (!t || enemy.mon.uid !== t.uid || enemy.mon.hp <= 0) return;
+  const share = enemy.mon.hp / maxHp(content, enemy.mon);
+  getTotem(content, t.id).phases.forEach((phase, i) => {
+    if (t.phasesDone.includes(i) || share > phase.atHp) return;
+    t.phasesDone.push(i);
+    applyBossPhase(ctx, enemy, phase, events);
+  });
 }
 
 /** Clears a stuck two-turn or lock-in move (its move slot is gone), keeping the other conditions. */
@@ -649,6 +731,7 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   if (!item.usableInBattle) return `${item.name} can't be used in battle.`;
   if (item.effect.kind === 'catch') {
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
+    if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
     return null;
   }
@@ -3127,5 +3210,6 @@ function settleFaints(ctx: BattleContext, events: BattleEvent[]): void {
 export function startBattle(ctx: BattleContext): BattleEvent[] {
   const events: BattleEvent[] = [];
   resolveEntries(ctx, events);
+  if (ctx.battle.totem) totemAura(ctx, events);
   return events;
 }

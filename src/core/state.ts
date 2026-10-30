@@ -276,6 +276,19 @@ export const RaidBattleSchema = z.object({
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
+/** The changing state of a Totem fight (rules in core/totem/totem.ts). */
+export const TotemBattleSchema = z.object({
+  id: z.string(),
+  /** The Totem's own uid (the ally takes the field in its place while called). */
+  uid: z.string(),
+  auraDone: z.boolean(),
+  phasesDone: z.array(z.number().int().min(0)),
+  callsUsed: z.number().int().min(0),
+  /** The ally's uid while it is on the field. */
+  allyUid: z.string().nullable(),
+});
+export type TotemBattle = z.infer<typeof TotemBattleSchema>;
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -354,6 +367,8 @@ export const BattleStateSchema = z.object({
   raid: RaidBattleSchema.optional(),
   /** Battle Drama Engine: what the trainer has already said (see core/drama). */
   drama: DramaBattleSchema.default(freshDrama),
+  /** A Totem fight: aura, ally calls and phases (core/totem/totem.ts). */
+  totem: TotemBattleSchema.optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -361,9 +376,11 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
+  /** A Totem's territory: which Totem (totems.json) lives here. */
+  totemId: z.string().optional(),
   /** A healing stop and a fishing spot work once; a shop can be visited again. */
   used: z.boolean(),
 });
@@ -555,6 +572,8 @@ export const RunStateSchema = z.object({
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
+  /** Totem record this run, the unlocks they gave and research points. */
+  totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),

@@ -63,14 +63,25 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 ### 2. Mega-Expeditions — TODO (every item)
 Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid, final boss. Route generation (5–9 nodes, valid graph, visible route). Party modes: own, rental, recruit one, draft, combined. Attrition and recovery (rest node). Mega Energy, Mega Stones, temporary Mega, Mega bosses, Mega research, exclusive encounters/achievements. Extraction and failure rules. Progression by region. Briefing, route choice, checkpoint, finale, extract.
 
-### 3. Totem Pokémon — TODO (every item)
-Aura (5 kinds), ally calls (cap, no loops, interrupt, resummon rule), behaviour phases, environmental advantage, rewards (rare encounters, held items, evolution items, Mega energy/stones, unlocks, research, achievements, routes), progression table, battle validation.
+### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
+Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
+| Item | Status |
+|---|---|
+| Every Totem has a mechanic beyond inflated HP (load check: aura present, at most 2 stages of boost) | DONE |
+| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect TODO |
+| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1 (both on field) TODO, the engine is 1v1 |
+| Behaviour phases at HP lines (reuse raid phases) | DONE |
+| Environmental advantage: weather, terrain, hazards, tied to the stage (Totem type matches the stage theme) | DONE |
+| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; held-item uniques, Mega energy/stones, achievements, cross-run unlocks TODO |
+| Progression table (early: one aura + one weak ally; mid: aura + ally or phase; late: several; grand: unique) | DONE |
+| Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
+| Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |
 
 ### 4. Minigames — TODO (every item)
 Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4–M8 TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5–M8 TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |

@@ -58,6 +58,8 @@ import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
 import raidsJson from './raids.json';
+import totemsJson from './totems.json';
+import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
 
 export class ContentError extends Error {
@@ -89,6 +91,7 @@ export interface RawContent {
   balance: unknown;
   story: unknown;
   raids: unknown;
+  totems: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -133,6 +136,7 @@ export const RAW_CONTENT: RawContent = {
   balance: balanceJson,
   story: storyJson,
   raids: raidsJson,
+  totems: totemsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -180,9 +184,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
+  const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !raids || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!story || !raids || !totems || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -212,6 +217,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     balance,
     story,
     raids,
+    totems,
     zMoves,
     maxMoves,
   };
@@ -258,6 +264,15 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const r of raid.rewards.items) if (!content.items.has(r.item)) problems.push(`raids.json "${raid.id}" gives unknown item "${r.item}"`);
     if (raid.shield && raid.shield.at.length * raid.shield.points >= 0.9) problems.push(`raids.json "${raid.id}" shields are too big`);
     if (raid.phases.some((p, i) => i > 0 && p.atHp >= raid.phases[i - 1]!.atHp)) problems.push(`raids.json "${raid.id}" phases must go down in HP`);
+  }
+  for (const t of totems.totems) {
+    for (const id of [...t.species, t.ally?.species, t.rewards.rareJoin?.species]) if (id && !content.species.has(id)) problems.push(`totems.json "${t.id}" has unknown species "${id}"`);
+    for (const r of t.rewards.items) if (!content.items.has(r.item)) problems.push(`totems.json "${t.id}" gives unknown item "${r.item}"`);
+    // An aura is one or two stages in total; several big boosts at once make a fight about the boosts, not the mechanic.
+    const stages = Object.values(t.aura.boost ?? {}).reduce((a, b) => a + b, 0);
+    if (stages > 2) problems.push(`totems.json "${t.id}" aura boosts more than 2 stages`);
+    if (t.phases.some((p, i) => i > 0 && p.atHp >= t.phases[i - 1]!.atHp)) problems.push(`totems.json "${t.id}" phases must go down in HP`);
+    if (t.tier === 'early' && (t.phases.length > 0 || (t.ally && t.ally.maxCalls > 1))) problems.push(`totems.json "${t.id}": early Totems have one aura and at most one weak ally call`);
   }
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {

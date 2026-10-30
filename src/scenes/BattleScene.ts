@@ -397,6 +397,16 @@ export class BattleScene extends Phaser.Scene {
   /** The normal header, plus a raid status line (shield, phase count, charged attack, timer). */
   private updateHeader(): void {
     this.updateHeaderBase();
+    const totem = this.run.battle?.totem;
+    if (totem) {
+      const tdef = services().session.content.totems.totems.find((x) => x.id === totem.id);
+      const out = currentEnemy(this.run.battle!).uid !== totem.uid;
+      const bits = ['TOTEM', tdef?.aura.text ?? ''];
+      if (tdef?.ally) bits.push(out ? 'ALLY ON FIELD: defeat it' : totem.callsUsed >= tdef.ally.maxCalls ? 'no more ally calls' : `ally calls ${totem.callsUsed}/${tdef.ally.maxCalls}`);
+      if (tdef && tdef.phases.length > 0) bits.push(`phase ${totem.phasesDone.length}/${tdef.phases.length}`);
+      this.header.setText(`${this.header.text}\n${bits.join('  ·  ')}`);
+      return;
+    }
     const raid = this.run.battle?.raid;
     if (!raid) return;
     const content = services().session.content;
@@ -777,7 +787,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (result.raidFailed) {
-      await this.say('The raid is over... your Pokémon were pulled back to safety.');
+      await this.say('The fight is over... your Pokémon were pulled back to safety.');
       this.scene.start(sceneForRun(result.run));
       return;
     }
