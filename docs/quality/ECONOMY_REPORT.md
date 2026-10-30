@@ -6,16 +6,16 @@ The bot is crude (no item use beyond Poké Balls, no switching tactics), so it l
 
 | Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Story | off | x0.8 | 91.5 | 4.2 | 28447.2 | 0% |
-| Story | on | x0.72 | 91.5 | 4.2 | 28447.2 | 0% |
-| Standard | off | x1 | 42.5 | 1.5 | 7512.7 | 17% |
-| Standard | on | x0.9 | 42.5 | 1.5 | 7512.7 | 17% |
-| Veteran | off | x1.2 | 38.2 | 1.7 | 8937.5 | 33% |
-| Veteran | on | x1.08 | 38.2 | 1.7 | 8937.5 | 33% |
-| Champion | off | x1.4 | 12.2 | 0.3 | 2028.5 | 67% |
-| Champion | on | x1.26 | 12.2 | 0.3 | 2028.5 | 67% |
-| Nightmare | off | x1.7 | 9.0 | 0.3 | 2126.3 | 83% |
-| Nightmare | on | x1.53 | 9.0 | 0.3 | 2126.3 | 83% |
+| Story | off | x0.8 | 17.0 | 0.2 | 1114.7 | 33% |
+| Story | on | x0.72 | 17.0 | 0.2 | 1114.7 | 33% |
+| Standard | off | x1 | 12.3 | 0.0 | 884.0 | 33% |
+| Standard | on | x0.9 | 12.3 | 0.0 | 884.0 | 33% |
+| Veteran | off | x1.2 | 11.3 | 0.0 | 1098.7 | 33% |
+| Veteran | on | x1.08 | 11.3 | 0.0 | 1098.7 | 33% |
+| Champion | off | x1.4 | 7.5 | 0.0 | 750.3 | 67% |
+| Champion | on | x1.26 | 7.5 | 0.0 | 750.3 | 67% |
+| Nightmare | off | x1.7 | 3.7 | 0.0 | 549.0 | 83% |
+| Nightmare | on | x1.53 | 3.7 | 0.0 | 549.0 | 83% |
 
 ## Smarter bot
 
@@ -23,15 +23,31 @@ Picks the best move by power, STAB and type effectiveness, drinks potions when l
 
 | Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Story | off | x0.8 | 58.2 | 2.7 | 16483.2 | 17% |
-| Story | on | x0.72 | 58.2 | 2.7 | 16483.2 | 17% |
-| Standard | off | x1 | 76.0 | 3.5 | 23892.2 | 0% |
-| Standard | on | x0.9 | 76.0 | 3.5 | 23892.2 | 0% |
-| Veteran | off | x1.2 | 63.7 | 2.7 | 20156.0 | 17% |
-| Veteran | on | x1.08 | 63.7 | 2.7 | 20156.0 | 17% |
-| Champion | off | x1.4 | 69.7 | 2.8 | 27209.7 | 17% |
-| Champion | on | x1.26 | 69.7 | 2.8 | 27209.7 | 17% |
-| Nightmare | off | x1.7 | 46.0 | 2.0 | 15455.8 | 33% |
-| Nightmare | on | x1.53 | 46.0 | 2.0 | 15455.8 | 33% |
+| Story | off | x0.8 | 24.7 | 0.7 | 2656.3 | 33% |
+| Story | on | x0.72 | 24.7 | 0.7 | 2656.3 | 33% |
+| Standard | off | x1 | 41.0 | 1.5 | 6594.5 | 17% |
+| Standard | on | x0.9 | 41.0 | 1.5 | 6594.5 | 17% |
+| Veteran | off | x1.2 | 25.2 | 0.7 | 3819.3 | 17% |
+| Veteran | on | x1.08 | 25.2 | 0.7 | 3819.3 | 17% |
+| Champion | off | x1.4 | 23.2 | 0.5 | 3970.7 | 33% |
+| Champion | on | x1.26 | 23.2 | 0.5 | 3970.7 | 33% |
+| Nightmare | off | x1.7 | 14.2 | 0.3 | 2697.7 | 33% |
+| Nightmare | on | x1.53 | 14.2 | 0.3 | 2697.7 | 33% |
 
-(126 s)
+## Item rarity in generated drafts
+
+5-item drafts, 300 per row, ordinary run state. Each source uses its own weights from balance.json; better routes and bosses must show more rare and epic items.
+
+Reward pool size by rarity: common 177, uncommon 251, rare 301, epic 48. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json;.
+
+| Reward source | Common | Uncommon | Rare | Epic |
+| --- | --- | --- | --- | --- |
+| Ordinary stop | 60% | 31% | 8% | 1% |
+| Harder route | 41% | 39% | 18% | 2% |
+| Gym, Elite Four or Champion | 20% | 46% | 30% | 4% |
+
+## Attribute growth pace
+
+One smart-bot run (Standard, no Death-Block) would add about 10.8 permanent attribute points by the balance.attributeGrowth table (26, 4, -11, 2, 13, 31 across the 6 seeds). The sum can be negative: meters (like Good/Evil) move both ways. Compare this with the maximum of 100 per attribute: a number that is large after one run means growth is too frequent (Untitled doc §6.3).
+
+(39 s)

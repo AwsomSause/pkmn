@@ -56,3 +56,16 @@ export function gauntletWon(content: Content, run: RunState, rivalId: string): s
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'gauntlet-done', suppressed: false }, importance: 85, text: `Beat every rival in the Rival Gauntlet (+₽${prize.money})` });
   return `Gauntlet cleared! +₽${prize.money}`;
 }
+
+/**
+ * The Grand Region's gauntlet (catalog 93): arriving in the last region calls every rival you have met back, one per
+ * stage, strongest first, each with the team it has trained since. The goal is stated up front and no rule changes:
+ * the same battles you know, with familiar faces. Once per run.
+ */
+export function grandGauntlet(content: Content, run: RunState): void {
+  if ((run.stage?.index ?? 0) !== 0 || run.regionIndex < run.regionOrder.length - 1 || run.story.flags['gaunt:grand']) return;
+  run.story.flags['gaunt:grand'] = true;
+  const n = startGauntlet(content, run, content.story.gauntlet.grandRivals);
+  if (n === 0) return;
+  emit(content, run, 'storyMoment', { actors: [], data: { def: 'grand-gauntlet', suppressed: false }, importance: 80, text: 'The Grand Region called every rival back. Beat them, then face the Champion' });
+}

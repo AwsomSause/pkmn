@@ -32,18 +32,18 @@ const newRun = (seed: string, attributes?: Partial<Attributes>): RunState =>
   chooseStarter(content, createRun(content, { runId: `r-${seed}`, seed, archetypeId: 'red', attributes: attributes && attrs(attributes) }), 0);
 
 describe('permanent attributes grow from lifetime counters', () => {
-  it('follows the growth rules in balance.json (by type defeated or caught)', () => {
+  it('follows the growth rules in balance.json (by type defeated or caught: 4 per point, 3 stat boosts per Charisma)', () => {
     const p: Profile = {
       ...createProfile(content, 'p'),
       counters: {
-        'defeatedOrCaught.fighting': 4,
-        'defeatedOrCaught.psychic': 3,
-        'defeatedOrCaught.electric': 2,
-        'defeatedOrCaught.fire': 5,
-        'defeatedOrCaught.grass': 7,
-        'defeatedOrCaught.fairy': 1,
-        'defeatedOrCaught.dark': 3,
-        statsBoosted: 6,
+        'defeatedOrCaught.fighting': 16,
+        'defeatedOrCaught.psychic': 12,
+        'defeatedOrCaught.electric': 8,
+        'defeatedOrCaught.fire': 20,
+        'defeatedOrCaught.grass': 28,
+        'defeatedOrCaught.fairy': 4,
+        'defeatedOrCaught.dark': 12,
+        statsBoosted: 18,
         pokemonCaught: 31,
         shiniesFound: 2,
         evolutions: 2,
@@ -70,7 +70,7 @@ describe('permanent attributes grow from lifetime counters', () => {
   it('is worked out when a run that counts ends, and shown on the run-end summary', () => {
     let profile: Profile = { ...createProfile(content, 'p'), counters: { 'defeatedOrCaught.fighting': 0 } };
     const run = { ...newRun('grow'), phase: 'over' as const };
-    run.log.counters['defeatedOrCaught.fighting'] = 1;
+    run.log.counters['defeatedOrCaught.fighting'] = 4; // four defeats or catches per point
     const result = finalizeRun(content, profile, run);
     profile = result.profile;
     expect(profile.attributes.strength).toBe(1);

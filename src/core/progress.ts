@@ -22,6 +22,7 @@ import { topMoments } from './story/record';
 import { awardContracts, type ContractPayout } from './contracts';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
+import { recordMoveMastery } from './moveMastery';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
@@ -272,6 +273,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   }
   const questSteps = counts ? awardQuestSteps(content, profile, questTrainer(content, run.archetypeId), now) : [];
   const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
+  if (counts) recordMoveMastery(content, profile, run, now);
   const modeRewards = counts ? awardModeRewards(profile, run, now) : [];
   const gameEvents = counts ? awardGameEvents(content, profile, run, { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 }, now) : [];
 

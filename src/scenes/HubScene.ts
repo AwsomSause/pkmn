@@ -9,6 +9,8 @@ import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, g
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { topMoves } from '../core/moveMastery';
+import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
@@ -444,6 +446,7 @@ export class HubScene extends Phaser.Scene {
         const t = researchTotals(session.content, p);
         y = this.line(y, `Met ${t.met} · Caught ${t.caught} of ${t.total}`, 16);
         y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
+        for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
         break;
       }
       case 'wardrobe': {
@@ -655,12 +658,33 @@ export class HubScene extends Phaser.Scene {
         },
       };
     });
+    const notes = researchNotes(session.content);
+    for (const note of notes) {
+      const open = noteOpen(p, note.id);
+      rows.push({
+        problem: open ? null : noteProblem(session.content, p, note.id),
+        hint: open ? note.lines.join('  ·  ') : `Enter: buy for ${note.cost} Research Points. Information only.`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, 6, note.name, textStyle(19, open ? COLORS.gold : COLORS.textLight)));
+          box.add(scene.add.text(12, 32, open ? note.lines.join(' · ') : `${note.cost} Research Points`, textStyle(14, COLORS.textMuted, { wordWrap: { width: w - 24 } })));
+        },
+      });
+    }
     this.openPicker({
       title: paid.length ? `Research Room  ·  +${paid.reduce((n, x) => n + x.researchPoints, 0)} Research Points (${paid.map((x) => `${x.setName} ${x.pct}%`).join(', ')})` : 'Research Room',
       rows,
       columns: 1,
       rowHeight: 58,
-      onSelect: () => undefined,
+      onSelect: (i) => {
+        const note = notes[i - collectionSets(session.content).length];
+        if (!note || noteOpen(session.profile, note.id)) return;
+        try {
+          session.buyResearchNote(note.id);
+          this.restart(`Bought "${note.name}".`, 'research');
+        } catch (err) {
+          this.restart(String((err as Error).message), 'research');
+        }
+      },
       onBack: () => this.closePicker(),
     });
   }

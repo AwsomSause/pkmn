@@ -345,25 +345,25 @@
   {
    "attribute": "strength",
    "counter": "defeatedOrCaught.fighting",
-   "per": 1,
+   "per": 4,
    "amount": 1
   },
   {
    "attribute": "intelligence",
    "counter": "defeatedOrCaught.psychic",
-   "per": 1,
+   "per": 4,
    "amount": 1
   },
   {
    "attribute": "speed",
    "counter": "defeatedOrCaught.electric",
-   "per": 1,
+   "per": 4,
    "amount": 1
   },
   {
    "attribute": "charisma",
    "counter": "statsBoosted",
-   "per": 1,
+   "per": 3,
    "amount": 1
   },
   {
@@ -381,25 +381,25 @@
   {
    "attribute": "ragePeace",
    "counter": "defeatedOrCaught.fire",
-   "per": 1,
+   "per": 4,
    "amount": 1
   },
   {
    "attribute": "ragePeace",
    "counter": "defeatedOrCaught.grass",
-   "per": 1,
+   "per": 4,
    "amount": -1
   },
   {
    "attribute": "goodEvil",
    "counter": "defeatedOrCaught.fairy",
-   "per": 1,
+   "per": 4,
    "amount": 1
   },
   {
    "attribute": "goodEvil",
    "counter": "defeatedOrCaught.dark",
-   "per": 1,
+   "per": 4,
    "amount": -1
   },
   {

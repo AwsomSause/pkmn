@@ -99,7 +99,7 @@ export interface Moment {
 }
 
 /** A small string hash (FNV-1a), so "unusual" flavour is fixed by the seed and never draws from a random stream. */
-function fnv1a(text: string): number {
+export function fnv1a(text: string): number {
   let h = 0x811c9dc5;
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
   return h;
