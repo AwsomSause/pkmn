@@ -19,6 +19,7 @@ import { researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, LeafRequirement, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
+import { awardContracts, type ContractPayout } from './contracts';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
 import { recordMastery, type MasteryRankUp } from './mastery';
@@ -208,6 +209,8 @@ export interface RunEndSummary {
   masteryUps: MasteryRankUp[];
   /** Game event objectives and rewards finished by this run. */
   gameEvents: GameEventPayout[];
+  /** Contract Board contracts this run paid. */
+  contracts?: ContractPayout[];
   /** Daily Run, Spooky and Endless rewards earned by this run. */
   modeRewards: ModeRewardPaid[];
   /** The Research Directive and how far it got (null: none, or the run doesn't count). */
@@ -272,6 +275,8 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   const modeRewards = counts ? awardModeRewards(profile, run, now) : [];
   const gameEvents = counts ? awardGameEvents(content, profile, run, { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 }, now) : [];
 
+  const contracts = counts ? awardContracts(profile, { ...run.log.counters, runsWon: run.victory ? 1 : 0 }, new Date(now), now) : [];
+
   const raw = runPayout(content, run);
   // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
   const base = run.rules.progressionEligible ? { savings: scaleReward(raw.savings, run.rules), stipend: scaleReward(raw.stipend, run.rules) } : { savings: 0, stipend: 0 };
@@ -313,7 +318,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, modeRewards, directive };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, contracts, modeRewards, directive };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

@@ -172,9 +172,9 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §2E Raid & World Crisis | Raids thread |
 | §3 Spectacle layers 1–2, animation fallback | DONE (M9) |
 | §3 Layer 3 transformations | PART (Hyper evolutions add banners; cinematics M9.5) |
-| §3 Layer 4 boss spectacle, dynamic music, battle commentary (Drama thread), arena modifiers, victory moments | TODO / Drama thread |
+| §3 Layer 4 boss spectacle, dynamic music, arena modifiers, victory moments | Boss phases exist for raids/Totems (state-driven); commentary = Drama thread (done). Cinematic presentation, music layers and victory sequences belong to the visual battle thread (VISUAL_BIBLE); not built here |
 | §4 Campaign dramatic arcs, route consequence engine | DONE: `core/campaign/director.ts`. Five acts per region told in the chronicle, a regional recap before the next region, a seeded region focus (mystery, rivals, raids, exploration) that changes den odds, six route labels on the map (safe, high-risk, mystery, research, nemesis, story), maps validated completable over 60 seeds. Limited: focus changes raid and expedition odds only; mystery and rival focus are told, not mechanical |
-| §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
+| §5 Living hub | Research Lab = Research Room (collection sets, milestones). Hall of Fame (#168). Training Center = Training School (#171). Species/Trainer mastery (Mastery room, Trainer Quests, Wardrobe). Campaign chronicle = Story screen. NEW here: Contract Board (`core/contracts.ts`, `contracts.json`: 3 daily + 2 weekly contracts rotating by UTC date, done within one run, paid once through the claim ledger, shown in the Event Hall and on the run summary) and Rival ghosts (an archived rival's lead Pokémon returns as the new rival's ace). Legacy runs are covered by Reunion (past Pokémon return with their titles), the legacy rival and kept titles; no extra stat bonus on purpose (permanent unlocks stay horizontal). Done |
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
 
 - Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.

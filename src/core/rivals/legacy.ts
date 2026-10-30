@@ -16,7 +16,7 @@ export function archiveRivals(profile: Profile, run: RunState): void {
   const have = new Set(profile.rivalArchive.map((a) => `${a.runId}:${a.name}:${a.classId}`));
   for (const r of run.story.rivals) {
     if (r.encounters < cfg.minEncounters || have.has(`${run.runId}:${r.name}:${r.classId}`)) continue;
-    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null });
+    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null, team: [...r.memory.lastBattle.team] });
   }
   profile.rivalArchive = profile.rivalArchive.slice(-cfg.archiveMax);
 }
@@ -38,6 +38,12 @@ export function applyLegacy(run: Pick<RunState, 'legacyRival' | 'story'>, rival:
   for (const k of TRAIT_KEYS) rival.traits[k as keyof Traits] = Math.round(rival.traits[k as keyof Traits] * (1 - blend) + legend.traits[k as keyof Traits] * blend);
   rival.style = legend.style;
   rival.legacyOf = legend.name;
+  // Rival ghost: the old rival's lead Pokémon comes back as this rival's ace.
+  const ace = legend.team?.[0];
+  if (ace) {
+    const team = rival.memory.lastBattle.team;
+    rival.memory.lastBattle.team = team.length > 0 ? [...team.slice(0, -1), ace] : [ace];
+  }
   run.story.flags[LEGACY_USED] = true;
 }
 

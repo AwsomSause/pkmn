@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
@@ -39,7 +40,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
   { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
-  { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, their objectives and rewards (Enter)." },
+  { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
   { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
@@ -591,6 +592,11 @@ export class HubScene extends Phaser.Scene {
         false,
         15,
       );
+    }
+    header('Contract Board', COLORS.gold, 'Daily and weekly contracts. Finish one in a single run to be paid once. They rotate at midnight (daily) and on Mondays (weekly), UTC.');
+    for (const entry of contractBoard(now)) {
+      const done = contractDone(p, entry);
+      header(`  ${done ? '✓' : '•'} ${entry.contract.period === 'daily' ? 'Daily' : 'Weekly'}: ${entry.contract.text}  (${contractRewardText(entry.contract.reward)})`, done ? COLORS.good : COLORS.textLight, done ? 'Paid.' : 'Not finished yet. A run that meets it pays it when the run ends.', false, 16);
     }
     const upcoming = upcomingWeekly(content, now, 3);
     if (upcoming.length > 0) header('Coming up', COLORS.textLight, 'Weekly events rotate every Monday (UTC). Each one comes back in a later week.');
