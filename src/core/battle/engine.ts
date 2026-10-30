@@ -25,7 +25,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -1435,6 +1435,8 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       isStarter: ctx.starterUid === user.mon.uid,
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
       userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
+      effectiveness,
+      turnsOut: user.vol.turnsOut,
       moveIsZ: move.flags.includes('zmove'),
       moveIsSpread: isSpreadMove(move.id),
       partyIndex: ctx.party.findIndex((p) => p.uid === user.mon.uid),
@@ -1452,6 +1454,8 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       attackerIsBoss: isBossClass(ctx.battle.trainer?.classId),
       weather: weatherName,
       targetIsMega: getSpecies(ctx.content, target.mon.speciesId).form?.kind === 'mega',
+      effectiveness,
+      targetTurnsOut: target.vol.turnsOut,
     });
   }
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
@@ -1928,7 +1932,7 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
     case 'doubleTargetHurt': return target.vol.tookPhysical + target.vol.tookSpecial > 0 ? base * 2 : base;
     case 'doubleRandom': return ctx.rng.chance(0.3) ? base * 2 : base;
     case 'stockpile': return 100 * user.vol.stockpile;
-    case 'friendship': return Math.max(1, Math.min(102, Math.floor((user.side === 'player' && (ctx.perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled') ? 0 : user.mon.friendship) / 2.5)));
+    case 'friendship': return Math.max(1, Math.min(102, Math.floor((user.side === 'player' ? ((ctx.perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled') ? 0 : bonusFriendship(ctx.perks, user.mon.friendship)) : user.mon.friendship) / 2.5)));
     case 'rageFist': return Math.min(350, 50 + 50 * user.vol.timesHit);
     case 'stompingTantrum': return user.vol.lastFailed ? base * 2 : base;
     case 'lashOut': return user.vol.loweredThisTurn ? base * 2 : base;
@@ -2361,7 +2365,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       const physical = fx.attackFrom === 'best' || fx.autoCategory || (fx.teraBlast && ctx.battle.transform.teraTypes[user.mon.uid]) ? userStats.atk >= userStats.spa : move.category === 'physical';
       const hitsDefense = (physical || fx.targetsDefense) !== (ctx.battle.extra.wonderRoom > 0);
       const userStatus = user.mon.status?.id;
-      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0)));
+      crit = rng.chance(Math.min(1, critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0) + (user.vol.focusEnergy ? 2 : 0)) * (user.side === 'player' ? critChancePerk(ctx.perks) : 1)));
       if (fx.alwaysCrit || user.vol.laserFocus) crit = true;
       if (userAbility === 'merciless' && target.mon.status?.id === 'psn') crit = true;
       if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor' || ctx.battle.sideEffects[target.side].luckyChant > 0) crit = false;

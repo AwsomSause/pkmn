@@ -1309,5 +1309,311 @@
    "group": "all",
    "value": 1.15
   }
+ ],
+ "glacia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "ice",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 0.85
+  }
+ ],
+ "gladion-masters-2": [
+  {
+   "kind": "lowHpDamageMultiplier",
+   "below": 0.5,
+   "value": 1.25
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.8
+  }
+ ],
+ "gladion-stance": [
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "stayingDamageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "gloria-league": [
+  {
+   "kind": "championMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "steel",
+   "value": 1.1
+  },
+  {
+   "kind": "ordinaryMoneyMultiplier",
+   "value": 0.85
+  }
+ ],
+ "grace": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "grant": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "rock",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "rock",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "green-classic": [
+  {
+   "kind": "startingLevelOffset",
+   "value": -1
+  },
+  {
+   "kind": "moneyMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "grimsley-gen-7": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "critChanceMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.1
+  }
+ ],
+ "grusha": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "ice",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "ice",
+   "value": 0.9
+  }
+ ],
+ "guzma": [
+  {
+   "kind": "damageMultiplier",
+   "type": "bug",
+   "value": 1.25
+  },
+  {
+   "kind": "critChanceMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "rock",
+   "value": 1.15
+  }
+ ],
+ "hala": [
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "fighting",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fairy",
+   "value": 1.15
+  }
+ ],
+ "hapu": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ground",
+   "value": 1.25
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "harmony": [
+  {
+   "kind": "friendshipBonusMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "hau-stance": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 0.9
+  }
+ ],
+ "hilbert": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "hilda": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "hop": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "superEffectiveDamageMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "superEffectiveTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "hugh": [
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "higher",
+   "value": 1.2
+  },
+  {
+   "kind": "levelGapDamageMultiplier",
+   "foe": "lower",
+   "value": 0.9
+  }
+ ],
+ "ilima": [
+  {
+   "kind": "damageMultiplier",
+   "type": "normal",
+   "value": 1.2
+  },
+  {
+   "kind": "statusMoveAccuracy",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fighting",
+   "value": 1.2
+  }
+ ],
+ "ingo": [
+  {
+   "kind": "switchGuard",
+   "value": 0.9
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
  ]
 }

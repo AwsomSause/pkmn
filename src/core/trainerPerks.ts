@@ -62,6 +62,10 @@ export interface DamageDealtInfo {
   userHoldsItem?: boolean;
   /** This is the first attack your side makes in the battle (false when unknown). */
   firstAttack?: boolean;
+  /** Type effectiveness of the hit (above 1 is super effective). */
+  effectiveness?: number;
+  /** Full turns the attacker has been out. */
+  turnsOut?: number;
   moveIsZ?: boolean;
   moveIsSpread?: boolean;
   /** Place in the party (0 = first) and the party's size. */
@@ -80,6 +84,8 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'starterDamageMultiplier', (m) => m.starter === i.isStarter);
   for (const m of of(perks, 'battleOrderDamage')) v *= i.firstInBattle ? m.first : m.later;
   for (const m of of(perks, 'firstAttackDamage')) v *= i.firstAttack ? m.first : m.later;
+  if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveDamageMultiplier');
+  if ((i.turnsOut ?? 0) >= 1) v *= product(perks, 'stayingDamageMultiplier');
   if (i.moveIsZ) v *= product(perks, 'zMoveDamageMultiplier');
   v *= product(perks, 'spreadMoveDamageMultiplier', (m) => m.spread === Boolean(i.moveIsSpread));
   v *= product(perks, 'partyPositionDamage', (m) => (m.position === 'first' ? i.partyIndex === 0 : i.partyIndex !== undefined && i.partySize !== undefined && i.partyIndex === i.partySize - 1));
@@ -98,6 +104,9 @@ export interface DamageTakenInfo {
   attackerIsBoss: boolean;
   weather: string | null;
   targetIsMega?: boolean;
+  effectiveness?: number;
+  /** Full turns the defender has been out (0 = it just came in). */
+  targetTurnsOut?: number;
 }
 
 /** Damage multiplier for a hit your Pokémon takes. */
@@ -111,6 +120,8 @@ export function damageTakenPerk(perks: Perks | undefined, i: DamageTakenInfo): n
   });
   if (i.attackerIsBoss) v *= product(perks, 'bossDamageTakenMultiplier');
   if (i.targetIsMega) v *= product(perks, 'megaDamageTakenMultiplier');
+  if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveTakenMultiplier');
+  if (i.targetTurnsOut === 0) v *= product(perks, 'switchGuard');
   const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
   if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'enemy' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
   return v;
@@ -385,4 +396,21 @@ export function shopEarlyStockPerk(perks: Perks | undefined): number {
 
 export function zMoveDelayTurns(perks: Perks | undefined): number {
   return sum(perks, 'zMoveDelay', (m) => m.turns);
+}
+
+export function championMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'championMoneyMultiplier');
+}
+
+export function ordinaryMoneyPerk(perks: Perks | undefined): number {
+  return product(perks, 'ordinaryMoneyMultiplier');
+}
+
+export function critChancePerk(perks: Perks | undefined): number {
+  return product(perks, 'critChanceMultiplier');
+}
+
+/** Friendship as friendship-based bonuses see it. */
+export function bonusFriendship(perks: Perks | undefined, friendship: number): number {
+  return friendship * product(perks, 'friendshipBonusMultiplier');
 }

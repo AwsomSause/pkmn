@@ -6,5 +6,12 @@
  "elm": "Newly hatched Pokémon start three levels higher and gain 15% more EXP has no effect: the game has no egg hatching yet.",
  "emmet": "Double battles grant 25% more rewards has no effect: the game has no double battles yet. (Multi-target moves are the spread list in trainerPerks.ts.)",
  "ginter": "Rare items appear 20% more often in shops: one extra locked (later-unlocking) item is on sale early, since shop stock is a fixed list.",
- "giacomo": "Status moves are 15% more effective: read as +15% accuracy for your status moves."
+ "giacomo": "Status moves are 15% more effective: read as +15% accuracy for your status moves.",
+ "gladion-stance": "Switching grants 10% damage reduction for one turn: read as 10% less damage taken on a Pokémon's first turn after it comes in (the turn it switches in and its first acting turn).",
+ "hau-stance": "Switching grants a small shield: read as the same 10% damage reduction on the first turn after switching in.",
+ "ilima": "Status moves are 10% more effective: read as +10% accuracy for your status moves.",
+ "harmony": "Friendship bonuses are 20% stronger: Return power and friendship-gated Hyper moments count friendship 20% higher.",
+ "hilda": "Fire-types and physical attackers: two separate boosts, so a Fire-type using a physical move gets both.",
+ "ingo": "Double battles grant 20% more rewards has no effect: the game has no double battles yet. Single battles grant 10% less EXP applies to every battle (all battles are single).",
+ "green-classic": "Starters start one level lower (never below level 1)."
 }
