@@ -65,7 +65,7 @@ describe('Dowsing Machine and Bloom Mail: bigger drafts', () => {
   });
 
   it('Bloom Mail: next stage, trainer wins give one extra choice; wild wins do not; the stage after is back to normal', () => {
-    const run = nextStage(take(newRun('bloom'), 'bloom-mail'));
+    const run = nextStage(take(newRun('bloom2'), 'bloom-mail'));
     expect(winNode(run, 'wild').draft).toHaveLength(size);
     const trainer = winNode(run, 'trainer');
     expect(trainer.draft).toHaveLength(size + 1);

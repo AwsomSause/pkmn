@@ -1186,6 +1186,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   z.object({ hook: z.literal('statusImmune'), statuses: z.array(StatusIdSchema).min(1) }),
   /** While held, this species takes another form in battle (Griseous Orb, Gracidea). */
   z.object({ hook: z.literal('formHeld'), from: z.string(), to: z.string() }),
+  /** Silvally (RKS System) takes this type while holding it, and Multi-Attack uses it (Memories). */
+  z.object({ hook: z.literal('memory'), type: TypeNameSchema }),
   // ---------- berries and other eaten items (each one eaten uses up a copy) ----------
   /** At or below `below` of max HP: heal a share of max HP (or `flat` HP), with attribute changes for the player. */
   z.object({
