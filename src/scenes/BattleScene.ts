@@ -24,13 +24,15 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
-import type { DramaLine } from '../core/drama';
+import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { burstReveal, hop, introTransition, type IntroKind } from '../ui/battleFx/spectacle';
-import { AERO, bounceIn, breathe, categoryIcon, drawGlass, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
+import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
+import { typeEffectiveness } from '../core/battle/damage';
+import type { Move, TypeName } from '../core/contentSchema';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -56,6 +58,8 @@ interface InfoBox {
   /** "TERA WATER" while the Pokémon is Terastallized. */
   teraBadge?: Phaser.GameObjects.Container;
   rageBadge?: Phaser.GameObjects.Container;
+  /** EBDX's Mega / Dynamax symbol beside the name. */
+  formIcon?: Phaser.GameObjects.Image;
   /** A soft red glow behind the box while HP is low. */
   danger?: Phaser.GameObjects.Graphics;
 }
@@ -354,6 +358,14 @@ export class BattleScene extends Phaser.Scene {
       box.container.add(box.teraBadge);
     }
     this.dangerGlow(box, mon.hp / max);
+    box.formIcon?.destroy();
+    box.formIcon = undefined;
+    const formKind = getSpecies(content, mon.speciesId).form?.kind;
+    const sym = mon.dynamaxed ? 'pack.ebdx.symDynamax' : formKind === 'mega' || formKind === 'primal' ? 'pack.ebdx.symMega' : null;
+    if (sym && this.textures.exists(sym)) {
+      box.formIcon = this.add.image(box.name.x + box.name.width + 10, box.name.y + 14, sym).setOrigin(0, 0.5);
+      box.container.add(box.formIcon);
+    }
     box.rageBadge?.destroy();
     box.rageBadge = undefined;
     if (box === this.enemyBox && mon.uid === this.riledUid) {
@@ -679,10 +691,10 @@ export class BattleScene extends Phaser.Scene {
         const art = [type, cat].filter((o): o is Phaser.GameObjects.Image => o !== null);
         const label = art.length === 2 ? '' : `${move.type.toUpperCase()}  ·  ${move.category}\n`;
         if (art.length === 2) {
-          this.moveBadges = this.add.container(COMMAND_X + 28, MESSAGE_Y + 46, art);
+          this.moveBadges = this.add.container(COMMAND_X + 28, MESSAGE_Y + 40, [...art, ...this.moveExtras(move)]);
           bounceIn(this, this.moveBadges, this.motion);
         } else art.forEach((o) => o.destroy());
-        this.moveInfo.setText(`${label}PP  ${slot.pp}/${maxPp(content, slot)}\nPower ${power}`).setY(art.length === 2 ? MESSAGE_Y + 70 : MESSAGE_Y + 30);
+        this.moveInfo.setText(`${label}PP  ${slot.pp}/${maxPp(content, slot)}  ·  Power ${power}`).setY(art.length === 2 ? MESSAGE_Y + 64 : MESSAGE_Y + 30);
         this.moveInfo.setColor(COLORS.textLight);
       },
       onSelect: (i) => {
@@ -693,6 +705,30 @@ export class BattleScene extends Phaser.Scene {
       onBack: () => this.showRootMenu(),
     });
     this.moveInfo.setVisible(true);
+  }
+
+  /**
+   * Enhanced Battle UI extras for the move panel: up to four flag icons
+   * (contact, sound, punch…) and how well the move hits the foe's visible
+   * types, as a tag plus words. Only what the player can already see.
+   */
+  private moveExtras(move: Move): Phaser.GameObjects.GameObject[] {
+    const out: Phaser.GameObjects.GameObject[] = [];
+    const flags = [...move.flags, ...(move.critStage > 0 ? ['highCrit'] : [])].map((f) => FLAG_ICONS[f]).filter((f): f is string => Boolean(f));
+    flags.slice(0, 4).forEach((name, n) => {
+      const key = `pack.ebui.flag.${name}`;
+      if (this.textures.exists(key)) out.push(this.add.image(192 + n * 32, 0, key).setOrigin(0, 0.5).setScale(1.1));
+    });
+    if (move.category === 'status') return out;
+    const content = services().session.content;
+    const foe = this.shown.enemy;
+    const tera = this.run.battle?.transform.teraTypes[foe.uid];
+    const types = (tera ? [tera] : getSpecies(content, foe.speciesId).types) as TypeName[];
+    const hint = effectivenessWord(typeEffectiveness(content.typeChart, move.type as TypeName, types));
+    const icon = effectivenessIcon(this, 0, 72, hint.frame, 0.36);
+    if (icon) out.push(icon);
+    out.push(this.add.text(icon ? 32 : 0, 72, hint.text, textStyle(20, COLORS.textLight)).setOrigin(0, 0.5));
+    return out;
   }
 
   private battleCtx() {
@@ -846,6 +882,13 @@ export class BattleScene extends Phaser.Scene {
 
   /** A line of trainer dialogue: "Joey: \"Crush them!\"". */
   private async sayTrainer(line: DramaLine): Promise<void> {
+    const { session } = services();
+    const { battleAnimations, effectIntensity } = session.settings;
+    // Signature attacks and rare events get a short banner; reduced motion keeps the banner without movement, "off" skips it.
+    const title = line.category === 'signature' && line.cue?.moveId ? (session.content.moves.get(line.cue.moveId)?.name ?? null) : line.cue?.event && !line.cue.event.startsWith('memory:') ? (DRAMA_LIBRARY.events.find((e) => e.id === line.cue!.event)?.name ?? null) : null;
+    if (title && battleAnimations !== 'off') {
+      this.showMoment({ at: -1, side: 'enemy', title, messages: [], color: line.category === 'signature' ? '#ffb020' : '#7a5cff', sound: 'se.shiny', music: null, major: true, cutIn: false, shake: false }, battleAnimations === 'full' && effectIntensity > 0);
+    }
     await this.say(`${line.speaker}: “${line.text}”`);
   }
 
@@ -920,6 +963,20 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, duration: 250 });
           break;
+        case 'evolved': {
+          // The Pokémon evolves between turns: flash, then the new form and its HP.
+          if (battleAnimations !== 'off' && sprite) {
+            const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0).setDepth(40);
+            await tween(this, { targets: flash, alpha: battleAnimations === 'full' ? 0.9 : 0.4, duration: 300, yoyo: true, hold: 200 });
+            flash.destroy();
+          }
+          mon!.speciesId = e.to;
+          mon!.hp = e.hpAfter;
+          this.showSprite(e.side, mon!);
+          playSfx(this, 'se.level_up');
+          await this.refreshInfoBox(box, mon!, false);
+          break;
+        }
         case 'switchIn': {
           const incoming = this.findMon(before, e.uid);
           if (incoming) {
@@ -1041,6 +1098,11 @@ export class BattleScene extends Phaser.Scene {
       if (cue.shake && motion) this.cameras.main.shake(220, 0.006);
       const band = this.add.rectangle(GAME_WIDTH / 2, 132, GAME_WIDTH, 54, color, 0.85).setDepth(50).setAlpha(0);
       const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
+      // A bouncy pop-in (no movement when motion is reduced).
+      if (motion) {
+        title.setScale(0.5);
+        this.tweens.add({ targets: title, scale: 1, duration: 320, ease: 'Back.easeOut' });
+      }
       this.tweens.add({ targets: [band, title], alpha: 1, duration: 180, hold: 1300, yoyo: true, onComplete: () => { band.destroy(); title.destroy(); } });
       if (motion) {
         const at = cue.side === 'enemy' ? ENEMY_POS : PLAYER_POS;

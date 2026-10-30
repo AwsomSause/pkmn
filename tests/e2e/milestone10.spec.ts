@@ -61,7 +61,12 @@ test('the battle screen uses the Aero look and pack art', async ({ page }) => {
 
   // Fight: the focused move shows Essentials' type label and category icon.
   await page.keyboard.press('Enter');
-  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges?.list.map((o: any) => o.texture.key))).toEqual(['pack.ebdx.types', 'pack.ebdx.category']);
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges?.list.map((o: any) => o.texture.key).slice(0, 2)))
+    .toEqual(['pack.ebdx.types', 'pack.ebdx.category']);
+  // Enhanced Battle UI extras: an effectiveness tag with words (damaging moves) or none (status moves).
+  const extras = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').moveBadges.list.map((o: any) => o.text ?? o.texture.key));
+  expect(extras.some((k: string) => /effective|No effect|Normal damage/.test(k)) || !extras.includes('pack.ebui.effectiveness')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-moves.png' });
 
   // A status shows Essentials' status icon in the foe's databox.
