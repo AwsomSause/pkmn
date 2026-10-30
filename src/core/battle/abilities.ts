@@ -152,6 +152,7 @@ export const HALF_HP_BOOST: Record<string, { stat: BoostStat; stages: number }> 
 
 /** Abilities the battle engine runs. */
 const SUPPORTED = new Set<string>([
+  'cute-charm', 'rivalry',
   ...Object.keys(PINCH),
   ...Object.keys(WEATHER_SETTERS),
   ...Object.keys(TERRAIN_SETTERS),
@@ -208,7 +209,7 @@ const SUPPORTED = new Set<string>([
 const NO_EFFECT = new Set<string>([
   'run-away', 'pickup', 'honey-gather', 'illuminate', 'ball-fetch', 'frisk', 'anticipation', 'forewarn', 'pickpocket',
   'magician', 'sticky-hold', 'klutz', 'unburden', 'gluttony', 'harvest', 'cheek-pouch', 'ripen', 'cud-chew',
-  'cute-charm', 'rivalry', 'suction-cups', 'unnerve', 'supersweet-syrup', 'emergency-exit', 'wimp-out',
+  'suction-cups', 'unnerve', 'supersweet-syrup', 'emergency-exit', 'wimp-out',
   'heavy-metal', 'light-metal', 'infiltrator', 'screen-cleaner', 'rks-system',
 ]);
 

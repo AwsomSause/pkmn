@@ -101,7 +101,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 6.9
+  "weight": 6.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "ivysaur",
@@ -205,7 +206,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": 0.125
  },
  {
   "id": "venusaur",
@@ -320,7 +322,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": 0.125
  },
  {
   "id": "venusaur-mega",
@@ -439,7 +442,8 @@
    ],
    "hidden": null
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": 0.125
  },
  {
   "id": "venusaur-gmax",
@@ -558,7 +562,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": 0.125
  },
  {
   "id": "charmander",
@@ -673,7 +678,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "charmeleon",
@@ -788,7 +794,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 19
+  "weight": 19,
+  "femaleRatio": 0.125
  },
  {
   "id": "charizard",
@@ -927,7 +934,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 90.5
+  "weight": 90.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "charizard-mega-x",
@@ -1070,7 +1078,8 @@
    ],
    "hidden": null
   },
-  "weight": 90.5
+  "weight": 90.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "charizard-mega-y",
@@ -1213,7 +1222,8 @@
    ],
    "hidden": null
   },
-  "weight": 90.5
+  "weight": 90.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "charizard-gmax",
@@ -1356,7 +1366,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 90.5
+  "weight": 90.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "squirtle",
@@ -1471,7 +1482,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 0.125
  },
  {
   "id": "wartortle",
@@ -1586,7 +1598,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 22.5
+  "weight": 22.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "blastoise",
@@ -1704,7 +1717,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 85.5
+  "weight": 85.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "blastoise-mega",
@@ -1826,7 +1840,8 @@
    ],
    "hidden": null
   },
-  "weight": 85.5
+  "weight": 85.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "blastoise-gmax",
@@ -1948,7 +1963,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 85.5
+  "weight": 85.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "caterpie",
@@ -2003,7 +2019,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 2.9
+  "weight": 2.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "metapod",
@@ -2050,7 +2067,8 @@
    ],
    "hidden": null
   },
-  "weight": 9.9
+  "weight": 9.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "butterfree",
@@ -2169,7 +2187,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.5
  },
  {
   "id": "butterfree-gmax",
@@ -2292,7 +2311,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.5
  },
  {
   "id": "weedle",
@@ -2348,7 +2368,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 3.2
+  "weight": 3.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "kakuna",
@@ -2396,7 +2417,8 @@
    ],
    "hidden": null
   },
-  "weight": 10
+  "weight": 10,
+  "femaleRatio": 0.5
  },
  {
   "id": "beedrill",
@@ -2519,7 +2541,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 29.5
+  "weight": 29.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "beedrill-mega",
@@ -2646,7 +2669,8 @@
    ],
    "hidden": null
   },
-  "weight": 29.5
+  "weight": 29.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pidgey",
@@ -2751,7 +2775,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "pidgeotto",
@@ -2856,7 +2881,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "pidgeot",
@@ -2964,7 +2990,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 39.5
+  "weight": 39.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pidgeot-mega",
@@ -3075,7 +3102,8 @@
    ],
    "hidden": null
   },
-  "weight": 39.5
+  "weight": 39.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "rattata",
@@ -3179,7 +3207,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "rattata-alola",
@@ -3281,7 +3310,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "raticate",
@@ -3380,7 +3410,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 18.5
+  "weight": 18.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "raticate-alola",
@@ -3493,7 +3524,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 18.5
+  "weight": 18.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "spearow",
@@ -3585,7 +3617,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "fearow",
@@ -3696,7 +3729,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 38
+  "weight": 38,
+  "femaleRatio": 0.5
  },
  {
   "id": "ekans",
@@ -3824,7 +3858,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 6.9
+  "weight": 6.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "arbok",
@@ -3967,7 +4002,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 65
+  "weight": 65,
+  "femaleRatio": 0.5
  },
  {
   "id": "pikachu",
@@ -4111,7 +4147,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "pikachu-gmax",
@@ -4249,7 +4286,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "raichu",
@@ -4387,7 +4425,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "raichu-alola",
@@ -4531,7 +4570,8 @@
    ],
    "hidden": null
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "raichu-mega-x",
@@ -4673,7 +4713,8 @@
    ],
    "hidden": null
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "raichu-mega-y",
@@ -4815,7 +4856,8 @@
    ],
    "hidden": null
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandshrew",
@@ -4938,7 +4980,8 @@
    ],
    "hidden": "sand-rush"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandshrew-alola",
@@ -5079,7 +5122,8 @@
    ],
    "hidden": "slush-rush"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandslash",
@@ -5209,7 +5253,8 @@
    ],
    "hidden": "sand-rush"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandslash-alola",
@@ -5353,7 +5398,8 @@
    ],
    "hidden": "slush-rush"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.5
  },
  {
   "id": "nidoran-f",
@@ -5464,7 +5510,8 @@
     "rivalry"
    ],
    "hidden": "hustle"
-  }
+  },
+  "femaleRatio": 1
  },
  {
   "id": "nidorina",
@@ -5576,7 +5623,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 1
  },
  {
   "id": "nidoqueen",
@@ -5696,7 +5744,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 1
  },
  {
   "id": "nidoran-m",
@@ -5803,7 +5852,8 @@
     "rivalry"
    ],
    "hidden": "hustle"
-  }
+  },
+  "femaleRatio": 0
  },
  {
   "id": "nidorino",
@@ -5911,7 +5961,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0
  },
  {
   "id": "nidoking",
@@ -6031,7 +6082,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 62
+  "weight": 62,
+  "femaleRatio": 0
  },
  {
   "id": "clefairy",
@@ -6223,7 +6275,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 7.5
+  "weight": 7.5,
+  "femaleRatio": 0.75
  },
  {
   "id": "clefable",
@@ -6386,7 +6439,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.75
  },
  {
   "id": "clefable-mega",
@@ -6553,7 +6607,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.75
  },
  {
   "id": "vulpix",
@@ -6692,7 +6747,8 @@
    ],
    "hidden": "drought"
   },
-  "weight": 9.9
+  "weight": 9.9,
+  "femaleRatio": 0.75
  },
  {
   "id": "vulpix-alola",
@@ -6860,7 +6916,8 @@
    ],
    "hidden": "snow-warning"
   },
-  "weight": 9.9
+  "weight": 9.9,
+  "femaleRatio": 0.75
  },
  {
   "id": "ninetales",
@@ -6986,7 +7043,8 @@
    ],
    "hidden": "drought"
   },
-  "weight": 19.9
+  "weight": 19.9,
+  "femaleRatio": 0.75
  },
  {
   "id": "ninetales-alola",
@@ -7130,7 +7188,8 @@
    ],
    "hidden": "snow-warning"
   },
-  "weight": 19.9
+  "weight": 19.9,
+  "femaleRatio": 0.75
  },
  {
   "id": "jigglypuff",
@@ -7279,7 +7338,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0.75
  },
  {
   "id": "wigglytuff",
@@ -7415,7 +7475,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.75
  },
  {
   "id": "zubat",
@@ -7539,7 +7600,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 7.5
+  "weight": 7.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "golbat",
@@ -7679,7 +7741,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "oddish",
@@ -7791,7 +7854,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 5.4
+  "weight": 5.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "gloom",
@@ -7915,7 +7979,8 @@
    ],
    "hidden": "stench"
   },
-  "weight": 8.6
+  "weight": 8.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "vileplume",
@@ -8022,7 +8087,8 @@
    ],
    "hidden": "effect-spore"
   },
-  "weight": 18.6
+  "weight": 18.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "paras",
@@ -8135,7 +8201,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 5.4
+  "weight": 5.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "parasect",
@@ -8255,7 +8322,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 29.5
+  "weight": 29.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "venonat",
@@ -8360,7 +8428,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "venomoth",
@@ -8496,7 +8565,8 @@
    ],
    "hidden": "wonder-skin"
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "diglett",
@@ -8608,7 +8678,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "diglett-alola",
@@ -8730,7 +8801,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "dugtrio",
@@ -8857,7 +8929,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 33.3
+  "weight": 33.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "dugtrio-alola",
@@ -8998,7 +9071,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 33.3
+  "weight": 33.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowth",
@@ -9110,7 +9184,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowth-alola",
@@ -9227,7 +9302,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowth-galar",
@@ -9328,7 +9404,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowth-gmax",
@@ -9439,7 +9516,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "persian",
@@ -9566,7 +9644,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.5
  },
  {
   "id": "persian-alola",
@@ -9702,7 +9781,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.5
  },
  {
   "id": "psyduck",
@@ -9826,7 +9906,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 19.6
+  "weight": 19.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "golduck",
@@ -9961,7 +10042,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 76.6
+  "weight": 76.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "mankey",
@@ -10101,7 +10183,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "primeape",
@@ -10261,7 +10344,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.5
  },
  {
   "id": "growlithe",
@@ -10385,7 +10469,8 @@
    ],
    "hidden": "justified"
   },
-  "weight": 19
+  "weight": 19,
+  "femaleRatio": 0.25
  },
  {
   "id": "growlithe-hisui",
@@ -10503,7 +10588,8 @@
    ],
    "hidden": "rock-head"
   },
-  "weight": 19
+  "weight": 19,
+  "femaleRatio": 0.25
  },
  {
   "id": "arcanine",
@@ -10626,7 +10712,8 @@
    ],
    "hidden": "justified"
   },
-  "weight": 155
+  "weight": 155,
+  "femaleRatio": 0.25
  },
  {
   "id": "arcanine-hisui",
@@ -10755,7 +10842,8 @@
    ],
    "hidden": "rock-head"
   },
-  "weight": 155
+  "weight": 155,
+  "femaleRatio": 0.25
  },
  {
   "id": "poliwag",
@@ -10871,7 +10959,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 12.4
+  "weight": 12.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "poliwhirl",
@@ -10991,7 +11080,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 0.5
  },
  {
   "id": "poliwrath",
@@ -11115,7 +11205,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.5
  },
  {
   "id": "abra",
@@ -11163,7 +11254,8 @@
    ],
    "hidden": "magic-guard"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "kadabra",
@@ -11295,7 +11387,8 @@
    ],
    "hidden": "magic-guard"
   },
-  "weight": 56.5
+  "weight": 56.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "alakazam",
@@ -11430,7 +11523,8 @@
    ],
    "hidden": "magic-guard"
   },
-  "weight": 48
+  "weight": 48,
+  "femaleRatio": 0.25
  },
  {
   "id": "alakazam-mega",
@@ -11568,7 +11662,8 @@
    ],
    "hidden": null
   },
-  "weight": 48
+  "weight": 48,
+  "femaleRatio": 0.25
  },
  {
   "id": "machop",
@@ -11724,7 +11819,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "machoke",
@@ -11880,7 +11976,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 70.5
+  "weight": 70.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "machamp",
@@ -12043,7 +12140,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 130
+  "weight": 130,
+  "femaleRatio": 0.25
  },
  {
   "id": "machamp-gmax",
@@ -12210,7 +12308,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 130
+  "weight": 130,
+  "femaleRatio": 0.25
  },
  {
   "id": "bellsprout",
@@ -12314,7 +12413,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "weepinbell",
@@ -12418,7 +12518,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 6.4
+  "weight": 6.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "victreebel",
@@ -12553,7 +12654,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 15.5
+  "weight": 15.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "victreebel-mega",
@@ -12692,7 +12794,8 @@
    ],
    "hidden": null
   },
-  "weight": 15.5
+  "weight": 15.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "tentacool",
@@ -12821,7 +12924,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 45.5
+  "weight": 45.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "tentacruel",
@@ -12957,7 +13061,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "geodude",
@@ -13094,7 +13199,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 0.5
  },
  {
   "id": "geodude-alola",
@@ -13224,7 +13330,8 @@
    ],
    "hidden": "galvanize"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 0.5
  },
  {
   "id": "graveler",
@@ -13365,7 +13472,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.5
  },
  {
   "id": "graveler-alola",
@@ -13495,7 +13603,8 @@
    ],
    "hidden": "galvanize"
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.5
  },
  {
   "id": "golem",
@@ -13643,7 +13752,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 300
+  "weight": 300,
+  "femaleRatio": 0.5
  },
  {
   "id": "golem-alola",
@@ -13776,7 +13886,8 @@
    ],
    "hidden": "galvanize"
   },
-  "weight": 300
+  "weight": 300,
+  "femaleRatio": 0.5
  },
  {
   "id": "ponyta",
@@ -13896,7 +14007,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "ponyta-galar",
@@ -13997,7 +14109,8 @@
    ],
    "hidden": "anticipation"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "rapidash",
@@ -14128,7 +14241,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 95
+  "weight": 95,
+  "femaleRatio": 0.5
  },
  {
   "id": "rapidash-galar",
@@ -14237,7 +14351,8 @@
    ],
    "hidden": "anticipation"
   },
-  "weight": 95
+  "weight": 95,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowpoke",
@@ -14358,7 +14473,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 36
+  "weight": 36,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowpoke-galar",
@@ -14479,7 +14595,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 36
+  "weight": 36,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowbro",
@@ -14603,7 +14720,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 78.5
+  "weight": 78.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowbro-mega",
@@ -14730,7 +14848,8 @@
    ],
    "hidden": null
   },
-  "weight": 78.5
+  "weight": 78.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowbro-galar",
@@ -14847,7 +14966,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 78.5
+  "weight": 78.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "magnemite",
@@ -14976,7 +15096,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": null
  },
  {
   "id": "magneton",
@@ -15113,7 +15234,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": null
  },
  {
   "id": "farfetchd",
@@ -15249,7 +15371,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "farfetchd-galar",
@@ -15357,7 +15480,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "doduo",
@@ -15482,7 +15606,8 @@
    ],
    "hidden": "tangled-feet"
   },
-  "weight": 39.2
+  "weight": 39.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "dodrio",
@@ -15610,7 +15735,8 @@
    ],
    "hidden": "tangled-feet"
   },
-  "weight": 85.2
+  "weight": 85.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "seel",
@@ -15742,7 +15868,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.5
  },
  {
   "id": "dewgong",
@@ -15878,7 +16005,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "grimer",
@@ -15998,7 +16126,8 @@
    ],
    "hidden": "poison-touch"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "grimer-alola",
@@ -16120,7 +16249,8 @@
    ],
    "hidden": "power-of-alchemy"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "muk",
@@ -16247,7 +16377,8 @@
    ],
    "hidden": "poison-touch"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "muk-alola",
@@ -16376,7 +16507,8 @@
    ],
    "hidden": "power-of-alchemy"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "shellder",
@@ -16488,7 +16620,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "cloyster",
@@ -16616,7 +16749,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 132.5
+  "weight": 132.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gastly",
@@ -16740,7 +16874,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.1
+  "weight": 0.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "haunter",
@@ -16872,7 +17007,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.1
+  "weight": 0.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "gengar",
@@ -17015,7 +17151,8 @@
    ],
    "hidden": null
   },
-  "weight": 40.5
+  "weight": 40.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gengar-mega",
@@ -17162,7 +17299,8 @@
    ],
    "hidden": null
   },
-  "weight": 40.5
+  "weight": 40.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gengar-gmax",
@@ -17309,7 +17447,8 @@
    ],
    "hidden": null
   },
-  "weight": 40.5
+  "weight": 40.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "onix",
@@ -17458,7 +17597,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": 0.5
  },
  {
   "id": "drowzee",
@@ -17578,7 +17718,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 32.4
+  "weight": 32.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "hypno",
@@ -17705,7 +17846,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 75.6
+  "weight": 75.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "krabby",
@@ -17821,7 +17963,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "kingler",
@@ -17948,7 +18091,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0.5
  },
  {
   "id": "kingler-gmax",
@@ -18079,7 +18223,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0.5
  },
  {
   "id": "voltorb",
@@ -18199,7 +18344,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 10.4
+  "weight": 10.4,
+  "femaleRatio": null
  },
  {
   "id": "voltorb-hisui",
@@ -18333,7 +18479,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 10.4
+  "weight": 10.4,
+  "femaleRatio": null
  },
  {
   "id": "electrode",
@@ -18452,7 +18599,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 66.6
+  "weight": 66.6,
+  "femaleRatio": null
  },
  {
   "id": "electrode-hisui",
@@ -18585,7 +18733,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 66.6
+  "weight": 66.6,
+  "femaleRatio": null
  },
  {
   "id": "exeggcute",
@@ -18718,7 +18867,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "exeggutor",
@@ -18849,7 +18999,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "exeggutor-alola",
@@ -18989,7 +19140,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "cubone",
@@ -19106,7 +19258,8 @@
    ],
    "hidden": "battle-armor"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "marowak",
@@ -19221,7 +19374,8 @@
    ],
    "hidden": "battle-armor"
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "marowak-alola",
@@ -19362,7 +19516,8 @@
    ],
    "hidden": "rock-head"
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "hitmonlee",
@@ -19501,7 +19656,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 49.8
+  "weight": 49.8,
+  "femaleRatio": 0
  },
  {
   "id": "hitmonchan",
@@ -19648,7 +19804,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 50.2
+  "weight": 50.2,
+  "femaleRatio": 0
  },
  {
   "id": "lickitung",
@@ -19792,7 +19949,8 @@
    ],
    "hidden": "cloud-nine"
   },
-  "weight": 65.5
+  "weight": 65.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "koffing",
@@ -19905,7 +20063,8 @@
    ],
    "hidden": "stench"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "weezing",
@@ -20024,7 +20183,8 @@
    ],
    "hidden": "stench"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "weezing-galar",
@@ -20161,7 +20321,8 @@
    ],
    "hidden": "misty-surge"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "rhyhorn",
@@ -20274,7 +20435,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 115
+  "weight": 115,
+  "femaleRatio": 0.5
  },
  {
   "id": "rhydon",
@@ -20431,7 +20593,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "chansey",
@@ -20599,7 +20762,8 @@
    ],
    "hidden": "healer"
   },
-  "weight": 34.6
+  "weight": 34.6,
+  "femaleRatio": 1
  },
  {
   "id": "tangela",
@@ -20739,7 +20903,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "kangaskhan",
@@ -20862,7 +21027,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 80
+  "weight": 80,
+  "femaleRatio": 1
  },
  {
   "id": "kangaskhan-mega",
@@ -20988,7 +21154,8 @@
    ],
    "hidden": null
   },
-  "weight": 80
+  "weight": 80,
+  "femaleRatio": 1
  },
  {
   "id": "horsea",
@@ -21100,7 +21267,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "seadra",
@@ -21220,7 +21388,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.5
  },
  {
   "id": "goldeen",
@@ -21324,7 +21493,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "seaking",
@@ -21435,7 +21605,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 39
+  "weight": 39,
+  "femaleRatio": 0.5
  },
  {
   "id": "staryu",
@@ -21563,7 +21734,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 34.5
+  "weight": 34.5,
+  "femaleRatio": null
  },
  {
   "id": "starmie",
@@ -21679,7 +21851,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 80
+  "weight": 80,
+  "femaleRatio": null
  },
  {
   "id": "starmie-mega",
@@ -21798,7 +21971,8 @@
    ],
    "hidden": null
   },
-  "weight": 80
+  "weight": 80,
+  "femaleRatio": null
  },
  {
   "id": "mr-mime",
@@ -21970,7 +22144,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 54.5
+  "weight": 54.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "mr-mime-galar",
@@ -22124,7 +22299,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 54.5
+  "weight": 54.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "scyther",
@@ -22261,7 +22437,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 56
+  "weight": 56,
+  "femaleRatio": 0.5
  },
  {
   "id": "jynx",
@@ -22397,7 +22574,8 @@
    ],
    "hidden": "dry-skin"
   },
-  "weight": 40.6
+  "weight": 40.6,
+  "femaleRatio": 1
  },
  {
   "id": "electabuzz",
@@ -22508,7 +22686,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.25
  },
  {
   "id": "magmar",
@@ -22631,7 +22810,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 44.5
+  "weight": 44.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "pinsir",
@@ -22746,7 +22926,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "pinsir-mega",
@@ -22865,7 +23046,8 @@
    ],
    "hidden": null
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "tauros",
@@ -22988,7 +23170,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 88.4
+  "weight": 88.4,
+  "femaleRatio": 0
  },
  {
   "id": "tauros-paldea-combat-breed",
@@ -23116,7 +23299,8 @@
    ],
    "hidden": "cud-chew"
   },
-  "weight": 88.4
+  "weight": 88.4,
+  "femaleRatio": 0
  },
  {
   "id": "tauros-paldea-blaze-breed",
@@ -23245,7 +23429,8 @@
    ],
    "hidden": "cud-chew"
   },
-  "weight": 88.4
+  "weight": 88.4,
+  "femaleRatio": 0
  },
  {
   "id": "tauros-paldea-aqua-breed",
@@ -23374,7 +23559,8 @@
    ],
    "hidden": "cud-chew"
   },
-  "weight": 88.4
+  "weight": 88.4,
+  "femaleRatio": 0
  },
  {
   "id": "magikarp",
@@ -23429,7 +23615,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 10
+  "weight": 10,
+  "femaleRatio": 0.5
  },
  {
   "id": "gyarados",
@@ -23572,7 +23759,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 235
+  "weight": 235,
+  "femaleRatio": 0.5
  },
  {
   "id": "gyarados-mega",
@@ -23719,7 +23907,8 @@
    ],
    "hidden": null
   },
-  "weight": 235
+  "weight": 235,
+  "femaleRatio": 0.5
  },
  {
   "id": "lapras",
@@ -23835,7 +24024,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "lapras-gmax",
@@ -23955,7 +24145,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "ditto",
@@ -23997,7 +24188,8 @@
    ],
    "hidden": "imposter"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": null
  },
  {
   "id": "eevee",
@@ -24157,7 +24349,8 @@
    ],
    "hidden": "anticipation"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "eevee-gmax",
@@ -24288,7 +24481,8 @@
    ],
    "hidden": "anticipation"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "vaporeon",
@@ -24450,7 +24644,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 29
+  "weight": 29,
+  "femaleRatio": 0.125
  },
  {
   "id": "jolteon",
@@ -24600,7 +24795,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 24.5
+  "weight": 24.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "flareon",
@@ -24766,7 +24962,8 @@
    ],
    "hidden": "guts"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.125
  },
  {
   "id": "porygon",
@@ -24894,7 +25091,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 36.5
+  "weight": 36.5,
+  "femaleRatio": null
  },
  {
   "id": "omanyte",
@@ -25023,7 +25221,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 7.5
+  "weight": 7.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "omastar",
@@ -25159,7 +25358,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.125
  },
  {
   "id": "kabuto",
@@ -25288,7 +25488,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "kabutops",
@@ -25436,7 +25637,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 40.5
+  "weight": 40.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "aerodactyl",
@@ -25556,7 +25758,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 59
+  "weight": 59,
+  "femaleRatio": 0.125
  },
  {
   "id": "aerodactyl-mega",
@@ -25679,7 +25882,8 @@
    ],
    "hidden": null
   },
-  "weight": 59
+  "weight": 59,
+  "femaleRatio": 0.125
  },
  {
   "id": "snorlax",
@@ -25862,7 +26066,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 460
+  "weight": 460,
+  "femaleRatio": 0.125
  },
  {
   "id": "snorlax-gmax",
@@ -26049,7 +26254,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 460
+  "weight": 460,
+  "femaleRatio": 0.125
  },
  {
   "id": "articuno",
@@ -26178,7 +26384,8 @@
    ],
    "hidden": "snow-cloak"
   },
-  "weight": 55.4
+  "weight": 55.4,
+  "femaleRatio": null
  },
  {
   "id": "articuno-galar",
@@ -26288,7 +26495,8 @@
    ],
    "hidden": null
   },
-  "weight": 55.4
+  "weight": 55.4,
+  "femaleRatio": null
  },
  {
   "id": "zapdos",
@@ -26401,7 +26609,8 @@
    ],
    "hidden": "static"
   },
-  "weight": 52.6
+  "weight": 52.6,
+  "femaleRatio": null
  },
  {
   "id": "zapdos-galar",
@@ -26511,7 +26720,8 @@
    ],
    "hidden": null
   },
-  "weight": 52.6
+  "weight": 52.6,
+  "femaleRatio": null
  },
  {
   "id": "moltres",
@@ -26636,7 +26846,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": null
  },
  {
   "id": "moltres-galar",
@@ -26746,7 +26957,8 @@
    ],
    "hidden": null
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": null
  },
  {
   "id": "dratini",
@@ -26849,7 +27061,8 @@
    ],
    "hidden": "marvel-scale"
   },
-  "weight": 3.3
+  "weight": 3.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragonair",
@@ -26952,7 +27165,8 @@
    ],
    "hidden": "marvel-scale"
   },
-  "weight": 16.5
+  "weight": 16.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragonite",
@@ -27083,7 +27297,8 @@
    ],
    "hidden": "multiscale"
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragonite-mega",
@@ -27218,7 +27433,8 @@
    ],
    "hidden": null
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": 0.5
  },
  {
   "id": "mewtwo",
@@ -27362,7 +27578,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 122
+  "weight": 122,
+  "femaleRatio": null
  },
  {
   "id": "mewtwo-mega-x",
@@ -27511,7 +27728,8 @@
    ],
    "hidden": null
   },
-  "weight": 122
+  "weight": 122,
+  "femaleRatio": null
  },
  {
   "id": "mewtwo-mega-y",
@@ -27659,7 +27877,8 @@
    ],
    "hidden": null
   },
-  "weight": 122
+  "weight": 122,
+  "femaleRatio": null
  },
  {
   "id": "mew",
@@ -27775,7 +27994,8 @@
    ],
    "hidden": null
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": null
  },
  {
   "id": "chikorita",
@@ -27886,7 +28106,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 6.4
+  "weight": 6.4,
+  "femaleRatio": 0.125
  },
  {
   "id": "bayleef",
@@ -27997,7 +28218,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 15.8
+  "weight": 15.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "meganium",
@@ -28111,7 +28333,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 100.5
+  "weight": 100.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "meganium-mega",
@@ -28230,7 +28453,8 @@
    ],
    "hidden": null
   },
-  "weight": 100.5
+  "weight": 100.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "cyndaquil",
@@ -28341,7 +28565,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 7.9
+  "weight": 7.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "quilava",
@@ -28457,7 +28682,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 19
+  "weight": 19,
+  "femaleRatio": 0.125
  },
  {
   "id": "typhlosion",
@@ -28567,7 +28793,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 79.5
+  "weight": 79.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "typhlosion-hisui",
@@ -28691,7 +28918,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 79.5
+  "weight": 79.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "totodile",
@@ -28806,7 +29034,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "croconaw",
@@ -28921,7 +29150,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.125
  },
  {
   "id": "feraligatr",
@@ -29035,7 +29265,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 88.8
+  "weight": 88.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "feraligatr-mega",
@@ -29154,7 +29385,8 @@
    ],
    "hidden": null
   },
-  "weight": 88.8
+  "weight": 88.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "sentret",
@@ -29266,7 +29498,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "furret",
@@ -29381,7 +29614,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 32.5
+  "weight": 32.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "hoothoot",
@@ -29502,7 +29736,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 21.2
+  "weight": 21.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "noctowl",
@@ -29622,7 +29857,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 40.8
+  "weight": 40.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "ledyba",
@@ -29731,7 +29967,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 10.8
+  "weight": 10.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "ledian",
@@ -29835,7 +30072,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 35.6
+  "weight": 35.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "spinarak",
@@ -29964,7 +30202,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "ariados",
@@ -30108,7 +30347,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 33.5
+  "weight": 33.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "crobat",
@@ -30231,7 +30471,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 75
+  "weight": 75,
+  "femaleRatio": 0.5
  },
  {
   "id": "chinchou",
@@ -30340,7 +30581,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "lanturn",
@@ -30460,7 +30702,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 22.5
+  "weight": 22.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pichu",
@@ -30557,7 +30800,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "cleffa",
@@ -30671,7 +30915,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.75
  },
  {
   "id": "igglybuff",
@@ -30750,7 +30995,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.75
  },
  {
   "id": "togepi",
@@ -30892,7 +31138,8 @@
    ],
    "hidden": "super-luck"
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "togetic",
@@ -31045,7 +31292,8 @@
    ],
    "hidden": "super-luck"
   },
-  "weight": 3.2
+  "weight": 3.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "natu",
@@ -31154,7 +31402,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "xatu",
@@ -31258,7 +31507,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "mareep",
@@ -31369,7 +31619,8 @@
    ],
    "hidden": "plus"
   },
-  "weight": 7.8
+  "weight": 7.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "flaaffy",
@@ -31480,7 +31731,8 @@
    ],
    "hidden": "plus"
   },
-  "weight": 13.3
+  "weight": 13.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "ampharos",
@@ -31610,7 +31862,8 @@
    ],
    "hidden": "plus"
   },
-  "weight": 61.5
+  "weight": 61.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "ampharos-mega",
@@ -31745,7 +31998,8 @@
    ],
    "hidden": null
   },
-  "weight": 61.5
+  "weight": 61.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "bellossom",
@@ -31867,7 +32121,8 @@
    ],
    "hidden": "healer"
   },
-  "weight": 5.8
+  "weight": 5.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "marill",
@@ -31992,7 +32247,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "azumarill",
@@ -32112,7 +32368,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 28.5
+  "weight": 28.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sudowoodo",
@@ -32243,7 +32500,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 38
+  "weight": 38,
+  "femaleRatio": 0.5
  },
  {
   "id": "politoed",
@@ -32346,7 +32604,8 @@
    ],
    "hidden": "drizzle"
   },
-  "weight": 33.9
+  "weight": 33.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "hoppip",
@@ -32471,7 +32730,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "skiploom",
@@ -32596,7 +32856,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "jumpluff",
@@ -32716,7 +32977,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.5
  },
  {
   "id": "aipom",
@@ -32832,7 +33094,8 @@
    ],
    "hidden": "skill-link"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sunkern",
@@ -32944,7 +33207,8 @@
    ],
    "hidden": "early-bird"
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "sunflora",
@@ -33075,7 +33339,8 @@
    ],
    "hidden": "early-bird"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "yanma",
@@ -33212,7 +33477,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 38
+  "weight": 38,
+  "femaleRatio": 0.5
  },
  {
   "id": "wooper",
@@ -33317,7 +33583,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "wooper-paldea",
@@ -33415,7 +33682,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "quagsire",
@@ -33515,7 +33783,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 75
+  "weight": 75,
+  "femaleRatio": 0.5
  },
  {
   "id": "espeon",
@@ -33653,7 +33922,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 26.5
+  "weight": 26.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "umbreon",
@@ -33807,7 +34077,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 27
+  "weight": 27,
+  "femaleRatio": 0.125
  },
  {
   "id": "murkrow",
@@ -33948,7 +34219,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 2.1
+  "weight": 2.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowking",
@@ -34084,7 +34356,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 79.5
+  "weight": 79.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "slowking-galar",
@@ -34225,7 +34498,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 79.5
+  "weight": 79.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "misdreavus",
@@ -34340,7 +34614,8 @@
    ],
    "hidden": null
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "unown",
@@ -34382,7 +34657,8 @@
    ],
    "hidden": null
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": null
  },
  {
   "id": "wobbuffet",
@@ -34452,7 +34728,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 28.5
+  "weight": 28.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "girafarig",
@@ -34569,7 +34846,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 41.5
+  "weight": 41.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pineco",
@@ -34680,7 +34958,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 7.2
+  "weight": 7.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "forretress",
@@ -34811,7 +35090,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 125.8
+  "weight": 125.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "dunsparce",
@@ -34951,7 +35231,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 14
+  "weight": 14,
+  "femaleRatio": 0.5
  },
  {
   "id": "gligar",
@@ -35084,7 +35365,8 @@
    ],
    "hidden": "immunity"
   },
-  "weight": 64.8
+  "weight": 64.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "steelix",
@@ -35248,7 +35530,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 400
+  "weight": 400,
+  "femaleRatio": 0.5
  },
  {
   "id": "steelix-mega",
@@ -35415,7 +35698,8 @@
    ],
    "hidden": null
   },
-  "weight": 400
+  "weight": 400,
+  "femaleRatio": 0.5
  },
  {
   "id": "snubbull",
@@ -35535,7 +35819,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 7.8
+  "weight": 7.8,
+  "femaleRatio": 0.75
  },
  {
   "id": "granbull",
@@ -35654,7 +35939,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 48.7
+  "weight": 48.7,
+  "femaleRatio": 0.75
  },
  {
   "id": "qwilfish",
@@ -35782,7 +36068,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 3.9
+  "weight": 3.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "qwilfish-hisui",
@@ -35924,7 +36211,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 3.9
+  "weight": 3.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "scizor",
@@ -36064,7 +36352,8 @@
    ],
    "hidden": "light-metal"
   },
-  "weight": 118
+  "weight": 118,
+  "femaleRatio": 0.5
  },
  {
   "id": "scizor-mega",
@@ -36207,7 +36496,8 @@
    ],
    "hidden": null
   },
-  "weight": 118
+  "weight": 118,
+  "femaleRatio": 0.5
  },
  {
   "id": "shuckle",
@@ -36323,7 +36613,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 20.5
+  "weight": 20.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "heracross",
@@ -36455,7 +36746,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.5
  },
  {
   "id": "heracross-mega",
@@ -36590,7 +36882,8 @@
    ],
    "hidden": null
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.5
  },
  {
   "id": "sneasel",
@@ -36711,7 +37004,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "sneasel-hisui",
@@ -36821,7 +37115,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "teddiursa",
@@ -36953,7 +37248,8 @@
    ],
    "hidden": "honey-gather"
   },
-  "weight": 8.8
+  "weight": 8.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "ursaring",
@@ -37093,7 +37389,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 125.8
+  "weight": 125.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "slugma",
@@ -37201,7 +37498,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "magcargo",
@@ -37309,7 +37607,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "swinub",
@@ -37434,7 +37733,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "piloswine",
@@ -37579,7 +37879,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 55.8
+  "weight": 55.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "corsola",
@@ -37699,7 +38000,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.75
  },
  {
   "id": "corsola-galar",
@@ -37799,7 +38101,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.75
  },
  {
   "id": "remoraid",
@@ -37911,7 +38214,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "octillery",
@@ -38042,7 +38346,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 28.5
+  "weight": 28.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "delibird",
@@ -38090,7 +38395,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.5
  },
  {
   "id": "mantine",
@@ -38214,7 +38520,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "skarmory",
@@ -38338,7 +38645,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 50.5
+  "weight": 50.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "skarmory-mega",
@@ -38465,7 +38773,8 @@
    ],
    "hidden": null
   },
-  "weight": 50.5
+  "weight": 50.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "houndour",
@@ -38598,7 +38907,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 10.8
+  "weight": 10.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "houndoom",
@@ -38730,7 +39040,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "houndoom-mega",
@@ -38865,7 +39176,8 @@
    ],
    "hidden": null
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "kingdra",
@@ -38981,7 +39293,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 152
+  "weight": 152,
+  "femaleRatio": 0.5
  },
  {
   "id": "phanpy",
@@ -39080,7 +39393,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 33.5
+  "weight": 33.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "donphan",
@@ -39222,7 +39536,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "porygon2",
@@ -39346,7 +39661,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 32.5
+  "weight": 32.5,
+  "femaleRatio": null
  },
  {
   "id": "stantler",
@@ -39474,7 +39790,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 71.2
+  "weight": 71.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "smeargle",
@@ -39517,7 +39834,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 58
+  "weight": 58,
+  "femaleRatio": 0.5
  },
  {
   "id": "tyrogue",
@@ -39594,7 +39912,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 21
+  "weight": 21,
+  "femaleRatio": 0
  },
  {
   "id": "hitmontop",
@@ -39717,7 +40036,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 48
+  "weight": 48,
+  "femaleRatio": 0
  },
  {
   "id": "smoochum",
@@ -39832,7 +40152,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 1
  },
  {
   "id": "elekid",
@@ -39941,7 +40262,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 23.5
+  "weight": 23.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "magby",
@@ -40062,7 +40384,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 21.4
+  "weight": 21.4,
+  "femaleRatio": 0.25
  },
  {
   "id": "miltank",
@@ -40169,7 +40492,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 75.5
+  "weight": 75.5,
+  "femaleRatio": 1
  },
  {
   "id": "blissey",
@@ -40332,7 +40656,8 @@
    ],
    "hidden": "healer"
   },
-  "weight": 46.8
+  "weight": 46.8,
+  "femaleRatio": 1
  },
  {
   "id": "raikou",
@@ -40444,7 +40769,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 178
+  "weight": 178,
+  "femaleRatio": null
  },
  {
   "id": "entei",
@@ -40564,7 +40890,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 198
+  "weight": 198,
+  "femaleRatio": null
  },
  {
   "id": "suicune",
@@ -40688,7 +41015,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 187
+  "weight": 187,
+  "femaleRatio": null
  },
  {
   "id": "larvitar",
@@ -40800,7 +41128,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 72
+  "weight": 72,
+  "femaleRatio": 0.5
  },
  {
   "id": "pupitar",
@@ -40920,7 +41249,8 @@
    ],
    "hidden": null
   },
-  "weight": 152
+  "weight": 152,
+  "femaleRatio": 0.5
  },
  {
   "id": "tyranitar",
@@ -41051,7 +41381,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 202
+  "weight": 202,
+  "femaleRatio": 0.5
  },
  {
   "id": "tyranitar-mega",
@@ -41186,7 +41517,8 @@
    ],
    "hidden": null
   },
-  "weight": 202
+  "weight": 202,
+  "femaleRatio": 0.5
  },
  {
   "id": "lugia",
@@ -41299,7 +41631,8 @@
    ],
    "hidden": "multiscale"
   },
-  "weight": 216
+  "weight": 216,
+  "femaleRatio": null
  },
  {
   "id": "ho-oh",
@@ -41420,7 +41753,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 199
+  "weight": 199,
+  "femaleRatio": null
  },
  {
   "id": "celebi",
@@ -41521,7 +41855,8 @@
    ],
    "hidden": null
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": null
  },
  {
   "id": "treecko",
@@ -41636,7 +41971,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.125
  },
  {
   "id": "grovyle",
@@ -41767,7 +42103,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 21.6
+  "weight": 21.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "sceptile",
@@ -41905,7 +42242,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 52.2
+  "weight": 52.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "sceptile-mega",
@@ -42048,7 +42386,8 @@
    ],
    "hidden": null
   },
-  "weight": 52.2
+  "weight": 52.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "torchic",
@@ -42167,7 +42506,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "combusken",
@@ -42295,7 +42635,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "blaziken",
@@ -42434,7 +42775,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 52
+  "weight": 52,
+  "femaleRatio": 0.125
  },
  {
   "id": "blaziken-mega",
@@ -42577,7 +42919,8 @@
    ],
    "hidden": null
   },
-  "weight": 52
+  "weight": 52,
+  "femaleRatio": 0.125
  },
  {
   "id": "mudkip",
@@ -42700,7 +43043,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 7.6
+  "weight": 7.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "marshtomp",
@@ -42836,7 +43180,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.125
  },
  {
   "id": "swampert",
@@ -42971,7 +43316,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 81.9
+  "weight": 81.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "swampert-mega",
@@ -43110,7 +43456,8 @@
    ],
    "hidden": null
   },
-  "weight": 81.9
+  "weight": 81.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "poochyena",
@@ -43234,7 +43581,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 13.6
+  "weight": 13.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "mightyena",
@@ -43369,7 +43717,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 37
+  "weight": 37,
+  "femaleRatio": 0.5
  },
  {
   "id": "zigzagoon",
@@ -43481,7 +43830,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "zigzagoon-galar",
@@ -43587,7 +43937,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "linoone",
@@ -43718,7 +44069,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 32.5
+  "weight": 32.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "linoone-galar",
@@ -43840,7 +44192,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 32.5
+  "weight": 32.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "wurmple",
@@ -43903,7 +44256,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 3.6
+  "weight": 3.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "silcoon",
@@ -43962,7 +44316,8 @@
    ],
    "hidden": null
   },
-  "weight": 10
+  "weight": 10,
+  "femaleRatio": 0.5
  },
  {
   "id": "beautifly",
@@ -44093,7 +44448,8 @@
    ],
    "hidden": "rivalry"
   },
-  "weight": 28.4
+  "weight": 28.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "cascoon",
@@ -44152,7 +44508,8 @@
    ],
    "hidden": null
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "dustox",
@@ -44275,7 +44632,8 @@
    ],
    "hidden": "compound-eyes"
   },
-  "weight": 31.6
+  "weight": 31.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "lotad",
@@ -44384,7 +44742,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 2.6
+  "weight": 2.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "lombre",
@@ -44521,7 +44880,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 32.5
+  "weight": 32.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "ludicolo",
@@ -44633,7 +44993,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.5
  },
  {
   "id": "seedot",
@@ -44737,7 +45098,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "nuzleaf",
@@ -44874,7 +45236,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "shiftry",
@@ -45026,7 +45389,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 59.6
+  "weight": 59.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "taillow",
@@ -45122,7 +45486,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 2.3
+  "weight": 2.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "swellow",
@@ -45217,7 +45582,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 19.8
+  "weight": 19.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "wingull",
@@ -45318,7 +45684,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pelipper",
@@ -45446,7 +45813,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "ralts",
@@ -45567,7 +45935,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 6.6
+  "weight": 6.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "kirlia",
@@ -45692,7 +46061,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 20.2
+  "weight": 20.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "gardevoir",
@@ -45840,7 +46210,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 48.4
+  "weight": 48.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "gardevoir-mega",
@@ -45991,7 +46362,8 @@
    ],
    "hidden": null
   },
-  "weight": 48.4
+  "weight": 48.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "surskit",
@@ -46087,7 +46459,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 1.7
+  "weight": 1.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "masquerain",
@@ -46226,7 +46599,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 3.6
+  "weight": 3.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "shroomish",
@@ -46322,7 +46696,8 @@
    ],
    "hidden": "quick-feet"
   },
-  "weight": 4.5
+  "weight": 4.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "breloom",
@@ -46454,7 +46829,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 39.2
+  "weight": 39.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "slakoth",
@@ -46553,7 +46929,8 @@
    ],
    "hidden": null
   },
-  "weight": 24
+  "weight": 24,
+  "femaleRatio": 0.5
  },
  {
   "id": "vigoroth",
@@ -46676,7 +47053,8 @@
    ],
    "hidden": null
   },
-  "weight": 46.5
+  "weight": 46.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "slaking",
@@ -46822,7 +47200,8 @@
    ],
    "hidden": null
   },
-  "weight": 130.5
+  "weight": 130.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "nincada",
@@ -46914,7 +47293,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "ninjask",
@@ -47037,7 +47417,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "shedinja",
@@ -47152,7 +47533,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": null
  },
  {
   "id": "whismur",
@@ -47247,7 +47629,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 16.3
+  "weight": 16.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "loudred",
@@ -47346,7 +47729,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 40.5
+  "weight": 40.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "exploud",
@@ -47464,7 +47848,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 84
+  "weight": 84,
+  "femaleRatio": 0.5
  },
  {
   "id": "makuhita",
@@ -47588,7 +47973,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 86.4
+  "weight": 86.4,
+  "femaleRatio": 0.25
  },
  {
   "id": "hariyama",
@@ -47715,7 +48101,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 253.8
+  "weight": 253.8,
+  "femaleRatio": 0.25
  },
  {
   "id": "azurill",
@@ -47802,7 +48189,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.75
  },
  {
   "id": "nosepass",
@@ -47914,7 +48302,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 97
+  "weight": 97,
+  "femaleRatio": 0.5
  },
  {
   "id": "skitty",
@@ -48050,7 +48439,8 @@
    ],
    "hidden": "wonder-skin"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.75
  },
  {
   "id": "delcatty",
@@ -48161,7 +48551,8 @@
    ],
    "hidden": "wonder-skin"
   },
-  "weight": 32.6
+  "weight": 32.6,
+  "femaleRatio": 0.75
  },
  {
   "id": "sableye",
@@ -48285,7 +48676,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "sableye-mega",
@@ -48412,7 +48804,8 @@
    ],
    "hidden": null
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "mawile",
@@ -48524,7 +48917,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "mawile-mega",
@@ -48639,7 +49033,8 @@
    ],
    "hidden": null
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "aron",
@@ -48756,7 +49151,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0.5
  },
  {
   "id": "lairon",
@@ -48873,7 +49269,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "aggron",
@@ -48985,7 +49382,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 360
+  "weight": 360,
+  "femaleRatio": 0.5
  },
  {
   "id": "aggron-mega",
@@ -49099,7 +49497,8 @@
    ],
    "hidden": null
   },
-  "weight": 360
+  "weight": 360,
+  "femaleRatio": 0.5
  },
  {
   "id": "meditite",
@@ -49235,7 +49634,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 11.2
+  "weight": 11.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "medicham",
@@ -49382,7 +49782,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 31.5
+  "weight": 31.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "medicham-mega",
@@ -49533,7 +49934,8 @@
    ],
    "hidden": null
   },
-  "weight": 31.5
+  "weight": 31.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "electrike",
@@ -49637,7 +50039,8 @@
    ],
    "hidden": "minus"
   },
-  "weight": 15.2
+  "weight": 15.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "manectric",
@@ -49744,7 +50147,8 @@
    ],
    "hidden": "minus"
   },
-  "weight": 40.2
+  "weight": 40.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "manectric-mega",
@@ -49854,7 +50258,8 @@
    ],
    "hidden": null
   },
-  "weight": 40.2
+  "weight": 40.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "plusle",
@@ -49988,7 +50393,8 @@
    ],
    "hidden": "lightning-rod"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "minun",
@@ -50118,7 +50524,8 @@
    ],
    "hidden": "volt-absorb"
   },
-  "weight": 4.2
+  "weight": 4.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "volbeat",
@@ -50229,7 +50636,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 17.7
+  "weight": 17.7,
+  "femaleRatio": 0
  },
  {
   "id": "illumise",
@@ -50332,7 +50740,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 17.7
+  "weight": 17.7,
+  "femaleRatio": 1
  },
  {
   "id": "roselia",
@@ -50465,7 +50874,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "gulpin",
@@ -50577,7 +50987,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 10.3
+  "weight": 10.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "swalot",
@@ -50692,7 +51103,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 80
+  "weight": 80,
+  "femaleRatio": 0.5
  },
  {
   "id": "carvanha",
@@ -50800,7 +51212,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 20.8
+  "weight": 20.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "sharpedo",
@@ -50919,7 +51332,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 88.8
+  "weight": 88.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "sharpedo-mega",
@@ -51042,7 +51456,8 @@
    ],
    "hidden": null
   },
-  "weight": 88.8
+  "weight": 88.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "wailmer",
@@ -51154,7 +51569,8 @@
    ],
    "hidden": "pressure"
   },
-  "weight": 130
+  "weight": 130,
+  "femaleRatio": 0.5
  },
  {
   "id": "wailord",
@@ -51269,7 +51685,8 @@
    ],
    "hidden": "pressure"
   },
-  "weight": 398
+  "weight": 398,
+  "femaleRatio": 0.5
  },
  {
   "id": "numel",
@@ -51386,7 +51803,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 24
+  "weight": 24,
+  "femaleRatio": 0.5
  },
  {
   "id": "camerupt",
@@ -51510,7 +51928,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "camerupt-mega",
@@ -51637,7 +52056,8 @@
    ],
    "hidden": null
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "torkoal",
@@ -51756,7 +52176,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 80.4
+  "weight": 80.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "spoink",
@@ -51868,7 +52289,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 30.6
+  "weight": 30.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "grumpig",
@@ -51983,7 +52405,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 71.5
+  "weight": 71.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "spinda",
@@ -52078,7 +52501,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.5
  },
  {
   "id": "trapinch",
@@ -52198,7 +52622,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "vibrava",
@@ -52350,7 +52775,8 @@
    ],
    "hidden": null
   },
-  "weight": 15.3
+  "weight": 15.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "flygon",
@@ -52513,7 +52939,8 @@
    ],
    "hidden": null
   },
-  "weight": 82
+  "weight": 82,
+  "femaleRatio": 0.5
  },
  {
   "id": "cacnea",
@@ -52640,7 +53067,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 51.3
+  "weight": 51.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "cacturne",
@@ -52771,7 +53199,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 77.4
+  "weight": 77.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "swablu",
@@ -52887,7 +53316,8 @@
    ],
    "hidden": "cloud-nine"
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "altaria",
@@ -53010,7 +53440,8 @@
    ],
    "hidden": "cloud-nine"
   },
-  "weight": 20.6
+  "weight": 20.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "altaria-mega",
@@ -53137,7 +53568,8 @@
    ],
    "hidden": null
   },
-  "weight": 20.6
+  "weight": 20.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "zangoose",
@@ -53307,7 +53739,8 @@
    ],
    "hidden": "toxic-boost"
   },
-  "weight": 40.3
+  "weight": 40.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "seviper",
@@ -53429,7 +53862,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 52.5
+  "weight": 52.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "lunatone",
@@ -53548,7 +53982,8 @@
    ],
    "hidden": null
   },
-  "weight": 168
+  "weight": 168,
+  "femaleRatio": null
  },
  {
   "id": "solrock",
@@ -53667,7 +54102,8 @@
    ],
    "hidden": null
   },
-  "weight": 154
+  "weight": 154,
+  "femaleRatio": null
  },
  {
   "id": "barboach",
@@ -53780,7 +54216,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 1.9
+  "weight": 1.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "whiscash",
@@ -53900,7 +54337,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 23.6
+  "weight": 23.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "corphish",
@@ -54012,7 +54450,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "crawdaunt",
@@ -54124,7 +54563,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 32.8
+  "weight": 32.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "baltoy",
@@ -54240,7 +54680,8 @@
    ],
    "hidden": null
   },
-  "weight": 21.5
+  "weight": 21.5,
+  "femaleRatio": null
  },
  {
   "id": "claydol",
@@ -54359,7 +54800,8 @@
    ],
    "hidden": null
   },
-  "weight": 108
+  "weight": 108,
+  "femaleRatio": null
  },
  {
   "id": "lileep",
@@ -54471,7 +54913,8 @@
    ],
    "hidden": "storm-drain"
   },
-  "weight": 23.8
+  "weight": 23.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "cradily",
@@ -54582,7 +55025,8 @@
    ],
    "hidden": "storm-drain"
   },
-  "weight": 60.4
+  "weight": 60.4,
+  "femaleRatio": 0.125
  },
  {
   "id": "anorith",
@@ -54686,7 +55130,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "armaldo",
@@ -54785,7 +55230,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 68.2
+  "weight": 68.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "feebas",
@@ -54841,7 +55287,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 7.4
+  "weight": 7.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "milotic",
@@ -54968,7 +55415,8 @@
    ],
    "hidden": "cute-charm"
   },
-  "weight": 162
+  "weight": 162,
+  "femaleRatio": 0.5
  },
  {
   "id": "castform",
@@ -55058,7 +55506,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "castform-sunny",
@@ -55152,7 +55601,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "castform-rainy",
@@ -55246,7 +55696,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "castform-snowy",
@@ -55340,7 +55791,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.8
+  "weight": 0.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "kecleon",
@@ -55466,7 +55918,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 22
+  "weight": 22,
+  "femaleRatio": 0.5
  },
  {
   "id": "shuppet",
@@ -55582,7 +56035,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 2.3
+  "weight": 2.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "banette",
@@ -55693,7 +56147,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "banette-mega",
@@ -55807,7 +56262,8 @@
    ],
    "hidden": null
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "duskull",
@@ -55926,7 +56382,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "dusclops",
@@ -56069,7 +56526,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 30.6
+  "weight": 30.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "tropius",
@@ -56189,7 +56647,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": 0.5
  },
  {
   "id": "chimecho",
@@ -56323,7 +56782,8 @@
    ],
    "hidden": null
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "chimecho-mega",
@@ -56462,7 +56922,8 @@
    ],
    "hidden": null
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "absol",
@@ -56581,7 +57042,8 @@
    ],
    "hidden": "justified"
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "absol-mega",
@@ -56703,7 +57165,8 @@
    ],
    "hidden": null
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "absol-mega-z",
@@ -56826,7 +57289,8 @@
    ],
    "hidden": null
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "wynaut",
@@ -56903,7 +57367,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 14
+  "weight": 14,
+  "femaleRatio": 0.5
  },
  {
   "id": "snorunt",
@@ -57023,7 +57488,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 16.8
+  "weight": 16.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "glalie",
@@ -57146,7 +57612,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 256.5
+  "weight": 256.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "glalie-mega",
@@ -57272,7 +57739,8 @@
    ],
    "hidden": null
   },
-  "weight": 256.5
+  "weight": 256.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "spheal",
@@ -57393,7 +57861,8 @@
    ],
    "hidden": "oblivious"
   },
-  "weight": 39.5
+  "weight": 39.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sealeo",
@@ -57518,7 +57987,8 @@
    ],
    "hidden": "oblivious"
   },
-  "weight": 87.6
+  "weight": 87.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "walrein",
@@ -57646,7 +58116,8 @@
    ],
    "hidden": "oblivious"
   },
-  "weight": 150.6
+  "weight": 150.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "clamperl",
@@ -57713,7 +58184,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 52.5
+  "weight": 52.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "huntail",
@@ -57827,7 +58299,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 27
+  "weight": 27,
+  "femaleRatio": 0.5
  },
  {
   "id": "gorebyss",
@@ -57945,7 +58418,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 22.6
+  "weight": 22.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "relicanth",
@@ -58045,7 +58519,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 23.4
+  "weight": 23.4,
+  "femaleRatio": 0.125
  },
  {
   "id": "luvdisc",
@@ -58163,7 +58638,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 8.7
+  "weight": 8.7,
+  "femaleRatio": 0.75
  },
  {
   "id": "bagon",
@@ -58262,7 +58738,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 42.1
+  "weight": 42.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "shelgon",
@@ -58365,7 +58842,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 110.5
+  "weight": 110.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "salamence",
@@ -58488,7 +58966,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 102.6
+  "weight": 102.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "salamence-mega",
@@ -58615,7 +59094,8 @@
    ],
    "hidden": null
   },
-  "weight": 102.6
+  "weight": 102.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "beldum",
@@ -58667,7 +59147,8 @@
    ],
    "hidden": "light-metal"
   },
-  "weight": 95.2
+  "weight": 95.2,
+  "femaleRatio": null
  },
  {
   "id": "metang",
@@ -58779,7 +59260,8 @@
    ],
    "hidden": "light-metal"
   },
-  "weight": 202.5
+  "weight": 202.5,
+  "femaleRatio": null
  },
  {
   "id": "metagross",
@@ -58894,7 +59376,8 @@
    ],
    "hidden": "light-metal"
   },
-  "weight": 550
+  "weight": 550,
+  "femaleRatio": null
  },
  {
   "id": "metagross-mega",
@@ -59013,7 +59496,8 @@
    ],
    "hidden": null
   },
-  "weight": 550
+  "weight": 550,
+  "femaleRatio": null
  },
  {
   "id": "regirock",
@@ -59113,7 +59597,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "regice",
@@ -59213,7 +59698,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 175
+  "weight": 175,
+  "femaleRatio": null
  },
  {
   "id": "registeel",
@@ -59321,7 +59807,8 @@
    ],
    "hidden": "light-metal"
   },
-  "weight": 205
+  "weight": 205,
+  "femaleRatio": null
  },
  {
   "id": "latias",
@@ -59446,7 +59933,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 1
  },
  {
   "id": "latias-mega",
@@ -59575,7 +60063,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 1
  },
  {
   "id": "latios",
@@ -59708,7 +60197,8 @@
    ],
    "hidden": null
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0
  },
  {
   "id": "latios-mega",
@@ -59845,7 +60335,8 @@
    ],
    "hidden": null
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0
  },
  {
   "id": "kyogre",
@@ -59945,7 +60436,8 @@
    ],
    "hidden": null
   },
-  "weight": 352
+  "weight": 352,
+  "femaleRatio": null
  },
  {
   "id": "kyogre-primal",
@@ -60049,7 +60541,8 @@
    ],
    "hidden": null
   },
-  "weight": 352
+  "weight": 352,
+  "femaleRatio": null
  },
  {
   "id": "groudon",
@@ -60149,7 +60642,8 @@
    ],
    "hidden": null
   },
-  "weight": 950
+  "weight": 950,
+  "femaleRatio": null
  },
  {
   "id": "groudon-primal",
@@ -60254,7 +60748,8 @@
    ],
    "hidden": null
   },
-  "weight": 950
+  "weight": 950,
+  "femaleRatio": null
  },
  {
   "id": "rayquaza",
@@ -60359,7 +60854,8 @@
    ],
    "hidden": null
   },
-  "weight": 206.5
+  "weight": 206.5,
+  "femaleRatio": null
  },
  {
   "id": "rayquaza-mega",
@@ -60468,7 +60964,8 @@
    ],
    "hidden": null
   },
-  "weight": 206.5
+  "weight": 206.5,
+  "femaleRatio": null
  },
  {
   "id": "jirachi",
@@ -60581,7 +61078,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.1
+  "weight": 1.1,
+  "femaleRatio": null
  },
  {
   "id": "deoxys",
@@ -60697,7 +61195,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.8
+  "weight": 60.8,
+  "femaleRatio": null
  },
  {
   "id": "deoxys-attack",
@@ -60809,7 +61308,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.8
+  "weight": 60.8,
+  "femaleRatio": null
  },
  {
   "id": "deoxys-defense",
@@ -60929,7 +61429,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.8
+  "weight": 60.8,
+  "femaleRatio": null
  },
  {
   "id": "deoxys-speed",
@@ -61041,7 +61542,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.8
+  "weight": 60.8,
+  "femaleRatio": null
  },
  {
   "id": "turtwig",
@@ -61156,7 +61658,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 10.2
+  "weight": 10.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "grotle",
@@ -61271,7 +61774,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 97
+  "weight": 97,
+  "femaleRatio": 0.125
  },
  {
   "id": "torterra",
@@ -61394,7 +61898,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 310
+  "weight": 310,
+  "femaleRatio": 0.125
  },
  {
   "id": "chimchar",
@@ -61505,7 +62010,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 6.2
+  "weight": 6.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "monferno",
@@ -61633,7 +62139,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 22
+  "weight": 22,
+  "femaleRatio": 0.125
  },
  {
   "id": "infernape",
@@ -61768,7 +62275,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 55
+  "weight": 55,
+  "femaleRatio": 0.125
  },
  {
   "id": "piplup",
@@ -61891,7 +62399,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 5.2
+  "weight": 5.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "prinplup",
@@ -62026,7 +62535,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 23
+  "weight": 23,
+  "femaleRatio": 0.125
  },
  {
   "id": "empoleon",
@@ -62165,7 +62675,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 84.5
+  "weight": 84.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "starly",
@@ -62277,7 +62788,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "staravia",
@@ -62389,7 +62901,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 15.5
+  "weight": 15.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "staraptor",
@@ -62500,7 +63013,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 24.9
+  "weight": 24.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "staraptor-mega",
@@ -62615,7 +63129,8 @@
    ],
    "hidden": null
   },
-  "weight": 24.9
+  "weight": 24.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "bidoof",
@@ -62731,7 +63246,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 0.5
  },
  {
   "id": "bibarel",
@@ -62863,7 +63379,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 31.5
+  "weight": 31.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "kricketot",
@@ -62930,7 +63447,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 2.2
+  "weight": 2.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "kricketune",
@@ -63056,7 +63574,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 25.5
+  "weight": 25.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "shinx",
@@ -63172,7 +63691,8 @@
    ],
    "hidden": "guts"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "luxio",
@@ -63284,7 +63804,8 @@
    ],
    "hidden": "guts"
   },
-  "weight": 30.5
+  "weight": 30.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "luxray",
@@ -63395,7 +63916,8 @@
    ],
    "hidden": "guts"
   },
-  "weight": 42
+  "weight": 42,
+  "femaleRatio": 0.5
  },
  {
   "id": "budew",
@@ -63490,7 +64012,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "roserade",
@@ -63626,7 +64149,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 14.5
+  "weight": 14.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cranidos",
@@ -63753,7 +64277,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 31.5
+  "weight": 31.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "rampardos",
@@ -63879,7 +64404,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 102.5
+  "weight": 102.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "shieldon",
@@ -63983,7 +64509,8 @@
    ],
    "hidden": "soundproof"
   },
-  "weight": 57
+  "weight": 57,
+  "femaleRatio": 0.125
  },
  {
   "id": "bastiodon",
@@ -64094,7 +64621,8 @@
    ],
    "hidden": "soundproof"
   },
-  "weight": 149.5
+  "weight": 149.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "burmy",
@@ -64169,7 +64697,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "wormadam",
@@ -64296,7 +64825,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 1
  },
  {
   "id": "wormadam-sandy",
@@ -64427,7 +64957,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 1
  },
  {
   "id": "wormadam-trash",
@@ -64558,7 +65089,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 1
  },
  {
   "id": "mothim",
@@ -64669,7 +65201,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 23.3
+  "weight": 23.3,
+  "femaleRatio": 0
  },
  {
   "id": "combee",
@@ -64733,7 +65266,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "vespiquen",
@@ -64880,7 +65414,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 38.5
+  "weight": 38.5,
+  "femaleRatio": 1
  },
  {
   "id": "pachirisu",
@@ -64995,7 +65530,8 @@
    ],
    "hidden": "volt-absorb"
   },
-  "weight": 3.9
+  "weight": 3.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "buizel",
@@ -65126,7 +65662,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 29.5
+  "weight": 29.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "floatzel",
@@ -65260,7 +65797,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 33.5
+  "weight": 33.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cherubi",
@@ -65383,7 +65921,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.3
+  "weight": 3.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "cherrim",
@@ -65505,7 +66044,8 @@
    ],
    "hidden": null
   },
-  "weight": 9.3
+  "weight": 9.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "shellos",
@@ -65609,7 +66149,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 6.3
+  "weight": 6.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "gastrodon",
@@ -65713,7 +66254,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 29.9
+  "weight": 29.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "ambipom",
@@ -65828,7 +66370,8 @@
    ],
    "hidden": "skill-link"
   },
-  "weight": 20.3
+  "weight": 20.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "drifloon",
@@ -65965,7 +66508,8 @@
    ],
    "hidden": "flare-boost"
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "drifblim",
@@ -66105,7 +66649,8 @@
    ],
    "hidden": "flare-boost"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "buneary",
@@ -66249,7 +66794,8 @@
    ],
    "hidden": "limber"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "lopunny",
@@ -66412,7 +66958,8 @@
    ],
    "hidden": "limber"
   },
-  "weight": 33.3
+  "weight": 33.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "lopunny-mega",
@@ -66579,7 +67126,8 @@
    ],
    "hidden": null
   },
-  "weight": 33.3
+  "weight": 33.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "mismagius",
@@ -66705,7 +67253,8 @@
    ],
    "hidden": null
   },
-  "weight": 4.4
+  "weight": 4.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "honchkrow",
@@ -66849,7 +67398,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 27.3
+  "weight": 27.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "glameow",
@@ -66973,7 +67523,8 @@
    ],
    "hidden": "keen-eye"
   },
-  "weight": 3.9
+  "weight": 3.9,
+  "femaleRatio": 0.75
  },
  {
   "id": "purugly",
@@ -67104,7 +67655,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 43.8
+  "weight": 43.8,
+  "femaleRatio": 0.75
  },
  {
   "id": "chingling",
@@ -67205,7 +67757,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.6
+  "weight": 0.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "stunky",
@@ -67334,7 +67887,8 @@
    ],
    "hidden": "keen-eye"
   },
-  "weight": 19.2
+  "weight": 19.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "skuntank",
@@ -67462,7 +68016,8 @@
    ],
    "hidden": "keen-eye"
   },
-  "weight": 38
+  "weight": 38,
+  "femaleRatio": 0.5
  },
  {
   "id": "bronzor",
@@ -67579,7 +68134,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 60.5
+  "weight": 60.5,
+  "femaleRatio": null
  },
  {
   "id": "bronzong",
@@ -67707,7 +68263,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 187
+  "weight": 187,
+  "femaleRatio": null
  },
  {
   "id": "bonsly",
@@ -67829,7 +68386,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "mime-jr",
@@ -67989,7 +68547,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": 0.5
  },
  {
   "id": "happiny",
@@ -68099,7 +68658,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 24.4
+  "weight": 24.4,
+  "femaleRatio": 1
  },
  {
   "id": "chatot",
@@ -68231,7 +68791,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 1.9
+  "weight": 1.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "spiritomb",
@@ -68342,7 +68903,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 108
+  "weight": 108,
+  "femaleRatio": 0.5
  },
  {
   "id": "gible",
@@ -68454,7 +69016,8 @@
    ],
    "hidden": "rough-skin"
   },
-  "weight": 20.5
+  "weight": 20.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gabite",
@@ -68570,7 +69133,8 @@
    ],
    "hidden": "rough-skin"
   },
-  "weight": 56
+  "weight": 56,
+  "femaleRatio": 0.5
  },
  {
   "id": "garchomp",
@@ -68685,7 +69249,8 @@
    ],
    "hidden": "rough-skin"
   },
-  "weight": 95
+  "weight": 95,
+  "femaleRatio": 0.5
  },
  {
   "id": "garchomp-mega",
@@ -68804,7 +69369,8 @@
    ],
    "hidden": null
   },
-  "weight": 95
+  "weight": 95,
+  "femaleRatio": 0.5
  },
  {
   "id": "garchomp-mega-z",
@@ -68922,7 +69488,8 @@
    ],
    "hidden": null
   },
-  "weight": 95
+  "weight": 95,
+  "femaleRatio": 0.5
  },
  {
   "id": "munchlax",
@@ -69076,7 +69643,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.125
  },
  {
   "id": "riolu",
@@ -69222,7 +69790,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 20.2
+  "weight": 20.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "lucario",
@@ -69414,7 +69983,8 @@
    ],
    "hidden": "justified"
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.125
  },
  {
   "id": "lucario-mega",
@@ -69609,7 +70179,8 @@
    ],
    "hidden": null
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.125
  },
  {
   "id": "lucario-mega-z",
@@ -69804,7 +70375,8 @@
    ],
    "hidden": null
   },
-  "weight": 54
+  "weight": 54,
+  "femaleRatio": 0.125
  },
  {
   "id": "hippopotas",
@@ -69915,7 +70487,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 49.5
+  "weight": 49.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "hippowdon",
@@ -70033,7 +70606,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 300
+  "weight": 300,
+  "femaleRatio": 0.5
  },
  {
   "id": "skorupi",
@@ -70158,7 +70732,8 @@
    ],
    "hidden": "keen-eye"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "drapion",
@@ -70290,7 +70865,8 @@
    ],
    "hidden": "keen-eye"
   },
-  "weight": 61.5
+  "weight": 61.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "croagunk",
@@ -70419,7 +70995,8 @@
    ],
    "hidden": "poison-touch"
   },
-  "weight": 23
+  "weight": 23,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxicroak",
@@ -70543,7 +71120,8 @@
    ],
    "hidden": "poison-touch"
   },
-  "weight": 44.4
+  "weight": 44.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "carnivine",
@@ -70661,7 +71239,8 @@
    ],
    "hidden": null
   },
-  "weight": 27
+  "weight": 27,
+  "femaleRatio": 0.5
  },
  {
   "id": "finneon",
@@ -70785,7 +71364,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.5
  },
  {
   "id": "lumineon",
@@ -70904,7 +71484,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 24
+  "weight": 24,
+  "femaleRatio": 0.5
  },
  {
   "id": "mantyke",
@@ -71015,7 +71596,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 65
+  "weight": 65,
+  "femaleRatio": 0.5
  },
  {
   "id": "snover",
@@ -71119,7 +71701,8 @@
    ],
    "hidden": "soundproof"
   },
-  "weight": 50.5
+  "weight": 50.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "abomasnow",
@@ -71226,7 +71809,8 @@
    ],
    "hidden": "soundproof"
   },
-  "weight": 135.5
+  "weight": 135.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "abomasnow-mega",
@@ -71337,7 +71921,8 @@
    ],
    "hidden": null
   },
-  "weight": 135.5
+  "weight": 135.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "weavile",
@@ -71480,7 +72065,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 34
+  "weight": 34,
+  "femaleRatio": 0.5
  },
  {
   "id": "magnezone",
@@ -71616,7 +72202,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 180
+  "weight": 180,
+  "femaleRatio": null
  },
  {
   "id": "lickilicky",
@@ -71747,7 +72334,8 @@
    ],
    "hidden": "cloud-nine"
   },
-  "weight": 140
+  "weight": 140,
+  "femaleRatio": 0.5
  },
  {
   "id": "rhyperior",
@@ -71887,7 +72475,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 282.8
+  "weight": 282.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "tangrowth",
@@ -72022,7 +72611,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 128.6
+  "weight": 128.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "electivire",
@@ -72144,7 +72734,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 138.6
+  "weight": 138.6,
+  "femaleRatio": 0.25
  },
  {
   "id": "magmortar",
@@ -72266,7 +72857,8 @@
    ],
    "hidden": "vital-spirit"
   },
-  "weight": 68
+  "weight": 68,
+  "femaleRatio": 0.25
  },
  {
   "id": "togekiss",
@@ -72418,7 +73010,8 @@
    ],
    "hidden": "super-luck"
   },
-  "weight": 38
+  "weight": 38,
+  "femaleRatio": 0.125
  },
  {
   "id": "yanmega",
@@ -72558,7 +73151,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 51.5
+  "weight": 51.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "leafeon",
@@ -72708,7 +73302,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 25.5
+  "weight": 25.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "glaceon",
@@ -72854,7 +73449,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 25.9
+  "weight": 25.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "gliscor",
@@ -73002,7 +73598,8 @@
    ],
    "hidden": "poison-heal"
   },
-  "weight": 42.5
+  "weight": 42.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "mamoswine",
@@ -73150,7 +73747,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 291
+  "weight": 291,
+  "femaleRatio": 0.5
  },
  {
   "id": "porygon-z",
@@ -73285,7 +73883,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 34
+  "weight": 34,
+  "femaleRatio": null
  },
  {
   "id": "gallade",
@@ -73461,7 +74060,8 @@
    ],
    "hidden": "justified"
   },
-  "weight": 52
+  "weight": 52,
+  "femaleRatio": 0
  },
  {
   "id": "gallade-mega",
@@ -73640,7 +74240,8 @@
    ],
    "hidden": null
   },
-  "weight": 52
+  "weight": 52,
+  "femaleRatio": 0
  },
  {
   "id": "probopass",
@@ -73784,7 +74385,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 340
+  "weight": 340,
+  "femaleRatio": 0.5
  },
  {
   "id": "dusknoir",
@@ -73926,7 +74528,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 106.6
+  "weight": 106.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "froslass",
@@ -74069,7 +74672,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 26.6
+  "weight": 26.6,
+  "femaleRatio": 1
  },
  {
   "id": "froslass-mega",
@@ -74216,7 +74820,8 @@
    ],
    "hidden": null
   },
-  "weight": 26.6
+  "weight": 26.6,
+  "femaleRatio": 1
  },
  {
   "id": "rotom",
@@ -74327,7 +74932,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "rotom-heat",
@@ -74446,7 +75052,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "rotom-wash",
@@ -74565,7 +75172,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "rotom-frost",
@@ -74684,7 +75292,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "rotom-fan",
@@ -74803,7 +75412,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "rotom-mow",
@@ -74922,7 +75532,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "uxie",
@@ -75074,7 +75685,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "mesprit",
@@ -75230,7 +75842,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "azelf",
@@ -75386,7 +75999,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  },
  {
   "id": "dialga",
@@ -75491,7 +76105,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 683
+  "weight": 683,
+  "femaleRatio": null
  },
  {
   "id": "dialga-origin",
@@ -75600,7 +76215,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 683
+  "weight": 683,
+  "femaleRatio": null
  },
  {
   "id": "palkia",
@@ -75709,7 +76325,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 336
+  "weight": 336,
+  "femaleRatio": null
  },
  {
   "id": "palkia-origin",
@@ -75822,7 +76439,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 336
+  "weight": 336,
+  "femaleRatio": null
  },
  {
   "id": "heatran",
@@ -75927,7 +76545,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 430
+  "weight": 430,
+  "femaleRatio": 0.5
  },
  {
   "id": "heatran-mega",
@@ -76036,7 +76655,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 430
+  "weight": 430,
+  "femaleRatio": 0.5
  },
  {
   "id": "regigigas",
@@ -76184,7 +76804,8 @@
    ],
    "hidden": null
   },
-  "weight": 420
+  "weight": 420,
+  "femaleRatio": null
  },
  {
   "id": "giratina",
@@ -76293,7 +76914,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 750
+  "weight": 750,
+  "femaleRatio": null
  },
  {
   "id": "giratina-origin",
@@ -76406,7 +77028,8 @@
    ],
    "hidden": null
   },
-  "weight": 750
+  "weight": 750,
+  "femaleRatio": null
  },
  {
   "id": "cresselia",
@@ -76514,7 +77137,8 @@
    ],
    "hidden": null
   },
-  "weight": 85.6
+  "weight": 85.6,
+  "femaleRatio": 1
  },
  {
   "id": "phione",
@@ -76622,7 +77246,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.1
+  "weight": 3.1,
+  "femaleRatio": null
  },
  {
   "id": "manaphy",
@@ -76734,7 +77359,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.4
+  "weight": 1.4,
+  "femaleRatio": null
  },
  {
   "id": "darkrai",
@@ -76862,7 +77488,8 @@
    ],
    "hidden": null
   },
-  "weight": 50.5
+  "weight": 50.5,
+  "femaleRatio": null
  },
  {
   "id": "darkrai-mega",
@@ -76994,7 +77621,8 @@
    ],
    "hidden": null
   },
-  "weight": 50.5
+  "weight": 50.5,
+  "femaleRatio": null
  },
  {
   "id": "shaymin",
@@ -77126,7 +77754,8 @@
    ],
    "hidden": null
   },
-  "weight": 2.1
+  "weight": 2.1,
+  "femaleRatio": null
  },
  {
   "id": "shaymin-sky",
@@ -77243,7 +77872,8 @@
    ],
    "hidden": null
   },
-  "weight": 2.1
+  "weight": 2.1,
+  "femaleRatio": null
  },
  {
   "id": "arceus",
@@ -77363,7 +77993,8 @@
    ],
    "hidden": null
   },
-  "weight": 320
+  "weight": 320,
+  "femaleRatio": null
  },
  {
   "id": "victini",
@@ -77480,7 +78111,8 @@
    ],
    "hidden": null
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": null
  },
  {
   "id": "snivy",
@@ -77587,7 +78219,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 8.1
+  "weight": 8.1,
+  "femaleRatio": 0.125
  },
  {
   "id": "servine",
@@ -77694,7 +78327,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.125
  },
  {
   "id": "serperior",
@@ -77796,7 +78430,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 63
+  "weight": 63,
+  "femaleRatio": 0.125
  },
  {
   "id": "tepig",
@@ -77903,7 +78538,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 9.9
+  "weight": 9.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "pignite",
@@ -78015,7 +78651,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 55.5
+  "weight": 55.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "emboar",
@@ -78126,7 +78763,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 150
+  "weight": 150,
+  "femaleRatio": 0.125
  },
  {
   "id": "emboar-mega",
@@ -78241,7 +78879,8 @@
    ],
    "hidden": null
   },
-  "weight": 150
+  "weight": 150,
+  "femaleRatio": 0.125
  },
  {
   "id": "oshawott",
@@ -78356,7 +78995,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 5.9
+  "weight": 5.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "dewott",
@@ -78476,7 +79116,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 24.5
+  "weight": 24.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "samurott",
@@ -78590,7 +79231,8 @@
    ],
    "hidden": "shell-armor"
   },
-  "weight": 94.6
+  "weight": 94.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "samurott-hisui",
@@ -78714,7 +79356,8 @@
    ],
    "hidden": "sharpness"
   },
-  "weight": 94.6
+  "weight": 94.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "patrat",
@@ -78826,7 +79469,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 11.6
+  "weight": 11.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "watchog",
@@ -78945,7 +79589,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 27
+  "weight": 27,
+  "femaleRatio": 0.5
  },
  {
   "id": "lillipup",
@@ -79049,7 +79694,8 @@
    ],
    "hidden": "run-away"
   },
-  "weight": 4.1
+  "weight": 4.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "herdier",
@@ -79153,7 +79799,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 14.7
+  "weight": 14.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "stoutland",
@@ -79264,7 +79911,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0.5
  },
  {
   "id": "purrloin",
@@ -79376,7 +80024,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 10.1
+  "weight": 10.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "liepard",
@@ -79483,7 +80132,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 37.5
+  "weight": 37.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pansage",
@@ -79590,7 +80240,8 @@
    ],
    "hidden": "overgrow"
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "simisage",
@@ -79692,7 +80343,8 @@
    ],
    "hidden": "overgrow"
   },
-  "weight": 30.5
+  "weight": 30.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "pansear",
@@ -79799,7 +80451,8 @@
    ],
    "hidden": "blaze"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.125
  },
  {
   "id": "simisear",
@@ -79901,7 +80554,8 @@
    ],
    "hidden": "blaze"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.125
  },
  {
   "id": "panpour",
@@ -80008,7 +80662,8 @@
    ],
    "hidden": "torrent"
   },
-  "weight": 13.5
+  "weight": 13.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "simipour",
@@ -80110,7 +80765,8 @@
    ],
    "hidden": "torrent"
   },
-  "weight": 29
+  "weight": 29,
+  "femaleRatio": 0.125
  },
  {
   "id": "munna",
@@ -80234,7 +80890,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 23.3
+  "weight": 23.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "musharna",
@@ -80341,7 +80998,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 60.5
+  "weight": 60.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pidove",
@@ -80446,7 +81104,8 @@
    ],
    "hidden": "rivalry"
   },
-  "weight": 2.1
+  "weight": 2.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "tranquill",
@@ -80551,7 +81210,8 @@
    ],
    "hidden": "rivalry"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "unfezant",
@@ -80651,7 +81311,8 @@
    ],
    "hidden": "rivalry"
   },
-  "weight": 29
+  "weight": 29,
+  "femaleRatio": 0.5
  },
  {
   "id": "blitzle",
@@ -80747,7 +81408,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 29.8
+  "weight": 29.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "zebstrika",
@@ -80842,7 +81504,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 79.5
+  "weight": 79.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "roggenrola",
@@ -80938,7 +81601,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "boldore",
@@ -81038,7 +81702,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 102
+  "weight": 102,
+  "femaleRatio": 0.5
  },
  {
   "id": "gigalith",
@@ -81133,7 +81798,8 @@
    ],
    "hidden": "sand-force"
   },
-  "weight": 260
+  "weight": 260,
+  "femaleRatio": 0.5
  },
  {
   "id": "woobat",
@@ -81238,7 +81904,8 @@
    ],
    "hidden": "simple"
   },
-  "weight": 2.1
+  "weight": 2.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "swoobat",
@@ -81338,7 +82005,8 @@
    ],
    "hidden": "simple"
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "drilbur",
@@ -81446,7 +82114,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "excadrill",
@@ -81558,7 +82227,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 40.4
+  "weight": 40.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "excadrill-mega",
@@ -81673,7 +82343,8 @@
    ],
    "hidden": null
   },
-  "weight": 40.4
+  "weight": 40.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "audino",
@@ -81796,7 +82467,8 @@
    ],
    "hidden": "klutz"
   },
-  "weight": 31
+  "weight": 31,
+  "femaleRatio": 0.5
  },
  {
   "id": "audino-mega",
@@ -81923,7 +82595,8 @@
    ],
    "hidden": null
   },
-  "weight": 31
+  "weight": 31,
+  "femaleRatio": 0.5
  },
  {
   "id": "timburr",
@@ -82035,7 +82708,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.25
  },
  {
   "id": "gurdurr",
@@ -82147,7 +82821,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.25
  },
  {
   "id": "conkeldurr",
@@ -82254,7 +82929,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 87
+  "weight": 87,
+  "femaleRatio": 0.25
  },
  {
   "id": "tympole",
@@ -82358,7 +83034,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 4.5
+  "weight": 4.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "palpitoad",
@@ -82463,7 +83140,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 17
+  "weight": 17,
+  "femaleRatio": 0.5
  },
  {
   "id": "seismitoad",
@@ -82571,7 +83249,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 62
+  "weight": 62,
+  "femaleRatio": 0.5
  },
  {
   "id": "throh",
@@ -82674,7 +83353,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 55.5
+  "weight": 55.5,
+  "femaleRatio": 0
  },
  {
   "id": "sawk",
@@ -82777,7 +83457,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 51
+  "weight": 51,
+  "femaleRatio": 0
  },
  {
   "id": "sewaddle",
@@ -82858,7 +83539,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "swadloon",
@@ -82947,7 +83629,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 7.3
+  "weight": 7.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "leavanny",
@@ -83043,7 +83726,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 20.5
+  "weight": 20.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "venipede",
@@ -83152,7 +83836,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 5.3
+  "weight": 5.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "whirlipede",
@@ -83265,7 +83950,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 58.5
+  "weight": 58.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "scolipede",
@@ -83381,7 +84067,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 200.5
+  "weight": 200.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "scolipede-mega",
@@ -83500,7 +84187,8 @@
    ],
    "hidden": null
   },
-  "weight": 200.5
+  "weight": 200.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cottonee",
@@ -83613,7 +84301,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 0.6
+  "weight": 0.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "whimsicott",
@@ -83741,7 +84430,8 @@
    ],
    "hidden": "chlorophyll"
   },
-  "weight": 6.6
+  "weight": 6.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "petilil",
@@ -83870,7 +84560,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 6.6
+  "weight": 6.6,
+  "femaleRatio": 1
  },
  {
   "id": "lilligant",
@@ -83993,7 +84684,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 16.3
+  "weight": 16.3,
+  "femaleRatio": 1
  },
  {
   "id": "lilligant-hisui",
@@ -84154,7 +84846,8 @@
    ],
    "hidden": "leaf-guard"
   },
-  "weight": 16.3
+  "weight": 16.3,
+  "femaleRatio": 1
  },
  {
   "id": "basculin",
@@ -84269,7 +84962,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "basculin-white-striped",
@@ -84389,7 +85083,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandile",
@@ -84510,7 +85205,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 15.2
+  "weight": 15.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "krokorok",
@@ -84631,7 +85327,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 33.4
+  "weight": 33.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "krookodile",
@@ -84751,7 +85448,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 96.3
+  "weight": 96.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "darumaka",
@@ -84866,7 +85564,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 37.5
+  "weight": 37.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "darumaka-galar",
@@ -84970,7 +85669,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 37.5
+  "weight": 37.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "darmanitan",
@@ -85088,7 +85788,8 @@
    ],
    "hidden": "zen-mode"
   },
-  "weight": 92.9
+  "weight": 92.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "darmanitan-zen",
@@ -85211,7 +85912,8 @@
    ],
    "hidden": "zen-mode"
   },
-  "weight": 92.9
+  "weight": 92.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "darmanitan-galar-standard",
@@ -85314,7 +86016,8 @@
    ],
    "hidden": "zen-mode"
   },
-  "weight": 92.9
+  "weight": 92.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "darmanitan-galar-zen",
@@ -85437,7 +86140,8 @@
    ],
    "hidden": "zen-mode"
   },
-  "weight": 92.9
+  "weight": 92.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "maractus",
@@ -85560,7 +86264,8 @@
    ],
    "hidden": "storm-drain"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "dwebble",
@@ -85665,7 +86370,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 14.5
+  "weight": 14.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "crustle",
@@ -85765,7 +86471,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 200
+  "weight": 200,
+  "femaleRatio": 0.5
  },
  {
   "id": "scraggy",
@@ -85886,7 +86593,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 11.8
+  "weight": 11.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "scrafty",
@@ -86002,7 +86710,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "scrafty-mega",
@@ -86121,7 +86830,8 @@
    ],
    "hidden": null
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "sigilyph",
@@ -86237,7 +86947,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 14
+  "weight": 14,
+  "femaleRatio": 0.5
  },
  {
   "id": "yamask",
@@ -86348,7 +87059,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "yamask-galar",
@@ -86461,7 +87173,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cofagrigus",
@@ -86575,7 +87288,8 @@
    ],
    "hidden": null
   },
-  "weight": 76.5
+  "weight": 76.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "tirtouga",
@@ -86696,7 +87410,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 16.5
+  "weight": 16.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "carracosta",
@@ -86812,7 +87527,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 81
+  "weight": 81,
+  "femaleRatio": 0.125
  },
  {
   "id": "archen",
@@ -86928,7 +87644,8 @@
    ],
    "hidden": null
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "archeops",
@@ -87043,7 +87760,8 @@
    ],
    "hidden": null
   },
-  "weight": 32
+  "weight": 32,
+  "femaleRatio": 0.125
  },
  {
   "id": "trubbish",
@@ -87159,7 +87877,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 31
+  "weight": 31,
+  "femaleRatio": 0.5
  },
  {
   "id": "garbodor",
@@ -87274,7 +87993,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 107.3
+  "weight": 107.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "garbodor-gmax",
@@ -87393,7 +88113,8 @@
    ],
    "hidden": "aftermath"
   },
-  "weight": 107.3
+  "weight": 107.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "zorua",
@@ -87508,7 +88229,8 @@
    ],
    "hidden": null
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "zorua-hisui",
@@ -87629,7 +88351,8 @@
    ],
    "hidden": null
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "zoroark",
@@ -87747,7 +88470,8 @@
    ],
    "hidden": null
   },
-  "weight": 81.1
+  "weight": 81.1,
+  "femaleRatio": 0.125
  },
  {
   "id": "zoroark-hisui",
@@ -87871,7 +88595,8 @@
    ],
    "hidden": null
   },
-  "weight": 81.1
+  "weight": 81.1,
+  "femaleRatio": 0.125
  },
  {
   "id": "minccino",
@@ -87987,7 +88712,8 @@
    ],
    "hidden": "skill-link"
   },
-  "weight": 5.8
+  "weight": 5.8,
+  "femaleRatio": 0.75
  },
  {
   "id": "cinccino",
@@ -88090,7 +88816,8 @@
    ],
    "hidden": "skill-link"
   },
-  "weight": 7.5
+  "weight": 7.5,
+  "femaleRatio": 0.75
  },
  {
   "id": "gothita",
@@ -88210,7 +88937,8 @@
    ],
    "hidden": "shadow-tag"
   },
-  "weight": 5.8
+  "weight": 5.8,
+  "femaleRatio": 0.75
  },
  {
   "id": "gothorita",
@@ -88330,7 +89058,8 @@
    ],
    "hidden": "shadow-tag"
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.75
  },
  {
   "id": "gothitelle",
@@ -88445,7 +89174,8 @@
    ],
    "hidden": "shadow-tag"
   },
-  "weight": 44
+  "weight": 44,
+  "femaleRatio": 0.75
  },
  {
   "id": "solosis",
@@ -88569,7 +89299,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "duosion",
@@ -88693,7 +89424,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "reuniclus",
@@ -88820,7 +89552,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 20.1
+  "weight": 20.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "ducklett",
@@ -88925,7 +89658,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "swanna",
@@ -89025,7 +89759,8 @@
    ],
    "hidden": "hydration"
   },
-  "weight": 24.2
+  "weight": 24.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "vanillite",
@@ -89129,7 +89864,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 5.7
+  "weight": 5.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "vanillish",
@@ -89233,7 +89969,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 41
+  "weight": 41,
+  "femaleRatio": 0.5
  },
  {
   "id": "vanilluxe",
@@ -89344,7 +90081,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 57.5
+  "weight": 57.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "deerling",
@@ -89457,7 +90195,8 @@
    ],
    "hidden": "serene-grace"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sawsbuck",
@@ -89573,7 +90312,8 @@
    ],
    "hidden": "serene-grace"
   },
-  "weight": 92.5
+  "weight": 92.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "emolga",
@@ -89676,7 +90416,8 @@
    ],
    "hidden": "motor-drive"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.5
  },
  {
   "id": "karrablast",
@@ -89780,7 +90521,8 @@
    ],
    "hidden": "no-guard"
   },
-  "weight": 5.9
+  "weight": 5.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "escavalier",
@@ -89916,7 +90658,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.5
  },
  {
   "id": "foongus",
@@ -90024,7 +90767,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "amoonguss",
@@ -90127,7 +90871,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "frillish",
@@ -90248,7 +90993,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.5
  },
  {
   "id": "jellicent",
@@ -90368,7 +91114,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 135
+  "weight": 135,
+  "femaleRatio": 0.5
  },
  {
   "id": "alomomola",
@@ -90479,7 +91226,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 31.6
+  "weight": 31.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "joltik",
@@ -90592,7 +91340,8 @@
    ],
    "hidden": "swarm"
   },
-  "weight": 0.6
+  "weight": 0.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "galvantula",
@@ -90704,7 +91453,8 @@
    ],
    "hidden": "swarm"
   },
-  "weight": 14.3
+  "weight": 14.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "ferroseed",
@@ -90808,7 +91558,8 @@
    ],
    "hidden": null
   },
-  "weight": 18.8
+  "weight": 18.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "ferrothorn",
@@ -90915,7 +91666,8 @@
    ],
    "hidden": "anticipation"
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": 0.5
  },
  {
   "id": "klink",
@@ -91019,7 +91771,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 21
+  "weight": 21,
+  "femaleRatio": null
  },
  {
   "id": "klang",
@@ -91123,7 +91876,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 51
+  "weight": 51,
+  "femaleRatio": null
  },
  {
   "id": "klinklang",
@@ -91234,7 +91988,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 81
+  "weight": 81,
+  "femaleRatio": null
  },
  {
   "id": "tynamo",
@@ -91293,7 +92048,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "eelektrik",
@@ -91396,7 +92152,8 @@
    ],
    "hidden": null
   },
-  "weight": 22
+  "weight": 22,
+  "femaleRatio": 0.5
  },
  {
   "id": "eelektross",
@@ -91478,7 +92235,8 @@
    ],
    "hidden": null
   },
-  "weight": 80.5
+  "weight": 80.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "eelektross-mega",
@@ -91564,7 +92322,8 @@
    ],
    "hidden": null
   },
-  "weight": 80.5
+  "weight": 80.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "elgyem",
@@ -91684,7 +92443,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 0.5
  },
  {
   "id": "beheeyem",
@@ -91803,7 +92563,8 @@
    ],
    "hidden": "analytic"
   },
-  "weight": 34.5
+  "weight": 34.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "litwick",
@@ -91916,7 +92677,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 3.1
+  "weight": 3.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "lampent",
@@ -92029,7 +92791,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": 0.5
  },
  {
   "id": "chandelure",
@@ -92137,7 +92900,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 34.3
+  "weight": 34.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "chandelure-mega",
@@ -92248,7 +93012,8 @@
    ],
    "hidden": null
   },
-  "weight": 34.3
+  "weight": 34.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "axew",
@@ -92376,7 +93141,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "fraxure",
@@ -92504,7 +93270,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 36
+  "weight": 36,
+  "femaleRatio": 0.5
  },
  {
   "id": "haxorus",
@@ -92627,7 +93394,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 105.5
+  "weight": 105.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cubchoo",
@@ -92743,7 +93511,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "beartic",
@@ -92866,7 +93635,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 260
+  "weight": 260,
+  "femaleRatio": 0.5
  },
  {
   "id": "cryogonal",
@@ -92988,7 +93758,8 @@
    ],
    "hidden": null
   },
-  "weight": 148
+  "weight": 148,
+  "femaleRatio": null
  },
  {
   "id": "shelmet",
@@ -93096,7 +93867,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 7.7
+  "weight": 7.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "accelgor",
@@ -93231,7 +94003,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 25.3
+  "weight": 25.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "stunfisk",
@@ -93351,7 +94124,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "stunfisk-galar",
@@ -93455,7 +94229,8 @@
    ],
    "hidden": null
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "mienfoo",
@@ -93571,7 +94346,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 20
+  "weight": 20,
+  "femaleRatio": 0.5
  },
  {
   "id": "mienshao",
@@ -93686,7 +94462,8 @@
    ],
    "hidden": "reckless"
   },
-  "weight": 35.5
+  "weight": 35.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "druddigon",
@@ -93797,7 +94574,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 139
+  "weight": 139,
+  "femaleRatio": 0.5
  },
  {
   "id": "golett",
@@ -93918,7 +94696,8 @@
    ],
    "hidden": "no-guard"
   },
-  "weight": 92
+  "weight": 92,
+  "femaleRatio": null
  },
  {
   "id": "golurk",
@@ -94038,7 +94817,8 @@
    ],
    "hidden": "no-guard"
   },
-  "weight": 330
+  "weight": 330,
+  "femaleRatio": null
  },
  {
   "id": "golurk-mega",
@@ -94161,7 +94941,8 @@
    ],
    "hidden": null
   },
-  "weight": 330
+  "weight": 330,
+  "femaleRatio": null
  },
  {
   "id": "pawniard",
@@ -94278,7 +95059,8 @@
    ],
    "hidden": "pressure"
   },
-  "weight": 10.2
+  "weight": 10.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "bisharp",
@@ -94399,7 +95181,8 @@
    ],
    "hidden": "pressure"
   },
-  "weight": 70
+  "weight": 70,
+  "femaleRatio": 0.5
  },
  {
   "id": "bouffalant",
@@ -94502,7 +95285,8 @@
    ],
    "hidden": "soundproof"
   },
-  "weight": 94.5
+  "weight": 94.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "rufflet",
@@ -94632,7 +95416,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0
  },
  {
   "id": "braviary",
@@ -94744,7 +95529,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 41
+  "weight": 41,
+  "femaleRatio": 0
  },
  {
   "id": "braviary-hisui",
@@ -94877,7 +95663,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 41
+  "weight": 41,
+  "femaleRatio": 0
  },
  {
   "id": "vullaby",
@@ -94998,7 +95785,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 1
  },
  {
   "id": "mandibuzz",
@@ -95126,7 +95914,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 39.5
+  "weight": 39.5,
+  "femaleRatio": 1
  },
  {
   "id": "heatmor",
@@ -95245,7 +96034,8 @@
    ],
    "hidden": "white-smoke"
   },
-  "weight": 58
+  "weight": 58,
+  "femaleRatio": 0.5
  },
  {
   "id": "durant",
@@ -95349,7 +96139,8 @@
    ],
    "hidden": "truant"
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.5
  },
  {
   "id": "deino",
@@ -95465,7 +96256,8 @@
    ],
    "hidden": null
   },
-  "weight": 17.3
+  "weight": 17.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "zweilous",
@@ -95585,7 +96377,8 @@
    ],
    "hidden": null
   },
-  "weight": 50
+  "weight": 50,
+  "femaleRatio": 0.5
  },
  {
   "id": "hydreigon",
@@ -95708,7 +96501,8 @@
    ],
    "hidden": null
   },
-  "weight": 160
+  "weight": 160,
+  "femaleRatio": 0.5
  },
  {
   "id": "larvesta",
@@ -95812,7 +96606,8 @@
    ],
    "hidden": "swarm"
   },
-  "weight": 28.8
+  "weight": 28.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "volcarona",
@@ -95951,7 +96746,8 @@
    ],
    "hidden": "swarm"
   },
-  "weight": 46
+  "weight": 46,
+  "femaleRatio": 0.5
  },
  {
   "id": "cobalion",
@@ -96048,7 +96844,8 @@
    ],
    "hidden": null
   },
-  "weight": 250
+  "weight": 250,
+  "femaleRatio": null
  },
  {
   "id": "terrakion",
@@ -96141,7 +96938,8 @@
    ],
    "hidden": null
   },
-  "weight": 260
+  "weight": 260,
+  "femaleRatio": null
  },
  {
   "id": "virizion",
@@ -96242,7 +97040,8 @@
    ],
    "hidden": null
   },
-  "weight": 200
+  "weight": 200,
+  "femaleRatio": null
  },
  {
   "id": "tornadus",
@@ -96370,7 +97169,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 63
+  "weight": 63,
+  "femaleRatio": 0
  },
  {
   "id": "tornadus-therian",
@@ -96502,7 +97302,8 @@
    ],
    "hidden": null
   },
-  "weight": 63
+  "weight": 63,
+  "femaleRatio": 0
  },
  {
   "id": "thundurus",
@@ -96643,7 +97444,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0
  },
  {
   "id": "thundurus-therian",
@@ -96788,7 +97590,8 @@
    ],
    "hidden": null
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0
  },
  {
   "id": "reshiram",
@@ -96893,7 +97696,8 @@
    ],
    "hidden": null
   },
-  "weight": 330
+  "weight": 330,
+  "femaleRatio": null
  },
  {
   "id": "zekrom",
@@ -96998,7 +97802,8 @@
    ],
    "hidden": null
   },
-  "weight": 345
+  "weight": 345,
+  "femaleRatio": null
  },
  {
   "id": "landorus",
@@ -97139,7 +97944,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 68
+  "weight": 68,
+  "femaleRatio": 0
  },
  {
   "id": "landorus-therian",
@@ -97284,7 +98090,8 @@
    ],
    "hidden": null
   },
-  "weight": 68
+  "weight": 68,
+  "femaleRatio": 0
  },
  {
   "id": "kyurem",
@@ -97393,7 +98200,8 @@
    ],
    "hidden": null
   },
-  "weight": 325
+  "weight": 325,
+  "femaleRatio": null
  },
  {
   "id": "kyurem-black",
@@ -97506,7 +98314,8 @@
    ],
    "hidden": null
   },
-  "weight": 325
+  "weight": 325,
+  "femaleRatio": null
  },
  {
   "id": "kyurem-white",
@@ -97619,7 +98428,8 @@
    ],
    "hidden": null
   },
-  "weight": 325
+  "weight": 325,
+  "femaleRatio": null
  },
  {
   "id": "keldeo",
@@ -97720,7 +98530,8 @@
    ],
    "hidden": null
   },
-  "weight": 48.5
+  "weight": 48.5,
+  "femaleRatio": null
  },
  {
   "id": "meloetta",
@@ -97825,7 +98636,8 @@
    ],
    "hidden": null
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": null
  },
  {
   "id": "meloetta-pirouette",
@@ -97934,7 +98746,8 @@
    ],
    "hidden": null
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": null
  },
  {
   "id": "genesect",
@@ -98055,7 +98868,8 @@
    ],
    "hidden": null
   },
-  "weight": 82.5
+  "weight": 82.5,
+  "femaleRatio": null
  },
  {
   "id": "chespin",
@@ -98154,7 +98968,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 0.125
  },
  {
   "id": "quilladin",
@@ -98257,7 +99072,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 29
+  "weight": 29,
+  "femaleRatio": 0.125
  },
  {
   "id": "chesnaught",
@@ -98376,7 +99192,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.125
  },
  {
   "id": "chesnaught-mega",
@@ -98499,7 +99316,8 @@
    ],
    "hidden": null
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.125
  },
  {
   "id": "fennekin",
@@ -98606,7 +99424,8 @@
    ],
    "hidden": "magician"
   },
-  "weight": 9.4
+  "weight": 9.4,
+  "femaleRatio": 0.125
  },
  {
   "id": "braixen",
@@ -98713,7 +99532,8 @@
    ],
    "hidden": "magician"
   },
-  "weight": 14.5
+  "weight": 14.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "delphox",
@@ -98836,7 +99656,8 @@
    ],
    "hidden": "magician"
   },
-  "weight": 39
+  "weight": 39,
+  "femaleRatio": 0.125
  },
  {
   "id": "delphox-mega",
@@ -98963,7 +99784,8 @@
    ],
    "hidden": null
   },
-  "weight": 39
+  "weight": 39,
+  "femaleRatio": 0.125
  },
  {
   "id": "froakie",
@@ -99066,7 +99888,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.125
  },
  {
   "id": "frogadier",
@@ -99169,7 +99992,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 10.9
+  "weight": 10.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "greninja",
@@ -99288,7 +100112,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.125
  },
  {
   "id": "greninja-ash",
@@ -99411,7 +100236,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.125
  },
  {
   "id": "greninja-mega",
@@ -99534,7 +100360,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.125
  },
  {
   "id": "bunnelby",
@@ -99654,7 +100481,8 @@
    ],
    "hidden": "huge-power"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.5
  },
  {
   "id": "diggersby",
@@ -99774,7 +100602,8 @@
    ],
    "hidden": "huge-power"
   },
-  "weight": 42.4
+  "weight": 42.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "fletchling",
@@ -99886,7 +100715,8 @@
    ],
    "hidden": "gale-wings"
   },
-  "weight": 1.7
+  "weight": 1.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "fletchinder",
@@ -100002,7 +100832,8 @@
    ],
    "hidden": "gale-wings"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.5
  },
  {
   "id": "talonflame",
@@ -100121,7 +100952,8 @@
    ],
    "hidden": "gale-wings"
   },
-  "weight": 24.5
+  "weight": 24.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "scatterbug",
@@ -100181,7 +101013,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "spewpa",
@@ -100232,7 +101065,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 8.4
+  "weight": 8.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "vivillon",
@@ -100336,7 +101170,8 @@
    ],
    "hidden": "friend-guard"
   },
-  "weight": 17
+  "weight": 17,
+  "femaleRatio": 0.5
  },
  {
   "id": "litleo",
@@ -100441,7 +101276,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 13.5
+  "weight": 13.5,
+  "femaleRatio": 0.875
  },
  {
   "id": "pyroar",
@@ -100545,7 +101381,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 81.5
+  "weight": 81.5,
+  "femaleRatio": 0.875
  },
  {
   "id": "pyroar-mega",
@@ -100652,7 +101489,8 @@
    ],
    "hidden": null
   },
-  "weight": 81.5
+  "weight": 81.5,
+  "femaleRatio": 0.875
  },
  {
   "id": "flabebe",
@@ -100755,7 +101593,8 @@
    ],
    "hidden": "symbiosis"
   },
-  "weight": 0.1
+  "weight": 0.1,
+  "femaleRatio": 1
  },
  {
   "id": "floette",
@@ -100858,7 +101697,8 @@
    ],
    "hidden": "symbiosis"
   },
-  "weight": 0.9
+  "weight": 0.9,
+  "femaleRatio": 1
  },
  {
   "id": "floette-eternal",
@@ -100960,7 +101800,8 @@
    ],
    "hidden": "symbiosis"
   },
-  "weight": 0.9
+  "weight": 0.9,
+  "femaleRatio": 1
  },
  {
   "id": "floette-mega",
@@ -101062,7 +101903,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.9
+  "weight": 0.9,
+  "femaleRatio": 1
  },
  {
   "id": "florges",
@@ -101160,7 +102002,8 @@
    ],
    "hidden": "symbiosis"
   },
-  "weight": 10
+  "weight": 10,
+  "femaleRatio": 1
  },
  {
   "id": "skiddo",
@@ -101267,7 +102110,8 @@
    ],
    "hidden": "grass-pelt"
   },
-  "weight": 31
+  "weight": 31,
+  "femaleRatio": 0.5
  },
  {
   "id": "gogoat",
@@ -101377,7 +102221,8 @@
    ],
    "hidden": "grass-pelt"
   },
-  "weight": 91
+  "weight": 91,
+  "femaleRatio": 0.5
  },
  {
   "id": "pancham",
@@ -101485,7 +102330,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "pangoro",
@@ -101601,7 +102447,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 136
+  "weight": 136,
+  "femaleRatio": 0.5
  },
  {
   "id": "furfrou",
@@ -101691,7 +102538,8 @@
    ],
    "hidden": null
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "espurr",
@@ -101779,7 +102627,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowstic",
@@ -101898,7 +102747,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowstic-female",
@@ -102025,7 +102875,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowstic-male-mega",
@@ -102147,7 +102998,8 @@
    ],
    "hidden": null
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "meowstic-female-mega",
@@ -102269,7 +103121,8 @@
    ],
    "hidden": null
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "honedge",
@@ -102373,7 +103226,8 @@
    ],
    "hidden": null
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "doublade",
@@ -102477,7 +103331,8 @@
    ],
    "hidden": null
   },
-  "weight": 4.5
+  "weight": 4.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "aegislash",
@@ -102584,7 +103439,8 @@
    ],
    "hidden": null
   },
-  "weight": 53
+  "weight": 53,
+  "femaleRatio": 0.5
  },
  {
   "id": "aegislash-blade",
@@ -102695,7 +103551,8 @@
    ],
    "hidden": null
   },
-  "weight": 53
+  "weight": 53,
+  "femaleRatio": 0.5
  },
  {
   "id": "spritzee",
@@ -102802,7 +103659,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "aromatisse",
@@ -102920,7 +103778,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 15.5
+  "weight": 15.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "swirlix",
@@ -103031,7 +103890,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "slurpuff",
@@ -103141,7 +104001,8 @@
    ],
    "hidden": "unburden"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.5
  },
  {
   "id": "inkay",
@@ -103258,7 +104119,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "malamar",
@@ -103378,7 +104240,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "malamar-mega",
@@ -103501,7 +104364,8 @@
    ],
    "hidden": null
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "binacle",
@@ -103610,7 +104474,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 31
+  "weight": 31,
+  "femaleRatio": 0.5
  },
  {
   "id": "barbaracle",
@@ -103722,7 +104587,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 96
+  "weight": 96,
+  "femaleRatio": 0.5
  },
  {
   "id": "barbaracle-mega",
@@ -103837,7 +104703,8 @@
    ],
    "hidden": null
   },
-  "weight": 96
+  "weight": 96,
+  "femaleRatio": 0.5
  },
  {
   "id": "skrelp",
@@ -103942,7 +104809,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 7.3
+  "weight": 7.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragalge",
@@ -104058,7 +104926,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 81.5
+  "weight": 81.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragalge-mega",
@@ -104177,7 +105046,8 @@
    ],
    "hidden": null
   },
-  "weight": 81.5
+  "weight": 81.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "clauncher",
@@ -104284,7 +105154,8 @@
    ],
    "hidden": null
   },
-  "weight": 8.3
+  "weight": 8.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "clawitzer",
@@ -104398,7 +105269,8 @@
    ],
    "hidden": null
   },
-  "weight": 35.3
+  "weight": 35.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "helioptile",
@@ -104499,7 +105371,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "heliolisk",
@@ -104595,7 +105468,8 @@
    ],
    "hidden": "solar-power"
   },
-  "weight": 21
+  "weight": 21,
+  "femaleRatio": 0.5
  },
  {
   "id": "tyrunt",
@@ -104703,7 +105577,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 26
+  "weight": 26,
+  "femaleRatio": 0.125
  },
  {
   "id": "tyrantrum",
@@ -104814,7 +105689,8 @@
    ],
    "hidden": "rock-head"
   },
-  "weight": 270
+  "weight": 270,
+  "femaleRatio": 0.125
  },
  {
   "id": "amaura",
@@ -104934,7 +105810,8 @@
    ],
    "hidden": "snow-warning"
   },
-  "weight": 25.2
+  "weight": 25.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "aurorus",
@@ -105049,7 +105926,8 @@
    ],
    "hidden": "snow-warning"
   },
-  "weight": 225
+  "weight": 225,
+  "femaleRatio": 0.125
  },
  {
   "id": "sylveon",
@@ -105199,7 +106077,8 @@
    ],
    "hidden": "pixilate"
   },
-  "weight": 23.5
+  "weight": 23.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "hawlucha",
@@ -105315,7 +106194,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 21.5
+  "weight": 21.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "hawlucha-mega",
@@ -105434,7 +106314,8 @@
    ],
    "hidden": null
   },
-  "weight": 21.5
+  "weight": 21.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "dedenne",
@@ -105542,7 +106423,8 @@
    ],
    "hidden": "plus"
   },
-  "weight": 2.2
+  "weight": 2.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "carbink",
@@ -105653,7 +106535,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 5.7
+  "weight": 5.7,
+  "femaleRatio": null
  },
  {
   "id": "goomy",
@@ -105770,7 +106653,8 @@
    ],
    "hidden": "gooey"
   },
-  "weight": 2.8
+  "weight": 2.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "sliggoo",
@@ -105878,7 +106762,8 @@
    ],
    "hidden": "gooey"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sliggoo-hisui",
@@ -106000,7 +106885,8 @@
    ],
    "hidden": "gooey"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "goodra",
@@ -106123,7 +107009,8 @@
    ],
    "hidden": "gooey"
   },
-  "weight": 150.5
+  "weight": 150.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "goodra-hisui",
@@ -106256,7 +107143,8 @@
    ],
    "hidden": "gooey"
   },
-  "weight": 150.5
+  "weight": 150.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "klefki",
@@ -106367,7 +107255,8 @@
    ],
    "hidden": "magician"
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.5
  },
  {
   "id": "phantump",
@@ -106476,7 +107365,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.5
  },
  {
   "id": "trevenant",
@@ -106584,7 +107474,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 71
+  "weight": 71,
+  "femaleRatio": 0.5
  },
  {
   "id": "pumpkaboo",
@@ -106681,7 +107572,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pumpkaboo-small",
@@ -106782,7 +107674,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pumpkaboo-large",
@@ -106883,7 +107776,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pumpkaboo-super",
@@ -106984,7 +107878,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gourgeist",
@@ -107088,7 +107983,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gourgeist-small",
@@ -107196,7 +108092,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gourgeist-large",
@@ -107304,7 +108201,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "gourgeist-super",
@@ -107412,7 +108310,8 @@
    ],
    "hidden": "insomnia"
   },
-  "weight": 9.5
+  "weight": 9.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "bergmite",
@@ -107537,7 +108436,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 99.5
+  "weight": 99.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "avalugg",
@@ -107660,7 +108560,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 505
+  "weight": 505,
+  "femaleRatio": 0.5
  },
  {
   "id": "avalugg-hisui",
@@ -107793,7 +108694,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 505
+  "weight": 505,
+  "femaleRatio": 0.5
  },
  {
   "id": "noibat",
@@ -107910,7 +108812,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "noivern",
@@ -108034,7 +108937,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 85
+  "weight": 85,
+  "femaleRatio": 0.5
  },
  {
   "id": "xerneas",
@@ -108150,7 +109054,8 @@
    ],
    "hidden": null
   },
-  "weight": 215
+  "weight": 215,
+  "femaleRatio": null
  },
  {
   "id": "yveltal",
@@ -108271,7 +109176,8 @@
    ],
    "hidden": null
   },
-  "weight": 203
+  "weight": 203,
+  "femaleRatio": null
  },
  {
   "id": "zygarde",
@@ -108392,7 +109298,8 @@
    ],
    "hidden": null
   },
-  "weight": 305
+  "weight": 305,
+  "femaleRatio": null
  },
  {
   "id": "zygarde-complete",
@@ -108517,7 +109424,8 @@
    ],
    "hidden": null
   },
-  "weight": 305
+  "weight": 305,
+  "femaleRatio": null
  },
  {
   "id": "zygarde-10",
@@ -108642,7 +109550,8 @@
    ],
    "hidden": null
   },
-  "weight": 305
+  "weight": 305,
+  "femaleRatio": null
  },
  {
   "id": "zygarde-mega",
@@ -108761,7 +109670,8 @@
    "icon": "6/718-mega",
    "cry": "718-mega"
   },
-  "weight": 305
+  "weight": 305,
+  "femaleRatio": null
  },
  {
   "id": "diancie",
@@ -108882,7 +109792,8 @@
    ],
    "hidden": null
   },
-  "weight": 8.8
+  "weight": 8.8,
+  "femaleRatio": null
  },
  {
   "id": "diancie-mega",
@@ -109007,7 +109918,8 @@
    ],
    "hidden": null
   },
-  "weight": 8.8
+  "weight": 8.8,
+  "femaleRatio": null
  },
  {
   "id": "hoopa",
@@ -109124,7 +110036,8 @@
    ],
    "hidden": null
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": null
  },
  {
   "id": "hoopa-unbound",
@@ -109237,7 +110150,8 @@
    ],
    "hidden": null
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": null
  },
  {
   "id": "volcanion",
@@ -109354,7 +110268,8 @@
    ],
    "hidden": null
   },
-  "weight": 195
+  "weight": 195,
+  "femaleRatio": null
  },
  {
   "id": "rowlet",
@@ -109490,7 +110405,8 @@
    ],
    "hidden": "long-reach"
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "dartrix",
@@ -109631,7 +110547,8 @@
    ],
    "hidden": "long-reach"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.125
  },
  {
   "id": "decidueye",
@@ -109758,7 +110675,8 @@
    ],
    "hidden": "long-reach"
   },
-  "weight": 36.6
+  "weight": 36.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "decidueye-hisui",
@@ -109890,7 +110808,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 36.6
+  "weight": 36.6,
+  "femaleRatio": 0.125
  },
  {
   "id": "litten",
@@ -109997,7 +110916,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 4.3
+  "weight": 4.3,
+  "femaleRatio": 0.125
  },
  {
   "id": "torracat",
@@ -110104,7 +111024,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.125
  },
  {
   "id": "incineroar",
@@ -110223,7 +111144,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 83
+  "weight": 83,
+  "femaleRatio": 0.125
  },
  {
   "id": "popplio",
@@ -110330,7 +111252,8 @@
    ],
    "hidden": "liquid-voice"
   },
-  "weight": 7.5
+  "weight": 7.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "brionne",
@@ -110437,7 +111360,8 @@
    ],
    "hidden": "liquid-voice"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "primarina",
@@ -110544,7 +111468,8 @@
    ],
    "hidden": "liquid-voice"
   },
-  "weight": 44
+  "weight": 44,
+  "femaleRatio": 0.125
  },
  {
   "id": "pikipek",
@@ -110641,7 +111566,8 @@
    ],
    "hidden": "pickup"
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "trumbeak",
@@ -110742,7 +111668,8 @@
    ],
    "hidden": "pickup"
   },
-  "weight": 14.8
+  "weight": 14.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "toucannon",
@@ -110842,7 +111769,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 26
+  "weight": 26,
+  "femaleRatio": 0.5
  },
  {
   "id": "yungoos",
@@ -110950,7 +111878,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "gumshoos",
@@ -111053,7 +111982,8 @@
    ],
    "hidden": "adaptability"
   },
-  "weight": 14.2
+  "weight": 14.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "grubbin",
@@ -111140,7 +112070,8 @@
    ],
    "hidden": null
   },
-  "weight": 4.4
+  "weight": 4.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "charjabug",
@@ -111240,7 +112171,8 @@
    ],
    "hidden": null
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "vikavolt",
@@ -111363,7 +112295,8 @@
    ],
    "hidden": null
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "crabrawler",
@@ -111475,7 +112408,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 7
+  "weight": 7,
+  "femaleRatio": 0.5
  },
  {
   "id": "crabominable",
@@ -111583,7 +112517,8 @@
    ],
    "hidden": "anger-point"
   },
-  "weight": 180
+  "weight": 180,
+  "femaleRatio": 0.5
  },
  {
   "id": "crabominable-mega",
@@ -111694,7 +112629,8 @@
    ],
    "hidden": null
   },
-  "weight": 180
+  "weight": 180,
+  "femaleRatio": 0.5
  },
  {
   "id": "oricorio",
@@ -111801,7 +112737,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 0.75
  },
  {
   "id": "oricorio-pom-pom",
@@ -111912,7 +112849,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 0.75
  },
  {
   "id": "oricorio-pau",
@@ -112023,7 +112961,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 0.75
  },
  {
   "id": "oricorio-sensu",
@@ -112134,7 +113073,8 @@
    ],
    "hidden": null
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 0.75
  },
  {
   "id": "cutiefly",
@@ -112231,7 +113171,8 @@
    ],
    "hidden": "sweet-veil"
   },
-  "weight": 0.2
+  "weight": 0.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "ribombee",
@@ -112327,7 +113268,8 @@
    ],
    "hidden": "sweet-veil"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "rockruff",
@@ -112443,7 +113385,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 9.2
+  "weight": 9.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "lycanroc",
@@ -112562,7 +113505,8 @@
    ],
    "hidden": "steadfast"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.5
  },
  {
   "id": "lycanroc-midnight",
@@ -112685,7 +113629,8 @@
    ],
    "hidden": "no-guard"
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.5
  },
  {
   "id": "lycanroc-dusk",
@@ -112831,7 +113776,8 @@
    ],
    "hidden": null
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": 0.5
  },
  {
   "id": "wishiwashi",
@@ -112933,7 +113879,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "wishiwashi-school",
@@ -113039,7 +113986,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "mareanie",
@@ -113136,7 +114084,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxapex",
@@ -113236,7 +114185,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 14.5
+  "weight": 14.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "mudbray",
@@ -113344,7 +114294,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": 0.5
  },
  {
   "id": "mudsdale",
@@ -113447,7 +114398,8 @@
    ],
    "hidden": "inner-focus"
   },
-  "weight": 920
+  "weight": 920,
+  "femaleRatio": 0.5
  },
  {
   "id": "dewpider",
@@ -113559,7 +114511,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "araquanid",
@@ -113666,7 +114619,8 @@
    ],
    "hidden": "water-absorb"
   },
-  "weight": 82
+  "weight": 82,
+  "femaleRatio": 0.5
  },
  {
   "id": "fomantis",
@@ -113757,7 +114711,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "lurantis",
@@ -113855,7 +114810,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 18.5
+  "weight": 18.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "morelull",
@@ -113960,7 +114916,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "shiinotic",
@@ -114060,7 +115017,8 @@
    ],
    "hidden": "rain-dish"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "salandit",
@@ -114172,7 +115130,8 @@
    ],
    "hidden": "oblivious"
   },
-  "weight": 4.8
+  "weight": 4.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "salazzle",
@@ -114311,7 +115270,8 @@
    ],
    "hidden": "oblivious"
   },
-  "weight": 22.2
+  "weight": 22.2,
+  "femaleRatio": 1
  },
  {
   "id": "stufful",
@@ -114416,7 +115376,8 @@
    ],
    "hidden": "cute-charm"
   },
-  "weight": 6.8
+  "weight": 6.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "bewear",
@@ -114520,7 +115481,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 135
+  "weight": 135,
+  "femaleRatio": 0.5
  },
  {
   "id": "bounsweet",
@@ -114604,7 +115566,8 @@
    ],
    "hidden": "sweet-veil"
   },
-  "weight": 3.2
+  "weight": 3.2,
+  "femaleRatio": 1
  },
  {
   "id": "steenee",
@@ -114704,7 +115667,8 @@
    ],
    "hidden": "sweet-veil"
   },
-  "weight": 8.2
+  "weight": 8.2,
+  "femaleRatio": 1
  },
  {
   "id": "tsareena",
@@ -114819,7 +115783,8 @@
    ],
    "hidden": "sweet-veil"
   },
-  "weight": 21.4
+  "weight": 21.4,
+  "femaleRatio": 1
  },
  {
   "id": "comfey",
@@ -114942,7 +115907,8 @@
    ],
    "hidden": "natural-cure"
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": 0.75
  },
  {
   "id": "oranguru",
@@ -115042,7 +116008,8 @@
    ],
    "hidden": "symbiosis"
   },
-  "weight": 76
+  "weight": 76,
+  "femaleRatio": 0.5
  },
  {
   "id": "passimian",
@@ -115140,7 +116107,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 82.8
+  "weight": 82.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "wimpod",
@@ -115196,7 +116164,8 @@
    ],
    "hidden": null
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "golisopod",
@@ -115299,7 +116268,8 @@
    ],
    "hidden": null
   },
-  "weight": 108
+  "weight": 108,
+  "femaleRatio": 0.5
  },
  {
   "id": "golisopod-mega",
@@ -115406,7 +116376,8 @@
    ],
    "hidden": null
   },
-  "weight": 108
+  "weight": 108,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandygast",
@@ -115506,7 +116477,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 70
+  "weight": 70,
+  "femaleRatio": 0.5
  },
  {
   "id": "palossand",
@@ -115601,7 +116573,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 250
+  "weight": 250,
+  "femaleRatio": 0.5
  },
  {
   "id": "pyukumuku",
@@ -115707,7 +116680,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 1.2
+  "weight": 1.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "type-null",
@@ -115824,7 +116798,8 @@
    ],
    "hidden": null
   },
-  "weight": 120.5
+  "weight": 120.5,
+  "femaleRatio": null
  },
  {
   "id": "silvally",
@@ -115972,7 +116947,8 @@
    ],
    "hidden": null
   },
-  "weight": 100.5
+  "weight": 100.5,
+  "femaleRatio": null
  },
  {
   "id": "minior",
@@ -116071,7 +117047,8 @@
    ],
    "hidden": null
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": null
  },
  {
   "id": "minior-core",
@@ -116174,7 +117151,8 @@
   "form": {
    "kind": "battle",
    "base": "minior"
-  }
+  },
+  "femaleRatio": null
  },
  {
   "id": "komala",
@@ -116264,7 +117242,8 @@
    ],
    "hidden": null
   },
-  "weight": 19.9
+  "weight": 19.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "turtonator",
@@ -116363,7 +117342,8 @@
    ],
    "hidden": null
   },
-  "weight": 212
+  "weight": 212,
+  "femaleRatio": 0.5
  },
  {
   "id": "togedemaru",
@@ -116463,7 +117443,8 @@
    ],
    "hidden": "sturdy"
   },
-  "weight": 3.3
+  "weight": 3.3,
+  "femaleRatio": 0.5
  },
  {
   "id": "mimikyu",
@@ -116566,7 +117547,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.7
+  "weight": 0.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "mimikyu-busted",
@@ -116673,7 +117655,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.7
+  "weight": 0.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "bruxish",
@@ -116765,7 +117748,8 @@
    ],
    "hidden": "wonder-skin"
   },
-  "weight": 19
+  "weight": 19,
+  "femaleRatio": 0.5
  },
  {
   "id": "drampa",
@@ -116865,7 +117849,8 @@
    ],
    "hidden": "cloud-nine"
   },
-  "weight": 185
+  "weight": 185,
+  "femaleRatio": 0.5
  },
  {
   "id": "drampa-mega",
@@ -116968,7 +117953,8 @@
    ],
    "hidden": null
   },
-  "weight": 185
+  "weight": 185,
+  "femaleRatio": 0.5
  },
  {
   "id": "dhelmise",
@@ -117079,7 +118065,8 @@
    ],
    "hidden": null
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": null
  },
  {
   "id": "jangmo-o",
@@ -117179,7 +118166,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 29.7
+  "weight": 29.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "hakamo-o",
@@ -117292,7 +118280,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 47
+  "weight": 47,
+  "femaleRatio": 0.5
  },
  {
   "id": "kommo-o",
@@ -117416,7 +118405,8 @@
    ],
    "hidden": "overcoat"
   },
-  "weight": 78.2
+  "weight": 78.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "tapu-koko",
@@ -117533,7 +118523,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 20.5
+  "weight": 20.5,
+  "femaleRatio": null
  },
  {
   "id": "tapu-lele",
@@ -117646,7 +118637,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 18.6
+  "weight": 18.6,
+  "femaleRatio": null
  },
  {
   "id": "tapu-bulu",
@@ -117767,7 +118759,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 45.5
+  "weight": 45.5,
+  "femaleRatio": null
  },
  {
   "id": "tapu-fini",
@@ -117888,7 +118881,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 21.2
+  "weight": 21.2,
+  "femaleRatio": null
  },
  {
   "id": "cosmog",
@@ -117941,7 +118935,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.1
+  "weight": 0.1,
+  "femaleRatio": null
  },
  {
   "id": "cosmoem",
@@ -117998,7 +118993,8 @@
    ],
    "hidden": null
   },
-  "weight": 999.9
+  "weight": 999.9,
+  "femaleRatio": null
  },
  {
   "id": "solgaleo",
@@ -118111,7 +119107,8 @@
    ],
    "hidden": null
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "lunala",
@@ -118220,7 +119217,8 @@
    ],
    "hidden": null
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": null
  },
  {
   "id": "nihilego",
@@ -118339,7 +119337,8 @@
    ],
    "hidden": null
   },
-  "weight": 55.5
+  "weight": 55.5,
+  "femaleRatio": null
  },
  {
   "id": "buzzwole",
@@ -118458,7 +119457,8 @@
    ],
    "hidden": null
   },
-  "weight": 333.6
+  "weight": 333.6,
+  "femaleRatio": null
  },
  {
   "id": "pheromosa",
@@ -118577,7 +119577,8 @@
    ],
    "hidden": null
   },
-  "weight": 25
+  "weight": 25,
+  "femaleRatio": null
  },
  {
   "id": "xurkitree",
@@ -118691,7 +119692,8 @@
    ],
    "hidden": null
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": null
  },
  {
   "id": "celesteela",
@@ -118806,7 +119808,8 @@
    ],
    "hidden": null
   },
-  "weight": 999.9
+  "weight": 999.9,
+  "femaleRatio": null
  },
  {
   "id": "kartana",
@@ -118921,7 +119924,8 @@
    ],
    "hidden": null
   },
-  "weight": 0.1
+  "weight": 0.1,
+  "femaleRatio": null
  },
  {
   "id": "guzzlord",
@@ -119048,7 +120052,8 @@
    ],
    "hidden": null
   },
-  "weight": 888
+  "weight": 888,
+  "femaleRatio": null
  },
  {
   "id": "necrozma",
@@ -119164,7 +120169,8 @@
    ],
    "hidden": null
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "necrozma-dusk",
@@ -119289,7 +120295,8 @@
    ],
    "hidden": null
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "necrozma-dawn",
@@ -119414,7 +120421,8 @@
    ],
    "hidden": null
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "necrozma-ultra",
@@ -119535,7 +120543,8 @@
    ],
    "hidden": null
   },
-  "weight": 230
+  "weight": 230,
+  "femaleRatio": null
  },
  {
   "id": "magearna",
@@ -119680,7 +120689,8 @@
    ],
    "hidden": null
   },
-  "weight": 80.5
+  "weight": 80.5,
+  "femaleRatio": null
  },
  {
   "id": "magearna-mega",
@@ -119829,7 +120839,8 @@
    ],
    "hidden": null
   },
-  "weight": 80.5
+  "weight": 80.5,
+  "femaleRatio": null
  },
  {
   "id": "magearna-original-mega",
@@ -119978,7 +120989,8 @@
    ],
    "hidden": null
   },
-  "weight": 80.5
+  "weight": 80.5,
+  "femaleRatio": null
  },
  {
   "id": "marshadow",
@@ -120103,7 +121115,8 @@
    ],
    "hidden": null
   },
-  "weight": 22.2
+  "weight": 22.2,
+  "femaleRatio": null
  },
  {
   "id": "poipole",
@@ -120202,7 +121215,8 @@
    ],
    "hidden": null
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": null
  },
  {
   "id": "naganadel",
@@ -120309,7 +121323,8 @@
    ],
    "hidden": null
   },
-  "weight": 150
+  "weight": 150,
+  "femaleRatio": null
  },
  {
   "id": "stakataka",
@@ -120416,7 +121431,8 @@
    ],
    "hidden": null
   },
-  "weight": 820
+  "weight": 820,
+  "femaleRatio": null
  },
  {
   "id": "blacephalon",
@@ -120527,7 +121543,8 @@
    ],
    "hidden": null
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": null
  },
  {
   "id": "zeraora",
@@ -120639,7 +121656,8 @@
    ],
    "hidden": null
   },
-  "weight": 44.5
+  "weight": 44.5,
+  "femaleRatio": null
  },
  {
   "id": "zeraora-mega",
@@ -120755,7 +121773,8 @@
    ],
    "hidden": null
   },
-  "weight": 44.5
+  "weight": 44.5,
+  "femaleRatio": null
  },
  {
   "id": "meltan",
@@ -120828,7 +121847,8 @@
    ],
    "hidden": null
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": null
  },
  {
   "id": "melmetal",
@@ -120928,7 +121948,8 @@
    ],
    "hidden": null
   },
-  "weight": 800
+  "weight": 800,
+  "femaleRatio": null
  },
  {
   "id": "melmetal-gmax",
@@ -121032,7 +122053,8 @@
    ],
    "hidden": null
   },
-  "weight": 800
+  "weight": 800,
+  "femaleRatio": null
  },
  {
   "id": "grookey",
@@ -121119,7 +122141,8 @@
    ],
    "hidden": "grassy-surge"
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": 0.125
  },
  {
   "id": "thwackey",
@@ -121210,7 +122233,8 @@
    ],
    "hidden": "grassy-surge"
   },
-  "weight": 14
+  "weight": 14,
+  "femaleRatio": 0.125
  },
  {
   "id": "rillaboom",
@@ -121312,7 +122336,8 @@
    ],
    "hidden": "grassy-surge"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.125
  },
  {
   "id": "rillaboom-gmax",
@@ -121418,7 +122443,8 @@
    ],
    "hidden": "grassy-surge"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.125
  },
  {
   "id": "scorbunny",
@@ -121505,7 +122531,8 @@
    ],
    "hidden": "libero"
   },
-  "weight": 4.5
+  "weight": 4.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "raboot",
@@ -121592,7 +122619,8 @@
    ],
    "hidden": "libero"
   },
-  "weight": 9
+  "weight": 9,
+  "femaleRatio": 0.125
  },
  {
   "id": "cinderace",
@@ -121686,7 +122714,8 @@
    ],
    "hidden": "libero"
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.125
  },
  {
   "id": "cinderace-gmax",
@@ -121784,7 +122813,8 @@
    ],
    "hidden": "libero"
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.125
  },
  {
   "id": "sobble",
@@ -121871,7 +122901,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.125
  },
  {
   "id": "drizzile",
@@ -121958,7 +122989,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 11.5
+  "weight": 11.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "inteleon",
@@ -122052,7 +123084,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 45.2
+  "weight": 45.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "inteleon-gmax",
@@ -122150,7 +123183,8 @@
    ],
    "hidden": "sniper"
   },
-  "weight": 45.2
+  "weight": 45.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "skwovet",
@@ -122245,7 +123279,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "greedent",
@@ -122339,7 +123374,8 @@
    ],
    "hidden": "gluttony"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "rookidee",
@@ -122427,7 +123463,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "corvisquire",
@@ -122515,7 +123552,8 @@
    ],
    "hidden": "big-pecks"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.5
  },
  {
   "id": "corviknight",
@@ -122615,7 +123653,8 @@
    ],
    "hidden": "mirror-armor"
   },
-  "weight": 75
+  "weight": 75,
+  "femaleRatio": 0.5
  },
  {
   "id": "corviknight-gmax",
@@ -122719,7 +123758,8 @@
    ],
    "hidden": "mirror-armor"
   },
-  "weight": 75
+  "weight": 75,
+  "femaleRatio": 0.5
  },
  {
   "id": "blipbug",
@@ -122767,7 +123807,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "dottler",
@@ -122828,7 +123869,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 19.5
+  "weight": 19.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "orbeetle",
@@ -122932,7 +123974,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 40.8
+  "weight": 40.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "orbeetle-gmax",
@@ -123040,7 +124083,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 40.8
+  "weight": 40.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "nickit",
@@ -123124,7 +124168,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 8.9
+  "weight": 8.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "thievul",
@@ -123211,7 +124256,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 19.9
+  "weight": 19.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "gossifleur",
@@ -123299,7 +124345,8 @@
    ],
    "hidden": "effect-spore"
   },
-  "weight": 2.2
+  "weight": 2.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "eldegoss",
@@ -123390,7 +124437,8 @@
    ],
    "hidden": "effect-spore"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "wooloo",
@@ -123482,7 +124530,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "dubwool",
@@ -123573,7 +124622,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 43
+  "weight": 43,
+  "femaleRatio": 0.5
  },
  {
   "id": "chewtle",
@@ -123653,7 +124703,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 8.5
+  "weight": 8.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "drednaw",
@@ -123749,7 +124800,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 115.5
+  "weight": 115.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "drednaw-gmax",
@@ -123849,7 +124901,8 @@
    ],
    "hidden": "swift-swim"
   },
-  "weight": 115.5
+  "weight": 115.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "yamper",
@@ -123936,7 +124989,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 13.5
+  "weight": 13.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "boltund",
@@ -124026,7 +125080,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 34
+  "weight": 34,
+  "femaleRatio": 0.5
  },
  {
   "id": "rolycoly",
@@ -124110,7 +125165,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.5
  },
  {
   "id": "carkol",
@@ -124207,7 +125263,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 78
+  "weight": 78,
+  "femaleRatio": 0.5
  },
  {
   "id": "coalossal",
@@ -124303,7 +125360,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 310.5
+  "weight": 310.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "coalossal-gmax",
@@ -124403,7 +125461,8 @@
    ],
    "hidden": "flash-fire"
   },
-  "weight": 310.5
+  "weight": 310.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "applin",
@@ -124464,7 +125523,8 @@
    ],
    "hidden": "bulletproof"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "flapple",
@@ -124572,7 +125632,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "flapple-gmax",
@@ -124684,7 +125745,8 @@
    ],
    "hidden": "hustle"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "appletun",
@@ -124792,7 +125854,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": 0.5
  },
  {
   "id": "appletun-gmax",
@@ -124904,7 +125967,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 13
+  "weight": 13,
+  "femaleRatio": 0.5
  },
  {
   "id": "silicobra",
@@ -124996,7 +126060,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 7.6
+  "weight": 7.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandaconda",
@@ -125087,7 +126152,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 65.5
+  "weight": 65.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "sandaconda-gmax",
@@ -125182,7 +126248,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 65.5
+  "weight": 65.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "cramorant",
@@ -125273,7 +126340,8 @@
    ],
    "hidden": null
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "cramorant-gulping",
@@ -125368,7 +126436,8 @@
    ],
    "hidden": null
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "cramorant-gorging",
@@ -125463,7 +126532,8 @@
    ],
    "hidden": null
   },
-  "weight": 18
+  "weight": 18,
+  "femaleRatio": 0.5
  },
  {
   "id": "arrokuda",
@@ -125546,7 +126616,8 @@
    ],
    "hidden": "propeller-tail"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "barraskewda",
@@ -125628,7 +126699,8 @@
    ],
    "hidden": "propeller-tail"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxel",
@@ -125703,7 +126775,8 @@
    ],
    "hidden": "klutz"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxtricity",
@@ -125843,7 +126916,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxtricity-low-key",
@@ -125987,7 +127061,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxtricity-amped-gmax",
@@ -126131,7 +127206,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "toxtricity-low-key-gmax",
@@ -126275,7 +127351,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "sizzlipede",
@@ -126372,7 +127449,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "centiskorch",
@@ -126468,7 +127546,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "centiskorch-gmax",
@@ -126568,7 +127647,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "clobbopus",
@@ -126655,7 +127735,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "grapploct",
@@ -126749,7 +127830,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 39
+  "weight": 39,
+  "femaleRatio": 0.5
  },
  {
   "id": "sinistea",
@@ -126840,7 +127922,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 0.2
+  "weight": 0.2,
+  "femaleRatio": null
  },
  {
   "id": "polteageist",
@@ -126942,7 +128025,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 0.4
+  "weight": 0.4,
+  "femaleRatio": null
  },
  {
   "id": "hatenna",
@@ -127034,7 +128118,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 3.4
+  "weight": 3.4,
+  "femaleRatio": 1
  },
  {
   "id": "hattrem",
@@ -127130,7 +128215,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 4.8
+  "weight": 4.8,
+  "femaleRatio": 1
  },
  {
   "id": "hatterene",
@@ -127230,7 +128316,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 5.1
+  "weight": 5.1,
+  "femaleRatio": 1
  },
  {
   "id": "hatterene-gmax",
@@ -127334,7 +128421,8 @@
    ],
    "hidden": "magic-bounce"
   },
-  "weight": 5.1
+  "weight": 5.1,
+  "femaleRatio": 1
  },
  {
   "id": "impidimp",
@@ -127431,7 +128519,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 5.5
+  "weight": 5.5,
+  "femaleRatio": 0
  },
  {
   "id": "morgrem",
@@ -127536,7 +128625,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 12.5
+  "weight": 12.5,
+  "femaleRatio": 0
  },
  {
   "id": "grimmsnarl",
@@ -127648,7 +128738,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0
  },
  {
   "id": "grimmsnarl-gmax",
@@ -127764,7 +128855,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0
  },
  {
   "id": "obstagoon",
@@ -127888,7 +128980,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 46
+  "weight": 46,
+  "femaleRatio": 0.5
  },
  {
   "id": "perrserker",
@@ -127991,7 +129084,8 @@
    ],
    "hidden": "steely-spirit"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "cursola",
@@ -128085,7 +129179,8 @@
    ],
    "hidden": "perish-body"
   },
-  "weight": 0.4
+  "weight": 0.4,
+  "femaleRatio": 0.75
  },
  {
   "id": "sirfetchd",
@@ -128195,7 +129290,8 @@
    ],
    "hidden": "scrappy"
   },
-  "weight": 117
+  "weight": 117,
+  "femaleRatio": 0.5
  },
  {
   "id": "mr-rime",
@@ -128355,7 +129451,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 58.2
+  "weight": 58.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "runerigus",
@@ -128466,7 +129563,8 @@
    ],
    "hidden": null
   },
-  "weight": 66.6
+  "weight": 66.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "milcery",
@@ -128561,7 +129659,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": 1
  },
  {
   "id": "alcremie",
@@ -128655,7 +129754,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 1
  },
  {
   "id": "alcremie-gmax",
@@ -128753,7 +129853,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 0.5
+  "weight": 0.5,
+  "femaleRatio": 1
  },
  {
   "id": "falinks",
@@ -128847,7 +129948,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 62
+  "weight": 62,
+  "femaleRatio": null
  },
  {
   "id": "falinks-mega",
@@ -128945,7 +130047,8 @@
    ],
    "hidden": null
   },
-  "weight": 62
+  "weight": 62,
+  "femaleRatio": null
  },
  {
   "id": "pincurchin",
@@ -129039,7 +130142,8 @@
    ],
    "hidden": "electric-surge"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "snom",
@@ -129091,7 +130195,8 @@
    ],
    "hidden": "ice-scales"
   },
-  "weight": 3.8
+  "weight": 3.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "frosmoth",
@@ -129206,7 +130311,8 @@
    ],
    "hidden": "ice-scales"
   },
-  "weight": 42
+  "weight": 42,
+  "femaleRatio": 0.5
  },
  {
   "id": "stonjourner",
@@ -129296,7 +130402,8 @@
    ],
    "hidden": null
   },
-  "weight": 520
+  "weight": 520,
+  "femaleRatio": 0.5
  },
  {
   "id": "eiscue",
@@ -129386,7 +130493,8 @@
    ],
    "hidden": null
   },
-  "weight": 89
+  "weight": 89,
+  "femaleRatio": 0.5
  },
  {
   "id": "eiscue-noice",
@@ -129480,7 +130588,8 @@
    ],
    "hidden": null
   },
-  "weight": 89
+  "weight": 89,
+  "femaleRatio": 0.5
  },
  {
   "id": "indeedee",
@@ -129576,7 +130685,8 @@
    ],
    "hidden": "psychic-surge"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "indeedee-female",
@@ -129672,7 +130782,8 @@
    ],
    "hidden": "psychic-surge"
   },
-  "weight": 28
+  "weight": 28,
+  "femaleRatio": 0.5
  },
  {
   "id": "morpeko",
@@ -129767,7 +130878,8 @@
    ],
    "hidden": null
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.5
  },
  {
   "id": "morpeko-hangry",
@@ -129866,7 +130978,8 @@
    ],
    "hidden": null
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.5
  },
  {
   "id": "cufant",
@@ -129961,7 +131074,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 100
+  "weight": 100,
+  "femaleRatio": 0.5
  },
  {
   "id": "copperajah",
@@ -130055,7 +131169,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 650
+  "weight": 650,
+  "femaleRatio": 0.5
  },
  {
   "id": "copperajah-gmax",
@@ -130153,7 +131268,8 @@
    ],
    "hidden": "heavy-metal"
   },
-  "weight": 650
+  "weight": 650,
+  "femaleRatio": 0.5
  },
  {
   "id": "dracozolt",
@@ -130245,7 +131361,8 @@
    ],
    "hidden": "sand-rush"
   },
-  "weight": 190
+  "weight": 190,
+  "femaleRatio": null
  },
  {
   "id": "arctozolt",
@@ -130337,7 +131454,8 @@
    ],
    "hidden": "slush-rush"
   },
-  "weight": 150
+  "weight": 150,
+  "femaleRatio": null
  },
  {
   "id": "dracovish",
@@ -130429,7 +131547,8 @@
    ],
    "hidden": "sand-rush"
   },
-  "weight": 215
+  "weight": 215,
+  "femaleRatio": null
  },
  {
   "id": "arctovish",
@@ -130521,7 +131640,8 @@
    ],
    "hidden": "slush-rush"
   },
-  "weight": 175
+  "weight": 175,
+  "femaleRatio": null
  },
  {
   "id": "duraludon",
@@ -130622,7 +131742,8 @@
    ],
    "hidden": "stalwart"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "duraludon-gmax",
@@ -130722,7 +131843,8 @@
    ],
    "hidden": "stalwart"
   },
-  "weight": 40
+  "weight": 40,
+  "femaleRatio": 0.5
  },
  {
   "id": "dreepy",
@@ -130783,7 +131905,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 2
+  "weight": 2,
+  "femaleRatio": 0.5
  },
  {
   "id": "drakloak",
@@ -130896,7 +132019,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": 0.5
  },
  {
   "id": "dragapult",
@@ -131012,7 +132136,8 @@
    ],
    "hidden": "cursed-body"
   },
-  "weight": 50
+  "weight": 50,
+  "femaleRatio": 0.5
  },
  {
   "id": "zacian",
@@ -131112,7 +132237,8 @@
    ],
    "hidden": null
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": null
  },
  {
   "id": "zacian-crowned",
@@ -131217,7 +132343,8 @@
    ],
    "hidden": null
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": null
  },
  {
   "id": "zamazenta",
@@ -131313,7 +132440,8 @@
    ],
    "hidden": null
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": null
  },
  {
   "id": "zamazenta-crowned",
@@ -131414,7 +132542,8 @@
    ],
    "hidden": null
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": null
  },
  {
   "id": "eternatus",
@@ -131519,7 +132648,8 @@
    ],
    "hidden": null
   },
-  "weight": 950
+  "weight": 950,
+  "femaleRatio": null
  },
  {
   "id": "eternatus-eternamax",
@@ -131628,7 +132758,8 @@
    ],
    "hidden": null
   },
-  "weight": 950
+  "weight": 950,
+  "femaleRatio": null
  },
  {
   "id": "kubfu",
@@ -131737,7 +132868,8 @@
    ],
    "hidden": null
   },
-  "weight": 12
+  "weight": 12,
+  "femaleRatio": 0.125
  },
  {
   "id": "urshifu",
@@ -131846,7 +132978,8 @@
    ],
    "hidden": null
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.125
  },
  {
   "id": "urshifu-rapid-strike",
@@ -131959,7 +133092,8 @@
    ],
    "hidden": null
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.125
  },
  {
   "id": "urshifu-single-strike-gmax",
@@ -132072,7 +133206,8 @@
    ],
    "hidden": null
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.125
  },
  {
   "id": "urshifu-rapid-strike-gmax",
@@ -132185,7 +133320,8 @@
    ],
    "hidden": null
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.125
  },
  {
   "id": "zarude",
@@ -132294,7 +133430,8 @@
    ],
    "hidden": null
   },
-  "weight": 70
+  "weight": 70,
+  "femaleRatio": null
  },
  {
   "id": "regieleki",
@@ -132394,7 +133531,8 @@
    ],
    "hidden": null
   },
-  "weight": 145
+  "weight": 145,
+  "femaleRatio": null
  },
  {
   "id": "regidrago",
@@ -132494,7 +133632,8 @@
    ],
    "hidden": null
   },
-  "weight": 200
+  "weight": 200,
+  "femaleRatio": null
  },
  {
   "id": "glastrier",
@@ -132590,7 +133729,8 @@
    ],
    "hidden": null
   },
-  "weight": 800
+  "weight": 800,
+  "femaleRatio": null
  },
  {
   "id": "spectrier",
@@ -132686,7 +133826,8 @@
    ],
    "hidden": null
   },
-  "weight": 44.5
+  "weight": 44.5,
+  "femaleRatio": null
  },
  {
   "id": "calyrex",
@@ -132795,7 +133936,8 @@
    ],
    "hidden": null
   },
-  "weight": 7.7
+  "weight": 7.7,
+  "femaleRatio": null
  },
  {
   "id": "calyrex-ice",
@@ -132968,7 +134110,8 @@
    ],
    "hidden": null
   },
-  "weight": 7.7
+  "weight": 7.7,
+  "femaleRatio": null
  },
  {
   "id": "calyrex-shadow",
@@ -133141,7 +134284,8 @@
    ],
    "hidden": null
   },
-  "weight": 7.7
+  "weight": 7.7,
+  "femaleRatio": null
  },
  {
   "id": "wyrdeer",
@@ -133249,7 +134393,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 95.1
+  "weight": 95.1,
+  "femaleRatio": 0.5
  },
  {
   "id": "kleavor",
@@ -133365,7 +134510,8 @@
    ],
    "hidden": "sharpness"
   },
-  "weight": 89
+  "weight": 89,
+  "femaleRatio": 0.5
  },
  {
   "id": "ursaluna",
@@ -133493,7 +134639,8 @@
    ],
    "hidden": "unnerve"
   },
-  "weight": 290
+  "weight": 290,
+  "femaleRatio": 0.5
  },
  {
   "id": "ursaluna-bloodmoon",
@@ -133604,7 +134751,8 @@
    ],
    "hidden": null
   },
-  "weight": 290
+  "weight": 290,
+  "femaleRatio": 0.5
  },
  {
   "id": "basculegion",
@@ -133724,7 +134872,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": 0.5
  },
  {
   "id": "basculegion-female",
@@ -133848,7 +134997,8 @@
    ],
    "hidden": "mold-breaker"
   },
-  "weight": 110
+  "weight": 110,
+  "femaleRatio": 0.5
  },
  {
   "id": "sneasler",
@@ -133952,7 +135102,8 @@
    ],
    "hidden": "poison-touch"
   },
-  "weight": 43
+  "weight": 43,
+  "femaleRatio": 0.5
  },
  {
   "id": "overqwil",
@@ -134084,7 +135235,8 @@
    ],
    "hidden": "intimidate"
   },
-  "weight": 60.5
+  "weight": 60.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "enamorus",
@@ -134205,7 +135357,8 @@
    ],
    "hidden": "contrary"
   },
-  "weight": 48
+  "weight": 48,
+  "femaleRatio": 1
  },
  {
   "id": "enamorus-therian",
@@ -134330,7 +135483,8 @@
    ],
    "hidden": null
   },
-  "weight": 48
+  "weight": 48,
+  "femaleRatio": 1
  },
  {
   "id": "sprigatito",
@@ -134425,7 +135579,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 4.1
+  "weight": 4.1,
+  "femaleRatio": 0.125
  },
  {
   "id": "floragato",
@@ -134524,7 +135679,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 12.2
+  "weight": 12.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "meowscarada",
@@ -134643,7 +135799,8 @@
    ],
    "hidden": "protean"
   },
-  "weight": 31.2
+  "weight": 31.2,
+  "femaleRatio": 0.125
  },
  {
   "id": "fuecoco",
@@ -134734,7 +135891,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 9.8
+  "weight": 9.8,
+  "femaleRatio": 0.125
  },
  {
   "id": "crocalor",
@@ -134833,7 +135991,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 30.7
+  "weight": 30.7,
+  "femaleRatio": 0.125
  },
  {
   "id": "skeledirge",
@@ -134952,7 +136111,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 326.5
+  "weight": 326.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "quaxly",
@@ -135043,7 +136203,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 6.1
+  "weight": 6.1,
+  "femaleRatio": 0.125
  },
  {
   "id": "quaxwell",
@@ -135146,7 +136307,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 21.5
+  "weight": 21.5,
+  "femaleRatio": 0.125
  },
  {
   "id": "quaquaval",
@@ -135265,7 +136427,8 @@
    ],
    "hidden": "moxie"
   },
-  "weight": 61.9
+  "weight": 61.9,
+  "femaleRatio": 0.125
  },
  {
   "id": "lechonk",
@@ -135365,7 +136528,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 10.2
+  "weight": 10.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "oinkologne",
@@ -135464,7 +136628,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "oinkologne-female",
@@ -135567,7 +136732,8 @@
    ],
    "hidden": "thick-fat"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "tarountula",
@@ -135666,7 +136832,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": 0.5
  },
  {
   "id": "spidops",
@@ -135764,7 +136931,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 16.5
+  "weight": 16.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "nymble",
@@ -135859,7 +137027,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "lokix",
@@ -135974,7 +137143,8 @@
    ],
    "hidden": "tinted-lens"
   },
-  "weight": 17.5
+  "weight": 17.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pawmi",
@@ -136078,7 +137248,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 2.5
+  "weight": 2.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pawmo",
@@ -136187,7 +137358,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pawmot",
@@ -136303,7 +137475,8 @@
    ],
    "hidden": "iron-fist"
   },
-  "weight": 41
+  "weight": 41,
+  "femaleRatio": 0.5
  },
  {
   "id": "tandemaus",
@@ -136407,7 +137580,8 @@
    ],
    "hidden": "own-tempo"
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": null
  },
  {
   "id": "maushold",
@@ -136510,7 +137684,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 2.8
+  "weight": 2.8,
+  "femaleRatio": null
  },
  {
   "id": "maushold-family-of-three",
@@ -136617,7 +137792,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 2.8
+  "weight": 2.8,
+  "femaleRatio": null
  },
  {
   "id": "fidough",
@@ -136720,7 +137896,8 @@
    ],
    "hidden": "klutz"
   },
-  "weight": 10.9
+  "weight": 10.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "dachsbun",
@@ -136818,7 +137995,8 @@
    ],
    "hidden": "aroma-veil"
   },
-  "weight": 14.9
+  "weight": 14.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "smoliv",
@@ -136914,7 +138092,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "dolliv",
@@ -137010,7 +138189,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 11.9
+  "weight": 11.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "arboliva",
@@ -137117,7 +138297,8 @@
    ],
    "hidden": "harvest"
   },
-  "weight": 48.2
+  "weight": 48.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "squawkabilly",
@@ -137221,7 +138402,8 @@
    ],
    "hidden": "guts"
   },
-  "weight": 2.4
+  "weight": 2.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "nacli",
@@ -137321,7 +138503,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.5
  },
  {
   "id": "naclstack",
@@ -137425,7 +138608,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 105
+  "weight": 105,
+  "femaleRatio": 0.5
  },
  {
   "id": "garganacl",
@@ -137540,7 +138724,8 @@
    ],
    "hidden": "clear-body"
   },
-  "weight": 240
+  "weight": 240,
+  "femaleRatio": 0.5
  },
  {
   "id": "charcadet",
@@ -137627,7 +138812,8 @@
    ],
    "hidden": "flame-body"
   },
-  "weight": 10.5
+  "weight": 10.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "armarouge",
@@ -137738,7 +138924,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 85
+  "weight": 85,
+  "femaleRatio": 0.5
  },
  {
   "id": "ceruledge",
@@ -137857,7 +139044,8 @@
    ],
    "hidden": "weak-armor"
   },
-  "weight": 62
+  "weight": 62,
+  "femaleRatio": 0.5
  },
  {
   "id": "tadbulb",
@@ -137953,7 +139141,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 0.4
+  "weight": 0.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "bellibolt",
@@ -138048,7 +139237,8 @@
    ],
    "hidden": "damp"
   },
-  "weight": 113
+  "weight": 113,
+  "femaleRatio": 0.5
  },
  {
   "id": "wattrel",
@@ -138141,7 +139331,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 3.6
+  "weight": 3.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "kilowattrel",
@@ -138237,7 +139428,8 @@
    ],
    "hidden": "competitive"
   },
-  "weight": 38.6
+  "weight": 38.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "maschiff",
@@ -138341,7 +139533,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 16
+  "weight": 16,
+  "femaleRatio": 0.5
  },
  {
   "id": "mabosstiff",
@@ -138448,7 +139641,8 @@
    ],
    "hidden": "stakeout"
   },
-  "weight": 61
+  "weight": 61,
+  "femaleRatio": 0.5
  },
  {
   "id": "shroodle",
@@ -138553,7 +139747,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 0.7
+  "weight": 0.7,
+  "femaleRatio": 0.5
  },
  {
   "id": "grafaiai",
@@ -138653,7 +139848,8 @@
    ],
    "hidden": "prankster"
   },
-  "weight": 27.2
+  "weight": 27.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "bramblin",
@@ -138757,7 +139953,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 0.6
+  "weight": 0.6,
+  "femaleRatio": 0.5
  },
  {
   "id": "brambleghast",
@@ -138856,7 +140053,8 @@
    ],
    "hidden": "infiltrator"
   },
-  "weight": 6
+  "weight": 6,
+  "femaleRatio": 0.5
  },
  {
   "id": "toedscool",
@@ -138968,7 +140166,8 @@
    ],
    "hidden": null
   },
-  "weight": 33
+  "weight": 33,
+  "femaleRatio": 0.5
  },
  {
   "id": "toedscruel",
@@ -139079,7 +140278,8 @@
    ],
    "hidden": null
   },
-  "weight": 58
+  "weight": 58,
+  "femaleRatio": 0.5
  },
  {
   "id": "klawf",
@@ -139178,7 +140378,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 79
+  "weight": 79,
+  "femaleRatio": 0.5
  },
  {
   "id": "capsakid",
@@ -139270,7 +140471,8 @@
    ],
    "hidden": "klutz"
   },
-  "weight": 3
+  "weight": 3,
+  "femaleRatio": 0.5
  },
  {
   "id": "scovillain",
@@ -139378,7 +140580,8 @@
    ],
    "hidden": "moody"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "scovillain-mega",
@@ -139489,7 +140692,8 @@
    ],
    "hidden": null
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "rellor",
@@ -139572,7 +140776,8 @@
    ],
    "hidden": "shed-skin"
   },
-  "weight": 1
+  "weight": 1,
+  "femaleRatio": 0.5
  },
  {
   "id": "rabsca",
@@ -139687,7 +140892,8 @@
    ],
    "hidden": "telepathy"
   },
-  "weight": 3.5
+  "weight": 3.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "flittle",
@@ -139771,7 +140977,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 1.5
+  "weight": 1.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "espathra",
@@ -139874,7 +141081,8 @@
    ],
    "hidden": "speed-boost"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.5
  },
  {
   "id": "tinkatink",
@@ -139983,7 +141191,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 8.9
+  "weight": 8.9,
+  "femaleRatio": 1
  },
  {
   "id": "tinkatuff",
@@ -140092,7 +141301,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 59.1
+  "weight": 59.1,
+  "femaleRatio": 1
  },
  {
   "id": "tinkaton",
@@ -140200,7 +141410,8 @@
    ],
    "hidden": "pickpocket"
   },
-  "weight": 112.8
+  "weight": 112.8,
+  "femaleRatio": 1
  },
  {
   "id": "wiglett",
@@ -140292,7 +141503,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 1.8
+  "weight": 1.8,
+  "femaleRatio": 0.5
  },
  {
   "id": "wugtrio",
@@ -140383,7 +141595,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 5.4
+  "weight": 5.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "bombirdier",
@@ -140487,7 +141700,8 @@
    ],
    "hidden": "rocky-payload"
   },
-  "weight": 42.9
+  "weight": 42.9,
+  "femaleRatio": 0.5
  },
  {
   "id": "finizen",
@@ -140582,7 +141796,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.2
+  "weight": 60.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "palafin",
@@ -140688,7 +141903,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.2
+  "weight": 60.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "palafin-hero",
@@ -140798,7 +142014,8 @@
    ],
    "hidden": null
   },
-  "weight": 60.2
+  "weight": 60.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "varoom",
@@ -140902,7 +142119,8 @@
    ],
    "hidden": "slow-start"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "revavroom",
@@ -141009,7 +142227,8 @@
    ],
    "hidden": "filter"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "cyclizar",
@@ -141104,7 +142323,8 @@
    ],
    "hidden": "regenerator"
   },
-  "weight": 63
+  "weight": 63,
+  "femaleRatio": 0.5
  },
  {
   "id": "orthworm",
@@ -141198,7 +142418,8 @@
    ],
    "hidden": "sand-veil"
   },
-  "weight": 310
+  "weight": 310,
+  "femaleRatio": 0.5
  },
  {
   "id": "glimmet",
@@ -141298,7 +142519,8 @@
    ],
    "hidden": "corrosion"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "glimmora",
@@ -141405,7 +142627,8 @@
    ],
    "hidden": "corrosion"
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "glimmora-mega",
@@ -141516,7 +142739,8 @@
    ],
    "hidden": null
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "greavard",
@@ -141619,7 +142843,8 @@
    ],
    "hidden": "fluffy"
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": 0.5
  },
  {
   "id": "houndstone",
@@ -141721,7 +142946,8 @@
    ],
    "hidden": "fluffy"
   },
-  "weight": 15
+  "weight": 15,
+  "femaleRatio": 0.5
  },
  {
   "id": "flamigo",
@@ -141821,7 +143047,8 @@
    ],
    "hidden": "costar"
   },
-  "weight": 37
+  "weight": 37,
+  "femaleRatio": 0.5
  },
  {
   "id": "cetoddle",
@@ -141925,7 +143152,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 45
+  "weight": 45,
+  "femaleRatio": 0.5
  },
  {
   "id": "cetitan",
@@ -142024,7 +143252,8 @@
    ],
    "hidden": "sheer-force"
   },
-  "weight": 700
+  "weight": 700,
+  "femaleRatio": 0.5
  },
  {
   "id": "veluza",
@@ -142115,7 +143344,8 @@
    ],
    "hidden": "sharpness"
   },
-  "weight": 90
+  "weight": 90,
+  "femaleRatio": 0.5
  },
  {
   "id": "dondozo",
@@ -142222,7 +143452,8 @@
    ],
    "hidden": "water-veil"
   },
-  "weight": 220
+  "weight": 220,
+  "femaleRatio": 0.5
  },
  {
   "id": "tatsugiri",
@@ -142309,7 +143540,8 @@
    ],
    "hidden": "storm-drain"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "tatsugiri-curly-mega",
@@ -142394,7 +143626,8 @@
    "icon": "9/978-mega-curly",
    "cry": "978"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "tatsugiri-droopy-mega",
@@ -142479,7 +143712,8 @@
    "icon": "9/978-mega-droopy",
    "cry": "978"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "tatsugiri-stretchy-mega",
@@ -142564,7 +143798,8 @@
    "icon": "9/978-mega-stretchy",
    "cry": "978"
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": 0.5
  },
  {
   "id": "annihilape",
@@ -142680,7 +143915,8 @@
    ],
    "hidden": "defiant"
   },
-  "weight": 56
+  "weight": 56,
+  "femaleRatio": 0.5
  },
  {
   "id": "clodsire",
@@ -142772,7 +144008,8 @@
    ],
    "hidden": "unaware"
   },
-  "weight": 223
+  "weight": 223,
+  "femaleRatio": 0.5
  },
  {
   "id": "farigiraf",
@@ -142876,7 +144113,8 @@
    ],
    "hidden": "sap-sipper"
   },
-  "weight": 160
+  "weight": 160,
+  "femaleRatio": 0.5
  },
  {
   "id": "dudunsparce",
@@ -142983,7 +144221,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 39.2
+  "weight": 39.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "dudunsparce-three-segment",
@@ -143094,7 +144333,8 @@
    ],
    "hidden": "rattled"
   },
-  "weight": 39.2
+  "weight": 39.2,
+  "femaleRatio": 0.5
  },
  {
   "id": "kingambit",
@@ -143202,7 +144442,8 @@
    ],
    "hidden": "pressure"
   },
-  "weight": 120
+  "weight": 120,
+  "femaleRatio": 0.5
  },
  {
   "id": "great-tusk",
@@ -143309,7 +144550,8 @@
    ],
    "hidden": null
   },
-  "weight": 320
+  "weight": 320,
+  "femaleRatio": null
  },
  {
   "id": "scream-tail",
@@ -143416,7 +144658,8 @@
    ],
    "hidden": null
   },
-  "weight": 8
+  "weight": 8,
+  "femaleRatio": null
  },
  {
   "id": "brute-bonnet",
@@ -143519,7 +144762,8 @@
    ],
    "hidden": null
   },
-  "weight": 21
+  "weight": 21,
+  "femaleRatio": null
  },
  {
   "id": "flutter-mane",
@@ -143626,7 +144870,8 @@
    ],
    "hidden": null
   },
-  "weight": 4
+  "weight": 4,
+  "femaleRatio": null
  },
  {
   "id": "slither-wing",
@@ -143737,7 +144982,8 @@
    ],
    "hidden": null
   },
-  "weight": 92
+  "weight": 92,
+  "femaleRatio": null
  },
  {
   "id": "sandy-shocks",
@@ -143848,7 +145094,8 @@
    ],
    "hidden": null
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": null
  },
  {
   "id": "iron-treads",
@@ -143951,7 +145198,8 @@
    ],
    "hidden": null
   },
-  "weight": 240
+  "weight": 240,
+  "femaleRatio": null
  },
  {
   "id": "iron-bundle",
@@ -144050,7 +145298,8 @@
    ],
    "hidden": null
   },
-  "weight": 11
+  "weight": 11,
+  "femaleRatio": null
  },
  {
   "id": "iron-hands",
@@ -144161,7 +145410,8 @@
    ],
    "hidden": null
   },
-  "weight": 380.7
+  "weight": 380.7,
+  "femaleRatio": null
  },
  {
   "id": "iron-jugulis",
@@ -144268,7 +145518,8 @@
    ],
    "hidden": null
   },
-  "weight": 111
+  "weight": 111,
+  "femaleRatio": null
  },
  {
   "id": "iron-moth",
@@ -144379,7 +145630,8 @@
    ],
    "hidden": null
   },
-  "weight": 36
+  "weight": 36,
+  "femaleRatio": null
  },
  {
   "id": "iron-thorns",
@@ -144490,7 +145742,8 @@
    ],
    "hidden": null
   },
-  "weight": 303
+  "weight": 303,
+  "femaleRatio": null
  },
  {
   "id": "frigibax",
@@ -144586,7 +145839,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 17
+  "weight": 17,
+  "femaleRatio": 0.5
  },
  {
   "id": "arctibax",
@@ -144678,7 +145932,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": 0.5
  },
  {
   "id": "baxcalibur",
@@ -144785,7 +146040,8 @@
    ],
    "hidden": "ice-body"
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": 0.5
  },
  {
   "id": "baxcalibur-mega",
@@ -144896,7 +146152,8 @@
    ],
    "hidden": null
   },
-  "weight": 210
+  "weight": 210,
+  "femaleRatio": 0.5
  },
  {
   "id": "gimmighoul",
@@ -144947,7 +146204,8 @@
    ],
    "hidden": null
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": null
  },
  {
   "id": "gimmighoul-roaming",
@@ -144997,7 +146255,8 @@
    ],
    "hidden": null
   },
-  "weight": 5
+  "weight": 5,
+  "femaleRatio": null
  },
  {
   "id": "gholdengo",
@@ -145084,7 +146343,8 @@
    ],
    "hidden": null
   },
-  "weight": 30
+  "weight": 30,
+  "femaleRatio": null
  },
  {
   "id": "wo-chien",
@@ -145201,7 +146461,8 @@
    ],
    "hidden": null
   },
-  "weight": 74.2
+  "weight": 74.2,
+  "femaleRatio": null
  },
  {
   "id": "chien-pao",
@@ -145318,7 +146579,8 @@
    ],
    "hidden": null
   },
-  "weight": 152.2
+  "weight": 152.2,
+  "femaleRatio": null
  },
  {
   "id": "ting-lu",
@@ -145431,7 +146693,8 @@
    ],
    "hidden": null
   },
-  "weight": 699.7
+  "weight": 699.7,
+  "femaleRatio": null
  },
  {
   "id": "chi-yu",
@@ -145544,7 +146807,8 @@
    ],
    "hidden": null
   },
-  "weight": 4.9
+  "weight": 4.9,
+  "femaleRatio": null
  },
  {
   "id": "roaring-moon",
@@ -145667,7 +146931,8 @@
    ],
    "hidden": null
   },
-  "weight": 380
+  "weight": 380,
+  "femaleRatio": null
  },
  {
   "id": "iron-valiant",
@@ -145782,7 +147047,8 @@
    ],
    "hidden": null
   },
-  "weight": 35
+  "weight": 35,
+  "femaleRatio": null
  },
  {
   "id": "koraidon",
@@ -145887,7 +147153,8 @@
    ],
    "hidden": null
   },
-  "weight": 303
+  "weight": 303,
+  "femaleRatio": null
  },
  {
   "id": "miraidon",
@@ -145996,7 +147263,8 @@
    ],
    "hidden": null
   },
-  "weight": 240
+  "weight": 240,
+  "femaleRatio": null
  },
  {
   "id": "walking-wake",
@@ -146103,7 +147371,8 @@
    ],
    "hidden": null
   },
-  "weight": 280
+  "weight": 280,
+  "femaleRatio": null
  },
  {
   "id": "iron-leaves",
@@ -146218,7 +147487,8 @@
    ],
    "hidden": null
   },
-  "weight": 125
+  "weight": 125,
+  "femaleRatio": null
  },
  {
   "id": "dipplin",
@@ -146327,7 +147597,8 @@
    ],
    "hidden": "sticky-hold"
   },
-  "weight": 4.4
+  "weight": 4.4,
+  "femaleRatio": 0.5
  },
  {
   "id": "poltchageist",
@@ -146423,7 +147694,8 @@
    ],
    "hidden": "heatproof"
   },
-  "weight": 1.1
+  "weight": 1.1,
+  "femaleRatio": null
  },
  {
   "id": "sinistcha",
@@ -146518,7 +147790,8 @@
    ],
    "hidden": "heatproof"
   },
-  "weight": 2.2
+  "weight": 2.2,
+  "femaleRatio": null
  },
  {
   "id": "okidogi",
@@ -146607,7 +147880,8 @@
    ],
    "hidden": "guard-dog"
   },
-  "weight": 92.2
+  "weight": 92.2,
+  "femaleRatio": 0
  },
  {
   "id": "munkidori",
@@ -146700,7 +147974,8 @@
    ],
    "hidden": "frisk"
   },
-  "weight": 12.2
+  "weight": 12.2,
+  "femaleRatio": 0
  },
  {
   "id": "fezandipiti",
@@ -146797,7 +148072,8 @@
    ],
    "hidden": "technician"
   },
-  "weight": 30.1
+  "weight": 30.1,
+  "femaleRatio": 0
  },
  {
   "id": "ogerpon",
@@ -146913,7 +148189,8 @@
    ],
    "hidden": null
   },
-  "weight": 39.8
+  "weight": 39.8,
+  "femaleRatio": 1
  },
  {
   "id": "ogerpon-wellspring-mask",
@@ -147034,7 +148311,8 @@
    ],
    "hidden": null
   },
-  "weight": 39.8
+  "weight": 39.8,
+  "femaleRatio": 1
  },
  {
   "id": "ogerpon-hearthflame-mask",
@@ -147155,7 +148433,8 @@
    ],
    "hidden": null
   },
-  "weight": 39.8
+  "weight": 39.8,
+  "femaleRatio": 1
  },
  {
   "id": "ogerpon-cornerstone-mask",
@@ -147276,7 +148555,8 @@
    ],
    "hidden": null
   },
-  "weight": 39.8
+  "weight": 39.8,
+  "femaleRatio": 1
  },
  {
   "id": "archaludon",
@@ -147372,7 +148652,8 @@
    ],
    "hidden": "stalwart"
   },
-  "weight": 60
+  "weight": 60,
+  "femaleRatio": 0.5
  },
  {
   "id": "hydrapple",
@@ -147488,7 +148769,8 @@
    ],
    "hidden": "sticky-hold"
   },
-  "weight": 93
+  "weight": 93,
+  "femaleRatio": 0.5
  },
  {
   "id": "gouging-fire",
@@ -147607,7 +148889,8 @@
    ],
    "hidden": null
   },
-  "weight": 590
+  "weight": 590,
+  "femaleRatio": null
  },
  {
   "id": "raging-bolt",
@@ -147718,7 +149001,8 @@
    ],
    "hidden": null
   },
-  "weight": 480
+  "weight": 480,
+  "femaleRatio": null
  },
  {
   "id": "iron-boulder",
@@ -147825,7 +149109,8 @@
    ],
    "hidden": null
   },
-  "weight": 162.5
+  "weight": 162.5,
+  "femaleRatio": null
  },
  {
   "id": "iron-crown",
@@ -147932,7 +149217,8 @@
    ],
    "hidden": null
   },
-  "weight": 156
+  "weight": 156,
+  "femaleRatio": null
  },
  {
   "id": "terapagos",
@@ -148020,7 +149306,8 @@
    ],
    "hidden": null
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "terapagos-terastal",
@@ -148112,7 +149399,8 @@
    ],
    "hidden": null
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "terapagos-stellar",
@@ -148204,7 +149492,8 @@
    ],
    "hidden": null
   },
-  "weight": 6.5
+  "weight": 6.5,
+  "femaleRatio": 0.5
  },
  {
   "id": "pecharunt",
@@ -148309,6 +149598,7 @@
    ],
    "hidden": null
   },
-  "weight": 0.3
+  "weight": 0.3,
+  "femaleRatio": null
  }
 ]
