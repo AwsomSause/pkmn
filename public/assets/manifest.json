@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T18:02:45.200Z",
+  "generatedAt": "2026-10-30T18:24:57.198Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -687,6 +687,12 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/battle_trainer.mp3"
+    },
+    {
+      "id": "bgm.credits",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/credits.mp3"
     },
     {
       "id": "se.ball_throw",

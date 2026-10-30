@@ -137,7 +137,16 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
     (window as any).__pkr.game.scene.getScene('GameOver').scene.start('Credits');
   });
   await waitForScene(page, 'Credits');
+  await page.waitForTimeout(1200);
   await page.screenshot({ path: 'test-results/m4-credits.png' });
+  await page.waitForTimeout(3000);
+  await page.screenshot({ path: 'test-results/m4-credits-roll.png' });
+  // The credits have the Aero sky and the winning party along the bottom.
+  const credits = await page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Credits');
+    return { party: scene.children.list.filter((o: any) => o.name === 'credits-party').length };
+  });
+  expect(credits.party).toBe(r.party.length);
   await page.waitForTimeout(500);
   await page.keyboard.press('Enter');
   await waitForScene(page, 'GameOver');

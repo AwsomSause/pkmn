@@ -31,6 +31,7 @@ Older assets (species sprites, arenas, PokeRogue UI, audio) come from the PokeRo
 
 Trainer Evolutions reuse pictures already in the PokeRogue boss pack: Champion Red `boss.red-masters`, Champion Blue `boss.blue-gen3champion`, Champion Cynthia `boss.cynthia-masters`, King N `boss.n`, Champion Oak `boss.oak` (neither pack has a separate King N or young Oak picture).
 | `images/arenas/raid_{max,tera,ultra,tera2}_bg.png` | Raid Battles.zip | `Graphics/Battlebacks/raid_<name>_bg.png` (resized 512×288 → 320×180) | Raid Battles plugin (Pokémon Essentials community) | Raid and Totem battle arenas (`BattleScene.raidArena`) | 2026-10-30 |
+| `audio/bgm/credits.mp3` | Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip | `Audio/BGM/B2W2 214 PWT Victor!.ogg` (converted to mp3, 128 kbps) | Pokémon Essentials kit (B2W2 arrangement, Nintendo/Game Freak music) | Ending credits music (`CreditsScene`) | 2026-10-30 |
 | `audio/bgm/raid_{ultra,max,tera}.mp3` | Raid Battles.zip | `Audio/BGM/Raid (<Ultra/Max/Tera>) battle v1.ogg` (converted to mp3, 96 kbps) | Raid Battles plugin (Pokémon Essentials community) | Raid and Totem battle music (`BattleScene`) | 2026-10-30 |
 
 Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the partner...) comes from PokeAPI's `data/v2/csv/moves.csv` `target_id` column (github.com/PokeAPI/pokeapi, BSD-3), built by `npm run data:move-targets` (2026-10-30).
