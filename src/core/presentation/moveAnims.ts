@@ -20,6 +20,8 @@ export const MovePresentationSchema = z.object({
   telegraph: z.enum(['normal', 'strong', 'quick']),
   /** Two-turn moves: the animation for the turn it charges up. */
   chargeAnim: z.string().optional(),
+  /** The director's Essentials pack animation for this move, played first (tools/import-essentials-anims.ts). */
+  pack: z.string().optional(),
 });
 export type MovePresentation = z.infer<typeof MovePresentationSchema>;
 
@@ -30,6 +32,9 @@ export const MoveAnimsFileSchema = z.object({
   /** Files each animation needs. */
   anims: z.record(z.string(), z.object({ graphics: z.array(z.string()), backgrounds: z.array(z.string()), sounds: z.array(z.string()) })),
   moves: z.record(z.string(), MovePresentationSchema),
+  /** Essentials pack versions of the common slots, played before `common`. */
+  commonPack: z.record(z.string(), z.string()).default({}),
+  packSource: z.string().optional(),
 });
 export type MoveAnims = z.infer<typeof MoveAnimsFileSchema>;
 
@@ -44,6 +49,18 @@ export const DEFAULT_PRESENTATION: MovePresentation = { anim: 'tackle', source: 
 
 export function presentationFor(data: MoveAnims, moveId: string): MovePresentation {
   return data.moves[moveId] ?? DEFAULT_PRESENTATION;
+}
+
+/** Which file a move plays: the pack's first, the PokeRogue one as the stand-by. */
+export function animChoice(look: MovePresentation): { anim: string; alt?: string } {
+  return look.pack ? { anim: look.pack, alt: look.anim } : { anim: look.anim };
+}
+
+/** The same for a status/field slot ("status.brn", "heal" …); anim is '' when there is none. */
+export function commonChoice(data: MoveAnims, slot: string): { anim: string; alt?: string } {
+  const pack = data.commonPack[slot];
+  const base = data.common[slot];
+  return pack ? (base ? { anim: pack, alt: base } : { anim: pack }) : { anim: base ?? '' };
 }
 
 /** The animation files the asset catalog has to know about. */
