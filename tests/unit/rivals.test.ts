@@ -24,6 +24,7 @@ import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import catalog from '../../src/data/rivalCatalog.json';
 import { afterBattleBehavior, bondLines, bondNote, bondShift, ensureBonds, RIVAL_BONDS, simulateOffscreen } from '../../src/core/rivals/bonds';
+import { legacyNote, pokemonInfluence, substitute, trainingExchange, triangleEffect } from '../../src/core/rivals/relations';
 import { content, toBattle } from './helpers';
 
 function trainerBattle(seed: string, opts: { leaderId?: string | null; faintedMate?: boolean } = {}): RunState {
@@ -550,5 +551,71 @@ describe('rival bonds and off-screen events', () => {
     expect(parsed.bonds).toEqual({});
     expect(parsed.offscreen).toEqual([]);
     expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(12);
+  });
+});
+
+describe('rival relations and memory', () => {
+  const mk = (seed: string, over: Partial<Rival> = {}): { run: RunState; rival: Rival } => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0));
+    const rival = structuredClone({ ...win(trainerBattle(`r-${seed}`)).story.rivals[0]!, ...over });
+    rival.memory.lastBattle.team = ['rattata', 'pidgey', 'jolteon'];
+    run.story.rivals = [rival];
+    return { run, rival };
+  };
+  const t = (o: Partial<Rival['traits']>): Rival['traits'] => ({ ambition: 50, pride: 50, empathy: 50, adaptability: 50, vindictiveness: 50, resilience: 50, ...o });
+
+  it('training exchange moves two rivals toward each other on the trait where they differ most', () => {
+    const a = mk('a', { traits: t({ ambition: 90 }) }).rival;
+    const b = mk('b', { traits: t({ ambition: 30 }) }).rival;
+    expect(trainingExchange(a, b)).toBe('ambition');
+    expect(a.traits.ambition).toBe(90 - RIVAL_CONFIG.relations.exchangeShift);
+    expect(b.traits.ambition).toBe(30 + RIVAL_CONFIG.relations.exchangeShift);
+    expect(trainingExchange(mk('c').rival, mk('c').rival)).toBeNull();
+  });
+
+  it('enemy Pokémon spar: one gains confidence, the other loses it, deterministically', () => {
+    const run = mk('inf').run;
+    const a = run.story.rivals[0]!;
+    const b = structuredClone({ ...a, id: 'other', name: 'other' });
+    const run2 = structuredClone(run);
+    const r1 = pokemonInfluence(run, a, b, '0.0');
+    const r2 = pokemonInfluence(run2, run2.story.rivals[0]!, structuredClone({ ...run2.story.rivals[0]!, id: 'other', name: 'other' }), '0.0');
+    expect(r1?.winner.id).toBe(r2?.winner.id);
+    expect(r1?.winner.id).not.toBe(r1?.loser.id);
+  });
+
+  it('rivalry triangle: beating a rival spurs its enemy and a vindictive friend, not a gentle friend', () => {
+    const run = mk('tri').run;
+    const [beaten] = run.story.rivals as [Rival];
+    const mkOther = (id: string, vind: number) => structuredClone({ ...beaten, id, name: id, traits: t({ vindictiveness: vind }) });
+    const enemy = mkOther('enemy', 10);
+    const vindictive = mkOther('vind', 90);
+    const gentle = mkOther('gentle', 10);
+    run.story.rivals = [beaten, enemy, vindictive, gentle];
+    run.story.rivalGraph = [{ a: beaten.id, b: 'enemy', kind: 'enemies' }, { a: beaten.id, b: 'vind', kind: 'friends' }, { a: beaten.id, b: 'gentle', kind: 'friends' }];
+    const before = run.story.rivals.map((r) => r.rivalPotential);
+    expect(triangleEffect(run, beaten).sort()).toEqual(['enemy', 'vind']);
+    expect(enemy.rivalPotential).toBe(before[1]! + RIVAL_CONFIG.relations.triangleGain);
+    expect(gentle.rivalPotential).toBe(before[3]);
+  });
+
+  it('a worn-out ace sits out and the next Pokémon leads; a rested one leads', () => {
+    const { run, rival } = mk('sub');
+    const members = [{ speciesId: 'rattata' }, { speciesId: 'pidgey' }, { speciesId: 'jolteon' }];
+    ensureBonds(run, rival);
+    expect(substitute(content, run, rival, members)).toBeNull();
+    rival.bonds.rattata!.strain = 95;
+    const sub = substitute(content, run, rival, members)!;
+    expect(sub.order).toEqual([1, 0, 2]);
+    expect(sub.note).toContain('leads');
+  });
+
+  it('a rival remembers a close last battle but not a clean one', () => {
+    const { rival } = mk('leg');
+    rival.encounters = 1;
+    rival.memory.lastBattle.hpLeftShare = 0.05;
+    expect(legacyNote(rival)).toContain('close');
+    rival.memory.lastBattle.hpLeftShare = 0.9;
+    expect(legacyNote(rival)).toBeNull();
   });
 });

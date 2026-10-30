@@ -10,6 +10,7 @@ import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
 import { advanceArc } from './arcs';
 import { simulateOffscreen } from './bonds';
+import { pokemonInfluence, trainingExchange } from './relations';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 
@@ -80,6 +81,20 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       const kind = edgeKind(a, b);
       graph.push({ a: a.id, b: b.id, kind });
       rumor ??= `${title(content, a)} and ${title(content, b)} have become ${kind === 'friends' ? 'friends' : kind === 'enemies' ? 'bitter enemies' : 'training partners'}`;
+    }
+  }
+  // Rivals who know each other affect each other: friends and partners swap training, enemies' Pokémon spar.
+  for (const e of graph) {
+    const a = story.rivals.find((r) => r.id === e.a);
+    const b = story.rivals.find((r) => r.id === e.b);
+    if (!a || !b || a.state === 'retired' || b.state === 'retired') continue;
+    const rng = new Rng(hashSeed(`${run.seed}::rival-relation::${run.regionIndex}.${stage}::${e.a}::${e.b}`));
+    if (rng.float() >= RIVAL_CONFIG.relations.exchangeChance) continue;
+    if (e.kind === 'enemies') {
+      const r = pokemonInfluence(run, a, b, `${run.regionIndex}.${stage}`);
+      if (r) rumor ??= `${title(content, r.winner)}'s Pokémon beat one of ${title(content, r.loser)}'s in a sparring match`;
+    } else if (trainingExchange(a, b)) {
+      rumor ??= `${title(content, a)} and ${title(content, b)} traded training methods`;
     }
   }
   if (rumor) {
