@@ -1708,6 +1708,345 @@
         "integrity"
       ],
       "variants": {}
+    },
+    {
+      "id": "overdrive-determination",
+      "displayName": "Determination Overdrive",
+      "messagePool": [
+        "{name} was filled with determination!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdriveDetermination"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Was filled with determination"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff3b3b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-bravery",
+      "displayName": "Bravery Overdrive",
+      "messagePool": [
+        "{name} stood its ground without fear!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdriveBravery"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Stood its ground without fear against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff9a3b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-justice",
+      "displayName": "Justice Overdrive",
+      "messagePool": [
+        "{name} refused to let that injustice stand!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdriveJustice"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Refused to let that injustice stand"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffe14a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "justice"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-kindness",
+      "displayName": "Kindness Overdrive",
+      "messagePool": [
+        "{name} wanted to protect everyone!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdriveKindness"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Wanted to protect everyone"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#4cd964",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-patience",
+      "displayName": "Patience Overdrive",
+      "messagePool": [
+        "{name} waited for the perfect moment!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdrivePatience"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spa",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Waited for the perfect moment"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#4a90ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-integrity",
+      "displayName": "Integrity Overdrive",
+      "messagePool": [
+        "{name} stayed true to itself!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdriveIntegrity"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "cure"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Stayed true to itself and shook off the disruption"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#3b6bff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "integrity"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "overdrive-perseverance",
+      "displayName": "Perseverance Overdrive",
+      "messagePool": [
+        "{name} kept going, no matter what!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "overdrivePerseverance"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spd",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Kept going, no matter what"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#a35cff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "dual-emotion",
+      "displayName": "Determination and Kindness",
+      "messagePool": [
+        "{name} fights on through the pain to protect its teammate!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "dualEmotion"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "heal",
+        "hpShare": 0.15
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 90,
+        "text": "Showed Determination and Kindness at once"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff8f6b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination",
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "emotional-clash",
+      "displayName": "Emotional Clash",
+      "messagePool": [
+        "{name} charges ahead while a kind teammate worries behind it!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "emotionalClash"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Charged ahead while a kind teammate watched"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb347",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": true,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery",
+        "kindness"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {

@@ -29,7 +29,9 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 ## Other guides (see how-to-execute-guides.md for the order)
 | Guide | Status |
 |---|---|
-| Untitled document phases A, B | DONE (except new NPC classes); C–G TODO (C overlaps the planning thread) |
+| Untitled document phases A, B | DONE (except new NPC classes) |
+| Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), 2 of 12 modifiers run (No Transformations, Scarce Supplies; the other 10 listed as planned), Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
+| Untitled doc Phase C–G rest | TODO: C prep slots (Field License, Research Directive, Challenge Contract) and effective-attribute layers (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | PART: see table below |
@@ -120,7 +122,7 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 |---|---|---|
 | §1 Original Hyper moments (Toughened It Out, Hung In There, Felt a Bond, Pushed Back Up, Heated Rivalry, This Trainer Will Return, Riled Up, A Past Pokémon Wants to Join) | 8 | DONE |
 | §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
-| §2 Seven Emotions (tags, current emotion dot, Story screen) | 7 | PART (tags only; their Overdrives, emotional clash and dual emotion TODO) |
+| §2 Seven Emotions: tags, current emotion dot, Story screen; 7 Emotional Overdrives (once per battle each: Determination/Bravery/Justice +1 Attack, Kindness +1 Defense, Patience +1 Sp. Atk, Perseverance +1 Sp. Def, Integrity cures a fresh status), rare dual emotion (Determination + Kindness: heal 15%), emotional clash | 7 + 2 | DONE (limited: no drawbacks/exhaustion, no signature achievement events such as "Not Until It's Over", Kindness peaceful encounters TODO) |
 | §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
 | §3 Bond/friendship/party: Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 6 of 10 | DONE; TODO: Understand Each Other, Won't Let Friend Fight Alone, Wants to Prove Itself, Feels Left Out (need pair combos / a choice screen) |
 | §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |

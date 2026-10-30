@@ -59,7 +59,8 @@ export function finalizeRun(
   if (profile.finalizedRunIds.includes(run.runId)) return { profile, applied: false, summary: null };
   const next: Profile = structuredClone(profile);
   next.stats.runsEnded += 1;
-  next.candies += run.candies;
+  // Adventure runs add nothing permanent (Untitled doc §15.2); the rest keep their candies.
+  if (run.rules.progressionEligible) next.candies += run.candies;
   next.stats.battlesWon += run.log.battlesWon;
   next.stats.bestEncounters = Math.max(next.stats.bestEncounters, run.encountersCompleted);
   const summary = applyRunToProfile(content, next, run, now);

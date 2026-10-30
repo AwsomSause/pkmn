@@ -231,6 +231,10 @@ export const VolatileSchema = z.object({
   grudge: z.boolean().default(false),
   /** Morpeko's Hunger Switch: currently in the Hangry mode. */
   hangry: z.boolean().default(false),
+  /** Sky Drop: true while the user of Sky Drop holds this Pokémon in the air. */
+  skyHeld: z.boolean().default(false),
+  /** Illusion: the species this Pokémon looks like until a damaging move hits it. */
+  illusion: z.string().nullable().default(null),
   /** Roost: Flying type lost until the turn ends. */
   roost: z.boolean().default(false),
   /** Throat Chop: sound moves blocked for this many turns. */
@@ -308,6 +312,8 @@ export const freshVolatile = (): Volatile => ({
   plannedMove: null,
   grudge: false,
   hangry: false,
+  skyHeld: false,
+  illusion: null,
   roost: false,
   throat: 0,
   lostTypes: [],
@@ -358,6 +364,7 @@ export const freshExtra = () => ({
   ionDeluge: false,
   wonderRoom: 0,
   brokenFace: [] as string[],
+  delta: false,
   mimic: {} as Record<string, { kind: 'mimic' | 'transform'; slot: number; moves: { id: string; pp: number }[] }>,
   fairyLock: -9,
   passSub: { player: 0, enemy: 0 },
@@ -472,6 +479,7 @@ export const BattleStateSchema = z.object({
     wonderRoom: z.number().int().default(0),
     /** Pokémon whose Disguise / Ice Face is already used up. */
     brokenFace: z.array(z.string()).default([]),
+    delta: z.boolean().default(false),
     mimic: z.record(z.string(), z.object({ kind: z.enum(['mimic', 'transform']), slot: z.number().int(), moves: z.array(z.object({ id: z.string(), pp: z.number().int() })) })).default({}),
     fairyLock: z.number().int().default(-9),
     passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),
@@ -645,6 +653,26 @@ export type RunPrep = z.infer<typeof RunPrepSchema>;
 export const LoadoutPresetSchema = RunPrepSchema.extend({ name: z.string(), archetypeId: z.string() });
 export type LoadoutPreset = z.infer<typeof LoadoutPresetSchema>;
 
+/** The rules a run was started with, fixed for the whole run (Untitled doc §13–16). Rewards use this snapshot at the end. */
+export const RunRulesSchema = z.object({
+  ruleVersion: z.number().int().min(1),
+  modeId: z.string(),
+  difficultyId: z.string(),
+  modifierIds: z.array(z.string()),
+  deathBlock: z.boolean(),
+  /** True once Death-Block has saved the run (it works once). */
+  deathBlockUsed: z.boolean(),
+  /** False means no account-level rewards of any kind (Adventure). */
+  progressionEligible: z.boolean(),
+  /** The published reward multiplier, fixed at the start. */
+  rewardMultiplier: z.number().min(0),
+  /** Added to every enemy's level. */
+  enemyLevelBonus: z.number().int(),
+  /** Times a wipe sent the run back to its checkpoint. */
+  wipes: z.number().int().min(0),
+});
+export type RunRules = z.infer<typeof RunRulesSchema>;
+
 export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over', 'expedition']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
@@ -727,6 +755,10 @@ export const RunStateSchema = z.object({
   draftCarry: z.array(z.string()).optional(),
   /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
   disabledMechanics: z.array(TransformKindSchema).default([]),
+  /** Mode, difficulty, modifiers and their reward multiplier (core/rules.ts). */
+  rules: RunRulesSchema,
+  /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */
+  checkpoint: z.record(z.string(), z.unknown()).optional(),
   /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
   runQuest: z.string().nullable().default(null),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */

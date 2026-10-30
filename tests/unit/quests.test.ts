@@ -124,15 +124,15 @@ describe('quests in saves', () => {
     expect(CURRENT_VERSIONS.profile).toBe(8);
   });
 
-  it('a version 16 run loads with no Run Quest', () => {
+  it('a version 17 run loads with no Run Quest', () => {
     const storage = new MemoryStorageProvider();
-    const { runQuest: _q, ...old } = newRun('save16');
-    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 16, savedAt: '', data: old }));
+    const { runQuest: _q, ...old } = newRun('save17');
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 17, savedAt: '', data: old }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
-    expect(loaded.migratedFrom).toBe(16);
+    expect(loaded.migratedFrom).toBe(17);
     expect(loaded.data.runQuest).toBeNull();
-    expect(CURRENT_VERSIONS.run).toBe(17);
+    expect(CURRENT_VERSIONS.run).toBe(18);
   });
 });

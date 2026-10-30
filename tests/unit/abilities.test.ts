@@ -87,7 +87,7 @@ describe('which ability a Pokémon has', () => {
     expect(statuses.filter((s) => s === 'supported').length).toBeGreaterThan(140);
     expect(abilityStatus('intimidate')).toBe('supported');
     expect(abilityStatus('pickup')).toBe('noEffect');
-    expect(abilityStatus('illusion')).toBe('pending');
+    expect(abilityStatus('illusion')).toBe('supported');
   });
 
   it('moves carry contact, punch, bite, pulse and sound flags', () => {

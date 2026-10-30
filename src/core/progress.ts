@@ -12,6 +12,7 @@ import { getArchetype, researchMultiplier } from './archetypes';
 import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
+import { scaleReward } from './rules';
 import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
@@ -125,7 +126,8 @@ export interface RunEndSummary {
  * progress), the Bank payout, achievements and the Run History entry.
  */
 export function applyRunToProfile(content: Content, profile: Profile, run: RunState, now: string): RunEndSummary {
-  const counts = getCampaign(content, run.campaignId).countsForProgress;
+  // Adventure earns nothing for the account; test campaigns count nothing either.
+  const counts = getCampaign(content, run.campaignId).countsForProgress && run.rules.progressionEligible;
   const readyBefore = new Set(trainersReadyToClaim(content, profile).map((a) => a.id));
   const research = content.balance.research;
   const attributesBefore = readAttributes(content, profile.attributes);
@@ -153,6 +155,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
         research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
         researchMultiplier(getArchetype(content, run.archetypeId)),
     ) + eventResearch(run);
+    researchPoints = scaleReward(researchPoints, run.rules);
     if (runQuestDone) researchPoints += runQuest.researchPoints;
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
@@ -160,7 +163,9 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   }
   const questSteps = counts ? awardQuestSteps(content, profile, run.archetypeId, now) : [];
 
-  const base = runPayout(content, run);
+  const raw = runPayout(content, run);
+  // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
+  const base = run.rules.progressionEligible ? { savings: scaleReward(raw.savings, run.rules), stipend: scaleReward(raw.stipend, run.rules) } : { savings: 0, stipend: 0 };
   const creditsBefore = profile.bankCredits;
   profile.bankCredits += base.savings + base.stipend;
   profile.lifetimeBankCredits += base.savings + base.stipend;

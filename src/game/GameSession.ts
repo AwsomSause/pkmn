@@ -16,6 +16,7 @@ import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
 import * as Run from '../core/run';
+import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
 import type { StorageProvider } from '../save/storage';
@@ -79,8 +80,8 @@ export class GameSession {
    * Starts a new run. `campaignId` picks a shorter campaign such as "dev" (default "full");
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
-  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon });
+  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon });
     this.profile = recordRunStarted(this.profile);
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));

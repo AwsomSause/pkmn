@@ -219,7 +219,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         break;
       case 'transform':
         if (e.side === 'player') active.player = e.uid;
-        if (e.kind === 'ability') break;
+        if (e.kind === 'ability' || e.kind === 'illusion') break;
         emit(content, run, 'transformed', {
           where,
           actors: [e.uid],

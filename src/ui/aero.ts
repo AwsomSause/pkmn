@@ -173,3 +173,55 @@ export function effectivenessIcon(scene: Phaser.Scene, x: number, y: number, fra
   if (!texture.has('e0')) for (let i = 0; i < 5; i++) texture.add(`e${i}`, 0, i * 64, 0, 64, 76);
   return scene.add.image(x, y, key, `e${frame}`).setOrigin(0, 0.5).setScale(scale);
 }
+
+/**
+ * The Aero backdrop for gameplay menus: a deep sky-to-sea gradient, soft light
+ * rays, a glossy horizon band and slowly rising bubbles (fixed layout, no
+ * random numbers). Still with reduced motion; plain with animations off.
+ */
+export function aeroBackdrop(scene: Phaser.Scene, motion: MotionLevel, tint: number = AERO.sky): Phaser.GameObjects.Container {
+  const W = scene.scale.width;
+  const H = scene.scale.height;
+  const root = scene.add.container(0, 0).setDepth(-100);
+  const g = scene.add.graphics();
+  const top = mixColor(tint, 0x000000, 0.55);
+  const bottom = mixColor(AERO.glassLow, 0x000000, 0.2);
+  g.fillGradientStyle(top, top, bottom, bottom, 1, 1, 1, 1);
+  g.fillRect(0, 0, W, H);
+  // A glossy curved horizon (Wii menu / Aero wallpaper).
+  g.fillStyle(0xffffff, 0.06);
+  g.fillEllipse(W / 2, H * 0.78, W * 1.6, H * 0.5);
+  g.fillStyle(tint, 0.08);
+  g.fillEllipse(W / 2, H * 0.82, W * 1.4, H * 0.38);
+  root.add(g);
+  if (motion === 'off') return root;
+  const has = (k: string) => scene.textures.exists(k);
+  if (has('pack.ebdx.lightA')) {
+    [0.15, 0.5, 0.85].forEach((fx, i) => {
+      const ray = scene.add.image(W * fx, -10, i % 2 ? 'pack.ebdx.lightB' : 'pack.ebdx.lightA').setOrigin(0.5, 0).setScale(2.4, 2.6).setAlpha(0.14).setBlendMode('ADD');
+      root.add(ray);
+      if (motion === 'full') scene.tweens.add({ targets: ray, alpha: 0.3, duration: 3000 + i * 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    });
+  }
+  if (has('pack.ebdx.bubble')) {
+    for (let i = 0; i < 12; i++) {
+      const f = (i * 0.6180339887) % 1;
+      const x = 30 + f * (W - 60);
+      const b = scene.add.image(x, H + 20 - ((i * 0.381966) % 1) * H, 'pack.ebdx.bubble').setScale(1.2 + f * 1.4).setAlpha(0.35);
+      root.add(b);
+      if (motion !== 'full') continue;
+      const dur = 9000 + f * 7000;
+      scene.tweens.add({
+        targets: b,
+        y: -20,
+        x: x + (i % 2 ? 24 : -24),
+        duration: (dur * (b.y + 20)) / (H + 40),
+        onComplete: () => {
+          b.setPosition(x, H + 20);
+          scene.tweens.add({ targets: b, y: -20, x: x + (i % 2 ? 24 : -24), duration: dur, repeat: -1 });
+        },
+      });
+    }
+  }
+  return root;
+}

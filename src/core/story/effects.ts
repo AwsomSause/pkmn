@@ -59,6 +59,12 @@ export function applyStoryEffect(content: Content, run: RunState, effectId: stri
       mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.max(1, Math.floor(maxHp(content, mon) * spec.hpShare)));
       break;
     }
+    case 'cure': {
+      const mon = run.party.find((m) => m.uid === targetUid);
+      if (!mon || !mon.status) return 'notApplicable';
+      mon.status = null;
+      break;
+    }
     case 'attribute':
       addRunAttribute(content, run, spec.attribute, spec.amount);
       break;
