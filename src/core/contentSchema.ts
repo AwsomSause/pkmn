@@ -1178,6 +1178,8 @@ export const BalanceSchema = z.object({
     extraPerStage: z.number().min(0),
     randomExtra: z.number().int().min(0),
     maxSize: z.number().int().min(1).max(6),
+    /** Early-game bands: the largest team in each of the run's first stages (stage 1: 1 Pokémon, then 2–4). Later stages use maxSize. */
+    earlyCaps: z.array(z.number().int().min(1).max(6)).default([]),
   }),
   /** Elite Four and champion teams grow with each region (extraPerStage counts regions here). */
   eliteFourTeam: z.object({

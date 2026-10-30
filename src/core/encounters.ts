@@ -66,7 +66,8 @@ type TeamConfig = Content['balance']['trainerTeam'];
 /** Team size grows with each stage: baseSize + extraPerStage × stage + random extra, capped. */
 export function teamSize(cfg: TeamConfig, stageIndex: number, rng: Rng): number {
   const extra = cfg.randomExtra > 0 ? rng.int(0, cfg.randomExtra) : 0;
-  return Math.max(1, Math.min(cfg.maxSize, cfg.baseSize + Math.floor(cfg.extraPerStage * stageIndex) + extra));
+  const cap = cfg.earlyCaps[stageIndex] ?? cfg.maxSize;
+  return Math.max(1, Math.min(cfg.maxSize, cap, cfg.baseSize + Math.floor(cfg.extraPerStage * stageIndex) + extra));
 }
 
 /**
