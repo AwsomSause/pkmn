@@ -98543,6 +98543,112 @@
   "femaleRatio": null
  },
  {
+  "id": "keldeo-resolute",
+  "dex": 647,
+  "name": "Resolute Keldeo",
+  "generation": 5,
+  "types": [
+   "water",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 91,
+   "atk": 72,
+   "def": 90,
+   "spa": 129,
+   "spd": 90,
+   "spe": 108
+  },
+  "catchRate": 3,
+  "baseExp": 261,
+  "growthRate": "slow",
+  "evolutionStage": 1,
+  "evolvesFrom": null,
+  "tags": [
+   "mythical"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "aqua-jet"
+   },
+   {
+    "level": 1,
+    "move": "leer"
+   },
+   {
+    "level": 1,
+    "move": "secret-sword"
+   },
+   {
+    "level": 10,
+    "move": "bubble-beam"
+   },
+   {
+    "level": 12,
+    "move": "double-kick"
+   },
+   {
+    "level": 15,
+    "move": "helping-hand"
+   },
+   {
+    "level": 28,
+    "move": "take-down"
+   },
+   {
+    "level": 29,
+    "move": "retaliate"
+   },
+   {
+    "level": 36,
+    "move": "aqua-tail"
+   },
+   {
+    "level": 37,
+    "move": "work-up"
+   },
+   {
+    "level": 38,
+    "move": "quick-guard"
+   },
+   {
+    "level": 45,
+    "move": "sacred-sword"
+   },
+   {
+    "level": 51,
+    "move": "swords-dance"
+   },
+   {
+    "level": 65,
+    "move": "hydro-pump"
+   },
+   {
+    "level": 71,
+    "move": "close-combat"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/keldeo-resolute",
+   "icon": "custom/keldeo-resolute",
+   "cry": "647"
+  },
+  "abilities": {
+   "normal": [
+    "justified"
+   ],
+   "hidden": null
+  },
+  "weight": 48.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "keldeo"
+  }
+ },
+ {
   "id": "meloetta",
   "dex": 648,
   "name": "Meloetta",
@@ -117149,8 +117255,8 @@
   ],
   "evolutions": [],
   "assets": {
-   "sprite": "774",
-   "icon": "7/774",
+   "sprite": "custom/minior-core",
+   "icon": "custom/minior-core",
    "cry": "774"
   },
   "abilities": {

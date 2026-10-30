@@ -122,6 +122,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
   ...['ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}.mp3` })),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
+  // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
+  { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },
+  // Victory fanfares from the Essentials EBDX kit ("Battle victory wild/trainer/leader"), loaded when a battle starts.
+  ...['wild', 'trainer', 'leader'].map((n): AssetEntry => ({ id: `bgm.victory_${n}`, kind: 'audio', category: 'music', path: `audio/bgm/victory_${n}.mp3`, lazy: true })),
   // Ending credits: "PWT Victor!" (B2W2 arrangement shipped with the Essentials EBDX kit), looped.
   { id: 'bgm.credits', kind: 'audio', category: 'music', path: 'audio/bgm/credits.mp3' },
   { id: 'se.ball_throw', kind: 'audio', category: 'sound', path: 'audio/se/pb_throw.wav' },

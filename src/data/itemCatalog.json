@@ -12140,7 +12140,7 @@
   "id": "keldeo-resolution",
   "name": "Keldeo Resolution",
   "family": "Key items: tickets, keys and story items",
-  "description": "Keldeo: Fighting moves +20% (no Resolute sprite yet)",
+  "description": "Keldeo takes its Resolute form; Fighting moves +20%",
   "rarity": "epic",
   "stacksOn": "pokemon",
   "max": 1,
@@ -12157,8 +12157,14 @@
      ],
      "percent": 20,
      "species": [
-      "keldeo"
+      "keldeo",
+      "keldeo-resolute"
      ]
+    },
+    {
+     "hook": "formHeld",
+     "from": "keldeo",
+     "to": "keldeo-resolute"
     }
    ]
   }

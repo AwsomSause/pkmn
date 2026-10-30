@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T18:24:57.198Z",
+  "generatedAt": "2026-10-30T19:26:34.652Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -687,6 +687,34 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/battle_trainer.mp3"
+    },
+    {
+      "id": "bgm.battle_gb",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/battle_gb.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.victory_wild",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/victory_wild.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.victory_trainer",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/victory_trainer.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.victory_leader",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/victory_leader.mp3",
+      "lazy": true
     },
     {
       "id": "bgm.credits",
@@ -37561,6 +37589,45 @@
       "lazy": true
     },
     {
+      "id": "pokemon.front.custom/keldeo-resolute",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/keldeo-resolute.png",
+      "atlasPath": "images/pokemon/custom/keldeo-resolute.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/keldeo-resolute",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/keldeo-resolute.png",
+      "atlasPath": "images/pokemon/back/custom/keldeo-resolute.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/keldeo-resolute",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/keldeo-resolute.png",
+      "atlasPath": "images/pokemon/shiny/custom/keldeo-resolute.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/keldeo-resolute",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/keldeo-resolute.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/keldeo-resolute.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.keldeo-resolute",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/keldeo-resolute.png",
+      "lazy": true
+    },
+    {
       "id": "pokemon.front.648-aria",
       "kind": "atlas",
       "category": "pokemon",
@@ -44958,6 +45025,45 @@
       "kind": "audio",
       "category": "sound",
       "path": "audio/cry/774.m4a",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.front.custom/minior-core",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/custom/minior-core.png",
+      "atlasPath": "images/pokemon/custom/minior-core.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.back.custom/minior-core",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/custom/minior-core.png",
+      "atlasPath": "images/pokemon/back/custom/minior-core.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.front.custom/minior-core",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/shiny/custom/minior-core.png",
+      "atlasPath": "images/pokemon/shiny/custom/minior-core.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.shiny.back.custom/minior-core",
+      "kind": "atlas",
+      "category": "pokemon",
+      "path": "images/pokemon/back/shiny/custom/minior-core.png",
+      "atlasPath": "images/pokemon/back/shiny/custom/minior-core.json",
+      "lazy": true
+    },
+    {
+      "id": "pokemon.icon.minior-core",
+      "kind": "image",
+      "category": "pokemon",
+      "path": "images/pokemon/icons/custom/minior-core.png",
       "lazy": true
     },
     {
