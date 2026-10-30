@@ -52,6 +52,7 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   wildAmbush: 'enemyStage',
   wildKin: 'flair',
   chemistryPerfect: 'statStage',
+  starterDestiny: 'statStage',
   grandOmen: 'flair',
   grandShadow: 'enemyStage',
   grandGrudge: 'statStage',
@@ -295,6 +296,10 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       if (run.party.some((m) => lossesTo(run, m.uid, foe.speciesId) >= 1)) fire('wildAmbush', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });
       const kin = run.party.find((m) => m.uid !== lead.uid && m.speciesId === foe.speciesId);
       if (kin) fire('wildKin', 'player', kin.uid, -1, { name: nameOf(kin.speciesId), enemy: nameOf(foe.speciesId) });
+    }
+    // Starter Destiny: the starter you chose meets an unusually difficult opponent and finds something extra.
+    if (lead.uid === run.log.starterUid && trainerFight && foe.level >= lead.level + 6) {
+      fire('starterDestiny', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     }
     // Team Chemistry: Perfect Timing partners open together with a lift.
     const timed = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && chemistryOf(content, run, lead.uid, m.uid) === 'perfectTiming');
