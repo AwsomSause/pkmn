@@ -34,7 +34,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 8, run 
 - Blueprint slice 2 Totems: 8 Totems (`totems.json`, `core/totem/`) on stage maps, aura, ally calls (ally takes the field in the Totem's place), phases, home-field weather/terrain/hazards, rare-Pokémon rewards, unlocks. Next: Expeditions, Minigames.
 
 - Blueprint slice 3 Mega-Expeditions: 5 expeditions (`expeditions.json`, `core/expedition/`, `ExpeditionScene`), 12 stop kinds, 5 party modes, loot kept on extraction, Mega Energy to temporary Mega Stones, Mega guardian finale. Next: Minigames.
-- Blueprint slice 4 Minigames: stop on stage maps (50%), 14 games (`minigames.json`, `core/minigame/`, `MinigameScene`), medals, capped rewards, run save v18. All four Blueprint slices are built; remaining TODOs are in the tracker.
+- Blueprint slice 4 Minigames: stop on stage maps (50%), 14 games (`minigames.json`, `core/minigame/`, `MinigameScene`), medals, capped rewards, run save v19. All four Blueprint slices are built; remaining TODOs are in the tracker.
 
 ## In progress / next
 - Trainers.md perks: batches 2–11 (one PR per 20 trainers, then signature mechanics).
