@@ -189,6 +189,11 @@ export function bossTeamIndex(role: BossRole, number: number): number {
   return Math.max(0, Math.min(count - 1, number));
 }
 
+/** The species of a boss's team, in battle order (the last one is the ace). Needs no roll, so map previews can show it. */
+export function bossTeamSpecies(content: Content, role: BossRole, bossId: string, number: number): string[] {
+  return getBoss(content, bossId).teams[role][bossTeamIndex(role, number)]!.members.map((m) => m.speciesId);
+}
+
 /**
  * A boss's team for a battle: the species, moves and training come from
  * bossTeams.json; levels follow the difficulty curve with the role's bonus,

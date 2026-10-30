@@ -16,8 +16,9 @@ import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, pr
 import { createBattle, resolveTurn, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
-import type { AttributeKey, Content } from './contentSchema';
+import type { AttributeKey, Content, TypeName } from './contentSchema';
 import {
+  bossTeamSpecies,
   candiesForRelease,
   CHAMPION_CLASS,
   ELITE_FOUR_CLASS,
@@ -37,7 +38,7 @@ import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
-import { findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
+import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
 import { passivePercent } from './catalog';
@@ -48,18 +49,28 @@ import {
   afterPurchase,
   afterTrainerWin,
   earlyStockCount,
+  hiddenItemFound,
+  hiddenItemNode,
+  hasPerk,
   mapItemRng,
+  markUsedThisStage,
+  perkItem,
   type MapItemRun,
   priceMultiplierFromItems,
   prizeMoneyFromItems,
   regionMoneyFromItems,
   repelActive,
+  spendUse,
+  stageKey,
   startStageEffects,
+  usedThisStage,
+  usesLeft,
   throwMultiplier,
   useRepel,
   useThrowCharges,
   useUses,
   useWildBattleCharges,
+  voucherOf,
   wildBattleSetup,
   wildExpMultiplier,
   wildLevelBonus,
@@ -273,14 +284,25 @@ function requireStage(run: RunState): StageState {
 /** Moves to a node on the map and starts its encounter. */
 export function chooseNode(content: Content, current: RunState, nodeId: string): RunState {
   assertPhase(current, 'map');
-  const choices = nextChoices(requireStage(current));
+  const choices = mapChoices(content, current);
   if (!choices.some((n) => n.id === nodeId)) throw new Error(`Node "${nodeId}" is not one of the next choices`);
   const run = structuredClone(current);
   const stage = run.stage!;
+  const mode = run.moveMode;
+  delete run.moveMode;
+  const node = findNode(stage.map, nodeId);
+  // The Bicycle rides through a node of the skipped column without stopping.
+  if (mode === 'bicycle') stage.visited.push(nextChoices(stage).find((n) => n.next.includes(nodeId))!.id);
+  if (mode && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, perkItem(content, run, mode)!);
   stage.current = nodeId;
   stage.visited.push(nodeId);
-  const node = findNode(stage.map, nodeId);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
+  // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
+  if (mode === 'machBike' && node.kind === 'wild') {
+    run.afterDecisions = 'reward';
+    continueAfterDecisions(content, run);
+    return run;
+  }
   // A Repel keeps a wild Pokémon away: no battle and no reward, but the level counts.
   if (node.kind === 'wild' && repelActive(content, run)) {
     useRepel(content, run);
@@ -290,8 +312,212 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   return run;
 }
 
-/** Sets up the battle for a map node (mutates `run`). */
-function startEncounter(content: Content, run: RunState, node: MapNode): void {
+// ---------- map items: getting around (M8.75 slice 3b-2) ----------
+
+/** The nodes the player may move to next: the normal choices, or where a chosen bike can reach. */
+export function mapChoices(content: Content, run: RunState): MapNode[] {
+  const stage = requireStage(run);
+  const plain = nextChoices(stage);
+  if (run.moveMode === 'bicycle') {
+    const ahead = new Map<string, MapNode>();
+    for (const n of plain) for (const id of n.next) ahead.set(id, findNode(stage.map, id));
+    return ahead.size > 0 ? [...ahead.values()] : plain;
+  }
+  if (run.moveMode === 'acroBike') {
+    const column = currentColumn(stage) + 1;
+    return stage.map.nodes.filter((n) => n.column === column);
+  }
+  return plain;
+}
+
+export type MapActionKind = 'escapeRope' | 'bicycle' | 'acroBike' | 'machBike' | 'rematch';
+
+export interface MapAction {
+  kind: MapActionKind;
+  itemId: string;
+  /** What the item does now, for the Items menu. */
+  text: string;
+  /** Why it can't be used now, or null. */
+  problem: string | null;
+  /** A bike chosen for the next move. */
+  on: boolean;
+}
+
+/** Where an Escape Rope leads: the index in `visited` of the last node with a choice of paths (-1 = the start), or null. */
+function lastFork(stage: StageState): number | null {
+  for (let i = stage.visited.length - 2; i >= 0; i--) if (findNode(stage.map, stage.visited[i]!).next.length > 1) return i;
+  return stage.visited.length > 0 && stage.map.nodes.filter((n) => n.column === 1).length > 1 ? -1 : null;
+}
+
+/** The trainer a VS Seeker calls back: the last one beaten on this stage. */
+function rematchNode(stage: StageState): MapNode | null {
+  for (let i = stage.visited.length - 1; i >= 0; i--) {
+    const node = findNode(stage.map, stage.visited[i]!);
+    if (node.kind === 'trainer') return node;
+  }
+  return null;
+}
+
+/** The map items the player can use from the map's Items menu, with why each can't be used now. */
+export function mapActions(content: Content, run: RunState): MapAction[] {
+  const stage = run.stage;
+  if (!stage) return [];
+  const out: MapAction[] = [];
+  const league = stage.kind === 'league' ? 'Not in the Pokémon League.' : null;
+  const rope = perkItem(content, run, 'escapeRope');
+  if (rope) {
+    const fork = lastFork(stage);
+    out.push({
+      kind: 'escapeRope',
+      itemId: rope,
+      text: `Go back to the last fork and choose again (${usesLeft(run, rope)} left)`,
+      problem: league ?? (fork === null ? 'No fork behind you on this stage.' : null),
+      on: false,
+    });
+  }
+  const plain = nextChoices(stage);
+  const bikes: { kind: 'bicycle' | 'acroBike' | 'machBike'; text: string; problem: string | null }[] = [
+    { kind: 'bicycle', text: 'Ride two columns ahead, skipping one', problem: plain.every((n) => n.next.length === 0) ? 'Nothing two columns ahead.' : null },
+    { kind: 'acroBike', text: 'Jump to any stop in the next column', problem: null },
+    { kind: 'machBike', text: 'Ride past the next wild Pokémon and still get its reward', problem: plain.some((n) => n.kind === 'wild') ? null : 'No wild Pokémon ahead.' },
+  ];
+  for (const bike of bikes) {
+    const itemId = perkItem(content, run, bike.kind);
+    if (!itemId) continue;
+    const used = usedThisStage(run, itemId) ? 'Already used on this stage.' : null;
+    out.push({ kind: bike.kind, itemId, text: `${bike.text} (once per stage)`, problem: league ?? used ?? bike.problem, on: run.moveMode === bike.kind });
+  }
+  const seeker = perkItem(content, run, 'rematch');
+  if (seeker) {
+    const node = rematchNode(stage);
+    out.push({
+      kind: 'rematch',
+      itemId: seeker,
+      text: `Fight a trainer from this stage again for double money (${usesLeft(run, seeker)} left)`,
+      problem: league ?? (node ? null : 'No trainer beaten on this stage yet.'),
+      on: false,
+    });
+  }
+  return out;
+}
+
+/** Uses a map item from the Items menu: an Escape Rope, a bike (chosen for the next move, or put away), or a VS Seeker. */
+export function useMapAction(content: Content, current: RunState, kind: MapActionKind): { run: RunState; message: string } {
+  assertPhase(current, 'map');
+  const action = mapActions(content, current).find((a) => a.kind === kind);
+  if (!action) throw new Error("You don't have that item");
+  if (action.problem && !action.on) throw new Error(action.problem);
+  const run = structuredClone(current);
+  const stage = run.stage!;
+  const name = content.catalog.get(action.itemId)!.name;
+  switch (kind) {
+    case 'escapeRope': {
+      const fork = lastFork(stage)!;
+      spendUse(run, action.itemId);
+      stage.visited = stage.visited.slice(0, fork + 1);
+      stage.current = fork < 0 ? null : stage.visited[fork]!;
+      delete run.moveMode;
+      return { run, message: `You used the ${name} and went back to the last fork.` };
+    }
+    case 'rematch': {
+      spendUse(run, action.itemId);
+      const node = rematchNode(stage)!;
+      startEncounter(content, run, node, new Rng(hashSeed(`${run.seed}::rematch::${stageKey(run)}::${run.encountersCompleted}`)));
+      return { run, message: `The ${name} buzzed: a trainer wants a rematch!` };
+    }
+    default: {
+      if (action.on) {
+        delete run.moveMode;
+        return { run, message: `You put the ${name} away.` };
+      }
+      run.moveMode = kind;
+      return { run, message: `You got on the ${name}. Choose where to ride.` };
+    }
+  }
+}
+
+/** One map node's preview from a map item: who waits there. */
+export interface NodePreview {
+  /** The item showing it. */
+  itemId: string;
+  /** Species in battle order, with levels when they are known. */
+  team: { speciesId: string; level: number | null }[];
+  trainerName: string | null;
+}
+
+/**
+ * What map items show about the nodes on this stage: the next wild Pokémon
+ * (Devon Scope), the next trainers' teams (Town Map), the gym leader's ace
+ * (Rule Book) or whole team (Orange Mail). Battles are planned on a copy of
+ * the run, so previews never use a gameplay roll; they show exactly the
+ * battle the player gets by choosing that node next.
+ */
+export function mapPreviews(content: Content, run: RunState): Record<string, NodePreview> {
+  const stage = run.stage;
+  if (!stage || run.phase !== 'map') return {};
+  const working = activePreviewItems(content, run);
+  const perks = (what: 'wild' | 'trainers' | 'gymAce' | 'gymTeam') =>
+    working.find((id) => {
+      const effect = content.catalog.get(id)?.effect;
+      return effect?.kind === 'perk' && effect.perks.some((p) => p.perk === 'preview' && p.what === what);
+    }) ?? null;
+  const out: Record<string, NodePreview> = {};
+  const wildItem = perks('wild');
+  const trainerItem = perks('trainers');
+  for (const node of mapChoices(content, run)) {
+    const itemId = node.kind === 'wild' ? wildItem : node.kind === 'trainer' ? trainerItem : null;
+    if (!itemId) continue;
+    const copy = structuredClone(run);
+    // A preview never stops the map: with no Pokémon able to battle there is nothing to show.
+    if (!copy.party.some((p) => p.hp > 0)) break;
+    startEncounter(content, copy, node);
+    const battle = copy.battle!;
+    out[node.id] = { itemId, team: battle.enemyTeam.map((m) => ({ speciesId: m.speciesId, level: m.level })), trainerName: battle.trainer?.name ?? null };
+  }
+  const gym = stage.map.nodes.find((n) => n.kind === 'gym');
+  const teamItem = perks('gymTeam') ?? perks('gymAce');
+  if (gym && teamItem) {
+    const campaign = getCampaign(content, run.campaignId);
+    const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
+    const shown = perks('gymTeam') ? species : species.slice(-1);
+    out[gym.id] = { itemId: teamItem, team: shown.map((speciesId) => ({ speciesId, level: null })), trainerName: null };
+  }
+  return out;
+}
+
+/** The map items giving a preview that are working right now. */
+function activePreviewItems(content: Content, run: RunState): string[] {
+  const ids = new Set<string>();
+  for (const id of Object.keys(run.passives ?? {}).concat((run.mapEffects ?? []).map((e) => e.itemId))) {
+    const probe = { ...run, passives: run.passives?.[id] ? { [id]: run.passives[id]! } : {}, mapEffects: (run.mapEffects ?? []).filter((e) => e.itemId === id) };
+    if (hasPerk(content, probe, 'preview')) ids.add(id);
+  }
+  return [...ids];
+}
+
+/**
+ * Fame Checker: the gym leaders of this region's stages still to come, found
+ * by starting those stages on a copy of the run, so they are exactly the ones
+ * the player will meet and no roll is used.
+ */
+export function nextGymLeaders(content: Content, run: RunState): { leaderId: string; types: TypeName[] }[] {
+  const stage = run.stage;
+  if (!stage || stage.kind !== 'stage' || !hasPerk(content, run, 'nextLeaders')) return [];
+  const campaign = getCampaign(content, run.campaignId);
+  const copy = structuredClone(run);
+  const out: { leaderId: string; types: TypeName[] }[] = [];
+  for (let index = stage.index + 1; index < campaign.stagesPerRegion; index++) {
+    enterStage(content, copy, index);
+    out.push({ leaderId: copy.stage!.leaderId, types: [...getTheme(content, copy.stage!.themeId).types] });
+  }
+  return out;
+}
+
+/**
+ * Sets up the battle for a map node (mutates `run`). A VS Seeker rematch passes
+ * a generator of its own, so the encounter stream (and every later battle) is unchanged.
+ */
+function startEncounter(content: Content, run: RunState, node: MapNode, rematch?: Rng): void {
   const stage = run.stage!;
   const archetype = getArchetype(content, run.archetypeId);
   const theme = getTheme(content, stage.themeId);
@@ -323,7 +549,8 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
     useWildBattleCharges(run);
   } else {
-    const plan: TrainerPlan = withStream(run.rng, 'encounter', (r) => {
+    const roll = <T>(fn: (r: Rng) => T): T => (rematch ? fn(rematch) : withStream(run.rng, 'encounter', fn));
+    const plan: TrainerPlan = roll((r) => {
       switch (node.kind) {
         case 'gym':
           return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r);
@@ -342,6 +569,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode): void {
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
     run.battle.ai = plan.ai;
     run.battle.levelInfo = plan.levelInfo;
+    if (rematch) run.battle.rematch = true;
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
     if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));
@@ -370,6 +598,20 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
     return { run, message: 'Your Pokémon were fully healed!' };
   }
   run.phase = 'shop';
+  // A Bike Voucher is traded for its bike (or money, if the player already has one).
+  const voucher = voucherOf(content, run);
+  if (voucher) {
+    spendUse(run, voucher.itemId);
+    const entry = content.catalog.get(voucher.item)!;
+    const owned = run.passives?.[voucher.item] ?? 0;
+    if (entry.max === null || owned < entry.max) {
+      run.passives = { ...run.passives, [voucher.item]: owned + 1 };
+      return { run, message: `Welcome to the shop! You traded your voucher for a ${entry.name}.` };
+    }
+    run.money += voucher.refund;
+    count(run, 'moneyEarned', voucher.refund);
+    return { run, message: `Welcome to the shop! You already have a ${entry.name}, so the voucher was worth ₽${voucher.refund}.` };
+  }
   return { run, message: 'Welcome to the shop!' };
 }
 
@@ -658,7 +900,9 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Reply and Bead Mail (trainers), Soot Sack (wild battles on its type's stages).
   const theme = run.stage ? (content.themes.get(run.stage.themeId) ?? null) : null;
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
-  const moneyGained = Math.floor(base * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  // A VS Seeker rematch pays double.
+  const rematch = battle.rematch ? 2 : 1;
+  const moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -709,10 +953,14 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
   }
   // Loot Sack and Blue Card: Bag items after trainer wins, from a generator of their own.
+  const stock = shopStock(content, run).map((e) => ({ item: e.item, price: e.price }));
   const itemsFound =
     outcome === 'win' && battle.kind === 'trainer'
-      ? afterTrainerWin(content, run, shopStock(content, run).map((e) => ({ item: e.item, price: e.price })), new Rng(hashSeed(`${run.seed}::trainer-loot::${run.encountersCompleted}`)))
+      ? afterTrainerWin(content, run, stock, new Rng(hashSeed(`${run.seed}::trainer-loot::${run.encountersCompleted}`)))
       : [];
+  // Itemfinder: the hidden item at this stage's marked wild stop.
+  const hidden = battle.kind === 'wild' ? hiddenItemFound(content, run, stock) : null;
+  if (hidden) itemsFound.push(hidden);
   for (const id of itemsFound) addItem(run.inventory, id, 1);
   if (outcome === 'win') {
     count(run, 'battlesWon');

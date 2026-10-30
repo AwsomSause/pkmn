@@ -5,8 +5,9 @@
 // straight line of Elite Four members, then the champion.
 
 import Phaser from 'phaser';
-import { currentColumn, findNode, nextChoices } from '../core/map';
-import { mapItemSummary, repelActive } from '../core/mapItems';
+import { currentColumn, findNode } from '../core/map';
+import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
+import { mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
@@ -14,8 +15,8 @@ import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
-import type { Picker } from '../ui/partyPanel';
-import { pokemonIcon, trainerVisual } from '../ui/sprites';
+import { Picker } from '../ui/partyPanel';
+import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, drawPanel, focusFrame } from '../ui/widgets';
 import { sceneForRun } from './routing';
@@ -46,7 +47,8 @@ type Option =
   | { kind: 'node'; node: MapNode }
   | { kind: 'side'; side: SideStop }
   | { kind: 'party' }
-  | { kind: 'bag' };
+  | { kind: 'bag' }
+  | { kind: 'items' };
 
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
@@ -56,13 +58,18 @@ export class MapScene extends Phaser.Scene {
   private info: Phaser.GameObjects.Text | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
   private busy = false;
+  /** What map items show about nodes (Devon Scope, Town Map, Rule Book, Orange Mail). */
+  private previews: Record<string, NodePreview> = {};
 
   constructor() {
     super('Map');
   }
 
   preload(): void {
-    preloadPokemon(this, partySpecies(), { icon: true });
+    const { session } = services();
+    this.previews = session.run?.phase === 'map' ? mapPreviews(session.content, session.run) : {};
+    const shown = Object.values(this.previews).flatMap((p) => p.team.flatMap((m) => session.content.species.get(m.speciesId) ?? []));
+    preloadPokemon(this, [...partySpecies(), ...shown], { icon: true });
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -113,7 +120,9 @@ export class MapScene extends Phaser.Scene {
       .setOrigin(1, 0);
 
     // ---------- the map (scrolls sideways) ----------
-    const choices = nextChoices(stage);
+    // A bike chosen from the Items menu changes where the player can go.
+    const choices = mapChoices(content, run);
+    const hidden = hiddenItemNode(content, run);
     const choiceIds = new Set(choices.map((n) => n.id));
     const mapLayer = this.add.container(0, 0);
     const totalWidth = MAP_LEFT * 2 + (stage.map.columns - 1) * COL_SPACING;
@@ -196,6 +205,9 @@ export class MapScene extends Phaser.Scene {
         mapLayer.add(this.add.text(x, y, style.glyph, textStyle(26, '#ffffff', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5).setAlpha(alpha));
       }
       if (n.harder) mapLayer.add(this.add.text(x + r - 2, y - r + 2, '!', textStyle(22, '#f8f8f8', { stroke: '#5a2890', strokeThickness: 5 })).setOrigin(0.5));
+      // Itemfinder: the stop hiding an item.
+      if (n.id === hidden && !visited) mapLayer.add(this.add.text(x - r + 2, y - r + 2, '✦', textStyle(22, '#f8e070', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5));
+      this.drawPreview(mapLayer, n, x, y, r);
       if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
       if (league && boss) mapLayer.add(this.add.text(x, y + NODE_RADIUS + 14, boss.name, textStyle(15, COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
@@ -236,6 +248,7 @@ export class MapScene extends Phaser.Scene {
       if (side.kind === 'heal' && side.used) continue;
       buttons.push({ option: { kind: 'side', side }, label: side.kind === 'heal' ? 'Heal' : 'Shop', color: SIDE_STYLE[side.kind].color });
     }
+    if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel });
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
@@ -247,7 +260,8 @@ export class MapScene extends Phaser.Scene {
     }
 
     // Without a notice, the corner shows the map items that are working (Repel ×2 · Black Flute...).
-    const working = mapItemSummary(content, run);
+    const riding = run.moveMode ? mapActions(content, run).find((a) => a.on) : undefined;
+    const working = [riding ? `Riding the ${content.catalog.get(riding.itemId)!.name}` : '', mapItemSummary(content, run)].filter(Boolean).join(' · ');
     this.notice = this.add
       .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : ''), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
       .setOrigin(1, 0);
@@ -324,7 +338,8 @@ export class MapScene extends Phaser.Scene {
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : 'shop'));
-        return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}`;
+        const seen = this.previewText(n);
+        return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';
@@ -332,6 +347,8 @@ export class MapScene extends Phaser.Scene {
         return 'Choose which Pokémon leads the next battle.';
       case 'bag':
         return 'Use medicine or evolution items on your Pokémon.';
+      case 'items':
+        return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
     }
   }
 
@@ -383,7 +400,119 @@ export class MapScene extends Phaser.Scene {
       case 'bag':
         openBagMenu(this.fieldHost());
         break;
+      case 'items':
+        this.openItems();
+        break;
     }
+  }
+
+  /**
+   * A small preview beside a node: the wild Pokémon with its level (Devon Scope),
+   * the trainer's lead and team size (Town Map), or the gym team (Rule Book, Orange Mail)
+   * in a little grid. It sits to the lower right, clear of the cursor ring and the paths.
+   */
+  private drawPreview(layer: Phaser.GameObjects.Container, n: MapNode, x: number, y: number, r: number): void {
+    const preview = this.previews[n.id];
+    if (!preview) return;
+    const content = services().session.content;
+    const label = (lx: number, ly: number, text: string) =>
+      layer.add(this.add.text(lx, ly, text, textStyle(13, '#f0e0a0', { stroke: '#181818', strokeThickness: 3 })).setOrigin(0.5, 0));
+    if (n.kind === 'gym') {
+      // Up to six icons, two columns of three, to the right of the gym leader.
+      const team = preview.team.slice(0, 6);
+      const rows = Math.min(3, team.length);
+      team.forEach((m, i) => {
+        const species = content.species.get(m.speciesId);
+        if (species) layer.add(pokemonIcon(this, species, x + r + 18 + Math.floor(i / 3) * 30, y + (i % 3 - (rows - 1) / 2) * 30, 0.9));
+      });
+      return;
+    }
+    const first = preview.team[0];
+    const species = first ? content.species.get(first.speciesId) : undefined;
+    if (!first || !species) return;
+    const px = x + r + 18;
+    layer.add(pokemonIcon(this, species, px, y + 4, 1.2));
+    label(px, y + 24, n.kind === 'wild' ? `Lv${first.level}` : `×${preview.team.length}`);
+  }
+
+  /** The preview of a node in words, for the info line. */
+  private previewText(n: MapNode): string {
+    const preview = this.previews[n.id];
+    if (!preview) return '';
+    const content = services().session.content;
+    const item = content.catalog.get(preview.itemId)!.name;
+    const names = preview.team.map((m) => `${content.species.get(m.speciesId)?.name ?? m.speciesId}${m.level ? ` Lv${m.level}` : ''}`).join(', ');
+    if (n.kind === 'gym') return `${item}: ${preview.team.length === 1 ? 'the ace is' : 'the team is'} ${names}`;
+    return `${item}: ${preview.trainerName ? `${preview.trainerName} with ` : ''}${names}`;
+  }
+
+  /** Rows of the map Items menu: items to use, then what the Fame Checker and gym previews show. */
+  private itemRows(): { action: MapActionKind | null; itemId: string; title: string; text: string; problem: string | null }[] {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
+    const rows: { action: MapActionKind | null; itemId: string; title: string; text: string; problem: string | null }[] = mapActions(content, run).map((a) => ({
+      action: a.kind,
+      itemId: a.itemId,
+      title: `${content.catalog.get(a.itemId)!.name}${a.on ? ' (riding)' : ''}`,
+      text: a.on ? 'Choose it again to get off.' : a.text,
+      problem: a.on ? null : a.problem,
+    }));
+    const leaders = nextGymLeaders(content, run);
+    if (leaders.length > 0) {
+      const text = leaders.map((l) => `${bossInfo(content, 'gym', l.leaderId).name} (${l.types.map((t) => t.toUpperCase()).join('/')})`).join(', ');
+      rows.push({ action: null, itemId: 'fame-checker', title: 'Fame Checker', text: `Next gym leaders: ${text}`, problem: `Next gym leaders: ${text}` });
+    }
+    const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
+    const gymText = gym ? this.previewText(gym) : '';
+    if (gym && gymText) {
+      const itemId = this.previews[gym.id]!.itemId;
+      const text = `Gym leader ${bossInfo(content, 'gym', run.stage!.leaderId).name}: ${gymText.slice(gymText.indexOf(':') + 2)}`;
+      rows.push({ action: null, itemId, title: content.catalog.get(itemId)!.name, text, problem: text });
+    }
+    return rows;
+  }
+
+  private openItems(): void {
+    const { session } = services();
+    const content = session.content;
+    const rows = this.itemRows();
+    const picker: Picker = new Picker(this, {
+      title: 'Map items',
+      columns: 1,
+      rowHeight: 78,
+      rows: rows.map((row) => ({
+        problem: row.problem,
+        hint: row.text,
+        draw: (scene, box, w, h) => {
+          const icon = content.rewards.get(`item:${row.itemId}`)?.iconAssetId;
+          if (icon) box.add(itemVisual(scene, icon, 26, h / 2, 2));
+          box.add(scene.add.text(56, 6, row.title, textStyle(22)));
+          box.add(scene.add.text(56, 34, row.text, textStyle(15, '#d8d0e0', { wordWrap: { width: w - 72 } })));
+        },
+      })),
+      onSelect: (i) => {
+        const row = rows[i]!;
+        picker.close();
+        this.picker = null;
+        if (!row.action) return;
+        playSfx(this, 'ui.select');
+        const notice = session.useMapAction(row.action);
+        const run = session.run!;
+        if (run.phase !== 'map') {
+          this.busy = true;
+          this.cameras.main.fadeOut(250);
+          this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+          return;
+        }
+        this.scene.restart({ notice, focus: 0 });
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   private showBanner(top: string, title: string, sub: string): void {
