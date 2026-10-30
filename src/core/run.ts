@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -1472,7 +1472,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) : 1) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
