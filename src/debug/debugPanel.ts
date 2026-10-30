@@ -18,14 +18,21 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLEl
 }
 
 /** The story layer, live: newest events first, then the chronicle's top moments and each Pokémon's history. */
-function storyLog(run: RunState): string {
+function storyLog(run: RunState, claims = 0): string {
   const story = run.story;
   const where = (w: RunState['story']['events'][number]['where']) =>
     `R${w.region + 1}${w.stage !== null ? ` S${w.stage + 1}` : ''}${w.level !== null ? ` L${w.level}` : ''}${w.battle !== null ? ` B${w.battle}` : ''}${w.turn !== null ? ` T${w.turn}` : ''}`;
-  const lines = story.events
+  const counts = new Map<string, number>();
+  for (const e of story.events) counts.set(e.type, (counts.get(e.type) ?? 0) + 1);
+  const lines = [
+    `seed ${run.seed}  ·  rule version ${run.rules.ruleVersion ?? '?'}  ·  profile claims ${claims}`,
+    `event counts: ${[...counts].sort((a, b) => b[1] - a[1]).map(([t, n]) => `${t}×${n}`).join(', ') || 'none'}`,
+    '',
+    ...story.events
     .slice(-40)
     .reverse()
-    .map((e) => `#${e.seq} ${e.type} [${e.actors.join(',')}] ${where(e.where)} ${Object.entries(e.data).map(([k, v]) => `${k}=${v}`).join(' ')}`);
+    .map((e) => `#${e.seq} ${e.type} [${e.actors.join(',')}] ${where(e.where)} ${Object.entries(e.data).map(([k, v]) => `${k}=${v}`).join(' ')}`),
+  ];
   lines.push('', 'top moments:', ...topMoments(story).map((m) => `  (${m.importance}) ${m.text}`));
   lines.push('', 'histories:');
   for (const h of Object.values(story.histories)) {
@@ -114,7 +121,7 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
         }
       }
 
-      panel.append(el('h3', { textContent: `Story Log (${run.story.seq} events, ${run.story.chronicle.length} in the chronicle)` }), el('pre', { textContent: storyLog(run) }));
+      panel.append(el('h3', { textContent: `Story Log (${run.story.seq} events, ${run.story.chronicle.length} in the chronicle)` }), el('pre', { textContent: storyLog(run, Object.keys(session.profile.claims ?? {}).length) }));
 
       const heal = el('button', { textContent: 'Heal party', onclick: () => { session.debugHeal(); if (run.phase === 'battle') goTo('Battle'); render(); } });
       panel.append(heal);
