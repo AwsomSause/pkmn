@@ -98,16 +98,20 @@ export function generateDraft(
   rng: Rng,
   weights: Partial<Record<Rarity, number>> = content.balance.rarityWeights,
   draftVariety = runAttributeEffects(content, run).draftVariety,
+  /** Draft items: a bigger draft, rewards that must be in it (first), and rewards that must not (the rest of a draft being re-rolled). */
+  opts: { size?: number; forced?: readonly string[]; exclude?: readonly string[] } = {},
 ): string[] {
-  const size = content.balance.draftSize;
-  const eligible = [...content.rewards.values()].filter((r) => isRewardEligible(content, run, r));
-  if (eligible.length < size) {
-    throw new RewardConfigError(`Only ${eligible.length} eligible rewards; a draft needs ${size} distinct rewards`);
+  const size = opts.size ?? content.balance.draftSize;
+  const forced = [...new Set(opts.forced ?? [])].filter((id) => content.rewards.has(id) && isRewardEligible(content, run, content.rewards.get(id)!)).slice(0, size);
+  const skip = new Set([...forced, ...(opts.exclude ?? [])]);
+  const eligible = [...content.rewards.values()].filter((r) => !skip.has(r.id) && isRewardEligible(content, run, r));
+  if (eligible.length + forced.length < size) {
+    throw new RewardConfigError(`Only ${eligible.length + forced.length} eligible rewards; a draft needs ${size} distinct rewards`);
   }
   const byTier = new Map<Rarity, Reward[]>(RARITIES.map((t) => [t, eligible.filter((r) => r.rarity === t)]));
   const repeatWeight = content.balance.repeatFamilyWeight * (1 - draftVariety);
-  const chosen: string[] = [];
-  const families = new Set<string>();
+  const chosen: string[] = [...forced];
+  const families = new Set<string>(forced.map((id) => rewardFamily(content.rewards.get(id)!)));
   while (chosen.length < size) {
     const tier = rng.weighted(
       RARITIES.map((t) => ({ item: t, weight: byTier.get(t)!.length > 0 ? weights[t] ?? 0 : 0 })),

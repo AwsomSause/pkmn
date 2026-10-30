@@ -371,6 +371,8 @@ export const RunStateSchema = z.object({
   victory: z.boolean(),
   /** The five reward ids on offer, while phase is "reward". */
   draft: z.array(z.string()).nullable(),
+  /** Rewards that come back in the next draft (Lock Capsule, Favored Mail). */
+  draftCarry: z.array(z.string()).optional(),
   /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
   disabledMechanics: z.array(TransformKindSchema).default([]),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */

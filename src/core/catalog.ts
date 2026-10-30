@@ -15,7 +15,7 @@ import { addRunAttribute, attributeText, runAttributeEffects } from './attribute
 import type { AttributeKey, CatalogEffect, CatalogEntry, Content } from './contentSchema';
 import { changeFriendship } from './friendship';
 import { createPokemon, getSpecies, MAX_PP_UPS, maxHp, maxPp } from './pokemon';
-import { addMapItem, mapItemCopies } from './mapItems';
+import { activePerks, addMapItem, mapItemCopies, perksOf } from './mapItems';
 import { discover } from './progress';
 import { runLevelCap } from './regions';
 import type { Rng } from './rng';
@@ -290,7 +290,9 @@ export function applyCatalog(
     }
     case 'teachMove': {
       const choices = teachableMoves(content, target!, effect.type);
-      const moveIds = effect.mode === 'hm' ? choices : opts.rng.shuffle(choices).slice(0, TM_CHOICES);
+      // TM Case: more moves to pick from.
+      const extra = perksOf(activePerks(content, run), 'tmChoices').reduce((sum, p) => sum + p.perk.extra, 0);
+      const moveIds = effect.mode === 'hm' ? choices : opts.rng.shuffle(choices).slice(0, TM_CHOICES + extra);
       pending.push({ kind: 'teachMove', uid: target!.uid, itemName: entry.name, moveIds });
       break;
     }

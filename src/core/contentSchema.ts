@@ -733,6 +733,19 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   z.object({ perk: z.literal('extraStop'), kind: z.enum(['heal', 'shop', 'fish']), where: z.enum(['stage', 'nextNode']) }),
   /** The next trainer's reward draft uses the gym leader's odds (Bridge Mail S). */
   z.object({ perk: z.literal('betterDraft') }),
+  // ---------- draft items (slice 3b-3b) ----------
+  /** Each stage's first reward draft shows one extra choice (Dowsing Machine). */
+  z.object({ perk: z.literal('dowsing') }),
+  /** The reward draft after each trainer win shows one extra choice (Bloom Mail). */
+  z.object({ perk: z.literal('extraChoice') }),
+  /** From the reward screen: swap one draft choice for a new one (Cornn Berry). */
+  z.object({ perk: z.literal('rerollOne') }),
+  /** From the reward screen: a choice you lock comes back in the next draft too (Lock Capsule). */
+  z.object({ perk: z.literal('lockOne') }),
+  /** The best reward you skip in the next draft comes back in the one after (Favored Mail). */
+  z.object({ perk: z.literal('favored') }),
+  /** TMs offer this many more moves to pick from (TM Case). */
+  z.object({ perk: z.literal('tmChoices'), extra: z.number().int().positive() }),
 ]);
 export type Perk = z.infer<typeof PerkSchema>;
 

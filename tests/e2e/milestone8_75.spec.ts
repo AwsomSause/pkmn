@@ -301,3 +301,45 @@ test('fishing: a Good Rod spot offers two Water Pokémon and starts a battle wit
   expect(after.stage.map.nodes.find((n: any) => n.id === after.stage.current).sides[0].used).toBe(true);
   expect(errors).toEqual([]);
 });
+
+test('draft items (3b-3b): a six-card draft, and the Lock Capsule keeps a card for the next draft', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/?debug=1');
+  await waitForScene(page, 'MainMenu');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.newRun('red', 'e2e-draft-items');
+    session.chooseStarter(0);
+    const run = session.run;
+    run.mapEffects = [{ itemId: 'cornn-berry', uses: 1 }, { itemId: 'lock-capsule', uses: 1 }];
+    run.draft = [...session.content.rewards.keys()].slice(0, 6);
+    run.phase = 'reward';
+    game.scene.getScenes(true)[0].scene.start('Reward');
+  });
+  await waitForScene(page, 'Reward');
+  const texts = () =>
+    page.evaluate(() => {
+      const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+      return (window as any).__pkr.game.scene.getScene('Reward').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text as string);
+    });
+  const before = await texts();
+  expect(before).toContain('Re-roll ×1');
+  expect(before).toContain('Lock ×1');
+  expect((await page.evaluate(() => (window as any).__pkr.session.run.draft.length))).toBe(6);
+  // Down to the buttons, right to "Lock one", then lock the first card.
+  await page.keyboard.press('ArrowDown');
+  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('Enter');
+  await expect.poll(async () => (await texts()).some((t: string) => t.includes('Lock Capsule'))).toBe(true);
+  await page.keyboard.press('Enter');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.run.draftCarry?.length ?? 0), { timeout: 10_000 }).toBe(1);
+  await page.waitForTimeout(1000);
+  const after = await texts();
+  expect(after).toContain('Locked: in the next draft too');
+  expect(after.some((t: string) => t.includes('locked in'))).toBe(true);
+  expect(after).not.toContain('Lock ×1');
+  await page.screenshot({ path: 'docs/m875-draft-items.png' });
+  expect(errors).toEqual([]);
+});
