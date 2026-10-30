@@ -24,7 +24,7 @@ import type {
 } from './schema';
 
 export function createStoryState(): StoryState {
-  return { seq: 0, events: [], histories: {}, relationships: [], enemyProfiles: [], rivals: [], chronicle: [], appliedEffects: [], flags: {}, majorCuesThisBattle: 0 };
+  return { seq: 0, events: [], histories: {}, relationships: [], enemyProfiles: [], rivals: [], rivalGraph: [], chronicle: [], appliedEffects: [], flags: {}, majorCuesThisBattle: 0 };
 }
 
 /** Which battle of the run this is (counted from 0). Lost battles end the run, so this never repeats. */

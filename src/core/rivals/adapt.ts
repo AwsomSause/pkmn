@@ -20,7 +20,7 @@ export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
 export function waitingRival(run: RunState): Rival | null {
   return (
     run.story.rivals.find((r) => {
-      if (!isHostile(r)) return false;
+      if (!isHostile(r) || r.cooldown > 0) return false;
       const last = run.story.flags[rivalReturnFlag(r.id)];
       if (typeof last === 'number' && last >= run.regionIndex) return false;
       const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
