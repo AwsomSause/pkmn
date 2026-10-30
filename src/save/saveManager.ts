@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 16, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 17, settings: 4, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -209,8 +209,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     13: (data) => ({ ...(data as Json), totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 } }),
     // v15 (map events): event stops and event battles are new optional fields, so older runs load as they are.
     14: (data) => data,
-    // v16 (run rules): older runs are standard-mode, standard-difficulty runs.
-    15: (data) => ({
+    // v16 (Mega-Expeditions): no expedition in progress, nothing finished or unlocked yet.
+    15: (data) => ({ ...(data as Json), expedition: null, expeditions: { completed: [], failed: [], unlocked: [], last: [] } }),
+    // v17 (run rules): older runs are standard-mode, standard-difficulty runs.
+    16: (data) => ({
       ...(data as Json),
       rules: { ruleVersion: 1, modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false, deathBlockUsed: false, progressionEligible: true, rewardMultiplier: 1, enemyLevelBonus: 0, wipes: 0 },
     }),

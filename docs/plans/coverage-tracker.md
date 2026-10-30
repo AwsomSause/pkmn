@@ -62,8 +62,24 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Overworld raid dens | DONE (map side stop `raid`); Raid Adventures mode = Expedition below |
 | Use encounter availability for the boss pool | PART (species are listed in `raids.json`; `availability.json` is not wired yet) |
 
-### 2. Mega-Expeditions — TODO (every item)
-Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid, final boss. Route generation (5–9 nodes, valid graph, visible route). Party modes: own, rental, recruit one, draft, combined. Attrition and recovery (rest node). Mega Energy, Mega Stones, temporary Mega, Mega bosses, Mega research, exclusive encounters/achievements. Extraction and failure rules. Progression by region. Briefing, route choice, checkpoint, finale, extract.
+### 2. Mega-Expeditions (slice 3, DONE except the TODO lines)
+Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.json` (5 expeditions, tiers 1–4), screen `ExpeditionScene`. Gate = map side stop `E`.
+| Item | Status |
+|---|---|
+| Structure: 5–9 stops, branching, part of the route visible, validated before it is shown | DONE |
+| Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid boss, final boss | DONE (all 12 kinds); elite = a harder trainer fight with a loot bonus |
+| Example flow: briefing, combat/resource route choice (two-stop layers), checkpoint (rest), finale, extract and claim | DONE |
+| A. Route generation: directed graph, valid path, no dead ends, unit-tested over 300 seeds | DONE |
+| B. Party modes: own, rental, recruit, draft, combined (one expedition each) | DONE |
+| C. Attrition and recovery: HP/status/PP carry between stops; rest and events heal | DONE |
+| D. Mega: Mega Energy resource, temporary Mega Stone + lent Mega Ring (stone kept on completion), Mega guardian finale that Mega Evolves, research objective, exclusive finales | DONE; achievements TODO; Mega bosses use the normal Mega rules only |
+| E. Extraction and failure rules written in `flow.ts`: completion keeps all + unlock; early extract keeps loot, no finale rewards; loss forfeits loot (share of money kept), heals, never ends the run, never loses your own Pokémon | DONE |
+| Reload mid-expedition (run v16), no double reward (gate used on entry) | DONE |
+| Progression table by region (tiers 1–4, unlock chain) | DONE |
+| Raid as finale or Totem as finale/stop | DONE |
+| Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
+| Temporary Mega in battle for rentals | limited: only for Pokémon with a Mega Stone available |
+| More expeditions / routes (content expansion, Blueprint M7) | TODO |
 
 ### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
 Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
@@ -83,7 +99,7 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5–M8 TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; M6–M8 TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |
@@ -106,7 +122,7 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 |---|---|---|
 | §1 Original Hyper moments (Toughened It Out, Hung In There, Felt a Bond, Pushed Back Up, Heated Rivalry, This Trainer Will Return, Riled Up, A Past Pokémon Wants to Join) | 8 | DONE |
 | §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
-| §2 Seven Emotions (tags, current emotion dot, Story screen) | 7 | PART (tags only; their Overdrives, emotional clash and dual emotion TODO) |
+| §2 Seven Emotions: tags, current emotion dot, Story screen; 7 Emotional Overdrives (once per battle each: Determination/Bravery/Justice +1 Attack, Kindness +1 Defense, Patience +1 Sp. Atk, Perseverance +1 Sp. Def, Integrity cures a fresh status), rare dual emotion (Determination + Kindness: heal 15%), emotional clash | 7 + 2 | DONE (limited: no drawbacks/exhaustion, no signature achievement events such as "Not Until It's Over", Kindness peaceful encounters TODO) |
 | §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
 | §3 Bond/friendship/party: Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 6 of 10 | DONE; TODO: Understand Each Other, Won't Let Friend Fight Alone, Wants to Prove Itself, Feels Left Out (need pair combos / a choice screen) |
 | §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |

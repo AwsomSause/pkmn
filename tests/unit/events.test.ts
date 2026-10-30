@@ -46,8 +46,8 @@ function win(run: RunState): TurnResult {
 
 describe('event data', () => {
   it('holds every event from the plan, the key-item events and the rest spots', () => {
-    expect(content.events.size).toBeGreaterThanOrEqual(170);
-    for (const id of ['mysterious-chest', 'pokemon-center', 'villain-hideout', 'rest-meadow', 'rest-field', 'rest-photo', 'eon-ticket-island', 'lost-property']) expect(content.events.has(id), id).toBe(true);
+    expect(content.events.size).toBeGreaterThanOrEqual(300);
+    for (const id of ['mysterious-chest', 'pokemon-center', 'villain-hideout', 'rest-meadow', 'rest-field', 'rest-photo', 'eon-ticket-island', 'lost-property', 'dark-deal', 'safari-zone', 'hot-spring']) expect(content.events.has(id), id).toBe(true);
   });
 
   it('gives every key item and ticket an event, and makes them work', () => {

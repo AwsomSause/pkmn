@@ -60,13 +60,13 @@ describe('a run keeps the rules it started with', () => {
   it('saves from before rules load as standard (migration v14)', () => {
     const storage = new MemoryStorageProvider();
     const { rules: _r, ...old } = start('mig');
-    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 15, savedAt: '', data: old }));
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 16, savedAt: '', data: old }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
-    expect(loaded.migratedFrom).toBe(15);
+    expect(loaded.migratedFrom).toBe(16);
     expect(loaded.data.rules).toMatchObject({ modeId: 'standard', rewardMultiplier: 1, progressionEligible: true });
-    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(16);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(17);
   });
 });
 

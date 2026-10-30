@@ -61,6 +61,8 @@ import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
 import raidsJson from './raids.json';
 import totemsJson from './totems.json';
+import expeditionsJson from './expeditions.json';
+import { ExpeditionFileSchema } from '../core/expedition/schema';
 import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
 import eventsJson from './events.json';
@@ -97,6 +99,7 @@ export interface RawContent {
   raids: unknown;
   events: unknown;
   totems: unknown;
+  expeditions: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -143,6 +146,7 @@ export const RAW_CONTENT: RawContent = {
   raids: raidsJson,
   events: eventsJson,
   totems: totemsJson,
+  expeditions: expeditionsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -192,9 +196,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
+  const expeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!eventsFile || !story || !raids || !totems || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!eventsFile || !story || !raids || !totems || !expeditions || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -226,6 +231,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     raids,
     events: toMap(eventsFile.events, 'events.json', problems),
     totems,
+    expeditions,
     zMoves,
     maxMoves,
   };
@@ -282,6 +288,20 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (t.phases.some((p, i) => i > 0 && p.atHp >= t.phases[i - 1]!.atHp)) problems.push(`totems.json "${t.id}" phases must go down in HP`);
     if (t.tier === 'early' && (t.phases.length > 0 || (t.ally && t.ally.maxCalls > 1))) problems.push(`totems.json "${t.id}": early Totems have one aura and at most one weak ally call`);
   }
+  const megaSpecies = new Set([...content.items.values()].flatMap((i) => (i.effect.kind === 'megaStone' ? Object.keys(i.effect.forms) : [])));
+  const expIds = new Set(expeditions.expeditions.map((e) => e.id));
+  for (const e of expeditions.expeditions) {
+    for (const id of e.rentals) if (!content.species.has(id)) problems.push(`expeditions.json "${e.id}" has unknown rental "${id}"`);
+    for (const r of [...e.cache, ...e.rewards.items]) if (!content.items.has(r.item)) problems.push(`expeditions.json "${e.id}" gives unknown item "${r.item}"`);
+    if (e.rewards.researchBonusItem && !content.items.has(e.rewards.researchBonusItem)) problems.push(`expeditions.json "${e.id}" bonus item is unknown`);
+    if (e.unlocks && !expIds.has(e.unlocks)) problems.push(`expeditions.json "${e.id}" unlocks unknown expedition "${e.unlocks}"`);
+    const fin = e.finale;
+    if (fin.kind === 'megaBoss') for (const id of fin.species) if (!megaSpecies.has(id)) problems.push(`expeditions.json "${e.id}" finale ${id} has no Mega Stone`);
+    if (fin.kind === 'raid' && !raids.raids.some((r) => r.id === fin.raidId)) problems.push(`expeditions.json "${e.id}" finale raid is unknown`);
+    if (fin.kind === 'totem' && !totems.totems.some((t) => t.id === fin.totemId)) problems.push(`expeditions.json "${e.id}" finale Totem is unknown`);
+    if (e.partyMode === 'rental' && e.nodeWeights.recruit) problems.push(`expeditions.json "${e.id}": a rental expedition cannot have recruit nodes`);
+  }
+  for (const ev of expeditions.mysteryEvents) for (const o of ev.options) if (o.effect.item && !content.items.has(o.effect.item)) problems.push(`expeditions.json event "${ev.id}" gives unknown item`);
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {
     for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);

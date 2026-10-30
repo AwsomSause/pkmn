@@ -197,6 +197,12 @@ export class BattleScene extends Phaser.Scene {
     return run.party[run.battle!.activeIndex]!;
   }
 
+  /** Illusion: the shown copy keeps looking like the species it copies until the disguise breaks. */
+  private disguise(side: 'player' | 'enemy', mon: PokemonInstance): void {
+    const vol = side === 'player' ? this.run.battle?.playerVolatile : this.run.battle?.enemyVolatile;
+    if (vol?.illusion) mon.speciesId = vol.illusion;
+  }
+
   private speciesName(mon: PokemonInstance): string {
     return getSpecies(services().session.content, mon.speciesId).name;
   }
@@ -1020,7 +1026,7 @@ export class BattleScene extends Phaser.Scene {
           const teraType = e.kind === 'tera' ? this.run.battle?.transform.teraTypes[mon!.uid] : undefined;
           const glowColor = zType ? (TYPE_COLORS[zType] ?? 0xffffff) : teraType ? (TYPE_COLORS[teraType] ?? 0xffffff) : e.kind.startsWith('dynamax') || e.kind === 'gigantamax' ? 0xff3060 : 0x9fe8ff;
           const at = e.side === 'player' ? PLAYER_POS : ENEMY_POS;
-          await burstReveal(this, at.x, at.y - 80, glowColor, this.motion).done;
+          if (e.kind !== 'illusion') await burstReveal(this, at.x, at.y - 80, glowColor, this.motion).done;
           if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
           else {
             // Dynamax doubles HP (and its end halves it again), the same way the battle rules do.
@@ -1084,9 +1090,11 @@ export class BattleScene extends Phaser.Scene {
       const active = run.party[run.battle.activeIndex];
       if (active && active.uid === this.shown.player.uid) {
         this.shown.player = structuredClone(active);
+        this.disguise('player', this.shown.player);
         await this.refreshInfoBox(this.playerBox, this.shown.player, false);
       }
       this.shown.enemy = structuredClone(currentEnemy(run.battle));
+      this.disguise('enemy', this.shown.enemy);
       await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
     } else {
       const active = run.party.find((m) => m.uid === this.shown.player.uid);

@@ -10826,6 +10826,9023 @@
    ]
   },
   {
+   "id": "dark-deal",
+   "name": "Dark Deal",
+   "group": "PokeRogue-style encounters",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#180820",
+    "effect": "flicker"
+   },
+   "intro": "A strange scientist offers a device. \"Give me one Pokémon and I'll give you a legend… maybe.\"",
+   "choices": [
+    {
+     "label": "Accept the deal",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "The machine whirs. A powerful Pokémon steps out!",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": 6,
+        "shinyMultiplier": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -8
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "\"Pity. Science waits for no one.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "safari-zone",
+   "name": "Safari Zone",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#284018",
+    "effect": "float"
+   },
+   "intro": "A gate to the Safari Zone. \"Rare Pokémon inside, ₽500 entry!\"",
+   "choices": [
+    {
+     "label": "Enter (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "Something rare rustles in the tall grass!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 4,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Throw bait from the fence",
+     "check": "luck",
+     "success": {
+      "text": "A friendly Pokémon wanders up and follows you.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "It ate the bait and ran.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "teleporting-hijinks",
+   "name": "Teleporting Hijinks",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#201838",
+    "effect": "spin"
+   },
+   "intro": "A glowing pad hums by the path. A sign reads \"DO NOT STAND HERE\".",
+   "choices": [
+    {
+     "label": "Stand on it",
+     "chance": 0.5,
+     "success": {
+      "text": "Zap! You land much further down the road.",
+      "effects": [
+       {
+        "kind": "skipAhead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Zap! You land in a nest of angry Psychic-types!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Study it",
+     "success": {
+      "text": "Fascinating tech.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 3
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "the-strong-stuff",
+   "name": "The Strong Stuff",
+   "group": "PokeRogue-style encounters",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "pokemon": "shuckle",
+    "effect": "shake"
+   },
+   "intro": "A Shuckle sits on a pile of fermented berry juice. It offers you a sip.",
+   "choices": [
+    {
+     "label": "Let your lead drink",
+     "success": {
+      "text": "Your lead feels incredibly tough, if a bit slower.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 3,
+        "who": "lead"
+       },
+       {
+        "kind": "status",
+        "status": "sleep"
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the Shuckle",
+     "success": {
+      "text": "The Shuckle hides in its shell!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "shuckle"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "item",
+         "id": "leftovers",
+         "count": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "offer-you-cant-refuse",
+   "name": "An Offer You Can't Refuse",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "effect": "glint"
+   },
+   "intro": "A rich kid points at your Pokémon. \"I'll pay a fortune for that one!\"",
+   "choices": [
+    {
+     "label": "Sell for ₽4000",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "A stack of cash. Your team looks at you funny.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 4000
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -5
+       },
+       {
+        "kind": "friendship",
+        "amount": -10,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for an item instead",
+     "check": "charisma",
+     "success": {
+      "text": "\"Fine, take this!\"",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"Ugh, no deal then.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "Your team cheers.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "delibird-y",
+   "name": "Delibird-y",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "pokemon": "delibird",
+    "tint": "#203040",
+    "effect": "snow"
+   },
+   "intro": "Three Delibird waddle up with sacks. They want a present first.",
+   "choices": [
+    {
+     "label": "Give money (₽600)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "success": {
+      "text": "They hand you a treat.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give a healing item",
+     "success": {
+      "text": "They chirp happily and give you a berry bundle.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle them",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "Present attack!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "delibird"
+       ],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "absolute-avarice",
+   "name": "Absolute Avarice",
+   "group": "PokeRogue-style encounters",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "pokemon": "greedent",
+    "effect": "shake"
+   },
+   "intro": "A huge Greedent sits on a hoard of berries. It glares at you.",
+   "choices": [
+    {
+     "label": "Battle for the hoard",
+     "success": {
+      "text": "Greedent charges!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "greedent"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer your berries",
+     "success": {
+      "text": "Greedent is pleased and joins you!",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "skwovet"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sneak past",
+     "success": {
+      "text": "You tiptoe away.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "clowning-around",
+   "name": "Clowning Around",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "pokemon": "mr-mime",
+    "tint": "#302040",
+    "effect": "spin"
+   },
+   "intro": "A clown and his Mr. Mime block the road. \"Laugh, or battle!\"",
+   "choices": [
+    {
+     "label": "Battle the clown",
+     "success": {
+      "text": "Honk honk!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Clown",
+       "size": 2,
+       "types": [
+        "psychic",
+        "fairy"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "silk-scarf",
+          "black-belt",
+          "sharp-beak",
+          "soft-sand",
+          "hard-stone",
+          "spell-tag",
+          "metal-coat",
+          "charcoal",
+          "mystic-water",
+          "miracle-seed",
+          "magnet",
+          "dragon-fang"
+         ]
+        },
+        {
+         "kind": "attribute",
+         "key": "charisma",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Laugh at the show",
+     "success": {
+      "text": "It's actually funny!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "part-timer",
+   "name": "Part-Timer",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "A shop needs a hand. Your Pokémon could help for pay.",
+   "choices": [
+    {
+     "label": "Help at the counter",
+     "check": "charisma",
+     "success": {
+      "text": "Your team charmed every customer.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 900
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A slow day.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help in the warehouse",
+     "check": "strength",
+     "success": {
+      "text": "Heavy work, good pay.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     },
+     "failure": {
+      "text": "You dropped a box.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 200
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Deliver orders",
+     "check": "speed",
+     "success": {
+      "text": "Fastest delivery ever!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Late again.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 250
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "dancing-lessons",
+   "name": "Dancing Lessons",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "pokemon": "oricorio",
+    "tint": "#402030",
+    "effect": "sparkle"
+   },
+   "intro": "An Oricorio dances by the road. It wants a partner.",
+   "choices": [
+    {
+     "label": "Dance with it",
+     "check": "speed",
+     "success": {
+      "text": "A great dance! It joins your team.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "oricorio"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You tripped. It laughs and flies away.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch and learn",
+     "success": {
+      "text": "Your team learned a few moves.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle it",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It attacks with a flourish!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "oricorio"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "global-trade",
+   "name": "Global Trade Station",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#102838",
+    "effect": "glint"
+   },
+   "intro": "A trading booth links to trainers around the world.",
+   "choices": [
+    {
+     "label": "Trade for a surprise",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "A Pokémon from far away arrives!",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": 1,
+        "shinyMultiplier": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade an item",
+     "success": {
+      "text": "Someone sends a held item back.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just browse",
+     "success": {
+      "text": "You learn about faraway Pokémon.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fun-and-games",
+   "name": "Fun and Games!",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "pokemon": "wobbuffet",
+    "tint": "#302018",
+    "effect": "rattle"
+   },
+   "intro": "A carnival game: knock out the Wobbuffet in three turns to win!",
+   "choices": [
+    {
+     "label": "Play (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "Wobbuffet stands its ground!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "wobbuffet"
+       ],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "money",
+         "amount": 1000
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "bug-superfan",
+   "name": "Bug-Type Superfan",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.bug_catcher"
+    ],
+    "effect": "float"
+   },
+   "intro": "\"Bugs are the BEST! Show me yours!\"",
+   "choices": [
+    {
+     "label": "Show a Bug-type",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "bug"
+      }
+     ],
+     "success": {
+      "text": "\"WOW!\" He gives you his best stuff.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "silverpowder",
+         "quick-claw",
+         "shed-shell"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"Bug power!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Bug Maniac",
+       "size": 3,
+       "types": [
+        "bug"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "poke-ball",
+          "great-ball",
+          "ultra-ball"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Say bugs are gross",
+     "success": {
+      "text": "He cries. You feel bad.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "unlikely-ally",
+   "name": "An Unlikely Ally",
+   "group": "PokeRogue-style encounters",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "effect": "sparkle"
+   },
+   "intro": "A strong wild Pokémon fights off a gang of others. It looks hurt.",
+   "choices": [
+    {
+     "label": "Jump in and help",
+     "success": {
+      "text": "You fight side by side against the gang!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "join",
+         "species": [],
+         "types": [],
+         "levelBonus": 3,
+         "shinyMultiplier": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Heal it after",
+     "check": "love",
+     "success": {
+      "text": "It nods at you, healed. It decides to come along.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": 3,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "It limps away.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "trash-to-treasure",
+   "name": "Trash to Treasure",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "pokemon": "garbodor",
+    "tint": "#202818",
+    "effect": "fog"
+   },
+   "intro": "A huge heap of junk. Something shiny pokes out. Something smelly guards it.",
+   "choices": [
+    {
+     "label": "Dig through the trash",
+     "check": "luck",
+     "success": {
+      "text": "Treasure among the junk!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "status",
+        "status": "poison"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Just junk, and now you smell.",
+      "effects": [
+       {
+        "kind": "status",
+        "status": "poison"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the guardian",
+     "success": {
+      "text": "Garbodor rises from the heap!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "garbodor"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "field-trip",
+   "name": "Field Trip",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "A teacher and her class want to see a Pokémon move in action.",
+   "choices": [
+    {
+     "label": "Show a physical move",
+     "check": "strength",
+     "success": {
+      "text": "\"Amazing!\" The class gives you a gift.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "A bit clumsy, but they clapped.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Show a special move",
+     "check": "intelligence",
+     "success": {
+      "text": "\"So pretty!\" They give you a gift.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Polite clapping.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Show a status move",
+     "success": {
+      "text": "The class learns something new.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 15
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "berry-merchant",
+   "name": "Berry Merchant",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "effect": "hearts"
+   },
+   "intro": "A cart full of fresh berries. \"Two for ₽400!\"",
+   "choices": [
+    {
+     "label": "Buy two (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "success": {
+      "text": "Juicy!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a held item for five",
+     "success": {
+      "text": "A huge basket.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "stone-seller",
+   "name": "Evolution Stone Seller",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "glint"
+   },
+   "intro": "\"Fire, water, thunder, leaf… pick a stone, ₽1200!\"",
+   "choices": [
+    {
+     "label": "Buy a stone (₽1200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1200
+      }
+     ],
+     "success": {
+      "text": "It glows in your hand.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1200
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fire-stone",
+         "water-stone",
+         "thunder-stone",
+         "leaf-stone",
+         "moon-stone",
+         "sun-stone",
+         "dusk-stone",
+         "dawn-stone",
+         "shiny-stone",
+         "ice-stone"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Haggle",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "check": "charisma",
+     "success": {
+      "text": "\"Fine, ₽600!\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fire-stone",
+         "water-stone",
+         "thunder-stone",
+         "leaf-stone",
+         "moon-stone",
+         "sun-stone",
+         "dusk-stone",
+         "dawn-stone",
+         "shiny-stone",
+         "ice-stone"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"No discounts!\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ball-factory-outlet",
+   "name": "Poké Ball Outlet",
+   "group": "Merchants and deals",
+   "stop": "shop",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "Factory seconds: slightly dented Poké Balls, cheap!",
+   "choices": [
+    {
+     "label": "Buy a bag (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "Five balls, barely dented.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "item",
+        "id": "poke-ball",
+        "count": 3
+       },
+       {
+        "kind": "item",
+        "id": "great-ball",
+        "count": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy Ultra Balls (₽1000)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "success": {
+      "text": "Shiny and yellow.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       },
+       {
+        "kind": "item",
+        "id": "ultra-ball",
+        "count": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "snack-stand",
+   "name": "Snack Stand",
+   "group": "Merchants and deals",
+   "stop": "shop",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "effect": "hearts"
+   },
+   "intro": "Fresh Water, Soda Pop, Lava Cookies… your team stares hungrily.",
+   "choices": [
+    {
+     "label": "Buy snacks (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "success": {
+      "text": "Yum!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Treat everyone (₽800)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 800
+      }
+     ],
+     "success": {
+      "text": "A feast! Your team loves you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -800
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "fossil-trader",
+   "name": "Fossil Trader",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#302418",
+    "effect": "shake"
+   },
+   "intro": "\"Ancient fossils! Revive them at any lab!\"",
+   "choices": [
+    {
+     "label": "Buy a fossil (₽1500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "success": {
+      "text": "A fossil, cold and heavy.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "old-amber",
+         "helix-fossil",
+         "dome-fossil"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a treasure",
+     "success": {
+      "text": "Fair trade.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "old-amber",
+         "helix-fossil",
+         "dome-fossil"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tm-vendor",
+   "name": "Move Tutor Stall",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "\"I teach moves for money. Your lead could learn a lot.\"",
+   "choices": [
+    {
+     "label": "Lesson (₽1000)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "success": {
+      "text": "Your lead learned well.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       },
+       {
+        "kind": "levels",
+        "amount": 2,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Group lesson (₽2000)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 2000
+      }
+     ],
+     "success": {
+      "text": "The whole team learned.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -2000
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mystery-box",
+   "name": "Mystery Box Seller",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "\"Mystery boxes! Could be anything! ₽700!\"",
+   "choices": [
+    {
+     "label": "Buy one (₽700)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 700
+      }
+     ],
+     "chance": 0.4,
+     "success": {
+      "text": "Ooh, nice!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -700
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "A rock. A literal rock.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -700
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "scrap-buyer",
+   "name": "Scrap Buyer",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "glint"
+   },
+   "intro": "\"I buy anything! Anything at all!\"",
+   "choices": [
+    {
+     "label": "Sell an item",
+     "success": {
+      "text": "Easy cash.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sell two items",
+     "success": {
+      "text": "Even more cash.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "money",
+        "amount": 1700
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lucky-charm-shop",
+   "name": "Lucky Charm Shop",
+   "group": "Merchants and deals",
+   "stop": "shop",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#281838",
+    "effect": "sparkle"
+   },
+   "intro": "Charms, trinkets and good-luck pendants line the shelves.",
+   "choices": [
+    {
+     "label": "Buy a clover charm (₽800)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 800
+      }
+     ],
+     "success": {
+      "text": "You feel lucky.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -800
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy a heart charm (₽800)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 800
+      }
+     ],
+     "success": {
+      "text": "You feel warm.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -800
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "healing-herbalist",
+   "name": "Herbalist",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#203018",
+    "effect": "hearts"
+   },
+   "intro": "Bitter herbs that heal fast. \"Cheap, but your Pokémon won't like the taste.\"",
+   "choices": [
+    {
+     "label": "Buy herbs (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "Bitter, but it works.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": -5,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy a revival herb (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "A strong herb.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "item",
+        "id": "revive",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ticket-booth",
+   "name": "Ferry Ticket Booth",
+   "group": "Merchants and deals",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#103050",
+    "effect": "float"
+   },
+   "intro": "\"Express ferry to the gym town! ₽1500!\"",
+   "choices": [
+    {
+     "label": "Ride the express (₽1500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "success": {
+      "text": "You step off near the gym.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       },
+       {
+        "kind": "skipAhead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy a souvenir (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "A little model ship.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "triple-battle",
+   "name": "Triple Trouble",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "effect": "shake"
+   },
+   "intro": "Three kids challenge you at once. \"All of us! Right now!\"",
+   "choices": [
+    {
+     "label": "Take them all",
+     "success": {
+      "text": "Three teams, one after another!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Kid Squad",
+       "size": 4,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-heal",
+          "revive"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Just one of them",
+     "success": {
+      "text": "The bravest steps up.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Youngster",
+       "size": 1,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 400
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "veteran-challenge",
+   "name": "Veteran's Challenge",
+   "group": "Trainers and challenges",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "trainer.marshal"
+    ],
+    "effect": "shake"
+   },
+   "intro": "An old Veteran nods. \"Show me what you've learned.\"",
+   "choices": [
+    {
+     "label": "Battle",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "\"Don't hold back!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Veteran",
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        },
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask for advice",
+     "success": {
+      "text": "\"Train with heart.\" You feel wiser.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "type-specialist",
+   "name": "Type Specialist",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.ryme"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "A trainer who uses only one type wants a battle.",
+   "choices": [
+    {
+     "label": "Battle",
+     "success": {
+      "text": "A mono-type team!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Specialist",
+       "size": 3,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "silk-scarf",
+          "black-belt",
+          "sharp-beak",
+          "soft-sand",
+          "hard-stone",
+          "spell-tag",
+          "metal-coat",
+          "charcoal",
+          "mystic-water",
+          "miracle-seed",
+          "magnet",
+          "dragon-fang"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Talk shop",
+     "success": {
+      "text": "You learn about type matchups.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "speed-trial",
+   "name": "Speed Trial",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.biker"
+    ],
+    "effect": "float"
+   },
+   "intro": "A racer dares you: \"Beat my time through the course!\"",
+   "choices": [
+    {
+     "label": "Race",
+     "check": "speed",
+     "success": {
+      "text": "You win the race!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "Lost by a hair.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle instead",
+     "success": {
+      "text": "\"Fast battle, then!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Racer",
+       "size": 2,
+       "types": [
+        "electric",
+        "flying"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "strength-trial",
+   "name": "Boulder Push",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "shake"
+   },
+   "intro": "A Hiker dares your team to push a huge boulder up a hill.",
+   "choices": [
+    {
+     "label": "Push!",
+     "check": "strength",
+     "success": {
+      "text": "It rolls to the top!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It rolls back. Ouch.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the Hiker",
+     "success": {
+      "text": "\"Rock solid!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hiker",
+       "size": 2,
+       "types": [
+        "rock",
+        "ground"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "quiz-master",
+   "name": "Quiz Master",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "\"Answer my three questions about Pokémon!\"",
+   "choices": [
+    {
+     "label": "Take the quiz",
+     "check": "intelligence",
+     "success": {
+      "text": "Three for three!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Two wrong. Still learned something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"Question four: can you win?\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Quiz Master",
+       "size": 2,
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "beauty-pageant",
+   "name": "Beauty Pageant",
+   "group": "Trainers and challenges",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#402038",
+    "effect": "glint"
+   },
+   "intro": "A stage, lights and judges. Your lead is entered!",
+   "choices": [
+    {
+     "label": "Strut your stuff",
+     "check": "charisma",
+     "success": {
+      "text": "First place!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1200
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 4
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Third place. Still pretty.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the champion",
+     "success": {
+      "text": "\"Beauty AND brawn!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Beauty",
+       "size": 2,
+       "types": [
+        "fairy",
+        "grass"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "charisma",
+         "amount": 3
+        },
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "marathon",
+   "name": "Pokémon Marathon",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.biker"
+    ],
+    "effect": "float"
+   },
+   "intro": "Runners and their Pokémon line up at the start.",
+   "choices": [
+    {
+     "label": "Run it",
+     "check": "speed",
+     "success": {
+      "text": "You finish strong!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 2
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "damage",
+        "share": 0.25
+       }
+      ]
+     },
+     "failure": {
+      "text": "You finish last, tired but proud.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.25
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Cheer the runners",
+     "success": {
+      "text": "The crowd loves you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "gym-trainer-ambush",
+   "name": "Gym Trainer Practice",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "effect": "shake"
+   },
+   "intro": "A gym trainer is practising nearby. \"Want to see what the leader uses?\"",
+   "choices": [
+    {
+     "label": "Battle for the scoop",
+     "success": {
+      "text": "\"If you win, I'll tell you!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Gym Trainer",
+       "size": 2,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "gymPreview"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay for the info (₽600)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "success": {
+      "text": "He spills it all.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "gymPreview"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mirror-match",
+   "name": "Mirror Match",
+   "group": "Trainers and challenges",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.mira"
+    ],
+    "tint": "#203040",
+    "effect": "glint"
+   },
+   "intro": "A trainer who looks like you, with a team that looks like yours…",
+   "choices": [
+    {
+     "label": "Battle your mirror",
+     "success": {
+      "text": "It's like fighting yourself!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Mirror Trainer",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        },
+        {
+         "kind": "attribute",
+         "key": "intelligence",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk away",
+     "success": {
+      "text": "Spooky.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "little-league",
+   "name": "Little League",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "Kids practise battling. They want a coach.",
+   "choices": [
+    {
+     "label": "Coach them",
+     "success": {
+      "text": "The kids learn fast.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "\"Ready, coach?\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Kid",
+       "size": 2,
+       "types": [],
+       "levelBonus": -1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-heal",
+          "revive"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "champion-cup",
+   "name": "Champion Cup Qualifier",
+   "group": "Trainers and challenges",
+   "rarity": "rare",
+   "minStage": 5,
+   "scene": {
+    "cast": [
+     "trainer.drayton"
+    ],
+    "tint": "#302810",
+    "effect": "glint"
+   },
+   "intro": "A qualifier for a big tournament. Only strong teams enter.",
+   "choices": [
+    {
+     "label": "Enter",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 3
+      }
+     ],
+     "success": {
+      "text": "A tough qualifier!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ace Trainer",
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        },
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Watch from the stands",
+     "success": {
+      "text": "You pick up tactics.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sleeping-hollow",
+   "name": "Sleeping Hollow",
+   "group": "Wild Pokémon scenes",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#182028",
+    "effect": "fog"
+   },
+   "intro": "A hollow where wild Pokémon nap in a pile.",
+   "choices": [
+    {
+     "label": "Sneak up for a catch",
+     "check": "speed",
+     "success": {
+      "text": "One wakes up grumpy!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     },
+     "failure": {
+      "text": "They ALL wake up!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Nap with them",
+     "success": {
+      "text": "A peaceful rest.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "migrating-flock",
+   "name": "Migrating Flock",
+   "group": "Wild Pokémon scenes",
+   "rarity": "common",
+   "types": [
+    "flying"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#203048",
+    "effect": "float"
+   },
+   "intro": "A flock of bird Pokémon passes overhead.",
+   "choices": [
+    {
+     "label": "Whistle at them",
+     "success": {
+      "text": "One swoops down!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "flying"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Watch them go",
+     "success": {
+      "text": "Beautiful.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tide-pools",
+   "name": "Tide Pools",
+   "group": "Wild Pokémon scenes",
+   "rarity": "common",
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#103040",
+    "effect": "rain"
+   },
+   "intro": "Small pools on the rocks are full of tiny Water Pokémon.",
+   "choices": [
+    {
+     "label": "Look closer",
+     "success": {
+      "text": "Something snaps at you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Collect shells",
+     "success": {
+      "text": "Pretty shells and a pearl.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "glowing-mushrooms",
+   "name": "Glowing Mushrooms",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "types": [
+    "grass",
+    "bug"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#182818",
+    "effect": "sparkle"
+   },
+   "intro": "Mushrooms glow blue in the dark woods.",
+   "choices": [
+    {
+     "label": "Pick some",
+     "check": "luck",
+     "success": {
+      "text": "Big Mushrooms!",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "big-mushroom",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Spores! Your team gets sleepy.",
+      "effects": [
+       {
+        "kind": "status",
+        "status": "sleep"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the glow",
+     "success": {
+      "text": "A Grass-type guards the patch.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "grass",
+        "bug"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "wild-stampede-2",
+   "name": "Rumbling Herd",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ground",
+    "normal"
+   ],
+   "scene": {
+    "cast": [],
+    "effect": "shake"
+   },
+   "intro": "The ground shakes. A herd charges down the valley.",
+   "choices": [
+    {
+     "label": "Stand firm",
+     "check": "strength",
+     "success": {
+      "text": "You stand your ground!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Trampled!",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Catch a straggler",
+     "success": {
+      "text": "One slows down to fight!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ground",
+        "normal"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Hide",
+     "success": {
+      "text": "You wait it out.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shiny-glint",
+   "name": "A Shiny Glint",
+   "group": "Wild Pokémon scenes",
+   "rarity": "rare",
+   "scene": {
+    "cast": [],
+    "tint": "#302810",
+    "effect": "glint"
+   },
+   "intro": "Something sparkles in the tall grass. Could it be…?",
+   "choices": [
+    {
+     "label": "Check it out",
+     "chance": 0.6,
+     "success": {
+      "text": "A shiny Pokémon!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 50,
+       "win": []
+      }
+     },
+     "failure": {
+      "text": "Just a bottle cap.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ignore it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "pokemon-playground",
+   "name": "Pokémon Playground",
+   "group": "Wild Pokémon scenes",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "hearts"
+   },
+   "intro": "Young wild Pokémon play tag in a clearing.",
+   "choices": [
+    {
+     "label": "Join the game",
+     "success": {
+      "text": "Your team made friends!",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Invite one along",
+     "check": "love",
+     "success": {
+      "text": "A little one follows you.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -2,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "They scatter, giggling.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "alpha-pokemon",
+   "name": "Alpha Pokémon",
+   "group": "Wild Pokémon scenes",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#401010",
+    "effect": "shake"
+   },
+   "intro": "A huge Pokémon with red eyes stomps through the clearing.",
+   "choices": [
+    {
+     "label": "Fight the Alpha",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It roars!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 6,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        },
+        {
+         "kind": "levels",
+         "amount": 1,
+         "who": "party"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Sneak away",
+     "success": {
+      "text": "It doesn't notice you. Phew.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "nesting-ground",
+   "name": "Nesting Ground",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#283018",
+    "effect": "hearts"
+   },
+   "intro": "Parent Pokémon guard their eggs. One egg rolls toward you.",
+   "choices": [
+    {
+     "label": "Return the egg",
+     "success": {
+      "text": "The parents thank you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep the egg",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It hatches right away!",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -3,
+        "shinyMultiplier": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lightning-storm",
+   "name": "Lightning Storm",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "types": [
+    "electric"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#181830",
+    "effect": "rain"
+   },
+   "intro": "Thunder cracks. Electric Pokémon dance in the storm.",
+   "choices": [
+    {
+     "label": "Run through the storm",
+     "success": {
+      "text": "An Electric-type zaps you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "electric"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Shelter and wait",
+     "success": {
+      "text": "You wait it out.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lake-legend",
+   "name": "Lake Legend",
+   "group": "Wild Pokémon scenes",
+   "rarity": "epic",
+   "minStage": 6,
+   "scene": {
+    "cast": [],
+    "pokemon": "suicune",
+    "tint": "#103040",
+    "effect": "fog"
+   },
+   "intro": "Mist rises from the lake. A blue shape runs across the water.",
+   "choices": [
+    {
+     "label": "Chase it",
+     "success": {
+      "text": "A legendary beast!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "suicune",
+        "raikou",
+        "entei"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Watch in awe",
+     "success": {
+      "text": "You will never forget this.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wild-tea-party",
+   "name": "Wild Tea Party",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "types": [
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "pokemon": "sinistea",
+    "tint": "#402838",
+    "effect": "hearts"
+   },
+   "intro": "Fairy Pokémon sit around a tiny table with teacups.",
+   "choices": [
+    {
+     "label": "Join them",
+     "success": {
+      "text": "Tea and cake! Lovely.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask one to come along",
+     "check": "charisma",
+     "success": {
+      "text": "A teacup Pokémon hops into your bag.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "sinistea",
+         "polteageist"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "They politely decline.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rocket-roadblock",
+   "name": "Rocket Roadblock",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.giovanni"
+    ],
+    "tint": "#200810",
+    "effect": "flicker"
+   },
+   "intro": "\"Team Rocket toll! ₽500 or battle!\"",
+   "choices": [
+    {
+     "label": "Battle",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "\"Prepare for trouble!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rocket Grunt",
+       "size": 2,
+       "types": [
+        "poison",
+        "dark"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay the toll",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "They laugh and let you pass.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sneak around",
+     "check": "speed",
+     "success": {
+      "text": "You slip past.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Spotted!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rocket Grunt",
+       "size": 2,
+       "types": [
+        "poison"
+       ],
+       "levelBonus": 0,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "aqua-flood",
+   "name": "Team Aqua's Flood",
+   "group": "Tricksters, villains and teams",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.archie-gen6"
+    ],
+    "tint": "#102040",
+    "effect": "rain"
+   },
+   "intro": "Team Aqua is flooding a valley \"for the Pokémon\"!",
+   "choices": [
+    {
+     "label": "Stop them",
+     "success": {
+      "text": "Aqua Grunts surround you!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Aqua Admin",
+       "size": 3,
+       "types": [
+        "water",
+        "dark"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "silk-scarf",
+          "black-belt",
+          "sharp-beak",
+          "soft-sand",
+          "hard-stone",
+          "spell-tag",
+          "metal-coat",
+          "charcoal",
+          "mystic-water",
+          "miracle-seed",
+          "magnet",
+          "dragon-fang"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Help the villagers instead",
+     "success": {
+      "text": "You get everyone to high ground.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "magma-drill",
+   "name": "Team Magma's Drill",
+   "group": "Tricksters, villains and teams",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.maxie-gen6"
+    ],
+    "tint": "#400808",
+    "effect": "fire"
+   },
+   "intro": "A giant drill digs into the mountain. Team Magma laughs.",
+   "choices": [
+    {
+     "label": "Smash the drill",
+     "success": {
+      "text": "Magma Grunts defend it!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Magma Admin",
+       "size": 3,
+       "types": [
+        "fire",
+        "ground"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        },
+        {
+         "kind": "money",
+         "amount": 1500
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Steal their supplies",
+     "check": "speed",
+     "success": {
+      "text": "A bag of their gear.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -3
+       }
+      ]
+     },
+     "failure": {
+      "text": "Caught!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Magma Grunt",
+       "size": 2,
+       "types": [
+        "fire"
+       ],
+       "levelBonus": 0,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "galactic-lecture",
+   "name": "Galactic Lecture",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.cyrus"
+    ],
+    "tint": "#102030",
+    "effect": "spin"
+   },
+   "intro": "A Galactic speaker preaches about a \"new world without spirit\".",
+   "choices": [
+    {
+     "label": "Argue back",
+     "check": "charisma",
+     "success": {
+      "text": "The crowd turns against him.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nobody listens to you either.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Battle the speaker",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "\"You'll see!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Galactic Grunt",
+       "size": 2,
+       "types": [
+        "poison",
+        "dark"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Listen",
+     "success": {
+      "text": "Creepy, but you learn their plan.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "plasma-protest",
+   "name": "Plasma Protest",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.ghetsis"
+    ],
+    "tint": "#182030",
+    "effect": "flicker"
+   },
+   "intro": "\"Free your Pokémon!\" Team Plasma waves signs at you.",
+   "choices": [
+    {
+     "label": "Show how happy your team is",
+     "check": "love",
+     "success": {
+      "text": "The protesters go quiet.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "They shout louder.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Battle them",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "\"Liberation!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Plasma Grunt",
+       "size": 2,
+       "types": [
+        "dark",
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "flare-boutique",
+   "name": "Flare Boutique",
+   "group": "Tricksters, villains and teams",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.lysandre"
+    ],
+    "tint": "#401808",
+    "effect": "fire"
+   },
+   "intro": "An exclusive boutique run by Team Flare. \"Only the beautiful may shop.\"",
+   "choices": [
+    {
+     "label": "Buy a fancy item (₽2500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 2500
+      }
+     ],
+     "success": {
+      "text": "Very stylish.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -2500
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Expose them",
+     "success": {
+      "text": "\"How dare you!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Flare Admin",
+       "size": 3,
+       "types": [
+        "fire",
+        "dark"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        },
+        {
+         "kind": "money",
+         "amount": 2000
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "skull-graffiti",
+   "name": "Team Skull Graffiti",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "boss.guzma"
+    ],
+    "effect": "shake"
+   },
+   "intro": "Team Skull is spray-painting a Pokémon Center. \"Yo, whatchu lookin' at?\"",
+   "choices": [
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "\"Skull, yo!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Skull Grunt",
+       "size": 2,
+       "types": [
+        "poison",
+        "bug",
+        "dark"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 600
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Help clean up",
+     "success": {
+      "text": "The nurse thanks you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Join in",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "negative",
+       "atLeast": 10
+      }
+     ],
+     "success": {
+      "text": "You tag your name. Rebel!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -3
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "yell-blockade",
+   "name": "Team Yell Blockade",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "boss.piers"
+    ],
+    "effect": "shake"
+   },
+   "intro": "Team Yell won't let anyone near Marnie's gym. They chant loudly.",
+   "choices": [
+    {
+     "label": "Battle through",
+     "success": {
+      "text": "\"YEEELL!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Yell Grunt",
+       "size": 2,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 600
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Chant along",
+     "success": {
+      "text": "They let you pass, laughing.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "macro-cosmos-lab",
+   "name": "Macro Cosmos Lab",
+   "group": "Tricksters, villains and teams",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#301018",
+    "effect": "sparkle"
+   },
+   "intro": "A Macro Cosmos lab drains energy from wild Pokémon.",
+   "choices": [
+    {
+     "label": "Shut it down",
+     "success": {
+      "text": "Security bots and staff attack!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Macro Cosmos Staff",
+       "size": 3,
+       "types": [
+        "steel",
+        "fairy"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Steal research notes",
+     "check": "intelligence",
+     "success": {
+      "text": "Interesting data.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Alarm! You run.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "star-heist",
+   "name": "Team Star Heist",
+   "group": "Tricksters, villains and teams",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.ryme"
+    ],
+    "effect": "spin"
+   },
+   "intro": "Team Star is \"borrowing\" Poké Balls from a school.",
+   "choices": [
+    {
+     "label": "Stop them",
+     "success": {
+      "text": "\"Star Barrage!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Star Grunt",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "item",
+         "id": "great-ball",
+         "count": 3
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 3
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Talk them out of it",
+     "check": "charisma",
+     "success": {
+      "text": "\"…Fine. We'll return them.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"Nice try!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Star Grunt",
+       "size": 2,
+       "types": [],
+       "levelBonus": 0,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "counterfeit-items",
+   "name": "Counterfeit Items",
+   "group": "Tricksters, villains and teams",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "effect": "glint"
+   },
+   "intro": "\"Genuine Leftovers, only ₽300!\" They look suspiciously plastic.",
+   "choices": [
+    {
+     "label": "Buy them anyway (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "chance": 0.15,
+     "success": {
+      "text": "Fake, of course.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       }
+      ]
+     },
+     "failure": {
+      "text": "Plastic. You got scammed.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Report the scammer",
+     "success": {
+      "text": "The police thank you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "poacher-camp",
+   "name": "Poacher Camp",
+   "group": "Tricksters, villains and teams",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#201008",
+    "effect": "flicker"
+   },
+   "intro": "Hunters keep caged Pokémon in their camp.",
+   "choices": [
+    {
+     "label": "Free the Pokémon",
+     "success": {
+      "text": "The hunters attack!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Pokémon Hunter",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 8
+        },
+        {
+         "kind": "join",
+         "species": [],
+         "types": [],
+         "levelBonus": 1,
+         "shinyMultiplier": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Sneak in and open the cages",
+     "check": "speed",
+     "success": {
+      "text": "They all escape! One stays with you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 6
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Caught!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Pokémon Hunter",
+       "size": 2,
+       "types": [],
+       "levelBonus": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "lost-wallet",
+   "name": "Lost Wallet",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "A wallet lies on the path, full of cash.",
+   "choices": [
+    {
+     "label": "Return it",
+     "success": {
+      "text": "The owner rewards you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep it",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "₽1500, nobody saw.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stuck-pokemon",
+   "name": "Stuck Pokémon",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "hearts"
+   },
+   "intro": "A Pokémon is stuck in a fence and crying.",
+   "choices": [
+    {
+     "label": "Free it gently",
+     "check": "love",
+     "success": {
+      "text": "It nuzzles you and follows along.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It runs off, but it's free.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Force the fence",
+     "success": {
+      "text": "Snap! It's free.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       },
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-mans-tale",
+   "name": "Old Man's Tale",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "fog"
+   },
+   "intro": "An old man by a campfire wants to share a story.",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "A tale of a legendary bird. You feel wiser.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 15
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own story",
+     "success": {
+      "text": "He laughs and gives you a gift.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bakery-gift",
+   "name": "Bakery Gift",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "effect": "hearts"
+   },
+   "intro": "A baker is giving out free treats to trainers.",
+   "choices": [
+    {
+     "label": "Take a treat",
+     "success": {
+      "text": "Delicious!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help bake",
+     "success": {
+      "text": "Your team helped knead the dough.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "volunteer-cleanup",
+   "name": "Volunteer Cleanup",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "Volunteers clean a polluted river.",
+   "choices": [
+    {
+     "label": "Help out",
+     "success": {
+      "text": "The river sparkles again.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Donate (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "They thank you warmly.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 4
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mom-calls",
+   "name": "Mom Calls",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#302028",
+    "effect": "hearts"
+   },
+   "intro": "Your phone rings. It's Mom! \"Are you eating well?\"",
+   "choices": [
+    {
+     "label": "Tell her everything",
+     "success": {
+      "text": "She sends a care package.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for money",
+     "success": {
+      "text": "\"Here, but spend it wisely!\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rescue-team",
+   "name": "Rescue Team Call",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "rain"
+   },
+   "intro": "A Rescue Team asks for help finding a lost hiker in the fog.",
+   "choices": [
+    {
+     "label": "Search with them",
+     "check": "intelligence",
+     "success": {
+      "text": "You find the hiker! The team rewards you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "No luck, but the team thanks you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the wild Pokémon blocking the path",
+     "success": {
+      "text": "Clearing the way!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 4
+        },
+        {
+         "kind": "money",
+         "amount": 600
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "kind-ranger",
+   "name": "Pokémon Ranger",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "float"
+   },
+   "intro": "A Ranger offers to check your team.",
+   "choices": [
+    {
+     "label": "Accept the check-up",
+     "success": {
+      "text": "All healthy!",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about rare Pokémon",
+     "success": {
+      "text": "She marks a spot on your map.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "blind-old-lady",
+   "name": "Old Lady at the Crossing",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "hearts"
+   },
+   "intro": "An old lady can't cross the busy road.",
+   "choices": [
+    {
+     "label": "Help her cross",
+     "success": {
+      "text": "She gives you a lucky charm.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Have a Pokémon carry her bags",
+     "success": {
+      "text": "She pats your lead.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pokemon-daycare-visit",
+   "name": "Daycare Drop-In",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#283018",
+    "effect": "hearts"
+   },
+   "intro": "The daycare man waves. \"Leave one with us a while?\"",
+   "choices": [
+    {
+     "label": "Leave the lead for a bit",
+     "success": {
+      "text": "It comes back stronger.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 2,
+        "who": "lead"
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about eggs",
+     "success": {
+      "text": "\"Here, this one was left behind.\"",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -3,
+        "shinyMultiplier": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stray-kitten",
+   "name": "Stray Kitten",
+   "group": "Helpers, gifts and kindness",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "pokemon": "skitty",
+    "effect": "hearts"
+   },
+   "intro": "A hungry little cat Pokémon mews at you.",
+   "choices": [
+    {
+     "label": "Feed it",
+     "success": {
+      "text": "It purrs and joins you.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "skitty",
+         "meowth",
+         "purrloin",
+         "espurr",
+         "litleo",
+         "sprigatito"
+        ],
+        "types": [],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Pet it",
+     "success": {
+      "text": "So soft.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "slot-machine",
+   "name": "Slot Machine",
+   "group": "Games of chance",
+   "stop": "casino",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "effect": "spin"
+   },
+   "intro": "A dusty slot machine blinks \"777!\"",
+   "choices": [
+    {
+     "label": "Pull (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "check": "luck",
+     "success": {
+      "text": "JACKPOT!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nothing.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "dice-game",
+   "name": "Dice Game",
+   "group": "Games of chance",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "\"Roll higher than me and double your money!\"",
+   "choices": [
+    {
+     "label": "Bet ₽500",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "chance": 0.5,
+     "success": {
+      "text": "You win!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     },
+     "failure": {
+      "text": "You lose.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bet ₽1500",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "chance": 0.45,
+     "success": {
+      "text": "Big win!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       }
+      ]
+     },
+     "failure": {
+      "text": "Big loss.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ball-toss",
+   "name": "Ball Toss",
+   "group": "Games of chance",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "effect": "float"
+   },
+   "intro": "Throw a ball into the basket from far away.",
+   "choices": [
+    {
+     "label": "Throw!",
+     "check": "speed",
+     "success": {
+      "text": "Swish! A prize!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "poke-ball",
+         "great-ball",
+         "ultra-ball"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "poke-ball",
+         "great-ball",
+         "ultra-ball"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Missed. Have a consolation ball.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "poke-ball",
+        "count": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "scratch-card",
+   "name": "Scratch Card",
+   "group": "Games of chance",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "glint"
+   },
+   "intro": "\"Scratch cards, ₽200 each!\"",
+   "choices": [
+    {
+     "label": "Buy one",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "chance": 0.25,
+     "success": {
+      "text": "A winner!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     },
+     "failure": {
+      "text": "Not a winner.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy five",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "chance": 0.5,
+     "success": {
+      "text": "Two winners!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       }
+      ]
+     },
+     "failure": {
+      "text": "All duds.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "voltorb-flip",
+   "name": "Voltorb Flip",
+   "group": "Games of chance",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "pokemon": "voltorb",
+    "effect": "sparkle"
+   },
+   "intro": "A board of cards. Some hide coins, some hide Voltorb!",
+   "choices": [
+    {
+     "label": "Play carefully",
+     "check": "intelligence",
+     "success": {
+      "text": "Coins and more coins!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1200
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "BOOM! A Voltorb pops out!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "voltorb"
+       ],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Flip wildly",
+     "chance": 0.35,
+     "success": {
+      "text": "Lucky flips!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 2000
+       }
+      ]
+     },
+     "failure": {
+      "text": "BOOM!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "voltorb",
+        "electrode"
+       ],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "lucky-egg-hunt",
+   "name": "Egg Hunt",
+   "group": "Games of chance",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#283018",
+    "effect": "hearts"
+   },
+   "intro": "Painted eggs are hidden all over a park.",
+   "choices": [
+    {
+     "label": "Search high",
+     "check": "luck",
+     "success": {
+      "text": "A golden egg!",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "lucky-egg",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A chocolate egg. Yum.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Search low",
+     "success": {
+      "text": "A basket of goodies.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fishing-derby",
+   "name": "Fishing Derby",
+   "group": "Games of chance",
+   "stop": "fish",
+   "rarity": "uncommon",
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#103040",
+    "effect": "rain"
+   },
+   "intro": "A fishing contest! Biggest catch wins.",
+   "choices": [
+    {
+     "label": "Cast your line",
+     "success": {
+      "text": "Something big bites!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1200
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Watch and bet (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "chance": 0.4,
+     "success": {
+      "text": "Your fisherman won!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your fisherman lost.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mystery-door",
+   "name": "Three Doors",
+   "group": "Games of chance",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#201828",
+    "effect": "fog"
+   },
+   "intro": "Three doors. One has treasure, one has a Pokémon, one has nothing.",
+   "choices": [
+    {
+     "label": "Left door",
+     "chance": 0.34,
+     "success": {
+      "text": "Treasure!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "An empty room.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Middle door",
+     "success": {
+      "text": "A Pokémon jumps out!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Right door",
+     "chance": 0.5,
+     "success": {
+      "text": "A healing spring!",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     },
+     "failure": {
+      "text": "A broom closet.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ghost-gamble",
+   "name": "Ghost's Gamble",
+   "group": "Games of chance",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "pokemon": "gengar",
+    "tint": "#180820",
+    "effect": "flicker"
+   },
+   "intro": "A grinning Gengar shuffles cards. \"Pick one, if you dare.\"",
+   "choices": [
+    {
+     "label": "Pick a card",
+     "chance": 0.5,
+     "success": {
+      "text": "The Ace! Gengar bows and gives you a prize.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Joker! Gengar curses your team.",
+      "effects": [
+       {
+        "kind": "status",
+        "status": "sleep"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Challenge Gengar",
+     "success": {
+      "text": "Gengar cackles!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "gengar"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "coin-fountain",
+   "name": "Coin Fountain",
+   "group": "Games of chance",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "sparkle"
+   },
+   "intro": "A fountain full of coins. A sign says \"Make a wish\".",
+   "choices": [
+    {
+     "label": "Toss a coin (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "Your wish comes true!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fish out some coins",
+     "success": {
+      "text": "₽400 in coins.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "waterfall-training",
+   "name": "Waterfall Training",
+   "group": "Training and growth",
+   "rarity": "common",
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#103040",
+    "effect": "rain"
+   },
+   "intro": "A roaring waterfall. Trainers meditate under it.",
+   "choices": [
+    {
+     "label": "Stand under it",
+     "success": {
+      "text": "Freezing, but strong!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Swim against it",
+     "check": "strength",
+     "success": {
+      "text": "Tough!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 2,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Swept away!",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mountain-climb",
+   "name": "Mountain Climb",
+   "group": "Training and growth",
+   "rarity": "common",
+   "types": [
+    "rock"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#283038",
+    "effect": "snow"
+   },
+   "intro": "A steep path up the mountain. The view must be amazing.",
+   "choices": [
+    {
+     "label": "Climb to the top",
+     "check": "strength",
+     "success": {
+      "text": "What a view! Your team grows.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Too steep. You turn back.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Meditate at the base",
+     "success": {
+      "text": "Calm and focused.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sparring-partner",
+   "name": "Sparring Partner",
+   "group": "Training and growth",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "effect": "shake"
+   },
+   "intro": "A Black Belt's Pokémon wants to spar with yours.",
+   "choices": [
+    {
+     "label": "Spar hard",
+     "success": {
+      "text": "Both grow tougher.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 2,
+        "who": "lead"
+       },
+       {
+        "kind": "damage",
+        "share": 0.25
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spar softly",
+     "success": {
+      "text": "Good practice.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "study-hall",
+   "name": "Study Hall",
+   "group": "Training and growth",
+   "stop": "library",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "A quiet room full of Pokémon books.",
+   "choices": [
+    {
+     "label": "Study type matchups",
+     "success": {
+      "text": "You understand battles better.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 3
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Study Pokémon care",
+     "success": {
+      "text": "Your team trusts you more.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "yoga-retreat",
+   "name": "Yoga Retreat",
+   "group": "Training and growth",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#283028",
+    "effect": "hearts"
+   },
+   "intro": "A calm retreat for trainers and Pokémon alike.",
+   "choices": [
+    {
+     "label": "Join the class",
+     "success": {
+      "text": "Deep breaths.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -5
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Skip to the hot spring",
+     "success": {
+      "text": "Ahh.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "obstacle-course",
+   "name": "Obstacle Course",
+   "group": "Training and growth",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.biker"
+    ],
+    "effect": "float"
+   },
+   "intro": "Ropes, tunnels and jumps. A record time wins a prize.",
+   "choices": [
+    {
+     "label": "Go for the record",
+     "check": "speed",
+     "success": {
+      "text": "New record!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 3
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "A tumble, but you finish.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ev-trainer",
+   "name": "EV Coach",
+   "group": "Training and growth",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.marshal"
+    ],
+    "effect": "shake"
+   },
+   "intro": "\"I train one stat at a time. Pick your focus.\"",
+   "choices": [
+    {
+     "label": "Power",
+     "success": {
+      "text": "Strong!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Defence",
+     "success": {
+      "text": "Sturdy!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "iron",
+         "zinc",
+         "hp-up"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Speed",
+     "success": {
+      "text": "Fast!",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "carbos",
+        "count": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rare-candy-cache",
+   "name": "Candy Cache",
+   "group": "Training and growth",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#302838",
+    "effect": "sparkle"
+   },
+   "intro": "A hidden jar of Rare Candies behind a rock!",
+   "choices": [
+    {
+     "label": "Share them with the team",
+     "success": {
+      "text": "Everyone levels up!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give them all to the lead",
+     "success": {
+      "text": "Your lead grows a lot!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bond-ceremony",
+   "name": "Bond Ceremony",
+   "group": "Training and growth",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#402838",
+    "effect": "hearts"
+   },
+   "intro": "A shrine where trainers and Pokémon promise to stay together.",
+   "choices": [
+    {
+     "label": "Make a promise",
+     "success": {
+      "text": "Your bond feels stronger than ever.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 12,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Pray for strength",
+     "success": {
+      "text": "A warm light.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ice-training",
+   "name": "Ice Training",
+   "group": "Training and growth",
+   "rarity": "common",
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#203040",
+    "effect": "snow"
+   },
+   "intro": "A frozen lake perfect for slide practice.",
+   "choices": [
+    {
+     "label": "Slide drills",
+     "check": "speed",
+     "success": {
+      "text": "Smooth moves!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 2
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Splat on the ice.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ice fishing",
+     "success": {
+      "text": "Something bites!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ice",
+        "water"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "unown-wall",
+   "name": "Unown Wall",
+   "group": "Mysteries and story",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "pokemon": "unown",
+    "tint": "#201810",
+    "effect": "glint"
+   },
+   "intro": "Letters on a cave wall shift and spell a word.",
+   "choices": [
+    {
+     "label": "Read the message",
+     "check": "intelligence",
+     "success": {
+      "text": "\"FRIEND\". An Unown floats out to join you.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "unown"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "Gibberish to you.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Copy it down",
+     "success": {
+      "text": "A researcher would love this.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "time-capsule",
+   "name": "Time Capsule",
+   "group": "Mysteries and story",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#302418",
+    "effect": "rattle"
+   },
+   "intro": "A buried box labelled \"Open in 20 years\". It's been 30.",
+   "choices": [
+    {
+     "label": "Open it",
+     "success": {
+      "text": "Old Poké Balls and a note.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "great-ball",
+        "count": 2
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Rebury it with a gift",
+     "success": {
+      "text": "Someone will be happy one day.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 4
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ancient-tablet",
+   "name": "Ancient Tablet",
+   "group": "Mysteries and story",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#201810",
+    "effect": "glint"
+   },
+   "intro": "A stone tablet shows a giant Pokémon shaping the land.",
+   "choices": [
+    {
+     "label": "Study it",
+     "success": {
+      "text": "You understand the legends better.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Touch it",
+     "success": {
+      "text": "The tablet glows. A guardian appears!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "rock",
+        "ground",
+        "steel"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "ghost-ship",
+   "name": "Ghost Ship",
+   "group": "Mysteries and story",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [
+    "ghost"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#101820",
+    "effect": "fog"
+   },
+   "intro": "A ship drifts in the fog. Nobody is on deck.",
+   "choices": [
+    {
+     "label": "Board it",
+     "success": {
+      "text": "The ship's ghosts awake!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ghost"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Watch it pass",
+     "success": {
+      "text": "A chill runs down your spine.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "meteor-shower",
+   "name": "Meteor Shower",
+   "group": "Mysteries and story",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#080818",
+    "effect": "sparkle"
+   },
+   "intro": "Shooting stars fill the sky. One lands nearby!",
+   "choices": [
+    {
+     "label": "Find the meteorite",
+     "success": {
+      "text": "A Star Piece!",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "star-piece",
+        "count": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Make a wish",
+     "success": {
+      "text": "You wish for your team's health.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for space Pokémon",
+     "success": {
+      "text": "Something fell with the meteor!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "clefairy",
+        "minior",
+        "beldum",
+        "elgyem",
+        "solrock",
+        "lunatone"
+       ],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "lost-journal",
+   "name": "Lost Journal",
+   "group": "Mysteries and story",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "fog"
+   },
+   "intro": "A soggy journal of a trainer who walked this road long ago.",
+   "choices": [
+    {
+     "label": "Read it",
+     "success": {
+      "text": "Old secrets of this route.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Return it to the town",
+     "success": {
+      "text": "The family is grateful.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "distortion-world",
+   "name": "Distortion",
+   "group": "Mysteries and story",
+   "rarity": "epic",
+   "minStage": 6,
+   "scene": {
+    "cast": [],
+    "pokemon": "giratina",
+    "tint": "#180818",
+    "effect": "spin"
+   },
+   "intro": "The world flips upside down. A shadow with six wings watches.",
+   "choices": [
+    {
+     "label": "Step into the distortion",
+     "success": {
+      "text": "Giratina!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "giratina"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Run back",
+     "success": {
+      "text": "Everything is normal again… right?",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": -1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pokemon-statue",
+   "name": "Mysterious Statue",
+   "group": "Mysteries and story",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "glint"
+   },
+   "intro": "An old statue of a Pokémon nobody recognizes.",
+   "choices": [
+    {
+     "label": "Polish it",
+     "success": {
+      "text": "Its eyes glint. You feel lucky.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave an offering",
+     "success": {
+      "text": "Something whispers \"thank you\".",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "dream-mist",
+   "name": "Dream Mist",
+   "group": "Mysteries and story",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "pokemon": "munna",
+    "tint": "#281830",
+    "effect": "fog"
+   },
+   "intro": "Pink mist drifts by. Your team starts dreaming of the future.",
+   "choices": [
+    {
+     "label": "Follow the dream",
+     "success": {
+      "text": "You glimpse the gym leader's team in the dream.",
+      "effects": [
+       {
+        "kind": "gymPreview"
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Catch the dreamer",
+     "success": {
+      "text": "A Psychic-type feeding on dreams!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "munna",
+        "musharna",
+        "drowzee"
+       ],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "cursed-doll",
+   "name": "Cursed Doll",
+   "group": "Mysteries and story",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "pokemon": "banette",
+    "tint": "#180818",
+    "effect": "flicker"
+   },
+   "intro": "A creepy doll sits on a bench. Its zipper mouth moves.",
+   "choices": [
+    {
+     "label": "Pick it up",
+     "success": {
+      "text": "It's a Banette!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "shuppet",
+        "banette"
+       ],
+       "types": [],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Give it a hug",
+     "check": "love",
+     "success": {
+      "text": "It giggles and joins you.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "shuppet"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "It bites!",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run",
+     "success": {
+      "text": "You run very fast.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ancient-seed",
+   "name": "Ancient Seed",
+   "group": "Mysteries and story",
+   "rarity": "uncommon",
+   "types": [
+    "grass"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#183018",
+    "effect": "sparkle"
+   },
+   "intro": "A seed that glows warm, found in old ruins.",
+   "choices": [
+    {
+     "label": "Plant it",
+     "success": {
+      "text": "It sprouts instantly into a berry bush!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep it safe",
+     "success": {
+      "text": "It hatches! It was a Pokémon all along.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [],
+        "types": [
+         "grass"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "brock-cooking",
+   "name": "Brock's Cooking",
+   "group": "Famous faces",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "hearts"
+   },
+   "intro": "A friendly breeder is cooking stew for every Pokémon in sight.",
+   "choices": [
+    {
+     "label": "Share a meal",
+     "success": {
+      "text": "The best food ever.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for breeding tips",
+     "success": {
+      "text": "Your team trusts you more.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 3
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "misty-swim",
+   "name": "Gym Leader's Swim",
+   "group": "Famous faces",
+   "rarity": "uncommon",
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.lacey"
+    ],
+    "tint": "#103050",
+    "effect": "rain"
+   },
+   "intro": "A Water gym leader swims laps. \"Race me!\"",
+   "choices": [
+    {
+     "label": "Race her",
+     "check": "speed",
+     "success": {
+      "text": "You won! She hands you a prize.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "mystic-water",
+         "water-stone"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "She laps you twice. Still fun.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle her",
+     "success": {
+      "text": "\"Splash!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Swimmer",
+       "size": 3,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "gymPreview"
+        },
+        {
+         "kind": "money",
+         "amount": 1500
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "blue-taunt",
+   "name": "Blue's Taunt",
+   "group": "Famous faces",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.blue"
+    ],
+    "effect": "shake"
+   },
+   "intro": "\"Smell ya later, loser!\" Blue blocks the road.",
+   "choices": [
+    {
+     "label": "Battle Blue",
+     "success": {
+      "text": "\"Let's see who's better!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Blue",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2000
+        },
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ignore him",
+     "success": {
+      "text": "\"Hey! Don't ignore me!\" You feel calm.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "roark-mine",
+   "name": "Roark's Mine",
+   "group": "Famous faces",
+   "rarity": "common",
+   "types": [
+    "rock"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.roark"
+    ],
+    "tint": "#302418",
+    "effect": "shake"
+   },
+   "intro": "A gym leader digs in the mine. \"Help me dig, and we'll split the finds!\"",
+   "choices": [
+    {
+     "label": "Dig with him",
+     "check": "strength",
+     "success": {
+      "text": "Fossils and shards!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "old-amber",
+         "helix-fossil",
+         "dome-fossil"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Just rocks.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hard-stone"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"Rock on!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Roark",
+       "size": 3,
+       "types": [
+        "rock"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "item",
+         "id": "hard-stone",
+         "count": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "candice-snowball",
+   "name": "Snowball Fight",
+   "group": "Famous faces",
+   "rarity": "common",
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.candice"
+    ],
+    "tint": "#203040",
+    "effect": "snow"
+   },
+   "intro": "\"Snowball fight! Focus, focus, focus!\"",
+   "choices": [
+    {
+     "label": "Throw snowballs",
+     "check": "speed",
+     "success": {
+      "text": "Direct hit!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Snow in your face.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Build a snow Pokémon",
+     "check": "charisma",
+     "success": {
+      "text": "It looks great!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nevermeltice"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "A lumpy snowman. Still fun.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lenora-museum",
+   "name": "Museum Tour",
+   "group": "Famous faces",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.lenora"
+    ],
+    "effect": "glint"
+   },
+   "intro": "A gym leader runs a museum. \"Want the full tour?\"",
+   "choices": [
+    {
+     "label": "Take the tour",
+     "success": {
+      "text": "Fascinating fossils!",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle her",
+     "success": {
+      "text": "\"Let's research your strength!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Lenora",
+       "size": 3,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "item",
+         "id": "silk-scarf",
+         "count": 1
+        },
+        {
+         "kind": "money",
+         "amount": 1000
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "burgh-painting",
+   "name": "Artist's Studio",
+   "group": "Famous faces",
+   "rarity": "common",
+   "types": [
+    "bug"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.burgh"
+    ],
+    "effect": "sparkle"
+   },
+   "intro": "An artist paints Bug Pokémon. \"Pose for me?\"",
+   "choices": [
+    {
+     "label": "Pose",
+     "success": {
+      "text": "A masterpiece!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 3
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"Inspiration!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Burgh",
+       "size": 3,
+       "types": [
+        "bug"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "silverpowder"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mustard-dojo",
+   "name": "Master Dojo",
+   "group": "Famous faces",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "trainer.mustard"
+    ],
+    "effect": "shake"
+   },
+   "intro": "A cheerful old master. \"Train with me for a day?\"",
+   "choices": [
+    {
+     "label": "Train the lead",
+     "success": {
+      "text": "A huge jump in power!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 3,
+        "who": "lead"
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle the master",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "\"Hohoho! Come on!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Mustard",
+       "size": 3,
+       "types": [
+        "fighting"
+       ],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        },
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "larry-lunch",
+   "name": "Salaryman's Lunch",
+   "group": "Famous faces",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.larry"
+    ],
+    "effect": "fog"
+   },
+   "intro": "A tired man eats rice balls. \"Normal day, normal lunch.\"",
+   "choices": [
+    {
+     "label": "Eat with him",
+     "success": {
+      "text": "He shares a rice ball. Very normal. Very nice.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"…Fine. One battle.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Larry",
+       "size": 3,
+       "types": [
+        "normal",
+        "flying"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "kieran-rivalry",
+   "name": "A Bitter Rival",
+   "group": "Famous faces",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.kieran"
+    ],
+    "tint": "#182030",
+    "effect": "flicker"
+   },
+   "intro": "A gloomy boy glares at you. \"I'll get stronger than you. I have to.\"",
+   "choices": [
+    {
+     "label": "Battle him",
+     "success": {
+      "text": "\"This time I'll win!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Kieran",
+       "size": 4,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Encourage him",
+     "check": "love",
+     "success": {
+      "text": "He looks surprised. \"…Thanks.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 4
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"Don't pity me!\" He storms off.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "poppy-steel",
+   "name": "Little Steel Master",
+   "group": "Famous faces",
+   "rarity": "common",
+   "types": [
+    "steel"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.poppy"
+    ],
+    "effect": "glint"
+   },
+   "intro": "A tiny girl with a big hammer. \"Wanna play?\"",
+   "choices": [
+    {
+     "label": "Play",
+     "success": {
+      "text": "\"Hammer time!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Poppy",
+       "size": 2,
+       "types": [
+        "steel"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "item",
+         "id": "metal-coat",
+         "count": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Give her a snack",
+     "success": {
+      "text": "\"Yay!\" She gives you a shiny bolt.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "metal-coat",
+         "iron-ball"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sandstorm",
+   "name": "Sandstorm",
+   "group": "Places and weather",
+   "rarity": "common",
+   "types": [
+    "ground",
+    "rock"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#403018",
+    "effect": "fog"
+   },
+   "intro": "A sandstorm blows across the desert route.",
+   "choices": [
+    {
+     "label": "Push through",
+     "success": {
+      "text": "Sand everywhere, but you made it.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Shelter in ruins",
+     "success": {
+      "text": "Something lives in the ruins!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ground",
+        "rock"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "heatwave",
+   "name": "Heatwave",
+   "group": "Places and weather",
+   "rarity": "common",
+   "types": [
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#402010",
+    "effect": "fire"
+   },
+   "intro": "The sun burns hot. Your team pants.",
+   "choices": [
+    {
+     "label": "Rest in the shade",
+     "success": {
+      "text": "Cooler now.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train in the heat",
+     "success": {
+      "text": "Tough, but worth it.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "status",
+        "status": "burn"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy cold drinks (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "Refreshing!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "heal",
+        "share": 0.6
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "blizzard-pass",
+   "name": "Blizzard Pass",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#203040",
+    "effect": "snow"
+   },
+   "intro": "A mountain pass buried in snow.",
+   "choices": [
+    {
+     "label": "Trudge through",
+     "success": {
+      "text": "Cold, but you make it.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Find a cave",
+     "success": {
+      "text": "An Ice-type lives here!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ice"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Camp by a fire",
+     "success": {
+      "text": "Warm and cozy.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "foggy-moor",
+   "name": "Foggy Moor",
+   "group": "Places and weather",
+   "rarity": "common",
+   "types": [
+    "ghost",
+    "dark"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#182020",
+    "effect": "fog"
+   },
+   "intro": "Thick fog. You can't see your feet.",
+   "choices": [
+    {
+     "label": "Feel your way forward",
+     "check": "luck",
+     "success": {
+      "text": "You find a lost item!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You walk in circles for hours.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Use a Pokémon's senses",
+     "success": {
+      "text": "Your team leads the way.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "revealStops"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rainbow-bridge",
+   "name": "Rainbow Bridge",
+   "group": "Places and weather",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#203048",
+    "effect": "sparkle"
+   },
+   "intro": "After the rain, a rainbow arcs over the route.",
+   "choices": [
+    {
+     "label": "Walk under it",
+     "success": {
+      "text": "You feel blessed.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look for a rainbow Pokémon",
+     "success": {
+      "text": "Something bright appears!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 10,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "hot-spring",
+   "name": "Hot Spring",
+   "group": "Places and weather",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#302020",
+    "effect": "fog"
+   },
+   "intro": "Steam rises from a natural hot spring. Your team runs in.",
+   "choices": [
+    {
+     "label": "Soak together",
+     "success": {
+      "text": "Bliss.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Massage the lead",
+     "success": {
+      "text": "It melts with happiness.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk",
+     "success": {
+      "text": "A quiet chat in the steam.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "starry-camp",
+   "name": "Starry Campsite",
+   "group": "Places and weather",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#080818",
+    "effect": "sparkle"
+   },
+   "intro": "A campsite under the stars. Your lead curls up beside you.",
+   "choices": [
+    {
+     "label": "Tell stories",
+     "success": {
+      "text": "It falls asleep smiling.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "lead"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stargaze",
+     "success": {
+      "text": "A shooting star!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Cook curry",
+     "success": {
+      "text": "A delicious curry for everyone!",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.7
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "flower-field-rest",
+   "name": "Flower Field",
+   "group": "Places and weather",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "types": [
+    "grass",
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#304028",
+    "effect": "hearts"
+   },
+   "intro": "Flowers as far as you can see. Your lead rolls in them.",
+   "choices": [
+    {
+     "label": "Make a flower crown",
+     "success": {
+      "text": "Your lead looks adorable.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Play hide and seek",
+     "success": {
+      "text": "So much fun!",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "lead"
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Nap in the flowers",
+     "success": {
+      "text": "A sweet nap.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ruined-bridge",
+   "name": "Broken Bridge",
+   "group": "Places and weather",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "effect": "shake"
+   },
+   "intro": "The bridge ahead is broken. The river below is wild.",
+   "choices": [
+    {
+     "label": "Fix it",
+     "check": "intelligence",
+     "success": {
+      "text": "Good as new! Travellers thank you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "It collapses. You swim across.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Swim across",
+     "success": {
+      "text": "A Water-type lives in the river!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "lighthouse",
+   "name": "Lighthouse",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "electric"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#102030",
+    "effect": "sparkle"
+   },
+   "intro": "The lighthouse lamp is out. Its Ampharos looks sick.",
+   "choices": [
+    {
+     "label": "Help the Ampharos",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "potion"
+      }
+     ],
+     "success": {
+      "text": "The light shines again! The keeper rewards you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     }
+    },
+    {
+     "label": "Charge the lamp with your team",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      }
+     ],
+     "success": {
+      "text": "Bright as day!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cherry-blossom",
+   "name": "Cherry Blossoms",
+   "group": "Places and weather",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#402830",
+    "effect": "hearts"
+   },
+   "intro": "Pink petals fall everywhere. A festival is going on.",
+   "choices": [
+    {
+     "label": "Join the festival",
+     "success": {
+      "text": "Food, games and laughs.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Catch a petal",
+     "success": {
+      "text": "Good luck all year!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "volcano-rim",
+   "name": "Volcano Rim",
+   "group": "Places and weather",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#400808",
+    "effect": "fire"
+   },
+   "intro": "The edge of an active volcano. Lava bubbles below.",
+   "choices": [
+    {
+     "label": "Look into the crater",
+     "success": {
+      "text": "A Fire-type rises from the lava!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "fire"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "fire-stone",
+          "charcoal",
+          "heat-rock"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Collect volcanic ash",
+     "success": {
+      "text": "Rare ash and a stone.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "fire-stone",
+        "count": 1
+       },
+       {
+        "kind": "status",
+        "status": "burn"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crystal-cave",
+   "name": "Crystal Cave",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "rock",
+    "ice"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#182838",
+    "effect": "glint"
+   },
+   "intro": "A cave of glowing crystals.",
+   "choices": [
+    {
+     "label": "Mine a crystal",
+     "check": "strength",
+     "success": {
+      "text": "A glittering shard.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "It cracks. Just dust.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the light",
+     "success": {
+      "text": "A crystal Pokémon!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "carbink",
+        "sableye",
+        "boldore",
+        "crustle",
+        "nosepass"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "desert-oasis",
+   "name": "Desert Oasis",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "ground",
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#403018",
+    "effect": "float"
+   },
+   "intro": "Palm trees and a pool of fresh water in the desert.",
+   "choices": [
+    {
+     "label": "Drink and rest",
+     "success": {
+      "text": "Refreshed!",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look around",
+     "success": {
+      "text": "Something lives here!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ground",
+        "water"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "ancient-forest",
+   "name": "Ancient Forest",
+   "group": "Places and weather",
+   "rarity": "rare",
+   "minStage": 4,
+   "types": [
+    "grass",
+    "bug"
+   ],
+   "scene": {
+    "cast": [],
+    "pokemon": "celebi",
+    "tint": "#103010",
+    "effect": "sparkle"
+   },
+   "intro": "Huge old trees. Time feels slower here.",
+   "choices": [
+    {
+     "label": "Visit the shrine",
+     "chance": 0.4,
+     "success": {
+      "text": "A time-travelling Pokémon!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "celebi"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 2,
+       "win": []
+      }
+     },
+     "failure": {
+      "text": "Only the wind. You feel at peace.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -4
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Gather old berries",
+     "success": {
+      "text": "Rare berries.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stormy-sea",
+   "name": "Stormy Sea",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#102030",
+    "effect": "rain"
+   },
+   "intro": "Huge waves crash. A boat is stuck on the rocks.",
+   "choices": [
+    {
+     "label": "Rescue the boat",
+     "check": "strength",
+     "success": {
+      "text": "Everyone is safe! The captain rewards you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     },
+     "failure": {
+      "text": "The waves knock you back.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Surf the waves",
+     "success": {
+      "text": "A sea Pokémon surfs beside you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water",
+        "dragon"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "moonlit-path",
+   "name": "Moonlit Path",
+   "group": "Places and weather",
+   "rarity": "uncommon",
+   "types": [
+    "fairy",
+    "dark"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#101830",
+    "effect": "sparkle"
+   },
+   "intro": "A full moon lights the path. Fairy Pokémon dance in a circle.",
+   "choices": [
+    {
+     "label": "Dance with them",
+     "check": "charisma",
+     "success": {
+      "text": "You feel light as a feather.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "They stop and stare.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Find a Moon Stone",
+     "success": {
+      "text": "Glowing under the moon.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "moon-stone",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Meet a night Pokémon",
+     "success": {
+      "text": "Something stirs in the dark.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "dark",
+        "fairy"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "abandoned-power-plant",
+   "name": "Abandoned Power Plant",
+   "group": "Places and weather",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [
+    "electric"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#202008",
+    "effect": "flicker"
+   },
+   "intro": "Sparks fly in an old power plant.",
+   "choices": [
+    {
+     "label": "Explore",
+     "success": {
+      "text": "A strong Electric-type!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "electric"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "magnet",
+          "thunder-stone"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Search the control room",
+     "success": {
+      "text": "Old parts worth money.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1200
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "doesnt-want-to-fight",
    "name": "It Doesn't Want to Fight…",
    "group": "Overdrive unusual events",

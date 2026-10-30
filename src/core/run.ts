@@ -89,6 +89,7 @@ import {
 } from './mapItems';
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
+import { placeExpeditionGate } from './expedition/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -182,6 +183,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     story: createStoryState(),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
+    expedition: null,
+    expeditions: { completed: [], failed: [], unlocked: [], last: [] },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -319,6 +322,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   addEventStops(content, run);
   placeRaidDens(content, run);
   placeTotem(content, run);
+  placeExpeditionGate(content, run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -399,7 +403,7 @@ function assertCanRelease(content: Content, run: RunState): void {
   if (releaseLimitReached(content, run)) throw new Error('This trainer can only release a few Pokémon per run, and you have used them all');
 }
 
-function requireStage(run: RunState): StageState {
+export function requireStage(run: RunState): StageState {
   if (!run.stage) throw new Error('The run has no stage');
   return run.stage;
 }
@@ -746,6 +750,13 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
   raidDen(run, sideId).side.used = true;
   run.money -= def.entryCost;
   const { speciesId, level } = raidBoss(content, run, def, node.id + sideId);
+  startRaidBattle(content, run, def, speciesId, level);
+  return run;
+}
+
+/** Builds the raid battle (mutates `run`): the boss with its HP pool, the raid state and its field. */
+export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number): void {
+  const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
   applyBossHp(def, boss);
   boss.hp = maxHp(content, boss);
@@ -757,7 +768,6 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
-  return run;
 }
 
 /** Totem territory preview. */
@@ -798,6 +808,13 @@ export function enterTotem(content: Content, current: RunState, sideId: string):
   const run = structuredClone(current);
   totemDen(run, sideId).side.used = true;
   const { speciesId, level } = totemBoss(content, run, def, node.id + sideId);
+  startTotemBattle(content, run, def, speciesId, level);
+  return run;
+}
+
+/** Builds the Totem battle (mutates `run`). */
+export function startTotemBattle(content: Content, run: RunState, def: TotemDef, speciesId: string, level: number): void {
+  const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
   applyTotemHp(def, boss);
   boss.hp = maxHp(content, boss);
@@ -808,7 +825,6 @@ export function enterTotem(content: Content, current: RunState, sideId: string):
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
-  return run;
 }
 
 /** Totem victory: money, items, draft choices, a rare Pokémon, an unlock and research (once: the battle is cleared right after). */
@@ -883,7 +899,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
  * Sets up the battle for a map node (mutates `run`). A VS Seeker rematch passes
  * a generator of its own, so the encounter stream (and every later battle) is unchanged.
  */
-function startEncounter(content: Content, run: RunState, node: MapNode, rematch?: Rng): void {
+export function startEncounter(content: Content, run: RunState, node: MapNode, rematch?: Rng): void {
   const stage = run.stage!;
   const archetype = getArchetype(content, run.archetypeId);
   const theme = getTheme(content, stage.themeId);
@@ -1231,6 +1247,13 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     recordChanges(content, current, run, 'battle');
     return { run, events, end, defeated: false, cues, drama };
   }
+  if (battle.outcome === 'lose' && battle.expedition && run.expedition) {
+    run.expedition.battleResult = 'lose';
+    run.battle = null;
+    run.phase = 'expedition';
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
   if (battle.outcome === 'lose' && (battle.raid || battle.totem)) {
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
@@ -1498,7 +1521,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // An event battle you won pays its own rewards.
   const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
-  run.afterDecisions = battle.fishing || battle.event ? 'map' : 'reward';
+  run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
   return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards };
 }
@@ -1531,6 +1554,11 @@ export function continueAfterDecisions(content: Content, run: RunState): void {
     // The last champion is beaten: the run is won.
     run.draft = null;
     run.phase = 'over';
+    return;
+  }
+  if (run.afterDecisions === 'expedition' && run.expedition) {
+    run.expedition.battleResult = 'win';
+    run.phase = 'expedition';
     return;
   }
   if (run.afterDecisions === 'reward') {

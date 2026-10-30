@@ -27,6 +27,8 @@ export interface AutoplayOptions {
 /** Picks the next action for `run` and plays it. */
 export function step(content: Content, run: RunState): { run: RunState; turn: TurnResult | null } {
   switch (run.phase) {
+    case 'expedition':
+      throw new Error('Autoplay does not enter expeditions');
     case 'starter':
       return { run: chooseStarter(content, run, 0), turn: null };
     case 'map':
