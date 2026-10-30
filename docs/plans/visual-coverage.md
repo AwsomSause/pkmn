@@ -37,7 +37,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Boss phase indicator | BUILT | header phase count (other thread) + NEW PHASE banner with the phase's rule (slice 7) |
 | Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
 | Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
-| Move flag icons (Enhanced Battle UI, 18) | PART | 9 shown (slice 3): every flag our move data has (contact, sound, bite, powder, pulse, punch, Z, Max) + high crit. Slicing, wind, dance, bomb, no-protect, thaw, electrocute, minimize, no-mirror: our data has no such flag yet |
+| Move flag icons (Enhanced Battle UI, 18) | BUILT | All 18: the move data's flags (contact, sound, bite, powder, pulse, punch, bomb, slicing, wind, Z, Max), high crit, and dance / no-Protect / thaw / Minimize / electrocute / no-Mirror-Move from Essentials `PBS/moves.txt` (`src/data/moveFlags.json`, `npm run data:move-flags`). Up to 4 per move |
 | Effectiveness hint on moves (from what the player can see) | BUILT | EBUI tag + words vs the foe's visible (or Tera) types (slice 3); abilities like Levitate aren't counted |
 | Layer 7 cinematic accents (portrait, banner, reveal, stamp) | PART | Hyper moment banner exists; slice 4 |
 | HP drains smoothly; damage number; crit emphasis | BUILT | M9 |

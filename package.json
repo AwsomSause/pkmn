@@ -16,6 +16,7 @@
     "check": "npm run typecheck && npm test && npm run build && npm run report:check && npm run report:assets",
     "data:movesets": "node tools/import-movesets.ts",
     "data:moves": "node tools/import-moves.ts",
+    "data:move-flags": "node tools/build-move-flags.ts",
     "data:move-targets": "node tools/build-move-targets.ts",
     "data:species": "node tools/import-species.ts",
     "data:bosses": "node tools/build-boss-teams.ts",

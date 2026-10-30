@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T16:37:51.085Z",
+  "generatedAt": "2026-10-30T17:28:13.629Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -206,6 +206,60 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/ebui/flags/DynamaxMove.png"
+    },
+    {
+      "id": "pack.ebui.flag.Bomb",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Bomb.png"
+    },
+    {
+      "id": "pack.ebui.flag.Dance",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Dance.png"
+    },
+    {
+      "id": "pack.ebui.flag.ElectrocuteUser",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/ElectrocuteUser.png"
+    },
+    {
+      "id": "pack.ebui.flag.NoMirrorMove",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/NoMirrorMove.png"
+    },
+    {
+      "id": "pack.ebui.flag.NoProtect",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/NoProtect.png"
+    },
+    {
+      "id": "pack.ebui.flag.Slicing",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Slicing.png"
+    },
+    {
+      "id": "pack.ebui.flag.ThawsUser",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/ThawsUser.png"
+    },
+    {
+      "id": "pack.ebui.flag.TramplesMinimize",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/TramplesMinimize.png"
+    },
+    {
+      "id": "pack.ebui.flag.Wind",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Wind.png"
     },
     {
       "id": "pack.ebdx.cloud1",
