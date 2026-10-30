@@ -3390,6 +3390,7 @@ function specialMoveType(ctx: BattleContext, user: Combatant, move: Move, _weath
   if (fx.itemMove === 'itemType') {
     for (const { hook } of Held.hooksOf(ctx, user.mon, user.side)) {
       if (hook.hook === 'drive') return hook.type;
+      if (hook.hook === 'memory' && move.id === 'multi-attack') return hook.type;
       if (hook.hook === 'typePower' && hook.types.length === 1 && move.id === 'judgment') return hook.types[0]!;
     }
   }

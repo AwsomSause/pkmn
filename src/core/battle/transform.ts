@@ -466,6 +466,12 @@ const PLATE_TYPE: Record<string, TypeName> = {
   'draco-plate': 'dragon', 'dread-plate': 'dark', 'pixie-plate': 'fairy',
 };
 
+/** The type a Memory gives Silvally: its item id is `<type>-memory`. */
+export function memoryType(held: Record<string, number>): TypeName | undefined {
+  for (const id of Object.keys(held)) if (id.endsWith('-memory')) return id.slice(0, -'-memory'.length) as TypeName;
+  return undefined;
+}
+
 export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
   const tera = battle.transform.teraTypes[mon.uid];
   if (tera) return [tera];
@@ -475,6 +481,10 @@ export function battleTypes(content: Content, battle: BattleState, mon: PokemonI
   if (mimic && !vol?.typeList) return [mimic];
   if (abilityOf(content, mon) === 'multitype' && !vol?.typeList) {
     for (const id of Object.keys(effectiveHeld({ battle }, mon))) if (PLATE_TYPE[id]) return [PLATE_TYPE[id]];
+  }
+  if (abilityOf(content, mon) === 'rks-system' && !vol?.typeList) {
+    const mem = memoryType(effectiveHeld({ battle }, mon));
+    if (mem) return [mem];
   }
   const bonus = battle.transform.bonusTypes[mon.uid];
   const typed = bonus && !vol?.typeList && !base.includes(bonus) ? [...base, bonus] : base;
