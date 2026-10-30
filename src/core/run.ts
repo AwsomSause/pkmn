@@ -125,6 +125,7 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
@@ -852,7 +853,8 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const { node, side } = raidDen(current, sideId);
   const def = getRaid(content, side.raidId!);
   const { speciesId, level } = raidBoss(content, current, def, node.id + sideId);
-  return { id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
+  const notes = def.grand ? grandNotes(content, current, speciesId) : [];
+  return { id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
 }
 
 function raidDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
@@ -899,6 +901,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.raid = freshRaidBattle(def);
   if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
   run.raids.entered += 1;
+  if (def.grand) startGrandBattle(content, run);
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
@@ -989,6 +992,7 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
 function failRaid(content: Content, run: RunState): void {
   const battle = run.battle!;
   const raidId = battle.raid?.id ?? battle.totem!.id;
+  if (battle.raid && getRaid(content, battle.raid.id).grand) endGrandBattle(content, run, false, run.party[battle.activeIndex]?.uid);
   const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
   for (const mon of run.party) {
     mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
@@ -1028,6 +1032,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
   run.raids.done.push(def.id);
+  if (def.grand) endGrandBattle(content, run, true, run.party[battle.activeIndex]?.uid);
   return { items, draftExtra: def.rewards.draftExtra, money };
 }
 
