@@ -3,6 +3,7 @@
 // Before choosing, the player can also use Bag items or change the lead.
 
 import Phaser from 'phaser';
+import { rewardSynergy } from '../core/rewardSynergy';
 import { isRerollReward, rewardTargetProblem } from '../core/rewards';
 import { draftItemUses, type DraftItemKind } from '../core/run';
 import { services } from '../game/services';
@@ -78,6 +79,8 @@ export class RewardScene extends Phaser.Scene {
       // A team or player item already at its max: picking it re-rolls the draft for free.
       const reroll = isRerollReward(content, run, reward);
       card.add(this.add.text(-cardW / 2 + 12, 9, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : '#cfe0f0', { wordWrap: { width: cardW - 24 } })));
+      const why = rewardSynergy(content, run, reward);
+      if (why) card.add(this.add.text(0, 118, why, textStyle(13, '#9fe8c8', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 1));
       if ((run.draftCarry ?? []).includes(rewardId)) card.add(this.add.text(0, 101, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
       this.cards.push(card);
       // Cards deal in one after another with a bounce.

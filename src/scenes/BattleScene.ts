@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
@@ -99,6 +100,9 @@ const tween = (scene: Phaser.Scene, config: Phaser.Types.Tweens.TweenBuilderConf
 
 export class BattleScene extends Phaser.Scene {
   private message!: Phaser.GameObjects.Text;
+  /** Battle log (catalog #115): the last lines said, reopened with the H key. Presentation only. */
+  private history: string[] = [];
+  private historyView: Phaser.GameObjects.Container | null = null;
   private menu: Menu | null = null;
   private picker: Picker | null = null;
   private moveInfo!: Phaser.GameObjects.Text;
@@ -163,6 +167,9 @@ export class BattleScene extends Phaser.Scene {
     const { session, assets } = services();
     const run = session.run!;
     const battle = run.battle!;
+    this.history = [];
+    this.historyView = null;
+    this.input.keyboard?.on('keydown-H', () => this.toggleHistory());
     // Presentation only: faster tweens and timers; the battle itself is unchanged.
     const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
@@ -527,7 +534,7 @@ export class BattleScene extends Phaser.Scene {
     const max = calcStats(content, mon).hp;
     if (!box.container.visible) slideIn(this, box.container, box.isPlayer ? 420 : -420, 0, this.motion);
     box.container.setVisible(true);
-    box.name.setText(`${this.speciesName(mon)}${mon.shiny ? ' ★' : ''}`);
+    box.name.setText(`${this.speciesName(mon)}${genderSign(content, mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
     box.hpText?.setText(`${Math.max(0, mon.hp)}/${max}`);
     box.statusBadge?.destroy();
@@ -675,6 +682,8 @@ export class BattleScene extends Phaser.Scene {
   /** Shows one message; resolves when the player presses confirm or after a short delay. */
   private say(text: string): Promise<void> {
     this.message.setText(text);
+    this.history.push(text);
+    if (this.history.length > 60) this.history.shift();
     return new Promise((resolve) => {
       const timer = this.time.delayedCall(MESSAGE_AUTO_ADVANCE_MS, () => done());
       const done = () => {
@@ -685,6 +694,20 @@ export class BattleScene extends Phaser.Scene {
       // Ignore the key press that opened this message.
       this.time.delayedCall(120, () => (this.advance = done));
     });
+  }
+
+  /** H: show or hide the last battle messages. */
+  private toggleHistory(): void {
+    if (this.historyView) {
+      this.historyView.destroy();
+      this.historyView = null;
+      return;
+    }
+    const lines = this.history.slice(-14);
+    const bg = this.add.rectangle(0, 0, GAME_WIDTH - 80, 360, 0x0b1a2e, 0.92).setOrigin(0).setStrokeStyle(2, 0xbfe9ff);
+    const title = this.add.text(16, 8, 'Battle log (H to close)', textStyle(18, '#bfe9ff'));
+    const body = this.add.text(16, 38, lines.length ? lines.join('\n') : 'Nothing has been said yet.', textStyle(16, COLORS.textLight, { lineSpacing: 4, wordWrap: { width: GAME_WIDTH - 112 } }));
+    this.historyView = this.add.container(40, 60, [bg, title, body]).setDepth(2000);
   }
 
   private clearMenus(): void {

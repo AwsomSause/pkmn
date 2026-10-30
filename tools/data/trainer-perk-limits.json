@@ -31,6 +31,5 @@
  "nemona-v": "Equal-level foes count as the same level (no bonus): the 20% bonus applies to higher-level foes, the 10% penalty to lower-level ones.",
  "n-classic": "Pokémon dealing 15% more damage against the same species is not built.",
  "mallow": "Food bonuses lasting 25% longer is not built (no food bonus yet).",
- "lana": "Fishing encounters with better rare Pokémon odds is not built (no fishing yet).",
- "zinnia": "Every third boss gains a random secondary type or additional combat modifier: built as the 'additional combat modifier' half (+3 levels on every third boss); the random secondary type is not built (a boss's types come from its species)."
+ "lana": "Fishing encounters with better rare Pokémon odds is not built (no fishing yet)."
 }

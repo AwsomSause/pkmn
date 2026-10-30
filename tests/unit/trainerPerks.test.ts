@@ -6,6 +6,7 @@ import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
 import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
 import { applyHype, createBattle } from '../../src/core/battle/engine';
+import { battleTypes } from '../../src/core/battle/transform';
 import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
@@ -709,6 +710,18 @@ describe('trainer perks, batch L (Lana to Lysandre)', () => {
         chooseSignatureOption(run, 1);
       }
       expect(run.perkEffects.filter((m) => m.kind === 'bossDamageTakenMultiplier' && m.value === 1.1)).toHaveLength(3);
+    });
+
+    it("Meteor's Prophecy: a bonus type adds a second type without duplicating or touching the species", () => {
+      const run = start('zinnia');
+      const mon = foe(run);
+      const battle = createBattle('trainer', [mon], 0, run.party[0]!.uid, { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' });
+      const own = [...battleTypes(content, battle, mon)];
+      battle.transform.bonusTypes[mon.uid] = own[0]!;
+      expect(battleTypes(content, battle, mon)).toEqual(own);
+      const extra = (['fire', 'water', 'grass', 'ghost'] as const).find((t) => !own.includes(t))!;
+      battle.transform.bonusTypes[mon.uid] = extra;
+      expect(battleTypes(content, battle, mon)).toEqual([...own, extra]);
     });
 
     it("Meteor's Prophecy: a temporary prophecy runs out after its battle; the Dragon relic stays", () => {

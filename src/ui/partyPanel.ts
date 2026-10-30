@@ -1,6 +1,7 @@
 // Full-screen pickers drawn over the current screen: the party list (switch,
 // choose a target for an item or reward, set the lead) and the Bag.
 
+import { genderSign } from '../core/gender';
 import Phaser from 'phaser';
 import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
@@ -235,7 +236,7 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       const max = calcStats(content, mon).hp;
       box.add(pokemonIcon(scene, species, 34, 36, 1.5));
       const shiny = mon.shiny ? ' ★' : '';
-      const nameText = scene.add.text(72, 6, `${species.name}${shiny}`, textStyle(26));
+      const nameText = scene.add.text(72, 6, `${species.name}${genderSign(content, mon)}${shiny}`, textStyle(26));
       box.add(nameText);
       if (emotion) {
         const x = 72 + nameText.width + 14;

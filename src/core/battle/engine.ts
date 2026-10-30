@@ -72,6 +72,7 @@ import {
   TERRAIN_SETTERS, WEATHER_SETTERS,
   WEATHER_SPEED,
 } from './abilities';
+import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
 import { absorbHit, advanceRaid, chargedDamage, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
@@ -909,7 +910,7 @@ function ballBonus(ctx: BattleContext, effect: Extract<ItemEffect, { kind: 'catc
     case 'dive': return water ? base : 1;
     case 'net': return water || species.types.includes('bug') ? base : 1;
     case 'moon': return species.evolutions.some((e) => e.item === 'moon-stone') ? base : 1;
-    case 'love': return mine && mine.speciesId === enemy.speciesId ? base : 1;
+    case 'love': return mine && mine.speciesId === enemy.speciesId && oppositeGender(ctx.content, mine, enemy) ? base : 1;
     case 'heavy': {
       const kg = species.weight ?? 50;
       return kg < 100 ? 0.5 : kg < 200 ? 1 : kg < 300 ? 2 : 4;
@@ -2598,6 +2599,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'orichalcum-pulse' && physical && weather === 'sun') attackBoost *= 4 / 3;
       if (userAbility === 'hadron-engine' && !physical && ctx.battle.terrain?.id === 'electric') attackBoost *= 4 / 3;
       if (sheerForce) powerMult *= 1.3;
+      // Rivalry: stronger against the same gender, weaker against the opposite one.
+      if (userAbility === 'rivalry') powerMult *= sameGender(content, user.mon, target.mon) ? 1.25 : oppositeGender(content, user.mon, target.mon) ? 0.75 : 1;
       if (userAbility === 'analytic' && !movedFirst) powerMult *= 1.3;
       if (foeAbility === 'heatproof' && moveType === 'fire') powerMult *= 0.5;
       if (foeAbility === 'dry-skin' && moveType === 'fire') powerMult *= 1.25;
@@ -2897,6 +2900,11 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
     if (status && rng.chance(0.3) && canGetStatus(ctx, target, user, status)) {
       announce(target, holder, events);
       tryInflictStatus(ctx, target, user, status, undefined, events, false);
+    }
+    if (holder === 'cute-charm' && !user.vol.infatuated && rng.chance(0.3) && oppositeGender(ctx.content, target.mon, user.mon) && abilityIn(ctx, user) !== 'oblivious' && !Held.statusBlocked(ctx, user, 'infatuation')) {
+      announce(target, holder, events);
+      user.vol.infatuated = true;
+      events.push({ type: 'selfState', side: user.side, state: 'infatuated' });
     }
     if (holder === 'effect-spore' && rng.chance(0.3)) {
       const spore = (['psn', 'par', 'slp'] as const)[rng.int(0, 2)]!;
@@ -3706,7 +3714,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   const fx = move.effects;
   let didSomething = false;
   const stat5 = ['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'eva'] as const;
-  if (fx.noop) {
+  if (fx.noop || (fx.oppositeGender && !oppositeGender(content, user.mon, target.mon))) {
     events.push({ type: 'fail', side: user.side });
     return;
   }
@@ -3732,7 +3740,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     return;
   }
   if (fx.attract) {
-    if (target.vol.infatuated || abilityIn(ctx, target) === 'oblivious' || Held.statusBlocked(ctx, target, 'infatuation')) {
+    if (target.vol.infatuated || !oppositeGender(content, user.mon, target.mon) || abilityIn(ctx, target) === 'oblivious' || Held.statusBlocked(ctx, target, 'infatuation')) {
       if (abilityIn(ctx, target) === 'oblivious') announce(target, 'oblivious', events);
       return void events.push({ type: 'fail', side: user.side });
     }

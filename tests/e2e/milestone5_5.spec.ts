@@ -21,6 +21,10 @@ async function prepRow(page: Page, row: number) {
   expect(await prepFocus(page)).toBe(row);
 }
 
+/** The row whose label starts with `text` (rows move when a new one is added). */
+const prepRowOf = (page: Page, text: string) =>
+  page.evaluate((t) => (window as any).__pkr.game.scene.getScene('RunPrep').menu.config.options.findIndex((o: any) => o.label.startsWith(t)) as number, text);
+
 async function toPrepDesk(page: Page, url: string) {
   await page.goto(url);
   await waitForScene(page, 'MainMenu');
@@ -99,7 +103,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await page.screenshot({ path: 'test-results/m55-prep.png' });
 
   // Save it in preset slot 1.
-  await prepRow(page, 12);
+  await prepRow(page, await prepRowOf(page, 'Save as preset'));
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
   await page.keyboard.press('Enter');
