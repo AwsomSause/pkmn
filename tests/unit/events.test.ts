@@ -173,15 +173,15 @@ describe('event items', () => {
 });
 
 describe('events in saves', () => {
-  it('a version 13 run loads unchanged', () => {
+  it('a version 14 run loads with its event stops', () => {
     const storage = new MemoryStorageProvider();
-    const run = newRun('save13');
-    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 13, savedAt: '', data: run }));
+    const run = newRun('save14');
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 14, savedAt: '', data: run }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
-    expect(loaded.migratedFrom).toBe(13);
-    expect(CURRENT_VERSIONS.run).toBe(14);
+    expect(loaded.migratedFrom).toBe(14);
+    expect(CURRENT_VERSIONS.run).toBe(15);
     expect(eventStops(loaded.data).length).toBe(eventStops(run).length);
   });
 });

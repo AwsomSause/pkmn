@@ -946,6 +946,18 @@
   "legacy-encounter": {
    "status": "limited",
    "note": "A rival that remembers a close last battle says so before the rematch. It does not rebuild the circumstances."
+  },
+  "public-reputation-system": {
+   "status": "limited",
+   "note": "Derived from bonds and ambition (respected/feared/disliked); shown on the Story screen. Other trainers do not react in battle yet."
+  },
+  "signature-technique": {
+   "status": "limited",
+   "note": "After two fights a rival's battle habit becomes its known tell (Story screen). It is flavour; it does not change moves."
+  },
+  "conflicting-account": {
+   "status": "limited",
+   "note": "Distorted rumours say a second account differs; the player is not told which is right. No investigation yet."
   }
  }
 }

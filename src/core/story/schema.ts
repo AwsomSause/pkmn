@@ -270,6 +270,10 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statStage'), stat: BoostStatSchema, stages: z.number().int().min(-6).max(6) }),
   /** Battle scope: the Pokémon hangs on at 1 HP (the engine does it; the effect records that it was used). */
   z.object({ kind: z.literal('endure') }),
+  /** Heals the Pokémon by a share of its max HP (run scope; applied once). */
+  z.object({ kind: z.literal('heal'), hpShare: z.number().gt(0).max(1) }),
+  /** Battle scope: raises (or lowers) a stat stage of the opposing Pokémon in battle. */
+  z.object({ kind: z.literal('enemyStage'), stat: BoostStatSchema, stages: z.number().int().min(-6).max(6) }),
   /** Presentation and a memory only: the moment changes nothing in the battle (Hyper evolutions). */
   z.object({ kind: z.literal('flair') }),
   /** Battle scope: a knocked-out Pokémon gets back up with this share of its max HP (the engine does it). */
@@ -328,7 +332,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -426,7 +430,20 @@ export const StoryEventDefinitionSchema = z.object({
 });
 export type StoryEventDefinition = z.infer<typeof StoryEventDefinitionSchema>;
 
+/** An Overdrive chain: steps (event ids or milestone names) that must happen in this order. */
+export const StoryChainSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  steps: z.array(z.string()).min(2),
+  text: z.string(),
+  importance: z.number().int().min(0).max(100),
+  emotions: z.array(EmotionSchema).default([]),
+});
+export type StoryChain = z.infer<typeof StoryChainSchema>;
+
 export const StoryConfigSchema = z.object({
+  /** Overdrive chains (blueprint §6). */
+  chains: z.array(StoryChainSchema).default([]),
   limits: z.object({
     recentEvents: z.number().int().positive(),
     memoriesPerPokemon: z.number().int().positive(),

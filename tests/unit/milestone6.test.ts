@@ -64,25 +64,28 @@ describe('the full Pokédex', () => {
 describe('moves the battle engine does not support yet', () => {
   it('are in the data, flagged, with what they still need', () => {
     expect(content.moves.size).toBeGreaterThan(900);
-    const transform = content.moves.get('transform')!;
-    expect(transform.supported).toBe(false);
-    expect(transform.needs).toBeTruthy();
+    const maxGuard = content.moves.get('max-guard')!;
+    expect(maxGuard.supported).toBe(false);
+    expect(maxGuard.needs).toBeTruthy();
     expect(content.moves.get('protect')!.priority).toBe(4);
     expect(content.moves.get('tackle')!.supported).toBe(true);
   });
 
   it('stay in learnsets but are never learned', () => {
-    // Some species still list moves the engine can't run (item moves, weight moves, doubles-only ones).
-    const pikachu = [...content.species.values()].find((s) => s.learnset.some((e) => !isUsableMove(content, e.move)))!;
-    expect(pikachu).toBeDefined();
-    const mon = createPokemon(content, pikachu.id, 1, 'p1');
-    for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);
-    gainXp(content, mon, 1_000_000);
-    for (const m of mon.moves) expect(isUsableMove(content, m.id), m.id).toBe(true);
+    // Max moves are only reached through Dynamax, so a learnset entry for one is never learned.
+    const c = structuredClone(content);
+    c.species.get('pikachu')!.learnset.push({ level: 1, move: 'max-guard' });
+    expect(c.species.get('pikachu')!.learnset.some((e) => !isUsableMove(c, e.move))).toBe(true);
+    const mon = createPokemon(c, 'pikachu', 1, 'p1');
+    for (const m of mon.moves) expect(isUsableMove(c, m.id), m.id).toBe(true);
+    gainXp(c, mon, 1_000_000);
+    for (const m of mon.moves) expect(isUsableMove(c, m.id), m.id).toBe(true);
   });
 
   it('a Pokémon with no supported moves at all only has Struggle', () => {
-    expect(createPokemon(content, 'ditto', 10, 'd').moves.map((m) => m.id)).toEqual(['struggle']);
+    const c = structuredClone(content);
+    c.species.get('ditto')!.learnset = [{ level: 1, move: 'max-guard' }];
+    expect(createPokemon(c, 'ditto', 10, 'd').moves.map((m) => m.id)).toEqual(['struggle']);
   });
 });
 
@@ -176,7 +179,7 @@ describe('who appears in the wild', () => {
     }
     const ids = new Set(wild.map((s) => s.id));
     for (const id of ['pikachu', 'rattata-alola', 'growlithe-hisui', 'wooper-paldea']) expect(ids.has(id), id).toBe(true);
-    for (const id of ['ditto', 'nihilego', 'iron-valiant', 'raichu']) expect(ids.has(id), id).toBe(false);
+    for (const id of ['nihilego', 'iron-valiant', 'raichu']) expect(ids.has(id), id).toBe(false);
   });
 
   it("prefers the region's own Pokémon (region eligibility)", () => {

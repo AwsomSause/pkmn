@@ -747,11 +747,919 @@
         "perseverance"
       ],
       "variants": {}
+    },
+    {
+      "id": "second-wind",
+      "displayName": "It Found a Second Wind!",
+      "messagePool": [
+        "{name} found a second wind!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "secondWind"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "heal",
+        "hpShare": 0.1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Found a second wind against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe0a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "not-given-up",
+      "displayName": "It Hasn't Given Up Yet!",
+      "messagePool": [
+        "{name} hasn't given up yet!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "notGivenUp"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Refused to give up under {enemy}'s attacks"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffb347",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "remembered-training",
+      "displayName": "It Remembered Its Training!",
+      "messagePool": [
+        "{name} remembered its training with {move}!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "rememberedTraining"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Remembered its training and used {move} again"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#9fd0ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "broke-limits",
+      "displayName": "It Broke Through Its Limits!",
+      "messagePool": [
+        "{name} broke through its limits against {enemy}!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "brokeLimits"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Broke through its limits and defeated {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff7fb0",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "something-awakened",
+      "displayName": "Something Within It Awakened!",
+      "messagePool": [
+        "Something within {name} awakened!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "somethingAwakened"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "friendship",
+        "amount": 10
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Something within it awakened"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#c79bff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "memory",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "instincts-took-over",
+      "displayName": "Its Instincts Took Over!",
+      "messagePool": [
+        "{name}'s instincts took over!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "instinctsTookOver"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Its instincts took over after an ambush"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffe27a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "refused-weakness",
+      "displayName": "It Refused to Be Defined by Its Weakness!",
+      "messagePool": [
+        "{name} refused to be defined by its weakness!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "refusedWeakness"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Refused to be defined by its weakness against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff9f6a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "turned-pain",
+      "displayName": "It Turned Its Pain Into Power!",
+      "messagePool": [
+        "{name} turned its pain into power!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "turnedPainIntoPower"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Turned its pain into power"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff5a5a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "make-you-proud",
+      "displayName": "It Wants to Make You Proud!",
+      "messagePool": [
+        "{name} wants to make you proud!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "makeYouProud"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Wanted to make you proud against a major trainer"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff9ecb",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "came-to-aid",
+      "displayName": "It Came to Its Friend's Aid!",
+      "messagePool": [
+        "{name} came to its friend's aid!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "cameToAid"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Came to a fallen friend's aid"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#8fd9ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness",
+        "justice"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "more-than-teammates",
+      "displayName": "They're More Than Just Teammates!",
+      "messagePool": [
+        "{name} and {other} are more than just teammates!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "moreThanTeammates"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Became more than teammates with {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb6d9",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "knows-you-believe",
+      "displayName": "It Knows You Believe in It!",
+      "messagePool": [
+        "{name} knows you believe in it!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "knowsYouBelieve"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Knew you believed in it"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffd0e8",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "memory",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "evolved-beyond",
+      "displayName": "It Evolved Beyond Expectations!",
+      "messagePool": [
+        "{name} evolved beyond all expectations!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "evolvedBeyond"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 85,
+        "text": "Evolved beyond expectations"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd95a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "memory",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "enemy-unshaken",
+      "displayName": "The Enemy's Resolve Is Unshaken!",
+      "messagePool": [
+        "{name}'s resolve is unshaken!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "enemyUnshaken"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Faced an unshaken {name}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff4f6a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "enemy-instinct",
+      "displayName": "It Is Fighting on Pure Instinct!",
+      "messagePool": [
+        "{name} is fighting on pure instinct!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "enemyInstinct"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Cornered {name}, fighting on pure instinct"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff7f4f",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "enemy-learned",
+      "displayName": "It Has Learned From Your Attacks!",
+      "messagePool": [
+        "{name} has learned from your {move}!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "enemyLearned"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "{name} learned from your repeated {move}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#b36bff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "protecting-trainer",
+      "displayName": "It Is Protecting Its Trainer!",
+      "messagePool": [
+        "{name} is protecting {trainer}!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "protectingTrainer"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 55,
+        "text": "{name} protected its trainer to the end"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#6bc7ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "partner-fall",
+      "displayName": "Its Partner's Fall Has Enraged It!",
+      "messagePool": [
+        "{name} is enraged by its partner's fall!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "partnerFall"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 55,
+        "text": "{name} was enraged by its partner's fall"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff3d5a",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "will-not-let-down",
+      "displayName": "It Will Not Let Its Trainer Down!",
+      "messagePool": [
+        "{name} will not let its trainer down!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "willNotLetDown"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Faced a boss's ace, {name}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffcf4f",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "something-different",
+      "displayName": "Something About It Is Different…",
+      "messagePool": [
+        "Something about this {enemy} is different…",
+        "This {enemy} seems unusual. Something about it is different…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "somethingDifferent"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Noticed that something about {enemy} was different"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffe27a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "waiting-for-battle",
+      "displayName": "They've Been Waiting for This Battle…",
+      "messagePool": [
+        "Your rival has been waiting for this battle…",
+        "This is the battle {name} and your rival have both been waiting for…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "waitingForBattle"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Met a waiting rival at a decisive battle"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff7fb0",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "something-watching",
+      "displayName": "Something Powerful Is Watching…",
+      "messagePool": [
+        "Something powerful is watching from the edge of the field…",
+        "A strange presence is watching this battle…"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "somethingWatching"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Felt something powerful watching"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#9f7fff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "patience"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
     "uses": 8,
     "boost": 1.2,
     "perPokemon": 2
-  }
+  },
+  "chains": [
+    {
+      "id": "rival-wont-stay-down",
+      "title": "The Rival Who Wouldn't Stay Down",
+      "steps": [
+        "trainer-will-return",
+        "enemy-unshaken",
+        "pushed-back-up"
+      ],
+      "text": "a trainer vowed to return, stood firm at the end, and was beaten after a comeback",
+      "importance": 90,
+      "emotions": [
+        "determination"
+      ]
+    },
+    {
+      "id": "bond-kindness-reunion",
+      "title": "A Kindness Remembered",
+      "steps": [
+        "came-to-aid",
+        "reunion"
+      ],
+      "text": "it protected a friend and later met a past Pokémon again",
+      "importance": 88,
+      "emotions": [
+        "kindness"
+      ]
+    },
+    {
+      "id": "determination-mega",
+      "title": "Determined to the End",
+      "steps": [
+        "determination-evolution",
+        "mega-overdrive"
+      ],
+      "text": "an evolution earned by determination, then a Mega Evolution at the decisive moment",
+      "importance": 90,
+      "emotions": [
+        "determination"
+      ]
+    },
+    {
+      "id": "bravery-justice",
+      "title": "Courage Answered",
+      "steps": [
+        "broke-limits",
+        "avenged"
+      ],
+      "text": "it beat a far stronger foe, then avenged a fallen friend",
+      "importance": 88,
+      "emotions": [
+        "bravery",
+        "justice"
+      ]
+    },
+    {
+      "id": "patience-mastery",
+      "title": "Patience Pays Off",
+      "steps": [
+        "not-given-up",
+        "signature-awakening"
+      ],
+      "text": "it held on through the hard turns and then mastered its signature move",
+      "importance": 88,
+      "emotions": [
+        "patience"
+      ]
+    },
+    {
+      "id": "perseverance-legacy",
+      "title": "The Long Gauntlet",
+      "steps": [
+        "second-wind",
+        "not-given-up",
+        "turned-pain"
+      ],
+      "text": "a long gauntlet survived with a second wind, a refusal to quit and pain turned into power",
+      "importance": 92,
+      "emotions": [
+        "perseverance"
+      ]
+    },
+    {
+      "id": "rage-respect",
+      "title": "Mutual Respect",
+      "steps": [
+        "enemy-riled-up",
+        "enemy-unshaken"
+      ],
+      "text": "a foe that grew riled up and stayed unshaken earned respect",
+      "importance": 85,
+      "emotions": []
+    }
+  ]
 }

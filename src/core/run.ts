@@ -87,6 +87,8 @@ import {
 } from './mapItems';
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
+import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
+import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
@@ -103,6 +105,7 @@ import {
 } from './story/hooks';
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
+import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
@@ -168,6 +171,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: createStoryState(),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
+    totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -260,6 +264,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   addItemStops(content, run);
   addEventStops(content, run);
   placeRaidDens(content, run);
+  placeTotem(content, run);
   run.battle = null;
   run.phase = 'map';
 }
@@ -668,16 +673,96 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
   return run;
 }
 
+/** Totem territory preview. */
+export function totemPreview(content: Content, current: RunState, sideId: string): TotemPreview {
+  const { node, side } = totemDen(current, sideId);
+  const def = getTotem(content, side.totemId!);
+  const { speciesId, level } = totemBoss(content, current, def, node.id + sideId);
+  return {
+    id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, aura: def.aura.text,
+    environment: def.environment?.text ?? null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
+  };
+}
+
+function totemDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
+  const stage = requireStage(run);
+  if (stage.current === null) throw new Error('Choose a node first');
+  const node = findNode(stage.map, stage.current);
+  const side = node.sides.find((x) => x.id === sideId && x.kind === 'totem' && x.totemId);
+  if (!side) throw new Error(`No Totem territory "${sideId}" here`);
+  return { node, side };
+}
+
+function totemBoss(content: Content, run: RunState, def: TotemDef, key: string): { speciesId: string; level: number } {
+  const stage = requireStage(run);
+  const campaign = getCampaign(content, run.campaignId);
+  const scale = levelScale(content, campaign, run.regionIndex, stage.index, campaign.columns);
+  return { speciesId: totemSpecies(def, run, key), level: totemLevel(def, scale.end, scale.cap) };
+}
+
+/** Starts the Totem fight. The territory is used up at once, so a reload can't repeat it or its rewards. */
+export function enterTotem(content: Content, current: RunState, sideId: string): RunState {
+  assertPhase(current, 'map');
+  const { node, side } = totemDen(current, sideId);
+  if (side.used) throw new Error('This Totem has already been fought');
+  const def = getTotem(content, side.totemId!);
+  const activeIndex = current.party.findIndex((p) => p.hp > 0);
+  if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
+  const run = structuredClone(current);
+  totemDen(run, sideId).side.used = true;
+  const { speciesId, level } = totemBoss(content, run, def, node.id + sideId);
+  const boss = newMon(content, run, speciesId, level, 'e');
+  applyTotemHp(def, boss);
+  boss.hp = maxHp(content, boss);
+  run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
+  run.battle.ai = 0.6;
+  run.battle.totem = freshTotemBattle(def, boss.uid);
+  run.totems.entered += 1;
+  discover(run, boss.speciesId, false);
+  run.phase = 'battle';
+  recordBattleStarted(content, run);
+  return run;
+}
+
+/** Totem victory: money, items, draft choices, a rare Pokémon, an unlock and research (once: the battle is cleared right after). */
+function claimTotemRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
+  const def = getTotem(content, battle.totem!.id);
+  const totem = battle.enemyTeam.find((m) => m.uid === battle.totem!.uid) ?? currentEnemy(battle);
+  const money = def.rewards.moneyPerLevel * totem.level;
+  run.money += money;
+  count(run, 'moneyEarned', money);
+  const rng = new Rng(hashSeed(`${run.seed}::totem-reward::${def.id}:${run.encountersCompleted}`));
+  const items = def.rewards.items.filter((i) => rng.chance(i.chance)).map((i) => i.item);
+  const rare = def.rewards.rareJoin;
+  if (rare && rng.chance(rare.chance)) {
+    const mon = newMon(content, run, rare.species, Math.max(2, totem.level - 2), 'p');
+    count(run, 'pokemonCaught');
+    discover(run, mon.speciesId, true);
+    run.pending.unshift({ kind: 'caught', mon });
+  }
+  run.totems.won += 1;
+  run.totems.done.push(def.id);
+  run.totems.research += def.rewards.research;
+  if (def.rewards.unlock && !run.totems.unlocks.includes(def.rewards.unlock)) run.totems.unlocks.push(def.rewards.unlock);
+  return { items, draftExtra: def.rewards.draftExtra, money };
+}
+
 /** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
 function failRaid(content: Content, run: RunState): void {
-  const raidId = run.battle!.raid!.id;
-  const frac = content.raids.failureHealFraction;
+  const battle = run.battle!;
+  const raidId = battle.raid?.id ?? battle.totem!.id;
+  const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
   for (const mon of run.party) {
     mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
     mon.status = null;
   }
-  run.raids.lost += 1;
-  run.raids.done.push(raidId);
+  if (battle.totem) {
+    run.totems.lost += 1;
+    run.totems.done.push(raidId);
+  } else {
+    run.raids.lost += 1;
+    run.raids.done.push(raidId);
+  }
   run.battle = null;
   run.phase = 'map';
 }
@@ -822,6 +907,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'fish') throw new Error('Choose a Pokémon to fish for (fishingOffer, then fish)');
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
+  if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -956,6 +1042,8 @@ export interface TurnResult {
   cues: PresentationCue[];
   /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
   raidFailed?: boolean;
+  /** What the trainer says during the turn (presentation only). */
+  drama: DramaLine[];
 }
 
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
@@ -983,6 +1071,14 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
  * Battle start: plays both first Pokémon's entry abilities (Intimidate,
  * Drizzle). Does nothing if they already happened. Uses no random numbers.
  */
+/** The trainer's opening line (shown once per battle; the saved state stops a repeat after a reload). */
+export function battleOpening(content: Content, current: RunState, dialogue: DialogueFrequency = 'normal'): { run: RunState; drama: DramaLine[] } {
+  assertPhase(current, 'battle');
+  const run = structuredClone(current);
+  const drama = openingDrama(content, run, dialogue);
+  return { run, drama };
+}
+
 export function beginBattle(content: Content, current: RunState): { run: RunState; events: RunEvent[] } {
   assertPhase(current, 'battle');
   if ((current.battle!.pendingEntry ?? []).length === 0) return { run: current, events: [] };
@@ -994,7 +1090,7 @@ export function beginBattle(content: Content, current: RunState): { run: RunStat
   return { run, events };
 }
 
-export function takeTurn(content: Content, current: RunState, action: PlayerAction): TurnResult {
+export function takeTurn(content: Content, current: RunState, action: PlayerAction, dialogue: DialogueFrequency = 'normal'): TurnResult {
   assertPhase(current, 'battle');
   const run = structuredClone(current);
   const battle = run.battle!;
@@ -1019,6 +1115,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
 
   const events = awardExperience(content, run, engineEvents);
   const cues = recordBattleTurn(content, current, run, events);
+  // Trainer dialogue for what just happened (presentation only: it never changes the battle).
+  const drama = planDrama(content, run, current.battle!, engineEvents, dialogue);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
     revertTransformations(content, battle, run.party);
@@ -1030,22 +1128,22 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     const caught = run.pending.find((d) => d.kind === 'caught');
     if (end.outcome === 'caught' && caught?.kind === 'caught') recordCaught(content, run, caught.mon);
     recordChanges(content, current, run, 'battle');
-    return { run, events, end, defeated: false, cues };
+    return { run, events, end, defeated: false, cues, drama };
   }
-  if (battle.outcome === 'lose' && battle.raid) {
+  if (battle.outcome === 'lose' && (battle.raid || battle.totem)) {
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
-    return { run, events, end: null, defeated: false, cues, raidFailed: true };
+    return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
     run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
     run.phase = 'over';
     recordChanges(content, current, run, 'battle');
-    return { run, events, end: null, defeated: true, cues };
+    return { run, events, end: null, defeated: true, cues, drama };
   }
   recordChanges(content, current, run, 'battle');
-  return { run, events, end: null, defeated: false, cues };
+  return { run, events, end: null, defeated: false, cues, drama };
 }
 
 /**
@@ -1201,7 +1299,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.pending = [...caughtPending, ...run.pending];
 
   const outcome = battle.outcome as 'win' | 'caught';
-  const raidWin = battle.raid && outcome === 'win' ? claimRaidRewards(content, run, battle) : null;
+  const raidWin = battle.raid && outcome === 'win' ? claimRaidRewards(content, run, battle) : battle.totem && outcome === 'win' ? claimTotemRewards(content, run, battle) : null;
   if (raidWin) {
     itemsFoundByRaid.push(...raidWin.items);
     moneyGained += raidWin.money;

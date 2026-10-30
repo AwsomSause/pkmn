@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T10:37:36.311Z",
+  "generatedAt": "2026-10-30T10:47:05.624Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -62,6 +62,78 @@
       "path": "images/packs/ebdx/ui/status.png"
     },
     {
+      "id": "pack.ebdx.symMega",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/symMega.png"
+    },
+    {
+      "id": "pack.ebdx.symDynamax",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/ui/symDynamax.png"
+    },
+    {
+      "id": "pack.ebui.effectiveness",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/move_effectiveness.png"
+    },
+    {
+      "id": "pack.ebui.flag.Contact",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Contact.png"
+    },
+    {
+      "id": "pack.ebui.flag.Sound",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Sound.png"
+    },
+    {
+      "id": "pack.ebui.flag.Biting",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Biting.png"
+    },
+    {
+      "id": "pack.ebui.flag.Powder",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Powder.png"
+    },
+    {
+      "id": "pack.ebui.flag.Pulse",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Pulse.png"
+    },
+    {
+      "id": "pack.ebui.flag.Punching",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/Punching.png"
+    },
+    {
+      "id": "pack.ebui.flag.HighCriticalHitRate",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/HighCriticalHitRate.png"
+    },
+    {
+      "id": "pack.ebui.flag.ZMove",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/ZMove.png"
+    },
+    {
+      "id": "pack.ebui.flag.DynamaxMove",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebui/flags/DynamaxMove.png"
+    },
+    {
       "id": "pack.ebdx.cloud1",
       "kind": "image",
       "category": "background",
@@ -78,6 +150,12 @@
       "kind": "image",
       "category": "background",
       "path": "images/packs/ebdx/elements/bubble.png"
+    },
+    {
+      "id": "pack.ebdx.bubbleDark",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/bubbleDark.png"
     },
     {
       "id": "pack.ebdx.snow",
@@ -114,6 +192,84 @@
       "kind": "image",
       "category": "background",
       "path": "images/packs/ebdx/elements/fog.png"
+    },
+    {
+      "id": "pack.ebdx.tr.ball",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/ball.png"
+    },
+    {
+      "id": "pack.ebdx.tr.outdoor",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/outdoor.png"
+    },
+    {
+      "id": "pack.ebdx.tr.indoor",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/indoor.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vsBar",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vsBar.png"
+    },
+    {
+      "id": "pack.ebdx.tr.glow",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/glow.png"
+    },
+    {
+      "id": "pack.ebdx.tr.shine2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/shine2.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_background",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_background.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_backgroundEvil",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_backgroundEvil.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_backgroundSkull",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_backgroundSkull.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layer.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layerEvil",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layerEvil.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layerSkull",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layerSkull.png"
     },
     {
       "id": "pack.dbk.burst",

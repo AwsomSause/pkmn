@@ -77,8 +77,19 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'pack.ebdx.types', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/types2.png' },
   { id: 'pack.ebdx.category', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/category.png' },
   { id: 'pack.ebdx.status', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/status.png' },
-  ...['cloud1', 'cloud2', 'bubble', 'snow', 'star', 'sun', 'lightA', 'lightB', 'fog'].map(
+  { id: 'pack.ebdx.symMega', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/symMega.png' },
+  { id: 'pack.ebdx.symDynamax', kind: 'image', category: 'ui', path: 'images/packs/ebdx/ui/symDynamax.png' },
+  // Enhanced Battle UI: move flag icons and the effectiveness tags (unknown, immune, weak, super, normal).
+  { id: 'pack.ebui.effectiveness', kind: 'image', category: 'ui', path: 'images/packs/ebui/move_effectiveness.png' },
+  ...['Contact', 'Sound', 'Biting', 'Powder', 'Pulse', 'Punching', 'HighCriticalHitRate', 'ZMove', 'DynamaxMove'].map(
+    (name): AssetEntry => ({ id: `pack.ebui.flag.${name}`, kind: 'image', category: 'ui', path: `images/packs/ebui/flags/${name}.png` }),
+  ),
+  ...['cloud1', 'cloud2', 'bubble', 'bubbleDark', 'snow', 'star', 'sun', 'lightA', 'lightB', 'fog'].map(
     (name): AssetEntry => ({ id: `pack.ebdx.${name}`, kind: 'image', category: 'background', path: `images/packs/ebdx/elements/${name}.png` }),
+  ),
+  // EBDX battle transitions (the intro wipe and VS screens).
+  ...['ball', 'outdoor', 'indoor', 'vs', 'vsBar', 'glow', 'shine2', ...['background', 'layer'].flatMap((k) => ['', 'Evil', 'Skull'].map((v) => `vs_${k}${v}`))].map(
+    (name): AssetEntry => ({ id: `pack.ebdx.tr.${name}`, kind: 'image', category: 'ui', path: `images/packs/ebdx/transitions/${name}.png` }),
   ),
   ...['burst', 'shine', 'particle', 'pulse'].map(
     (name): AssetEntry => ({ id: `pack.dbk.${name}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png` }),
