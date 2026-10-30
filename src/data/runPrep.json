@@ -1688,6 +1688,311 @@
     "atLeast": 200
    },
    "unlockText": "Defeat 200 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-bill",
+   "name": "Bill’s Team",
+   "description": "Pokémon from Bill’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "bill"
+   ],
+   "species": [
+    "abra",
+    "magnemite",
+    "eevee"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 210
+   },
+   "unlockText": "Defeat 210 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-blaine-lgpe",
+   "name": "Blaine (LGPE)’s Team",
+   "description": "Pokémon from Blaine (LGPE)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blaine"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 220
+   },
+   "unlockText": "Defeat 220 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-blaine",
+   "name": "Blaine’s Team",
+   "description": "Pokémon from Blaine’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blaine"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 230
+   },
+   "unlockText": "Defeat 230 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-blue-gen-3-champion",
+   "name": "Blue (Gen 3 Champion)’s Team",
+   "description": "Pokémon from Blue (Gen 3 Champion)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blue"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 240
+   },
+   "unlockText": "Defeat 240 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-blue-gen-7",
+   "name": "Blue (Gen 7)’s Team",
+   "description": "Pokémon from Blue (Gen 7)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blue"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 250
+   },
+   "unlockText": "Defeat 250 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-blue-classic",
+   "name": "Blue’s Team",
+   "description": "Pokémon from Blue’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blue"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 260
+   },
+   "unlockText": "Defeat 260 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brassius",
+   "name": "Brassius’s Team",
+   "description": "Pokémon from Brassius’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brassius"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 270
+   },
+   "unlockText": "Defeat 270 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brawly-gen-6",
+   "name": "Brawly (Gen 6)’s Team",
+   "description": "Pokémon from Brawly (Gen 6)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brawly"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 280
+   },
+   "unlockText": "Defeat 280 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brendan-emerald",
+   "name": "Brendan (Emerald)’s Team",
+   "description": "Pokémon from Brendan (Emerald)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brendan"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 290
+   },
+   "unlockText": "Defeat 290 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brendan-ruby-sapphire",
+   "name": "Brendan (Ruby/Sapphire)’s Team",
+   "description": "Pokémon from Brendan (Ruby/Sapphire)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brendan"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 300
+   },
+   "unlockText": "Defeat 300 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brigette",
+   "name": "Brigette’s Team",
+   "description": "Pokémon from Brigette’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brigette"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 310
+   },
+   "unlockText": "Defeat 310 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brock-masters",
+   "name": "Brock (Masters)’s Team",
+   "description": "Pokémon from Brock (Masters)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brock"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 320
+   },
+   "unlockText": "Defeat 320 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-brock-classic",
+   "name": "Brock’s Team",
+   "description": "Pokémon from Brock’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brock"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 330
+   },
+   "unlockText": "Defeat 330 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-bruno-gen-3",
+   "name": "Bruno (Gen 3)’s Team",
+   "description": "Pokémon from Bruno (Gen 3)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "bruno"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 340
+   },
+   "unlockText": "Defeat 340 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-bruno",
+   "name": "Bruno’s Team",
+   "description": "Pokémon from Bruno’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "bruno"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 350
+   },
+   "unlockText": "Defeat 350 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-bugsy",
+   "name": "Bugsy’s Team",
+   "description": "Pokémon from Bugsy’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "bugsy"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 360
+   },
+   "unlockText": "Defeat 360 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-byron",
+   "name": "Byron’s Team",
+   "description": "Pokémon from Byron’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "byron"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 370
+   },
+   "unlockText": "Defeat 370 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-caitlin",
+   "name": "Caitlin’s Team",
+   "description": "Pokémon from Caitlin’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "caitlin"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 380
+   },
+   "unlockText": "Defeat 380 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-calem",
+   "name": "Calem’s Team",
+   "description": "Pokémon from Calem’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "calem"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 390
+   },
+   "unlockText": "Defeat 390 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-canari",
+   "name": "Canari’s Team",
+   "description": "Pokémon from Canari’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "canari"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 400
+   },
+   "unlockText": "Defeat 400 trainers in total across your runs"
   }
  ],
  "draftRules": [

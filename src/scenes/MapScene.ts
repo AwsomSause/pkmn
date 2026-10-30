@@ -7,15 +7,19 @@
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
+import { runPerks } from '../core/archetypes';
+import { boxCapacity } from '../core/trainerPerks';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
+import { minigamePreview } from '../core/minigame/flow';
 import { fishingOffer, raidPreview, totemPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
+import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
-import { openBagMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
@@ -47,8 +51,9 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   totem: { color: 0xe8a020, glyph: 'T' },
   event: { color: 0xd89830, glyph: '!' },
   expedition: { color: 0x38b878, glyph: 'E' },
+  minigame: { color: 0x58c0e8, glyph: 'G' },
 };
-const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition' };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame' };
 /** A hidden event stop: a grey "?" until you reach it. */
 const HIDDEN_STYLE = { color: 0x6b5a73, glyph: '?' };
 
@@ -59,7 +64,8 @@ type Option =
   | { kind: 'party' }
   | { kind: 'bag' }
   | { kind: 'items' }
-  | { kind: 'story' };
+  | { kind: 'story' }
+  | { kind: 'box' };
 
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
@@ -121,9 +127,10 @@ export class MapScene extends Phaser.Scene {
       this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
       this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#d8d0e0'));
     } else {
-      this.add.text(24, 12, `Stage ${stage.index + 1}: ${theme.name}`, textStyle(28, COLORS.textLight));
+      const blind = blindMap(run.rules);
+      this.add.text(24, 12, `Stage ${stage.index + 1}: ${blind ? '???' : theme.name}`, textStyle(28, COLORS.textLight));
       let bx = 26;
-      for (const type of theme.types) {
+      for (const type of blind ? [] : theme.types) {
         const b = badge(this, bx, 44, type, TYPE_COLORS[type] ?? 0x808080, 14);
         bx += b.width + 6;
       }
@@ -266,6 +273,7 @@ export class MapScene extends Phaser.Scene {
       buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
+    if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
@@ -302,9 +310,9 @@ export class MapScene extends Phaser.Scene {
         const size = getCampaign(content, run.campaignId).eliteFourSize;
         this.showBanner(region.name, 'Pokémon League', `Elite Four ×${size}, then ${leader.title}  ·  Healed after every battle`);
       } else if (stage.index === 0) {
-        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${theme.name}  ·  ${leader.title}`);
+        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${blindMap(run.rules) ? '???' : theme.name}  ·  ${leader.title}`);
       } else {
-        this.showBanner(`Stage ${stage.index + 1}`, theme.name, `${theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
+        this.showBanner(`Stage ${stage.index + 1}`, blindMap(run.rules) ? '???' : theme.name, `${blindMap(run.rules) ? 'Blind Research' : theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
       }
     }
   }
@@ -376,6 +384,8 @@ export class MapScene extends Phaser.Scene {
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
       case 'story':
         return 'Read the story of your run so far, with the feelings each moment left.';
+      case 'box':
+        return 'Store spare Pokémon in the PC, or bring them back into the party.';
     }
   }
 
@@ -434,6 +444,10 @@ export class MapScene extends Phaser.Scene {
           if (!option.side.used) this.openExpedition(option.side.id);
           break;
         }
+        if (option.side.kind === 'minigame') {
+          if (!option.side.used) this.openMinigame(option.side.id);
+          break;
+        }
         const message = session.visitSide(option.side.id);
         if (option.side.kind === 'heal') {
           playSfx(this, 'se.level_up', 0.6);
@@ -455,6 +469,9 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'story':
         openStoryMenu(this.fieldHost());
+        break;
+      case 'box':
+        openBoxMenu(this.fieldHost());
         break;
     }
   }
@@ -524,6 +541,40 @@ export class MapScene extends Phaser.Scene {
       rows.push({ action: null, itemId: itemId ?? '', title: source, text, problem: text });
     }
     return rows;
+  }
+
+  /** A minigame stop: shows the rules and the attempts left, and the pick of a difficulty starts the game. */
+  private openMinigame(sideId: string): void {
+    const { session } = services();
+    const pv = minigamePreview(session.content, session.run!, sideId);
+    const picker: Picker = new Picker(this, {
+      title: `${pv.name} — ${pv.attemptsLeft} attempt${pv.attemptsLeft === 1 ? '' : 's'} left`,
+      columns: 1,
+      rowHeight: 120,
+      rows: pv.tiers.map((t) => ({
+        problem: pv.attemptsLeft > 0 ? null : 'No attempts left',
+        hint: `${pv.instructions} ${pv.scoring}`,
+        draw: (scene, box, w) => {
+          box.add(scene.add.text(16, 8, `${pv.name}  ·  ${t.label}`, textStyle(22)));
+          box.add(scene.add.text(16, 40, `${pv.instructions} ${pv.scoring}`, textStyle(15, '#ffd0a0', { wordWrap: { width: w - 32 } })));
+          box.add(scene.add.text(16, 92, `${pv.medals}  ·  Best: ${pv.best}`, textStyle(14, '#a0d0ff', { wordWrap: { width: w - 32 } })));
+        },
+      })),
+      onSelect: (i) => {
+        picker.close();
+        this.picker = null;
+        this.busy = true;
+        playSfx(this, 'ui.select');
+        const run = session.beginMinigame(sideId, i);
+        this.cameras.main.fadeOut(250);
+        this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   /** An expedition gate: shows the briefing (party rules, route length, finale, rewards), then asks to commit. */

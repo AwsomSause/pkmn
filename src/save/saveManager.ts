@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 9, run: 19, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 9, run: 20, settings: 4, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -222,8 +222,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     }),
     // v18 (trainer quests): the run's Run Quest; runs started before it have none.
     17: (data) => ({ ...(data as Json), runQuest: null }),
-    // v19 (species mastery): runs started before it get no mastery unlocks.
-    18: (data) => ({ ...(data as Json), mastery: {} }),
+    // v19 (Minigames): none in progress, nothing paid or played yet.
+    18: (data) => ({ ...(data as Json), minigame: null, minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} } }),
+    // v20 (species mastery): runs started before it get no mastery unlocks.
+    19: (data) => ({ ...(data as Json), mastery: {} }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

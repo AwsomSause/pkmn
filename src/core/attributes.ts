@@ -5,6 +5,7 @@
 // percentage, so 100 Strength doubles physical damage); the numbers live in
 // balance.json.
 
+import { runPerks } from './archetypes';
 import { friendshipPerk } from './trainerPerks';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type AttributeKey, type Content, type Rarity } from './contentSchema';
 import type { Profile, RunState } from './state';
@@ -103,7 +104,7 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
 
 export function runAttributeEffects(content: Content, run: RunState): AttributeEffects {
   const effects = attributeEffects(content, effectiveAttributes(content, run));
-  const perks = content.archetypes.get(run.archetypeId)?.modifiers;
+  const perks = runPerks(content, run);
   return perks ? { ...effects, friendship: effects.friendship * friendshipPerk(perks) } : effects;
 }
 

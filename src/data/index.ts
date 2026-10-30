@@ -65,6 +65,9 @@ import raidsJson from './raids.json';
 import totemsJson from './totems.json';
 import expeditionsJson from './expeditions.json';
 import { ExpeditionFileSchema } from '../core/expedition/schema';
+import minigamesJson from './minigames.json';
+import { MinigameFileSchema } from '../core/minigame/schema';
+import { MINIGAMES } from '../core/minigame/games';
 import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
 import eventsJson from './events.json';
@@ -103,6 +106,7 @@ export interface RawContent {
   events: unknown;
   totems: unknown;
   expeditions: unknown;
+  minigames: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -151,6 +155,7 @@ export const RAW_CONTENT: RawContent = {
   events: eventsJson,
   totems: totemsJson,
   expeditions: expeditionsJson,
+  minigames: minigamesJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -202,9 +207,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
   const expeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
+  const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !eventsFile || !story || !raids || !totems || !expeditions || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!quests || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -240,6 +246,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     events: toMap(eventsFile.events, 'events.json', problems),
     totems,
     expeditions,
+    minigames,
     zMoves,
     maxMoves,
   };
@@ -308,6 +315,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (fin.kind === 'raid' && !raids.raids.some((r) => r.id === fin.raidId)) problems.push(`expeditions.json "${e.id}" finale raid is unknown`);
     if (fin.kind === 'totem' && !totems.totems.some((t) => t.id === fin.totemId)) problems.push(`expeditions.json "${e.id}" finale Totem is unknown`);
     if (e.partyMode === 'rental' && e.nodeWeights.recruit) problems.push(`expeditions.json "${e.id}": a rental expedition cannot have recruit nodes`);
+  }
+  for (const g of minigames.games) {
+    if (!(g.id in MINIGAMES)) problems.push(`minigames.json has no module for "${g.id}"`);
+    for (const r of [g.rewardTable.bronze, g.rewardTable.silver, g.rewardTable.gold]) if (r.item && !content.items.has(r.item.item)) problems.push(`minigames.json "${g.id}" gives unknown item "${r.item.item}"`);
   }
   for (const ev of expeditions.mysteryEvents) for (const o of ev.options) if (o.effect.item && !content.items.has(o.effect.item)) problems.push(`expeditions.json event "${ev.id}" gives unknown item`);
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);

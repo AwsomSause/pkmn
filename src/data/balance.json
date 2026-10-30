@@ -136,6 +136,8 @@
  "wildMaxBaseStats": 560,
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
+ "heldItemSlots": 8,
+ "rareEncounterBst": 480,
  "evolution": {
   "trainerItemLevel": 30,
   "trainerBabyLevel": 15
@@ -168,6 +170,26 @@
     [
      11,
      17
+    ]
+   ],
+   "eliteFourSize": 4,
+   "countsForProgress": true
+  },
+  {
+   "id": "boss-rush",
+   "name": "Boss Rush",
+   "regularRegions": 9,
+   "grandRegion": true,
+   "stagesPerRegion": 4,
+   "columns": 12,
+   "trainerColumns": [
+    [
+     3,
+     5
+    ],
+    [
+     7,
+     10
     ]
    ],
    "eliteFourSize": 4,
@@ -256,9 +278,17 @@
   "luckDraftVariety": 1.0
  },
  "events": {
-  "perStage": [3, 5],
+  "perStage": [
+   3,
+   5
+  ],
   "hiddenShare": 0.34,
-  "rarityWeights": { "common": 60, "uncommon": 25, "rare": 12, "epic": 3 },
+  "rarityWeights": {
+   "common": 60,
+   "uncommon": 25,
+   "rare": 12,
+   "epic": 3
+  },
   "themeWeight": 2,
   "checkBase": 40,
   "checkMin": 5,
@@ -267,7 +297,13 @@
   "soldGift": 500,
   "restPerStage": 2,
   "trainerMoneyPerLevel": 24,
-  "explorerItems": ["potion", "super-potion", "poke-ball", "great-ball", "full-heal"]
+  "explorerItems": [
+   "potion",
+   "super-potion",
+   "poke-ball",
+   "great-ball",
+   "full-heal"
+  ]
  },
  "attributeGrowth": [
   {

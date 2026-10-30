@@ -42,6 +42,7 @@ Update this file when you add, move or delete a folder or a key file.
 | `src/core/mastery.ts` | Species Mastery: per-species counters and ranks (Seen → Master), family view, unlocks applied to joining Pokémon (`run.mastery`), the Mastered starter set. |
 | `src/core/quests.ts` | Trainer quests and the claim ledger: quest lines (`trainerQuests.json`, built by `npm run data:quests`), Run Quests, `claim()` pays a key once. |
 | `src/core/totem/` | Totems: `schema` (totems.json shape), `totem.ts` (placement, ally rules, previews; the engine runs aura, ally calls and phases). |
+| `src/core/minigame/` | Minigames: `schema`, `games` (14 pure game modules + registry), `flow` (start, act, tick, rewards, leave), `gate` (map stops). Screen: `src/scenes/MinigameScene.ts`. Data: `src/data/minigames.json`. |
 | `src/core/expedition/` | Mega-Expeditions: `schema`, `graph` (route generation and validation), `flow` (begin, stops, choices, extract, fail), `gate` (map gates). Screen: `src/scenes/ExpeditionScene.ts`. |
 | `src/core/*.ts` (rest) | One system each: `archetypes`, `attributes`, `capture`, `catalog` (item effects), `encounters` (difficulty, enemy planning), `evolution`, `friendship`, `items` (bag use), `map` (stage graph), `mapItems` (repels, shop, money), `pokemon` (stats, XP), `profile`, `progress` (permanent), `regions`, `rewards` (five-choice draft), `runPrep`, `themes`. |
 | `src/data/` | Game content JSON + `index.ts` (loads and validates it). See the data index below. |

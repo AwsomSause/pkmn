@@ -178,16 +178,16 @@ describe('mastery in saves', () => {
     expect(CURRENT_VERSIONS.profile).toBeGreaterThanOrEqual(9);
   });
 
-  it('a version 18 run loads with no mastery unlocks', () => {
+  it('a version 19 run loads with no mastery unlocks', () => {
     const storage = new MemoryStorageProvider();
-    const { mastery: _m, ...old } = runWith(createProfile(content, 'p'), 'charmander', 'save18');
-    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 18, savedAt: '', data: old }));
+    const { mastery: _m, ...old } = runWith(createProfile(content, 'p'), 'charmander', 'save19');
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 19, savedAt: '', data: old }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
-    expect(loaded.migratedFrom).toBe(18);
+    expect(loaded.migratedFrom).toBe(19);
     expect(loaded.data.mastery).toEqual({});
-    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(19);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(20);
   });
 
   it('a profile that met 1,000 species stays small and reloads its mastery', () => {

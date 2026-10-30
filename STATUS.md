@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 9, run 19, settings 4, meta 1. Next free versions: run 20, profile 10 (check `origin/main` first; another thread may have taken them).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 9, run 20, settings 4, meta 1. Next free versions: run 21, profile 10 (check `origin/main` first; another thread may have taken them).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -35,9 +35,10 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 9, run 
 - Blueprint slice 2 Totems: 8 Totems (`totems.json`, `core/totem/`) on stage maps, aura, ally calls (ally takes the field in the Totem's place), phases, home-field weather/terrain/hazards, rare-Pokémon rewards, unlocks. Next: Expeditions, Minigames.
 
 - Blueprint slice 3 Mega-Expeditions: 5 expeditions (`expeditions.json`, `core/expedition/`, `ExpeditionScene`), 12 stop kinds, 5 party modes, loot kept on extraction, Mega Energy to temporary Mega Stones, Mega guardian finale. Next: Minigames.
+- Blueprint slice 4 Minigames: stop on stage maps (50%), 14 games (`minigames.json`, `core/minigame/`, `MinigameScene`), medals, capped rewards, run save v19. All four Blueprint slices are built; remaining TODOs are in the tracker.
 
 ## In progress / next
-- Trainers.md perks: batches 2–11 (one PR per 20 trainers, then signature mechanics).
+- Trainers.md perks: batch 2 done (Bill to Canari: PC box with deposit/withdraw on the map, party and item-slot limits, PP cost, burn, weather heal, rare/type encounter weights, rival type and counters, and the first signature mechanic: Rival's Answer, `core/signature.ts`, run field `perkEffects`). Batches 3–11 next (one PR per 20 trainers).
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next trainer evolutions, weekly then holiday events.
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
@@ -47,7 +48,9 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 9, run 
 
 ## Biggest known gaps
 - 87 move rows are unsupported on purpose: Z-Moves, Max Moves and G-Max Moves only run through the Z/Dynamax systems. Every other move and every ability works. Known limits: Hidden Power's type is a fixed roll per Pokémon (director decision D2: no IVs); Shields Down gives the status immunity but Minior has no separate Core form; Illusion changes the sprite and name on screen only. 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Untitled doc Phase E1 (`core/rules.ts`, `data/runRules.json`, run save v17): the Preparation Desk now picks Mode (Standard/Adventure), Difficulty (5, enemy levels), one Modifier (No Transformations, Scarce Supplies) and Death-Block (on for a new player's first 3 runs). The reward multiplier is shown before launch and fixed in `run.rules`; Adventure earns no account rewards and returns to a checkpoint on a wipe.
+- Untitled doc Phase D1 (`core/specialForms.ts`, `data/specialForms.json`): Delta, Z-form, Spooky and regional forms are event-only. They no longer show up in wild pools, starter pools or trainer teams; the content gate check `special-form-leaks` keeps it at 0. Acquisition routes are listed in the data file. No save change.
+- Untitled doc Phase E1 (`core/rules.ts`, `data/runRules.json`, run save v17): the Preparation Desk now picks Mode (Standard/Adventure), Difficulty (5, enemy levels), modifiers (all 12 from the doc work; turn each on with Enter, one per kind) and Death-Block (on for a new player's first 3 runs). The reward multiplier is shown before launch and fixed in `run.rules`; Adventure earns no account rewards and returns to a checkpoint on a wipe.
+- Untitled doc Phase E1 (`core/rules.ts`, `data/runRules.json`, run save v18): the Preparation Desk now picks Mode (Standard/Adventure), Difficulty (5, enemy levels), one Modifier (No Transformations, Scarce Supplies) and Death-Block (on for a new player's first 3 runs). The reward multiplier is shown before launch and fixed in `run.rules`; Adventure earns no account rewards and returns to a checkpoint on a wipe.
 - Rival relations (`rivals/relations.ts`): training exchange, enemy Pokémon sparring, rivalry triangle, tired-ace substitute, close-battle memory (5 more mechanics "limited"); reputation, signature and conflicting rumours add 3 more (5 mechanics left).
 - Rival bonds (run save v12): each rival Pokémon has 8 bond dimensions, a trait and habits; one of 39 off-screen events runs per rival each stage (`rivalBonds.json`, `rivals/bonds.ts`, built by `tools/build-rival-bonds.mjs`); bonds change the return level and show up as a pre-battle line and on the Story screen. Hyper/Overdrive and the 9 bond arcs wait.
 - Rival arcs: 27 of 46 run (`rivalArcs.json`, `rivals/arcs.ts`); bond and Overdrive arcs wait for those systems.

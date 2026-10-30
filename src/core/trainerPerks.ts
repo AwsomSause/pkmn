@@ -53,6 +53,11 @@ export interface DamageDealtInfo {
   userBaseSpeed: number;
   userIsMega: boolean;
   partyHasMega: boolean;
+  /** The first Pokémon to fight in this battle. */
+  firstInBattle: boolean;
+  isStarter: boolean;
+  /** The types of the Pokémon being hit. */
+  targetTypes: readonly TypeName[];
 }
 
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
@@ -62,6 +67,9 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'lowHpDamageMultiplier', (m) => i.hpShare < m.below);
   v *= product(perks, 'levelGapDamageMultiplier', (m) => (m.foe === 'higher' ? i.targetLevel > i.userLevel : i.targetLevel < i.userLevel));
   if (i.targetIsBoss) v *= product(perks, 'bossDamageMultiplier');
+  v *= product(perks, 'damageVsTypeMultiplier', (m) => i.targetTypes.includes(m.foeType));
+  v *= product(perks, 'starterDamageMultiplier', (m) => m.starter === i.isStarter);
+  for (const m of of(perks, 'battleOrderDamage')) v *= i.firstInBattle ? m.first : m.later;
   if (i.partyHasMega && !i.userIsMega) v *= product(perks, 'nonMegaDamageMultiplier');
   const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
   if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'player' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
@@ -74,6 +82,7 @@ export interface DamageTakenInfo {
   attackerIsLegendary: boolean;
   attackerIsBoss: boolean;
   weather: string | null;
+  targetIsMega?: boolean;
 }
 
 /** Damage multiplier for a hit your Pokémon takes. */
@@ -86,14 +95,17 @@ export function damageTakenPerk(perks: Perks | undefined, i: DamageTakenInfo): n
     return true;
   });
   if (i.attackerIsBoss) v *= product(perks, 'bossDamageTakenMultiplier');
+  if (i.targetIsMega) v *= product(perks, 'megaDamageTakenMultiplier');
   const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
   if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'enemy' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
   return v;
 }
 
 /** Multiplier on one of your Pokémon's stats (or max HP). */
-export function statPerk(perks: Perks | undefined, stat: 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe', types: readonly TypeName[]): number {
-  return product(perks, 'statMultiplier', (m) => m.stat === stat && (!m.type || types.includes(m.type)));
+export function statPerk(perks: Perks | undefined, stat: 'hp' | 'atk' | 'def' | 'spa' | 'spd' | 'spe', types: readonly TypeName[], when: { burned?: boolean; threeStageLine?: boolean } = {}): number {
+  let v = product(perks, 'statMultiplier', (m) => m.stat === stat && (!m.type || types.includes(m.type)));
+  if (stat !== 'hp') v *= product(perks, 'conditionalStatMultiplier', (m) => m.stat === stat && (!m.type || types.includes(m.type)) && Boolean(when[m.when]));
+  return v;
 }
 
 export interface XpInfo {
@@ -220,4 +232,68 @@ export function signatureMoveFor(content: Content, speciesId: string): string | 
 
 export function hasStarterSignature(perks: Perks | undefined): boolean {
   return of(perks, 'starterSignatureMove').length > 0;
+}
+
+/** Pokémon the party can hold. */
+export function partyLimit(base: number, perks: Perks | undefined): number {
+  return Math.max(1, base + sum(perks, 'partySizeOffset', (m) => m.value));
+}
+
+/** Spare Pokémon the PC holds (0: no PC). */
+export function boxCapacity(perks: Perks | undefined): number {
+  return sum(perks, 'boxCapacity', (m) => m.slots);
+}
+
+/** Different items one Pokémon can hold. */
+export function itemSlotLimit(base: number, perks: Perks | undefined): number {
+  return Math.max(1, base + sum(perks, 'itemSlotOffset', (m) => m.value));
+}
+
+export function catchLevelOffset(perks: Perks | undefined): number {
+  return sum(perks, 'catchLevelOffset', (m) => m.value);
+}
+
+/** Weight multiplier for one wild species: type perks and the rare-encounter perk (rare: base stat total at or above `rareBst`). */
+export function wildWeightPerk(perks: Perks | undefined, types: readonly TypeName[], isRare: boolean, bestStat?: string): number {
+  let v = product(perks, 'typeEncounterWeight', (m) => types.includes(m.type));
+  v *= product(perks, 'statEncounterWeight', (m) => m.stat === bestStat);
+  if (isRare) v *= encounterWeightPerk(perks, 'rare');
+  return v;
+}
+
+export function burnDamagePerk(perks: Perks | undefined): number {
+  return product(perks, 'burnDamageMultiplier');
+}
+
+/** Extra PP a move of this type costs. */
+export function ppCostExtra(perks: Perks | undefined, type: TypeName): number {
+  return sum(perks, 'ppCostExtra', (m) => (m.type === type ? m.extra : 0));
+}
+
+export function rivalTeamTypes(perks: Perks | undefined): TypeName[] {
+  return of(perks, 'rivalTeamType').map((m) => m.type);
+}
+
+export function rivalCounterBonus(perks: Perks | undefined): number {
+  return sum(perks, 'rivalCounterBonus', (m) => m.count);
+}
+
+export function enemyHyperChancePerk(perks: Perks | undefined): number {
+  return product(perks, 'enemyHyperChanceMultiplier');
+}
+
+/** Share of max HP a Pokémon of these types recovers each turn in this weather (0 for none). */
+export function weatherHealPercent(perks: Perks | undefined, types: readonly TypeName[], weather: string | null): number {
+  return sum(perks, 'weatherHeal', (m) => (m.weather === weather && types.includes(m.type) ? m.percent : 0));
+}
+
+/** Whether the species' evolution line has three stages. */
+export function inThreeStageLine(content: Content, speciesId: string): boolean {
+  const longest = (id: string): number => {
+    const sp = content.species.get(id);
+    if (!sp || sp.evolutions.length === 0) return 1;
+    return 1 + Math.max(...sp.evolutions.map((e) => longest(e.to)));
+  };
+  const sp = getSpecies(content, speciesId);
+  return sp.evolutionStage - 1 + longest(speciesId) >= 3;
 }

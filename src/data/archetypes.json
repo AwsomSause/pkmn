@@ -419,7 +419,8 @@
       "scizor"
     ],
     "signaturePool": "trainer-aaron",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "acerola",
@@ -468,7 +469,8 @@
       "froslass"
     ],
     "signaturePool": "trainer-acerola",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "adaman",
@@ -522,7 +524,8 @@
       "ursaluna"
     ],
     "signaturePool": "trainer-adaman",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "agatha-lgpe",
@@ -569,7 +572,8 @@
       "mismagius"
     ],
     "signaturePool": "trainer-agatha-lgpe",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "alain",
@@ -629,7 +633,8 @@
       "weavile"
     ],
     "signaturePool": "trainer-alain",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "alder",
@@ -670,7 +675,8 @@
       "escavalier"
     ],
     "signaturePool": "trainer-alder",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "allister",
@@ -718,7 +724,8 @@
       "polteageist"
     ],
     "signaturePool": "trainer-allister",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "anabel-gen-7",
@@ -759,7 +766,8 @@
       "slowking"
     ],
     "signaturePool": "trainer-anabel-gen-7",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "archie-gen-6",
@@ -808,7 +816,8 @@
       "wailord"
     ],
     "signaturePool": "trainer-archie-gen-6",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "archie-usum",
@@ -859,7 +868,8 @@
       "wailord"
     ],
     "signaturePool": "trainer-archie-usum",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "arezu",
@@ -906,7 +916,8 @@
       "avalugg"
     ],
     "signaturePool": "trainer-arezu",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "ash-kalos",
@@ -962,7 +973,8 @@
       "lucario"
     ],
     "signaturePool": "trainer-ash-kalos",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "ash",
@@ -1017,7 +1029,8 @@
       "lucario"
     ],
     "signaturePool": "trainer-ash",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "az",
@@ -1067,7 +1080,8 @@
       "aegislash"
     ],
     "signaturePool": "trainer-az",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "ball-guy",
@@ -1114,7 +1128,8 @@
       "lickilicky"
     ],
     "signaturePool": "trainer-ball-guy",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "barry",
@@ -1160,7 +1175,8 @@
       "roserade"
     ],
     "signaturePool": "trainer-barry",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "bea",
@@ -1205,7 +1221,8 @@
       "grapploct"
     ],
     "signaturePool": "trainer-bea",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "bede",
@@ -1251,7 +1268,8 @@
       "gardevoir"
     ],
     "signaturePool": "trainer-bede",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "benga",
@@ -1291,7 +1309,8 @@
       "krookodile"
     ],
     "signaturePool": "trainer-benga",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
   },
   {
     "id": "bianca-pwt",
@@ -1336,6 +1355,1003 @@
       "chandelure"
     ],
     "signaturePool": "trainer-bianca-pwt",
-    "eventTags": []
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "bill",
+    "name": "Bill",
+    "title": "The Specialist",
+    "description": "Unlock a PC at Pokémon Centers to store Pokémon — Team size is reduced by one.",
+    "pros": [
+      "Unlock a PC at Pokémon Centers to store Pokémon",
+      "rare Pokémon encounter rates increase by 10%"
+    ],
+    "cons": [
+      "Team size is reduced by one",
+      "Pokémon are 10% harder to catch",
+      "your usable item slots are reduced by one"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 210
+    },
+    "unlockText": "Defeat 210 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bill",
+    "modifiers": [
+      {
+        "kind": "boxCapacity",
+        "slots": 6
+      },
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "rare",
+        "value": 1.1
+      },
+      {
+        "kind": "partySizeOffset",
+        "value": -1
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 0.9
+      },
+      {
+        "kind": "itemSlotOffset",
+        "value": -1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "eevee",
+      "vaporeon",
+      "jolteon",
+      "flareon"
+    ],
+    "signaturePool": "trainer-bill",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "blaine-lgpe",
+    "name": "Blaine (LGPE)",
+    "title": "The Fire Specialist",
+    "description": "Fire-types deal 25% more damage — Water moves deal 20% more damage against your team.",
+    "pros": [
+      "Fire-types deal 25% more damage",
+      "burn lasts two extra turns"
+    ],
+    "cons": [
+      "Water moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 220
+    },
+    "unlockText": "Defeat 220 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.blaine",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 1.25
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "water",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "arcanine",
+      "magmortar",
+      "rapidash",
+      "ninetales"
+    ],
+    "signaturePool": "trainer-blaine-lgpe",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "blaine",
+    "name": "Blaine",
+    "title": "The Fire Specialist",
+    "description": "Fire-types deal 50% more damage — Fire moves cost two additional PP.",
+    "pros": [
+      "Fire-types deal 50% more damage",
+      "burn damage increases by 25%",
+      "Fire-type Pokémon gain 20% Attack while burned"
+    ],
+    "cons": [
+      "Fire moves cost two additional PP",
+      "Fire-types appear less often",
+      "your rival always carries a Water-type"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 230
+    },
+    "unlockText": "Defeat 230 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.blaine",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 1.5
+      },
+      {
+        "kind": "burnDamageMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "conditionalStatMultiplier",
+        "stat": "atk",
+        "type": "fire",
+        "when": "burned",
+        "value": 1.2
+      },
+      {
+        "kind": "ppCostExtra",
+        "type": "fire",
+        "extra": 2
+      },
+      {
+        "kind": "typeEncounterWeight",
+        "type": "fire",
+        "value": 0.7
+      },
+      {
+        "kind": "rivalTeamType",
+        "type": "water"
+      }
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "arcanine",
+      "magmortar",
+      "rapidash",
+      "ninetales"
+    ],
+    "signaturePool": "trainer-blaine",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "blue-gen-3-champion",
+    "name": "Blue (Gen 3 Champion)",
+    "title": "The Specialist",
+    "description": "All Pokémon deal 15% more damage — Your rival builds counters to your two most-used Pokémon while maintaining a recognizable team.",
+    "pros": [
+      "All Pokémon deal 15% more damage",
+      "Hyper/Overdrive events are 20% more likely",
+      "Pokémon with three-stage evolutions gain 10% Attack",
+      "unlock a unique rival mechanic"
+    ],
+    "cons": [
+      "Your rival builds counters to your two most-used Pokémon while maintaining a recognizable team",
+      "rival Hyper/Overdrive events are 20% more likely",
+      "EXP gain is reduced by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 240
+    },
+    "unlockText": "Defeat 240 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.blue",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "hyperChanceMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "conditionalStatMultiplier",
+        "stat": "atk",
+        "when": "threeStageLine",
+        "value": 1.1
+      },
+      {
+        "kind": "rivalCounterBonus",
+        "count": 1
+      },
+      {
+        "kind": "enemyHyperChanceMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhyperior",
+      "arcanine"
+    ],
+    "signaturePool": "trainer-blue-gen-3-champion",
+    "eventTags": [],
+    "signatureMechanic": "rivals-answer"
+  },
+  {
+    "id": "blue-gen-7",
+    "name": "Blue (Gen 7)",
+    "title": "The Specialist",
+    "description": "The first Pokémon in each battle deals 25% more damage — Every subsequent Pokémon deals 10% less damage until the encounter ends.",
+    "pros": [
+      "The first Pokémon in each battle deals 25% more damage"
+    ],
+    "cons": [
+      "Every subsequent Pokémon deals 10% less damage until the encounter ends"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 250
+    },
+    "unlockText": "Defeat 250 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.blue",
+    "modifiers": [
+      {
+        "kind": "battleOrderDamage",
+        "first": 1.25,
+        "later": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhyperior",
+      "arcanine"
+    ],
+    "signaturePool": "trainer-blue-gen-7",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "blue-classic",
+    "name": "Blue",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% more EXP and 10% Speed — Shop prices increase by 15%.",
+    "pros": [
+      "Pokémon gain 15% more EXP and 10% Speed"
+    ],
+    "cons": [
+      "Shop prices increase by 15%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 260
+    },
+    "unlockText": "Defeat 260 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.blue",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.1
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhyperior",
+      "arcanine"
+    ],
+    "signaturePool": "trainer-blue-classic",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brassius",
+    "name": "Brassius",
+    "title": "The Grass Specialist",
+    "description": "Grass-types deal 20% more damage and recover 5% HP each turn in sunlight — Grass-types take 15% more damage from Fire moves.",
+    "pros": [
+      "Grass-types deal 20% more damage and recover 5% HP each turn in sunlight"
+    ],
+    "cons": [
+      "Grass-types take 15% more damage from Fire moves"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 270
+    },
+    "unlockText": "Defeat 270 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brassius",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "grass",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherHeal",
+        "type": "grass",
+        "weather": "sun",
+        "percent": 5
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "grass",
+        "moveType": "fire",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "sudowoodo",
+      "arboliva",
+      "breloom",
+      "scovillain"
+    ],
+    "signaturePool": "trainer-brassius",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brawly-gen-6",
+    "name": "Brawly (Gen 6)",
+    "title": "The Fighting Specialist",
+    "description": "Fighting-types deal 10% more damage and gain 10% HP — Psychic moves deal 20% more damage against your team.",
+    "pros": [
+      "Fighting-types deal 10% more damage and gain 10% HP"
+    ],
+    "cons": [
+      "Psychic moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 280
+    },
+    "unlockText": "Defeat 280 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brawly-gen6",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fighting",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "fighting",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "psychic",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "hariyama",
+      "makuhita",
+      "machamp",
+      "medicham"
+    ],
+    "signaturePool": "trainer-brawly-gen-6",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brendan-emerald",
+    "name": "Brendan (Emerald)",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% more EXP — Non-starters gain 10% less EXP.",
+    "pros": [
+      "Pokémon gain 15% more EXP",
+      "starters deal 15% more damage"
+    ],
+    "cons": [
+      "Non-starters gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 290
+    },
+    "unlockText": "Defeat 290 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brendan-rs",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "starterDamageMultiplier",
+        "starter": true,
+        "value": 1.15
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "starter": false,
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sceptile",
+      "swellow",
+      "camerupt",
+      "ludicolo"
+    ],
+    "signaturePool": "trainer-brendan-emerald",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brendan-ruby-sapphire",
+    "name": "Brendan (Ruby/Sapphire)",
+    "title": "The Specialist",
+    "description": "Physical moves deal 15% more damage — Special moves deal 10% less damage.",
+    "pros": [
+      "Physical moves deal 15% more damage"
+    ],
+    "cons": [
+      "Special moves deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 300
+    },
+    "unlockText": "Defeat 300 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brendan-rs",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sceptile",
+      "swellow",
+      "camerupt",
+      "ludicolo"
+    ],
+    "signaturePool": "trainer-brendan-ruby-sapphire",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brigette",
+    "name": "Brigette",
+    "title": "The Specialist",
+    "description": "Pokémon storage capacity is increased — Your active team is limited to five Pokémon.",
+    "pros": [
+      "Pokémon storage capacity is increased",
+      "newly caught Pokémon start one level higher"
+    ],
+    "cons": [
+      "Your active team is limited to five Pokémon",
+      "starting Pokémon gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 310
+    },
+    "unlockText": "Defeat 310 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brigette",
+    "modifiers": [
+      {
+        "kind": "boxCapacity",
+        "slots": 6
+      },
+      {
+        "kind": "catchLevelOffset",
+        "value": 1
+      },
+      {
+        "kind": "partySizeOffset",
+        "value": -1
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "starter": true,
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "eevee",
+      "lapras",
+      "pikachu",
+      "snorlax"
+    ],
+    "signaturePool": "trainer-brigette",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brock-masters",
+    "name": "Brock (Masters)",
+    "title": "The Rock Specialist",
+    "description": "Rock-types gain 20% Defense and deal 10% more damage — Rock-types lose 10% Speed.",
+    "pros": [
+      "Rock-types gain 20% Defense and deal 10% more damage"
+    ],
+    "cons": [
+      "Rock-types lose 10% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 320
+    },
+    "unlockText": "Defeat 320 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brock",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "rock",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "rock",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "rock",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "rock"
+    ],
+    "signatureSpecies": [
+      "onix",
+      "steelix",
+      "golem",
+      "kabutops"
+    ],
+    "signaturePool": "trainer-brock-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "brock-classic",
+    "name": "Brock",
+    "title": "The Specialist",
+    "description": "Rock-types gain 25% Defense — Special Defense is reduced by 10%.",
+    "pros": [
+      "Rock-types gain 25% Defense"
+    ],
+    "cons": [
+      "Special Defense is reduced by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 330
+    },
+    "unlockText": "Defeat 330 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.brock",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "rock",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spd",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "onix",
+      "steelix",
+      "golem",
+      "kabutops"
+    ],
+    "signaturePool": "trainer-brock-classic",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "bruno-gen-3",
+    "name": "Bruno (Gen 3)",
+    "title": "The Fighting Specialist",
+    "description": "Fighting-types deal 25% more physical damage — Fighting-types lose 10% Speed.",
+    "pros": [
+      "Fighting-types deal 25% more physical damage"
+    ],
+    "cons": [
+      "Fighting-types lose 10% Speed"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 340
+    },
+    "unlockText": "Defeat 340 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bruno",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fighting",
+        "category": "physical",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "fighting",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "machamp",
+      "hitmonlee",
+      "hitmonchan",
+      "onix"
+    ],
+    "signaturePool": "trainer-bruno-gen-3",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "bruno",
+    "name": "Bruno",
+    "title": "The Specialist",
+    "description": "Fighting-types gain 20% Attack and 10% HP — Healing items restore 15% less HP.",
+    "pros": [
+      "Fighting-types gain 20% Attack and 10% HP"
+    ],
+    "cons": [
+      "Healing items restore 15% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 350
+    },
+    "unlockText": "Defeat 350 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bruno",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "atk",
+        "type": "fighting",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "type": "fighting",
+        "value": 1.1
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "machamp",
+      "hitmonlee",
+      "hitmonchan",
+      "onix"
+    ],
+    "signaturePool": "trainer-bruno",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "bugsy",
+    "name": "Bugsy",
+    "title": "The Bug Specialist",
+    "description": "Bug-types gain 20% Speed and deal 15% more damage — Bug-types take 15% more damage from Rock moves.",
+    "pros": [
+      "Bug-types gain 20% Speed and deal 15% more damage"
+    ],
+    "cons": [
+      "Bug-types take 15% more damage from Rock moves"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 360
+    },
+    "unlockText": "Defeat 360 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.bugsy",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "bug",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "bug",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "bug",
+        "moveType": "rock",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "bug"
+    ],
+    "signatureSpecies": [
+      "scizor",
+      "heracross",
+      "pinsir",
+      "ariados"
+    ],
+    "signaturePool": "trainer-bugsy",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "byron",
+    "name": "Byron",
+    "title": "The Specialist",
+    "description": "Steel-types gain 25% Defense — Steel-types gain 15% less EXP.",
+    "pros": [
+      "Steel-types gain 25% Defense"
+    ],
+    "cons": [
+      "Steel-types gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 370
+    },
+    "unlockText": "Defeat 370 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.byron",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "steel",
+        "value": 1.25
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "type": "steel",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [
+      "steel"
+    ],
+    "signatureSpecies": [
+      "bastiodon",
+      "magneton",
+      "steelix",
+      "bronzong"
+    ],
+    "signaturePool": "trainer-byron",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "caitlin",
+    "name": "Caitlin",
+    "title": "The Psychic Specialist",
+    "description": "Psychic-types deal 20% more special damage — Physical moves deal 10% less damage.",
+    "pros": [
+      "Psychic-types deal 20% more special damage"
+    ],
+    "cons": [
+      "Physical moves deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 380
+    },
+    "unlockText": "Defeat 380 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.caitlin",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "psychic",
+        "category": "special",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "gothitelle",
+      "reuniclus",
+      "sigilyph",
+      "musharna"
+    ],
+    "signaturePool": "trainer-caitlin",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "calem",
+    "name": "Calem",
+    "title": "The Specialist",
+    "description": "Pokémon gain 10% more EXP — Mega-Evolved Pokémon take 10% more damage.",
+    "pros": [
+      "Pokémon gain 10% more EXP",
+      "Mega Evolution costs are reduced by 20%"
+    ],
+    "cons": [
+      "Mega-Evolved Pokémon take 10% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 390
+    },
+    "unlockText": "Defeat 390 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.calem",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "megaDamageTakenMultiplier",
+        "value": 1.1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "greninja",
+      "meowstic",
+      "absol",
+      "talonflame"
+    ],
+    "signaturePool": "trainer-calem",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "canari",
+    "name": "Canari",
+    "title": "The Electric Specialist",
+    "description": "Electric-types gain 20% Speed and deal 15% more damage — Ground moves deal 20% more damage against your team.",
+    "pros": [
+      "Electric-types gain 20% Speed and deal 15% more damage"
+    ],
+    "cons": [
+      "Ground moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 400
+    },
+    "unlockText": "Defeat 400 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.canari",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "type": "electric",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "electric",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "ground",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "electivire",
+      "electrode",
+      "jolteon",
+      "dedenne"
+    ],
+    "signaturePool": "trainer-canari",
+    "eventTags": [],
+    "signatureMechanic": null
   }
 ]

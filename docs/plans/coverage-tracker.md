@@ -30,13 +30,13 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Guide | Status |
 |---|---|
 | Untitled document phases A, B | DONE (except new NPC classes) |
-| Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), 2 of 12 modifiers run (No Transformations, Scarce Supplies; the other 10 listed as planned), Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
+| Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), all 12 modifiers run, one per kind (e.g. one party rule at a time): No Transformations, Scarce Supplies, Monotype, Single Region Dex, Rich Route, Blind Research (map hides stage themes, research x1.5), No Revives, Random Draft, Boss Rush (own 4-stage campaign), Variant Hunt (+50% event stops; shiny odds unchanged), Limited Party (4), No Duplicate Species, Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
 | Untitled doc Phase C–G rest | TODO: C prep slots (Field License, Research Directive, Challenge Contract) and effective-attribute layers (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE except planned events (see table below) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: batch 1 of 11 (20 of 220 trainers, A–B); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | PART: batches 1–2 of 11 (40 of 220 trainers, Aaron to Canari); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -95,11 +95,15 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 | Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
 | Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |
 
-### 4. Minigames — TODO (every item)
-Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
+### 4. Minigames (slice 4, DONE except the TODO lines)
+- DONE framework: every field (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions) in `minigames.json`, validated by `core/minigame/schema.ts`; one standard result (score, max, medal, money, item) from `flow.ts`; one generic screen (`MinigameScene`); one reward system.
+- DONE the six recommended games: Pokémon Memory, Catching Challenge, Rhythm Challenge, Berry Foraging, Knowledge Quiz (questions built from real species/type/ability data), Fossil Excavation.
+- DONE the eight extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
+- DONE economy: money cap per stage, repeats pay less, items only from the Normal tier up and capped per stage, failing costs nothing, leaving forfeits the attempt, reward paid once (stored outcome), save v19, play with the keyboard/mouse, slow mode (S) and pause (T) for timed games.
+- TODO: rewards other than money/items (recovery, research progress, temporary advantages); minigame art/sfx beyond the shared menu look; balance simulation of payouts.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; M6–M8 TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; M6–M8 content expansion, balance sims and the manual QA checklist TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |
@@ -154,3 +158,5 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §4 Campaign dramatic arcs, route consequence engine | TODO |
 | §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
+
+- Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.
