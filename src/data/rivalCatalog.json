@@ -1325,7 +1325,7 @@
    "name": "The Independent Rivalry",
    "group": "",
    "text": "Rivals develop relationships with one another without involving the player. Two rivals may become bitter enemies, close friends, or training partners.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-to-rival-pok-mon-influence",
@@ -1339,14 +1339,14 @@
    "name": "The Unseen Defeat",
    "group": "",
    "text": "A rival loses off-screen to a trainer who isn't the player. Their response affects their confidence, strategy, and ambitions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unseen-victory",
    "name": "The Unseen Victory",
    "group": "",
    "text": "A rival wins a major battle and becomes more ambitious. They might rise in regional rankings or attract a sponsor.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "training-exchange",
@@ -1367,7 +1367,7 @@
    "name": "The Shared Rival",
    "group": "",
    "text": "Multiple characters identify the player as their most important opponent. Each has a different interpretation of what defeating the player would prove.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-alliance",
@@ -1409,7 +1409,7 @@
    "name": "The Return Encounter",
    "group": "",
    "text": "A rival reappears after a long absence with evidence of independent progress, not simply a level increase.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "public-reputation-system",
@@ -1423,7 +1423,7 @@
    "name": "The Rivalry Rumor Mill",
    "group": "",
    "text": "The player hears partial reports about rivals. Some are accurate; others are incomplete or distorted.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "conflicting-account",
@@ -1437,21 +1437,21 @@
    "name": "The Rival's Private Goal",
    "group": "",
    "text": "A rival may pursue a goal that has little to do with defeating the player. The goal can take priority over a battle invitation.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "missed-encounter",
    "name": "The Missed Encounter",
    "group": "",
    "text": "If the player fails to meet a rival, the rival still advances their plans. Their next appearance reflects what happened in the meantime.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rivalry-cooldown",
    "name": "The Rivalry Cooldown",
    "group": "",
    "text": "A rival who has repeatedly lost may stop challenging the player temporarily, choosing to recover, retrain, or pursue another goal.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unscheduled-challenge",
@@ -1465,7 +1465,7 @@
    "name": "The Challenge Refusal",
    "group": "",
    "text": "A rival can refuse to battle because of injury, a personal commitment, a disagreement, or a belief that the timing is wrong.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-s-substitute",
@@ -1486,7 +1486,7 @@
    "name": "The Rivalry Handoff",
    "group": "",
    "text": "An established rival can lose relevance naturally while another character becomes the player's primary competitor.",
-   "status": "planned"
+   "status": "limited"
   }
  ]
 }

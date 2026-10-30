@@ -1,5 +1,5 @@
 {
- "maxRivals": 1,
+ "maxRivals": 3,
  "spark": {
   "ordinaryGain": 5,
   "closeGain": 12,
@@ -37,5 +37,18 @@
   },
   "minEncounters": 1,
   "switchMargin": 10
+ },
+ "world": {
+  "unseenWinBase": 0.5,
+  "progressCap": 3,
+  "unseenWinPotential": 3,
+  "privateGoalChance": 0.15,
+  "privateGoalMinAmbition": 60,
+  "fragileResilience": 40,
+  "toughResilience": 60,
+  "edgeChance": 0.35,
+  "distortedRumorChance": 0.25,
+  "friendMinEmpathy": 55,
+  "rivalMinAmbition": 60
  }
 }

@@ -15,9 +15,10 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Battle styles (§3) | 32 | PART: all 32 run as AI sharpness + stat bias + adaptation cap. Style tricks (berserker rage, trapping, copying) wait for battle hooks |
 | Off-screen events (§6; the doc says 40 but skips #19) | 39 | DATA |
 | Character arcs (§7: 36 long-form + 10 Overdrive) | 46 | DATA |
-| Advanced mechanics (§8) | 24 | DATA |
+| Advanced mechanics (§8) | 24 | PART: 11 limited (independent rivalry, unseen win/defeat, cooldown, private goal, challenge refusal, missed encounter, return encounter, rumour mill, handoff, shared rival); 13 planned |
 | Main doc slice 4: ladder, ally/retire/shaken outcomes, Ultimate Rival score + milestone evaluation | DONE (rival promotions at gyms/tournaments wait for the world sim) |
-| Main doc slices 5–6: rival graph, offscreen sim, scheduler, legacy layer | TODO |
+| Main doc slice 5: multiple rivals (3), rival graph, off-screen world sim, rumours | DONE (limited) |
+| Main doc slice 6: scheduler, legacy layer, account-level rival state | TODO |
 | Bond Engine (Examples §4, §9: Trainer–Pokémon bond dimensions, habits) | — | TODO |
 
 ## Other guides (see how-to-execute-guides.md for the order)

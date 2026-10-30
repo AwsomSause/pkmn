@@ -881,5 +881,51 @@
   "minAdaptability": 40,
   "vindictiveBonusAt": 70,
   "forgivingPenaltyAt": 15
+ },
+ "mechanics": {
+  "independent-rivalry": {
+   "status": "limited",
+   "note": "Rivals form enemies/friends/partners edges off-screen (rivalGraph); the edge only shows in rumours so far."
+  },
+  "unseen-defeat": {
+   "status": "limited",
+   "note": "Off-screen losses: tough rivals retrain (+progress), fragile ones sit out a stage."
+  },
+  "unseen-victory": {
+   "status": "limited",
+   "note": "Off-screen wins: +progress and potential, may climb the ladder. No sponsors or rankings yet."
+  },
+  "rivalry-cooldown": {
+   "status": "limited",
+   "note": "A shaken rival sits out a stage."
+  },
+  "rival-s-private-goal": {
+   "status": "limited",
+   "note": "Ambitious rivals sometimes skip a stage for their own goal; goals are not yet named or storyline-driven."
+  },
+  "challenge-refusal": {
+   "status": "limited",
+   "note": "Covered by sitting out for a private goal or recovery; injury and disagreement reasons are not modelled."
+  },
+  "missed-encounter": {
+   "status": "limited",
+   "note": "Rivals count stages away and gain progress meanwhile."
+  },
+  "return-encounter": {
+   "status": "limited",
+   "note": "A returning rival comes back with independent progress as extra levels."
+  },
+  "rivalry-rumor-mill": {
+   "status": "limited",
+   "note": "One rumour per stage in the chronicle; a quarter are marked incomplete. No rumour screen or investigation yet."
+  },
+  "rivalry-handoff": {
+   "status": "limited",
+   "note": "The Ultimate Rival moves on when a rival becomes an ally or retires, or another clearly outscores it."
+  },
+  "shared-rival": {
+   "status": "limited",
+   "note": "Up to 3 rivals can target the player; each does not yet have its own interpretation of a win."
+  }
  }
 }
