@@ -2,7 +2,7 @@
 
 import Phaser from 'phaser';
 import { services } from '../game/services';
-import { playMusic, stopMusic } from '../ui/audio';
+import { playMusic, refreshMusicVolume, stopMusic } from '../ui/audio';
 import { applyProfile, nextProfile, PROFILE_INFO } from '../core/accessibility';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
@@ -14,12 +14,14 @@ import { sceneForRun } from './routing';
 
 export class MainMenuScene extends Phaser.Scene {
   private menu!: Menu;
+  private page: 'main' | 'settings' = 'main';
 
   constructor() {
     super('MainMenu');
   }
 
-  create(data?: { focus?: number }): void {
+  create(data?: { focus?: number; page?: 'settings' }): void {
+    this.page = data?.page ?? 'main';
     const { session } = services();
     session.closeRun();
     playMusic(this, 'bgm.menu');
@@ -56,40 +58,52 @@ export class MainMenuScene extends Phaser.Scene {
       options.push({ option: { label: 'Continue', disabled: true }, action: () => undefined });
     }
     options.push({ option: { label: 'Enter the Hub', disabled: damaged }, action: () => this.scene.start('Hub') });
-    options.push({
+    // Main page: Continue, Hub, Settings. Settings page: every setting, then Back.
+    const settingsOptions: typeof options = [];
+    settingsOptions.push({
       option: { label: session.settings.muted ? 'Sound: Off' : 'Sound: On' },
       action: () => this.toggleSound(),
     });
+    const pct = (v: number) => `${Math.round(v * 100)}%`;
+    settingsOptions.push({ option: { label: `Music volume: ${pct(session.settings.musicVolume)}` }, action: () => this.cycleVolume('musicVolume') });
+    settingsOptions.push({ option: { label: `Effects volume: ${pct(session.settings.sfxVolume)}` }, action: () => this.cycleVolume('sfxVolume') });
     const animLabels = { full: 'Full', reduced: 'Reduced motion', off: 'Off' } as const;
-    options.push({
+    settingsOptions.push({
       option: { label: `Animations: ${animLabels[session.settings.battleAnimations]}` },
       action: () => this.cycleAnimations(),
     });
-    options.push({
+    settingsOptions.push({
       option: { label: `Effects: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
       action: () => this.cycleIntensity(),
     });
 
     const speedLabels = { normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
-    options.push({
+    settingsOptions.push({
       option: { label: `Battle speed: ${speedLabels[session.settings.battleSpeed]}` },
       action: () => this.cycleSpeed(),
     });
 
     const talkLabels = { off: 'Off', low: 'Low', normal: 'Normal', high: 'High' } as const;
-    options.push({
+    settingsOptions.push({
       option: { label: `Trainer talk: ${talkLabels[session.settings.dialogueFrequency]}` },
       action: () => this.cycleTalk(),
     });
 
-    options.push({
+    settingsOptions.push({
       option: { label: `Accessibility: ${PROFILE_INFO[session.settings.accessibilityProfile].label}` },
       action: () => this.cycleProfile(),
     });
-    options.push({
+    settingsOptions.push({
       option: { label: `Damage details: ${session.settings.damageDetails ? 'On' : 'Off'}` },
       action: () => this.toggleDetails(),
     });
+
+    if (this.page === 'settings') {
+      options.length = 0;
+      options.push(...settingsOptions, { option: { label: 'Back' }, action: () => this.scene.restart({}) });
+    } else {
+      options.push({ option: { label: 'Settings' }, action: () => this.scene.restart({ page: 'settings' }) });
+    }
 
     const rowH = Math.min(46, Math.floor(272 / options.length));
     this.menu = new Menu(this, {
@@ -102,7 +116,10 @@ export class MainMenuScene extends Phaser.Scene {
       onSelect: (i) => options[i]!.action(),
     });
     if (data?.focus) this.menu.focus(data.focus, false);
-    onInputAction(this, (a) => this.menu.handle(a));
+    onInputAction(this, (a) => {
+      if (a === 'back' && this.page === 'settings') this.scene.restart({});
+      else this.menu.handle(a);
+    });
 
     // Messages: damaged saves, storage problems, save failures.
     const notes: string[] = [...session.warnings];
@@ -129,7 +146,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   private discardDamaged(): void {
     services().session.discardDamagedRun();
-    this.scene.restart();
+    this.scene.restart({ page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   /** Battle animations: full → reduced motion (no flashing or shaking) → off (skipped). */
@@ -138,7 +155,7 @@ export class MainMenuScene extends Phaser.Scene {
     const order = ['full', 'reduced', 'off'] as const;
     const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleAnimations: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   /** Trainer dialogue: normal → high → off → low. */
@@ -147,20 +164,20 @@ export class MainMenuScene extends Phaser.Scene {
     const order = ['normal', 'high', 'off', 'low'] as const;
     const next = order[(order.indexOf(session.settings.dialogueFrequency) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, dialogueFrequency: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   /** Accessibility presets: custom → Reduced Motion → Low Flash → More Combat Detail → Fast Battles. */
   private cycleProfile(): void {
     const { session } = services();
     session.saveSettings(applyProfile(session.settings, nextProfile(session.settings.accessibilityProfile)));
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   private toggleDetails(): void {
     const { session } = services();
     session.saveSettings({ ...session.settings, damageDetails: !session.settings.damageDetails, accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   /** Battle speed: normal → fast → quick. */
@@ -169,7 +186,7 @@ export class MainMenuScene extends Phaser.Scene {
     const order = ['normal', 'fast', 'quick'] as const;
     const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleSpeed: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
   /** Strength of screen shake and flashes: 100% → 50% → 25%. */
@@ -178,13 +195,23 @@ export class MainMenuScene extends Phaser.Scene {
     const order = [1, 0.5, 0.25];
     const i = order.findIndex((v) => Math.abs(v - session.settings.effectIntensity) < 0.01);
     session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
+  }
+
+  /** Music or effects volume: 100% → 75% → 50% → 25% → 0% → 100%. */
+  private cycleVolume(key: 'musicVolume' | 'sfxVolume'): void {
+    const { session } = services();
+    const order = [1, 0.75, 0.5, 0.25, 0];
+    const i = order.findIndex((v) => Math.abs(v - session.settings[key]) < 0.13);
+    session.saveSettings({ ...session.settings, [key]: order[(i + 1) % order.length]!, accessibilityProfile: 'custom' });
+    if (key === 'musicVolume') refreshMusicVolume();
+    this.scene.restart({ focus: this.menu.index, page: 'settings' });
   }
 
   private toggleSound(): void {
     const { session } = services();
     session.saveSettings({ ...session.settings, muted: !session.settings.muted });
     if (session.settings.muted) stopMusic();
-    this.scene.restart();
+    this.scene.restart({ page: this.page === 'settings' ? 'settings' : undefined });
   }
 }
