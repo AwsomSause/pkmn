@@ -27,7 +27,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 230 moves unsupported: Z/Max/G-Max rows, weight moves (Low Kick, Heavy Slam), item moves (Thief, Trick, Fling, Knock Off), form-dependent types, two-turn delayed ones (Future Sight, Doom Desire) and doubles-only support moves. 44 abilities pending (form changes, primal weather, Protosynthesis/Quark Drive, Illusion/Imposter, Stakeout...). 98 items pending: story/key items and gadgets need the event system (design with the director first), plus mulch/berry-pot/apricorn items.
-- Everything the rival Examples doc lists is stored in `rivalCatalog.json` (status "planned"); progress is in `docs/plans/coverage-tracker.md`.
+- Rival Examples doc: all lists stored in `rivalCatalog.json`; 40 personalities + 32 styles now run (`rivalProfiles.json`, status "limited"); paths, events, arcs, mechanics still "planned". Progress: `docs/plans/coverage-tracker.md`.
 - Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Slice 2: the rival returns once per region in place of the first ordinary trainer, with its old team stronger and ONE telegraphed counter-pick (resists your most-used attack type; shown before the battle). Slice 3: rivals are listed at the top of the Story screen (`rivals/chronicle.ts`). Next: slice 4 promotion/setback and Ultimate Rival, Battle Drama. Relationships/nemesis records are still only created by rivalries and returning trainers.
 - Event types `traded`, `trainerEscaped`, `transformed`, `eventChoice` are defined but never emitted.
 - CI workflow exists but has never run on GitHub.

@@ -5,7 +5,7 @@ import type { RunState } from '../state';
 import type { DomainEvent, Where } from '../story/schema';
 import type { Rival, Traits } from '../story/schema';
 import { TRAIT_KEYS } from '../story/schema';
-import { RIVAL_CONFIG } from './schema';
+import { RIVAL_CONFIG, RIVAL_PROFILES } from './schema';
 
 export interface SparkInput {
   where: Where;
@@ -37,15 +37,17 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
   if (gain < RIVAL_CONFIG.spark.threshold) return null;
   // Its own seeded stream: never touches the gameplay streams.
   const rng = new Rng(hashSeed(`${run.seed}::rival::${id}`));
-  const archetype = rng.pick(RIVAL_CONFIG.archetypes);
+  const personalityId = rng.pick(Object.keys(RIVAL_PROFILES.personalities).sort());
+  const personality = RIVAL_PROFILES.personalities[personalityId]!;
+  const styleId = rng.pick(personality.styles);
   const spread = RIVAL_CONFIG.traitSpread;
-  const traits = Object.fromEntries(TRAIT_KEYS.map((k) => [k, Math.max(0, Math.min(100, archetype.traits[k] + rng.int(-spread, spread)))])) as Traits;
+  const traits = Object.fromEntries(TRAIT_KEYS.map((k) => [k, Math.max(0, Math.min(100, personality.traits[k] + rng.int(-spread, spread)))])) as Traits;
   const rival: Rival = {
     id,
     classId: input.classId,
     name: input.name,
-    archetype: archetype.id,
-    style: archetype.style,
+    archetype: personalityId,
+    style: styleId,
     traits,
     rivalPotential: gain,
     adaptations: [],

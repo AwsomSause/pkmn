@@ -3,10 +3,11 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { RIVAL_CONFIG } from '../../src/core/rivals/schema';
+import { RIVAL_CONFIG, RIVAL_PROFILES } from '../../src/core/rivals/schema';
 import { sparkGain } from '../../src/core/rivals/manager';
 import { nextChoices } from '../../src/core/map';
 import type { TrainerPlan } from '../../src/core/encounters';
+import { rivalMods } from '../../src/core/rivals/profile';
 import { rivalChronicle } from '../../src/core/rivals/chronicle';
 import { mostUsedType, rivalReturn, rivalReturnFlag, waitingRival } from '../../src/core/rivals/adapt';
 import { chooseNode, chooseStarter, createRun, takeTurn } from '../../src/core/run';
@@ -14,6 +15,7 @@ import type { RunState } from '../../src/core/state';
 import { RivalSchema } from '../../src/core/story/schema';
 import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
+import catalog from '../../src/data/rivalCatalog.json';
 import { content, toBattle } from './helpers';
 
 function trainerBattle(seed: string, opts: { leaderId?: string | null; faintedMate?: boolean } = {}): RunState {
@@ -42,7 +44,8 @@ describe('rival Spark', () => {
     const rival = run.story.rivals[0]!;
     expect(RivalSchema.parse(rival)).toEqual(rival);
     expect(rival).toMatchObject({ name: 'Joey', classId: 'youngster', origin: { path: 'spark' } });
-    expect(RIVAL_CONFIG.archetypes.map((a) => a.id)).toContain(rival.archetype);
+    expect(Object.keys(RIVAL_PROFILES.personalities)).toContain(rival.archetype);
+    expect(RIVAL_PROFILES.personalities[rival.archetype]!.styles).toContain(rival.style);
     expect(rival.memory.lastBattle).toMatchObject({ result: 'win', team: ['rattata'] });
     expect(run.story.events.some((e) => e.type === 'rivalryFormed')).toBe(true);
   });
@@ -136,8 +139,40 @@ describe('rival chronicle', () => {
     const run = win(trainerBattle('chron'));
     const [line] = rivalChronicle(content, run);
     expect(line!.title).toContain('Youngster Joey');
-    expect(line!.summary).toMatch(/^Fights \w[\w-]*\. Strongest trait: \w+ \(\d+\)\.$/);
+    expect(line!.summary).toMatch(/^Fights as [\w -]+\. Strongest trait: \w+ \(\d+\)\.$/);
     expect(line!.memory).toContain('Last battle:');
     expect(rivalChronicle(content, createRun(content, { runId: 'x', seed: 'x', archetypeId: 'red' }))).toEqual([]);
   });
 });
+
+describe('personalities and battle styles', () => {
+  it('every personality and style of the Examples doc has a profile, and every pairing exists', () => {
+    expect(Object.keys(RIVAL_PROFILES.personalities).sort()).toEqual(catalog.personalities.map((p) => p.id).sort());
+    expect(Object.keys(RIVAL_PROFILES.styles).sort()).toEqual(catalog.styles.map((s) => s.id).sort());
+    for (const p of Object.values(RIVAL_PROFILES.personalities)) for (const s of p.styles) expect(RIVAL_PROFILES.styles[s], s).toBeDefined();
+  });
+
+  it('traits change the return: vindictive +1 level, forgiving -1, low adaptability never adapts, style sets AI', () => {
+    const base = { archetype: 'avenger', style: 'revenge-striker', traits: { ambition: 50, pride: 50, empathy: 50, adaptability: 50, vindictiveness: 90, resilience: 50 } };
+    expect(rivalMods(base)).toMatchObject({ levelBonus: 1, canAdapt: true, ai: 0.4 });
+    expect(rivalMods({ ...base, traits: { ...base.traits, vindictiveness: 5, adaptability: 20 } })).toMatchObject({ levelBonus: -1, canAdapt: false });
+    expect(rivalMods({ ...base, style: 'counter-builder' }).adaptCap).toBe(8);
+    expect(rivalMods({ ...base, style: 'nope' })).toMatchObject({ ai: 0, statBias: [] });
+  });
+
+  it('a rival that cannot adapt returns without a note, and its battle uses the style AI', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'na', seed: 'na', archetypeId: 'red' }), 0));
+    run.party[0]!.moves = [{ id: 'thunderbolt', pp: 15 }];
+    const rival = structuredClone(sparked0('na').story.rivals[0]!);
+    rival.traits.adaptability = 10;
+    rival.style = 'anti-meta';
+    const plan: TrainerPlan = { classId: 'youngster', name: 'x', leaderId: null, ai: 0, members: [{ speciesId: 'geodude', level: 20 }, { speciesId: 'pidgey', level: 20 }], levelInfo: [{ level: 20 } as never, { level: 20 } as never] };
+    const ret = rivalReturn(content, run, rival, plan, { kind: 'rematch', levelBonus: 1, extraMembers: 1, perStage: 1, perRegion: 4 });
+    expect(ret.note).toBeNull();
+    expect(ret.plan.ai).toBe(0.6);
+  });
+});
+
+function sparked0(seed: string): RunState {
+  return win(trainerBattle(seed));
+}
