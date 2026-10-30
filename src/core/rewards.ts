@@ -29,7 +29,7 @@ import { hasKeyItem } from './battle/transform';
 import { addLevels, maxHp } from './pokemon';
 import { count } from './progress';
 import { runLevelCap } from './regions';
-import type { Rng } from './rng';
+import { hashSeed, Rng } from './rng';
 import type { PendingDecision, RunState } from './state';
 
 export class RewardConfigError extends Error {
@@ -50,6 +50,7 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
     const stat = reward.effect.stat;
     return run.party.some((p) => (p.vitamins[stat] ?? 0) < content.balance.vitaminMaxStacks);
   }
+  if (reward.effect.kind === 'deal') return run.money >= reward.effect.cost;
   if (reward.effect.kind === 'levelUp') return run.party.some((p) => p.level < runLevelCap(content, run));
   // Evolution items are only offered when someone in the party can evolve with them.
   const item = reward.effect.kind === 'addItem' ? content.items.get(reward.effect.item) : undefined;
@@ -95,6 +96,11 @@ export function rewardFamily(reward: Reward): string {
   return reward.family ?? reward.category;
 }
 
+/** How much a draft archetype (a prep token's `draftBias`) favours a family of rewards: its weight when any member is in a favoured category, otherwise 1. */
+export function biasWeight(bias: { categories: readonly string[]; weight: number } | null, members: readonly Reward[]): number {
+  return bias && members.some((r) => bias.categories.includes(r.category)) ? bias.weight : 1;
+}
+
 export function generateDraft(
   content: Content,
   run: RunState,
@@ -115,6 +121,8 @@ export function generateDraft(
   }
   const byTier = new Map<Rarity, Reward[]>(RARITIES.map((t) => [t, eligible.filter((r) => r.rarity === t)]));
   const repeatWeight = content.balance.repeatFamilyWeight * (1 - draftVariety);
+  // A draft archetype from the Preparation Desk leans the family odds, nothing more.
+  const bias = run.prep?.tokenId ? content.prepTokens.get(run.prep.tokenId)?.draftBias ?? null : null;
   const chosen: string[] = [...forced];
   if (forced.some((id) => content.rewards.get(id)!.category === 'attribute')) for (const p of byTier.values()) for (let i = p.length - 1; i >= 0; i--) if (p[i]!.category === 'attribute') p.splice(i, 1);
   const families = new Set<string>(forced.map((id) => rewardFamily(content.rewards.get(id)!)));
@@ -126,7 +134,7 @@ export function generateDraft(
     const tierFamilies = [...new Set(pool.map(rewardFamily))];
     const anyFresh = tierFamilies.some((f) => !families.has(f));
     // A tier holding only families already shown still fills the slot.
-    const family = rng.weighted(tierFamilies.map((f) => ({ item: f, weight: anyFresh && families.has(f) ? repeatWeight : 1 })));
+    const family = rng.weighted(tierFamilies.map((f) => ({ item: f, weight: (anyFresh && families.has(f) ? repeatWeight : 1) * biasWeight(bias, pool.filter((r) => rewardFamily(r) === f)) })));
     const members = pool.filter((r) => rewardFamily(r) === family);
     const reward = members[rng.int(0, members.length - 1)]!;
     pool.splice(pool.indexOf(reward), 1);
@@ -178,6 +186,21 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       addItem(run.inventory, effect.item, effect.quantity);
       const item = content.items.get(effect.item)!;
       messages.push(`${item.name}${effect.quantity > 1 ? ` ×${effect.quantity}` : ''} added to your Bag.`);
+      break;
+    }
+    case 'deal': {
+      run.money -= effect.cost;
+      if (effect.cost > 0) messages.push(`You paid ₽${effect.cost}.`);
+      // The risk is rolled from the run seed and the encounter count, never from a gameplay stream.
+      const won = effect.chance >= 1 || new Rng(hashSeed(`${run.seed}::deal::${reward.id}::${run.encountersCompleted}`)).chance(effect.chance);
+      if (!won) {
+        messages.push('The gamble did not pay off. You got nothing.');
+        break;
+      }
+      for (const it of effect.items) {
+        addItem(run.inventory, it.item, it.quantity);
+        messages.push(`${content.items.get(it.item)!.name}${it.quantity > 1 ? ` ×${it.quantity}` : ''} added to your Bag.`);
+      }
       break;
     }
     case 'money': {

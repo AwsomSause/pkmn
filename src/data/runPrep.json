@@ -4944,6 +4944,72 @@
     "super-potion": 3,
     "revive": 1
    }
+  },
+  {
+   "id": "focus-research",
+   "name": "Research Focus",
+   "description": "Reward drafts offer currency and attribute items about 1.8x as often. Still random.",
+   "unlock": null,
+   "unlockText": "",
+   "license": null,
+   "money": 0,
+   "items": {},
+   "draftBias": {
+    "categories": [
+     "currency",
+     "attribute"
+    ],
+    "weight": 1.8
+   }
+  },
+  {
+   "id": "focus-aggressive",
+   "name": "Aggressive Focus",
+   "description": "Reward drafts offer stat boosters about 1.8x as often. Still random.",
+   "unlock": null,
+   "unlockText": "",
+   "license": null,
+   "money": 0,
+   "items": {},
+   "draftBias": {
+    "categories": [
+     "stat-buff"
+    ],
+    "weight": 1.8
+   }
+  },
+  {
+   "id": "focus-defensive",
+   "name": "Defensive Focus",
+   "description": "Reward drafts offer healing items about 1.8x as often. Still random.",
+   "unlock": null,
+   "unlockText": "",
+   "license": null,
+   "money": 0,
+   "items": {},
+   "draftBias": {
+    "categories": [
+     "healing"
+    ],
+    "weight": 1.8
+   }
+  },
+  {
+   "id": "focus-transformation",
+   "name": "Transformation Focus",
+   "description": "Reward drafts offer transformation items and key items about 1.8x as often. Still random.",
+   "unlock": null,
+   "unlockText": "",
+   "license": null,
+   "money": 0,
+   "items": {},
+   "draftBias": {
+    "categories": [
+     "transformation",
+     "key"
+    ],
+    "weight": 1.8
+   }
   }
  ],
  "licenses": [

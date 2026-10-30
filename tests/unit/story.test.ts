@@ -81,6 +81,8 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
     itemCatalog: catalog.filter((e) => !eventItem(e)),
+    // The draft deals (bundles, bargains, a risk) join the reward pool, which would change old seeds' drafts.
+    rewards: (RAW_CONTENT.rewards as { id: string }[]).filter((r) => !r.id.startsWith('deal-')),
     // The Camp Council (one more rest spot) the Relic Shrine and the world events (milestones, rare sites, callbacks, legendary route) would shift what an old seed meets, so they are left out too.
     events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
   });
