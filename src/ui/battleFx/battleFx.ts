@@ -16,6 +16,8 @@ import type { Cue } from '../../core/presentation/cues';
 import type { FamilyId } from '../../core/presentation/families';
 import { moveAnims } from '../../data/presentation';
 import { services } from '../../game/services';
+import { typeSoundFor } from '../../core/presentation/typeSound';
+import { playSfx } from '../audio';
 import { loadAssets } from '../lazyAssets';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
@@ -113,7 +115,7 @@ export class BattleFx {
       case 'telegraph':
         return this.telegraph(cue.side, cue.color, cue.style);
       case 'moveAnim':
-        return this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family);
+        return this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType);
       case 'pulse':
         return this.pulse(cue.side, cue.color);
       case 'commonAnim':
@@ -216,12 +218,13 @@ export class BattleFx {
     return (await this.ready(name)) ?? (alt && !this.skipping ? this.ready(alt) : null);
   }
 
-  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId): Promise<void> {
+  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId, moveType?: string): Promise<void> {
     const userVisual = this.opts.sprite(user);
     const targetVisual = this.opts.sprite(target);
     if (!userVisual || !targetVisual || this.skipping) return;
     const anim = await this.readyFirst(name, alt);
     if (this.skipping || !this.scene.sys.isActive()) return;
+    if (!anim) this.typeSound(moveType);
     if (!anim) return family ? this.familyFallback(userVisual, targetVisual, color, family) : this.fallback(userVisual, targetVisual, color);
     this.current = playAnim(
       { scene: this.scene, field: this.opts.field, backgroundIndex: this.opts.backgroundIndex(), user: userVisual, target: targetVisual, userIsPlayer: user === 'player' },
@@ -249,6 +252,15 @@ export class BattleFx {
     const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: this.settings.effectIntensity, speed: 1 }, family);
     // Skipping cuts the wait; the effect cleans itself up.
     await Promise.race([done, new Promise<void>((resolve) => { const check = () => (this.skipping ? resolve() : this.scene.time.delayedCall(50, check)); check(); })]);
+  }
+
+  /** The type's own sound when a move has no animation (#127). Never blocks or changes the battle. */
+  private typeSound(type?: string): void {
+    const slug = type ? typeSoundFor(type) : null;
+    if (!slug || this.settings.muted || this.skipping) return;
+    const id = animAssetIds.sound(slug);
+    if (!services().assets.has(id)) return;
+    void loadAssets(this.scene, [id]).then(() => this.scene.sys.isActive() && playSfx(this.scene, id, 0.8));
   }
 
   /** The quick stand-in when a move's animation is missing: the user lunges and the target flashes. */
