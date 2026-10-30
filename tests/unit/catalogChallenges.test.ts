@@ -2,7 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { chooseStarter, createRun, useItemOutsideBattle } from '../../src/core/run';
-import { bossTeamSpecies } from '../../src/core/encounters';
+import { bossTeamSpecies, remixedMembers } from '../../src/core/encounters';
+import { getBoss } from '../../src/core/regions';
 import { bossRemix, campaignCounts, noEvolution, partyCap, rewardMultiplier, rulesProblem, STANDARD_CHOICE, type RulesChoice } from '../../src/core/rules';
 import type { RunState } from '../../src/core/state';
 import { content } from './helpers';
@@ -44,12 +45,22 @@ describe('contracts', () => {
 });
 
 describe('Boss Remix (#149)', () => {
-  it('reorders a boss team without changing who is on it, and is stable', () => {
+  it('rebuilds a boss team from that boss\'s own other teams, and is stable', () => {
+    const boss = getBoss(content, 'brock');
     const plain = bossTeamSpecies(content, 'gym', 'brock', 3);
     const remix = bossTeamSpecies(content, 'gym', 'brock', 3, true);
-    expect([...remix].sort()).toEqual([...plain].sort());
+    const own = new Set(boss.teams.gym.flatMap((t) => t.members.map((m) => m.speciesId)));
+    expect(remix.length).toBe(plain.length);
     expect(remix).not.toEqual(plain);
+    expect(remix.filter((id) => !plain.includes(id)).length).toBeLessThanOrEqual(1);
+    for (const id of remix) expect(own.has(id), id).toBe(true);
     expect(bossTeamSpecies(content, 'gym', 'brock', 3, true)).toEqual(remix);
+  });
+  it('keeps every remixed member\'s own moves', () => {
+    const boss = getBoss(content, 'brock');
+    const mems = remixedMembers(boss, 'gym', 3, true, 'gym:brock:3');
+    const all = boss.teams.gym.flatMap((t) => t.members);
+    for (const m of mems) expect(all.some((x) => x.speciesId === m.speciesId && x.moves.join() === m.moves.join()), m.speciesId).toBe(true);
   });
   it('is a modifier that reaches the rules', () => {
     expect(bossRemix({ modifierIds: ['boss-remix'] })).toBe(true);
