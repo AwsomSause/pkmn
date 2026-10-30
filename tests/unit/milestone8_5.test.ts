@@ -11,7 +11,7 @@ import {
   canDynamax,
   gmaxFormFor,
   maxMoveFor,
-  megaOptions,
+  permanentForm,
   revertTransformations,
   stabMultiplier,
   stoneForms,
@@ -30,7 +30,8 @@ import { SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { content, toBattle } from './helpers';
 
-const MEGA: PlayerAction = { kind: 'move', index: 0, transform: { kind: 'mega' } };
+// Mega Evolution happens by itself (PokeRogue style), so a plain move is enough.
+const MEGA: PlayerAction = { kind: 'move', index: 0 };
 
 function setMoves(mon: PokemonInstance, ...ids: string[]) {
   mon.moves = ids.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
@@ -67,24 +68,24 @@ describe('Mega Stone data', () => {
   });
 });
 
-describe('Mega Evolution in battle', () => {
+describe('Mega Evolution in battle (PokeRogue style)', () => {
   it('needs the Mega Ring and the stone', () => {
     const p = mon('venusaur', 50, 'p1', 'tackle');
     const e = mon('rattata', 5, 'e1', 'tackle');
     for (const inventory of [{}, { 'mega-ring': 1 }, { venusaurite: 1 }] as Record<string, number>[]) {
       const { ctx } = setup([structuredClone(p)], [structuredClone(e)], inventory);
-      expect(megaOptions(ctx)).toEqual([]);
-      expect(() => resolveTurn(ctx, MEGA)).toThrow(/Mega Ring|Mega Stone/);
+      expect(permanentForm(content, inventory, p)).toBeNull();
+      expect(transforms(resolveTurn(ctx, MEGA))).toEqual([]);
     }
   });
 
-  it('changes form, types and stats before anyone moves, so the new Speed counts', () => {
+  it('happens by itself before anyone moves, so the new Speed counts', () => {
     // Beedrill (Speed 75) is slower than Garchomp (102); Mega Beedrill (145) is faster.
-    const runTurn = (mega: boolean) => {
+    const runTurn = (stone: boolean) => {
       const p = mon('beedrill', 50, 'p1', 'tackle');
       const e = mon('garchomp', 50, 'e1', 'tackle');
-      const { ctx } = setup([p], [e], { 'mega-ring': 1, beedrillite: 1 });
-      const events = resolveTurn(ctx, mega ? MEGA : { kind: 'move', index: 0 });
+      const { ctx } = setup([p], [e], stone ? { 'mega-ring': 1, beedrillite: 1 } : { 'mega-ring': 1 });
+      const events = resolveTurn(ctx, MEGA);
       return { p, events, first: events.find((x) => x.type === 'move')!.side };
     };
     expect(runTurn(false).first).toBe('enemy');
@@ -95,28 +96,36 @@ describe('Mega Evolution in battle', () => {
     expect(events[0]!.type).toBe('transform');
   });
 
-  it('works once per battle, once per Pokémon, and lasts through switching', () => {
+  it('every Pokémon with its stone Mega Evolves in every battle, with no limit, and stays Mega through switching', () => {
     const a = mon('venusaur', 50, 'p1', 'tackle');
     const b = mon('charizard', 50, 'p2', 'tackle');
-    const e = mon('snorlax', 60, 'e1', 'splash');
-    const { battle, ctx } = setup([a, b], [e], { 'mega-ring': 1, venusaurite: 1, 'charizardite-x': 1, 'charizardite-y': 1 });
+    const e = mon('snorlax', 60, 'e1', 'growl');
+    const { battle, ctx } = setup([a, b], [e], { 'mega-ring': 1, venusaurite: 1, 'charizardite-y': 1 });
     resolveTurn(ctx, MEGA);
     expect(a.speciesId).toBe('venusaur-mega');
-    expect(() => resolveTurn(ctx, MEGA)).toThrow(/already/);
-    resolveTurn(ctx, { kind: 'switch', partyIndex: 1 });
-    expect(megaOptions(ctx)).toEqual([]);
-    expect(() => resolveTurn(ctx, { kind: 'move', index: 0, transform: { kind: 'mega', formId: 'charizard-mega-y' } })).toThrow(/already Mega Evolved/);
+    expect(transforms(resolveTurn(ctx, MEGA))).toEqual([]);
+    // The Pokémon that comes in Mega Evolves before the turn's moves.
+    const events = transforms(resolveTurn(ctx, { kind: 'switch', partyIndex: 1 }));
+    expect(events.map((x) => x.type === 'transform' && x.to)).toEqual(['charizard-mega-y']);
     resolveTurn(ctx, { kind: 'switch', partyIndex: 0 });
     expect(a.speciesId).toBe('venusaur-mega');
-    expect(battle.transform.used.player).toEqual(['mega']);
+    expect(battle.transform.used.player).toEqual([]);
   });
 
-  it('lets the player pick between Mega Charizard X and Y', () => {
-    const p = mon('charizard', 50, 'p1', 'tackle');
-    const { ctx } = setup([p], [mon('snorlax', 60, 'e1', 'splash')], { 'mega-ring': 1, 'charizardite-x': 1, 'charizardite-y': 1 });
-    expect(megaOptions(ctx).map((o) => o.formId)).toEqual(['charizard-mega-x', 'charizard-mega-y']);
-    resolveTurn(ctx, { kind: 'move', index: 0, transform: { kind: 'mega', formId: 'charizard-mega-y' } });
-    expect(p.speciesId).toBe('charizard-mega-y');
+  it('Charizard takes Mega X when you own Charizardite X, otherwise Y', () => {
+    const both = permanentForm(content, { 'mega-ring': 1, 'charizardite-x': 1, 'charizardite-y': 1 }, mon('charizard', 50, 'p1'));
+    expect(both?.option.formId).toBe('charizard-mega-x');
+    expect(permanentForm(content, { 'mega-ring': 1, 'charizardite-y': 1 }, mon('charizard', 50, 'p1'))?.option.formId).toBe('charizard-mega-y');
+  });
+
+  it('a Mega Evolved Pokémon can still Terastallize or use a Z-Move, but not Dynamax', () => {
+    const inventory = { 'mega-ring': 1, venusaurite: 1, 'tera-orb': 1, 'dynamax-band': 1 };
+    const tera = setup([mon('venusaur', 50, 'p1', 'tackle')], [mon('snorlax', 90, 'e1', 'growl')], inventory);
+    resolveTurn(tera.ctx, { kind: 'move', index: 0, transform: { kind: 'tera' } });
+    expect(tera.battle.transform.teraTypes.p1).toBe('grass');
+    const max = setup([mon('venusaur', 50, 'p1', 'tackle')], [mon('snorlax', 90, 'e1', 'growl')], inventory);
+    resolveTurn(max.ctx, MEGA);
+    expect(() => resolveTurn(max.ctx, { kind: 'move', index: 0, transform: { kind: 'dynamax' } })).toThrow(/Mega Evolved Pokémon can't Dynamax/);
   });
 
   it('changes back after the battle, keeping HP within the original maximum', () => {
@@ -139,9 +148,8 @@ describe('Mega Evolution in battle', () => {
     battle.enemyIndex = 1;
     battle.transform.enemyMechanics = ['mega'];
     ctx.disabledMechanics = ['mega'];
-    expect(megaOptions(ctx)).toEqual([]);
-    expect(() => resolveTurn(ctx, MEGA)).toThrow(/switched off/);
     expect(transforms(resolveTurn(ctx, { kind: 'move', index: 0 }))).toEqual([]);
+    expect(p.speciesId).toBe('venusaur');
     expect(bossMechanics(content, 'champion', 1, ['mega'])).toEqual(['tera']);
     expect(bossMechanics(content, 'champion', 1, ['mega', 'tera'])).toEqual([]);
   });
@@ -293,17 +301,14 @@ describe('Terastallization', () => {
     expect(teraPower(battle, p, content.moves.get('tackle')!, 40)).toBe(40);
   });
 
-  it('can be used in the same battle as a Mega, but not on the same Pokémon', () => {
-    const a = mon('venusaur', 50, 'p1', 'tackle');
-    const b = mon('charizard', 50, 'p2', 'tackle');
-    const { battle, ctx } = setup([a, b], [mon('snorlax', 60, 'e1', 'splash')], { 'mega-ring': 1, venusaurite: 1, 'tera-orb': 1 });
-    resolveTurn(ctx, MEGA);
-    expect(teraOption(ctx)).toBeNull();
-    expect(() => resolveTurn(ctx, TERA)).toThrow(/already transformed/);
-    resolveTurn(ctx, { kind: 'switch', partyIndex: 1 });
+  it('works on a Mega Evolved Pokémon; then that Pokémon can use no Z-Move or Dynamax this battle', () => {
+    const a = mon('charizard', 50, 'p1', 'flamethrower');
+    const { battle, ctx } = setup([a], [mon('snorlax', 90, 'e1', 'growl')], { 'mega-ring': 1, 'charizardite-y': 1, 'tera-orb': 1, 'z-ring': 1, 'firium-z': 1 });
     resolveTurn(ctx, TERA);
-    expect(battle.transform.used.player).toEqual(['mega', 'tera']);
-    expect(battleTypes(content, battle, b)).toEqual(['fire']);
+    expect(a.speciesId).toBe('charizard-mega-y');
+    expect(battleTypes(content, battle, a)).toEqual(['fire']);
+    expect(zMoveOptions(ctx)).toEqual([null]);
+    expect(() => resolveTurn(ctx, { kind: 'move', index: 0, transform: { kind: 'zmove' } })).toThrow(/already transformed/);
   });
 
   it('a boss ace with no Mega form Terastallizes into the boss speciality', () => {
@@ -583,14 +588,20 @@ describe('Dynamax in battle', () => {
     expect(() => resolveTurn(ctx, MAX)).toThrow(/already Dynamaxed|already transformed/);
   });
 
-  it('Gigantamaxes a Pokémon with a G-Max form, whose type moves become its G-Max Move', () => {
+  it('with the Dynamax Band, a Pokémon with a G-Max form takes it in every battle; Dynamaxed, its type moves become its G-Max Move', () => {
     const p = mon('charizard', 50, 'p1', 'flamethrower');
-    const { ctx } = setup([p], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    const { ctx, battle } = setup([p], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    expect(permanentForm(content, BAND, p)).toEqual({ kind: 'gigantamax', option: { formId: 'charizard-gmax', itemId: null } });
+    const plain = resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(transforms(plain)).toEqual([{ type: 'transform', side: 'player', uid: 'p1', kind: 'gigantamax', from: 'charizard', to: 'charizard-gmax', itemId: null }]);
+    expect(movesUsed(plain, 'player')).toEqual(['flamethrower']);
     const events = resolveTurn(ctx, MAX);
-    expect(transforms(events)[0]).toMatchObject({ kind: 'gigantamax', from: 'charizard', to: 'charizard-gmax' });
     expect(movesUsed(events, 'player')).toEqual(['g-max-wildfire']);
     resolveTurn(ctx, { kind: 'move', index: 0 });
     resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(p.dynamaxed).toBeUndefined();
+    expect(p.speciesId).toBe('charizard-gmax');
+    revertTransformations(content, battle, [p]);
     expect(p.speciesId).toBe('charizard');
   });
 

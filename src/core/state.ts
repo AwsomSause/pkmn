@@ -132,17 +132,19 @@ export const BattleTransformSchema = z.object({
   /** The mechanics each side has already used this battle (each works once per battle). */
   used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
   /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
-  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'zmove', 'dynamax']), from: z.string() })),
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
   teraTypes: z.record(z.string(), TypeNameSchema).default({}),
   /** uid -> turns left for a Dynamaxed Pokémon. */
   dynamax: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** uid -> the once-per-battle mechanic it used (Tera, Z-Move or Dynamax; one per Pokémon). */
+  mechanics: z.record(z.string(), z.enum(['tera', 'zmove', 'dynamax'])).default({}),
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {} });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
