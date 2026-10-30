@@ -548,6 +548,10 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       if (starter) emit(content, run, 'starterChosen', { actors: [mon.uid], data: { speciesId: mon.speciesId }, text: 'Chosen as your starter' });
       else if (reunion?.kind === 'reunion') {
         advanceChains(content, run, 'reunion', mon.uid);
+        // It comes back remembered: the legacy titles it earned in the past run.
+        const remembered = run.reunion?.mon.titles ?? [];
+        const h = run.story.histories[mon.uid];
+        if (h) for (const t of remembered) if (!h.titles.includes(t)) h.titles.push(t);
         emit(content, run, 'joinedParty', {
           actors: [mon.uid],
           data: { speciesId: mon.speciesId, how: 'reunion', hallOfFame: reunion.hallOfFame },
