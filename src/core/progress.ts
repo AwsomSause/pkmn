@@ -205,6 +205,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
       moments: topMoments(run.story).map((m) => m.text),
+      journal: run.journal ?? [],
     },
     ...profile.runHistory,
   ].slice(0, content.balance.runHistorySize);

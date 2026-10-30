@@ -1416,5 +1416,60 @@
    "kind": "zCrystal",
    "type": "fairy"
   }
+ },
+ {
+  "id": "ability-urge",
+  "name": "Ability Urge",
+  "description": "Triggers the ability of your Pokémon in battle right now.",
+  "category": "charm",
+  "iconAssetId": "item.gen5/ability-urge",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "party",
+  "effect": {
+   "kind": "urge",
+   "what": "ability"
+  }
+ },
+ {
+  "id": "item-urge",
+  "name": "Item Urge",
+  "description": "Makes your Pokémon in battle use its held Berry or Herb right now.",
+  "category": "charm",
+  "iconAssetId": "item.gen5/item-urge",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "party",
+  "effect": {
+   "kind": "urge",
+   "what": "item"
+  }
+ },
+ {
+  "id": "reset-urge",
+  "name": "Reset Urge",
+  "description": "Resets all stat changes of your Pokémon in battle.",
+  "category": "charm",
+  "iconAssetId": "item.gen5/reset-urge",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "party",
+  "effect": {
+   "kind": "urge",
+   "what": "reset"
+  }
+ },
+ {
+  "id": "item-drop",
+  "name": "Item Drop",
+  "description": "Makes the opposing Pokémon drop its held item.",
+  "category": "charm",
+  "iconAssetId": "item.gen5/item-drop",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "itemDrop"
+  }
  }
 ]

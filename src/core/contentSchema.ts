@@ -960,6 +960,10 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
   /** A Z-Crystal: with the Z-Ring, turns one move of its type into that type's Z-Move once per battle. */
   z.object({ kind: z.literal('zCrystal'), type: TypeNameSchema }),
+  /** Battle-only "urge" items on the Pokémon in battle: trigger its ability now, use its held Berry or Herb now, or reset its stat changes. */
+  z.object({ kind: z.literal('urge'), what: z.enum(['ability', 'item', 'reset']) }),
+  /** Makes the opposing Pokémon drop its held item for the rest of the battle (Item Drop). */
+  z.object({ kind: z.literal('itemDrop') }),
 ]);
 export type ItemEffect = z.infer<typeof ItemEffectSchema>;
 
@@ -1258,6 +1262,23 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   /** Tidal Bell, Clear Bell: this legendary is chosen whenever an event could offer it. */
   z.object({ perk: z.literal('favorSpecies'), species: z.string() }),
   /** Pal Pad: the first Pokémon caught each stage joins with this many extra levels. */
+  /** X-Transceiver: once per stage, from the Items menu, call home and heal the whole team by a share. */
+  z.object({ perk: z.literal('transceiver'), heal: z.number().positive().max(1) }),
+  /** Wailmer Pail, Sprayduck: once per stage, from the Items menu, tend a Pokémon (friendship) or cool one down (Peace). */
+  z.object({ perk: z.literal('pail'), friendship: z.number().int().positive() }),
+  z.object({ perk: z.literal('sprayduck'), peace: z.number().int().positive() }),
+  /** Squirtbottle: once per stage, from the Items menu, the lead gains extra EXP from the next battle. */
+  z.object({ perk: z.literal('squirt'), percent: z.number().positive() }),
+  /** VS Recorder: losing a trainer battle replays it from the start, once per run. */
+  z.object({ perk: z.literal('vsRecorder') }),
+  /** GB Sounds: the battle music plays in the Game Boy style. */
+  z.object({ perk: z.literal('gbSounds') }),
+  /** Journal: the run's full map is recorded with the run history. */
+  z.object({ perk: z.literal('journal') }),
+  /** Seal Case: catching a Pokémon shows a special effect and gives Luck. */
+  z.object({ perk: z.literal('sealCase'), luck: z.number().int().positive() }),
+  /** Seal Bag: items sell for their full shop price instead of half. */
+  z.object({ perk: z.literal('fullSell') }),
   z.object({ perk: z.literal('palPad'), levels: z.number().int().positive() }),
   /** Prop Case: Contest stops give double Charisma. */
   z.object({ perk: z.literal('doubleContest') }),
@@ -1321,11 +1342,15 @@ export const CatalogEffectSchema = z.discriminatedUnion('kind', [
   /** A run-long perk (Amulet Coin, Exp. Share...). `percent` is per copy. */
   z.object({
     kind: z.literal('passive'),
-    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp']),
+    passive: z.enum(['money', 'trainerMoney', 'expShare', 'gymInterest', 'newSpeciesLove', 'stageCharisma', 'catchUpExp', 'berrySave', 'berryHeal', 'berryPinch', 'berryMoney', 'berryPeace', 'feedFriendship', 'feedCharisma', 'berryPots', 'berryPotsExtra', 'apricornBox']),
     percent: z.number().positive(),
   }),
   /** The fossil's Pokémon joins the party (or is released, like a catch). */
   z.object({ kind: z.literal('fossil'), species: z.string() }),
+  /** Mystery Egg: hatches after this many stages into a random first-stage Pokémon (shiny chance times `shiny`). */
+  z.object({ kind: z.literal('egg'), stages: z.number().int().positive(), shiny: z.number().positive() }),
+  /** Goes into the Bag (items.json `item`) to be used in battle or from the map. */
+  z.object({ kind: z.literal('bagItem'), item: z.string(), count: z.number().int().positive().default(1) }),
   /** Teach a move of one type the Pokémon can learn: TM = pick 1 of 3 random ones, HM = pick any. */
   z.object({ kind: z.literal('teachMove'), type: TypeNameSchema, mode: z.enum(['tm', 'hm']) }),
   /** A held item: copies go on the chosen Pokémon (or on every team member for team items like the Plates). */
