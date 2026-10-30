@@ -446,6 +446,7 @@ export class HubScene extends Phaser.Scene {
         const t = researchTotals(session.content, p);
         y = this.line(y, `Met ${t.met} · Caught ${t.caught} of ${t.total}`, 16);
         y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
+        y = this.line(y, `Shinies found ${t.shinies} · ${t.shinySpecies} species`, 16, COLORS.textMuted);
         for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
         break;
       }

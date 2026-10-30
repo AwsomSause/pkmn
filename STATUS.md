@@ -8,7 +8,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 ## Done
 - Quality items (Electric plan §4, §7, §9): `npm run report:dashboard` writes `docs/quality/dashboard.html` (counts, offending ids, vs baseline, mechanics) and `CONTENT_REPORT.md`; new `mechanic` kind (`src/quality/mechanics.json`, 42 entries, each with its code and unit tests, check `mechanics-without-proof`); `tests/e2e/viewports.spec.ts` (4 window sizes, no console errors); SYSTEMS_AUDIT, FEATURE_INTERACTION_MATRIX, QUALITY_GATES refreshed. GitHub Actions has still never run (Kice must switch it on).
 - Major rebalance (Kice, PokeRogue-style flow): enemy level curve linear (`difficulty.curve` 1), `xpScale` 2.2, `benchXpPercent` 50 (benched mons always get it), gym/E4/champion bonuses +1/+1/+2, 4-fight gentle opening, `levelBst` (enemy BST ceiling by level, used for wild and trainer picks), boss teams rebuilt (`npm run data:bosses`). Softlocks: attack-less species get Tackle, Normal-only early movesets get an off-type attack, `tests/unit/softlocks.test.ts` scans every species. Smart bot: 9 → 30 fights survived on average (16 seeds, `node tools/sweep-balance.ts`). Charts: Artifact "Pocket Raiders Progression". Known limit: the bot still loses to gym leaders 1-2 on bad type matchups; humans do better.
-- Rebalance 2 (Kice): party level caps per stage (`stageLevelCap`: that stage's last enemy level + `stageCapMargin` 4, region cap still applies; stage 1 = L13, stage 5 = L34), a scripted first rival on stage 2 (first ordinary trainer, one level-5 starter-line Pokémon, `balance.rival`, `core/firstRival.ts`, trainer class `rival`), the Exp. Share and bench EXP only after that fight (fallback: switches on a stage later), `xpScale` 2.0. Boss teams respect the BST limit. Smart bot: 23 fights on average (30 before these changes; the delayed Exp. Share costs most). The rival's "level 5" is `balance.rival.level`, one number to change. Not done: showing the cap on the map/party screens.
+- Rebalance 2 (Kice): party level caps per stage (`stageLevelCap`: that stage's last enemy level + `stageCapMargin` 4, region cap still applies; stage 1 = L13, stage 5 = L34), a scripted first rival on stage 2 (first ordinary trainer, one level-5 starter-line Pokémon, `balance.rival`, `core/firstRival.ts`, trainer class `rival`), the Exp. Share and bench EXP only after that fight (fallback: switches on a stage later), `xpScale` 2.0. Boss teams respect the BST limit. Smart bot: 23 fights on average (30 before these changes; the delayed Exp. Share costs most). The rival's "level 5" is `balance.rival.level`, one number to change. The cap shows on the map header and the party menu title.
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
 - M7 attributes and luck; M8 custom forms (255 Delta, Z-Forms, Spooky); M8.6 audit + content/balance reports + `report:check` gate.
 - M8.5 Mega, Primal, Tera, Z-Moves, Dynamax/G-Max (PokeRogue-style limits).
@@ -63,7 +63,12 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 2: party role labels on the Bond screen (`core/partyRoles.ts`), battle log on H in battle, reward cards show why they fit (`core/rewardSynergy.ts`).
 - Catalog slice 3: Hub > Unlocks > Research Room (`core/collection.ts`): 9 generation sets plus Delta, Z, Spooky, Regional and Mega form sets; milestones at 25/50/75/100% pay 5/10/15/30 Research Points once via the claim ledger.
 - Catalog slice 4: wild Pokémon first impressions (7 behaviours, `core/wildBehavior.ts`, narrative only, own hashed seed), territorial warning, two rescue events and a 3-link chain via `eventSeen` (`tools/events/wild.ts`, 353 events).
+- Delta, Z and Spooky forms now also come from the Nursery (Delta/Z-Form/Spooky Egg, 1200) and the Trade Post, once the run has won that family's route battle (`openFormFamilies`).
+- Delta, Z and Spooky forms now have routes of their own beyond their sets: Delta Research (3 clues, Delta Study), Z-Form Trial (2 sigils, trial battle) and Haunted Detour (2 lights, battle). Each battle fires once per run and uses the `flag` clue system (`FORM_FAMILY_ROUTE_EVENTS`). Eggs and trades still do not hand them out.
+- Boss Remix now rebuilds teams: one member is swapped for a Pokémon from the same boss's other teams (own moves kept), then the order turns so lead and ace change. Levels stay on the normal curve (`remixedMembers`).
+- Research Room shows lifetime shinies found and distinct shiny species (`profile.speciesShiny`, defaulted so old saves load; `countShiny` in progress.ts).
 - Catalog slice 5a: Quick Route (shorter practice campaign), Solo Run (party of 1) and Contract: No Evolution (`noEvolution` in `rules.ts`) on the Preparation Desk.
+- Quick Route is now a real mode (`modes.quick-route`): its own short campaign, counts for account progress, rewards scaled x0.6 (`rewardScale`). The old modifier is retired so older saves still load.
 - Catalog slice 6b: Shadow Pokémon arc as a 4-link event chain (sighting, sanctuary, stabilize, purified; `tools/events/wild.ts`, 378 events).
 - Catalog slice 6c: Boss Remix contract on the Preparation Desk (`bossRemix` in `rules.ts`, `remixMembers` in `encounters.ts`; map previews match the fight).
 - Catalog slice 6d: debug Story Log header with seed, rule version, claims and event counts (`debug/debugPanel.ts`).
@@ -75,6 +80,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6j: start-up load budget (`npm run report:perf`, in `npm run check`).
 - Catalog slice 6k: Move Mastery (`core/moveMastery.ts`, `profile.moveUses`; no save version bump, the field is optional).
 - Catalog slice 6l: Research notes in the Research Room (`core/researchNotes.ts`, 15 Research Points each, information only).
+- Catalog slice 6m: run-end stamps on the game-over screen (`runStamps`, cosmetic).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
@@ -87,7 +93,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).
 - M8.5: regional forms as a mechanic (if still wanted).
-- M9: Grand Region, final boss, ending, deploy.
+- M9: Grand Region, final boss, deploy. Ending credits built (`core/credits.ts`, `CreditsScene`, "Roll the credits" on the victory screen); no Grand Region decision needed.
 - M10 visuals (guide 9, Visual Bible V1–V5): next slices = event choice frames, league/run-end, level-up/evolution, perf pass.
 
 ## Biggest known gaps

@@ -34,6 +34,21 @@ describe('collection sets (catalog #105, #112)', () => {
     expect(p.titles.filter((t) => t === `Complete: ${set.name}`)).toHaveLength(1);
   });
   it('totals start at zero', () => {
-    expect(researchTotals(content, createProfile(content, 'p'))).toMatchObject({ met: 0, caught: 0, evolved: 0 });
+    expect(researchTotals(content, createProfile(content, 'p'))).toMatchObject({ met: 0, caught: 0, evolved: 0, shinies: 0, shinySpecies: 0 });
+  });
+});
+
+describe('Research Room shiny count', () => {
+  it('records shiny species in the run and adds them to the profile once', async () => {
+    const { chooseStarter, createRun } = await import('../../src/core/run');
+    const { countShiny } = await import('../../src/core/progress');
+    const { finalizeRun } = await import('../../src/core/profile');
+    const run = chooseStarter(content, createRun(content, { runId: 'sr', seed: 'sr', archetypeId: 'red' }), 0);
+    countShiny(run, 'pidgey');
+    countShiny(run, 'pidgey');
+    expect(run.log.counters.shiniesFound).toBe(2);
+    const out = finalizeRun(content, createProfile(content, 'p'), { ...run, phase: 'over' as const });
+    expect(out.profile.speciesShiny).toEqual(['pidgey']);
+    expect(researchTotals(content, out.profile)).toMatchObject({ shinies: 2, shinySpecies: 1 });
   });
 });

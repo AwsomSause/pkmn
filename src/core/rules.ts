@@ -65,7 +65,7 @@ export const RunRulesDataSchema = z.object({
     once: z.object({ pool: z.string().optional(), trainer: z.string().optional(), title: z.string().optional(), bankCredits: z.number().int().optional(), text: z.string() }),
     repeat: z.object({ bankCredits: z.number().int().optional(), candies: z.number().int().optional(), text: z.string() }),
   })),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), spookyChance: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 
@@ -111,7 +111,8 @@ export function rewardMultiplier(choice: RulesChoice): number {
   const difficulty = getDifficulty(choice.difficultyId)?.multiplier ?? 1;
   const bonus = choice.modifierIds.reduce((sum, id) => sum + (getModifier(id)?.bonus ?? 0), 0);
   const capped = Math.min(RUN_RULES.multiplierCap, difficulty * (1 + bonus));
-  const total = choice.deathBlock ? capped * RUN_RULES.deathBlock.multiplier : capped;
+  const scaled = capped * (mode.rewardScale ?? 1);
+  const total = choice.deathBlock ? scaled * RUN_RULES.deathBlock.multiplier : scaled;
   return Math.round(total * 100) / 100;
 }
 
@@ -196,7 +197,11 @@ export const wantsRandomDraft = (rules: Pick<RunRules, 'modifierIds'>): boolean 
 export const wantsGenerationLock = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.lockGeneration);
 export const wantsTypeLock = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.lockType);
 /** A modifier's own campaign (Boss Rush), or null. */
-export const rulesCampaign = (choice: Pick<RulesChoice, 'modifierIds'>): string | null => choice.modifierIds.map((id) => getModifier(id)?.campaignId).find(Boolean) ?? null;
+/** The campaign a mode or modifier forces (Quick Route), or null. */
+export const rulesCampaign = (choice: Pick<RulesChoice, 'modifierIds'> & { modeId?: string }): string | null => (choice.modeId ? getMode(choice.modeId)?.campaignId : undefined) ?? choice.modifierIds.map((id) => getModifier(id)?.campaignId).find(Boolean) ?? null;
+
+/** True when a run on this campaign still counts for the account: normal campaigns, or the campaign a mode brings. */
+export const campaignCounts = (campaign: { id: string; countsForProgress: boolean }, modeId: string): boolean => campaign.countsForProgress || getMode(modeId)?.campaignId === campaign.id;
 
 /** How many Pokémon the party may hold. */
 export function partyCap(content: Content, rules: Pick<RunRules, 'modifierIds'>): number {

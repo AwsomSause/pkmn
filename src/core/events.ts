@@ -27,7 +27,7 @@ import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { addLevels, calcStats, maxHp } from './pokemon';
-import { count, discover } from './progress';
+import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
 import { getCampaign, runLevelCap } from './regions';
@@ -570,7 +570,7 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       const level = Math.max(1, eventLevel(content, run, node, rng) + e.levelBonus);
       const mon = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'p');
       mon.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * e.shinyMultiplier);
-      if (mon.shiny) count(run, 'shiniesFound');
+      if (mon.shiny) countShiny(run, mon.speciesId);
       discover(run, mon.speciesId, true);
       count(run, 'pokemonCaught');
       run.pending.push({ kind: 'caught', mon });
@@ -701,7 +701,7 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     const level = Math.min(cap, Math.max(1, base));
     const enemy = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     enemy.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * b.shinyMultiplier);
-    if (enemy.shiny) count(run, 'shiniesFound');
+    if (enemy.shiny) countShiny(run, enemy.speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;

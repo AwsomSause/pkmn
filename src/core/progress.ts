@@ -15,7 +15,7 @@ import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
 import { noteJournal } from './run';
-import { researchScale, scaleReward } from './rules';
+import { campaignCounts, researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, LeafRequirement, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
@@ -30,6 +30,13 @@ import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuest
 export function count(run: RunState, counter: string, amount = 1): void {
   if (amount <= 0) return;
   run.log.counters[counter] = (run.log.counters[counter] ?? 0) + amount;
+}
+
+/** Counts a shiny found and remembers its species for the Research Room (mutates `run`). */
+export function countShiny(run: RunState, speciesId: string): void {
+  count(run, 'shiniesFound');
+  const list = (run.log.speciesShiny ??= []);
+  if (!list.includes(speciesId)) list.push(speciesId);
 }
 
 /** Remembers species met or caught this run (mutates `run`). */
@@ -233,7 +240,7 @@ function finalJournal(content: Content, run: RunState): string[] {
 
 export function applyRunToProfile(content: Content, profile: Profile, run: RunState, now: string): RunEndSummary {
   // Adventure earns nothing for the account; test campaigns count nothing either.
-  const counts = getCampaign(content, run.campaignId).countsForProgress && run.rules.progressionEligible;
+  const counts = campaignCounts(getCampaign(content, run.campaignId), run.rules.modeId) && run.rules.progressionEligible;
   const readyBefore = new Set(trainersReadyToClaim(content, profile).map((a) => a.id));
   const research = content.balance.research;
   const attributesBefore = readAttributes(content, profile.attributes);
@@ -257,6 +264,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     newSpeciesCaught = run.log.speciesCaught.filter((id) => !profile.speciesCaught.includes(id));
     profile.speciesSeen.push(...newSpeciesSeen);
     profile.speciesCaught.push(...newSpeciesCaught);
+    for (const id of run.log.speciesShiny ?? []) if (!(profile.speciesShiny ??= []).includes(id)) profile.speciesShiny.push(id);
     researchPoints = Math.round(
       (research.perSpeciesSeen * newSpeciesSeen.length +
         research.perSpeciesCaught * newSpeciesCaught.length +

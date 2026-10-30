@@ -918,6 +918,8 @@ export const RunStateSchema = z.object({
     /** Species met and caught this run, for the profile's discoveries. */
     speciesSeen: z.array(z.string()),
     speciesCaught: z.array(z.string()),
+    /** Species whose shiny turned up this run. */
+    speciesShiny: z.array(z.string()).default([]),
     /** True once the Last Stand Charm has saved the run in the current region. */
     charmUsedInRegion: z.boolean(),
     /** What ended the run, when it was lost. */
@@ -1034,6 +1036,8 @@ export const ProfileSchema = z.object({
   best: z.record(z.string(), z.number().int().min(0)),
   speciesSeen: z.array(z.string()),
   speciesCaught: z.array(z.string()),
+  /** Species a shiny has been found for (Research Room). */
+  speciesShiny: z.array(z.string()).default([]),
   /** Earned achievements: id → when. */
   achievements: z.record(z.string(), z.object({ earnedAt: z.string() })),
   /** Titles earned from achievements, and the one on show. */

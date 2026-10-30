@@ -9,7 +9,7 @@ import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
 import { buildRecap } from '../core/recap';
 import { encodeSeedCode } from '../core/seedCode';
-import { getMode } from '../core/rules';
+import { campaignCounts, getMode } from '../core/rules';
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
@@ -33,7 +33,7 @@ export class GameOverScene extends Phaser.Scene {
     drawPanel(this, 24, 72, 440, 286);
     drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     const recap = run ? buildRecap(session.content, run) : null;
-    const recapLines = recap ? [recap.ending, ...(recap.legend ? [`Legend: ${recap.legend}`] : []), ...recap.rivals.slice(0, 1), ...(recap.tip ? [recap.tip] : [])] : [];
+    const recapLines = recap ? [recap.ending, ...(recap.legend ? [`Legend: ${recap.legend}`] : []), ...(recap.stamps.length ? [`Stamps: ${recap.stamps.join(' · ')}`] : []), ...recap.rivals.slice(0, 1), ...(recap.tip ? [recap.tip] : [])] : [];
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];
@@ -95,7 +95,7 @@ export class GameOverScene extends Phaser.Scene {
       const ups = summary.masteryUps ?? [];
       if (ups.length > 0) lines.push(`Mastery: ${ups.slice(0, 6).map((u) => `${session.content.species.get(u.speciesId)?.name ?? u.speciesId} ${RANK_NAMES[u.rank]}`).join(', ')}${ups.length > 6 ? ` and ${ups.length - 6} more` : ''}`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);
-      if (run && !session.content.campaigns.get(run.campaignId)?.countsForProgress) lines.push('', 'Test campaign: achievements and unlocks were not counted.');
+      if (run && !campaignCounts(session.content.campaigns.get(run.campaignId)!, run.rules.modeId)) lines.push('', 'Test campaign: achievements and unlocks were not counted.');
       if (run && !run.rules.progressionEligible) lines.push('', 'Adventure run: no Bank Credits, Research Points, candies, unlocks or achievements were earned.');
     } else {
       lines.push('This run was already added to your profile.');
@@ -104,11 +104,15 @@ export class GameOverScene extends Phaser.Scene {
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,
       y: 486,
-      options: [{ label: 'Back to the Hub' }, ...(run ? [{ label: 'Retry this seed' }] : [])],
+      options: [{ label: 'Back to the Hub' }, ...(run ? [{ label: 'Retry this seed' }] : []), ...(won ? [{ label: 'Roll the credits' }] : [])],
       itemHeight: 25,
       fontSize: 22,
       color: COLORS.textLight,
       onSelect: (i) => {
+        if (won && i === (run ? 2 : 1)) {
+          this.scene.start('Credits');
+          return;
+        }
         if (i === 1 && run) {
           // Same seed, trainer, preparation and rules. Daily seeds pay their account rewards once, so a retry pays nothing.
           const { note: _note, ...prep } = run.prep;

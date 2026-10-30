@@ -11,6 +11,7 @@ import { BriefingScene } from './scenes/BriefingScene';
 import { ExpeditionScene } from './scenes/ExpeditionScene';
 import { MinigameScene } from './scenes/MinigameScene';
 import { DecisionScene } from './scenes/DecisionScene';
+import { CreditsScene } from './scenes/CreditsScene';
 import { GameOverScene } from './scenes/GameOverScene';
 import { HallOfFameScene } from './scenes/HallOfFameScene';
 import { HubScene } from './scenes/HubScene';
@@ -71,7 +72,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, HallOfFameScene],
+    scene: [BootScene, MainMenuScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {

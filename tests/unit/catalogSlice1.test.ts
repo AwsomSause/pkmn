@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { applyProfile, nextProfile, PROFILE_ORDER } from '../../src/core/accessibility';
 import { buildRecap } from '../../src/core/recap';
 import { decodeSeedCode, encodeSeedCode } from '../../src/core/seedCode';
-import { createRun } from '../../src/core/run';
+import { chooseStarter, createRun } from '../../src/core/run';
+import { STANDARD_CHOICE } from '../../src/core/rules';
 import { CURRENT_VERSIONS, DEFAULT_SETTINGS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { eventText } from '../../src/ui/battleText';
@@ -66,5 +67,18 @@ describe('damage details', () => {
     const names = { player: 'A', enemy: 'B', trainer: null, nameOf: () => 'A' };
     expect(eventText(content, names, e)).not.toContain('30 damage');
     expect(eventText(content, names, e, true)).toContain('30 damage, ×2');
+  });
+});
+
+describe('Run-end stamps (#111)', () => {
+  it('earns stamps from the run and only cosmetically', async () => {
+    const { runStamps } = await import('../../src/core/recap');
+    const run = chooseStarter(content, createRun(content, { runId: 'st', seed: 'st', archetypeId: 'red', rules: STANDARD_CHOICE }), 0);
+    expect(runStamps(run)).toEqual([]);
+    run.victory = true;
+    expect(runStamps(run)).toContain('Victory');
+    expect(runStamps(run)).toContain('Untouched');
+    Object.values(run.story.histories)[0]!.knockoutsTaken = 1;
+    expect(runStamps(run)).not.toContain('Untouched');
   });
 });

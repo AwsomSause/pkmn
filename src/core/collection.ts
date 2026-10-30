@@ -53,6 +53,9 @@ export interface ResearchTotals {
   met: number;
   caught: number;
   evolved: number;
+  /** Shinies found in all runs, and how many different species they were. */
+  shinies: number;
+  shinySpecies: number;
   total: number;
 }
 
@@ -61,6 +64,8 @@ export function researchTotals(content: Content, profile: Profile): ResearchTota
     met: new Set([...profile.speciesSeen, ...profile.speciesCaught]).size,
     caught: new Set(profile.speciesCaught).size,
     evolved: Object.values(profile.mastery ?? {}).filter((m) => m.evolved > 0).length,
+    shinies: profile.counters.shiniesFound ?? 0,
+    shinySpecies: new Set(profile.speciesShiny ?? []).size,
     total: content.species.size,
   };
 }
