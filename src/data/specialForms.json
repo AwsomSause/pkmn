@@ -1,0 +1,21 @@
+{
+ "note": "Untitled doc §8: special forms are event-only discoveries. A species is a special form when it has one of these tags or is a regional form. They never appear in ordinary wild pools, generic trainer teams or starter pools; an event, trade, egg, research quest, boss reward, secret route or earned starter set must hand them out. `ordinary` lists forms that are a core species identity and stay in normal pools.",
+ "families": {
+  "delta": { "name": "Delta forms", "tag": "delta", "routes": ["runEvent", "gameEvent", "researchQuest", "starterSet"] },
+  "zform": { "name": "Z-Forms", "tag": "zform", "routes": ["runEvent", "gameEvent", "bossReward", "starterSet"] },
+  "spooky": { "name": "Spooky forms", "tag": "spooky", "routes": ["gameEvent", "spookyMode", "starterSet"] },
+  "regional": { "name": "Regional forms", "formKind": "regional", "routes": ["runEvent", "gameEvent", "npcTrade", "secretRoute", "starterSet"] }
+ },
+ "routes": {
+  "runEvent": { "status": "supported", "note": "A rare event stop inside a run (events.json)." },
+  "gameEvent": { "status": "planned", "note": "Daily, weekly, seasonal and holiday events (Phase F)." },
+  "npcTrade": { "status": "planned", "note": "Trade Post service (Phase D2)." },
+  "egg": { "status": "planned", "note": "Egg Lab (Phase D2)." },
+  "researchQuest": { "status": "planned", "note": "Clue chains (Phase F)." },
+  "bossReward": { "status": "limited", "note": "Raid and Totem rewards that offer a catch." },
+  "secretRoute": { "status": "planned", "note": "Map detours (Phase D2)." },
+  "starterSet": { "status": "limited", "note": "Special-Form Sets in the Starter Laboratory, once the form is earned." },
+  "spookyMode": { "status": "supported", "note": "Spooky Mode wild encounters." }
+ },
+ "ordinary": []
+}

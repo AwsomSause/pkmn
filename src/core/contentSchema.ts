@@ -7,6 +7,7 @@ import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
 import type { ExpeditionFile } from './expedition/schema';
+import type { MinigameFile } from './minigame/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -497,6 +498,8 @@ export const BASE_COUNTER_NAMES = [
   'regionsClearedWithStarter',
   /** Stats your Pokémon raised on themselves with moves (Bulk Up, Nasty Plot...): one per stat raised. */
   'statsBoosted',
+  /** Run Quests finished (the trainer's goal offered on the briefing screen). */
+  'runQuestsDone',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -550,6 +553,51 @@ export const AchievementSchema = z.object({
   reward: UnlockRewardSchema,
 });
 export type Achievement = z.infer<typeof AchievementSchema>;
+
+/** What a trainer quest step pays out, once (its claim key is `quest:<trainer>:<step>`). */
+export const QuestRewardSchema = UnlockRewardSchema.extend({
+  /** A Starter Laboratory set unlocked for free. */
+  pool: z.string().optional(),
+  /** The last step of a special trainer's line unlocks their Trainer Evolution. */
+  evolution: z.boolean().default(false),
+});
+export type QuestReward = z.infer<typeof QuestRewardSchema>;
+
+/**
+ * One step of a trainer's quest line. Counters ("total", "best") count only
+ * runs played as that trainer; steps are done in order, across runs.
+ */
+export const QuestStepSchema = z.object({
+  /** What to do, in a few words. */
+  goal: z.string().min(1),
+  /** A line of story shown when the step is done. */
+  story: z.string().min(1),
+  requirement: RequirementSchema,
+  reward: QuestRewardSchema,
+});
+export type QuestStep = z.infer<typeof QuestStepSchema>;
+
+export const QuestLineSchema = z.object({
+  trainerId: z.string(),
+  name: z.string().min(1),
+  steps: z.array(QuestStepSchema).length(5),
+});
+export type QuestLine = z.infer<typeof QuestLineSchema>;
+
+/** A goal for one run, offered on the briefing screen; done when the run's counter reaches `atLeast`. */
+export const RunQuestSchema = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
+  counter: CounterNameSchema,
+  atLeast: z.number().int().positive(),
+  researchPoints: z.number().int().min(0),
+});
+export type RunQuest = z.infer<typeof RunQuestSchema>;
+
+export const TrainerQuestsFileSchema = z.object({
+  lines: z.array(QuestLineSchema),
+  runQuests: z.array(RunQuestSchema).min(1),
+});
 
 export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('xpMultiplier'), value: z.number().positive() }),
@@ -628,6 +676,40 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('startingAttribute'), key: z.string(), value: z.number().int() }),
   /** At most this many Pokémon can be released per run. */
   z.object({ kind: z.literal('releaseLimit'), value: z.number().int().min(0) }),
+  /** Room in the PC for spare Pokémon (deposit and withdraw on the map between battles). */
+  z.object({ kind: z.literal('boxCapacity'), slots: z.number().int().positive() }),
+  /** The party holds this many fewer (negative) or more Pokémon. */
+  z.object({ kind: z.literal('partySizeOffset'), value: z.number().int() }),
+  /** How many different items one Pokémon can hold changes by this much. */
+  z.object({ kind: z.literal('itemSlotOffset'), value: z.number().int() }),
+  /** Newly caught Pokémon start this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('catchLevelOffset'), value: z.number().int() }),
+  /** Wild species of a type turn up less (or more) often. */
+  z.object({ kind: z.literal('typeEncounterWeight'), type: TypeNameSchema, value: z.number().positive() }),
+  /** Burn damage on foes you burn. */
+  z.object({ kind: z.literal('burnDamageMultiplier'), value: z.number().positive() }),
+  /** A stat bonus that only applies in a situation: while burned, or for Pokémon from a three-stage evolution line. */
+  z.object({ kind: z.literal('conditionalStatMultiplier'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), when: z.enum(['burned', 'threeStageLine']), value: z.number().positive() }),
+  /** Moves of a type cost extra PP. */
+  z.object({ kind: z.literal('ppCostExtra'), type: TypeNameSchema, extra: z.number().int().positive() }),
+  /** Rivals always carry a Pokémon of this type. */
+  z.object({ kind: z.literal('rivalTeamType'), type: TypeNameSchema }),
+  /** Rivals counter this many more of your Pokémon on a return. */
+  z.object({ kind: z.literal('rivalCounterBonus'), count: z.number().int().positive() }),
+  /** Chance of the opposing side's Hyper moments (rival Hyper/Overdrive events). */
+  z.object({ kind: z.literal('enemyHyperChanceMultiplier'), value: z.number().positive() }),
+  /** The Pokémon that fought first in a battle deals more damage, every later one less. */
+  z.object({ kind: z.literal('battleOrderDamage'), first: z.number().positive(), later: z.number().positive() }),
+  /** Pokémon of a type recover this share of max HP each turn in a weather. */
+  z.object({ kind: z.literal('weatherHeal'), type: TypeNameSchema, weather: z.enum(['rain', 'sun']), percent: z.number().positive() }),
+  /** Damage dealt by your starter (starter: true) or by everyone else (false). */
+  z.object({ kind: z.literal('starterDamageMultiplier'), starter: z.boolean(), value: z.number().positive() }),
+  /** Damage your Pokémon deal to foes of a type (a signature choice, e.g. Rival's Answer). */
+  z.object({ kind: z.literal('damageVsTypeMultiplier'), foeType: TypeNameSchema, value: z.number().positive() }),
+  /** Wild species whose highest base stat is `stat` turn up more or less often. */
+  z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
+  /** Mega Evolved Pokémon of yours take more damage. */
+  z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -662,6 +744,8 @@ export const ArchetypeSchema = z.object({
   signaturePool: z.string().nullable().default(null),
   /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
   eventTags: z.array(z.string()).default([]),
+  /** The trainer's signature mechanic (core/signature.ts), if any. */
+  signatureMechanic: z.string().nullable().default(null),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
@@ -695,7 +779,9 @@ export const StarterPoolSchema = z.object({
   license: z.string().nullable().default(null),
   /** Research Points to unlock the pool. */
   researchCost: z.number().int().min(0).default(0),
-}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined, { message: 'a starter pool needs species, bosses or a filter' });
+  /** The "Mastered" set: its species are the ones you raised to Silver mastery or better (core/mastery.ts). */
+  mastered: z.boolean().default(false),
+}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
@@ -1407,6 +1493,16 @@ export const BalanceSchema = z.object({
   vitaminMaxStacks: z.number().int().positive(),
   /** Abilities (M8.75 part C3): the chance a new Pokémon has its hidden ability instead of a normal one. */
   abilities: z.object({ hiddenChance: z.number().min(0).max(1) }),
+  /**
+   * Species Mastery (core/mastery.ts): battles needed for Bronze, Silver (when it can't evolve) and Gold,
+   * and the Research Points each rank pays once.
+   */
+  mastery: z.object({
+    bronzeBattles: z.number().int().min(1),
+    silverBattles: z.number().int().min(1),
+    goldBattles: z.number().int().min(1),
+    rankResearch: z.object({ bronze: z.number().int().min(0), silver: z.number().int().min(0), gold: z.number().int().min(0), master: z.number().int().min(0) }),
+  }),
   /** Battle transformations (M8.5): which bosses may use them. */
   transformations: z.object({
     /** Gym leaders use them from this gym of the run on (1 = the first gym). */
@@ -1591,6 +1687,10 @@ export const BalanceSchema = z.object({
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */
   legendaryMinRegion: z.number().int().min(0),
+  /** How many different items one Pokémon can hold (trainer perks change it). */
+  heldItemSlots: z.number().int().positive(),
+  /** Wild species with at least this base stat total count as rare (trainer perks make them turn up more or less). */
+  rareEncounterBst: z.number().int().positive(),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
@@ -1830,6 +1930,9 @@ export interface Content {
   typeChart: TypeChart;
   archetypes: Map<string, Archetype>;
   achievements: Map<string, Achievement>;
+  /** Trainer quest lines by trainer id, and Run Quests (trainerQuests.json, core/quests.ts). */
+  questLines: Map<string, QuestLine>;
+  runQuests: Map<string, RunQuest>;
   starterPools: Map<string, StarterPool>;
   draftRules: Map<string, DraftRule>;
   prepTokens: Map<string, PrepToken>;
@@ -1840,6 +1943,8 @@ export interface Content {
   catalog: Map<string, CatalogEntry>;
   /** Every move each species can learn by TM, tutor or egg, beyond its level-up moves (learnables.json). */
   learnables: Map<string, string[]>;
+  /** Each species' egg moves (learnables.json "egg"), for Species Mastery. */
+  eggMoves: Map<string, string[]>;
   trainers: Map<string, TrainerClass>;
   /** Every gym leader, Elite Four member and champion, with their teams. */
   bosses: Map<string, Boss>;
@@ -1860,6 +1965,8 @@ export interface Content {
   totems: TotemFile;
   /** Mega-Expeditions (expeditions.json, core/expedition). */
   expeditions: ExpeditionFile;
+  /** Minigames (minigames.json, core/minigame). */
+  minigames: MinigameFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

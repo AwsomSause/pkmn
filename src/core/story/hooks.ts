@@ -4,6 +4,7 @@
 // decided by the battle engine; this file only tells their story).
 
 import type { Side } from '../battle/engine';
+import { applyMastery } from '../mastery';
 import type { Content } from '../contentSchema';
 import { CHAMPION_CLASS, ELITE_FOUR_CLASS, GYM_LEADER_CLASS } from '../encounters';
 import { maxHp } from '../pokemon';
@@ -450,7 +451,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const rivalBack = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
-    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId) };
+    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
     if (result === 'win') {
       const before = rivalBack.state;
       const outcome = applyDefeat(rivalBack, sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) }));
@@ -475,7 +476,8 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       name: trainer.name,
       team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId),
       ended,
-      hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0,
+      // A gripping comeback (the Battle Drama Engine's Last-Second Resolve or Comeback Call) counts as a close fight.
+      hpLeftShare: Math.min(totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0, battle.drama.seen.some((id) => id === 'ev:comebackCall' || id === 'ev:lastSecondResolve') ? 0.1 : 1),
       turns: battle.turn - 1,
       flawless: run.party.every((m) => m.hp > 0),
       returning: Boolean(battle.returning),
@@ -535,6 +537,8 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       const caught = before.pending.some((d) => d.kind === 'caught' && d.mon.uid === mon.uid);
       const reunion = before.pending.find((d) => d.kind === 'reunion' && d.mon.uid === mon.uid);
       openHistory(content, run, mon.uid, mon.speciesId, starter ? 'starter' : caught ? 'caught' : 'gift');
+      // Species Mastery unlocks (egg moves, ability, an awakened move) for a Pokémon that just joined.
+      applyMastery(content, run, mon);
       if (starter) emit(content, run, 'starterChosen', { actors: [mon.uid], data: { speciesId: mon.speciesId }, text: 'Chosen as your starter' });
       else if (reunion?.kind === 'reunion') {
         advanceChains(content, run, 'reunion', mon.uid);

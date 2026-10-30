@@ -26,7 +26,7 @@ export const DramaDataSchema = z.object({
     budget: z.object({ ordinary: z.number().int().min(0), gym: z.number().int().min(0), rival: z.number().int().min(0), boss: z.number().int().min(0) }),
     minGapTurns: z.number().int().min(0),
     recentLines: z.number().int().min(1),
-    frequency: z.object({ off: z.number(), low: z.number(), normal: z.number(), high: z.number() }),
+    frequency: z.object({ normal: z.number(), high: z.number() }),
     declarationMoveBpMin: z.number().int().min(1),
     desperationHpShare: z.number().min(0).max(1),
   }),
@@ -51,6 +51,14 @@ export const DramaBattleSchema = z.object({
   /** Enemy Pokémon (uids) allowed to evolve in this battle, and those that already did. */
   evolvable: z.array(z.string()).default([]),
   evolved: z.array(z.string()).default([]),
+  /** Bond Engine, once per battle: Pokémon that refused a command, took initiative, practiced pairs that handed over, Pokémon that revealed a move. */
+  refused: z.array(z.string()).default([]),
+  initiated: z.array(z.string()).default([]),
+  combos: z.array(z.string()).default([]),
+  revealed: z.array(z.string()).default([]),
+  /** What each Pokémon felt this battle, and the emotions already turned into a turning point. */
+  feelings: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
+  turned: z.array(z.string()).default([]),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
 export const freshDrama = (): DramaBattle => DramaBattleSchema.parse({});
@@ -81,6 +89,11 @@ export const DramaEventDefSchema = z.object({
   classes: z.array(z.enum(['ordinary', 'gym', 'rival', 'boss'])).optional(),
   /** What a rival says about it the next time you meet. */
   remember: z.string().optional(),
+  /** Trait changes it makes to the rival (clamped 0–100) and the Chronicle line for them. */
+  /** Fair AI influence: added to how often the trainer picks its best move for the rest of the battle (uses only what it has seen). */
+  aiShift: z.number().min(-1).max(1).optional(),
+  traitShift: z.record(z.string(), z.number().int()).optional(),
+  shiftText: z.string().optional(),
 });
 export type DramaEventDef = z.infer<typeof DramaEventDefSchema>;
 

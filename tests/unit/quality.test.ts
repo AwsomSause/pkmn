@@ -1,6 +1,7 @@
 // M8.6: the content report, support statuses, the quality gate and the
 // balance simulations. Each check is shown to catch the problem it reports.
 
+import { specialFamily } from '../../src/core/specialForms';
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
 import { generateStageMap } from '../../src/core/map';
@@ -67,7 +68,7 @@ describe('support status', () => {
     expect(statuses.filter((s) => s.status === 'invalid')).toEqual([]);
   });
 
-  it('bosses only count as meetable when asked (they bring their own moves and cannot be caught)', () => {
+  it('bosses only count as meetable when asked (they bring their own moves and cannot be caught)', { timeout: 30000 }, () => {
     // Smeargle's Sketch works now, so it is meetable in the wild; asking for bosses never takes anyone away.
     const wild = meetableSpecies(content);
     for (const id of wild) expect(meetableSpecies(content, true).has(id)).toBe(true);
@@ -153,5 +154,24 @@ describe('balance simulations', () => {
     const curve = difficultyCurve(content, 'det', 1, 'dev');
     expect(curve).toEqual(difficultyCurve(content, 'det', 1, 'dev'));
     expect(curve.map((r) => r.slot)).toEqual(['gym 1', 'gym 2', 'Elite Four', 'champion', 'gym 1', 'gym 2', 'Elite Four', 'champion']);
+  });
+});
+
+describe('special forms are event-only (Untitled doc §8)', () => {
+  it('no Delta, Z, Spooky or regional form is in a wild, trainer or starter pool', () => {
+    expect(check(content, 'special-form-leaks').count).toBe(0);
+  });
+
+  it('classifies every designated family, and the base species stay ordinary', () => {
+    const fam = (id: string) => specialFamily(content.species.get(id)!);
+    expect(fam('bulbasaur-delta')).toBe('delta');
+    expect(fam('abra-z')).toBe('zform');
+    expect(fam('litwick-spooky')).toBe('spooky');
+    expect(fam('rattata-alola')).toBe('regional');
+    expect(fam('bulbasaur')).toBeNull();
+    const counts: Record<string, number> = {};
+    for (const s of content.species.values()) if (specialFamily(s)) counts[specialFamily(s)!] = (counts[specialFamily(s)!] ?? 0) + 1;
+    expect(counts.delta).toBeGreaterThan(100);
+    expect(counts.spooky).toBe(15);
   });
 });

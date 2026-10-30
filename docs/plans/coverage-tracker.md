@@ -29,12 +29,14 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 ## Other guides (see how-to-execute-guides.md for the order)
 | Guide | Status |
 |---|---|
-| Untitled document phases A, B | DONE (except new NPC classes); C–G TODO (C overlaps the planning thread) |
+| Untitled document phases A, B | DONE (except new NPC classes) |
+| Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), all 12 modifiers run, one per kind (e.g. one party rule at a time): No Transformations, Scarce Supplies, Monotype, Single Region Dex, Rich Route, Blind Research (map hides stage themes, research x1.5), No Revives, Random Draft, Boss Rush (own 4-stage campaign), Variant Hunt (+50% event stops; shiny odds unchanged), Limited Party (4), No Duplicate Species, Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
+| Untitled doc Phase C–G rest | TODO: C prep slots (Field License, Research Directive, Challenge Contract) and effective-attribute layers (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
-| The Battle Drama Engine (9 phases) | PART: see table below |
+| The Battle Drama Engine (9 phases) | DONE except the 2 Overdrive events (see table below) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: batch 1 of 11 (20 of 220 trainers, A–B); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | PART: batches 1–2 of 11 (40 of 220 trainers, Aaron to Canari); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -93,11 +95,16 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 | Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
 | Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |
 
-### 4. Minigames — TODO (every item)
-Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
+### 4. Minigames (slice 4, DONE except the TODO lines)
+- DONE framework: every field (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions) in `minigames.json`, validated by `core/minigame/schema.ts`; one standard result (score, max, medal, money, item) from `flow.ts`; one generic screen (`MinigameScene`); one reward system.
+- DONE the six recommended games: Pokémon Memory, Catching Challenge, Rhythm Challenge, Berry Foraging, Knowledge Quiz (questions built from real species/type/ability data), Fossil Excavation.
+- DONE the eight extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
+- DONE economy: money cap per stage, repeats pay less, items only from the Normal tier up and capped per stage, failing costs nothing, leaving forfeits the attempt, reward paid once (stored outcome), save v19, play with the keyboard/mouse, slow mode (S) and pause (T) for timed games.
+- DONE bonus rewards: silver/gold can also heal the party (never revive), add Totem research points, or give a shop discount for the stage (data: `effect` in `rewardTable`; capped by `effectCapPerStage`). Medal art bounces in at the end; sounds reuse the pack sounds already in the game (no new binary assets).
+- DONE balance: `tests/unit/blueprintBalance.test.ts` runs the real data and flow (prize money vs gym leaders for raids/Totems/expeditions, 300-seed expedition route mix, random-player minigame medals and payouts) and writes `docs/plans/balance-report.md`. Fishing and Treasure Hunt were retuned because a random player got gold too often.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; M6–M8 TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; balance sims DONE (data-level, not full battle sims); M6–M8 content expansion and the manual QA checklist TODO.
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |
@@ -107,11 +114,11 @@ Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.tes
 | P3 Dialogue: voices, rival voice from traits, rival callbacks from real history, no repeats, budgets, observed player habit | DONE (limited: archetype/arc/bond-based picks and encouragement/post-battle callbacks TODO) |
 | P4 Signature attacks: 8 declaration styles (warning, signature, promise, desperate gamble, tactical call, showman, quiet threat, personal callback) chosen from the situation, only for named trainers / last Pokémon / low HP, once per Pokémon+move; aftermath reactions (hit, miss, KO); banner + sound that follow the animation settings. Presentation only | DONE (limited: no custom per-move camera/sound files; no declaration for the player's side) |
 | P5 Mid-battle evolution (`core/drama/evolution.ts`): a returning rival's ace is brought in one stage below its final form when already at its evolution level; it evolves at a turn boundary (turn 3+ or half HP) with the one `evolve()` implementation (status, damage taken, moves carry over; Everstone blocks; once per Pokémon, saved); trainer reacts, Chronicle entry, rival remembers it next battle; AI reads the new species/moves next decision | DONE (limited: rivals only; no separate "became eligible" event) |
-| P6 Event library `dramaEvents.json`: all 20 events of guide §5 listed with eligibility, severity, cooldown, rarity roll, Chronicle record and rival memory flag; 14 run now (Breakthrough Evolution, Last-Second Resolve [enemy Hyper], Tactical Revelation, Comeback Call, Ace Reveal, Failed Technique, Veteran's Adjustment, Desperate Switch, Unfinished Grudge, Mercy Moment, Breaking Point, Calm Before the Finish, Rematch Reversal, Unexpected Respect); 8 planned: Refusal, New Move, Unplanned Combination, Overdrive Breakthrough/Misfire (Overdrive thread), Rival Interruption, Pokémon Takes Initiative, Pokémon Recognition, Emotional Turning Point (need bond/autonomy/enemy-emotion systems) | PART |
-| P7 Relationship/rival/bond integration; memories | PART: rival traits pick the voice; rivals bring up a real earlier moment next battle (flags `drama:rival:*`); bond values TODO (bond engine not built) |
-| P8 Pacing director: tiers, gaps, budgets, dialogue-frequency setting (settings v4) | DONE (limited: animation-speed/reduced-motion already exist) |
-| P9 Tests: 14 unit tests; 3 scripted scenarios, evolution/Hyper tests | PART |
-| §9 Emergent battle memories | PART: Chronicle entries + rival callbacks; style changes / recurring-rival promotion TODO |
+| P6 Event library `dramaEvents.json`: all 20 events of guide §5 + 2 extras, each with eligibility, severity, cooldown, rarity roll, Chronicle record, rival memory flag, optional fair AI shift / trait shift. 21 run: Last-Second Resolve, Refusal, New Move, Tactical Revelation, Comeback Call, Ace Reveal, Unplanned Combination, Failed Technique, Veteran's Adjustment, Desperate Switch, Rival Interruption, Unfinished Grudge, Mercy Moment, Breaking Point, Calm Before the Finish, Pokémon Takes Initiative, Rematch Reversal, Unexpected Respect, Pokémon Recognition, Emotional Turning Point, Breakthrough Evolution. 2 planned: Overdrive Breakthrough and Overdrive Misfire (owned by the Overdrive thread) | DONE except the 2 Overdrive events |
+| P7 Bond values (`core/drama/bond.ts`: trust, affection, respect, synchronization, confidence, autonomy, strain) derived from rival traits + record (the Bond Engine itself isn't built) gate Comeback Call, Mercy Moment, Breaking Point, Unfinished Grudge; they change who may speak / traits, never stats. Rival traits pick the voice; rivals bring up real earlier moments | DONE (limited: no Pokémon-specific personality until the Bond Engine) |
+| P8 Pacing director: tiers ambient/tactical/major/climactic, gaps, budgets by class, one big moment per turn, quiet after Calm Before the Finish; "Trainer talk" off/low/normal/high (settings v4: off hides all, low keeps major+, never changes what is recorded); animation speed + reduced motion already exist; lines are skippable like all battle text | DONE |
+| P9 Tests (`tests/unit/drama.test.ts`, 33): eligibility+cooldowns, voice differences, ordering, no duplicates, evolution + status/state, Hyper-gated Last-Second Resolve, rival callbacks from real history only, no hidden info, fair AI shift, save round trip, skip/hide (off/low), 3 scripted scenarios (ordinary, rival rematch, major evolution). Hyper/Overdrive breakthrough tests belong to the Overdrive thread | DONE (limited) |
+| §9 Emergent battle memories: Chronicle + rival flags; evolved rival gets a new battle style (ambition/pride up); a merciful rival changes its training philosophy (empathy up, vindictiveness down) and says so; Tactical Revelation / Failed Technique / Unexpected Respect callbacks ("I spent weeks figuring out how you broke through our defense with X"); a random trainer with a gripping comeback becomes a rival through the Spark; counters via the existing rival counter-pick | DONE (limited: no new trainer classes, no Pokémon-level style change) |
 
 ## Overdrive Hyper Techno Supreme Z (thread "Finish Overdrive and Hyper evolutions")
 Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-overdrive-techno.md`). Statuses checked against the repo 2026-10-30.
@@ -152,3 +159,20 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §4 Campaign dramatic arcs, route consequence engine | TODO |
 | §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
+
+- Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.
+
+### Bond Engine for your Pokémon (`src/core/bond/`, built for the Drama follow-up)
+The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do too, in the same `Bond` record, saved in the Pokémon's story history (`bond`, optional, created on first use).
+| Item | Status |
+|---|---|
+| Seven values + trait (12 traits shared with rival Pokémon), starting values by how it joined | DONE |
+| Growth and strain: faints strain, Hyper moments and knockouts deepen, won battles raise trust and sync | DONE |
+| Refusal: willful (autonomy 60+) and distrusting (trust 35−) Pokémon refuse a reckless order (a move that faints the user) once per battle; the turn is spent (`idle` action); foreshadowed by "(may refuse)" in the move list | DONE |
+| Pokémon Takes Initiative: sync 70+ and trust 60+ swaps an immune-target command for its best working move, once per battle | DONE |
+| Unplanned Combination: an open Bond relationship pair (sync 50+) hands over with +1 attacking stat; rivals with bonds do the same for their next Pokémon | DONE |
+| New Move: at half HP a trusted Pokémon (or a confident rival Pokémon) reveals the strongest valid learnset move, replacing its weakest if full | DONE |
+| Pokémon Recognition: rival memory now stores which of your Pokémon fought it (`foes`); its Pokémon recognises them | DONE |
+| Rival Interruption: a second living rival watches gym/boss/rival battles; a rival-graph tie or a rivalry step forms | DONE |
+| Emotional Turning Point: five feelings counted from real events for both sides; yours become tagged memories, a rival's trainer comments and remembers | DONE |
+| Bond screens (summary UI for the seven values), bond-based evolution/moves outside battle | TODO (UI belongs to the visual thread) |

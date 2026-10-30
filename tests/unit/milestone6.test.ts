@@ -178,7 +178,9 @@ describe('who appears in the wild', () => {
       expect(['mega', 'gigantamax', 'primal', 'battle']).not.toContain(s.form?.kind);
     }
     const ids = new Set(wild.map((s) => s.id));
-    for (const id of ['pikachu', 'rattata-alola', 'growlithe-hisui', 'wooper-paldea']) expect(ids.has(id), id).toBe(true);
+    // Regional forms are event-only (Untitled doc §8): the base species stay.
+    for (const id of ['pikachu', 'rattata', 'growlithe', 'wooper']) expect(ids.has(id), id).toBe(true);
+    for (const id of ['rattata-alola', 'growlithe-hisui', 'wooper-paldea']) expect(ids.has(id), id).toBe(false);
     for (const id of ['nihilego', 'iron-valiant', 'raichu']) expect(ids.has(id), id).toBe(false);
   });
 

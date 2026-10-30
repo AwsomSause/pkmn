@@ -4,7 +4,7 @@
 import type { Content } from '../../src/core/contentSchema';
 import { forcedMoveIndex } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
+import { chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, partyCapacity, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
 import { currentEnemy, type RunState } from '../../src/core/state';
 import { content as defaultContent, toBattle } from './helpers';
 
@@ -29,6 +29,8 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
   switch (run.phase) {
     case 'expedition':
       throw new Error('Autoplay does not enter expeditions');
+    case 'minigame':
+      throw new Error('Autoplay does not enter minigames');
     case 'starter':
       return { run: chooseStarter(content, run, 0), turn: null };
     case 'map':
@@ -44,7 +46,7 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
       const enemy = currentEnemy(battle);
       // A Pokémon in the middle of a two-turn move, or locked by a Choice item, can't throw a ball.
       const midMove = forcedMoveIndex(battle, run.party) !== null;
-      if (!midMove && battle.kind === 'wild' && run.party.length < 6 && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2) {
+      if (!midMove && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2) {
         const turn = takeTurn(content, run, { kind: 'item', itemId: 'poke-ball' });
         return { run: turn.run, turn };
       }
@@ -57,9 +59,10 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
     case 'decision': {
       const d = run.pending[0]!;
       if (d.kind === 'learnMove') return { run: resolveDecision(content, run, { kind: 'forgetMove', moveIndex: 0 }).run, turn: null };
+      if (d.kind === 'signature') return { run: resolveDecision(content, run, { kind: 'signature', optionIndex: 0 }).run, turn: null };
       if (d.kind === 'mentorship') return { run: resolveDecision(content, run, { kind: 'mentor', accept: false }).run, turn: null };
       if (d.kind !== 'caught') return { run: resolveDecision(content, run, { kind: 'skipMove' }).run, turn: null };
-      const choice = run.party.length < content.balance.partyMax ? { kind: 'addToParty' as const } : { kind: 'release' as const };
+      const choice = run.party.length < partyCapacity(content, run) ? { kind: 'addToParty' as const } : { kind: 'release' as const };
       return { run: resolveDecision(content, run, choice).run, turn: null };
     }
     case 'reward':

@@ -7,7 +7,9 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
-import { canCashIn } from '../core/run';
+import { boxCapacity } from '../core/trainerPerks';
+import { runPerks } from '../core/archetypes';
+import { canCashIn, partyCapacity } from '../core/run';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
 import { bagRow, emotionDot, partyRows, Picker, speciesRow } from './partyPanel';
@@ -39,6 +41,36 @@ export function openPartyMenu(host: FieldMenuHost): void {
       session.setLead(i);
       close(host, picker);
       host.changed(`${name} will lead the next battle.`);
+    },
+    onBack: () => close(host, picker),
+  });
+  host.setPicker(picker);
+}
+
+/** The PC: party Pokémon on the left list go in, PC Pokémon come out. One picker, party first, then the PC. */
+export function openBoxMenu(host: FieldMenuHost): void {
+  const { session } = services();
+  const run = session.run!;
+  const content = session.content;
+  const capacity = boxCapacity(runPerks(content, run));
+  const partyFull = run.party.length >= partyCapacity(content, run);
+  const rows = [
+    ...partyRows(content, run.party, () => (run.party.length <= 1 ? 'The party needs one Pokémon.' : run.box.length >= capacity ? 'The PC is full.' : null), () => 'PARTY', () => 'Send this Pokémon to the PC.'),
+    ...partyRows(content, run.box, () => (partyFull ? 'Your party is full.' : null), () => 'PC', () => 'Bring this Pokémon into the party.'),
+  ];
+  const picker: Picker = new Picker(host.scene, {
+    title: `PC (${run.box.length}/${capacity})`,
+    columns: 2,
+    rowHeight: 78,
+    rows,
+    onSelect: (i) => {
+      const inParty = i < run.party.length;
+      const mon = inParty ? run.party[i]! : run.box[i - run.party.length]!;
+      const name = content.species.get(mon.speciesId)!.name;
+      if (inParty) session.depositToBox(i);
+      else session.withdrawFromBox(i - run.party.length);
+      close(host, picker);
+      host.changed(inParty ? `${name} was sent to the PC.` : `${name} joined the party.`);
     },
     onBack: () => close(host, picker),
   });

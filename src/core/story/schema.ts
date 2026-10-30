@@ -42,6 +42,8 @@ export const DOMAIN_EVENT_TYPES = [
   'storyMoment',
   'rivalryFormed',
   'trainerVowedReturn',
+  /** A Pokémon found a feeling in battle (Emotional Turning Point). */
+  'feeling',
   'runEnded',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
@@ -127,6 +129,8 @@ export const PokemonHistorySchema = z.object({
   moves: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Times it and each teammate (by uid) took turns landing finishing blows (Friendly Competition). */
   finishTrades: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** The Bond Engine's values for this Pokémon (core/bond); created on first use. */
+  bond: z.lazy(() => BondSchema).optional(),
 });
 export type PokemonHistory = z.infer<typeof PokemonHistorySchema>;
 
@@ -230,6 +234,8 @@ export const RivalSchema = z.object({
       turns: z.number().int().min(0),
       /** Its team that day, for later counter-adaptation. */
       team: z.array(z.string()).max(6),
+      /** Uids of your Pokémon that fought it that day (so its Pokémon can recognise them). */
+      foes: z.array(z.string()).optional(),
     }),
   }),
 });

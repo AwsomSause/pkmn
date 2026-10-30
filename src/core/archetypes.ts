@@ -97,3 +97,15 @@ export function typeModifiers(archetype: Archetype): TypeModifiers {
 
 /** The trainer's modifier list: battle code reads perks through the helpers in trainerPerks.ts. */
 export type Perks = readonly ArchetypeModifier[];
+
+/** The trainer with the run's signature-choice effects added (Rival's Answer and the like; see core/signature.ts). */
+export function runArchetype(content: Content, run: { archetypeId: string; perkEffects?: ArchetypeModifier[] }): Archetype {
+  const archetype = getArchetype(content, run.archetypeId);
+  return run.perkEffects && run.perkEffects.length > 0 ? { ...archetype, modifiers: [...archetype.modifiers, ...run.perkEffects] } : archetype;
+}
+
+/** The run's whole perk list (trainer plus signature choices), or undefined for an unknown trainer. */
+export function runPerks(content: Content, run: { archetypeId: string; perkEffects?: ArchetypeModifier[] }): Perks | undefined {
+  const archetype = content.archetypes.get(run.archetypeId);
+  return archetype ? [...archetype.modifiers, ...(run.perkEffects ?? [])] : undefined;
+}

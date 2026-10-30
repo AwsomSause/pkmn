@@ -24,7 +24,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, isBossClass, isLegendaryLike } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -160,6 +160,12 @@ export type BattleEvent =
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
   /** A trainer's Pokémon evolved between turns (core/drama/evolution.ts). */
+  /** Bond Engine (core/bond): a Pokémon acted on its own before the turn. */
+  | { type: 'refused'; side: Side; uid: string; moveId: string }
+  | { type: 'initiative'; side: Side; uid: string; from: string; to: string }
+  | { type: 'combo'; side: Side; from: string; to: string; stat: 'atk' | 'spa' }
+  | { type: 'newMove'; side: Side; uid: string; moveId: string; replaced: string | null }
+  | { type: 'turningPoint'; side: Side; uid: string; emotion: string }
   | { type: 'evolved'; side: Side; uid: string; from: string; to: string; hpAfter: number }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
@@ -172,7 +178,9 @@ export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
   | { kind: 'move'; index: number; transform?: TransformRequest }
   | { kind: 'switch'; partyIndex: number }
-  | { kind: 'item'; itemId: string; targetIndex?: number };
+  | { kind: 'item'; itemId: string; targetIndex?: number }
+  /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
+  | { kind: 'idle' };
 
 interface Combatant {
   side: Side;
@@ -203,6 +211,8 @@ export interface BattleContext {
   typeModifiers?: TypeModifiers;
   /** The trainer's perks (Trainers.md): see core/trainerPerks.ts. */
   perks?: Perks;
+  /** The run's starter (starter perks). */
+  starterUid?: string | null;
   /** The player's attributes (damage, Speed, damage taken). */
   attributes?: AttributeEffects;
   /** The player's team items (run.passives): the Plates help every team member. */
@@ -734,7 +744,7 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
-  } else {
+  } else if (action.kind === 'item') {
     const problem = itemProblem(ctx, action.itemId, action.targetIndex);
     if (problem) throw new Error(problem);
   }
@@ -1417,6 +1427,9 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       userBaseSpeed: getSpecies(ctx.content, user.mon.speciesId).baseStats.spe,
       userIsMega: getSpecies(ctx.content, user.mon.speciesId).form?.kind === 'mega',
       partyHasMega: ctx.party.some((p) => getSpecies(ctx.content, p.speciesId).form?.kind === 'mega'),
+      firstInBattle: ctx.battle.participants[0] === user.mon.uid,
+      isStarter: ctx.starterUid === user.mon.uid,
+      targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
     });
   }
   if (target.side === 'player') {
@@ -1429,6 +1442,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       attackerIsLegendary: isLegendaryLike(getSpecies(ctx.content, user.mon.speciesId)),
       attackerIsBoss: isBossClass(ctx.battle.trainer?.classId),
       weather: weatherName,
+      targetIsMega: getSpecies(ctx.content, target.mon.speciesId).form?.kind === 'mega',
     });
   }
   return multiplier === 1 ? damage : Math.max(1, Math.floor(damage * multiplier));
@@ -1582,7 +1596,9 @@ function warnRage(ctx: BattleContext, mon: PokemonInstance, events: BattleEvent[
   const e = ctx.hyper.eligibility('enemyRiledUp', mon);
   if (!e) return;
   const key = cooldownKey(e.def, mon.uid);
-  if (hasBattleEffect(ctx.battle, key) || !rollHyper(ctx.hyper, e)) return;
+  // A trainer perk (Blue, Gen 3): rivals get riled up more often.
+  const rolled = ctx.battle.rivalId ? { ...e, chance: Math.min(1, e.chance * enemyHyperChancePerk(ctx.perks)) } : e;
+  if (hasBattleEffect(ctx.battle, key) || !rollHyper(ctx.hyper, rolled)) return;
   markBattleEffect(ctx.battle, key);
   ctx.enemyHyperUsed = true;
   // Evil makes its rage uncontrollable more often (rolled only when Evil is above 0).
@@ -1752,7 +1768,7 @@ function executeMove(
   if (slot === -1) events.push({ type: 'noPp', side: user.side });
   else if (!continuing) {
     const pp = user.mon.moves[slot]!;
-    pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1));
+    pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1) - (user.side === 'player' ? ppCostExtra(ctx.perks, move.type) : 0));
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
   if (!continuing && slot !== -1) {
@@ -4256,6 +4272,13 @@ function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEven
       c.mon.hp += amount;
       events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
     }
+    // A trainer perk (Brassius): Pokémon of a type recover HP each turn in a weather.
+    const perkHeal = c.side === 'player' ? weatherHealPercent(ctx.perks, getSpecies(ctx.content, c.mon.speciesId).types, weather.id) : 0;
+    if (perkHeal > 0 && c.mon.hp < max) {
+      const amount = Math.min(max - c.mon.hp, Math.max(1, Math.floor((max * perkHeal) / 100)));
+      c.mon.hp += amount;
+      events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+    }
     if ((ability === 'dry-skin' || ability === 'solar-power') && weather.id === 'sun') {
       announce(c, ability, events);
       abilityHurt(ctx, c, Math.max(1, Math.floor(max / 8)), events);
@@ -4309,7 +4332,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
   };
   const status = ability === 'poison-heal' && c.mon.status?.id === 'psn' ? undefined : c.mon.status?.id;
   const burn = content.ruleset.burnResidualFraction / (ability === 'heatproof' ? 2 : 1);
-  let fraction = status === 'brn' ? burn : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
+  let fraction = status === 'brn' ? burn * (c.side === 'enemy' ? burnDamagePerk(ctx.perks) : 1) : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
   if (status === 'psn' && c.mon.status?.bad) {
     // Toxic: 1/16 more of max HP each turn, up to 15/16.
     c.mon.status.turns = Math.min(15, (c.mon.status.turns ?? 0) + 1);

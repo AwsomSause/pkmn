@@ -1,0 +1,1209 @@
+{
+  "economy": {
+    "stopChance": 0.5,
+    "stageMoneyCap": 400,
+    "diminishing": 0.5,
+    "itemMinTier": 2,
+    "itemCapPerStage": 2,
+    "tierMultipliers": [
+      1,
+      1.5,
+      2
+    ],
+    "effectCapPerStage": 2
+  },
+  "games": [
+    {
+      "id": "pokemon-memory",
+      "name": "Pokémon Memory",
+      "category": "memory",
+      "blurb": "Match the type tiles.",
+      "instructions": "Flip two tiles. Matching types stay up. Decoy tiles cost extra moves. You have a limited number of moves.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "pairs": 6,
+            "moves": 14,
+            "decoys": 0
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "pairs": 8,
+            "moves": 16,
+            "decoys": 1
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "pairs": 10,
+            "moves": 18,
+            "decoys": 2
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "1 point per pair matched.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "super-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 1,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 2,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "catching-challenge",
+      "name": "Pokémon Catching Challenge",
+      "category": "skill",
+      "blurb": "Tag the Pokémon as they run past.",
+      "instructions": "Pokémon cross the field. Tag them before they leave. Rarer Pokémon move faster and score more. You have limited throws and time.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "throws": 10,
+            "ticks": 30,
+            "goal": 8,
+            "targets": 2
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "throws": 10,
+            "ticks": 30,
+            "goal": 12,
+            "targets": 3
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "throws": 9,
+            "ticks": 28,
+            "goal": 14,
+            "targets": 3
+          }
+        }
+      ],
+      "durationLimit": 30,
+      "attemptLimit": 2,
+      "scoringRules": "1–3 points per Pokémon tagged.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "ultra-ball",
+            "chance": 0.4
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 10,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "ultra-ball",
+            "chance": 0.7
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 15,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 900
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.6,
+        "noTimerOption": true
+      }
+    },
+    {
+      "id": "rhythm-challenge",
+      "name": "Rhythm Challenge",
+      "category": "timing",
+      "blurb": "Hit the notes in time.",
+      "instructions": "Notes fall down four lanes. Press the lane as a note reaches the bottom row. Build a combo for bonus points.",
+      "unlockRequirements": {
+        "badges": 1,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "notes": 14
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "notes": 20
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "notes": 26
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "2 points for a perfect hit, 1 for early, +1 per 5 combo.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": null,
+          "effect": {
+            "kind": "discount",
+            "amount": 10,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 15,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 650
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.8,
+        "noTimerOption": true
+      }
+    },
+    {
+      "id": "berry-foraging",
+      "name": "Foraging and Berry Picking",
+      "category": "resource",
+      "blurb": "Pick the best berries before the basket is full.",
+      "instructions": "Berries come one at a time. Take or skip. Your basket holds only a few. Some berries are rotten.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "items": 8,
+            "capacity": 3,
+            "hideRotten": 0
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "items": 10,
+            "capacity": 4,
+            "hideRotten": 0
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "items": 12,
+            "capacity": 4,
+            "hideRotten": 1
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Total value of the berries in the basket, minus rotten ones.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "super-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 25,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 40,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "knowledge-quiz",
+      "name": "Pokémon Knowledge Quiz",
+      "category": "knowledge",
+      "blurb": "Questions from the real Pokédex.",
+      "instructions": "Answer questions about types, evolutions, abilities and stats. All questions use the game's own data.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "questions": 6
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "questions": 8
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "questions": 10
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "1 point per right answer.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "ether",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 2,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 3,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "fossil-excavation",
+      "name": "Fossil Excavation",
+      "category": "resource",
+      "blurb": "Dig up treasures with a worn tool.",
+      "instructions": "Dig tiles; a number shows treasures next to it. Your tool wears out with each dig.",
+      "unlockRequirements": {
+        "badges": 2,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "treasures": 4,
+            "durability": 14
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "treasures": 5,
+            "durability": 14
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "treasures": 6,
+            "durability": 14
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Value of the treasures found.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 70,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 120,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 2,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 180,
+          "item": {
+            "item": "revive",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 3,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "fishing-challenge",
+      "name": "Fishing Challenge",
+      "category": "timing",
+      "blurb": "Reel in fish without snapping the line.",
+      "instructions": "Keep the line tension in the green zone while the fish tires. Reel to pull, ease to relax.",
+      "unlockRequirements": {
+        "badges": 1,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "rounds": 3,
+            "ticks": 40
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "rounds": 4,
+            "ticks": 50
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "rounds": 5,
+            "ticks": 60
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Rarity points of the fish you land.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": null,
+          "effect": {
+            "kind": "heal",
+            "amount": 20,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "super-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 35,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 700
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.8,
+        "noTimerOption": true
+      }
+    },
+    {
+      "id": "battle-puzzle",
+      "name": "Battle Puzzle",
+      "category": "puzzle",
+      "blurb": "Win with a fixed team and limited moves.",
+      "instructions": "Defeat each foe in the turns you have. Moves have limited uses. Type matchups matter.",
+      "unlockRequirements": {
+        "badges": 2,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "puzzles": 3,
+            "turns": 3
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "puzzles": 3,
+            "turns": 3
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "puzzles": 4,
+            "turns": 3
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "3 points for a quick win, 2 for a win, per puzzle.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 70,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 120,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 15,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 180,
+          "item": {
+            "item": "revive",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 30,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "type-match",
+      "name": "Type-Match Puzzle",
+      "category": "puzzle",
+      "blurb": "Match type tiles to reach the target.",
+      "instructions": "Pick two tiles. Same type scores 2. If the second is super effective against the first it scores 1.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "tiles": 12,
+            "moves": 10,
+            "goal": 10
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "tiles": 14,
+            "moves": 10,
+            "goal": 12
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "tiles": 16,
+            "moves": 10,
+            "goal": 14
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Points from matched tiles.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": null,
+          "effect": {
+            "kind": "research",
+            "amount": 1,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 2,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "pokemon-tracking",
+      "name": "Pokémon Tracking",
+      "category": "skill",
+      "blurb": "Follow the clues to the hidden Pokémon.",
+      "instructions": "Search a spot. Clues tell you warm or cold. Find the Pokémon in as few searches as you can.",
+      "unlockRequirements": {
+        "badges": 1,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "rounds": 3,
+            "probes": 6
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "rounds": 3,
+            "probes": 5
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "rounds": 4,
+            "probes": 5
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Searches left when you find it, per round.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "ultra-ball",
+            "chance": 0.4
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 2,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "ultra-ball",
+            "chance": 0.7
+          },
+          "effect": {
+            "kind": "research",
+            "amount": 3,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "berry-growing",
+      "name": "Berry-Growing Challenge",
+      "category": "resource",
+      "blurb": "Water each patch just right.",
+      "instructions": "Spread your water over the patches. Each wants a different amount. Too much or too little lowers the harvest.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "plots": 4,
+            "units": 8
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "plots": 5,
+            "units": 10
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "plots": 6,
+            "units": 12
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Harvest quality of each patch.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "super-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 25,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 40,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "trainers-trial",
+      "name": "Trainer's Trial",
+      "category": "knowledge",
+      "blurb": "Pick the best Pokémon for each situation.",
+      "instructions": "A foe appears. Choose the team member whose attack hits hardest.",
+      "unlockRequirements": {
+        "badges": 1,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "rounds": 6
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "rounds": 8
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "rounds": 10
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "1 point per best pick.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": null,
+          "effect": {
+            "kind": "heal",
+            "amount": 20,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "heal",
+            "amount": 35,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "treasure-hunt",
+      "name": "Treasure Hunt",
+      "category": "puzzle",
+      "blurb": "Follow hints, choose your risks.",
+      "instructions": "At each fork choose the safe path or the risky one. Hints are usually right.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "forks": 5
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "forks": 6
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "forks": 7
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "Safe path 1 point; risky path 3 points if it pays off.",
+      "medals": {
+        "bronze": 0.5,
+        "silver": 0.75,
+        "gold": 0.95
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": {
+            "item": "super-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 10,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.6
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 20,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "choices",
+        "tickMs": 0
+      },
+      "accessibilityOptions": {
+        "slowFactor": 1.5,
+        "noTimerOption": false
+      }
+    },
+    {
+      "id": "reaction-challenge",
+      "name": "Reaction Challenge",
+      "category": "timing",
+      "blurb": "Press when the light turns green.",
+      "instructions": "Wait for the green light, then press at once. Do not press on red. The window is wide on Easy and in slow mode.",
+      "unlockRequirements": {
+        "badges": 0,
+        "regionIndex": 0
+      },
+      "difficultyTiers": [
+        {
+          "id": "easy",
+          "label": "Easy",
+          "params": {
+            "rounds": 6,
+            "window": 3
+          }
+        },
+        {
+          "id": "normal",
+          "label": "Normal",
+          "params": {
+            "rounds": 8,
+            "window": 2
+          }
+        },
+        {
+          "id": "hard",
+          "label": "Hard",
+          "params": {
+            "rounds": 10,
+            "window": 2
+          }
+        }
+      ],
+      "durationLimit": 0,
+      "attemptLimit": 2,
+      "scoringRules": "1 point per fast press; early presses cost a point.",
+      "medals": {
+        "bronze": 0.4,
+        "silver": 0.65,
+        "gold": 0.9
+      },
+      "rewardTable": {
+        "bronze": {
+          "money": 60,
+          "item": null,
+          "effect": null
+        },
+        "silver": {
+          "money": 100,
+          "item": null,
+          "effect": {
+            "kind": "discount",
+            "amount": 5,
+            "chance": 0.5
+          }
+        },
+        "gold": {
+          "money": 160,
+          "item": {
+            "item": "hyper-potion",
+            "chance": 0.5
+          },
+          "effect": {
+            "kind": "discount",
+            "amount": 10,
+            "chance": 0.8
+          }
+        }
+      },
+      "failureOutcome": "Nothing is lost. You just get no reward.",
+      "replayRules": "Replay any time; each repeat in the same stage pays less.",
+      "uiConfiguration": {
+        "layout": "grid",
+        "tickMs": 600
+      },
+      "accessibilityOptions": {
+        "slowFactor": 2,
+        "noTimerOption": true
+      }
+    }
+  ]
+}

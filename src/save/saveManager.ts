@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 7, run: 16, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 9, run: 20, settings: 4, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -72,6 +72,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v7 (M8.9 slice 5): the archive of past runs' Pokémon. Runs before it kept none.
     6: (data) => ({ ...(data as Json), pastPokemon: [] }),
+    // v8 (trainer quests): the claim ledger and per-trainer counters start empty.
+    7: (data) => ({ ...(data as Json), claims: {}, trainerCounters: {}, trainerBest: {} }),
+    // v9 (species mastery): no species has mastery counters yet.
+    8: (data) => ({ ...(data as Json), mastery: {} }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -211,6 +215,17 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     14: (data) => data,
     // v16 (Mega-Expeditions): no expedition in progress, nothing finished or unlocked yet.
     15: (data) => ({ ...(data as Json), expedition: null, expeditions: { completed: [], failed: [], unlocked: [], last: [] } }),
+    // v17 (run rules): older runs are standard-mode, standard-difficulty runs.
+    16: (data) => ({
+      ...(data as Json),
+      rules: { ruleVersion: 1, modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false, deathBlockUsed: false, progressionEligible: true, rewardMultiplier: 1, enemyLevelBonus: 0, wipes: 0 },
+    }),
+    // v18 (trainer quests): the run's Run Quest; runs started before it have none.
+    17: (data) => ({ ...(data as Json), runQuest: null }),
+    // v19 (Minigames): none in progress, nothing paid or played yet.
+    18: (data) => ({ ...(data as Json), minigame: null, minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} } }),
+    // v20 (species mastery): runs started before it get no mastery unlocks.
+    19: (data) => ({ ...(data as Json), mastery: {} }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

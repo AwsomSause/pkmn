@@ -8,8 +8,8 @@ import type { Rng } from './rng';
 import type { LevelBreakdown, PokemonInstance } from './state';
 import { getBoss, levelCap, type BossRole } from './regions';
 import { isUsableMove } from './pokemon';
-import { isLegendaryLike } from './trainerPerks';
-import { pickThemeSpecies, trainerClassesFor } from './themes';
+import { isLegendaryLike, wildWeightPerk } from './trainerPerks';
+import { baseStatTotal, pickThemeSpecies, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
 
@@ -100,8 +100,18 @@ export interface WildPlan {
 }
 
 /** A wild Pokémon from the stage's theme (preferring the region's own Pokémon). */
+/** A trainer's perks on which wild species turn up (Fire-types less often, rare Pokémon more); undefined when there are none. */
+function wildWeightMod(content: Content, archetype: Archetype): ((speciesId: string) => number) | undefined {
+  if (!archetype.modifiers.some((m) => m.kind === 'typeEncounterWeight' || m.kind === 'statEncounterWeight' || (m.kind === 'encounterWeightMultiplier' && m.group === 'rare'))) return undefined;
+  return (speciesId) => {
+    const s = content.species.get(speciesId)!;
+    const best = (Object.entries(s.baseStats).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0] ?? ['hp'])[0];
+    return wildWeightPerk(archetype.modifiers, s.types, baseStatTotal(s) >= content.balance.rareEncounterBst, best);
+  };
+}
+
 export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
-  const speciesId = pickThemeSpecies(content, theme, rng, undefined, regionId);
+  const speciesId = pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype));
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }

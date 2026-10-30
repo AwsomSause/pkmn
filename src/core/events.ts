@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import { eventChanceScale } from './rules';
 import { getArchetype } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
 import { createBattle } from './battle/engine';
@@ -126,7 +127,7 @@ export function addEventStops(content: Content, run: RunState): void {
     const node = rng.pick(candidates);
     node.sides.push({ id: `event-${node.sides.length + 1}-${node.id}`, kind: 'event', used: false, eventId, ...(hidden ? { hidden: true } : {}) });
   };
-  const wanted = rng.int(cfg.perStage[0], cfg.perStage[1]);
+  const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules));
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
     if (!e) break;

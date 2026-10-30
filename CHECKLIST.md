@@ -179,7 +179,20 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 - [x] Slice 2: trainer identity: signature types, species and set for all 9 trainers; signature Pokémon in the starter draw; Cynthia, Oak and N passives.
 - [x] Slice 3: "?" event stops: 170 events (every event and map stop in Kice's plan, one per type, rest spots, 30 key-item/ticket events, Lost Property and other key sources). Choices can need money, items, party types, attributes or a trainer tag (N won't make aggressive choices); attribute checks; battles with prizes; Pokémon joining; gym scouting. Event items (slice 4b): Silph Scope, Inquiry Mail, Bridge Mail V, Explorer Kit, Prop Case, Tidal Bell, Clear Bell and all keys/tickets. Animated scene (bouncy cards, cast, ambient effects; calm when animations are reduced). Tests: `tests/unit/events.test.ts`, `tests/e2e/events.spec.ts`.
 - [x] Slice 3b: doubled events: 134 more (304 in all): 17 PokeRogue-style encounters (Dark Deal, Safari Zone, Teleporting Hijinks, Delibird-y, Absolute Avarice, Clowning Around, Part-Timer, Dancing Lessons, GTS, Fun and Games, Bug-Type Superfan, An Unlikely Ally, Trash to Treasure, Field Trip…), about 11 more in every group, a new Places and weather group, and 3 more rest spots.
-- [ ] Trainer quests + claim ledger; species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+- [x] Slice 4: trainer quests + claim ledger: every trainer has a 5-step line done in order across runs (counters count only runs as that trainer); rewards are Research Points, Bank Credits, candies, titles, the trainer's starter set, and (Red, Blue, Cynthia, Giovanni, N, Oak) the Trainer Evolution unlock. One Run Quest per run (22 goals). Tests: `tests/unit/quests.test.ts`, `tests/e2e/quests.spec.ts`.
+- [x] Slice 5: Species Mastery for every species (`core/mastery.ts`, profile `mastery`): ranks Seen → Caught → Bronze → Silver → Gold → Master from each run's Pokémon histories (thresholds in `balance.mastery`); a family has its best member's rank. Unlocks for Pokémon of the family that join a run: Bronze first egg move, Silver Hidden Ability, Gold second egg move + choice of ability, Master its strongest move starts awakened. Each rank pays Research Points once (claim ledger), Master gives "<Species> Master". "Mastered" starter set (Silver species, opens at 3). Hub > Unlocks > Species Mastery (family pages, picks), catch screen preview, run-end ranks. Saves: profile v9, run v20. Tests: `tests/unit/mastery.test.ts`, `tests/e2e/mastery.spec.ts`.
+- [ ] Trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+
+### Known limits in slice 5
+- "Battles" counts battles the Pokémon fought in (you win every battle of a run except a losing last one). Gold's "never fainted" is per run (a boss win in a run where it never fainted), not per stage; Master needs it in the party at the end of a run that cleared a region.
+- Each run credits every species the Pokémon was (Charmander that became Charizard counts for both). Runs before profile v9 don't count.
+- Egg moves come from the family's first stage; ones the engine can't run are listed as "found, not active yet" and never used. Many species' egg moves are not supported yet (e.g. Bulbasaur, Charmander), so those families get no egg move until the moves are built.
+- The Master "signature move" is the strongest move it joins with, awakened (Signature Move Awakening). No form licenses yet.
+- The Mastered set can't use Type Focus (its types depend on your profile). Sprite borders and badges are not drawn yet; the rank colour shows instead.
+
+### Known limits in slice 4
+- Per-trainer counters start at zero for old profiles (runs before v8 don't count toward quest lines).
+- Trainers added later need `npm run data:quests` (the content check fails until they have a line).
 
 ### Known limits in slice 3
 - Scanner (trade at a shop) still needs the shop; Room 6's event trades it on the spot for an Epic item instead.
@@ -198,8 +211,9 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 
 Every trainer in Trainers.md becomes a playable trainer with all its pros and cons, 20 per PR. List: `docs/plans/trainers-coverage.md`.
 - [x] Batch 1 (Aaron to Bianca, 20 trainers) and the shared perk system (`core/trainerPerks.ts`).
-- [ ] Batches 2–11 (the other 200 trainers), then the signature mechanics (Rival's Answer, Distortion Protocol, Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy).
-- Known limits: "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
+- [x] Batch 2 (Bill to Canari, 20 trainers) with the PC box and Rival's Answer.
+- [ ] Batches 3–11 (the other 180 trainers), then the signature mechanics (Distortion Protocol, Beautiful Parasite, Encore!, Perfect Shot, The Final Revelation, Meteor's Prophecy; they reuse `core/signature.ts`).
+- Known limits: a few clauses have no effect yet and are listed per trainer in `docs/plans/trainers-coverage.md` (burns never wear off; Mega Evolution has no cost). "fast" means base Speed 90+ and "slow" 60 or less. HP perks update when a battle, stage or starter pick starts (not mid-menu). Legendary wild encounters are new: 2% per wild battle from the second region.
 
 ## Milestone 10 — Visuals and presentation (planned)
 

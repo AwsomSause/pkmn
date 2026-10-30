@@ -51,6 +51,7 @@
     "storyMoment": 60,
     "rivalryFormed": 55,
     "trainerVowedReturn": 50,
+    "feeling": 55,
     "runEnded": 90
   },
   "emotions": {

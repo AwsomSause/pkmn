@@ -10,6 +10,7 @@ import { calcStats } from '../pokemon';
 import type { BattleState, PokemonInstance, RunState } from '../state';
 import { emit, whereNow } from '../story/record';
 import type { Rival } from '../story/schema';
+import { rivalBond, type Bond } from './bond';
 import type { BattleClass, DramaEvent } from './index';
 import { DRAMA, DRAMA_LIBRARY, pickIndex, type DeclarationStyle, type DialogueCategory, type DramaEventDef, type Tier, type Voice } from './schema';
 
@@ -30,6 +31,9 @@ export interface PlanCtx {
   habit: { at: number; moveId: string; id: string } | null;
   enemyName: string;
   foeName: string;
+  bond: Bond;
+  /** Another rival watching this big battle from the side (only when the battle starts). */
+  witness: Rival | undefined;
 }
 
 export interface Candidate {
@@ -41,6 +45,8 @@ export interface Candidate {
   def?: DramaEventDef;
   vars?: Record<string, string>;
   cue?: { event?: string; style?: string; moveId?: string };
+  /** Who says it, when not the trainer you are fighting. */
+  speaker?: string;
 }
 
 const flagCd = (id: string) => `drama:cd:${id}`;
@@ -123,6 +129,7 @@ export const CHECKS: Record<string, Check> = {
   },
   tacticalRevelation: (c) => (c.habit ? { at: c.habit.at, vars: { foeMove: c.content.moves.get(c.habit.moveId)?.name ?? 'that move' } } : null),
   comebackCall: (c) => {
+    if (c.bond.trust < 40) return null;
     const i = c.events.findIndex((e) => e.type === 'damage' && e.side === 'enemy' && e.hpAfter > 0 && e.hpAfter / Math.max(1, calcStats(c.content, c.enemy).hp) <= DRAMA.config.desperationHpShare);
     return i >= 0 ? { at: i } : null;
   },
@@ -140,13 +147,15 @@ export const CHECKS: Record<string, Check> = {
     const i = c.events.findIndex((e) => e.type === 'switchOut' && e.side === 'enemy');
     return i >= 0 && !c.events.some((e) => e.type === 'faint' && e.side === 'enemy') ? { at: i } : null;
   },
-  unfinishedGrudge: (c) => (c.rival && c.rival.encounters > 0 && c.rival.memory.lastBattle.result === 'win' ? aceOut(c) : null),
+  unfinishedGrudge: (c) => (c.rival && c.rival.encounters > 0 && c.rival.memory.lastBattle.result === 'win' && c.bond.strain >= 10 ? aceOut(c) : null),
   mercyMoment: (c) => {
+    if (c.bond.affection < 40 || c.bond.strain >= 60) return null;
     const foe = c.foeMon;
     const i = c.events.findIndex((e) => e.type === 'move' && e.side === 'enemy');
     return foe && foe.hp > 0 && hpShare(c.content, foe) <= 0.15 && i >= 0 ? { at: lastIdx(c) } : null;
   },
   breakingPoint: (c) => {
+    if (c.bond.confidence > 60) return null;
     const i = c.drama.find((e) => e.kind === 'enemyFaint');
     return i && enemyAlive(c) >= Math.ceil(c.battle.enemyTeam.length / 2) && allAlive(c) ? { at: i.at } : null;
   },
@@ -155,11 +164,52 @@ export const CHECKS: Record<string, Check> = {
     const i = c.events.findIndex((e) => e.type === 'evolved' && e.side === 'enemy');
     return i >= 0 ? { at: i, vars: { foeMove: c.content.species.get((c.events[i] as { to: string }).to)?.name ?? 'it' } } : null;
   },
+  refusal: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'refused');
+    return i >= 0 ? { at: i } : null;
+  },
+  takesInitiative: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'initiative');
+    return i >= 0 ? { at: i } : null;
+  },
+  unplannedCombination: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'combo');
+    return i >= 0 ? { at: i } : null;
+  },
+  newMove: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'newMove');
+    const e = c.events[i];
+    return e && e.type === 'newMove' ? { at: i, vars: { foeMove: c.content.moves.get(e.moveId)?.name ?? 'a new move' } } : null;
+  },
+  emotionalTurningPoint: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'turningPoint');
+    const e = c.events[i];
+    return e && e.type === 'turningPoint' ? { at: i, vars: { foeMove: e.emotion } } : null;
+  },
+  pokemonRecognition: (c) => {
+    const last = c.rival?.memory.lastBattle;
+    const foes = last?.foes ?? [];
+    if (!c.rival || !last || !last.team.includes(c.enemy.speciesId) || !c.foeMon || !foes.includes(c.foeMon.uid)) return null;
+    // At the start of the battle, or when that very Pokémon comes in.
+    if (!c.prior) return { at: -1 };
+    const send = c.drama.find((e) => e.kind === 'enemySwitch');
+    return send ? { at: send.at } : null;
+  },
+  rivalInterruption: (c) => (c.witness ? { at: -1 } : null),
   rematchReversal: (c) => (!c.prior && c.rival && c.rival.adaptations.length > 0 ? { at: -1 } : null),
   unexpectedRespect: (c) => {
     const ace = c.battle.enemyTeam[c.battle.enemyTeam.length - 1]?.uid;
     const f = c.drama.find((e) => e.kind === 'enemyFaint' && e.data.uid === ace);
-    return f ? { at: f.at } : null;
+    if (!f) return null;
+    let foeMove = 'that move';
+    for (let i = f.at; i >= 0; i--) {
+      const e = c.events[i]!;
+      if (e.type === 'move' && e.side === 'player') {
+        foeMove = c.content.moves.get(e.moveId)?.name ?? foeMove;
+        break;
+      }
+    }
+    return { at: f.at, vars: { foeMove } };
   },
 };
 
@@ -187,6 +237,7 @@ export function libraryCandidates(c: PlanCtx): Candidate[] {
       def,
       vars: hit.vars,
       cue: { event: def.id },
+      speaker: def.id === 'rivalInterruption' && c.witness ? `${c.content.trainers.get(c.witness.classId)?.name ?? 'Trainer'} ${c.witness.name}` : undefined,
     });
   }
   return out;
@@ -195,16 +246,24 @@ export function libraryCandidates(c: PlanCtx): Candidate[] {
 /** Called when the director accepted a library event: cooldown, rival memory and Chronicle. */
 export function recordLibraryEvent(c: PlanCtx, cand: Candidate): void {
   const def = cand.def!;
+  if (def.id === 'rivalInterruption' && c.witness) witnessEffects(c);
   const flags = c.run.story.flags;
   c.battle.drama.seen.push(`ev:${def.id}`);
   flags[flagCd(def.id)] = battleNo(c.run);
+  if (def.aiShift) c.battle.ai = Math.max(0, Math.min(1, c.battle.ai + def.aiShift));
+  if (def.traitShift && c.rival) {
+    for (const [k, n] of Object.entries(def.traitShift)) {
+      const key = k as keyof Rival['traits'];
+      if (key in c.rival.traits) c.rival.traits[key] = Math.max(0, Math.min(100, c.rival.traits[key] + n));
+    }
+  }
   if (!def.records) return;
   if (c.rival && def.remember) flags[flagRival(c.rival.id, def.id)] = `${battleNo(c.run)}|${cand.vars?.foeMove ?? ''}`;
   emit(c.content, c.run, 'storyMoment', {
     where: { ...whereNow(c.run), turn: c.turn },
     actors: [c.enemy.uid],
     data: { dramaEvent: def.id, trainer: c.battle.trainer?.name ?? '' },
-    text: `${c.battle.trainer?.name ?? 'A trainer'}: ${def.name}`,
+    text: `${c.battle.trainer?.name ?? 'A trainer'}: ${def.name}${def.shiftText && c.rival ? ` (${def.shiftText})` : ''}`,
   });
 }
 
@@ -223,4 +282,29 @@ export function memoryCallback(c: PlanCtx): Candidate | null {
   if (!best) return null;
   const remember = best.def.remember!;
   return { ev: { id: `${c.key}:t${c.turn}:e-1:memory`, kind: 'battleStart', turn: c.turn, at: -1, data: {} }, category: 'event', tier: 'major', pool: [remember], def: undefined, vars: { foeMove: best.move || 'that move' }, cue: { event: `memory:${best.def.id}` } };
+}
+
+/** Another rival who happens to be watching a big battle (gym, boss or rival fights; chosen by hashing the battle, never by gameplay RNG). */
+export function pickWitness(run: RunState, battle: BattleState, cls: BattleClass, atStart: boolean, key: string): Rival | undefined {
+  if (!atStart || cls === 'ordinary') return undefined;
+  const others = run.story.rivals.filter((r) => r.id !== battle.rivalId && r.state !== 'retired' && r.cooldown === 0);
+  if (others.length === 0 || pickIndex(`${key}|witness|roll`, 100) >= 50) return undefined;
+  return others[pickIndex(`${key}|witness`, others.length)];
+}
+
+function witnessEffects(c: PlanCtx): string {
+  const w = c.witness!;
+  const fighting = c.rival;
+  if (fighting) {
+    // The two rivals meet: how they feel about each other follows their traits.
+    const kind = w.traits.empathy >= 55 && fighting.traits.empathy >= 55 ? 'friends' : w.traits.pride >= 55 && w.traits.ambition >= 55 ? 'enemies' : 'partners';
+    const graph = c.run.story.rivalGraph;
+    const has = graph.some((g) => (g.a === w.id && g.b === fighting.id) || (g.a === fighting.id && g.b === w.id));
+    if (!has) graph.push({ a: w.id, b: fighting.id, kind });
+    return `${kind}`;
+  }
+  // Watching you fight makes the witness take more interest in you.
+  if (w.state === 'recognized') w.state = 'recurring';
+  else if (w.state === 'recurring') w.state = 'active';
+  return w.state;
 }

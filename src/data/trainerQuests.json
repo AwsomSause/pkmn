@@ -1,0 +1,3694 @@
+{
+ "lines": [
+  {
+   "trainerId": "red",
+   "name": "The Silent Champion",
+   "steps": [
+    {
+     "goal": "Win 30 battles as Red",
+     "story": "Red nods. Words were never needed.",
+     "requirement": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 30
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Quiet Challenger"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Red",
+     "story": "Every goal met, one step at a time.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-red"
+     }
+    },
+    {
+     "goal": "Defeat 8 gym leaders as Red",
+     "story": "Eight badges shine on the old cap.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 8
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Evolve 4 Pokémon in one run as Red",
+     "story": "The team grows with its trainer.",
+     "requirement": {
+      "kind": "best",
+      "counter": "evolutions",
+      "atLeast": 4
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Pallet Legend"
+     }
+    },
+    {
+     "goal": "Defeat a Champion as Red",
+     "story": "At the top of Mt. Silver, a Champion waits for no one.",
+     "requirement": {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Red",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blue",
+   "name": "Smell Ya Later",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Blue",
+     "story": "\"Too easy! Who's next?\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Know-It-All"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blue",
+     "story": "\"See? I always finish what I start.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blue"
+     }
+    },
+    {
+     "goal": "Defeat 6 gym leaders as Blue",
+     "story": "\"Gym leaders? I eat them for breakfast.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 6
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat 2 Elite Four members in one run as Blue",
+     "story": "\"The Elite Four can't keep up with me!\"",
+     "requirement": {
+      "kind": "best",
+      "counter": "eliteFourDefeated",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Viridian Ace"
+     }
+    },
+    {
+     "goal": "Clear a region as Blue",
+     "story": "\"Smell ya later, everyone. I'm the best!\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Rival Blue",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "green",
+   "name": "The Collector",
+   "steps": [
+    {
+     "goal": "Catch 15 Pokémon as Green",
+     "story": "Every catch goes in the notebook.",
+     "requirement": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Notebook Keeper"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Green",
+     "story": "A plan, followed to the letter.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-green"
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Green",
+     "story": "A full box in one trip.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Find a shiny Pokémon as Green",
+     "story": "It sparkles. Green smiles.",
+     "requirement": {
+      "kind": "total",
+      "counter": "shiniesFound",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Shiny Hunter"
+     }
+    },
+    {
+     "goal": "Clear a region as Green",
+     "story": "The notebook is full of stories now.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Master Collector"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brock",
+   "name": "Rock-Solid Will",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Rock-types as Brock",
+     "story": "\"A rock is patient. So am I.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Pewter Hopeful"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brock",
+     "story": "\"One stone at a time builds a mountain.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brock"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Rock-type leading",
+     "story": "\"Rock-solid defence wins the day!\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.rock",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Heal at 5 healing stops as Brock",
+     "story": "\"A good breeder always cares for the team.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "healStopsUsed",
+      "atLeast": 5
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Pokémon Doctor"
+     }
+    },
+    {
+     "goal": "Clear a region as Brock",
+     "story": "\"The mountain is climbed. Time for a bigger one.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Rock Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "misty",
+   "name": "Tidecaller",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Misty",
+     "story": "\"My policy is an all-out offensive!\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Cerulean Hopeful"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Misty",
+     "story": "\"Ride the current, don't fight it.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-misty"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "\"The tide always comes back stronger!\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "\"The whole sea is on my side.\"",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Tidecaller"
+     }
+    },
+    {
+     "goal": "Clear a region as Misty",
+     "story": "\"Tomboyish mermaid? Try Water Master.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Water Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "giovanni",
+   "name": "The Boss Returns",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ground-types as Giovanni",
+     "story": "\"The earth bends to my will.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Rocket Recruit"
+     }
+    },
+    {
+     "goal": "Earn ₽30,000 as Giovanni",
+     "story": "\"Money is power. Power is everything.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 30000
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-giovanni"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ground-type leading",
+     "story": "\"Leaders kneel before the Boss.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ground",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Finish 3 Run Quests as Giovanni",
+     "story": "\"Every plan succeeds, eventually.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 3
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Rocket Executive"
+     }
+    },
+    {
+     "goal": "Defeat a Champion as Giovanni",
+     "story": "\"Team Rocket rises again. This time, for good.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Rocket Boss",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "cynthia",
+   "name": "Myths of Sinnoh",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Dragon-types as Cynthia",
+     "story": "\"Dragons are the stuff of legend. Let's meet them.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Myth Seeker"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Cynthia",
+     "story": "\"Research is patient work.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-cynthia"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Dragon-type leading",
+     "story": "\"A dragon's roar shakes any gym.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.dragon",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Complete 8 map events as Cynthia",
+     "story": "\"Every ruin tells a story.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 8
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Archaeologist"
+     }
+    },
+    {
+     "goal": "Defeat a Champion as Cynthia",
+     "story": "\"A Champion who still seeks. That is the real legend.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Cynthia",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "oak",
+   "name": "The Complete Pokédex",
+   "steps": [
+    {
+     "goal": "See 60 different Pokémon",
+     "story": "\"Ah, a new entry! Wonderful!\"",
+     "requirement": {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 60
+     },
+     "reward": {
+      "researchPoints": 75,
+      "title": "Field Researcher"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Oak",
+     "story": "\"Science rewards a careful hand.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-oak"
+     }
+    },
+    {
+     "goal": "Catch 25 Pokémon as Oak",
+     "story": "\"Every catch teaches us something.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 25
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 60 different Pokémon",
+     "story": "\"Half a Pokédex! My old notes can't keep up.\"",
+     "requirement": {
+      "kind": "distinct",
+      "set": "speciesCaught",
+      "atLeast": 60
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Pokédex Scholar"
+     }
+    },
+    {
+     "goal": "Clear a region as Oak",
+     "story": "\"Not bad for an old man, eh? Back to the field!\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Professor Emeritus",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "n",
+   "name": "Truths and Ideals",
+   "steps": [
+    {
+     "goal": "Catch 15 Pokémon as N",
+     "story": "\"They chose to come with me. I can hear it.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Friend of Pokémon"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as N",
+     "story": "\"Ideals need action.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-n"
+     }
+    },
+    {
+     "goal": "Keep 8 caught Pokémon in your party as N",
+     "story": "\"A team is a family.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "caughtKept",
+      "atLeast": 8
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Complete 8 map events as N",
+     "story": "\"The world is full of voices.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 8
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Listener"
+     }
+    },
+    {
+     "goal": "Clear a region as N",
+     "story": "\"Truth and ideals, side by side. I understand now.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "King N",
+      "evolution": true
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "aaron",
+   "name": "Aaron's Bug Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Bug-types as Aaron",
+     "story": "Aaron feels the Bug-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Aaron's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Aaron",
+     "story": "Aaron checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-aaron"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Bug-type leading",
+     "story": "The Bug-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.bug",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Bug-types in one run",
+     "story": "A whole run of Bug-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Bug Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Aaron",
+     "story": "Aaron's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Aaron, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "acerola",
+   "name": "Acerola's Ghost Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ghost-types as Acerola",
+     "story": "Acerola feels the Ghost-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Acerola's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Acerola",
+     "story": "Acerola checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-acerola"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ghost-type leading",
+     "story": "The Ghost-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ghost",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ghost-types in one run",
+     "story": "A whole run of Ghost-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ghost Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Acerola",
+     "story": "Acerola's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Acerola, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "adaman",
+   "name": "Adaman's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Adaman",
+     "story": "Adaman has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Adaman's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Adaman",
+     "story": "Adaman checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-adaman"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Adaman",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Adaman",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Adaman",
+     "story": "Adaman's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Adaman, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "agatha-lgpe",
+   "name": "Agatha (LGPE)'s Ghost Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ghost-types as Agatha (LGPE)",
+     "story": "Agatha (LGPE) feels the Ghost-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Agatha (LGPE)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Agatha (LGPE)",
+     "story": "Agatha (LGPE) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-agatha-lgpe"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ghost-type leading",
+     "story": "The Ghost-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ghost",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ghost-types in one run",
+     "story": "A whole run of Ghost-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ghost Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Agatha (LGPE)",
+     "story": "Agatha (LGPE)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Agatha (LGPE), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "alain",
+   "name": "Alain's Fire Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fire-types as Alain",
+     "story": "Alain feels the Fire-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Alain's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Alain",
+     "story": "Alain checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-alain"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fire-type leading",
+     "story": "The Fire-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fire",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fire-types in one run",
+     "story": "A whole run of Fire-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fire Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Alain",
+     "story": "Alain's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Alain, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "alder",
+   "name": "Alder's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Alder",
+     "story": "Alder has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Alder's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Alder",
+     "story": "Alder checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-alder"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Alder",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Alder",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Alder",
+     "story": "Alder's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Alder, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "allister",
+   "name": "Allister's Ghost Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ghost-types as Allister",
+     "story": "Allister feels the Ghost-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Allister's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Allister",
+     "story": "Allister checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-allister"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ghost-type leading",
+     "story": "The Ghost-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ghost",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ghost-types in one run",
+     "story": "A whole run of Ghost-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ghost Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Allister",
+     "story": "Allister's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Allister, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "anabel-gen-7",
+   "name": "Anabel (Gen 7)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Anabel (Gen 7)",
+     "story": "Anabel (Gen 7) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Anabel (Gen 7)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Anabel (Gen 7)",
+     "story": "Anabel (Gen 7) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-anabel-gen-7"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Anabel (Gen 7)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Anabel (Gen 7)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Anabel (Gen 7)",
+     "story": "Anabel (Gen 7)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Anabel (Gen 7), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "archie-gen-6",
+   "name": "Archie (Gen 6)'s Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Archie (Gen 6)",
+     "story": "Archie (Gen 6) feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Archie (Gen 6)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Archie (Gen 6)",
+     "story": "Archie (Gen 6) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-archie-gen-6"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Archie (Gen 6)",
+     "story": "Archie (Gen 6)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Archie (Gen 6), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "archie-usum",
+   "name": "Archie (USUM)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Archie (USUM)",
+     "story": "Archie (USUM) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Archie (USUM)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Archie (USUM)",
+     "story": "Archie (USUM) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-archie-usum"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Archie (USUM)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Archie (USUM)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Archie (USUM)",
+     "story": "Archie (USUM)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Archie (USUM), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "arezu",
+   "name": "Arezu's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Arezu",
+     "story": "Arezu has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Arezu's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Arezu",
+     "story": "Arezu checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-arezu"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Arezu",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Arezu",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Arezu",
+     "story": "Arezu's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Arezu, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "ash-kalos",
+   "name": "Ash (Kalos)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Ash (Kalos)",
+     "story": "Ash (Kalos) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Ash (Kalos)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Ash (Kalos)",
+     "story": "Ash (Kalos) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-ash-kalos"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Ash (Kalos)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Ash (Kalos)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Ash (Kalos)",
+     "story": "Ash (Kalos)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Ash (Kalos), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "ash",
+   "name": "Ash's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Ash",
+     "story": "Ash has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Ash's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Ash",
+     "story": "Ash checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-ash"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Ash",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Ash",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Ash",
+     "story": "Ash's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Ash, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "az",
+   "name": "AZ's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as AZ",
+     "story": "AZ has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "AZ's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as AZ",
+     "story": "AZ checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-az"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as AZ",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as AZ",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as AZ",
+     "story": "AZ's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "AZ, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "ball-guy",
+   "name": "Ball Guy's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Ball Guy",
+     "story": "Ball Guy has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Ball Guy's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Ball Guy",
+     "story": "Ball Guy checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-ball-guy"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Ball Guy",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Ball Guy",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Ball Guy",
+     "story": "Ball Guy's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Ball Guy, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "barry",
+   "name": "Barry's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Barry",
+     "story": "Barry has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Barry's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Barry",
+     "story": "Barry checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-barry"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Barry",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Barry",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Barry",
+     "story": "Barry's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Barry, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bea",
+   "name": "Bea's Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Bea",
+     "story": "Bea feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bea's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bea",
+     "story": "Bea checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bea"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bea",
+     "story": "Bea's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bea, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bede",
+   "name": "Bede's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Bede",
+     "story": "Bede feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bede's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bede",
+     "story": "Bede checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bede"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bede",
+     "story": "Bede's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bede, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "benga",
+   "name": "Benga's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Benga",
+     "story": "Benga has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Benga's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Benga",
+     "story": "Benga checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-benga"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Benga",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Benga",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Benga",
+     "story": "Benga's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Benga, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bianca-pwt",
+   "name": "Bianca (PWT)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Bianca (PWT)",
+     "story": "Bianca (PWT) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bianca (PWT)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bianca (PWT)",
+     "story": "Bianca (PWT) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bianca-pwt"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Bianca (PWT)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Bianca (PWT)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Bianca (PWT)",
+     "story": "Bianca (PWT)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bianca (PWT), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bill",
+   "name": "Bill's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Bill",
+     "story": "Bill has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bill's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bill",
+     "story": "Bill checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bill"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Bill",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Bill",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Bill",
+     "story": "Bill's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bill, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blaine-lgpe",
+   "name": "Blaine (LGPE)'s Fire Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fire-types as Blaine (LGPE)",
+     "story": "Blaine (LGPE) feels the Fire-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Blaine (LGPE)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blaine (LGPE)",
+     "story": "Blaine (LGPE) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blaine-lgpe"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fire-type leading",
+     "story": "The Fire-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fire",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fire-types in one run",
+     "story": "A whole run of Fire-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fire Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Blaine (LGPE)",
+     "story": "Blaine (LGPE)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Blaine (LGPE), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blaine",
+   "name": "Blaine's Fire Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fire-types as Blaine",
+     "story": "Blaine feels the Fire-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Blaine's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blaine",
+     "story": "Blaine checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blaine"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fire-type leading",
+     "story": "The Fire-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fire",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fire-types in one run",
+     "story": "A whole run of Fire-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fire Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Blaine",
+     "story": "Blaine's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Blaine, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blue-gen-3-champion",
+   "name": "Blue (Gen 3 Champion)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Blue (Gen 3 Champion)",
+     "story": "Blue (Gen 3 Champion) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Blue (Gen 3 Champion)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blue (Gen 3 Champion)",
+     "story": "Blue (Gen 3 Champion) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blue-gen-3-champion"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Blue (Gen 3 Champion)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Blue (Gen 3 Champion)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Blue (Gen 3 Champion)",
+     "story": "Blue (Gen 3 Champion)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Blue (Gen 3 Champion), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blue-gen-7",
+   "name": "Blue (Gen 7)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Blue (Gen 7)",
+     "story": "Blue (Gen 7) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Blue (Gen 7)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blue (Gen 7)",
+     "story": "Blue (Gen 7) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blue-gen-7"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Blue (Gen 7)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Blue (Gen 7)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Blue (Gen 7)",
+     "story": "Blue (Gen 7)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Blue (Gen 7), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "blue-classic",
+   "name": "Blue's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Blue",
+     "story": "Blue has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Blue's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Blue",
+     "story": "Blue checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-blue-classic"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Blue",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Blue",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Blue",
+     "story": "Blue's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Blue, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brassius",
+   "name": "Brassius's Grass Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Grass-types as Brassius",
+     "story": "Brassius feels the Grass-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brassius's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brassius",
+     "story": "Brassius checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brassius"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Grass-type leading",
+     "story": "The Grass-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.grass",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Grass-types in one run",
+     "story": "A whole run of Grass-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Grass Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Brassius",
+     "story": "Brassius's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brassius, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brawly-gen-6",
+   "name": "Brawly (Gen 6)'s Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Brawly (Gen 6)",
+     "story": "Brawly (Gen 6) feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brawly (Gen 6)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brawly (Gen 6)",
+     "story": "Brawly (Gen 6) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brawly-gen-6"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Brawly (Gen 6)",
+     "story": "Brawly (Gen 6)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brawly (Gen 6), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brendan-emerald",
+   "name": "Brendan (Emerald)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Brendan (Emerald)",
+     "story": "Brendan (Emerald) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brendan (Emerald)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brendan (Emerald)",
+     "story": "Brendan (Emerald) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brendan-emerald"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Brendan (Emerald)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Brendan (Emerald)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Brendan (Emerald)",
+     "story": "Brendan (Emerald)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brendan (Emerald), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brendan-ruby-sapphire",
+   "name": "Brendan (Ruby/Sapphire)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Brendan (Ruby/Sapphire)",
+     "story": "Brendan (Ruby/Sapphire) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brendan (Ruby/Sapphire)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brendan (Ruby/Sapphire)",
+     "story": "Brendan (Ruby/Sapphire) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brendan-ruby-sapphire"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Brendan (Ruby/Sapphire)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Brendan (Ruby/Sapphire)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Brendan (Ruby/Sapphire)",
+     "story": "Brendan (Ruby/Sapphire)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brendan (Ruby/Sapphire), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brigette",
+   "name": "Brigette's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Brigette",
+     "story": "Brigette has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brigette's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brigette",
+     "story": "Brigette checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brigette"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Brigette",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Brigette",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Brigette",
+     "story": "Brigette's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brigette, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brock-masters",
+   "name": "Brock (Masters)'s Rock Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Rock-types as Brock (Masters)",
+     "story": "Brock (Masters) feels the Rock-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brock (Masters)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brock (Masters)",
+     "story": "Brock (Masters) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brock-masters"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Rock-type leading",
+     "story": "The Rock-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.rock",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Rock-types in one run",
+     "story": "A whole run of Rock-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Rock Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Brock (Masters)",
+     "story": "Brock (Masters)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brock (Masters), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "brock-classic",
+   "name": "Brock's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Brock",
+     "story": "Brock has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Brock's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Brock",
+     "story": "Brock checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-brock-classic"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Brock",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Brock",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Brock",
+     "story": "Brock's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Brock, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bruno-gen-3",
+   "name": "Bruno (Gen 3)'s Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Bruno (Gen 3)",
+     "story": "Bruno (Gen 3) feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bruno (Gen 3)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bruno (Gen 3)",
+     "story": "Bruno (Gen 3) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bruno-gen-3"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bruno (Gen 3)",
+     "story": "Bruno (Gen 3)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bruno (Gen 3), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bruno",
+   "name": "Bruno's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Bruno",
+     "story": "Bruno has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bruno's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bruno",
+     "story": "Bruno checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bruno"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Bruno",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Bruno",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Bruno",
+     "story": "Bruno's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bruno, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "bugsy",
+   "name": "Bugsy's Bug Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Bug-types as Bugsy",
+     "story": "Bugsy feels the Bug-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bugsy's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bugsy",
+     "story": "Bugsy checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-bugsy"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Bug-type leading",
+     "story": "The Bug-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.bug",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Bug-types in one run",
+     "story": "A whole run of Bug-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Bug Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bugsy",
+     "story": "Bugsy's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bugsy, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "byron",
+   "name": "Byron's Steel Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Steel-types as Byron",
+     "story": "Byron feels the Steel-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.steel",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Byron's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Byron",
+     "story": "Byron checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-byron"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Steel-type leading",
+     "story": "The Steel-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.steel",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Steel-types in one run",
+     "story": "A whole run of Steel-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.steel",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Steel Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Byron",
+     "story": "Byron's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Byron, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "caitlin",
+   "name": "Caitlin's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Caitlin",
+     "story": "Caitlin feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Caitlin's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Caitlin",
+     "story": "Caitlin checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-caitlin"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Caitlin",
+     "story": "Caitlin's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Caitlin, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "calem",
+   "name": "Calem's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Calem",
+     "story": "Calem has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Calem's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Calem",
+     "story": "Calem checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-calem"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Calem",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Calem",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Calem",
+     "story": "Calem's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Calem, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "canari",
+   "name": "Canari's Electric Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Electric-types as Canari",
+     "story": "Canari feels the Electric-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Canari's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Canari",
+     "story": "Canari checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-canari"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Electric-type leading",
+     "story": "The Electric-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.electric",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Electric-types in one run",
+     "story": "A whole run of Electric-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Electric Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Canari",
+     "story": "Canari's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Canari, Master"
+     }
+    }
+   ]
+  }
+ ],
+ "runQuests": [
+  {
+   "id": "evolve-3",
+   "text": "Evolve 3 Pokémon this run",
+   "counter": "evolutions",
+   "atLeast": 3,
+   "researchPoints": 40
+  },
+  {
+   "id": "catch-5",
+   "text": "Catch 5 Pokémon this run",
+   "counter": "pokemonCaught",
+   "atLeast": 5,
+   "researchPoints": 30
+  },
+  {
+   "id": "keep-3",
+   "text": "Add 3 caught Pokémon to your party",
+   "counter": "caughtKept",
+   "atLeast": 3,
+   "researchPoints": 30
+  },
+  {
+   "id": "trainers-8",
+   "text": "Defeat 8 trainers this run",
+   "counter": "trainersDefeated",
+   "atLeast": 8,
+   "researchPoints": 40
+  },
+  {
+   "id": "gyms-2",
+   "text": "Defeat 2 gym leaders this run",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 2,
+   "researchPoints": 50
+  },
+  {
+   "id": "gyms-4",
+   "text": "Defeat 4 gym leaders this run",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 4,
+   "researchPoints": 80
+  },
+  {
+   "id": "wild-20",
+   "text": "Defeat 20 wild Pokémon this run",
+   "counter": "wildDefeated",
+   "atLeast": 20,
+   "researchPoints": 30
+  },
+  {
+   "id": "battles-30",
+   "text": "Win 30 battles this run",
+   "counter": "battlesWon",
+   "atLeast": 30,
+   "researchPoints": 50
+  },
+  {
+   "id": "events-4",
+   "text": "Complete 4 map events this run",
+   "counter": "eventsCompleted",
+   "atLeast": 4,
+   "researchPoints": 40
+  },
+  {
+   "id": "money-5000",
+   "text": "Earn ₽5,000 this run",
+   "counter": "moneyEarned",
+   "atLeast": 5000,
+   "researchPoints": 40
+  },
+  {
+   "id": "candies-10",
+   "text": "Earn 10 candies this run",
+   "counter": "candiesEarned",
+   "atLeast": 10,
+   "researchPoints": 30
+  },
+  {
+   "id": "boosts-10",
+   "text": "Raise your Pokémon's stats 10 times with moves",
+   "counter": "statsBoosted",
+   "atLeast": 10,
+   "researchPoints": 30
+  },
+  {
+   "id": "shiny-1",
+   "text": "Find a shiny Pokémon this run",
+   "counter": "shiniesFound",
+   "atLeast": 1,
+   "researchPoints": 100
+  },
+  {
+   "id": "elite-1",
+   "text": "Defeat an Elite Four member this run",
+   "counter": "eliteFourDefeated",
+   "atLeast": 1,
+   "researchPoints": 80
+  },
+  {
+   "id": "region-starter",
+   "text": "Clear a region with your starter still in the party",
+   "counter": "regionsClearedWithStarter",
+   "atLeast": 1,
+   "researchPoints": 100
+  },
+  {
+   "id": "heal-3",
+   "text": "Use 3 healing stops this run",
+   "counter": "healStopsUsed",
+   "atLeast": 3,
+   "researchPoints": 20
+  },
+  {
+   "id": "water-8",
+   "text": "Defeat or catch 8 Water-types this run",
+   "counter": "defeatedOrCaught.water",
+   "atLeast": 8,
+   "researchPoints": 30
+  },
+  {
+   "id": "bug-8",
+   "text": "Defeat or catch 8 Bug-types this run",
+   "counter": "defeatedOrCaught.bug",
+   "atLeast": 8,
+   "researchPoints": 30
+  },
+  {
+   "id": "flying-8",
+   "text": "Defeat or catch 8 Flying-types this run",
+   "counter": "defeatedOrCaught.flying",
+   "atLeast": 8,
+   "researchPoints": 30
+  },
+  {
+   "id": "normal-10",
+   "text": "Defeat or catch 10 Normal-types this run",
+   "counter": "defeatedOrCaught.normal",
+   "atLeast": 10,
+   "researchPoints": 30
+  },
+  {
+   "id": "grass-8",
+   "text": "Defeat or catch 8 Grass-types this run",
+   "counter": "defeatedOrCaught.grass",
+   "atLeast": 8,
+   "researchPoints": 30
+  },
+  {
+   "id": "ghost-5",
+   "text": "Defeat or catch 5 Ghost-types this run",
+   "counter": "defeatedOrCaught.ghost",
+   "atLeast": 5,
+   "researchPoints": 40
+  }
+ ]
+}

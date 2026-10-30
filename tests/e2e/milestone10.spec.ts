@@ -138,3 +138,41 @@ test('slice 2: the trainer VS intro can be skipped and the battle carries on', a
   expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').enemyBox.danger))).toBe(true);
   expect(errors).toEqual([]);
 });
+
+/** True while a text with exactly this content is on the battle screen (inside any container). */
+const showsText = (page: Page, text: string) =>
+  page.evaluate((t) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.text === t || o.list?.some((c: any) => c.text === t)), text);
+
+test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-boss&debug=1');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  // Turn it into a gym battle against Brock with two weak Pokémon (the second is the ace).
+  await page.evaluate(() => {
+    const pkr = (window as any).__pkr;
+    const battle = pkr.session.run.battle;
+    battle.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
+    const team = battle.enemyTeam;
+    team[0].hp = 1;
+    team.push({ ...structuredClone(team[0]), uid: 'm10-ace' });
+    pkr.game.scene.getScene('Battle').scene.restart();
+  });
+  await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 6000, intervals: [100] }).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-boss-title.png' });
+  await waitForMenu(page);
+  // Knock out the first Pokémon: the ace comes out with its stamp.
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Enter');
+  await expect.poll(() => showsText(page, 'ACE!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await waitForMenu(page);
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Enter');
+  await expect.poll(() => showsText(page, 'VICTORY!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-victory.png' });
+  expect(errors).toEqual([]);
+});

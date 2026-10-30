@@ -23,6 +23,7 @@ import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { drawPanel, Menu } from '../ui/widgets';
+import { getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
 
 export interface RunPrepData {
   archetypeId: string;
@@ -31,10 +32,14 @@ export interface RunPrepData {
   seed?: string | null;
   focus?: number;
   notice?: string;
+  /** Mode, difficulty, modifier and Death-Block (default: standard; Death-Block on for a player's first three runs). */
+  rules?: RulesChoice;
+  /** Which modifier the Modifier row shows (Enter turns it on or off). */
+  modCursor?: number;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
 export class RunPrepScene extends Phaser.Scene {
   private menu!: Menu;
@@ -43,6 +48,8 @@ export class RunPrepScene extends Phaser.Scene {
   private archetypeId = '';
   private prep!: RunPrep;
   private seed: string | null = null;
+  private rules: RulesChoice = STANDARD_CHOICE;
+  private modCursor = 0;
 
   constructor() {
     super('RunPrep');
@@ -65,6 +72,8 @@ export class RunPrepScene extends Phaser.Scene {
     this.archetypeId = resolved.archetypeId;
     this.prep = resolved.prep;
     this.seed = data.seed !== undefined ? data.seed : params.get('seed');
+    this.modCursor = data.modCursor ?? 0;
+    this.rules = data.rules ?? { ...STANDARD_CHOICE, deathBlock: profile.stats.runsEnded < 3 && !params.has('debug') };
     const notice = [data.notice, ...resolved.problems].filter(Boolean).join(' ');
 
     this.add.text(GAME_WIDTH / 2, 26, 'Preparation Desk', textStyle(36, COLORS.textLight)).setOrigin(0.5);
@@ -83,16 +92,20 @@ export class RunPrepScene extends Phaser.Scene {
       draft: `Draft: ${rule.name}`,
       type: `Focus type: ${this.prep.typeFocus ? capitalise(this.prep.typeFocus) : '—'}`,
       token: `Preparation: ${token?.name ?? 'none'}`,
+      mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
+      difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
+      modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
+      deathBlock: `Death-Block: ${this.rules.deathBlock ? 'on' : 'off'}`,
       seed: `Seed: ${this.seed ?? 'random'}`,
       save: 'Save as preset…',
       load: 'Load a preset…',
     };
     this.menu = new Menu(this, {
       x: 40,
-      y: 76,
+      y: 72,
       options: ROWS.map((r) => ({ label: labels[r], disabled: r === 'type' && rule.kind !== 'typeFocus' })),
-      itemHeight: 39,
-      fontSize: 21,
+      itemHeight: 27,
+      fontSize: 18,
       onFocus: (i) => (this.focusIndex = i),
       onSelect: (i) => this.select(ROWS[i]!),
       onBack: () => this.scene.start('TrainerSelect'),
@@ -106,6 +119,8 @@ export class RunPrepScene extends Phaser.Scene {
     };
     line('Run Build Summary', 24);
     for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
+    y += 6;
+    for (const l of rulesLines(this.rules)) line(l, 15, '#c8e0f0');
     y += 6;
     line(`${rule.description}`, 15, '#d8d0e0');
     const locked = [
@@ -131,7 +146,7 @@ export class RunPrepScene extends Phaser.Scene {
   }
 
   private refresh(changes: Partial<RunPrep> = {}, extra: Partial<RunPrepData> = {}): void {
-    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, ...extra } satisfies RunPrepData);
+    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, rules: this.rules, modCursor: this.modCursor, ...extra } satisfies RunPrepData);
   }
 
   /** Steps through the options of a row (←/→, or Enter on rows that cycle). */
@@ -170,6 +185,21 @@ export class RunPrepScene extends Phaser.Scene {
         if (ids.length < 2) return this.refresh({}, { notice: 'Earn achievements or buy licenses to unlock preparation choices.' });
         return this.refresh({ tokenId: next(ids, this.prep.tokenId) });
       }
+      case 'mode': {
+        const ids = RUN_RULES.modes.filter((m) => m.status === 'supported').map((m) => m.id);
+        return this.refresh({}, { rules: { ...this.rules, modeId: next(ids, this.rules.modeId) } });
+      }
+      case 'difficulty': {
+        const ids = RUN_RULES.difficulties.map((d) => d.id);
+        return this.refresh({}, { rules: { ...this.rules, difficultyId: next(ids, this.rules.difficultyId) } });
+      }
+      case 'modifier': {
+        // ←/→ choose a modifier; Enter turns it on or off.
+        this.modCursor = (this.modCursor + step + RUN_RULES.modifiers.length) % RUN_RULES.modifiers.length;
+        return this.refresh();
+      }
+      case 'deathBlock':
+        return this.refresh({}, { rules: { ...this.rules, deathBlock: !this.rules.deathBlock } });
       default:
         return;
     }
@@ -179,6 +209,13 @@ export class RunPrepScene extends Phaser.Scene {
     switch (row) {
       case 'start':
         return this.start();
+      case 'modifier': {
+        const m = RUN_RULES.modifiers[this.modCursor]!;
+        const on = this.rules.modifierIds.includes(m.id);
+        // Turning one on switches off any modifier of the same kind.
+        const others = this.rules.modifierIds.filter((id) => id !== m.id && getModifier(id)!.group !== m.group);
+        return this.refresh({}, { rules: { ...this.rules, modifierIds: on ? others.filter((id) => id !== m.id) : [...others, m.id] } });
+      }
       case 'seed': {
         const value = window.prompt('Seed for this run (leave empty for a random one):', this.seed ?? '');
         if (value === null) return;
@@ -196,7 +233,7 @@ export class RunPrepScene extends Phaser.Scene {
 
   private start(): void {
     const { session } = services();
-    session.newRun(this.archetypeId, this.seed ?? undefined, undefined, this.prep);
+    session.newRun(this.archetypeId, this.seed ?? undefined, undefined, this.prep, this.rules);
     this.scene.start('StarterSelect');
   }
 
