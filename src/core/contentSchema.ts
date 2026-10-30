@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
+import type { TotemFile } from './totem/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -1497,6 +1498,8 @@ export interface Content {
   story: StoryConfig;
   /** Raid bosses and den placement (raids.json, core/raid). */
   raids: RaidFile;
+  /** Totem Pokémon (totems.json, core/totem). */
+  totems: TotemFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

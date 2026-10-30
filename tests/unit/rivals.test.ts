@@ -95,7 +95,7 @@ describe('rivals in saves', () => {
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(10);
     expect(loaded.data.story.rivals).toEqual([]);
-    expect(CURRENT_VERSIONS.run).toBe(13);
+    expect(CURRENT_VERSIONS.run).toBe(14);
   });
 
   it('a version 11 run keeps its rivals and gains empty bonds', () => {
