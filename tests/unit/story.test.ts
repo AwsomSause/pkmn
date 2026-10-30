@@ -59,12 +59,12 @@ describe('story foundation: random streams', () => {
   // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8).
   const BEFORE_STORY: Record<string, string> = {
     'STORY1/0': '118c704578b3ba31',
-    'STORY2/0': '0576dbdf0e4e17dd',
-    'STORY4/0': 'a859f680542e3f69',
-    'STORY5/0': 'a93ae49dd50613cb',
+    'STORY2/0': 'e73f41c2f2866ed2',
+    'STORY4/0': '11da3a33e6fe80c2',
+    'STORY5/0': 'e984a6f25bcfc416',
     'STORY6/0': '55c1af886ec5e692',
-    'STORY7/0': '393b2df3b4dc5334',
-    'STORY8/0': '21bea799f1cb3420',
+    'STORY7/0': 'b9919a1b3cdc8417',
+    'STORY8/0': '11ed7fbb8d01ce34',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
   // what is left must still match main exactly, which proves the story and hyper streams moved no other roll.

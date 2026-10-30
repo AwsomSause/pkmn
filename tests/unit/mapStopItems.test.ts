@@ -7,7 +7,7 @@ import { nextChoices } from '../../src/core/map';
 import { mapItemSummary } from '../../src/core/mapItems';
 import { createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { chooseNode, chooseStarter, createRun, fish, fishingOffer, takeTurn, visitSide, type TurnResult } from '../../src/core/run';
+import { chooseNode, chooseStarter, createRun, fish, fishingOffer, resolveDecision, takeTurn, visitSide, type TurnResult } from '../../src/core/run';
 import type { MapNode, RunState } from '../../src/core/state';
 import { content, takeAnyReward } from './helpers';
 
@@ -38,7 +38,10 @@ function win(run: RunState): TurnResult {
 function nextStage(run: RunState): RunState {
   const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym')!;
   run.stage!.current = run.stage!.map.nodes.find((n) => n.next.includes(gym.id))!.id;
-  return takeAnyReward(win(chooseNode(content, run, gym.id)).run);
+  let next = takeAnyReward(win(chooseNode(content, run, gym.id)).run);
+  // A fossil or egg in the draft brings a Pokémon to place first.
+  while (next.phase === 'decision' && next.pending[0]?.kind === 'caught') next = resolveDecision(content, next, { kind: 'release' }).run;
+  return next;
 }
 
 const itemStops = (run: RunState) => run.stage!.map.nodes.flatMap((n) => n.sides.filter((s) => s.id.startsWith('item-stop')).map((s) => ({ node: n, side: s })));

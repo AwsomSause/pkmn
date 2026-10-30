@@ -92,9 +92,11 @@ export const HeldStateSchema = z.object({
   magicRoom: z.number().int().min(0).default(0),
   /** Attacks your side has made this battle (First Attack perks). */
   playerAttacks: z.number().int().min(0).default(0),
+  /** Berries the player's side ate this battle (Powder Jar, Gooey Mulch). */
+  berries: z.number().int().min(0).default(0),
 });
 export type HeldState = z.infer<typeof HeldStateSchema>;
-export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0, playerAttacks: 0 });
+export const freshHeldState = (): HeldState => ({ used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {}, lost: {}, gained: {}, embargo: {}, magicRoom: 0, playerAttacks: 0, berries: 0 });
 
 /** Battle-only conditions on the Pokémon in battle; cleared when it switches out. */
 export const VolatileSchema = z.object({
@@ -820,6 +822,10 @@ export const RunStateSchema = z.object({
   rules: RunRulesSchema,
   /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */
   checkpoint: z.record(z.string(), z.unknown()).optional(),
+  /** VS Recorder: the run as the current trainer battle began, so a loss can replay it once. */
+  recorder: z.record(z.string(), z.unknown()).optional(),
+  /** Journal: one line per finished stage (the stops passed), kept for the run history. */
+  journal: z.array(z.string()).default([]),
   /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
   runQuest: z.string().nullable().default(null),
   /** Species Mastery unlocks for this run, by family (first-stage id): applied to each Pokémon of it that joins. */
@@ -908,6 +914,8 @@ export const RunRecordSchema = z.object({
   achievements: z.array(z.string()),
   /** The run's top chronicle moments, most memorable first. */
   moments: z.array(z.string()),
+  /** Journal: the run's map, stage by stage (empty without the Journal). */
+  journal: z.array(z.string()).default([]),
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
