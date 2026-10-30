@@ -1,15 +1,19 @@
 // Battle transformations (Milestone 8.5, GAME_DESIGN.md §5f): Mega Evolution,
 // Primal Reversion, Terastallization, Z-Moves and Dynamax/Gigantamax.
 //
-// Rules:
-// - Each mechanic needs its key item in the Bag (Mega Ring) and works once
-//   per battle for each side. A Pokémon can only transform once per battle.
-// - Mega Evolution also needs that species' Mega Stone in the Bag. The player
-//   asks for it together with a move; it happens before anyone moves, so the
-//   new Speed already counts for that turn's order.
-// - Primal Reversion (Red/Blue Orb) is automatic at the start of the move
-//   phase, needs no key item and doesn't use up the Mega.
-// - The transformed Pokémon's speciesId is its new form until the battle ends;
+// Rules ("PokeRogue style", the director's pick, 2026-10-29):
+// - Each mechanic needs its key item in the Bag (Mega Ring, Tera Orb, Z-Ring,
+//   Dynamax Band).
+// - Forms are permanent while you own the key item: every Pokémon with its
+//   Mega Stone in the Bag Mega Evolves by itself in every battle, and with the
+//   Dynamax Band every Pokémon with a Gigantamax form takes it. Primal
+//   Reversion (Red/Blue Orb) works the same way and needs no key item. The
+//   form change happens before anyone moves on its first turn out, so the new
+//   Speed already counts.
+// - Terastallization, Z-Moves and Dynamax work once per battle for each side,
+//   and a Pokémon can use only one of the three per battle. A Mega Evolved or
+//   Primal Pokémon can't Dynamax.
+// - A changed Pokémon's speciesId is its new form until the battle ends;
 //   `battle.transform.forms` remembers the old one and revertTransformations
 //   changes it back. HP stays the same (capped at the new maximum).
 // - Terastallization needs the Tera Orb. The Pokémon's types become its Tera
@@ -23,15 +27,13 @@
 //   status move works as itself and adds its Z bonus (stat boosts, clearing
 //   lowered stats, or a full heal). The Z-Power is spent, and a status move's
 //   bonus lands, at the start of the turn, like the other transformations.
-//   It counts as that Pokémon's one transformation.
 // - Dynamax needs the Dynamax Band. For balance.transformations.dynamaxTurns
 //   turns (counting the first) its HP is doubled and every move becomes a
 //   Max Move (maxMoves.json): damaging moves turn into their type's Max Move,
 //   which never misses, has no priority, hits through Protect for a quarter
 //   and then sets the weather or changes stats; status moves become Max
-//   Guard. A Pokémon with a Gigantamax form takes it, and its type's Max Move
-//   becomes its G-Max Move. Switching out or fainting ends it early. It
-//   can't be made to flinch.
+//   Guard. In its Gigantamax form, its type's Max Move becomes its G-Max
+//   Move. Switching out or fainting ends it early. It can't be made to flinch.
 // - Bosses (balance.transformations) may transform their ace, the last
 //   Pokémon of their team, and need no items.
 // - A run can switch mechanics off (run.disabledMechanics, a challenge); that
@@ -46,10 +48,12 @@ import { calcStats, getSpecies } from '../pokemon';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
-export type FormChangeKind = 'mega' | 'primal' | 'tera';
+export type FormChangeKind = 'mega' | 'primal' | 'gigantamax' | 'tera';
+/** The mechanics that work once per battle; a Pokémon can use only one of them. */
+export type BattleMechanic = 'tera' | 'zmove' | 'dynamax';
 
 /** The player's request, sent with a move (a Z-Move applies to that move). */
-export type TransformRequest = { kind: 'mega'; formId?: string } | { kind: 'tera' } | { kind: 'zmove' } | { kind: 'dynamax' };
+export type TransformRequest = { kind: 'tera' } | { kind: 'zmove' } | { kind: 'dynamax' };
 
 export interface TransformEvent {
   type: 'transform';
@@ -115,11 +119,17 @@ export function ownedMegaForms(content: Content, inventory: Record<string, numbe
   return stoneForms(content, mon.speciesId, false).filter((o) => o.itemId !== null && owns(inventory, o.itemId));
 }
 
-/** The Mega forms the player's active Pokémon can take right now (empty when it can't Mega Evolve). */
-export function megaOptions(ctx: TransformContext): FormOption[] {
-  const mon = ctx.party[ctx.battle.activeIndex];
-  if (!mon) return [];
-  return megaProblem(ctx, mon, undefined) ? [] : ownedMegaForms(ctx.content, ctx.inventory, mon);
+/** The form this Pokémon takes by itself in battle: its Mega form (the first stone you own) or its Gigantamax form, or null. */
+export function permanentForm(content: Content, inventory: Record<string, number>, mon: PokemonInstance, disabled: readonly TransformKind[] = []): { kind: 'mega' | 'gigantamax'; option: FormOption } | null {
+  const mega = !disabled.includes('mega') && hasKeyItem(content, inventory, 'mega') ? ownedMegaForms(content, inventory, mon)[0] : undefined;
+  if (mega) return { kind: 'mega', option: mega };
+  const gmax = !disabled.includes('dynamax') && hasKeyItem(content, inventory, 'dynamax') ? gmaxFormFor(content, mon.speciesId) : null;
+  return gmax ? { kind: 'gigantamax', option: { formId: gmax, itemId: null } } : null;
+}
+
+/** Why this Pokémon can't use another once-per-battle mechanic, or null. */
+function oncePerPokemon(ctx: TransformContext, mon: PokemonInstance): string | null {
+  return ctx.battle.transform.mechanics[mon.uid] ? 'That Pokémon has already transformed this battle.' : null;
 }
 
 /** Why the player's active Pokémon can't do this transformation now (with the move in `moveIndex`), or null if it can. */
@@ -128,7 +138,7 @@ export function transformProblem(ctx: TransformContext, request: TransformReques
   if (!mon) return 'No active Pokémon.';
   if (request.kind === 'zmove') return zMoveProblem(ctx, mon, moveIndex);
   if (request.kind === 'dynamax') return dynamaxProblem(ctx, mon);
-  return request.kind === 'mega' ? megaProblem(ctx, mon, request.formId) : teraProblem(ctx, mon);
+  return teraProblem(ctx, mon);
 }
 
 /**
@@ -178,7 +188,7 @@ function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: nu
   if (ctx.disabledMechanics?.includes('zmove')) return 'Z-Moves are switched off for this run.';
   if (!hasKeyItem(content, inventory, 'zmove')) return 'You need a Z-Ring to use a Z-Move.';
   if (battle.transform.used.player.includes('zmove')) return 'You have already used a Z-Move this battle.';
-  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
+  if (oncePerPokemon(ctx, mon)) return oncePerPokemon(ctx, mon);
   const slot = mon.moves[moveIndex];
   const move = slot ? content.moves.get(slot.id) : undefined;
   if (!slot || !move) return 'Choose a move for the Z-Move.';
@@ -199,7 +209,9 @@ function dynamaxProblem(ctx: TransformContext, mon: PokemonInstance): string | n
   if (ctx.disabledMechanics?.includes('dynamax')) return 'Dynamax is switched off for this run.';
   if (!hasKeyItem(content, inventory, 'dynamax')) return 'You need a Dynamax Band to Dynamax.';
   if (battle.transform.used.player.includes('dynamax')) return 'You have already Dynamaxed this battle.';
-  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
+  if (oncePerPokemon(ctx, mon)) return oncePerPokemon(ctx, mon);
+  const form = battle.transform.forms[mon.uid]?.kind;
+  if (form === 'mega' || form === 'primal') return `A ${form === 'mega' ? 'Mega Evolved' : 'Primal'} Pokémon can't Dynamax.`;
   return null;
 }
 
@@ -270,34 +282,30 @@ export function battleMove(content: Content, battle: BattleState, mon: PokemonIn
 export function maxMoveOptions(ctx: TransformContext): (Move | null)[] {
   const mon = ctx.party[ctx.battle.activeIndex];
   if (!mon) return [];
-  const species = ctx.battle.transform.dynamax[mon.uid] !== undefined ? mon.speciesId : (gmaxFormFor(ctx.content, mon.speciesId) ?? mon.speciesId);
+  // Before its first turn out it hasn't taken its Gigantamax form yet, but it will before it moves.
+  const species = ctx.battle.transform.forms[mon.uid] ? mon.speciesId : (permanentForm(ctx.content, ctx.inventory, mon, ctx.disabledMechanics)?.option.formId ?? mon.speciesId);
   return mon.moves.map((slot) => maxMoveFor(ctx.content, species, ctx.content.moves.get(slot.id)!));
 }
 
 function dynamax(ctx: TransformContext, side: Side, mon: PokemonInstance, events: TransformStepEvent[]): void {
   const { content, battle } = ctx;
-  const from = mon.speciesId;
-  const gmax = gmaxFormFor(content, from);
   const before = calcStats(content, mon).hp;
-  battle.transform.forms[mon.uid] = { kind: 'dynamax', from };
+  battle.transform.mechanics[mon.uid] = 'dynamax';
   battle.transform.dynamax[mon.uid] = content.balance.transformations.dynamaxTurns;
   battle.transform.used[side].push('dynamax');
-  if (gmax) mon.speciesId = gmax;
   mon.dynamaxed = true;
   mon.hp = Math.max(1, Math.round((mon.hp * calcStats(content, mon).hp) / before));
-  events.push({ type: 'transform', side, uid: mon.uid, kind: gmax ? 'gigantamax' : 'dynamax', from, to: mon.speciesId, itemId: null });
+  events.push({ type: 'transform', side, uid: mon.uid, kind: 'dynamax', from: mon.speciesId, to: mon.speciesId, itemId: null });
 }
 
-/** Ends a Dynamax: HP is scaled back to the normal maximum and a Gigantamax form changes back. */
+/** Ends a Dynamax: HP is scaled back to the normal maximum (a Gigantamax form stays until the battle ends). */
 export function endDynamax(content: Content, battle: BattleState, side: Side, mon: PokemonInstance, events?: TransformStepEvent[]): void {
   if (battle.transform.dynamax[mon.uid] === undefined) return;
-  const from = mon.speciesId;
   const before = calcStats(content, mon).hp;
   delete battle.transform.dynamax[mon.uid];
   delete mon.dynamaxed;
-  mon.speciesId = battle.transform.forms[mon.uid]?.from ?? mon.speciesId;
   if (mon.hp > 0) mon.hp = Math.max(1, Math.round((mon.hp * calcStats(content, mon).hp) / before));
-  events?.push({ type: 'transform', side, uid: mon.uid, kind: 'dynamaxEnd', from, to: mon.speciesId, itemId: null });
+  events?.push({ type: 'transform', side, uid: mon.uid, kind: 'dynamaxEnd', from: mon.speciesId, to: mon.speciesId, itemId: null });
 }
 
 /** End of turn: Dynamax turns run down; it ends when they run out or the Pokémon has fainted. */
@@ -322,25 +330,13 @@ function teraProblem(ctx: TransformContext, mon: PokemonInstance): string | null
   if (ctx.disabledMechanics?.includes('tera')) return 'Terastallization is switched off for this run.';
   if (!hasKeyItem(content, inventory, 'tera')) return 'You need a Tera Orb to Terastallize.';
   if (battle.transform.used.player.includes('tera')) return 'You have already Terastallized this battle.';
-  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
-  return null;
-}
-
-function megaProblem(ctx: TransformContext, mon: PokemonInstance, formId: string | undefined): string | null {
-  const { content, battle, inventory } = ctx;
-  if (ctx.disabledMechanics?.includes('mega')) return 'Mega Evolution is switched off for this run.';
-  if (!hasKeyItem(content, inventory, 'mega')) return 'You need a Mega Ring to Mega Evolve.';
-  if (battle.transform.used.player.includes('mega')) return 'You have already Mega Evolved this battle.';
-  if (battle.transform.forms[mon.uid]) return 'That Pokémon has already transformed this battle.';
-  const options = ownedMegaForms(content, inventory, mon);
-  if (options.length === 0) return `${getSpecies(content, mon.speciesId).name} has no Mega Stone.`;
-  if (formId !== undefined && !options.some((o) => o.formId === formId)) return "You don't have the stone for that Mega form.";
-  return null;
+  return oncePerPokemon(ctx, mon);
 }
 
 /**
- * Applies this turn's transformations, before anyone moves: automatic Primal
- * Reversion for both sides, then the player's request, then the opponent's.
+ * Applies this turn's transformations, before anyone moves: the forms that
+ * happen by themselves (Primal, Mega, Gigantamax) for both sides, then the
+ * player's request, then the opponent's.
  */
 export function applyTransformations(ctx: TransformContext, request: TransformRequest | undefined, events: TransformStepEvent[], moveIndex = -1): void {
   const { content, battle } = ctx;
@@ -351,25 +347,19 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   const enemyMay = (mon: PokemonInstance) =>
     megaOn && battle.transform.enemyMechanics.includes('mega') && battle.enemyTeam.indexOf(mon) === battle.enemyTeam.length - 1;
 
-  // 1. Primal Reversion (automatic, free).
-  if (megaOn && player.hp > 0 && !battle.transform.forms[player.uid]) {
-    const orb = stoneForms(content, player.speciesId, true).find((o) => o.itemId && owns(ctx.inventory, o.itemId));
+  // 1. Forms that happen by themselves: Primal Reversion, then Mega Evolution or Gigantamax.
+  if (player.hp > 0 && !battle.transform.forms[player.uid]) {
+    const orb = megaOn ? stoneForms(content, player.speciesId, true).find((o) => o.itemId && owns(ctx.inventory, o.itemId)) : undefined;
+    const form = orb ? null : permanentForm(content, ctx.inventory, player, ctx.disabledMechanics);
     if (orb) changeForm(ctx, 'player', player, 'primal', orb, events);
+    else if (form) changeForm(ctx, 'player', player, form.kind, form.option, events);
   }
   if (enemy.hp > 0 && !battle.transform.forms[enemy.uid] && enemyMay(enemy)) {
     const orb = stoneForms(content, enemy.speciesId, true)[0];
     if (orb) changeForm(ctx, 'enemy', enemy, 'primal', { ...orb, itemId: null }, events);
   }
 
-  // 2. The player's Mega Evolution.
-  if (request?.kind === 'mega' && player.hp > 0 && !megaProblem(ctx, player, request.formId)) {
-    const options = ownedMegaForms(content, ctx.inventory, player);
-    const option = options.find((o) => o.formId === request.formId) ?? options[0]!;
-    changeForm(ctx, 'player', player, 'mega', option, events);
-    battle.transform.used.player.push('mega');
-  }
-
-  // ... or Terastallization.
+  // 2. The player's Terastallization...
   if (request?.kind === 'tera' && player.hp > 0 && !teraProblem(ctx, player)) {
     terastallize(ctx, 'player', player, teraTypeOf(content, player), events);
   }
@@ -378,7 +368,7 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   if (request?.kind === 'zmove' && player.hp > 0 && !zMoveProblem(ctx, player, moveIndex)) {
     const move = content.moves.get(player.moves[moveIndex]!.id)!;
     const z = zMoveFor(content, move)!;
-    battle.transform.forms[player.uid] = { kind: 'zmove', from: player.speciesId };
+    battle.transform.mechanics[player.uid] = 'zmove';
     battle.transform.used.player.push('zmove');
     events.push({
       type: 'transform', side: 'player', uid: player.uid, kind: 'zmove', from: player.speciesId, to: player.speciesId,
@@ -394,7 +384,7 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   const may = (kind: TransformKind) =>
     !ctx.disabledMechanics?.includes(kind) && battle.transform.enemyMechanics.includes(kind) && !battle.transform.used.enemy.includes(kind);
   const isAce = battle.enemyTeam.indexOf(enemy) === battle.enemyTeam.length - 1;
-  if (enemy.hp > 0 && isAce && !battle.transform.forms[enemy.uid]) {
+  if (enemy.hp > 0 && isAce && !battle.transform.forms[enemy.uid] && !battle.transform.mechanics[enemy.uid]) {
     const option = may('mega') ? stoneForms(content, enemy.speciesId, false)[0] : undefined;
     if (option) {
       changeForm(ctx, 'enemy', enemy, 'mega', { ...option, itemId: null }, events);
@@ -438,7 +428,7 @@ function applyZBonus(ctx: TransformContext, side: Side, mon: PokemonInstance, mo
 
 function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, type: TypeName, events: TransformStepEvent[]): void {
   const { battle } = ctx;
-  battle.transform.forms[mon.uid] = { kind: 'tera', from: mon.speciesId };
+  battle.transform.mechanics[mon.uid] = 'tera';
   battle.transform.teraTypes[mon.uid] = type;
   battle.transform.used[side].push('tera');
   events.push({ type: 'transform', side, uid: mon.uid, kind: 'tera', from: mon.speciesId, to: mon.speciesId, itemId: null, teraType: type });
@@ -491,6 +481,7 @@ export function revertTransformations(content: Content, battle: BattleState, par
   battle.transform.forms = {};
   battle.transform.teraTypes = {};
   battle.transform.dynamax = {};
+  battle.transform.mechanics = {};
 }
 
 /** The mechanics a trainer battle's opponent may use (bosses only; see balance.transformations). */

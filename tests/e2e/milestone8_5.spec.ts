@@ -35,7 +35,7 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => localStorage.clear());
 });
 
-test('Mega Evolution from the battle menu', async ({ page }) => {
+test('Mega Evolution happens by itself in battle', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await startRun(page, 'e2e-mega');
@@ -55,14 +55,8 @@ test('Mega Evolution from the battle menu', async ({ page }) => {
   });
   await waitForScene(page, 'Battle');
   await expect.poll(() => textureOf(page), { timeout: 10_000 }).toBe('pokemon.back.3');
-  // Wait for the intro to reach the menu, then pick "Mega" (bottom right of the 2×2 menu).
-  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Mega: OFF']);
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('ArrowDown');
-  await page.keyboard.press('Enter');
-  await expect.poll(() => menuLabels(page)).toEqual(['Fight', 'Bag', 'Pokémon', 'Mega: ON']);
-  await page.screenshot({ path: 'test-results/m8_5-mega-armed.png' });
-  // The menu reopens on Fight: Fight -> first move.
+  // PokeRogue style: no Mega button; it Mega Evolves before its first move.
+  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon']);
   await page.keyboard.press('Enter');
   await page.waitForTimeout(250);
   await page.keyboard.press('Enter');

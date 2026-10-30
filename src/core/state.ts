@@ -43,6 +43,12 @@ export const PokemonInstanceSchema = z.object({
   shiny: z.boolean(),
   /** How much it likes you (0–255, see core/friendship.ts). */
   friendship: z.number().int().min(0).max(255),
+  /**
+   * Which of its species' abilities it has: -1 = the hidden ability, otherwise
+   * an index into the normal ones (kept through evolution, see abilityOf).
+   * Pokémon from saves made before abilities existed get the first one.
+   */
+  abilitySlot: z.number().int().min(-1).default(0),
   /** Held items (catalog id → copies). A Pokémon can hold many items, each up to its catalog max (director, Q1). */
   held: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Small permanent stat boosts per stat (Wings): copies taken, each worth its catalog percent. */
@@ -95,6 +101,10 @@ export const VolatileSchema = z.object({
   locked: z.object({ moveId: z.string(), turns: z.number().int().min(0) }).nullable().default(null),
   /** Full turns it has been in battle (Fake Out works only on the first). */
   turnsOut: z.number().int().min(0).default(0),
+  /** Flash Fire took a Fire move: its own Fire moves are 1.5× as strong. */
+  flashFire: z.boolean().default(false),
+  /** Truant: it loafs around on its next turn. */
+  truant: z.boolean().default(false),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -107,6 +117,8 @@ export const freshVolatile = (): Volatile => ({
   semi: null,
   locked: null,
   turnsOut: 0,
+  flashFire: false,
+  truant: false,
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
@@ -132,17 +144,19 @@ export const BattleTransformSchema = z.object({
   /** The mechanics each side has already used this battle (each works once per battle). */
   used: z.object({ player: z.array(TransformKindSchema), enemy: z.array(TransformKindSchema) }),
   /** uid -> what that Pokémon transformed with and the species it was before. One transformation per Pokémon. */
-  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'tera', 'zmove', 'dynamax']), from: z.string() })),
+  forms: z.record(z.string(), z.object({ kind: z.enum(['mega', 'primal', 'gigantamax', 'tera', 'zmove', 'dynamax']), from: z.string() })),
   /** The mechanics the opponent may use (bosses; see balance.transformations). */
   enemyMechanics: z.array(TransformKindSchema),
   /** uid -> the type a Terastallized Pokémon has become. */
   teraTypes: z.record(z.string(), TypeNameSchema).default({}),
   /** uid -> turns left for a Dynamaxed Pokémon. */
   dynamax: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** uid -> the once-per-battle mechanic it used (Tera, Z-Move or Dynamax; one per Pokémon). */
+  mechanics: z.record(z.string(), z.enum(['tera', 'zmove', 'dynamax'])).default({}),
 });
 export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
-export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {} });
+export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
@@ -161,6 +175,8 @@ export const BattleStateSchema = z.object({
   enemyVolatile: VolatileSchema.default(freshVolatile),
   /** The weather and how many turns it has left. */
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** Sides whose Pokémon just came in and whose entry ability (Intimidate, Drizzle) hasn't happened yet. */
+  pendingEntry: z.array(z.enum(['player', 'enemy'])).default([]),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */
   participants: z.array(z.string()),
   /** True when the active Pokémon fainted and the player must send out another. */

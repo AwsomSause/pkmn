@@ -9,19 +9,26 @@
 //
 // A Pokémon charging a two-turn move (Solar Beam, Fly) or locked into Thrash
 // must use that move next turn: the player's move choice is replaced by it.
+//
+// Abilities (abilities.ts) hook in at each step: when a Pokémon comes in
+// (Intimidate, Drizzle), in turn order (Swift Swim, Prankster), before a move
+// lands (Levitate, Volt Absorb), in the damage formula (Blaze, Thick Fat),
+// after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
+// when switching out (Regenerator).
 
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
 import type { BoostStat, Content, Move, Semi, StatusId, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
-import { calcStats, getSpecies } from '../pokemon';
+import { abilityOf, calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
 import { currentEnemy, freshHeldState, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
+  pokeRound,
   clampStage,
   confusionHitChance,
   lowHpPower,
@@ -34,6 +41,24 @@ import {
   isStatusImmune,
   typeEffectiveness,
 } from './damage';
+import {
+  ABSORB,
+  CONTACT_HURT,
+  CONTACT_STATUS,
+  DROP_GUARD,
+  FLAG_BOOST,
+  HIT_BOOST,
+  INTIMIDATE_GUARD,
+  KO_BOOST,
+  MOLD_BREAKERS,
+  PINCH,
+  STATUS_IMMUNE,
+  TYPE_CHANGE,
+  WEATHER_DAMAGE_IMMUNE,
+  WEATHER_EVASION,
+  WEATHER_SETTERS,
+  WEATHER_SPEED,
+} from './abilities';
 import * as Held from './held';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
@@ -50,7 +75,11 @@ export type BattleEvent =
   | { type: 'status'; side: Side; status: StatusId }
   | { type: 'stat'; side: Side; stat: BoostStat; change: number }
   | { type: 'statLimit'; side: Side; stat: BoostStat; up: boolean }
-  | { type: 'cant'; side: Side; reason: 'slp' | 'frz' | 'par' | 'flinch' | 'recharge' }
+  | { type: 'cant'; side: Side; reason: 'slp' | 'frz' | 'par' | 'flinch' | 'recharge' | 'truant' }
+  /** Its ability did something (shown as "Gyarados's Intimidate!" before the effect). */
+  | { type: 'ability'; side: Side; ability: string }
+  /** Its status was cured (Shed Skin, Hydration). */
+  | { type: 'cured'; side: Side }
   /** Became confused; `confusion` is the "is confused!" check at the start of its move; `confusionEnd` snapped out. */
   | { type: 'confused'; side: Side }
   | { type: 'confusion'; side: Side }
@@ -171,6 +200,7 @@ export function createBattle(
     playerVolatile: freshVolatile(),
     enemyVolatile: freshVolatile(),
     weather: null,
+    pendingEntry: ['player', 'enemy'],
     participants: [activeUid],
     needsSwitch: false,
     lastStandUsed: false,
@@ -224,9 +254,12 @@ function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): nu
   const targetSpecies = getSpecies(content, target.speciesId);
   const userStats = calcStats(content, user);
   const targetStats = calcStats(content, target);
+  const targetAbilityId = abilityOf(content, target);
   const attackPower = (m: Move) => {
     if (m.category === 'status') return 0;
     const effectiveness = m.flags.includes('typeless') ? 1 : typeEffectiveness(content.typeChart, m.type, targetSpecies.types);
+    // It knows the obvious ability immunities (Levitate, Volt Absorb, Wonder Guard).
+    if (targetAbilityId && (ABSORB[targetAbilityId]?.type === m.type || (targetAbilityId === 'levitate' && m.type === 'ground') || (targetAbilityId === 'wonder-guard' && effectiveness <= 1))) return 0;
     // A two-turn move is worth about half as much per turn.
     const power = (m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0)) * (m.effects.charge ? 0.5 : 1);
     const ratio = m.category === 'physical' ? userStats.atk / targetStats.def : userStats.spa / targetStats.spd;
@@ -306,12 +339,14 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     if (problem) throw new Error(problem);
     switchIn(ctx, action.partyIndex, events);
     battle.needsSwitch = false;
+    resolveEntries(ctx, events);
     return events;
   }
 
   battle.playerVolatile ??= freshVolatile();
   battle.enemyVolatile ??= freshVolatile();
   battle.weather ??= null;
+  battle.pendingEntry ??= [];
   battle.held ??= freshHeldState();
   // X items and Dire Hit take effect when a Pokémon is first in battle.
   enterField(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
@@ -329,6 +364,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   ctx.hyperUsed = false;
   ctx.enemyHyperUsed = false;
   battle.hyper ??= freshHyperBattle();
+  // Entry abilities still waiting from the start of the battle (the battle screen normally plays them first, see startBattle).
+  resolveEntries(ctx, events);
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
@@ -343,7 +380,9 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     events.push({ type: 'switchOut', side: 'player', uid: ctx.party[battle.activeIndex]!.uid });
     // Switching out ends a Dynamax.
     endDynamax(content, battle, 'player', ctx.party[battle.activeIndex]!, events as TransformStepEvent[]);
+    switchOutAbility(ctx, ctx.party[battle.activeIndex]!);
     switchIn(ctx, action.partyIndex, events);
+    resolveEntries(ctx, events);
   } else if (action.kind === 'item') {
     useItemInBattle(ctx, action.itemId, action.targetIndex, events);
     if (battle.outcome === 'caught') {
@@ -383,15 +422,26 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
   recordFaints(ctx, playerC, enemy, events);
 
-  // 3. End of turn: weather, then burn, poison, binding and Leech Seed.
+  // 3. End of turn: weather (and Rain Dish), Shed Skin, then burn, poison, binding and Leech Seed, then Speed Boost.
   if (!anyFainted(playerC, enemy)) {
     applyWeather(ctx, [playerC, enemy], events);
     recordFaints(ctx, playerC, enemy, events);
   }
   if (!anyFainted(playerC, enemy)) {
+    for (const c of [playerC, enemy]) statusCureAbility(ctx, c, events);
     applyResidual(ctx, playerC, enemy, events);
     applyResidual(ctx, enemy, playerC, events);
     recordFaints(ctx, playerC, enemy, events);
+  }
+  if (!anyFainted(playerC, enemy)) {
+    for (const c of [playerC, enemy]) {
+      // Not on the turn it switched in.
+      const justIn = c.side === 'player' && action.kind === 'switch';
+      if (abilityIn(ctx, c) === 'speed-boost' && c.stages.spe < 6 && !justIn) {
+        events.push({ type: 'ability', side: c.side, ability: 'speed-boost' });
+        applyStageChange(ctx, c, 'spe', 1, events);
+      }
+    }
   }
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -505,6 +555,7 @@ function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[])
   battle.playerVolatile = freshVolatile();
   if (!battle.participants.includes(mon.uid)) battle.participants.push(mon.uid);
   events.push({ type: 'switchIn', side: 'player', uid: mon.uid, speciesId: mon.speciesId, level: mon.level });
+  battle.pendingEntry = [...(battle.pendingEntry ?? []).filter((side) => side !== 'player'), 'player'];
   enterField(ctx, { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
 }
 
@@ -531,6 +582,141 @@ function leaveField(ctx: BattleContext, mon: PokemonInstance): void {
   Held.onSwitchOut(ctx, mon);
 }
 
+/** Natural Cure and Regenerator, when a Pokémon still standing is called back (silently, as in the main games). */
+function switchOutAbility(ctx: BattleContext, mon: PokemonInstance): void {
+  if (mon.hp <= 0) return;
+  const ability = abilityOf(ctx.content, mon);
+  if (ability === 'natural-cure') mon.status = null;
+  if (ability === 'regenerator') {
+    const max = calcStats(ctx.content, mon).hp;
+    mon.hp = Math.min(max, mon.hp + Math.floor(max / 3));
+  }
+}
+
+// ---------- abilities ----------
+
+function abilityIn(ctx: BattleContext, c: Combatant): string | null {
+  return abilityOf(ctx.content, c.mon);
+}
+
+/** The target's ability as the attacker's move sees it: Mold Breaker ignores it. */
+function targetAbility(ctx: BattleContext, user: Combatant, target: Combatant): string | null {
+  if (user === target) return abilityIn(ctx, target);
+  const own = abilityIn(ctx, user);
+  return own && MOLD_BREAKERS.has(own) ? null : abilityIn(ctx, target);
+}
+
+function announce(c: Combatant, ability: string, events: BattleEvent[]): void {
+  events.push({ type: 'ability', side: c.side, ability });
+}
+
+/** Builds the two Pokémon in battle (for steps outside a turn's moves). */
+function activeCombatants(ctx: BattleContext): { player: Combatant; enemy: Combatant } {
+  const { battle } = ctx;
+  battle.playerVolatile ??= freshVolatile();
+  battle.enemyVolatile ??= freshVolatile();
+  return {
+    player: { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false },
+    enemy: { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false },
+  };
+}
+
+/**
+ * Entry abilities of Pokémon that just came in (battle start, switching,
+ * a trainer's next Pokémon), the faster one first. Uses no random numbers.
+ */
+function resolveEntries(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  const pending = battle.pendingEntry ?? [];
+  if (pending.length === 0 || battle.outcome || battle.needsSwitch) return;
+  battle.pendingEntry = [];
+  const { player, enemy } = activeCombatants(ctx);
+  const sides = pending.map((side) => (side === 'player' ? { c: player, other: enemy } : { c: enemy, other: player }));
+  if (sides.length === 2 && speedOf(ctx, enemy) > speedOf(ctx, player)) sides.reverse();
+  for (const { c, other } of sides) if (c.mon.hp > 0) entryAbility(ctx, c, other, events);
+}
+
+function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events: BattleEvent[]): void {
+  const ability = abilityIn(ctx, c);
+  if (!ability) return;
+  const weather = WEATHER_SETTERS[ability];
+  if (weather) {
+    if (ctx.battle.weather?.id === weather) return;
+    announce(c, ability, events);
+    ctx.battle.weather = { id: weather, turns: 5 };
+    events.push({ type: 'weather', weather });
+    return;
+  }
+  if (ability === 'intimidate' && other.mon.hp > 0) {
+    announce(c, ability, events);
+    const guard = abilityIn(ctx, other);
+    if (guard && INTIMIDATE_GUARD.has(guard)) {
+      announce(other, guard, events);
+      events.push({ type: 'fail', side: other.side });
+      return;
+    }
+    applyStageChange(ctx, other, 'atk', -1, events, c);
+    if (guard === 'rattled') applyStageChange(ctx, other, 'spe', 1, events);
+    return;
+  }
+  if (ability === 'download' && other.mon.hp > 0) {
+    // Raises Attack if the foe's Defense is lower than its Sp. Def, otherwise Sp. Atk.
+    const stats = calcStats(ctx.content, other.mon);
+    announce(c, ability, events);
+    applyStageChange(ctx, c, stats.def < stats.spd ? 'atk' : 'spa', 1, events);
+    return;
+  }
+  if (ability === 'pressure' || MOLD_BREAKERS.has(ability)) announce(c, ability, events);
+}
+
+/** Shed Skin (30%) and Hydration (in rain) cure its status at the end of the turn. */
+function statusCureAbility(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
+  if (c.mon.hp <= 0 || !c.mon.status) return;
+  const ability = abilityIn(ctx, c);
+  const cure = (ability === 'shed-skin' && ctx.rng.chance(0.3)) || (ability === 'hydration' && ctx.battle.weather?.id === 'rain');
+  if (!cure) return;
+  announce(c, ability!, events);
+  c.mon.status = null;
+  events.push({ type: 'cured', side: c.side });
+}
+
+/**
+ * Abilities that stop a move before it lands: Levitate (Ground), Volt Absorb
+ * and friends (take the move and heal or get stronger), Wonder Guard (only
+ * super-effective hits), Soundproof. Returns true if the move was stopped.
+ */
+function abilityBlocksMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, moveType: TypeName, effectiveness: number, events: BattleEvent[]): boolean {
+  const ability = targetAbility(ctx, user, target);
+  if (!ability) return false;
+  const damaging = move.category !== 'status';
+  const absorb = ABSORB[ability];
+  let blocked = false;
+  if (absorb && absorb.type === moveType) {
+    announce(target, ability, events);
+    if (absorb.heal) {
+      const max = calcStats(ctx.content, target.mon).hp;
+      const amount = Math.min(max - target.mon.hp, Math.max(1, Math.floor(max * absorb.heal)));
+      if (amount > 0) {
+        target.mon.hp += amount;
+        events.push({ type: 'heal', side: target.side, amount, hpAfter: target.mon.hp });
+      } else events.push({ type: 'noEffect', side: target.side });
+    } else if (absorb.boost) {
+      applyStageChange(ctx, target, absorb.boost.stat, absorb.boost.stages, events);
+    } else {
+      target.vol.flashFire = true;
+      events.push({ type: 'noEffect', side: target.side });
+    }
+    return true;
+  }
+  if (damaging && ability === 'levitate' && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
+  if (damaging && ability === 'wonder-guard' && effectiveness <= 1 && !move.flags.includes('typeless')) blocked = true;
+  if (ability === 'soundproof' && move.flags.includes('sound')) blocked = true;
+  if (!blocked) return false;
+  announce(target, ability, events);
+  events.push({ type: 'noEffect', side: target.side });
+  return true;
+}
+
 function resolveMove(content: Content, mon: PokemonInstance, index: number): Move {
   const id = index === -1 ? content.ruleset.struggleMoveId : mon.moves[index]?.id;
   const move = id ? content.moves.get(id) : undefined;
@@ -538,15 +724,33 @@ function resolveMove(content: Content, mon: PokemonInstance, index: number): Mov
   return move;
 }
 
-function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
+/** Speed for turn order: stages, paralysis, the player's Speed attribute and Speed abilities (Swift Swim, Quick Feet, Slow Start). */
+function speedOf(ctx: BattleContext, c: Combatant): number {
   const { content } = ctx;
-  const speedOf = (c: Combatant) =>
-    effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par') *
-    (c.side === 'player' ? (ctx.attributes?.speed ?? 1) : 1);
+  const ability = abilityIn(ctx, c);
+  const weather = ctx.battle.weather?.id;
+  const quickFeet = ability === 'quick-feet' && c.mon.status !== null;
+  let speed = effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par' && !quickFeet);
+  if (ability && weather && WEATHER_SPEED[ability]?.includes(weather)) speed *= 2;
+  if (quickFeet) speed = Math.floor(speed * 1.5);
+  if (ability === 'slow-start' && c.vol.turnsOut < 5) speed = Math.floor(speed / 2);
+  return speed * (c.side === 'player' ? (ctx.attributes?.speed ?? 1) : 1);
+}
+
+/** Move priority with Prankster (status moves), Gale Wings (Flying moves at full HP) and Triage (healing moves). */
+function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
+  const ability = abilityIn(ctx, c);
+  if (ability === 'prankster' && move.category === 'status') return move.priority + 1;
+  if (ability === 'gale-wings' && move.type === 'flying' && c.mon.hp >= calcStats(ctx.content, c.mon).hp) return move.priority + 1;
+  if (ability === 'triage' && (move.effects.heal || move.effects.drain)) return move.priority + 3;
+  return move.priority;
+}
+
+function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Move, enemy: Combatant, eMove: Move): Side {
   // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: pMove.priority + Held.orderBracket(ctx, player) / 10, speed: speedOf(player) },
-    { priority: eMove.priority + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(enemy) },
+    { priority: priorityOf(ctx, player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) },
+    { priority: priorityOf(ctx, enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
   return result === 'a' ? 'player' : 'enemy';
@@ -555,6 +759,13 @@ function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Mov
 /** Checks recharging, sleep, freeze, flinching, confusion and paralysis. Returns false if the Pokémon can't act. */
 function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[]): boolean {
   const { content, rng } = ctx;
+  const ability = abilityIn(ctx, user);
+  if (user.vol.truant) {
+    user.vol.truant = false;
+    announce(user, 'truant', events);
+    events.push({ type: 'cant', side: user.side, reason: 'truant' });
+    return false;
+  }
   if (user.vol.recharge) {
     user.vol.recharge = false;
     events.push({ type: 'cant', side: user.side, reason: 'recharge' });
@@ -564,7 +775,8 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[]): boo
   if (status?.id === 'slp') {
     const turns = status.turns ?? 0;
     if (turns > 0) {
-      status.turns = turns - 1;
+      // Early Bird wakes up twice as fast.
+      status.turns = Math.max(0, turns - (ability === 'early-bird' ? 2 : 1));
       events.push({ type: 'cant', side: user.side, reason: 'slp' });
       return false;
     }
@@ -582,6 +794,10 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[]): boo
   }
   if (user.flinched) {
     events.push({ type: 'cant', side: user.side, reason: 'flinch' });
+    if (ability === 'steadfast') {
+      announce(user, ability, events);
+      applyStageChange(ctx, user, 'spe', 1, events);
+    }
     return false;
   }
   if (user.vol.confusion > 0) {
@@ -808,8 +1024,8 @@ function unleashRage(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]
   const def = ctx.hyper.eligibility('enemyRiledUp', enemy.mon)?.def;
   if (!def || def.effect?.kind !== 'rage') return;
   events.push({ type: 'hyper', side: 'enemy', uid: enemy.mon.uid, defId: def.id, variant: rage.uncontrollable ? 'unleashedUncontrollable' : 'unleashed', hpAfter: enemy.mon.hp, cured: false });
-  for (const [stat, stages] of Object.entries(def.effect.stats) as [BoostStat, number][]) applyStageChange(enemy, stat, stages, events);
-  if (rage.uncontrollable) for (const [stat, stages] of Object.entries(def.effect.uncontrollable) as [BoostStat, number][]) applyStageChange(enemy, stat, stages, events);
+  for (const [stat, stages] of Object.entries(def.effect.stats) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
+  if (rage.uncontrollable) for (const [stat, stages] of Object.entries(def.effect.uncontrollable) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
 }
 
 /** End of turn: a bond may shake off a status; a long low-HP stand (or two super-effective hits survived) digs in. */
@@ -844,7 +1060,7 @@ function hyperEndOfTurn(ctx: BattleContext, c: Combatant, events: BattleEvent[])
   const fx = e.def.effect;
   const variant = !stood && shrugged && e.def.variants.wouldntStayDown ? 'wouldntStayDown' : e.variant;
   events.push({ type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant, hpAfter: c.mon.hp, cured: false });
-  for (const [stat, stages] of Object.entries(fx.stats) as [BoostStat, number][]) applyStageChange(c, stat, stages, events);
+  for (const [stat, stages] of Object.entries(fx.stats) as [BoostStat, number][]) applyStageChange(ctx, c, stat, stages, events);
   const scale = fx.healAttribute ? ctx.hyper!.attributeShare(fx.healAttribute) : 1;
   const heal = Math.min(max - c.mon.hp, Math.floor(max * fx.healShare * scale));
   if (heal > 0) {
@@ -871,12 +1087,27 @@ function executeMove(
     return;
   }
 
-  // The second turn of a two-turn move and more Thrash use no PP.
+  if (abilityIn(ctx, user) === 'truant') user.vol.truant = true;
+
+  // The second turn of a two-turn move and more Thrash use no PP; Pressure makes a move use 2.
   if (slot === -1) events.push({ type: 'noPp', side: user.side });
-  else if (!continuing) user.mon.moves[slot]!.pp -= 1;
+  else if (!continuing) {
+    const pp = user.mon.moves[slot]!;
+    pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1));
+  }
   events.push({ type: 'move', side: user.side, moveId: move.id });
   if (!move.effects.protect) user.vol.protectChain = 0;
   if (slot !== -1) Held.noteMoveUsed(ctx, user, move.id);
+
+  // Damp stops Explosion and Self-Destruct from either side.
+  if (move.effects.selfFaint) {
+    const damp = [target, user].find((c) => abilityIn(ctx, c) === 'damp');
+    if (damp) {
+      announce(damp, 'damp', events);
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+  }
 
   runMove(ctx, user, target, move, movedFirst, events);
 
@@ -924,7 +1155,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       user.vol.charging = move.id;
       user.vol.semi = fx.charge.semi ?? null;
       events.push({ type: 'charge', side: user.side, moveId: move.id, semi: user.vol.semi });
-      for (const change of fx.charge.boosts ?? []) applyStageChange(user, change.stat, change.stages, events);
+      for (const change of fx.charge.boosts ?? []) applyStageChange(ctx, user, change.stat, change.stages, events);
       return;
     }
   }
@@ -953,8 +1184,11 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   const targetsEnemy = move.target === 'enemy';
-  // A hidden target can only be hit by the moves that reach it (Earthquake hits Dig).
-  if (targetsEnemy && target.vol.semi && fx.hitsSemi?.semi !== target.vol.semi) {
+  const userAbility = abilityIn(ctx, user);
+  const foeAbility = targetsEnemy ? targetAbility(ctx, user, target) : null;
+  const noGuard = userAbility === 'no-guard' || abilityIn(ctx, target) === 'no-guard';
+  // A hidden target can only be hit by the moves that reach it (Earthquake hits Dig), or with No Guard.
+  if (targetsEnemy && target.vol.semi && fx.hitsSemi?.semi !== target.vol.semi && !noGuard) {
     events.push({ type: 'avoided', side: target.side });
     return;
   }
@@ -967,20 +1201,50 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     events.push({ type: 'fail', side: user.side });
     return;
   }
+  if (fx.ohko && foeAbility === 'sturdy') {
+    announce(target, 'sturdy', events);
+    events.push({ type: 'noEffect', side: target.side });
+    return;
+  }
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
   const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
   const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst, move) : 1;
-  const accuracy =
-    itemAccuracy === null
-      ? 1
-      : fx.ohko
-        ? ohkoAccuracy(user.mon.level, target.mon.level)
-        : Math.min(1, hitChance(baseAccuracy, user.stages.acc, fx.ignoreStages ? 0 : target.stages.eva) * itemAccuracy);
+  let accuracy: number;
+  if (itemAccuracy === null) {
+    accuracy = 1;
+  } else if (fx.ohko) {
+    accuracy = ohkoAccuracy(user.mon.level, target.mon.level);
+  } else {
+    // Unaware ignores the other side's stages; Keen Eye ignores raised evasion.
+    const accStage = foeAbility === 'unaware' ? 0 : user.stages.acc;
+    const keenEye = (userAbility === 'keen-eye' || userAbility === 'minds-eye') && target.stages.eva > 0;
+    const evaStage = fx.ignoreStages || userAbility === 'unaware' || keenEye ? 0 : target.stages.eva;
+    accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy;
+    if (baseAccuracy !== null) {
+      if (userAbility === 'compound-eyes') accuracy *= 1.3;
+      if (userAbility === 'victory-star') accuracy *= 1.1;
+      if (userAbility === 'hustle' && move.category === 'physical') accuracy *= 0.8;
+      if (foeAbility && weather && WEATHER_EVASION[foeAbility]?.includes(weather)) accuracy *= 0.8;
+    }
+    accuracy = Math.min(1, accuracy);
+  }
+  if (noGuard) accuracy = 1;
   if (targetsEnemy && rng.float() >= accuracy) {
     events.push({ type: 'miss', side: user.side });
     return;
   }
+
+  // The move's type: Weather Ball follows the weather; Pixilate and friends turn Normal moves into their type.
+  const baseType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
+  const typeChange = userAbility ? TYPE_CHANGE[userAbility] : undefined;
+  const changedType = typeChange !== undefined && baseType === 'normal' && !move.flags.includes('typeless');
+  const moveType = changedType ? typeChange : baseType;
+  const targetTypes = battleTypes(content, ctx.battle, target.mon);
+  // Scrappy: Normal and Fighting moves hit Ghost types.
+  const hitTypes = userAbility === 'scrappy' && (moveType === 'normal' || moveType === 'fighting') ? targetTypes.filter((t) => t !== 'ghost') : targetTypes;
+  const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, hitTypes));
+  if (targetsEnemy && abilityBlocksMove(ctx, user, target, move, moveType, effectiveness, events)) return;
 
   if (move.category === 'status') {
     applyStatusMove(ctx, user, target, move, events);
@@ -988,20 +1252,24 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   }
 
   // Damaging move.
-  const targetTypes = battleTypes(content, ctx.battle, target.mon);
-  const moveType = fx.weatherBall && weather ? WEATHER_BALL_TYPE[weather] : Held.moveTypeFor(ctx, user.mon, user.side, move.type);
-  const effectiveness = move.flags.includes('typeless') ? 1 : Held.adjustEffectiveness(ctx, target, moveType, typeEffectiveness(content.typeChart, moveType, targetTypes));
   if (effectiveness === 0) {
     events.push({ type: 'noEffect', side: target.side });
     return;
   }
 
-  const hits = fx.hits ? multiHitCount(fx.hits, rng) : 1;
+  const contact = move.flags.includes('contact') && userAbility !== 'long-reach';
+  const changes = fx.statChanges ?? [];
+  // Sheer Force: moves with an extra effect are 1.3× as strong and lose the effect.
+  const hasExtra = Boolean(fx.status || fx.flinchChance || fx.confuse || changes.some((c) => c.target === 'enemy' || c.chance < 100));
+  const sheerForce = userAbility === 'sheer-force' && hasExtra;
+  const hits = fx.hits ? (userAbility === 'skill-link' ? fx.hits[1] : multiHitCount(fx.hits, rng)) : 1;
   let dealt = 0;
   let landed = 0;
+  let anyCrit = false;
   for (let hit = 0; hit < hits && target.mon.hp > 0 && user.mon.hp > 0; hit++) {
     let damage: number;
     let crit = false;
+    const targetMax = calcStats(content, target.mon).hp;
     if (fx.ohko) {
       damage = target.mon.hp;
     } else if (fx.fixedDamage === 'level') {
@@ -1011,7 +1279,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const targetStats = calcStats(content, target.mon);
       const physical = move.category === 'physical';
       const hitsDefense = physical || fx.targetsDefense;
-      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user)));
+      const userStatus = user.mon.status?.id;
+      crit = rng.chance(critChance(content.ruleset, move.critStage + Held.critStageBonus(ctx, user) + (userAbility === 'super-luck' ? 1 : 0)));
+      if (userAbility === 'merciless' && target.mon.status?.id === 'psn') crit = true;
+      if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor') crit = false;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
@@ -1020,27 +1291,69 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (fx.hitsSemi?.double && target.vol.semi === fx.hitsSemi.semi) power *= 2;
       if (fx.weatherBall && weather) power *= 2;
       if (fx.charge?.sunSkips && weather && weather !== 'sun') power = Math.floor(power / 2);
+      // Abilities that change the move's power.
+      let powerMult = 1;
+      if (changedType) powerMult *= 1.2;
+      if (userAbility === 'technician' && power <= 60) powerMult *= 1.5;
+      const flagBoost = userAbility ? FLAG_BOOST[userAbility] : undefined;
+      if (flagBoost && move.flags.includes(flagBoost.flag)) powerMult *= flagBoost.multiplier;
+      if (userAbility === 'reckless' && fx.recoil) powerMult *= 1.2;
+      if (sheerForce) powerMult *= 1.3;
+      if (userAbility === 'analytic' && !movedFirst) powerMult *= 1.3;
+      if (foeAbility === 'heatproof' && moveType === 'fire') powerMult *= 0.5;
+      if (foeAbility === 'dry-skin' && moveType === 'fire') powerMult *= 1.25;
+      if (powerMult !== 1) power = Math.max(1, pokeRound(power, powerMult));
+      // Abilities that change the attacking stat.
+      let attack = Math.floor((physical ? userStats.atk : userStats.spa) * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa'));
+      let attackMult = 1;
+      if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
+      if (physical && userAbility === 'hustle') attackMult *= 1.5;
+      if (physical && userAbility === 'guts' && userStatus) attackMult *= 1.5;
+      if (physical && userAbility === 'toxic-boost' && userStatus === 'psn') attackMult *= 1.5;
+      if (!physical && userAbility === 'flare-boost' && userStatus === 'brn') attackMult *= 1.5;
+      if (!physical && userAbility === 'solar-power' && weather === 'sun') attackMult *= 1.5;
+      if (physical && userAbility === 'slow-start' && user.vol.turnsOut < 5) attackMult *= 0.5;
+      if (userAbility === 'defeatist' && user.mon.hp * 2 <= userStats.hp) attackMult *= 0.5;
+      if (userAbility && PINCH[userAbility] === moveType && user.mon.hp * 3 <= userStats.hp) attackMult *= 1.5;
+      if (user.vol.flashFire && moveType === 'fire') attackMult *= 1.5;
+      if (foeAbility === 'thick-fat' && (moveType === 'fire' || moveType === 'ice')) attackMult *= 0.5;
+      if (attackMult !== 1) attack = Math.max(1, pokeRound(attack, attackMult));
       const defenseStage = hitsDefense ? target.stages.def : target.stages.spd;
       // Sandstorm raises Rock types' Sp. Def and snow raises Ice types' Defense by half.
       let defense = Math.floor((hitsDefense ? targetStats.def : targetStats.spd) * Held.heldStatMultiplier(ctx, target.mon, target.side, hitsDefense ? 'def' : 'spd'));
       if (weather === 'sand' && !hitsDefense && targetTypes.includes('rock')) defense = Math.floor(defense * 1.5);
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
+      if (hitsDefense && foeAbility === 'marvel-scale' && target.mon.status) defense = Math.floor(defense * 1.5);
+      if (hitsDefense && foeAbility === 'fur-coat') defense *= 2;
+      // Abilities that change the final damage.
+      let final = 1;
+      if (effectiveness > 1 && (foeAbility === 'filter' || foeAbility === 'solid-rock' || foeAbility === 'prism-armor')) final *= 0.75;
+      if ((foeAbility === 'multiscale' || foeAbility === 'shadow-shield') && target.mon.hp >= targetStats.hp) final *= 0.5;
+      if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
+      if (foeAbility === 'fluffy' && contact) final *= 0.5;
+      if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
+      if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
+      if (foeAbility === 'punk-rock' && move.flags.includes('sound')) final *= 0.5;
       const ruleset = crit ? { ...content.ruleset, critMultiplier: Held.critDamage(ctx, user, content.ruleset.critMultiplier) } : content.ruleset;
       damage = calcDamage(ruleset, {
         level: user.mon.level,
         power,
-        attack: Math.floor((physical ? userStats.atk : userStats.spa) * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa')),
+        attack,
         defense,
-        attackStage: physical ? user.stages.atk : user.stages.spa,
-        defenseStage: fx.ignoreStages ? 0 : defenseStage,
+        attackStage: foeAbility === 'unaware' ? 0 : physical ? user.stages.atk : user.stages.spa,
+        defenseStage: fx.ignoreStages || userAbility === 'unaware' ? 0 : defenseStage,
         stab: stab > 1,
-        stabMultiplier: stab,
+        // Adaptability: 2× instead of 1.5× (2.25× instead of 2× when Terastallized into its own type).
+        stabMultiplier: userAbility === 'adaptability' && stab > 1 ? (stab >= 2 ? 2.25 : 2) : stab,
         effectiveness,
         crit,
+        critMultiplier: userAbility === 'sniper' ? ruleset.critMultiplier * 1.5 : undefined,
         randomFactor,
-        burned: user.mon.status?.id === 'brn',
+        // Guts ignores the burn's Attack cut.
+        burned: userStatus === 'brn' && userAbility !== 'guts',
         physical,
         weather: weatherMultiplier(weather, moveType),
+        final,
       });
       damage = applyTypeModifiers(ctx, user, target, effectiveness, damage, physical);
       const itemMultiplier =
@@ -1051,12 +1364,17 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     }
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne) damage = Math.min(damage, target.mon.hp - 1);
+    // Sturdy: a hit at full HP leaves it with at least 1 HP.
+    const sturdy = foeAbility === 'sturdy' && target.mon.hp >= targetMax && target.mon.hp > 1 && damage >= target.mon.hp;
+    if (sturdy) damage = target.mon.hp - 1;
 
     const { lost, lastStand, hyper, knockedDown } = takeHp(ctx, target, damage, landed);
     dealt += lost;
     landed += 1;
+    anyCrit ||= crit;
     // Pushed Itself Back Up: the hit knocks it down first, then it gets up.
     events.push({ type: 'damage', side: target.side, amount: lost, hpAfter: knockedDown ? 0 : target.mon.hp, effectiveness, crit });
+    if (sturdy) announce(target, 'sturdy', events);
     if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
     if (hyper) events.push(hyper);
     if (target.side === 'player' && effectiveness > 1 && target.mon.hp > 0) {
@@ -1070,43 +1388,56 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   if (fx.recharge) user.vol.recharge = true;
 
   // A damaging Fire move thaws a frozen target.
-  if (move.type === 'fire' && target.mon.status?.id === 'frz' && target.mon.hp > 0) {
+  if (moveType === 'fire' && target.mon.status?.id === 'frz' && target.mon.hp > 0) {
     target.mon.status = null;
     events.push({ type: 'thaw', side: target.side });
   }
 
   if (fx.drain && dealt > 0) {
-    const userMax = calcStats(content, user.mon).hp;
-    const heal = Math.min(userMax - user.mon.hp, Math.max(1, Math.floor(dealt * fx.drain * Held.drainMultiplier(ctx, user.mon, user.side))));
-    if (heal > 0) {
-      user.mon.hp += heal;
-      events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
+    const amount = Math.max(1, Math.floor(dealt * fx.drain * Held.drainMultiplier(ctx, user.mon, user.side)));
+    if (abilityIn(ctx, target) === 'liquid-ooze') {
+      // Liquid Ooze: draining it hurts instead.
+      announce(target, 'liquid-ooze', events);
+      abilityHurt(ctx, user, amount, events);
+    } else {
+      const userMax = calcStats(content, user.mon).hp;
+      const heal = Math.min(userMax - user.mon.hp, amount);
+      if (heal > 0) {
+        user.mon.hp += heal;
+        events.push({ type: 'drain', side: user.side, amount: heal, hpAfter: user.mon.hp });
+      }
     }
   }
-  if (fx.recoil && dealt > 0) {
+  // Rock Head and Magic Guard take no recoil (Struggle's still hurts).
+  if (fx.recoil && dealt > 0 && userAbility !== 'rock-head' && userAbility !== 'magic-guard') {
     applyRecoil(ctx, user, Math.max(1, Math.floor(dealt * fx.recoil)), events);
     // The user of a recoil move wins if both sides run out at once.
     if (user.mon.hp <= 0) ctx.doubleKoLoser = user.side === 'player' ? 'enemy' : 'player';
   }
   if (fx.recoilMaxHp) applyRecoil(ctx, user, Math.max(1, Math.floor(calcStats(content, user.mon).hp * fx.recoilMaxHp)), events);
 
-  // Secondary effects only land if the target is still standing.
-  if (target.mon.hp > 0) {
-    if (fx.status && rng.chance(fx.status.chance / 100)) tryInflictStatus(content, rng, target, fx.status.id, move, events, false);
-    // A Dynamaxed Pokémon can't flinch.
-    if (fx.flinchChance && movedFirst && rng.chance(fx.flinchChance / 100) && !target.mon.dynamaxed) target.flinched = true;
-    if (fx.confuse && rng.chance(fx.confuse.chance / 100)) tryConfuse(ctx, target, events, false);
-    if (fx.bind && target.vol.bound === 0) {
-      target.vol.bound = rng.int(4, 5);
-      events.push({ type: 'bound', side: target.side, moveId: move.id });
-    }
+  // Extra effects only land if the target is still standing. Serene Grace doubles their chances; Shield Dust blocks them.
+  const chanceMult = userAbility === 'serene-grace' ? 2 : 1;
+  const shielded = foeAbility === 'shield-dust';
+  const roll = (percent: number) => rng.chance(Math.min(100, percent * chanceMult) / 100);
+  if (target.mon.hp > 0 && !sheerForce && !shielded) {
+    if (fx.status && roll(fx.status.chance)) tryInflictStatus(ctx, user, target, fx.status.id, move, events, false);
+    if (fx.flinchChance && movedFirst && roll(fx.flinchChance)) flinch(ctx, user, target);
+    else if (!fx.flinchChance && userAbility === 'stench' && movedFirst && rng.chance(0.1)) flinch(ctx, user, target);
+    if (fx.confuse && roll(fx.confuse.chance)) tryConfuse(ctx, user, target, events, false);
+  }
+  if (target.mon.hp > 0 && fx.bind && target.vol.bound === 0) {
+    target.vol.bound = rng.int(4, 5);
+    events.push({ type: 'bound', side: target.side, moveId: move.id });
   }
   // Changes that share a chance are rolled together (Ancient Power raises all five stats or none).
   const rolls = new Map<number, boolean>();
-  for (const change of fx.statChanges ?? []) {
+  for (const change of changes) {
     const recipient = change.target === 'self' ? user : target;
     if (recipient.mon.hp <= 0) continue;
-    if (!rolls.has(change.chance)) rolls.set(change.chance, rng.chance(change.chance / 100));
+    if (sheerForce && (change.target === 'enemy' || change.chance < 100)) continue;
+    if (shielded && change.target === 'enemy') continue;
+    if (!rolls.has(change.chance)) rolls.set(change.chance, roll(change.chance));
     if (rolls.get(change.chance)) changeStage(ctx, user, recipient, change.stat, change.stages, events);
   }
   // Max Moves set the weather after they hit (Max Flare: sun).
@@ -1115,10 +1446,91 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     ctx.battle.weather = { id: maxWeather, turns: Held.weatherTurns(ctx, user, maxWeather, 5) };
     events.push({ type: 'weather', weather: maxWeather });
   }
+
+  if (landed > 0) afterHitAbilities(ctx, user, target, move, moveType, contact, anyCrit, events);
+}
+
+/** Damage from an ability (Rough Skin, Liquid Ooze, Aftermath). Magic Guard prevents it. */
+function abilityHurt(ctx: BattleContext, c: Combatant, amount: number, events: BattleEvent[]): void {
+  if (c.mon.hp <= 0 || abilityIn(ctx, c) === 'magic-guard') return;
+  const { lost, lastStand } = takeHp(ctx, c, amount);
+  events.push({ type: 'damage', side: c.side, amount: lost, hpAfter: c.mon.hp, effectiveness: 1, crit: false });
+  if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+}
+
+/** Makes the target flinch, unless Inner Focus stops it or it is Dynamaxed. */
+function flinch(ctx: BattleContext, user: Combatant, target: Combatant): void {
+  if (targetAbility(ctx, user, target) !== 'inner-focus' && !target.mon.dynamaxed) target.flinched = true;
+}
+
+/**
+ * Abilities that react to a hit: the target's contact abilities (Static,
+ * Rough Skin, Aftermath), the attacker's Poison Touch, the target's stat
+ * boosts (Justified, Stamina, Anger Point) and the attacker's Moxie.
+ */
+function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, moveType: TypeName, contact: boolean, crit: boolean, events: BattleEvent[]): void {
+  const { rng } = ctx;
+  const holder = abilityIn(ctx, target);
+  const userAbility = abilityIn(ctx, user);
+  if (contact && holder && user.mon.hp > 0) {
+    const status = CONTACT_STATUS[holder];
+    if (status && rng.chance(0.3) && canGetStatus(ctx, target, user, status)) {
+      announce(target, holder, events);
+      tryInflictStatus(ctx, target, user, status, undefined, events, false);
+    }
+    if (holder === 'effect-spore' && rng.chance(0.3)) {
+      const spore = (['psn', 'par', 'slp'] as const)[rng.int(0, 2)]!;
+      const types = getSpecies(ctx.content, user.mon.speciesId).types;
+      if (!types.includes('grass') && userAbility !== 'overcoat' && canGetStatus(ctx, target, user, spore)) {
+        announce(target, holder, events);
+        tryInflictStatus(ctx, target, user, spore, undefined, events, false);
+      }
+    }
+    if (CONTACT_HURT.has(holder) && userAbility !== 'magic-guard') {
+      announce(target, holder, events);
+      abilityHurt(ctx, user, Math.max(1, Math.floor(calcStats(ctx.content, user.mon).hp / 8)), events);
+    }
+    if ((holder === 'gooey' || holder === 'tangling-hair') && user.mon.hp > 0) {
+      announce(target, holder, events);
+      applyStageChange(ctx, user, 'spe', -1, events, target);
+    }
+    if (holder === 'aftermath' && target.mon.hp <= 0 && userAbility !== 'magic-guard' && userAbility !== 'damp') {
+      announce(target, holder, events);
+      abilityHurt(ctx, user, Math.max(1, Math.floor(calcStats(ctx.content, user.mon).hp / 4)), events);
+    }
+  }
+  if (contact && userAbility === 'poison-touch' && target.mon.hp > 0 && rng.chance(0.3) && canGetStatus(ctx, user, target, 'psn')) {
+    announce(user, userAbility, events);
+    tryInflictStatus(ctx, user, target, 'psn', undefined, events, false);
+  }
+  if (target.mon.hp > 0 && holder) {
+    const boost = HIT_BOOST[holder];
+    if (boost && (!boost.types || boost.types.includes(moveType)) && (!boost.physical || move.category === 'physical')) {
+      announce(target, holder, events);
+      for (const change of boost.changes) applyStageChange(ctx, target, change.stat, change.stages, events);
+    }
+    if (holder === 'anger-point' && crit && target.stages.atk < 6) {
+      announce(target, holder, events);
+      applyStageChange(ctx, target, 'atk', 12, events);
+    }
+  }
+  const koBoost = userAbility ? KO_BOOST[userAbility] : undefined;
+  if (koBoost && target.mon.hp <= 0 && user.mon.hp > 0) {
+    let stat: BoostStat;
+    if (koBoost === 'best') {
+      // Beast Boost raises its highest stat.
+      const stats = calcStats(ctx.content, user.mon);
+      stat = (['atk', 'def', 'spa', 'spd', 'spe'] as const).reduce((best, s) => (stats[s] > stats[best] ? s : best));
+    } else stat = koBoost;
+    if (user.stages[stat] < 6) {
+      announce(user, userAbility!, events);
+      applyStageChange(ctx, user, stat, 1, events);
+    }
+  }
 }
 
 function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, events: BattleEvent[]): void {
-  const { content, rng } = ctx;
+  const { content } = ctx;
   const fx = move.effects;
   let didSomething = false;
   if (fx.heal) {
@@ -1134,7 +1546,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
       didSomething = true;
     }
   }
-  if (fx.confuse) didSomething = tryConfuse(ctx, target, events, true) || didSomething;
+  if (fx.confuse) didSomething = tryConfuse(ctx, user, target, events, true) || didSomething;
   if (fx.seed) {
     if (target.vol.seeded || getSpecies(content, target.mon.speciesId).types.includes('grass')) {
       events.push({ type: 'fail', side: target.side });
@@ -1145,7 +1557,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
     return;
   }
   if (fx.status) {
-    didSomething = tryInflictStatus(content, rng, target, fx.status.id, move, events, true) || didSomething;
+    didSomething = tryInflictStatus(ctx, user, target, fx.status.id, move, events, true) || didSomething;
   }
   for (const change of fx.statChanges ?? []) {
     const recipient = change.target === 'self' ? user : target;
@@ -1154,9 +1566,11 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   if (!didSomething && !fx.statChanges?.length && !fx.status && !fx.confuse) events.push({ type: 'fail', side: user.side });
 }
 
-/** Confuses for 2–5 turns of moves (1–4 of them are checks). Returns true if it worked. */
-function tryConfuse(ctx: BattleContext, target: Combatant, events: BattleEvent[], announceFailure: boolean): boolean {
-  if (target.vol.confusion > 0 || Held.statusBlocked(ctx, target, 'confusion')) {
+/** Confuses for 2–5 turns of moves (1–4 of them are checks); Own Tempo prevents it. Returns true if it worked. */
+function tryConfuse(ctx: BattleContext, source: Combatant, target: Combatant, events: BattleEvent[], announceFailure: boolean): boolean {
+  const ownTempo = targetAbility(ctx, source, target) === 'own-tempo';
+  if (target.vol.confusion > 0 || ownTempo || Held.statusBlocked(ctx, target, 'confusion')) {
+    if (announceFailure && ownTempo) announce(target, 'own-tempo', events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
   }
@@ -1165,18 +1579,41 @@ function tryConfuse(ctx: BattleContext, target: Combatant, events: BattleEvent[]
   return true;
 }
 
-/** Returns true if the status was applied. `announceFailure` is for status moves. */
+/** Whether `target` can get this status from `source` (types, abilities such as Limber, Leaf Guard in sun). */
+function canGetStatus(ctx: BattleContext, source: Combatant, target: Combatant, status: StatusId, move?: Move): boolean {
+  if (target.mon.status || target.mon.hp <= 0) return false;
+  if (isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
+  if (Held.statusBlocked({ content: ctx.content }, target, status)) return false;
+  return statusAbilityBlock(ctx, source, target, status) === null;
+}
+
+/** The target's ability that stops this status, or null. */
+function statusAbilityBlock(ctx: BattleContext, source: Combatant, target: Combatant, status: StatusId): string | null {
+  const ability = targetAbility(ctx, source, target);
+  if (!ability) return null;
+  if (STATUS_IMMUNE[ability]?.includes(status)) return ability;
+  if (ability === 'leaf-guard' && ctx.battle.weather?.id === 'sun') return ability;
+  return null;
+}
+
+/**
+ * Returns true if the status was applied. `announceFailure` is for status
+ * moves. Synchronize passes burn, poison and paralysis back to the source.
+ */
 function tryInflictStatus(
-  content: Content,
-  rng: Rng,
+  ctx: BattleContext,
+  source: Combatant,
   target: Combatant,
   status: StatusId,
-  move: Move,
+  move: Move | undefined,
   events: BattleEvent[],
   announceFailure: boolean,
 ): boolean {
+  const { content, rng } = ctx;
   const types = getSpecies(content, target.mon.speciesId).types;
-  if (target.mon.status || isStatusImmune(status, types, move) || Held.statusBlocked({ content }, target, status)) {
+  const blocker = target.mon.status ? null : statusAbilityBlock(ctx, source, target, status);
+  if (target.mon.status || isStatusImmune(status, types, move) || blocker || Held.statusBlocked({ content }, target, status)) {
+    if (announceFailure && blocker) announce(target, blocker, events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
   }
@@ -1186,6 +1623,10 @@ function tryInflictStatus(
     target.mon.status.turns = rng.int(content.ruleset.sleepTurnsMin, content.ruleset.sleepTurnsMax);
   }
   events.push({ type: 'status', side: target.side, status });
+  if (source !== target && abilityIn(ctx, target) === 'synchronize' && (status === 'brn' || status === 'psn' || status === 'par') && canGetStatus(ctx, target, source, status)) {
+    announce(target, 'synchronize', events);
+    tryInflictStatus(ctx, target, source, status, undefined, events, false);
+  }
   return true;
 }
 
@@ -1198,13 +1639,29 @@ function changeStage(ctx: BattleContext, user: Combatant, recipient: Combatant, 
     events.push({ type: 'held', side: recipient.side, itemId: 'guard-spec', what: 'guard' });
     return false;
   }
-  const changed = applyStageChange(recipient, stat, stages, events);
+  const changed = applyStageChange(ctx, recipient, stat, stages, events, recipient !== user ? user : undefined);
   if (changed && stages < 0) Held.whiteHerb(ctx, recipient, events as Held.HeldEvent[]);
   return changed;
 }
 
-/** Returns true if the stage actually changed. */
-function applyStageChange(c: Combatant, stat: BoostStat, stages: number, events: BattleEvent[]): boolean {
+/**
+ * Changes a stat stage. Returns true if it actually changed. `source` is the
+ * opposing Pokémon when it caused the change: Clear Body and friends block
+ * its drops, and Defiant and Competitive answer them. Simple doubles every
+ * change and Contrary reverses it.
+ */
+function applyStageChange(ctx: BattleContext, c: Combatant, stat: BoostStat, stages: number, events: BattleEvent[], source?: Combatant): boolean {
+  const ability = source ? targetAbility(ctx, source, c) : abilityIn(ctx, c);
+  if (ability === 'contrary') stages = -stages;
+  if (ability === 'simple') stages *= 2;
+  if (source && stages < 0 && ability) {
+    const guard = DROP_GUARD[ability];
+    if (guard === 'all' || guard === stat) {
+      announce(c, ability, events);
+      events.push({ type: 'fail', side: c.side });
+      return false;
+    }
+  }
   const before = c.stages[stat];
   const after = clampStage(before + stages);
   if (after === before) {
@@ -1213,6 +1670,10 @@ function applyStageChange(c: Combatant, stat: BoostStat, stages: number, events:
   }
   c.stages[stat] = after;
   events.push({ type: 'stat', side: c.side, stat, change: after - before });
+  if (source && after < before && (ability === 'defiant' || ability === 'competitive')) {
+    announce(c, ability, events);
+    applyStageChange(ctx, c, ability === 'defiant' ? 'atk' : 'spa', 2, events);
+  }
   return true;
 }
 
@@ -1235,15 +1696,38 @@ export function weatherMultiplier(weather: Weather | null, type: TypeName): numb
   return 1;
 }
 
-/** End of turn: sandstorm and hail hurt (1/16 HP) the types they don't spare; then the weather counts down. */
+/**
+ * End of turn: sandstorm and hail hurt (1/16 HP) the types and abilities they
+ * don't spare, and weather abilities act (Rain Dish, Ice Body, Dry Skin, Solar
+ * Power); then the weather counts down.
+ */
 function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
   const weather = ctx.battle.weather;
   if (!weather) return;
   const immune = WEATHER_IMMUNE[weather.id];
+  for (const c of sides) {
+    if (c.mon.hp <= 0) continue;
+    const ability = abilityIn(ctx, c);
+    const max = calcStats(ctx.content, c.mon).hp;
+    const heals = (ability === 'rain-dish' && weather.id === 'rain') || (ability === 'ice-body' && (weather.id === 'snow' || weather.id === 'hail'));
+    const dryHeal = ability === 'dry-skin' && weather.id === 'rain';
+    if ((heals || dryHeal) && c.mon.hp < max) {
+      const amount = Math.min(max - c.mon.hp, Math.max(1, Math.floor(max / (dryHeal ? 8 : 16))));
+      announce(c, ability!, events);
+      c.mon.hp += amount;
+      events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+    }
+    if ((ability === 'dry-skin' || ability === 'solar-power') && weather.id === 'sun') {
+      announce(c, ability, events);
+      abilityHurt(ctx, c, Math.max(1, Math.floor(max / 8)), events);
+    }
+  }
   if (immune) {
     for (const c of sides) {
       if (c.mon.hp <= 0 || c.vol.semi === 'underground' || c.vol.semi === 'underwater') continue;
       if (getSpecies(ctx.content, c.mon.speciesId).types.some((t) => immune.includes(t))) continue;
+      const ability = abilityIn(ctx, c);
+      if (ability && WEATHER_DAMAGE_IMMUNE[ability]?.includes(weather.id)) continue;
       const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(calcStats(ctx.content, c.mon).hp / 16)));
       events.push({ type: 'weatherDamage', side: c.side, weather: weather.id, amount: lost, hpAfter: c.mon.hp });
       if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
@@ -1256,16 +1740,32 @@ function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEven
   }
 }
 
-/** End-of-turn damage for one side: burn or poison, then binding, then Leech Seed (which heals the other side). */
+/**
+ * End-of-turn damage for one side: burn or poison, then binding, then Leech
+ * Seed (which heals the other side). Magic Guard takes none of it; Poison
+ * Heal heals from poison instead; Heatproof halves burn damage.
+ */
 function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, events: BattleEvent[]): void {
   const { content } = ctx;
   const max = calcStats(content, c.mon).hp;
+  const ability = abilityIn(ctx, c);
+  if (ability === 'poison-heal' && c.mon.status?.id === 'psn' && c.mon.hp > 0 && c.mon.hp < max) {
+    const amount = Math.min(max - c.mon.hp, Math.max(1, Math.floor(max / 8)));
+    announce(c, ability, events);
+    c.mon.hp += amount;
+    events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+  }
+  if (ability === 'magic-guard') {
+    if (c.vol.bound > 0 && --c.vol.bound === 0) events.push({ type: 'bindEnd', side: c.side });
+    return;
+  }
   const hurt = (fraction: number) => {
     const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(max * fraction)));
     return { lost, lastStand };
   };
-  const status = c.mon.status?.id;
-  const fraction = status === 'brn' ? content.ruleset.burnResidualFraction : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
+  const status = ability === 'poison-heal' && c.mon.status?.id === 'psn' ? undefined : c.mon.status?.id;
+  const burn = content.ruleset.burnResidualFraction / (ability === 'heatproof' ? 2 : 1);
+  const fraction = status === 'brn' ? burn : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
   if (c.mon.hp > 0 && status && fraction > 0) {
     const { lost, lastStand } = hurt(fraction);
     events.push({ type: 'residual', side: c.side, status, amount: lost, hpAfter: c.mon.hp });
@@ -1285,6 +1785,12 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     const { lost, lastStand } = hurt(1 / 8);
     events.push({ type: 'seedDamage', side: c.side, amount: lost, hpAfter: c.mon.hp });
     if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+    if (ability === 'liquid-ooze') {
+      // Draining Liquid Ooze hurts the seeder instead.
+      announce(c, ability, events);
+      abilityHurt(ctx, other, lost, events);
+      return;
+    }
     const otherMax = calcStats(content, other.mon).hp;
     const heal = Math.min(otherMax - other.mon.hp, lost);
     if (other.mon.hp > 0 && heal > 0) {
@@ -1326,10 +1832,24 @@ function settleFaints(ctx: BattleContext, events: BattleEvent[]): void {
     battle.participants = active.hp > 0 ? [active.uid] : [];
     const sent = battle.enemyTeam[next]!;
     events.push({ type: 'switchIn', side: 'enemy', uid: sent.uid, speciesId: sent.speciesId, level: sent.level });
+    battle.pendingEntry = [...(battle.pendingEntry ?? []).filter((side) => side !== 'enemy'), 'enemy'];
   }
   const active = ctx.party[battle.activeIndex]!;
   if (active.hp <= 0) {
     if (ctx.party.some((p) => p.hp > 0)) battle.needsSwitch = true;
     else battle.outcome = 'lose';
   }
+  // The trainer's next Pokémon's entry ability (after the player's replacement, if one is needed).
+  resolveEntries(ctx, events);
+}
+
+/**
+ * Battle start: the entry abilities of both first Pokémon (Intimidate,
+ * Drizzle). The battle screen calls this once after "Go! Pikachu!"; if it
+ * doesn't, the first turn does it. Uses no random numbers.
+ */
+export function startBattle(ctx: BattleContext): BattleEvent[] {
+  const events: BattleEvent[] = [];
+  resolveEntries(ctx, events);
+  return events;
 }
