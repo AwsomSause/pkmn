@@ -126,7 +126,7 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
@@ -276,7 +276,9 @@ export function newMon(content: Content, run: RunState, speciesId: string, level
   const uid = nextUid(run, prefix);
   // Difficulty: every enemy's level (the rules were fixed when the run started).
   const shown = prefix === 'e' ? Math.max(1, Math.min(100, level + run.rules.enemyLevelBonus)) : level;
-  return createPokemon(content, speciesId, shown, uid, `${run.seed}:${uid}`);
+  const mon = createPokemon(content, speciesId, shown, uid, `${run.seed}:${uid}`);
+  if (prefix === 'e') softenOpeningMoves(content, mon);
+  return mon;
 }
 
 function speciesName(content: Content, id: string): string {
@@ -1084,7 +1086,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
     else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`, spookyEncounterChance(runPerks(content, run)));
-    const enemy = newMon(content, run, speciesId, plan.level, 'e');
+    const opened = legendary ? { speciesId, level: plan.level } : openingWild(content, run, speciesId, plan.level, `wild:${node.id}`);
+    speciesId = opened.speciesId;
+    const enemy = newMon(content, run, speciesId, opened.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);

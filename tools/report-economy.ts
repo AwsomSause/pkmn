@@ -19,12 +19,17 @@ await closeModules();
 const SEEDS = ['eco-a', 'eco-b', 'eco-c', 'eco-d', 'eco-e', 'eco-f'];
 const started = Date.now();
 const rows: string[] = [];
+const smartRows: string[] = [];
 for (const d of RUN_RULES.difficulties) {
   for (const deathBlock of [false, true]) {
     const rules = { modeId: 'standard', difficultyId: d.id, modifierIds: [], deathBlock };
     const runs = SEEDS.map((seed) => autoplay({ seed, steps: 4000, rules, healOnMap: true }));
     const mean = (f: (r: (typeof runs)[number]) => number) => (runs.reduce((n, r) => n + f(r), 0) / runs.length).toFixed(1);
     const early = Math.round((runs.filter((r) => r.phase === 'over' && r.encountersCompleted < 10).length / runs.length) * 100);
+    const smart = SEEDS.map((seed) => autoplay({ seed, steps: 6000, rules, healOnMap: true, smart: true }));
+    const smean = (f: (r: (typeof smart)[number]) => number) => (smart.reduce((n, r) => n + f(r), 0) / smart.length).toFixed(1);
+    const searly = Math.round((smart.filter((r) => r.phase === 'over' && r.encountersCompleted < 10).length / smart.length) * 100);
+    smartRows.push(`| ${d.name} | ${deathBlock ? 'on' : 'off'} | x${rewardMultiplier(rules)} | ${smean((r) => r.encountersCompleted)} | ${smean((r) => r.badges.length)} | ${smean((r) => r.log.counters.moneyEarned ?? 0)} | ${searly}% |`);
     rows.push(`| ${d.name} | ${deathBlock ? 'on' : 'off'} | x${rewardMultiplier(rules)} | ${mean((r) => r.encountersCompleted)} | ${mean((r) => r.badges.length)} | ${mean((r) => r.log.counters.moneyEarned ?? 0)} | ${early}% |`);
   }
 }
@@ -38,6 +43,14 @@ const md = [
   '| Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |',
   '| --- | --- | --- | --- | --- | --- | --- |',
   ...rows,
+  '',
+  '## Smarter bot',
+  '',
+  'Picks the best move by power, STAB and type effectiveness, drinks potions when low, switches out of a bad matchup and shops for potions.',
+  '',
+  '| Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |',
+  '| --- | --- | --- | --- | --- | --- | --- |',
+  ...smartRows,
   '',
   `(${Math.round((Date.now() - started) / 1000)} s)`,
   '',

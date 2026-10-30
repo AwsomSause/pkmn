@@ -12,7 +12,10 @@ import type { MapNode, RunState } from '../../src/core/state';
 import { content, takeAnyReward } from './helpers';
 
 function newRun(seed = 'stop-items'): RunState {
-  return chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0);
+  // Past the gentle opening, whose weaker wild Pokémon would hide what these items change.
+  const run = chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0);
+  run.encountersCompleted = 2;
+  return run;
 }
 
 function take(run: RunState, id: string, times = 1): RunState {
