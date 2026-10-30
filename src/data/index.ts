@@ -4,6 +4,7 @@
 
 import { z } from 'zod';
 import {
+  AbilitySchema,
   AchievementSchema,
   RunPrepFileSchema,
   ArchetypeSchema,
@@ -28,6 +29,7 @@ import {
   type Requirement,
   type Reward,
 } from '../core/contentSchema';
+import abilitiesJson from './abilities.json';
 import { HISTORY_MEMORIES, HYPER_EFFECTS } from '../core/story/hyper';
 import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
@@ -65,6 +67,7 @@ export class ContentError extends Error {
 export interface RawContent {
   species: unknown;
   moves: unknown;
+  abilities: unknown;
   typeChart: unknown;
   archetypes: unknown;
   achievements: unknown;
@@ -106,6 +109,7 @@ export function mergeSpecies(base: unknown[], custom: unknown[], evolutions: { f
 export const RAW_CONTENT: RawContent = {
   species: mergeSpecies(speciesJson, customSpeciesJson, customEvolutionsJson),
   moves: movesJson,
+  abilities: abilitiesJson,
   typeChart: typeChartJson,
   archetypes: archetypesJson,
   achievements: achievementsJson,
@@ -152,6 +156,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const problems: string[] = [];
   const species = parse(z.array(SpeciesSchema), raw.species, 'species.json', problems);
   const moves = parse(z.array(MoveSchema), raw.moves, 'moves.json', problems);
+  const abilities = parse(z.array(AbilitySchema), raw.abilities, 'abilities.json', problems);
   const typeChart = parse(TypeChartSchema, raw.typeChart, 'typeChart.json', problems);
   const archetypes = parse(z.array(ArchetypeSchema), raw.archetypes, 'archetypes.json', problems);
   const achievements = parse(z.array(AchievementSchema), raw.achievements, 'achievements.json', problems);
@@ -171,13 +176,14 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !zMoves || !maxMoves || !species || !moves || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!story || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
   const content: Content = {
     species: toMap(species, 'species.json', problems),
     moves: toMap(moves, 'moves.json', problems),
+    abilities: toMap(abilities, 'abilities.json', problems),
     typeChart,
     archetypes: toMap(archetypes, 'archetypes.json', problems),
     achievements: toMap(achievements, 'achievements.json', problems),
@@ -212,8 +218,18 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   for (const id of Object.keys(bossTeams)) if (!content.bosses.has(id)) problems.push(`bossTeams.json has teams for unknown boss "${id}"`);
 
+  // Species without abilities of their own (the custom Delta, Z and Spooky forms, Bruticate) use
+  // those of the species they are a form of, or else evolve from.
+  for (const s of content.species.values()) {
+    const base = content.species.get(s.form?.base ?? s.evolvesFrom ?? '');
+    if (base && s.abilities.normal.length === 0 && s.abilities.hidden === null) s.abilities = base.abilities;
+  }
+
   // Cross-reference checks.
   for (const s of content.species.values()) {
+    for (const a of [...s.abilities.normal, ...(s.abilities.hidden ? [s.abilities.hidden] : [])]) {
+      if (!content.abilities.has(a)) problems.push(`species "${s.id}" has unknown ability "${a}"`);
+    }
     for (const entry of s.learnset) {
       if (!content.moves.has(entry.move)) problems.push(`species "${s.id}" learns unknown move "${entry.move}"`);
     }

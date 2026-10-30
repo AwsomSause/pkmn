@@ -54,15 +54,16 @@ describe('story foundation: random streams', () => {
   // Fingerprints of what the rules decided for these seeds, recorded on main
   // before the story layer existed (tests/unit/autoplay.ts). If one changes,
   // the story layer has changed a gameplay roll. Re-pinned after M8.75 item
-  // effects slices 2 to 3b-3 (held, map, shop, money, map-movement and map-stop items in drafts, bosses
-  // holding items), which change play on purpose.
+  // effects slices 2 to 3b-3a (held, map, shop, money, map-movement and map-stop items in drafts, bosses
+  // holding items) and M8.75 part C3 (every Pokémon has an ability), which change
+  // play on purpose.
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '510cb88e183af954',
+    'STORY1/0': 'af8e77600b7dd924',
     'STORY2/0': '289336f1e73c4f84',
     'STORY4/0': '96f2cac3866fccfe',
     'STORY5/0': '6a94ccb4c56bb170',
-    'STORY6/0': 'fb12816df446bfee',
-    'STORY7/0': '173c815313e80667',
+    'STORY6/0': '6efa1ccc1d950f44',
+    'STORY7/0': 'ca30e9f7e65c56eb',
     'STORY8/0': '9c19185effaefb06',
   };
   // Hyper moments (M8.9 Phase 1) do change battles on purpose, so the check runs without their definitions:
@@ -318,7 +319,8 @@ describe('story foundation: transformations', () => {
     const enemy = createPokemon(content, 'snorlax', 60, 'e900');
     enemy.moves = [{ id: 'splash', pp: 40 }];
     run.battle = createBattle('wild', [enemy], 0, uid);
-    run = takeTurn(content, run, { kind: 'move', index: 0, transform: { kind: 'mega' } }).run;
+    // Mega Evolution happens by itself with the Mega Ring and the stone (PokeRogue style, M8.5).
+    run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
     expect(run.party[0]!.speciesId).toBe('venusaur-mega');
     let guard = 0;
     while (run.phase === 'battle' && guard++ < 60) run = takeTurn(content, run, { kind: 'move', index: 0 }).run;

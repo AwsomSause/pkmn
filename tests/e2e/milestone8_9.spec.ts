@@ -22,11 +22,11 @@ test('Toughened It Out shows as a story moment, the Story Log shows it, and the 
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   await page.goto('/?debug=1');
   await waitForScene(page, 'MainMenu');
-  // On this seed the first fatal hit is survived by Toughened It Out (found by replaying these steps in a unit test).
+  // On this seed the first fatal hit is survived by Toughened It Out (found by replaying these steps; re-picked when abilities arrived).
   await page.evaluate(() => {
     const { session, game } = (window as any).__pkr;
     session.profile.attributes = { ...session.profile.attributes, love: 100 };
-    session.newRun('red', 'e2e-hyper-12');
+    session.newRun('red', 'e2e-hyper-16');
     session.chooseStarter(0);
     const stage = session.run.stage;
     const first = stage.map.nodes.filter((n: any) => n.column === 1).find((n: any) => !n.harder) ?? stage.map.nodes.find((n: any) => n.column === 1);

@@ -11,7 +11,8 @@
 // out of date; src/quality/knownLimits.json adds the limits a rule can't see.
 // Nothing here changes how the game plays.
 
-import type { Content, Evolution, Item, Move, Species } from '../core/contentSchema';
+import type { Ability, Content, Evolution, Item, Move, Species } from '../core/contentSchema';
+import { abilityStatus } from '../core/battle/abilities';
 import { isUsableMove, usableLearnset } from '../core/pokemon';
 import { isWildEligible } from '../core/themes';
 import { eligibleSpecies } from '../core/runPrep';
@@ -21,7 +22,7 @@ import knownLimits from './knownLimits.json';
 export const SUPPORT_STATUSES = ['supported', 'limited', 'disabled', 'invalid'] as const;
 export type SupportStatus = (typeof SUPPORT_STATUSES)[number];
 
-export const ENTRY_KINDS = ['species', 'form', 'move', 'item', 'evolution'] as const;
+export const ENTRY_KINDS = ['species', 'form', 'move', 'ability', 'item', 'evolution'] as const;
 export type EntryKind = (typeof ENTRY_KINDS)[number];
 
 export interface EntryStatus {
@@ -123,6 +124,14 @@ export function moveStatus(content: Content, m: Move): EntryStatus {
   return { kind: 'move', id: m.id, ...worst(notes) };
 }
 
+/** Abilities: supported, does nothing on purpose (limited), or not built yet (disabled). */
+export function abilityEntryStatus(a: Ability): EntryStatus {
+  const status = abilityStatus(a.id);
+  if (status === 'supported') return { kind: 'ability', id: a.id, status: 'supported', notes: [] };
+  if (status === 'noEffect') return { kind: 'ability', id: a.id, status: 'limited', notes: ["only affects things the game doesn't have (held items, genders, double battles, wild encounters)"] };
+  return { kind: 'ability', id: a.id, status: 'disabled', notes: ['disabled: the battle engine does not run it yet (Pokémon can still have it)'] };
+}
+
 export function speciesStatus(content: Content, s: Species, inputs: StatusInputs, artOwners: Map<string, string>, cryOwners: Map<string, string>): EntryStatus {
   const notes: { status: SupportStatus; note: string }[] = [];
   if (s.evolvesFrom && !content.species.has(s.evolvesFrom)) notes.push({ status: 'invalid', note: `evolves from unknown species "${s.evolvesFrom}"` });
@@ -141,7 +150,7 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   const custom = s.tags.some((t) => t === 'delta' || t === 'zform' || t === 'spooky');
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
   if (isTransformation(s)) {
-    if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken when its species Dynamaxes (M8.5); most G-Max side effects not built yet' });
+    if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken in every battle while you own the Dynamax Band (M8.5); most G-Max side effects not built yet' });
     else if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
     else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
   }
@@ -205,6 +214,7 @@ export function allStatuses(content: Content, inputs: StatusInputs): EntryStatus
   const out: EntryStatus[] = [];
   for (const s of content.species.values()) out.push(speciesStatus(content, s, inputs, artOwners, cryOwners));
   for (const m of content.moves.values()) out.push(moveStatus(content, m));
+  for (const a of content.abilities.values()) out.push(abilityEntryStatus(a));
   for (const item of content.items.values()) out.push(itemStatus(content, item, obtainable, usedForEvolution));
   for (const s of content.species.values()) for (const evo of s.evolutions) out.push(evolutionStatus(content, s, evo, obtainable, maxLevel));
   return out;
