@@ -83,5 +83,14 @@
   ],
   "archiveMax": 20,
   "traitBlend": 0.6
+ },
+ "alliance": {
+  "chance": 0.3
+ },
+ "identity": {
+  "mentorChance": 0.35,
+  "mentorMinAdaptability": 55,
+  "grudgeSetbacks": 2,
+  "grudgeMaxEmpathy": 40
  }
 }

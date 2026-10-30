@@ -28,6 +28,9 @@ export const RivalConfigSchema = z.object({
   /** Rival Scheduler (doc §13): stages a rival of each ladder state waits between appearances, the floor for any rival, and the pause after any rival appears. */
   /** Optional legacy layer (doc §11): how often an archived rival's character shapes a new one, and the archive's size. */
   legacy: z.object({ chance: z.number().min(0).max(1), minEncounters: z.number().int().min(0), states: z.array(z.string()), archiveMax: z.number().int().min(1), traitBlend: z.number().min(0).max(1) }),
+  /** Examples §8: an alliance forms between friends or partners who both lost to you; identity shifts come from a mentor or a grudge. */
+  alliance: z.object({ chance: z.number().min(0).max(1) }),
+  identity: z.object({ mentorChance: z.number().min(0).max(1), mentorMinAdaptability: z.number(), grudgeSetbacks: z.number().int(), grudgeMaxEmpathy: z.number() }),
   scheduler: z.object({ intervals: z.record(z.string(), z.number().int().min(1)), minGap: z.number().int().min(1), anyGap: z.number().int().min(0) }),
   world: z.object({ unseenWinBase: z.number(), progressCap: z.number().int(), unseenWinPotential: z.number(), privateGoalChance: z.number(), privateGoalMinAmbition: z.number(), fragileResilience: z.number(), toughResilience: z.number(), edgeChance: z.number(), distortedRumorChance: z.number(), friendMinEmpathy: z.number(), rivalMinAmbition: z.number() }),
   relations: z.object({ exchangeChance: z.number(), exchangeShift: z.number(), influenceConfidence: z.number(), triangleGain: z.number(), triangleMinVindictiveness: z.number(), substituteStrain: z.number(), legacyCloseNote: z.boolean() }),

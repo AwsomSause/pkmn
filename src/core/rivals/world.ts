@@ -10,7 +10,8 @@ import { emit } from '../story/record';
 import type { Rival } from '../story/schema';
 import { advanceArc } from './arcs';
 import { simulateOffscreen } from './bonds';
-import { pokemonInfluence, trainingExchange } from './relations';
+import { mostUsedType } from './adapt';
+import { formAlliances, grudgeType, mentorType, pokemonInfluence, trainingExchange } from './relations';
 import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 
@@ -96,6 +97,19 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
     } else if (trainingExchange(a, b)) {
       rumor ??= `${title(content, a)} and ${title(content, b)} traded training methods`;
     }
+  }
+  // Alliances against the common threat, mentors and grudges that change a team's identity (Examples §8).
+  const sk = `${run.regionIndex}.${stage}`;
+  for (const [a, b] of formAlliances(run, sk)) rumor ??= `${title(content, a)} and ${title(content, b)} have joined forces against you`;
+  const used = mostUsedType(content, run);
+  for (const r of story.rivals) {
+    if (!isHostile(r)) continue;
+    const mentor = mentorType(content, run, r, sk);
+    const grudge = mentor ? null : grudgeType(content, run, r, used);
+    if (mentor) r.identity = { type: mentor.type, source: 'mentor', by: mentor.by };
+    else if (grudge) r.identity = { type: grudge, source: 'grudge', by: r.name };
+    else continue;
+    rumor ??= mentor ? `${title(content, r)} has been seen training with ${mentor.by}` : `${title(content, r)} is rebuilding the team around ${grudge} Pokémon`;
   }
   if (rumor) {
     // Some rumours are only partly true; the player cannot tell which.
