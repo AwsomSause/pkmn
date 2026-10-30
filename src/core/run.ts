@@ -12,10 +12,12 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
+import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk, thirdBossLevels } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, shopEarlyStockPerk, thirdBossLevels, isUltraBeast } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
+import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, type AttributeKey, type Content, type TypeName } from './contentSchema';
@@ -125,6 +127,7 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
@@ -869,7 +872,8 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const { node, side } = raidDen(current, sideId);
   const def = getRaid(content, side.raidId!);
   const { speciesId, level } = raidBoss(content, current, def, node.id + sideId);
-  return { id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
+  const notes = def.grand ? grandNotes(content, current, speciesId) : [];
+  return { id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
 }
 
 function raidDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
@@ -916,6 +920,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.raid = freshRaidBattle(def);
   if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
   run.raids.entered += 1;
+  if (def.grand) startGrandBattle(content, run);
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
@@ -1006,6 +1011,7 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
 function failRaid(content: Content, run: RunState): void {
   const battle = run.battle!;
   const raidId = battle.raid?.id ?? battle.totem!.id;
+  if (battle.raid && getRaid(content, battle.raid.id).grand) endGrandBattle(content, run, false, run.party[battle.activeIndex]?.uid);
   const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
   for (const mon of run.party) {
     mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
@@ -1045,6 +1051,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
   run.raids.done.push(def.id);
+  if (def.grand) endGrandBattle(content, run, true, run.party[battle.activeIndex]?.uid);
   return { items, draftExtra: def.rewards.draftExtra, money };
 }
 
@@ -1155,6 +1162,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
+    const doublesCfg = content.balance.doubles;
+    if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+      if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
+    }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
@@ -1169,6 +1181,27 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
+}
+
+/**
+ * Unscheduled challenge: a due rival cuts in on a stop before you use it. Returns the run with the battle begun,
+ * or null when nobody does (nothing changes). Once per stage; the stop stays available afterwards.
+ */
+export function rivalChallenge(content: Content, current: RunState, sideId: string): RunState | null {
+  if (current.phase !== 'map' || !current.stage || current.stage.current === null) return null;
+  const node = findNode(current.stage.map, current.stage.current);
+  const side = node.sides.find((s) => s.id === sideId);
+  if (!side || waitingTrainer(current)) return null;
+  const rival = interruptingRival(content, current, side);
+  if (!rival) return null;
+  const run = structuredClone(current);
+  run.story.flags[interruptFlag(run)] = rival.id;
+  startEncounter(content, run, { ...findNode(run.stage!.map, node.id), kind: 'trainer' });
+  if (run.battle?.rivalId !== rival.id) return null;
+  const where = side.kind === 'heal' ? 'a healing stop' : side.kind === 'event' ? 'an event' : 'a service stop';
+  run.battle.rivalNote = `${run.story.rivals.find((r) => r.id === rival.id)!.name} cut in on you at ${where}! ${run.battle.rivalNote ?? ''}`.trim();
+  recordBattleStart(content, run);
+  return run;
 }
 
 /** Uses a healing stop or enters a shop beside the current node. */
@@ -1411,10 +1444,23 @@ export function beginBattle(content: Content, current: RunState): { run: RunStat
   if ((current.battle!.pendingEntry ?? []).length === 0) return { run: current, events: [] };
   const run = structuredClone(current);
   const rng = new Rng(run.rng.battle);
-  const events = startBattle(battleContext(content, run, rng, new Rng(run.rng.capture)));
+  const ctx = battleContext(content, run, rng, new Rng(run.rng.capture));
+  const events = run.battle!.doubles ? startDoubles(ctx) : startBattle(ctx);
   run.rng.battle = rng.state;
   countAttributeGrowth(content, run, events);
   return { run, events };
+}
+
+/**
+ * A double battle given one command (older callers, simple tools): it is the left-hand
+ * Pokémon's, and its partner uses its first usable move on the first foe.
+ */
+function doublesAction(ctx: BattleContext, action: PlayerAction): PlayerAction {
+  const d = ctx.battle.doubles!;
+  if (action.kind === 'double' || ctx.battle.needsSwitch) return action;
+  const commands = autoCommands(ctx);
+  commands[primarySpot(d, 'player')] = { action };
+  return { kind: 'double', commands };
 }
 
 export function takeTurn(content: Content, current: RunState, action: PlayerAction, dialogue: DialogueFrequency = 'normal'): TurnResult {
@@ -1430,7 +1476,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const wasForced = battle.needsSwitch;
   const outgoing = run.party[battle.activeIndex]?.uid;
   const enemyBefore = battle.enemyIndex;
-  const engineEvents: BattleEvent[] = [...shaped.events, ...resolveTurn(battleContext(content, run, rng, captureRng, hyperRng), shaped.action)];
+  const turnCtx = battleContext(content, run, rng, captureRng, hyperRng);
+  const engineEvents: BattleEvent[] = [...shaped.events, ...(battle.doubles ? resolveDoublesTurn(turnCtx, doublesAction(turnCtx, action)) : resolveTurn(turnCtx, shaped.action))];
   // A practiced pair hands over after a faint (yours, or a rival's).
   if (wasForced && action.kind === 'switch' && outgoing) {
     const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
@@ -1583,7 +1630,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       const catchUp = mon.level < leadLevel ? passivePercent(content, run, 'catchUpExp') : 0;
       // Macho Brace: more EXP for its holder.
       const monSpecies = getSpecies(content, mon.speciesId);
-      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle });
+      const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId) });
       const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const squirt = mon === run.party[0] && (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 1 + (perksOf(activePerks(content, run), 'squirt')[0]?.perk.percent ?? 5) / 100 : 1;
       const amount = Math.floor((participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100)) * squirt);
@@ -1632,7 +1679,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  const doublesBonus = battle.doubles ? doubleBattleRewardPerk(archetype.modifiers) : 1;
+  let moneyGained = Math.floor(base * rematch * doublesBonus * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
@@ -1772,6 +1820,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       count(run, role);
       const lead = run.party[battle.activeIndex];
       for (const type of lead ? getSpecies(content, lead.speciesId).types : []) count(run, `bossWinsLead.${type}`);
+      // Trainer unlock feats: every Pokémon in the party shares a type, or the party is one Pokémon.
+      const partyTypes = run.party.map((m) => getSpecies(content, m.speciesId).types);
+      if (partyTypes.length > 0) for (const type of partyTypes[0]!) if (partyTypes.every((t) => t.includes(type))) count(run, `bossWinsMono.${type}`);
+      if (run.party.length === 1) count(run, 'bossWinsSolo');
     } else {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
     }

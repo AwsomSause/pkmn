@@ -1,8 +1,10 @@
 // A simple deterministic player for tests: it always makes the same choice in
 // the same situation, so the same seed always plays the same run.
 
+import { doublesSwitchProblem } from '../../src/core/battle/doubles';
 import type { Content } from '../../src/core/contentSchema';
 import { forcedMoveIndex } from '../../src/core/battle/engine';
+import type { RulesChoice } from '../../src/core/rules';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, partyCapacity, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
 import { currentEnemy, type RunState } from '../../src/core/state';
@@ -13,6 +15,8 @@ export interface AutoplayOptions {
   archetypeId?: string;
   campaignId?: string;
   attributes?: Record<string, number>;
+  /** Mode, difficulty and modifiers (default: the standard rules). */
+  rules?: RulesChoice;
   /** Fully heals the party whenever it is on the map, so runs last longer. */
   healOnMap?: boolean;
   /** Raises the starter to this level right after it is chosen, so runs get further. */
@@ -40,7 +44,10 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
     case 'battle': {
       const battle = run.battle!;
       if (battle.needsSwitch) {
-        const turn = takeTurn(content, run, { kind: 'switch', partyIndex: run.party.findIndex((p) => p.hp > 0) });
+        // Any healthy Pokémon not already in battle (a double battle has two out).
+        const view = { battle: run.battle!, party: run.party };
+        const pick = run.battle!.doubles ? run.party.findIndex((_, i) => doublesSwitchProblem(view, i) === null) : run.party.findIndex((p) => p.hp > 0);
+        const turn = takeTurn(content, run, { kind: 'switch', partyIndex: pick });
         return { run: turn.run, turn };
       }
       const enemy = currentEnemy(battle);
@@ -83,7 +90,7 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
 
 export function autoplay(opts: AutoplayOptions): RunState {
   const content = opts.content ?? defaultContent;
-  let run = createRun(content, { runId: `test-${opts.seed}`, seed: opts.seed, archetypeId: opts.archetypeId ?? 'red', campaignId: opts.campaignId ?? 'full', attributes: opts.attributes });
+  let run = createRun(content, { runId: `test-${opts.seed}`, seed: opts.seed, archetypeId: opts.archetypeId ?? 'red', campaignId: opts.campaignId ?? 'full', attributes: opts.attributes, rules: opts.rules });
   for (let i = 0; i < opts.steps && run.phase !== 'over'; i++) {
     if (opts.healOnMap && run.phase === 'map') run = debugHealParty(content, run);
     const next = step(content, run);

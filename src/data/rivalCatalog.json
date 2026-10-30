@@ -13,14 +13,14 @@
    "name": "The Accidental Hero",
    "group": "Paths created by the player's actions",
    "text": "You save their Pokémon, help them through an event, or intervene in a crisis. They become inspired by you—or resent needing your help.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "stolen-spotlight",
    "name": "The Stolen Spotlight",
    "group": "Paths created by the player's actions",
    "text": "You receive recognition, a sponsorship, a rare Pokémon, or a tournament invitation they expected to earn.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "merciful-victor",
@@ -41,21 +41,21 @@
    "name": "The Shared Disaster",
    "group": "Paths created by the player's actions",
    "text": "You both survive a disastrous route, raid, or powerful encounter. You become connected through a shared experience.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-s-choice",
    "name": "The Pokémon's Choice",
    "group": "Paths created by the player's actions",
    "text": "A Pokémon bonds with you, rejects their training, or repeatedly reacts to your presence. The trainer's response creates the rivalry.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-you-inspired",
    "name": "The Rival You Inspired",
    "group": "Paths created by the player's actions",
    "text": "They begin by copying your team or strategy, then gradually develop a style of their own.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-you-neglected",
@@ -69,7 +69,7 @@
    "name": "The Debt",
    "group": "Paths created by the player's actions",
    "text": "You owe them a favor, they owe you one, or a past decision leaves an unresolved obligation that resurfaces later.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "self-made-challenger",
@@ -83,7 +83,7 @@
    "name": "The Chosen Successor",
    "group": "Paths created by the rival's own ambitions",
    "text": "A respected trainer, Gym Leader, or Champion identifies both of you as potential successors, creating an unspoken competition.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "family-legacy",
@@ -125,14 +125,14 @@
    "name": "The Regional Idealist",
    "group": "Paths created by the rival's own ambitions",
    "text": "They believe the region needs a particular kind of Champion and decide you represent the opposing future.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "disgraced-champion-candidate",
    "name": "The Disgraced Champion Candidate",
    "group": "Paths created by the rival's own ambitions",
    "text": "They once stood on the verge of greatness before a public failure, scandal, or devastating loss.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "world-traveler",
@@ -146,42 +146,42 @@
    "name": "The Assigned Opponent",
    "group": "Paths created by circumstances and other characters",
    "text": "A mentor, tournament, academy, or organization pairs you together. The rivalry becomes genuine—or the arrangement falls apart.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mutual-enemy",
    "name": "The Mutual Enemy",
    "group": "Paths created by circumstances and other characters",
    "text": "You both oppose the same dangerous trainer or faction but disagree over how to handle it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "former-friend",
    "name": "The Former Friend",
    "group": "Paths created by circumstances and other characters",
    "text": "A friendship deteriorates because of ambition, conflicting ideals, a betrayal, or a misunderstanding.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "rival-s-rival",
    "name": "The Rival's Rival",
    "group": "Paths created by circumstances and other characters",
    "text": "You defeat someone they have spent years trying to surpass, inheriting that person's attention.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-league-prospect",
    "name": "The Pokémon League Prospect",
    "group": "Paths created by circumstances and other characters",
    "text": "A league organization tracks both of you as promising competitors, turning ordinary encounters into a growing public competition.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-mentor",
    "name": "The Shared Mentor",
    "group": "Paths created by circumstances and other characters",
    "text": "You train under the same expert. Different lessons and interpretations create a philosophical rivalry.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "ideological-opponent",
@@ -202,14 +202,14 @@
    "name": "The Inherited Conflict",
    "group": "Paths created by circumstances and other characters",
    "text": "A rival believes your actions, family history, team legacy, or previous trainer's reputation wronged them.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-remembers",
    "name": "The Pokémon Who Remembers",
    "group": "Paths created by circumstances and other characters",
    "text": "One of their Pokémon recognizes you from an earlier encounter, a rescue, a battle, or a period when it belonged to someone else.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "personalities": [
@@ -1127,63 +1127,63 @@
    "name": "The Neglected Ace",
    "group": "Relationship-centered arcs",
    "text": "A powerful Pokémon receives little care outside battle. | The trainer changes their behavior, the Pokémon withdraws, or the relationship is restructured.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-outgrows-its-trainer",
    "name": "The Pokémon Who Outgrows Its Trainer",
    "group": "Relationship-centered arcs",
    "text": "A partner becomes more capable and independent. | The trainer adapts, resents the change, or learns to become a better partner.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "team-divided",
    "name": "The Team Divided",
    "group": "Relationship-centered arcs",
    "text": "Two Pokémon compete for attention or status. | The trainer restores balance or allows the conflict to deepen.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fearful-partner",
    "name": "The Fearful Partner",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon struggles with a particular battle situation. | Gradual confidence, continued accommodation, or a difficult separation from that role.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overprotective-trainer",
    "name": "The Overprotective Trainer",
    "group": "Relationship-centered arcs",
    "text": "Refuses to let Pokémon take reasonable risks. | Learns to trust their judgment—or remains unable to accept uncertainty.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "unlikely-pair",
    "name": "The Unlikely Pair",
    "group": "Relationship-centered arcs",
    "text": "Trainer and Pokémon have contrasting personalities. | They find complementary roles or discover that affection cannot solve every incompatibility.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "partner-who-stayed",
    "name": "The Partner Who Stayed",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon remains loyal through repeated hardship. | The trainer finally recognizes the sacrifices that loyalty involved.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "independent-ace",
    "name": "The Independent Ace",
    "group": "Relationship-centered arcs",
    "text": "A Pokémon increasingly acts on its own instincts. | The pair develops mutual trust or becomes unable to work together.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-recovery",
    "name": "The Shared Recovery",
    "group": "Relationship-centered arcs",
    "text": "Trainer and Pokémon both struggle after a crisis. | They rebuild together, potentially unlocking a distinctive controlled Hyper/Overdrive expression.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "friends-become-rivals",
@@ -1253,70 +1253,70 @@
    "name": "The Uncontrolled Prodigy",
    "group": "Overdrive-specific character arcs",
    "text": "enormous potential, insufficient control. Their progress depends on discipline and honest feedback.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "trainer-who-feared-overdrive",
    "name": "The Trainer Who Feared Overdrive",
    "group": "Overdrive-specific character arcs",
    "text": "avoids the mechanic after witnessing a frightening incident. Their arc may involve careful reintroduction or a principled refusal to use it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-refuses",
    "name": "The Pokémon Who Refuses",
    "group": "Overdrive-specific character arcs",
    "text": "a Pokémon stops cooperating with a trainer's attempts to force a power breakthrough. The trainer must address the relationship, not grind a hidden meter.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "perfect-synchronization",
    "name": "The Perfect Synchronization",
    "group": "Overdrive-specific character arcs",
    "text": "a pair with exceptional trust develops precise control, but must learn how to cope when one partner's condition changes.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "artificial-shortcut",
    "name": "The Artificial Shortcut",
    "group": "Overdrive-specific character arcs",
    "text": "a trainer pursues an external shortcut to power. The story can explore unstable results, ethical compromises, or the eventual rejection of the shortcut.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "overdrive-addict",
    "name": "The Overdrive Addict",
    "group": "Overdrive-specific character arcs",
    "text": "a trainer becomes obsessed with spectacular power surges, ignoring ordinary fundamentals and the welfare of their team.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "late-awakening",
    "name": "The Late Awakening",
    "group": "Overdrive-specific character arcs",
    "text": "a seemingly ordinary Pokémon discovers an unusual expression after years of accumulated experience.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-who-saves-the-trainer",
    "name": "The Pokémon Who Saves the Trainer",
    "group": "Overdrive-specific character arcs",
    "text": "a crisis reveals that the Pokémon's motivation is protecting its trainer rather than winning.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "broken-synchronization",
    "name": "The Broken Synchronization",
    "group": "Overdrive-specific character arcs",
    "text": "a major betrayal damages a previously reliable pairing. The duo must rebuild trust or accept that their old style no longer works.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "power-without-a-bond",
    "name": "The Power Without a Bond",
    "group": "Overdrive-specific character arcs",
    "text": "a rival can trigger an impressive state through exceptional skill or an unusual mechanism, but struggles with its consistency, meaning, or consequences.",
-   "status": "planned"
+   "status": "limited"
   }
  ],
  "mechanics": [
@@ -1402,7 +1402,7 @@
    "name": "The Pokémon Transfer",
    "group": "",
    "text": "A rival may trade, release, or rehome a Pokémon for a story-grounded reason, depending on the game's rules. Such decisions should have real consequences.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "return-encounter",
@@ -1458,7 +1458,7 @@
    "name": "The Unscheduled Challenge",
    "group": "",
    "text": "A rival may interrupt an appropriate exploration or event with a challenge when the story and gameplay state support it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "challenge-refusal",

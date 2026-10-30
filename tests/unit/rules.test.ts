@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { finalizeRun, createProfile } from '../../src/core/profile';
 import { chooseStarter, createRun, debugReplaceEnemy, resolveDecision, shopStock, takeTurn } from '../../src/core/run';
 import { isRewardEligible } from '../../src/core/rewards';
+import { awardModeRewards } from '../../src/core/modeRewards';
 import { dailyClaimKey, dailySeed, extendEndless, joinProblem, lockSpecies, partyCap, pickGeneration, randomDraft, spookyWild } from '../../src/core/rules';
 import { specialFamily } from '../../src/core/specialForms';
 import { getSpecies } from '../../src/core/pokemon';
@@ -238,6 +239,11 @@ describe('Daily Run, Endless and Spooky modes', () => {
     expect(run.rules.enemyLevelBonus).toBe(before + 5);
     expect(extendEndless(run)).toBe(true);
     expect(run.regionOrder).toHaveLength(6);
+    // The configured endpoint: after the loop limit the run ends in victory instead of looping again.
+    run.rules.loops = RUN_RULES.modes.find((m) => m.id === 'endless')!.loopLimit!;
+    const length = run.regionOrder.length;
+    expect(extendEndless(run)).toBe(false);
+    expect(run.regionOrder).toHaveLength(length);
     expect(extendEndless({ rules: makeRules(STANDARD_CHOICE), regionOrder: ['a'] })).toBe(false);
   });
 
@@ -252,5 +258,57 @@ describe('Daily Run, Endless and Spooky modes', () => {
     expect(Array.from({ length: 200 }, (_, i) => spookyWild(content, run, 'pidgey', `n${i}`))).toEqual(out);
     const std = { seed: 's1', rules: makeRules(STANDARD_CHOICE) };
     expect(spookyWild(content, std, 'pidgey', 'n1')).toBe('pidgey');
+  });
+});
+
+describe('mode rewards', () => {
+  const finished = (modeId: string, extra: Partial<RunState['rules']> = {}, badges = 4): RunState => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: `mr-${modeId}`, seed: 'mr', archetypeId: 'red', rules: { modeId, difficultyId: 'standard', modifierIds: [], deathBlock: false } }), 0));
+    run.badges = Array.from({ length: badges }, (_, i) => `b${i}`) as never;
+    run.rules = { ...run.rules, ...extra };
+    return run;
+  };
+  it('the Daily fourth-gym reward unlocks the Daily Set once, then pays a repeat reward', () => {
+    const profile = createProfile(content, 'p');
+    const first = awardModeRewards(profile, finished('daily'), 'now');
+    expect(first).toMatchObject([{ id: 'daily-fourth-gym', first: true }]);
+    expect(profile.unlockedPools).toContain('daily-set');
+    const credits = profile.bankCredits;
+    const again = awardModeRewards(profile, finished('daily'), 'later');
+    expect(again[0]!.first).toBe(false);
+    expect(profile.bankCredits).toBe(credits + 100);
+    expect(profile.unlockedPools.filter((p) => p === 'daily-set')).toHaveLength(1);
+  });
+  it('needs the badges, and Adventure or reward-free runs earn nothing', () => {
+    const profile = createProfile(content, 'p');
+    expect(awardModeRewards(profile, finished('daily', {}, 3), 'now')).toEqual([]);
+    expect(awardModeRewards(profile, finished('daily', { progressionEligible: false }), 'now')).toEqual([]);
+    expect(profile.unlockedPools).toEqual([]);
+  });
+  it('Spooky unlocks its pool and trainer; Endless pays by laps', () => {
+    const profile = createProfile(content, 'p');
+    awardModeRewards(profile, finished('spooky'), 'now');
+    expect(profile.unlockedPools).toContain('spooky');
+    expect(profile.unlockedArchetypes).toContain('hex-maniac');
+    expect(awardModeRewards(profile, finished('endless', { loops: 0 }), 'now')).toEqual([]);
+    expect(awardModeRewards(profile, finished('endless', { loops: 1 }), 'now').map((r) => r.id)).toEqual(['endless-lap-1']);
+    expect(awardModeRewards(profile, finished('endless', { loops: 3 }), 'now').map((r) => [r.id, r.first])).toEqual([['endless-lap-1', false], ['endless-lap-3', true]]);
+    expect(profile.titles).toEqual(expect.arrayContaining(['Endless Walker', 'Without End']));
+  });
+});
+
+describe('mode snapshot survives a reload', () => {
+  it('keeps the mode, laps and level bonus after saving and loading an Endless run', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'rl', seed: 'rl', archetypeId: 'red', rules: { modeId: 'endless', difficultyId: 'veteran', modifierIds: [], deathBlock: false } }), 0));
+    extendEndless(run);
+    const saves = new SaveManager(new MemoryStorageProvider(), content);
+    saves.saveRun(run);
+    const loaded = saves.loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status === 'ok') {
+      expect(loaded.data.rules).toEqual(run.rules);
+      expect(loaded.data.rules.loops).toBe(1);
+      expect(loaded.data.regionOrder).toEqual(run.regionOrder);
+    }
   });
 });

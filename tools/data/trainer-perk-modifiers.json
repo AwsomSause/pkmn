@@ -1098,6 +1098,10 @@
  ],
  "emmet": [
   {
+   "kind": "doubleBattleRewardMultiplier",
+   "value": 1.25
+  },
+  {
    "kind": "spreadMoveDamageMultiplier",
    "spread": true,
    "value": 1.15
@@ -2169,6 +2173,10 @@
   {
    "kind": "damageMultiplier",
    "value": 0.9
+  },
+  {
+   "kind": "hiddenItemChance",
+   "chance": 0.2
   }
  ],
  "spr-pt-lucas": [
@@ -2331,13 +2339,13 @@
  ],
  "rei": [
   {
-   "kind": "damageMultiplier",
-   "speed": "fast",
+   "kind": "moveStyleDamage",
+   "style": "agile",
    "value": 1.2
   },
   {
-   "kind": "damageMultiplier",
-   "speed": "slow",
+   "kind": "moveStyleDamage",
+   "style": "strong",
    "value": 0.9
   }
  ],
@@ -2473,6 +2481,11 @@
    "kind": "groupXpMultiplier",
    "type": "ghost",
    "value": 0.9
+  },
+  {
+   "kind": "evasionMultiplier",
+   "type": "ghost",
+   "value": 1.1
   }
  ],
  "palmer": [
@@ -2999,6 +3012,10 @@
   {
    "kind": "catchLevelOffset",
    "value": -2
+  },
+  {
+   "kind": "sameSpeciesDamageMultiplier",
+   "value": 1.15
   }
  ],
  "mr-fuji-gen-3": [
@@ -3026,6 +3043,11 @@
    "stat": "hp",
    "value": 0.9,
    "type": "ghost"
+  },
+  {
+   "kind": "evasionMultiplier",
+   "type": "ghost",
+   "value": 1.1
   }
  ],
  "molayne": [
@@ -3248,6 +3270,10 @@
   {
    "kind": "damageMultiplier",
    "value": 0.9
+  },
+  {
+   "kind": "evasionMultiplier",
+   "value": 1.15
   }
  ],
  "mallow": [
@@ -3260,6 +3286,10 @@
    "kind": "damageTakenMultiplier",
    "moveType": "fire",
    "value": 1.15
+  },
+  {
+   "kind": "foodDurationMultiplier",
+   "value": 1.25
   }
  ],
  "magnus": [
@@ -3471,6 +3501,37 @@
   {
    "kind": "healingMultiplier",
    "value": 0.8
+  }
+ ],
+ "lusamine-masters": [
+  {
+   "kind": "damageMultiplier",
+   "ultraBeast": true,
+   "value": 1.25
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "ultraBeast": false,
+   "value": 0.85
+  }
+ ],
+ "lusamine-nihilego": [
+  {
+   "kind": "damageMultiplier",
+   "types": [
+    "poison",
+    "psychic"
+   ],
+   "value": 1.2
+  },
+  {
+   "kind": "statusedFoeDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 0.9
   }
  ]
 }

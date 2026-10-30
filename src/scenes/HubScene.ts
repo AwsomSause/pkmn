@@ -6,13 +6,13 @@
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
-import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
+import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
 import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
-import type { RunRecord } from '../core/state';
+import type { Profile, RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
@@ -867,15 +867,26 @@ export class HubScene extends Phaser.Scene {
       const problem = status === 'claimable' ? claimProblem(p, a) : null;
       return {
         problem: status === 'claimable' ? problem : null,
-        hint: archiveHint(a, status, p.bankCredits),
+        hint: archiveHint(a, status, p),
         draw: (scene, box, w, h) => {
           box.add(trainerVisual(scene, a.spriteAssetId, a.name, 34, h / 2 + 4, 0.7));
           box.add(scene.add.text(76, 8, `${a.name}  ${a.title}`, textStyle(20)));
           const color = status === 'unlocked' ? COLORS.good : status === 'claimable' ? '#f8b048' : COLORS.textMuted;
-          box.add(scene.add.text(76, 34, STATUS_LABEL[status] + (status === 'claimable' && a.unlockCost ? `  ·  ${a.unlockCost} credits` : ''), textStyle(16, color)));
+          const stars = a.unlockTier && status !== 'unlocked' ? `  ${'★'.repeat(a.unlockTier)}${'☆'.repeat(5 - a.unlockTier)}` : '';
+          box.add(scene.add.text(76, 32, STATUS_LABEL[status] + (status === 'claimable' && a.unlockCost ? `  ·  ${a.unlockCost} credits` : '') + stars, textStyle(16, color)));
           if (a.unlock && status !== 'unlocked') {
             const prog = requirementProgress(p, a.unlock);
-            box.add(scene.add.text(w - 12, h / 2, `${prog.current}/${prog.target}`, textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
+            const frac = prog.target > 0 ? prog.current / prog.target : 0;
+            const multi = a.unlock.kind === 'all';
+            box.add(scene.add.text(w - 12, 20, multi ? `${Math.floor(frac * 100)}%` : `${prog.current}/${prog.target}`, textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
+            // Progress bar that springs open when the list appears.
+            const barW = w - 88 - 12;
+            box.add(scene.add.rectangle(76, h - 10, barW, 6, 0x000000, 0.35).setOrigin(0, 0.5));
+            if (frac > 0) {
+              const fill = scene.add.rectangle(76, h - 10, barW * frac, 6, status === 'claimable' ? 0xf8b048 : 0x58b8f8).setOrigin(0, 0.5).setScale(0, 1);
+              box.add(fill);
+              scene.tweens.add({ targets: fill, scaleX: 1, duration: 520, ease: 'Back.easeOut', delay: 60 });
+            }
           }
         },
       };
@@ -1140,12 +1151,13 @@ function rewardText(a: Achievement): string {
   return parts.join(', ') || 'bragging rights';
 }
 
-function archiveHint(a: Archetype, status: TrainerStatus, credits: number): string {
+function archiveHint(a: Archetype, status: TrainerStatus, p: Profile): string {
   const effects = [...a.pros.map((x) => `+ ${x}`), ...a.cons.map((x) => `− ${x}`)].join('  ');
   if (status === 'unlocked') return `${a.description}  ${effects}`;
   if (status === 'comingLater') return `${a.description} Arrives in a later update. Unlock: ${a.unlockText}.`;
-  if (status === 'claimable') return `Enter: claim for ${a.unlockCost} Bank Credits (you have ${credits}).  ${effects}`;
-  return `Unlock: ${a.unlockText}${a.unlockCost ? `, then ${a.unlockCost} Bank Credits` : ''}.  ${effects}`;
+  if (status === 'claimable') return `Enter: claim for ${a.unlockCost} Bank Credits (you have ${p.bankCredits}).  ${effects}`;
+  const parts = a.unlock ? requirementParts(p, a.unlock).map((x) => `${x.met ? '✓' : '•'} ${x.label}${x.target > 1 ? ` (${x.current.toLocaleString('en-US')}/${x.target.toLocaleString('en-US')})` : ''}`).join('  ') : a.unlockText;
+  return `${a.unlockFlavor ? `${a.unlockFlavor}  ` : ''}Challenge: ${parts}${a.unlockCost ? `  Then ${a.unlockCost} Bank Credits.` : ''}  ${effects}`;
 }
 
 function downloadText(filename: string, text: string): void {

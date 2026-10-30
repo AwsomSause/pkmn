@@ -46,3 +46,47 @@ describe('Grand-Enemy', () => {
     expect(run.story.chronicle.at(-1)!.text).toContain('turned back');
   });
 });
+
+describe('Grand-Enemy battles', () => {
+  it('the two fights are placed by the campaign, kept out of random dens, and use real species and items', async () => {
+    const { grandRaidFor } = await import('../../src/core/story/grandEnemy');
+    const grand = content.raids.raids.filter((r) => r.grand);
+    expect(grand.map((r) => r.grand).sort()).toEqual(['contact', 'reckoning']);
+    for (const r of grand) {
+      for (const s of r.species) expect(content.species.has(s)).toBe(true);
+      for (const i of r.rewards.items) expect(content.items.has(i.item)).toBe(true);
+    }
+    const { run } = fresh('ge-place');
+    const last = run.regionOrder.length - 1;
+    const at = (region: number, index: number, met = 0) => {
+      const r = structuredClone(run);
+      r.regionIndex = region;
+      r.stage = { kind: 'stage', index } as never;
+      r.story.flags['ge:met'] = met;
+      return grandRaidFor(content, r);
+    };
+    expect(at(Math.ceil(0.25 * last), 1)).toBe('contact');
+    expect(at(Math.ceil(0.25 * last), 0)).toBeNull();
+    expect(at(Math.ceil(0.25 * last), 1, 1)).toBeNull();
+    expect(at(last, 1)).toBe('reckoning');
+  });
+
+  it('adapts to a repeated style, reveals weaknesses after the first fight, and remembers the fight', async () => {
+    const g = await import('../../src/core/story/grandEnemy');
+    const { run, mon } = fresh('ge-adapt');
+    expect(g.grandAdaptation(content, run)).toBeNull();
+    expect(g.grandWeaknesses(content, run, 'lugia')).toEqual([]);
+    g.endGrandBattle(content, run, false, mon.uid);
+    expect(g.grandMet(run)).toBe(1);
+    expect(g.grandWeaknesses(content, run, 'lugia').length).toBeGreaterThan(0);
+    const adapt = g.grandAdaptation(content, run)!;
+    expect(adapt.text).toContain('Fight a different way');
+    run.battle = { enemyStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } } as never;
+    g.startGrandBattle(content, run);
+    expect((run.battle as unknown as { enemyStages: Record<string, number> }).enemyStages[adapt.stat]).toBe(1);
+    // A different fighting style is not punished.
+    run.story.flags['ge:category'] = g.dominantCategory(content, run) === 'physical' ? 'special' : 'physical';
+    expect(g.grandAdaptation(content, run)).toBeNull();
+    expect(run.story.chronicle.at(-1)!.text).toContain('learned how it fights');
+  });
+});

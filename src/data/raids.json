@@ -642,6 +642,125 @@
         "boost": 1.7,
         "text": "Mewtwo is focusing a crushing blow!"
       }
+    },
+    {
+      "id": "storm-sovereign-contact",
+      "name": "The Storm Sovereign",
+      "tier": 3,
+      "blurb": "A vast shape in the storm. You cannot beat it yet, but you can learn how it fights.",
+      "species": [
+        "lugia"
+      ],
+      "levelBonus": 4,
+      "hpBoostPercent": 300,
+      "entryCost": 0,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.1
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The storm answers its call!",
+          "boost": {
+            "spa": 1
+          },
+          "weather": "rain"
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 4,
+        "boost": 1.5,
+        "text": "The Storm Sovereign is gathering the storm!"
+      },
+      "extraActions": null,
+      "timerTurns": 30,
+      "weather": null,
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0
+      },
+      "grand": "contact"
+    },
+    {
+      "id": "storm-sovereign-reckoning",
+      "name": "The Storm Sovereign: Reckoning",
+      "tier": 6,
+      "blurb": "The final confrontation. It remembers how you fought it before.",
+      "species": [
+        "lugia"
+      ],
+      "levelBonus": 6,
+      "hpBoostPercent": 500,
+      "entryCost": 0,
+      "shield": {
+        "at": [
+          0.75,
+          0.5,
+          0.25
+        ],
+        "points": 0.1
+      },
+      "phases": [
+        {
+          "atHp": 0.75,
+          "text": "The sky darkens.",
+          "weather": "rain"
+        },
+        {
+          "atHp": 0.5,
+          "text": "The Storm Sovereign roars!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          },
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.25,
+          "text": "The storm breaks!",
+          "boost": {
+            "spe": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 3,
+        "boost": 1.6,
+        "text": "The Storm Sovereign is gathering everything!"
+      },
+      "extraActions": {
+        "belowHp": 0.5,
+        "max": 2
+      },
+      "timerTurns": 40,
+      "weather": null,
+      "rewards": {
+        "moneyPerLevel": 250,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "revive",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 3,
+        "joinChance": 0.3
+      },
+      "grand": "reckoning"
     }
   ]
 }

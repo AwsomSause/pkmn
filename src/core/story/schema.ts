@@ -227,6 +227,11 @@ export const RivalSchema = z.object({
   legacyOf: z.string().optional(),
   /** The team identity it has taken on (a type its roster is rebuilt around) and why: a mentor's example or a grudge against your style. */
   identity: z.object({ type: z.string(), source: z.enum(['mentor', 'grudge']), by: z.string() }).optional(),
+  /** Who backs it (a sponsor id, +1 level on return) and which faction it belongs to (rivalWorld.json). */
+  sponsor: z.string().optional(),
+  /** Arcs it has finished, so a bond or Overdrive arc never repeats. */
+  arcsDone: z.array(z.string()).optional(),
+  faction: z.string().optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
@@ -259,6 +264,26 @@ export const ArchivedRivalSchema = z.object({
 });
 export type ArchivedRival = z.infer<typeof ArchivedRivalSchema>;
 
+/** The player's place in the rival world: sponsor, faction standing, boss wins and debts (core/rivals/standing.ts). */
+export const StandingSchema = z.object({
+  sponsor: z.object({ id: z.string(), at: z.string() }).nullable().default(null),
+  factions: z.record(z.string(), z.number()).default({}),
+  bosses: z.number().int().min(0).default(0),
+  debts: z.array(z.object({
+    id: z.string(),
+    /** The sponsor id or rival id on the other side of the debt. */
+    other: z.string(),
+    direction: z.enum(['owed-by-player', 'owed-to-player']),
+    kind: z.enum(['money', 'favor']),
+    amount: z.number().int().min(0),
+    at: z.string(),
+    /** Boss wins needed (counted from `bosses` when it was made) before a money debt is called in. */
+    dueBosses: z.number().int().min(0),
+    settled: z.boolean().default(false),
+  })).default([]),
+});
+export type Standing = z.infer<typeof StandingSchema>;
+
 export const StoryStateSchema = z.object({
   /** Last sequence number used (event ids are seed + seq). */
   seq: z.number().int().min(0),
@@ -270,6 +295,7 @@ export const StoryStateSchema = z.object({
   /** Rivals born this run (src/core/rivals). */
   rivals: z.array(RivalSchema),
   /** How rivals feel about each other: enemies, friends or training partners. */
+  standing: StandingSchema.default({ sponsor: null, factions: {}, bosses: 0, debts: [] }),
   rivalGraph: z.array(z.object({ a: z.string(), b: z.string(), kind: z.enum(['enemies', 'friends', 'partners']) })).default([]),
   chronicle: z.array(ChronicleEntrySchema),
   /** Ids of run-scope effects already applied: applying one again does nothing. */

@@ -82,6 +82,7 @@ export class GameOverScene extends Phaser.Scene {
         for (const o of g.objectives) lines.push(`${g.event.name}: ${o.text} done (+${gameRewardText(session.content, o.reward)})`);
         if (g.final) lines.push(`${g.event.name} complete! ${g.final.fallback ? 'Repeat reward' : 'Reward'}: ${gameRewardText(session.content, g.final.reward)}`);
       }
+      for (const m of summary.modeRewards ?? []) lines.push(`${m.first ? 'New reward' : 'Repeat reward'}: ${m.text}`);
       const ups = summary.masteryUps ?? [];
       if (ups.length > 0) lines.push(`Mastery: ${ups.slice(0, 6).map((u) => `${session.content.species.get(u.speciesId)?.name ?? u.speciesId} ${RANK_NAMES[u.rank]}`).join(', ')}${ups.length > 6 ? ` and ${ups.length - 6} more` : ''}`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);

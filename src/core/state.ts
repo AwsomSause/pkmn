@@ -329,6 +329,26 @@ export const freshVolatile = (): Volatile => ({
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
 export type Stages = z.infer<typeof StagesSchema>;
 
+/**
+ * A double battle. The engine always works on one Pokémon per side (activeIndex / enemyIndex with
+ * their stages and volatile); the other one waits here and the two trade places when the engine
+ * turns to it. `index` -1 is an empty spot (nobody left to send out).
+ */
+const DoublesSlotSchema = z.object({ index: z.number().int().min(-1), stages: StagesSchema, vol: VolatileSchema.default(freshVolatile) });
+export const DoublesSchema = z.object({
+  player: DoublesSlotSchema,
+  enemy: DoublesSlotSchema,
+  /** True while the Pokémon in the main fields stands in the right-hand spot (spot 1). */
+  swapped: z.object({ player: z.boolean(), enemy: z.boolean() }),
+  /** Spots (0 left, 1 right) waiting for the player to send out a replacement. */
+  refill: z.array(z.number().int().min(0).max(1)).default([]),
+  /** Tatsugiri commanding from inside a partner Dondozo (Commander): they skip their turns and can't be hit. */
+  commanding: z.array(z.string()).default([]),
+  /** Where each Pokémon last aimed its move (the second turn of Solar Beam goes the same way). */
+  aims: z.record(z.string(), z.object({ side: z.enum(['player', 'enemy']), spot: z.union([z.literal(0), z.literal(1)]) })).default({}),
+});
+export type DoublesState = z.infer<typeof DoublesSchema>;
+
 export const LevelBreakdownSchema = z.object({
   base: z.number(),
   progress: z.number(),
@@ -571,6 +591,8 @@ export const BattleStateSchema = z.object({
   totem: TotemBattleSchema.optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
+  /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */
+  doubles: DoublesSchema.optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 

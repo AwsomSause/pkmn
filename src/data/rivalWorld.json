@@ -1,0 +1,142 @@
+{
+ "note": "Rival world systems (Living Rivalry Engine Examples sections 1 and 8): sponsors, factions and debts. A sponsor signs the player after the first boss win, pays an advance (a debt) and a stipend per boss; rivals can be sponsored too (stronger on return). Factions keep a standing from -100 to 100. Debts are repaid on a schedule and change what rivals do.",
+ "sponsors": [
+  {
+   "id": "silph-co",
+   "name": "Silph Co.",
+   "faction": "research",
+   "advance": 300,
+   "stipend": 80,
+   "line": "Silph Co. signed you as a field tester"
+  },
+  {
+   "id": "devon-corp",
+   "name": "Devon Corporation",
+   "faction": "research",
+   "advance": 300,
+   "stipend": 80,
+   "line": "Devon Corporation wants its name on your badge case"
+  },
+  {
+   "id": "aether-foundation",
+   "name": "Aether Foundation",
+   "faction": "research",
+   "advance": 400,
+   "stipend": 60,
+   "line": "The Aether Foundation offers a conservation grant"
+  },
+  {
+   "id": "league-patrons",
+   "name": "League Patrons' Circle",
+   "faction": "league",
+   "advance": 250,
+   "stipend": 100,
+   "line": "The League Patrons' Circle backs your challenge"
+  },
+  {
+   "id": "poke-mart-guild",
+   "name": "Poké Mart Guild",
+   "faction": "wanderers",
+   "advance": 350,
+   "stipend": 70,
+   "line": "The Poké Mart Guild hands you a supply voucher"
+  },
+  {
+   "id": "shadow-broker",
+   "name": "The Shadow Broker",
+   "faction": "syndicate",
+   "advance": 500,
+   "stipend": 40,
+   "line": "A stranger in a grey coat offers funding, no questions asked"
+  }
+ ],
+ "factions": [
+  {
+   "id": "league",
+   "name": "Pokémon League"
+  },
+  {
+   "id": "research",
+   "name": "Research Union"
+  },
+  {
+   "id": "wanderers",
+   "name": "Wanderers' Guild"
+  },
+  {
+   "id": "syndicate",
+   "name": "Underground Syndicate"
+  }
+ ],
+ "rivalFactions": {
+  "default": "wanderers",
+  "byPersonality": {
+   "prodigy": "league",
+   "perfectionist": "league",
+   "traditionalist": "league",
+   "showboat": "league",
+   "perpetual-runner-up": "league",
+   "scholar": "research",
+   "naturalist": "research",
+   "tactician": "research",
+   "innovator": "research",
+   "quiet-observer": "research",
+   "nihilist": "syndicate",
+   "pragmatist": "syndicate",
+   "collector": "syndicate",
+   "self-saboteur": "syndicate"
+  }
+ },
+ "standing": {
+  "bossLeague": 8,
+  "bossSyndicate": -4,
+  "rivalWinLeague": 3,
+  "sponsorFaction": 10,
+  "hostileAt": -12,
+  "patronAt": 15,
+  "min": -100,
+  "max": 100
+ },
+ "debts": {
+  "repayAfterBosses": 2,
+  "owedToPlayerLevels": 1,
+  "sponsorRivalLevels": 1,
+  "rivalSponsorChance": 0.3,
+  "rivalSponsorMinAmbition": 60
+ },
+ "context": {
+  "crisisEvents": 2,
+  "copyTypes": 2
+ },
+ "transfer": {
+  "note": "Rival Pokemon transfer (Examples section 8): a rival releases a Pokemon it has no trust with, trades one with a friend or training partner, or rehomes one that is loved but strained.",
+  "releaseChance": 0.25,
+  "releaseMaxTrust": 40,
+  "releaseMinStrain": 45,
+  "tradeChance": 0.3,
+  "rehomeChance": 0.25,
+  "rehomeMinAffection": 60,
+  "rehomeMinStrain": 35,
+  "minTeam": 2,
+  "maxTeam": 6,
+  "tradeTrustLoss": 15,
+  "releaseEmpathy": -3,
+  "tradeEmpathy": 2,
+  "rehomeEmpathy": 2
+ },
+ "interrupt": {
+  "note": "Unscheduled challenge (Examples section 8): a due, driven rival cuts in on an event, healing or service stop before you use it. Once per stage; never in the League or on a boss node; the stop is still there afterwards.",
+  "sideKinds": [
+   "event",
+   "heal",
+   "service"
+  ],
+  "states": [
+   "active",
+   "nemesis",
+   "contender"
+  ],
+  "minVindictiveness": 55,
+  "chance": 0.35
+ }
+}

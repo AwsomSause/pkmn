@@ -57,6 +57,8 @@ export const RaidDefSchema = z.object({
   timerTurns: z.number().int().min(5).max(60).nullable().default(null),
   weather: WeatherSchema.nullable().default(null),
   rewards: RaidRewardSchema,
+  /** The Grand-Enemy's own fights (core/story/grandEnemy): placed by the campaign, never in the random den pool. */
+  grand: z.enum(['contact', 'reckoning']).optional(),
 });
 export type RaidDef = z.infer<typeof RaidDefSchema>;
 

@@ -49,7 +49,15 @@ export const RunRulesDataSchema = z.object({
       noHealStops: z.boolean().optional(),
     }),
   ),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), spookyChance: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modeRewards: z.array(z.object({
+    modeId: z.string(),
+    id: z.string(),
+    needs: z.object({ badges: z.number().int().optional(), loops: z.number().int().optional() }),
+    claim: z.string(),
+    once: z.object({ pool: z.string().optional(), trainer: z.string().optional(), title: z.string().optional(), bankCredits: z.number().int().optional(), text: z.string() }),
+    repeat: z.object({ bankCredits: z.number().int().optional(), candies: z.number().int().optional(), text: z.string() }),
+  })),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), spookyChance: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 
@@ -239,8 +247,10 @@ export const dailyClaimKey = (isoDate: string): string => `daily:${isoDate.slice
  * Returns false in any other mode. Enemies get stronger every lap.
  */
 export function extendEndless(run: Pick<RunState, 'rules' | 'regionOrder'>): boolean {
-  const bonus = getMode(run.rules.modeId)?.loopLevelBonus;
-  if (!bonus) return false;
+  const mode = getMode(run.rules.modeId);
+  const bonus = mode?.loopLevelBonus;
+  // The configured endpoint: after the last lap the run is won like any other.
+  if (!bonus || run.rules.loops >= (mode?.loopLimit ?? Infinity)) return false;
   const lap = run.regionOrder.length / (run.rules.loops + 1);
   run.regionOrder.push(...run.regionOrder.slice(0, lap));
   run.rules.loops += 1;

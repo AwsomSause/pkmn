@@ -5,7 +5,7 @@ import type { RunState } from '../state';
 import catalog from '../../data/rivalCatalog.json';
 import { FEELING_NAMES, rivalFeeling } from './feelings';
 import { bondLines, reputation, signature } from './bonds';
-import { RIVAL_CONFIG } from './schema';
+import { RIVAL_CONFIG, RIVAL_WORLD } from './schema';
 import { ultimateRival } from './ultimate';
 
 export interface RivalLine {
@@ -38,7 +38,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       state: `${r.state[0]!.toUpperCase() + r.state.slice(1)}, feels ${FEELING_NAMES[rivalFeeling(r).feeling].toLowerCase()}`,
       ultimate: ultimateRival(run)?.id === r.id,
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
-      bonds: [...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
+      bonds: [...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };
   });
 }

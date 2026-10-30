@@ -30,6 +30,8 @@ export const SLOW_BASE_SPEED = 60;
 
 const ULTRA_BEASTS = new Set(['nihilego', 'buzzwole', 'pheromosa', 'xurkitree', 'celesteela', 'kartana', 'guzzlord', 'necrozma', 'poipole', 'naganadel', 'stakataka', 'blacephalon']);
 
+export const isUltraBeast = (speciesId: string): boolean => ULTRA_BEASTS.has(speciesId);
+
 /** Legendary, Mythical or Ultra Beast (the groups Trainers.md perks name together). */
 export function isLegendaryLike(species: { id: string; tags: readonly string[] }): boolean {
   return species.tags.includes('legendary') || species.tags.includes('mythical') || ULTRA_BEASTS.has(species.id);
@@ -76,9 +78,13 @@ export interface DamageDealtInfo {
   partyIndex?: number;
   partySize?: number;
   userLegendary?: boolean;
+  userUltraBeast?: boolean;
   /** `unusual` / `common`: see unusualKind. */
   userRarity?: 'unusual' | 'common' | null;
   moveFlags?: readonly string[];
+  /** The target is the same species as the attacker. */
+  sameSpecies?: boolean;
+  moveStyle?: 'agile' | 'strong' | null;
   /** Enemies your side has already defeated in this battle. */
   enemiesDefeated?: number;
 }
@@ -86,7 +92,9 @@ export interface DamageDealtInfo {
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
 export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): number {
   let v = 1;
-  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)));
+  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)) && (m.ultraBeast === undefined || m.ultraBeast === Boolean(i.userUltraBeast)));
+  if (i.sameSpecies) v *= product(perks, 'sameSpeciesDamageMultiplier');
+  v *= product(perks, 'moveStyleDamage', (m) => m.style === i.moveStyle);
   v *= product(perks, 'moveFlagDamage', (m) => m.flags.some((f) => i.moveFlags?.includes(f)));
   for (const m of of(perks, 'unusualDamageMultiplier')) v *= i.userRarity === 'unusual' ? m.unusual : i.userRarity === 'common' ? m.common : 1;
   if ((i.enemiesDefeated ?? 0) > 0) v *= product(perks, 'afterKoDamageMultiplier');
@@ -154,6 +162,7 @@ export interface XpInfo {
   baseSpeed: number;
   isStarter: boolean;
   isBossBattle: boolean;
+  ultraBeast?: boolean;
 }
 
 /** Experience multiplier for one Pokémon (group perks and ordinary-battle perks). */
@@ -164,6 +173,7 @@ export function xpPerk(perks: Perks | undefined, i: XpInfo): number {
     if (m.speed === 'fast' && i.baseSpeed < FAST_BASE_SPEED) return false;
     if (m.speed === 'slow' && i.baseSpeed > SLOW_BASE_SPEED) return false;
     if (m.starter !== undefined && m.starter !== i.isStarter) return false;
+    if (m.ultraBeast !== undefined && m.ultraBeast !== Boolean(i.ultraBeast)) return false;
     return true;
   });
   if (!i.isBossBattle) v *= product(perks, 'ordinaryXpMultiplier');
@@ -371,7 +381,7 @@ export function enemyHealingBlocked(perks: Perks | undefined): boolean {
   return of(perks, 'enemyHealingBlocked').length > 0;
 }
 
-/** Moves that hit every foe in the real games' double battles (the game here is singles, so this only picks the perk's damage rule). */
+/** Moves that hit every foe in double battles (for the perk's damage rule; battle/doubles.ts has the full target list). */
 const SPREAD_MOVES = new Set([
   'earthquake', 'surf', 'rock-slide', 'blizzard', 'heat-wave', 'discharge', 'razor-leaf', 'muddy-water', 'bulldoze', 'dazzling-gleam', 'hyper-voice',
   'icy-wind', 'snarl', 'electroweb', 'sludge-wave', 'eruption', 'water-spout', 'boomburst', 'lava-plume', 'sparkling-aria', 'origin-pulse',
@@ -399,6 +409,10 @@ export function burnDamageTakenPerk(perks: Perks | undefined): number {
 
 export function bossMoneyPerk(perks: Perks | undefined): number {
   return product(perks, 'bossMoneyMultiplier');
+}
+
+export function doubleBattleRewardPerk(perks: Perks | undefined): number {
+  return product(perks, 'doubleBattleRewardMultiplier');
 }
 
 export function statusMoveAccuracyPerk(perks: Perks | undefined): number {
@@ -443,6 +457,28 @@ export function catchMoneyPerk(perks: Perks | undefined): number {
 const DANCE_MOVES = new Set(['swords-dance', 'dragon-dance', 'quiver-dance', 'feather-dance', 'petal-dance', 'fiery-dance', 'lunar-dance', 'teeter-dance', 'revelation-dance', 'victory-dance', 'clangorous-soul-dance', 'aqua-step', 'raging-fury-dance']);
 export function moveFlagsOf(move: { id: string; flags: readonly string[] }): readonly string[] {
   return DANCE_MOVES.has(move.id) ? [...move.flags, 'dance'] : move.flags;
+}
+
+/** Agile style: quick moves (priority, or power 60 or less); Strong style: heavy moves (power 90 or more). Status moves have none. */
+export function moveStyleOf(move: { power: number | null; priority: number }): 'agile' | 'strong' | null {
+  if (move.power === null) return null;
+  if (move.power >= 90) return 'strong';
+  return move.priority > 0 || move.power <= 60 ? 'agile' : null;
+}
+
+/** Food for the perks that name it: Berries and Honey. */
+export function isFoodItem(itemId: string): boolean {
+  return itemId === 'honey' || itemId.endsWith('-berry');
+}
+
+/** How many battles or throws a food map item lasts, with the perk's longer duration (rounded up). */
+export function foodCount(perks: Perks | undefined, itemId: string, count: number): number {
+  return isFoodItem(itemId) ? Math.ceil(count * product(perks, 'foodDurationMultiplier')) : count;
+}
+
+/** Chance of a hidden item at one wild stop of a stage from the archetype's perks (0 when it has none). */
+export function hiddenItemChancePerk(perks: Perks | undefined): number {
+  return Math.min(1, sum(perks, 'hiddenItemChance', (m) => m.chance));
 }
 
 const RARITY = new WeakMap<Content, { combo: Map<string, number>; ability: Map<string, number> }>();

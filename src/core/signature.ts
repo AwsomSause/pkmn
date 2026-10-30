@@ -114,12 +114,33 @@ const DEFS: SignatureDef[] = [
       ];
     },
   },
+  {
+    id: 'beautiful-parasite',
+    name: 'Beautiful Parasite',
+    trigger: 'bossBattle',
+    title: 'Beautiful Parasite: choose an Assimilation for your team',
+    options(_content, run) {
+      // Two Assimilations at most; each makes the team take 5% more damage.
+      if (assimilations(run) >= 2) return [];
+      const cost: ArchetypeModifier = { kind: 'damageTakenMultiplier', value: 1.05 };
+      return [
+        { label: 'Assimilate Special Attack', description: 'Your team has +10% Special Attack, but takes 5% more damage.', effects: [{ kind: 'statMultiplier', stat: 'spa', value: 1.1 }, cost] },
+        { label: 'Assimilate poison', description: 'Your Pokémon poison 25% more often, but take 5% more damage.', effects: [{ kind: 'statusChanceMultiplier', status: 'psn', value: 1.25 }, cost] },
+        { label: 'Assimilate Speed', description: 'Your team has +10% Speed, but takes 5% more damage.', effects: [{ kind: 'statMultiplier', stat: 'spe', value: 1.1 }, cost] },
+      ];
+    },
+  },
 ];
 
 /** Bosses (gym leaders, Elite Four, champions) defeated this run, counting this battle's win. */
 function bossesDefeated(run: RunState, battle: BattleState): number {
   const c = run.log.counters;
   return (c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + (isBossClass(battle.trainer?.classId) ? 1 : 0);
+}
+
+/** Assimilations chosen so far (each one adds a 5% damage-taken cost). */
+function assimilations(run: RunState): number {
+  return (run.signatureApplied['beautiful-parasite'] ?? []).filter((m) => m.kind === 'damageTakenMultiplier').length;
 }
 
 export function signatureDef(id: string | null | undefined): SignatureDef | undefined {
@@ -138,7 +159,8 @@ export function signatureDecisions(content: Content, run: RunState, battle: Batt
     const caught = battle.enemyTeam[battle.enemyIndex]?.speciesId;
     if (battle.outcome !== 'caught' || !caught || run.log.speciesCaught.at(-1) !== caught || run.log.speciesCaught.length % 3 !== 0) return [];
   }
-  return [{ kind: 'signature', mechanicId: def.id, title: def.title, options: def.options(content, run, battle) }];
+  const options = def.options(content, run, battle);
+  return options.length === 0 ? [] : [{ kind: 'signature', mechanicId: def.id, title: def.title, options }];
 }
 
 /** Adds the chosen option's modifiers to the run (mutates `run`). Returns the message to show and any items or levels to hand out. */
@@ -152,6 +174,8 @@ export function chooseSignatureOption(run: RunState, optionIndex: number): { mes
     const old = run.signatureApplied[def.id] ?? [];
     run.perkEffects = run.perkEffects.filter((m) => !old.some((o) => JSON.stringify(o) === JSON.stringify(m)));
     run.signatureApplied[def.id] = option.effects;
+  } else if (def?.id === 'beautiful-parasite') {
+    run.signatureApplied[def.id] = [...(run.signatureApplied[def.id] ?? []), ...option.effects];
   }
   run.perkEffects.push(...option.effects);
   if (option.temp && option.effects.length > 0) run.tempEffects.push({ effects: option.effects, battles: option.temp.battles, until: option.temp.until });

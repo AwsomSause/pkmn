@@ -7,6 +7,7 @@ import { Rng, hashSeed } from '../rng';
 import { maxHp } from '../pokemon';
 import type { Content } from '../contentSchema';
 import type { BattleState, PokemonInstance, RaidBattle, RunState } from '../state';
+import { grandRaidFor } from '../story/grandEnemy';
 import type { RaidDef, RaidPhase } from './schema';
 
 export function getRaid(content: Content, id: string): RaidDef {
@@ -24,7 +25,7 @@ export function tiersForRegion(content: Content, regionIndex: number): number[] 
 /** Which raid sits in a den: a seeded pick among the raids of the allowed tiers (stable for a given run, stage and den). */
 export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'>, key: string): RaidDef {
   const tiers = tiersForRegion(content, run.regionIndex);
-  const pool = content.raids.raids.filter((r) => tiers.includes(r.tier));
+  const pool = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand);
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
   return rng.pick(pool.length > 0 ? pool : content.raids.raids);
 }
@@ -187,10 +188,24 @@ export function placeRaidDens(content: Content, run: RunState): void {
   const stage = run.stage;
   if (!stage || stage.kind !== 'stage') return;
   const rng = new Rng(hashSeed(`${run.seed}::raid-den::${run.regionIndex}:${stage.index}`));
+  placeGrandEnemy(content, run, rng);
   if (!rng.chance(content.raids.denChance)) return;
   const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
   if (candidates.length === 0) return;
   const node = rng.pick(candidates);
   const def = pickRaidFor(content, run, `${run.regionIndex}:${stage.index}`);
   node.sides.push({ id: `raid-${stage.index}`, kind: 'raid', raidId: def.id, used: false });
+}
+
+/** The Grand-Enemy's fight for this stage, if the campaign calls for one: a den beside a node of its own pick. */
+function placeGrandEnemy(content: Content, run: RunState, rng: Rng): void {
+  const stage = run.stage!;
+  const kind = grandRaidFor(content, run);
+  if (!kind) return;
+  const def = content.raids.raids.find((r) => r.grand === kind);
+  if (!def) return;
+  const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
+  if (candidates.length === 0) return;
+  const node = rng.pick(candidates);
+  node.sides.push({ id: `raid-grand-${stage.index}`, kind: 'raid', raidId: def.id, used: false });
 }

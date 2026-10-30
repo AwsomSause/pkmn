@@ -13,6 +13,8 @@
 import { bridgeEventStop } from './events';
 import type { CatalogEffect, CatalogEntry, Content, EncounterMod, Perk, Theme, TypeName } from './contentSchema';
 import { hooksOf } from './battle/held';
+import { runArchetype } from './archetypes';
+import { foodCount, hiddenItemChancePerk } from './trainerPerks';
 import { findNode } from './map';
 import { hashSeed, Rng } from './rng';
 import type { PokemonInstance, RunState } from './state';
@@ -120,9 +122,10 @@ export function addMapItem(content: Content, run: RunState, entry: CatalogEntry)
   const effects = [...(run.mapEffects ?? [])].filter((e) => e.stage === 'next' || isActive(run, e));
   const counter = counterOf(lasts);
   if (counter && 'count' in lasts) {
+    const count = foodCount(runArchetype(content, run).modifiers, entry.id, lasts.count);
     const existing = effects.find((e) => e.itemId === entry.id && e[counter] !== undefined);
-    if (existing) existing[counter] = existing[counter]! + lasts.count;
-    else effects.push({ itemId: entry.id, [counter]: lasts.count });
+    if (existing) existing[counter] = existing[counter]! + count;
+    else effects.push({ itemId: entry.id, [counter]: count });
   } else {
     // Taken right after a gym leader or champion, a "rest of this stage" item waits for the next stage instead.
     const stage = run.stage;
@@ -400,7 +403,12 @@ export function markUsedThisStage(run: RunState, itemId: string): void {
 
 /** Itemfinder: the wild stop on this stage that hides a Bag item (picked by a generator of its own), or null. */
 export function hiddenItemNode(content: Content, run: RunState): string | null {
-  if (!run.stage || !hasPerk(content, run, 'hiddenItem')) return null;
+  if (!run.stage) return null;
+  if (!hasPerk(content, run, 'hiddenItem')) {
+    // Looker's perk: some stages hide an item with no Itemfinder.
+    const chance = hiddenItemChancePerk(runArchetype(content, run).modifiers);
+    if (chance <= 0 || new Rng(hashSeed(`${run.seed}::looker-chance::${stageKey(run)}`)).float() >= chance) return null;
+  }
   const wild = run.stage.map.nodes.filter((n) => n.kind === 'wild');
   if (wild.length === 0) return null;
   return new Rng(hashSeed(`${run.seed}::itemfinder::${stageKey(run)}`)).pick(wild).id;

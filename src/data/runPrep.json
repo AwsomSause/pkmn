@@ -4841,6 +4841,46 @@
     "atLeast": 1200
    },
    "unlockText": "Defeat 1200 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lusamine-masters",
+   "name": "Lusamine (Masters)’s Team",
+   "description": "Pokémon from Lusamine (Masters)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lusamine"
+   ],
+   "species": [
+    "cosmog",
+    "clefairy",
+    "nihilego"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1310
+   },
+   "unlockText": "Defeat 1310 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lusamine-nihilego",
+   "name": "Lusamine (Nihilego)’s Team",
+   "description": "Pokémon from Lusamine (Nihilego)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lusamine"
+   ],
+   "species": [
+    "nihilego",
+    "cosmog",
+    "poipole"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1320
+   },
+   "unlockText": "Defeat 1320 trainers in total across your runs"
   }
  ],
  "draftRules": [
