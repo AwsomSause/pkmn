@@ -58,7 +58,9 @@ import {
   hiddenItemNode,
   hasPerk,
   mapItemRng,
+  activePerks,
   markUsedThisStage,
+  perksOf,
   perkItem,
   type MapItemRun,
   priceMultiplierFromItems,
@@ -657,6 +659,15 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
       plan = revisedTeam(content, run, back, plan, rule.effect);
       run.story.flags[returnFlag(back.id)] = 'returned';
     }
+    // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
+    const rsvp = node.kind === 'trainer' && !rematch && !back ? perkItem(content, run, 'rival') : null;
+    let isRival = false;
+    if (rsvp && !usedThisStage(run, rsvp)) {
+      isRival = true;
+      markUsedThisStage(run, rsvp);
+      const bonus = perksOf(activePerks(content, run), 'rival')[0]!.perk.levelBonus;
+      plan = { ...plan, name: `Rival ${plan.name}`, members: plan.members.map((m) => ({ ...m, level: m.level + bonus })) };
+    }
     const team = plan.members.map((m) => {
       const uid = nextUid(run, 'e');
       return createPlannedPokemon(content, m, uid, `${run.seed}:${uid}`);
@@ -666,6 +677,7 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     run.battle.levelInfo = plan.levelInfo;
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
+    if (isRival) run.battle.rival = true;
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
     if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));
@@ -1075,6 +1087,11 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
   let extraChoices = 0;
+  // RSVP Mail: beating the rival gives the gym leader's odds and one more choice.
+  if (outcome === 'win' && battle.rival) {
+    run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
+    extraChoices += 1;
+  }
   if (outcome === 'win' && battle.kind === 'trainer' && hasPerk(content, run, 'extraChoice')) extraChoices += 1;
   const dowsing = perkItem(content, run, 'dowsing');
   if (dowsing && !battle.fishing && !usedThisStage(run, dowsing)) {
