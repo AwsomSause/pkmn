@@ -863,6 +863,11 @@ export class BattleScene extends Phaser.Scene {
       this.scene.start(sceneForRun(result.run));
       return;
     }
+    if (result.wiped) {
+      await this.say(result.run.rules.modeId === 'adventure' ? 'Your party fainted... you return to the start of the stage, healed.' : 'Death-Block! You return to the start of the stage with your party healed.');
+      this.scene.start(sceneForRun(result.run));
+      return;
+    }
     if (result.defeated) {
       await this.say('You have no Pokémon that can fight!');
       await exitWipe(this, this.motion);

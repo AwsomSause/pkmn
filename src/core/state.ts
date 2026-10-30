@@ -653,6 +653,26 @@ export type RunPrep = z.infer<typeof RunPrepSchema>;
 export const LoadoutPresetSchema = RunPrepSchema.extend({ name: z.string(), archetypeId: z.string() });
 export type LoadoutPreset = z.infer<typeof LoadoutPresetSchema>;
 
+/** The rules a run was started with, fixed for the whole run (Untitled doc §13–16). Rewards use this snapshot at the end. */
+export const RunRulesSchema = z.object({
+  ruleVersion: z.number().int().min(1),
+  modeId: z.string(),
+  difficultyId: z.string(),
+  modifierIds: z.array(z.string()),
+  deathBlock: z.boolean(),
+  /** True once Death-Block has saved the run (it works once). */
+  deathBlockUsed: z.boolean(),
+  /** False means no account-level rewards of any kind (Adventure). */
+  progressionEligible: z.boolean(),
+  /** The published reward multiplier, fixed at the start. */
+  rewardMultiplier: z.number().min(0),
+  /** Added to every enemy's level. */
+  enemyLevelBonus: z.number().int(),
+  /** Times a wipe sent the run back to its checkpoint. */
+  wipes: z.number().int().min(0),
+});
+export type RunRules = z.infer<typeof RunRulesSchema>;
+
 export const RunPhaseSchema = z.enum(['starter', 'map', 'shop', 'battle', 'decision', 'reward', 'over', 'expedition']);
 export type RunPhase = z.infer<typeof RunPhaseSchema>;
 
@@ -735,6 +755,10 @@ export const RunStateSchema = z.object({
   draftCarry: z.array(z.string()).optional(),
   /** Transformations switched off for this run (a challenge; M8.75 part D adds the menu that sets it). */
   disabledMechanics: z.array(TransformKindSchema).default([]),
+  /** Mode, difficulty, modifiers and their reward multiplier (core/rules.ts). */
+  rules: RunRulesSchema,
+  /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */
+  checkpoint: z.record(z.string(), z.unknown()).optional(),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */

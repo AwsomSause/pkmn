@@ -111,6 +111,7 @@ import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
+import { disabledByRules, makeRules, startScale, wantsCheckpoint, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -129,14 +130,18 @@ export interface NewRunOptions {
   attributes?: Record<string, number>;
   /** The profile's past Pokémon; one may come back this run (core/story/reunion.ts). */
   pastPokemon?: readonly PastPokemon[];
+  /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
+  rules?: RulesChoice;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
   const prep: RunPrep = opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' };
   const resources = startingResources(content, archetype, prep);
+  const rules = makeRules(opts.rules ?? { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false });
+  const scale = startScale(rules);
   const inventory: Record<string, number> = {};
-  for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, n);
+  for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, scale < 1 ? Math.floor(n * scale) : n);
   const campaign = getCampaign(content, prep.campaignId);
   const rng = createStreams(opts.seed);
   const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
@@ -151,7 +156,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     starterChoices,
     prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
-    money: resources.money,
+    money: Math.floor(resources.money * scale),
     inventory,
     candies: 0,
     encountersCompleted: 0,
@@ -168,7 +173,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     regionsCleared: [],
     victory: false,
     draft: null,
-    disabledMechanics: [],
+    disabledMechanics: disabledByRules(rules),
+    rules,
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
@@ -186,6 +192,35 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   return run;
 }
 
+/** Keeps a copy of the run for a wipe to return to (mutates `run`); drops it when no rule needs it. */
+function takeCheckpoint(run: RunState): void {
+  if (!wantsCheckpoint(run)) {
+    delete run.checkpoint;
+    return;
+  }
+  const { checkpoint: _old, ...rest } = run;
+  run.checkpoint = structuredClone(rest) as Record<string, unknown>;
+}
+
+/**
+ * The party is wiped: Adventure returns to the checkpoint (with a small money loss), Death-Block does it once in the first
+ * battles. Returns the restored run, or null when the run really ends. The party comes back healed.
+ */
+function restoreAfterWipe(content: Content, run: RunState): RunState | null {
+  if (!run.checkpoint) return null;
+  const adventure = getMode(run.rules.modeId)?.checkpoints === true;
+  const block = !adventure && run.rules.deathBlock && !run.rules.deathBlockUsed && run.encountersCompleted < RUN_RULES.deathBlock.battles;
+  if (!adventure && !block) return null;
+  const back = structuredClone(run.checkpoint) as unknown as RunState;
+  back.rules = { ...run.rules, wipes: run.rules.wipes + 1, deathBlockUsed: run.rules.deathBlockUsed || block };
+  if (adventure) back.money = Math.floor(back.money * (1 - (getMode(run.rules.modeId)?.wipeMoneyLoss ?? 0)));
+  healParty(content, back);
+  back.battle = null;
+  back.phase = 'map';
+  takeCheckpoint(back);
+  return back;
+}
+
 function assertPhase(run: RunState, ...phases: RunState['phase'][]): void {
   if (!phases.includes(run.phase)) throw new Error(`Action needs phase "${phases.join('" or "')}" but run is in "${run.phase}"`);
 }
@@ -199,7 +234,9 @@ export function nextUid(run: RunState, prefix: string): string {
 /** A new Pokémon for this run; its ability comes from the run seed and its uid. */
 export function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
   const uid = nextUid(run, prefix);
-  return createPokemon(content, speciesId, level, uid, `${run.seed}:${uid}`);
+  // Difficulty: every enemy's level (the rules were fixed when the run started).
+  const shown = prefix === 'e' ? Math.max(1, Math.min(100, level + run.rules.enemyLevelBonus)) : level;
+  return createPokemon(content, speciesId, shown, uid, `${run.seed}:${uid}`);
 }
 
 function speciesName(content: Content, id: string): string {
@@ -288,6 +325,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeExpeditionGate(content, run);
   run.battle = null;
   run.phase = 'map';
+  takeCheckpoint(run);
 }
 
 /** Starts the region's Pokémon League (mutates `run`): picks the Elite Four and champion and heals the party. */
@@ -316,6 +354,7 @@ function enterLeague(content: Content, run: RunState): void {
   healParty(content, run);
   run.battle = null;
   run.phase = 'map';
+  takeCheckpoint(run);
 }
 
 /** Moves every party Pokémon up or down by whole levels (a trainer perk); experience follows the level. */
@@ -984,6 +1023,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
     healParty(content, run);
     runSide.used = true;
     count(run, 'healStopsUsed');
+    takeCheckpoint(run);
     return { run, message: 'Your Pokémon were fully healed!' };
   }
   run.phase = 'shop';
@@ -1112,6 +1152,8 @@ export interface TurnResult {
   cues: PresentationCue[];
   /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
   raidFailed?: boolean;
+  /** The whole party fainted but the rules sent the run back to its checkpoint. */
+  wiped?: boolean;
   /** What the trainer says during the turn (presentation only). */
   drama: DramaLine[];
 }
@@ -1220,6 +1262,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
     run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
+    // Adventure and Death-Block: a wipe sends you back to the checkpoint instead of ending the run.
+    const back = restoreAfterWipe(content, run);
+    if (back) {
+      recordChanges(content, current, back, 'battle');
+      return { run: back, events, end: null, defeated: false, cues, drama, wiped: true };
+    }
     run.phase = 'over';
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: true, cues, drama };
