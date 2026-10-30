@@ -104,7 +104,7 @@ Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/
 - DONE balance: `tests/unit/blueprintBalance.test.ts` runs the real data and flow (prize money vs gym leaders for raids/Totems/expeditions, 300-seed expedition route mix, random-player minigame medals and payouts) and writes `docs/plans/balance-report.md`. Fishing and Treasure Hunt were retuned because a random player got gold too often.
 
 ### Blueprint acceptance and milestones
-M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; balance sims DONE (data-level, not full battle sims); M6–M8 content expansion and the manual QA checklist TODO.
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4 Totem MVP DONE; M5 Expedition MVP DONE; minigame framework + 14 games DONE; M6 DONE; M7 content expansion DONE (13 raids, 12 Totems, 8 expeditions, 5 mystery events, 14 minigames); M8 balance sims DONE (data-level, not full battle sims), save/load and progression tests DONE, manual QA checklist DONE (`docs/qa/blueprint-qa.md`).
 ## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
 Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
 | Item | Status |

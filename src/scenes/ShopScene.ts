@@ -3,7 +3,7 @@
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
 import { mapItemSummary } from '../core/mapItems';
-import { shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
+import { isBlackMarket, shopBadgesNeeded, shopPrice, shopStock } from '../core/run';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -41,12 +41,14 @@ export class ShopScene extends Phaser.Scene {
       const price = shopPrice(content, run, entry);
       // Member Card and Wepear Berry: sold before the badges would unlock it.
       const early = run.badges.length < badgesFor(entry);
+      // Rocket Boss Giovanni's Black Market: locked stock, sold at a markup.
+      const black = isBlackMarket(content, run, entry);
       return {
         problem: run.money < price ? `Not enough money for the ${item.name} (₽${price}, you have ₽${run.money}).` : null,
         hint: `${item.description}  ·  You have ₽${run.money}.${next ? `  New stock at ${badgesFor(next)} badges.` : ''}${working ? `  ·  ${working}` : ''}`,
         draw: (scene, box, w, h) => {
           box.add(itemVisual(scene, item.iconAssetId, 26, h / 2, 2));
-          box.add(scene.add.text(56, h / 2, early ? `${item.name} (early)` : item.name, textStyle(22, early ? '#f0c060' : undefined)).setOrigin(0, 0.5));
+          box.add(scene.add.text(56, h / 2, black ? `${item.name} (black market)` : early ? `${item.name} (early)` : item.name, textStyle(22, black ? '#d070f0' : early ? '#f0c060' : undefined)).setOrigin(0, 0.5));
           box.add(scene.add.text(w - 90, h / 2, price === 0 ? 'FREE' : `₽${price}`, textStyle(22)).setOrigin(1, 0.5));
           // Attribute items are used when bought, so there's no count in the Bag to show.
           if (item.effect.kind !== 'attribute') box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#a69cb4')).setOrigin(1, 0.5));

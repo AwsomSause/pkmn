@@ -17,7 +17,7 @@ import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockRewa
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
 import { recordMastery, type MasteryRankUp } from './mastery';
-import { addTrainerCounters, awardQuestSteps, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
+import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
 /** Adds to one of this run's counters (mutates `run`). */
 export function count(run: RunState, counter: string, amount = 1): void {
@@ -162,9 +162,9 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     if (runQuestDone) researchPoints += runQuest.researchPoints;
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
-    addTrainerCounters(profile, run.archetypeId, runCounters);
+    addTrainerCounters(profile, questTrainer(content, run.archetypeId), runCounters);
   }
-  const questSteps = counts ? awardQuestSteps(content, profile, run.archetypeId, now) : [];
+  const questSteps = counts ? awardQuestSteps(content, profile, questTrainer(content, run.archetypeId), now) : [];
   const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
 
   const raw = runPayout(content, run);
@@ -209,6 +209,8 @@ export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';
 
 /** Where a trainer stands in the Trainer Archive. */
 export function trainerStatus(profile: Profile, archetype: Archetype): TrainerStatus {
+  // A Trainer Evolution unlocks when its base trainer's quest line is finished (claim "evolution:<base>").
+  if (archetype.evolvedFrom) return profile.claims?.[`evolution:${archetype.evolvedFrom}`] ? 'unlocked' : archetype.available ? 'locked' : 'comingLater';
   if (archetype.unlockedByDefault || profile.unlockedArchetypes.includes(archetype.id)) return 'unlocked';
   if (!archetype.available) return 'comingLater';
   if (archetype.unlock && requirementProgress(profile, archetype.unlock).met) return 'claimable';

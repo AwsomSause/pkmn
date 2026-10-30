@@ -45,6 +45,7 @@ import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp,
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
+import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -61,6 +62,8 @@ import {
   earlyStockCount,
   fishingRod,
   hiddenItemFound,
+  catchDrop,
+  palPadLevels,
   hiddenItemNode,
   hasPerk,
   mapItemRng,
@@ -960,6 +963,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
     const setup = wildBattleSetup(content, run, mods);
+    if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
     if (setup.foeSpeed !== 0) run.battle.enemyStages.spe = Math.max(-6, Math.min(6, run.battle.enemyStages.spe + setup.foeSpeed));
     useWildBattleCharges(run);
@@ -1099,7 +1103,14 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
     .filter((e) => !open(e) && !owned(e))
     .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
     .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
-  return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
+  // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
+  const black = blackMarketMarkup(runPerks(content, run)) !== null;
+  return content.shop.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
+}
+
+/** Whether an entry is on sale only through the Black Market (your badges haven't opened it). */
+export function isBlackMarket(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'perkEffects'>>, entry: Content['shop'][number]): boolean {
+  return blackMarketMarkup(runPerks(content, run)) !== null && run.badges.length < shopBadgesNeeded(content, run, entry);
 }
 
 /** Key items, Mega Stones and Z-Crystals last the whole run, so you only ever need one. */
@@ -1116,7 +1127,8 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
+  const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
+  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
 }
 
 /** Buys one of an item at the shop. */
@@ -1175,6 +1187,8 @@ export interface BattleEndResult {
   eventRewards: string[];
   /** True when this win beat the last champion and so won the run. */
   victory: boolean;
+  /** King N's Voice of Pokémon: the defeated wild species that asked to join (its decision comes next). */
+  voiceJoined?: string | null;
 }
 
 export interface TurnResult {
@@ -1459,14 +1473,33 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'caught') {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
-    shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)));
+    shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)) + palPadLevels(content, run));
     caughtSpeciesId = caught.speciesId;
     count(run, 'pokemonCaught');
     // Photo Album: a species caught for the first time this run gives Love.
     const album = passivePercent(content, run, 'newSpeciesLove');
     if (album > 0 && !run.log.speciesCaught.includes(caught.speciesId)) addRunAttribute(content, run, 'love', album);
+    // Champion Oak's Field Research: a species caught for the first time this run pays money.
+    const research = fieldResearchMoney(runPerks(content, run));
+    if (research > 0 && !run.log.speciesCaught.includes(caught.speciesId)) {
+      run.money += research;
+      count(run, 'moneyEarned', research);
+      moneyGained += research;
+    }
     discover(run, caught.speciesId, true);
     caughtPending.push({ kind: 'caught', mon: caught });
+  }
+  // King N's Voice of Pokémon: a wild Pokémon you defeated may ask to join, no ball needed.
+  let voiceJoined: string | null = null;
+  if (battle.outcome === 'win' && battle.kind === 'wild' && !battle.trainer && !battle.raid && !battle.totem && !battle.expedition && voiceAsksToJoin(runPerks(content, run), run)) {
+    const joined = structuredClone(currentEnemy(battle));
+    joined.uid = nextUid(run, 'p');
+    joined.hp = maxHp(content, joined);
+    joined.status = null;
+    count(run, 'pokemonCaught');
+    discover(run, joined.speciesId, true);
+    caughtPending.push({ kind: 'caught', mon: joined });
+    voiceJoined = joined.speciesId;
   }
 
   if (battle.outcome === 'win') {
@@ -1537,6 +1570,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Itemfinder: the hidden item at this stage's marked wild stop.
   const hidden = battle.kind === 'wild' ? hiddenItemFound(content, run, stock) : null;
   if (hidden) itemsFound.push(hidden);
+  const dropped = battle.kind === 'wild' ? catchDrop(run, stock, outcome === 'caught') : null;
+  if (dropped) itemsFound.push(dropped);
   for (const id of itemsFound) addItem(run.inventory, id, 1);
   if (outcome === 'win') {
     count(run, 'battlesWon');
@@ -1586,7 +1621,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined };
 }
 
 /**

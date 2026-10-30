@@ -49,7 +49,10 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.frames = [];
     this.cells = [];
     // Every trainer, in data order (Red first), then empty slots for trainers still to come.
-    this.slots = [...session.content.archetypes.values()].map((a) => ({ archetype: a, status: trainerStatus(p, a) }));
+    // Each Trainer Evolution sits right after its base trainer.
+    const all = [...session.content.archetypes.values()];
+    const ordered = all.filter((a) => !a.evolvedFrom).flatMap((a) => [a, ...all.filter((e) => e.evolvedFrom === a.id)]);
+    this.slots = ordered.map((a) => ({ archetype: a, status: trainerStatus(p, a) }));
     while (this.slots.length < PAGE) this.slots.push(null);
 
     new ArenaBackdrop(this, { dim: 0.55 });
@@ -112,6 +115,12 @@ export class TrainerSelectScene extends Phaser.Scene {
       if (!open && sprite instanceof Phaser.GameObjects.Sprite) sprite.setTintFill(0x141118);
       cell.add(sprite);
       if (open) cell.add(this.add.text(CELL_W / 2, 8, slot.archetype.name, textStyle(18)).setOrigin(0.5, 0));
+      // A Trainer Evolution gets a bobbing gold tag.
+      if (open && slot.archetype.evolvedFrom) {
+        const tag = this.add.text(CELL_W - 8, 38, '★ EVOLVED', textStyle(12, COLORS.gold)).setOrigin(1, 0);
+        cell.add(tag);
+        if (this.motion === 'full') this.tweens.add({ targets: tag, y: 34, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      }
     }
     if (!open) {
       cell.add(this.add.text(CELL_W / 2, CELL_H / 2 - 8, '?', textStyle(64, COLORS.textLight)).setOrigin(0.5));
@@ -160,6 +169,10 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.drawProfile(this.slots[i] ?? null);
   }
 
+  private get motion(): 'full' | 'reduced' | 'off' {
+    return services().session.settings.battleAnimations;
+  }
+
   private drawProfile(slot: Slot): void {
     this.profileLayer.removeAll(true);
     const L = this.profileLayer;
@@ -182,6 +195,11 @@ export class TrainerSelectScene extends Phaser.Scene {
     glow.fillEllipse(cx, 232, 170, 28);
     glow.fillStyle(0x5c4f70, 1);
     glow.fillEllipse(cx, 232, 120, 18);
+    // A Trainer Evolution stands in a pulsing golden aura.
+    if (open && a.evolvedFrom) {
+      const aura = add(this.add.ellipse(cx, 170, 150, 190, 0xf8d030, 0.16));
+      if (this.motion === 'full') this.tweens.add({ targets: aura, scaleX: 1.12, scaleY: 1.06, alpha: 0.3, duration: 1100, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
     const sprite = this.fitSprite(trainerVisual(this, a.spriteAssetId, a.name, cx, 236, 2), 140);
     if (!open && sprite instanceof Phaser.GameObjects.Sprite) sprite.setTintFill(0x141118);
     add(sprite);

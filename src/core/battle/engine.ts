@@ -16,6 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
+import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
@@ -1011,6 +1012,7 @@ const FORM_PAIRS: Record<string, [string, string][]> = {
   'power-construct': [['zygarde', 'zygarde-complete']],
   'hunger-switch': [['morpeko', 'morpeko-hangry']],
   'tera-shift': [['terapagos', 'terapagos-terastal']],
+  'shields-down': [['minior', 'minior-core']],
 };
 const FORECAST_FORMS: Partial<Record<Weather, string>> = { sun: 'castform-sunny', rain: 'castform-rainy', snow: 'castform-snowy', hail: 'castform-snowy' };
 
@@ -1043,7 +1045,7 @@ function syncForms(ctx: BattleContext, c: Combatant, events: BattleEvent[], endO
   for (const [base, alt] of pairs) {
     if (c.mon.speciesId !== base && c.mon.speciesId !== alt) continue;
     let useAlt: boolean;
-    if (ability === 'zen-mode') useAlt = c.mon.hp * 2 <= max;
+    if (ability === 'zen-mode' || ability === 'shields-down') useAlt = c.mon.hp * 2 <= max;
     else if (ability === 'schooling') useAlt = c.mon.level >= 20 && c.mon.hp * 4 > max;
     else if (ability === 'power-construct') useAlt = c.mon.speciesId === alt || c.mon.hp * 2 <= max;
     else if (ability === 'hunger-switch') useAlt = c.vol.hangry;
@@ -1287,7 +1289,7 @@ function decideOrder(ctx: BattleContext, rng: Rng, player: Combatant, pMove: Mov
   const quickDraw = (c: Combatant, m: Move): number => (abilityIn(ctx, c) === 'quick-draw' && m.category !== 'status' && rng.chance(0.3) ? 0.2 : 0);
   // Custap Berry moves first and Lagging Tail last within the same priority.
   const result = compareTurnOrder(
-    { priority: priorityOf(ctx, player, pMove) + quickDraw(player, pMove) + Held.orderBracket(ctx, player) / 10, speed: speedOf(ctx, player) * trickSign },
+    { priority: priorityOf(ctx, player, pMove) + quickDraw(player, pMove) + Held.orderBracket(ctx, player) / 10 + firstStrikeBonus(ctx.perks, ctx.battle), speed: speedOf(ctx, player) * trickSign },
     { priority: priorityOf(ctx, enemy, eMove) + quickDraw(enemy, eMove) + Held.orderBracket(ctx, enemy) / 10, speed: speedOf(ctx, enemy) * trickSign },
   );
   if (result === 'tie') return rng.chance(0.5) ? 'player' : 'enemy';
@@ -4453,5 +4455,20 @@ export function startBattle(ctx: BattleContext): BattleEvent[] {
   const events: BattleEvent[] = [];
   resolveEntries(ctx, events);
   if (ctx.battle.totem) totemAura(ctx, events);
+  championsAura(ctx, events);
   return events;
+}
+
+/** Champion Cynthia's Champion's Aura: at the start of a boss battle your lead's best stat rises. */
+function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
+  const stages = championsAuraStages(ctx.perks);
+  if (stages === 0 || !isBossClass(ctx.battle.trainer?.classId)) return;
+  const { battle, content } = ctx;
+  const mon = ctx.party[battle.activeIndex];
+  if (!mon || mon.hp <= 0) return;
+  const stats = calcStats(content, mon);
+  const best = (['atk', 'def', 'spa', 'spd', 'spe'] as const).reduce((a, b) => (stats[b] > stats[a] ? b : a));
+  const player: Combatant = { side: 'player', mon, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false };
+  events.push({ type: 'raid', tone: 'phase', text: "Champion's Aura! Your Pokémon feels the Champion's resolve!" });
+  applyStageChange(ctx, player, best, stages, events);
 }

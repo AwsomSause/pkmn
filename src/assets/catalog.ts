@@ -66,6 +66,8 @@ export const MENU_ICON_ITEMS = [
 /** Fixed UI/audio assets used by the screens. */
 export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bg.battle', kind: 'image', category: 'background', path: 'images/arenas/grass_bg.png' },
+  // Raid arenas from the Raid Battles pack (resized to the game's 320×180).
+  ...['max', 'tera', 'ultra', 'tera2'].map((n): AssetEntry => ({ id: `bg.raid.${n}`, kind: 'image', category: 'background', path: `images/arenas/raid_${n}_bg.png` })),
   { id: 'bg.battle.player', kind: 'image', category: 'background', path: 'images/arenas/grass_a.png' },
   { id: 'bg.battle.enemy', kind: 'image', category: 'background', path: 'images/arenas/grass_b.png' },
   // PokeRogue's interface art: the menu pointer, battle info boxes and message bar.
@@ -98,6 +100,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...MENU_ICON_ITEMS.map((name) => itemEntry(`item.${name}`)),
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
+  ...['ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}.mp3` })),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   { id: 'se.ball_throw', kind: 'audio', category: 'sound', path: 'audio/se/pb_throw.wav' },
   { id: 'se.ball_shake', kind: 'audio', category: 'sound', path: 'audio/se/pb_move.wav' },

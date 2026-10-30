@@ -119,6 +119,7 @@ test('a damaged save is reported and can be discarded safely', async ({ page }) 
 });
 
 test('losing a battle ends the run and keeps the profile', async ({ page }) => {
+  test.setTimeout(180_000); // a long fight of key presses; slow when the whole suite runs at once
   await page.goto('/?seed=e2e-lose&debug=1');
   await waitForScene(page, 'MainMenu');
   await page.keyboard.press('Enter');
