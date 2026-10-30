@@ -65,6 +65,10 @@ describe('trainer perks, batch 1', () => {
     expect(xpPerk(perks('adaman'), xp)).toBeCloseTo(1.1);
     expect(xpPerk(perks('benga'), xp)).toBeCloseTo(0.8);
     expect(xpPerk(perks('benga'), { ...xp, isBossBattle: true })).toBe(1);
+    // Ingo: single battles give 10% less EXP, double battles don't; Elm: hatched Pokémon +15%.
+    expect(xpPerk(perks('ingo'), xp)).toBeCloseTo(0.9);
+    expect(xpPerk(perks('ingo'), { ...xp, isDoubles: true })).toBe(1);
+    expect(xpPerk(perks('elm'), { ...xp, isHatched: true, isDoubles: true })).toBeCloseTo(1.15);
     expect(statPerk(perks('barry'), 'spe', ['fire'])).toBeCloseTo(1.2);
     expect(statPerk(perks('bea'), 'spd', ['fire'])).toBeCloseTo(0.85);
     expect(survivalChance(perks('acerola'), ['ghost'])).toBeCloseTo(0.15);

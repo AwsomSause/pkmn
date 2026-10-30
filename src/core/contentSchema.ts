@@ -773,6 +773,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
   /** Prize money from double battles. */
   z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
+  /** Experience from single (one-on-one) battles; double battles are unaffected. */
+  z.object({ kind: z.literal('singleBattleXpMultiplier'), value: z.number().positive() }),
   /** Pokémon hatched from Eggs start this many levels higher. */
   z.object({ kind: z.literal('hatchLevelOffset'), value: z.number().int() }),
   /** Experience for Pokémon hatched from Eggs. */
@@ -1656,7 +1658,10 @@ export type EventRarity = (typeof EVENT_RARITIES)[number];
 export const BalanceSchema = z.object({
   trainerAi: TrainerAiSchema,
   /** Double battles: the chance an ordinary trainer fights two at a time, from this stage number (0 = the first stage). */
-  doubles: z.object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0) }).default({ chance: 0.3, fromStage: 1 }),
+  /** Double battles: ordinary trainers (`chance`), wild Pokémon in pairs (`wildChance`), and bosses that always fight two at a time (`bossIds`). */
+  doubles: z
+    .object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0), wildChance: z.number().min(0).max(1).default(0), bossIds: z.array(z.string()).default([]) })
+    .default({ chance: 0.3, fromStage: 1, wildChance: 0, bossIds: [] }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

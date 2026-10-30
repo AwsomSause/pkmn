@@ -814,6 +814,9 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
     if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
+    // Wild double battle: the ball has no clear target until only one wild Pokémon is left.
+    const partner = ctx.battle.doubles ? ctx.battle.enemyTeam[ctx.battle.doubles.enemy.index] : undefined;
+    if (partner && partner.hp > 0 && currentEnemy(ctx.battle).hp > 0) return "You can't aim a Poké Ball while two wild Pokémon are out!";
     return null;
   }
   if (item.effect.kind === 'itemDrop') {

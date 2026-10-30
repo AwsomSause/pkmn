@@ -4,7 +4,7 @@
 import { doublesSwitchProblem } from '../../src/core/battle/doubles';
 import type { Content } from '../../src/core/contentSchema';
 import { typeEffectiveness } from '../../src/core/battle/damage';
-import { forcedMoveIndex } from '../../src/core/battle/engine';
+import { forcedMoveIndex, itemProblem } from '../../src/core/battle/engine';
 import type { RulesChoice } from '../../src/core/rules';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { buyItem, chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, partyCapacity, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
@@ -71,7 +71,7 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       const enemy = currentEnemy(battle);
       // A Pokémon in the middle of a two-turn move, or locked by a Choice item, can't throw a ball.
       const midMove = forcedMoveIndex(battle, run.party) !== null;
-      if (!midMove && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2) {
+      if (!midMove && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2 && itemProblem({ content, battle, party: run.party, inventory: run.inventory }, 'poke-ball') === null) {
         const turn = takeTurn(content, run, { kind: 'item', itemId: 'poke-ball' });
         return { run: turn.run, turn };
       }

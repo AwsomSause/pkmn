@@ -164,6 +164,7 @@ export interface XpInfo {
   isBossBattle: boolean;
   ultraBeast?: boolean;
   isHatched?: boolean;
+  isDoubles?: boolean;
 }
 
 /** Experience multiplier for one Pokémon (group perks and ordinary-battle perks). */
@@ -179,6 +180,7 @@ export function xpPerk(perks: Perks | undefined, i: XpInfo): number {
   });
   if (!i.isBossBattle) v *= product(perks, 'ordinaryXpMultiplier');
   if (i.isHatched) v *= product(perks, 'hatchedXpMultiplier');
+  if (!i.isDoubles) v *= product(perks, 'singleBattleXpMultiplier');
   return v;
 }
 
