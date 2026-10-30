@@ -47,7 +47,8 @@ export function hallOfFame(profile: Profile): HallOfFame {
     champions: wins,
     unusual,
     rareForms: runs.flatMap((run) => run.party.filter((m) => m.shiny).map((m) => ({ speciesId: m.speciesId, level: m.level, run }))),
-    legends: runs.flatMap((run) => run.legacy.filter((c) => c.titles.length > 0 || c.tags.length > 0 || c.mentor !== null).map((card) => ({ run, card }))),
-    legacyRecords: runs.flatMap((run) => run.legacy.flatMap((card) => card.records.map((record) => ({ run, card, record })))),
+    legends: runs.flatMap((run) => run.legacy.filter((c) => c.titles.length > 0 || c.tags.length > 0 || c.mentor != null).map((card) => ({ run, card }))),
+    // Cards from before mentors and records may lack both (saves fill them in; raw data may not).
+    legacyRecords: runs.flatMap((run) => run.legacy.flatMap((card) => (card.records ?? []).map((record) => ({ run, card, record })))),
   };
 }

@@ -318,7 +318,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     ...profile.runHistory,
   ];
   // The newest runs, plus any older run holding a Legacy Record: those stay in the Hall of Fame for good.
-  profile.runHistory = profile.runHistory.filter((r, i) => i < content.balance.runHistorySize || r.legacy.some((c) => c.records.length > 0));
+  profile.runHistory = profile.runHistory.filter((r, i) => i < content.balance.runHistorySize || r.legacy.some((c) => (c.records ?? []).length > 0));
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
