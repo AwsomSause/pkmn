@@ -203,6 +203,30 @@ describe('the Pokémon League', () => {
   });
 });
 
+describe('the final boss', () => {
+  it('rises for a second phase (a different team) before the run is won', () => {
+    let run = powerUp(newRun('finale'));
+    run.regionOrder = ['kanto', 'grand'];
+    run.regionIndex = 1;
+    run = debugJumpToLeague(content, run);
+    run.stage!.current = run.stage!.map.nodes.at(-2)!.id;
+    run = toBattle(run);
+    const first = run.battle!.enemyTeam.map((m) => m.speciesId);
+    expect(run.battle!.trainer!.classId).toBe('champion');
+    run = win(run, true);
+    expect(run.victory).toBe(false);
+    expect(run.story.flags['finale:phase2']).toBe('pending');
+    run = skipDecisions(chooseReward(content, run, 0).run);
+    expect(run.phase).toBe('map');
+    run = toBattle(run);
+    expect(run.battle!.trainer!.classId).toBe('champion');
+    expect(run.battle!.enemyTeam.map((m) => m.speciesId)).not.toEqual(first);
+    run = win(run, true);
+    expect(run.victory).toBe(true);
+    expect(run.regionsCleared).toEqual(['grand']);
+  });
+});
+
 describe('the dev campaign, start to finish', () => {
   it('clears two regions (stages, league, champion), raises the cap, then wins the run', () => {
     // Six strong Pokémon: level 100 teams know one-hit KO moves such as Fissure.

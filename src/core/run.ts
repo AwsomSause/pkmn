@@ -508,6 +508,9 @@ export function partyCapacity(content: Content, run: Pick<RunState, 'archetypeId
   return Math.min(partyLimit(content.balance.partyMax, runPerks(content, run)), partyCap(content, run.rules));
 }
 
+/** Run flag for the final boss's second phase: absent before the first win, 'pending' until the second fight is won, then 'done'. */
+const FINALE_FLAG = 'finale:phase2';
+
 /** Whether the champion of the region the run is in is the final boss: the last region of a campaign that has a Grand Region. */
 export function isFinalBoss(content: Content, run: Pick<RunState, 'regionOrder' | 'regionIndex'>): boolean {
   return !!content.regions.get(run.regionOrder[run.regionIndex] ?? '')?.grand && run.regionIndex === run.regionOrder.length - 1;
@@ -1168,7 +1171,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r, bossRemix(run.rules));
         }
         case 'champion':
-          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules), isFinalBoss(content, run));
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules) || run.story.flags[FINALE_FLAG] === 'pending', isFinalBoss(content, run));
         default:
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
@@ -1468,6 +1471,8 @@ export interface BattleEndResult {
   badge: string | null;
   /** The region's id when this win beat its champion. */
   regionCleared: string | null;
+  /** The final boss fell for the first time and rises for a second phase. */
+  finale?: boolean;
   /** What an event battle you won paid out, in words. */
   eventRewards: string[];
   /** True when this win beat the last champion and so won the run. */
@@ -1951,7 +1956,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // The Elite Four heal your party after each battle.
   if (won && classId === ELITE_FOUR_CLASS) healParty(content, run);
   let regionCleared: string | null = null;
-  if (won && classId === CHAMPION_CLASS) {
+  // The final boss rises again: its first defeat starts a second phase (a remixed team) instead of ending the run.
+  const finale = !!won && classId === CHAMPION_CLASS && isFinalBoss(content, run) && run.story.flags[FINALE_FLAG] === undefined;
+  if (finale) {
+    run.story.flags[FINALE_FLAG] = 'pending';
+    healParty(content, run);
+  } else if (won && classId === CHAMPION_CLASS) {
+    if (run.story.flags[FINALE_FLAG] === 'pending') run.story.flags[FINALE_FLAG] = 'done';
     regionCleared = currentRegion(content, run).id;
     run.regionsCleared.push(regionCleared);
     count(run, 'regionsCleared');
@@ -1985,7 +1996,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**
@@ -2041,6 +2052,11 @@ export function continueAfterDecisions(content: Content, run: RunState): void {
     const campaign = getCampaign(content, run.campaignId);
     if (stage.index + 1 >= campaign.stagesPerRegion) enterLeague(content, run);
     else enterStage(content, run, stage.index + 1);
+  } else if (kind === 'champion' && run.story.flags[FINALE_FLAG] === 'pending') {
+    // Phase two: back to the foot of the last node, so the champion can be chosen again.
+    const last = stage!.map.nodes.find((n) => n.next.includes(stage!.current!));
+    stage!.current = last ? last.id : null;
+    run.phase = 'map';
   } else if (kind === 'champion') {
     enterNextRegion(content, run);
   } else {

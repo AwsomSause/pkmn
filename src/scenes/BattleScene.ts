@@ -1290,6 +1290,10 @@ export class BattleScene extends Phaser.Scene {
       const leagueNext = result.run.stage?.kind === 'stage' && campaign && result.run.stage.index + 1 >= campaign.stagesPerRegion;
       await this.say(leagueNext ? 'The Pokémon League awaits…' : 'The next stage awaits…');
     }
+    if (end.finale) {
+      await this.say('It is not over! The final boss rises for a second phase…');
+      await this.say('Your party was restored. Face the champion once more.');
+    }
     if (end.regionCleared) {
       playSfx(this, 'se.level_up');
       const region = content.regions.get(end.regionCleared)?.name ?? end.regionCleared;
