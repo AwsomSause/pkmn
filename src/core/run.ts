@@ -12,6 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
+import { wildCatchMultiplier } from './wildBehavior';
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
@@ -1482,7 +1483,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     rng,
     captureRng,
     speciesCaught: run.log.speciesCaught,
-    catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)),
+    catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)) * wildCatchMultiplier(content, run),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
     perks: archetype.modifiers,

@@ -1,5 +1,6 @@
 // Wild Pokémon with identity (catalog #26, #27, #30): a first-impression behaviour and, for territorial ones, a warning sign.
-// Narrative framing only: it never changes the battle, catch rates or any run stream. Seeded by run seed, encounter and species.
+// Seeded by run seed, encounter and species (no run stream is used). Each behaviour also nudges the catch odds (CATCH_MULTIPLIER);
+// the battle itself is unchanged.
 
 import type { Content } from './contentSchema';
 import { hashSeed, Rng } from './rng';
@@ -28,6 +29,9 @@ export const WILD_BEHAVIORS: BehaviorDef[] = [
 /** Share of ordinary wild encounters that get a behaviour; the rest stay plain. */
 export const WILD_BEHAVIOR_CHANCE = 0.4;
 
+/** Catch-chance multiplier per behaviour (sick and calm foes are easier to catch, guarded and timid ones harder). */
+export const CATCH_MULTIPLIER: Record<WildBehaviorId, number> = { curious: 1.1, timid: 0.85, territorial: 0.9, playful: 1.05, sick: 1.4, guarding: 0.9, calm: 1.2 };
+
 export interface WildFraming {
   id: WildBehaviorId;
   /** The warning sign shown first (territorial warning, #30). */
@@ -48,4 +52,10 @@ export function wildBehavior(content: Content, run: Pick<RunState, 'seed' | 'enc
   const def = WILD_BEHAVIORS.find((b) => (roll -= b.weight) < 0) ?? WILD_BEHAVIORS[0]!;
   const name = content.species.get(foe.speciesId)?.name ?? foe.speciesId;
   return { id: def.id, sign: def.sign, line: def.line.replace('%s', name) };
+}
+
+/** Multiplier on the catch probability for this wild encounter (1 when it has no behaviour). */
+export function wildCatchMultiplier(content: Content, run: Pick<RunState, 'seed' | 'encountersCompleted' | 'battle'>): number {
+  const f = wildBehavior(content, run);
+  return f ? CATCH_MULTIPLIER[f.id] : 1;
 }
