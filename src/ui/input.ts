@@ -2,6 +2,7 @@
 //   Arrows / WASD : move        Enter / Space / Z : confirm        Esc / X / Backspace : back
 
 import type Phaser from 'phaser';
+import { InputBuffer } from '../core/inputBuffer';
 
 export type InputAction = 'up' | 'down' | 'left' | 'right' | 'confirm' | 'back';
 
@@ -14,6 +15,28 @@ const KEY_MAP: Record<string, InputAction> = {
   Escape: 'back', KeyX: 'back', Backspace: 'back',
 };
 
+const buffer = new InputBuffer<InputAction>();
+let handled = false;
+let watching = false;
+
+/** One window-level watcher: a press that no screen handled is kept for the next screen (#122). */
+function watchDroppedKeys(): void {
+  if (watching || typeof window === 'undefined') return;
+  watching = true;
+  window.addEventListener(
+    'keydown',
+    (event) => {
+      const action = KEY_MAP[event.code];
+      if (!action || event.repeat) return;
+      handled = false;
+      setTimeout(() => {
+        if (!handled) buffer.drop(action, performance.now());
+      }, 0);
+    },
+    true,
+  );
+}
+
 /** Calls `handler` with a game action for each key press while the scene is running. */
 export function onInputAction(scene: Phaser.Scene, handler: (action: InputAction) => void): void {
   const keyboard = scene.input.keyboard;
@@ -23,8 +46,14 @@ export function onInputAction(scene: Phaser.Scene, handler: (action: InputAction
     const target = event.target as HTMLElement | null;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) return;
     const action = KEY_MAP[event.code];
-    if (action) handler(action);
+    if (action) {
+      handled = true;
+      handler(action);
+    }
   };
+  watchDroppedKeys();
   keyboard.on('keydown', listener);
+  const kept = buffer.take(performance.now());
+  if (kept) setTimeout(() => handler(kept), 0);
   scene.events.once('shutdown', () => keyboard.off('keydown', listener));
 }
