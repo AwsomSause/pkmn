@@ -34,6 +34,8 @@ export interface RunPrepData {
   notice?: string;
   /** Mode, difficulty, modifier and Death-Block (default: standard; Death-Block on for a player's first three runs). */
   rules?: RulesChoice;
+  /** Which modifier the Modifier row shows (Enter turns it on or off). */
+  modCursor?: number;
 }
 
 type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
@@ -47,6 +49,7 @@ export class RunPrepScene extends Phaser.Scene {
   private prep!: RunPrep;
   private seed: string | null = null;
   private rules: RulesChoice = STANDARD_CHOICE;
+  private modCursor = 0;
 
   constructor() {
     super('RunPrep');
@@ -69,6 +72,7 @@ export class RunPrepScene extends Phaser.Scene {
     this.archetypeId = resolved.archetypeId;
     this.prep = resolved.prep;
     this.seed = data.seed !== undefined ? data.seed : params.get('seed');
+    this.modCursor = data.modCursor ?? 0;
     this.rules = data.rules ?? { ...STANDARD_CHOICE, deathBlock: profile.stats.runsEnded < 3 && !params.has('debug') };
     const notice = [data.notice, ...resolved.problems].filter(Boolean).join(' ');
 
@@ -90,7 +94,7 @@ export class RunPrepScene extends Phaser.Scene {
       token: `Preparation: ${token?.name ?? 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
-      modifier: `Modifier: ${this.rules.modifierIds.map((id) => getModifier(id)?.name).join(', ') || 'none'}`,
+      modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
       deathBlock: `Death-Block: ${this.rules.deathBlock ? 'on' : 'off'}`,
       seed: `Seed: ${this.seed ?? 'random'}`,
       save: 'Save as preset…',
@@ -142,7 +146,7 @@ export class RunPrepScene extends Phaser.Scene {
   }
 
   private refresh(changes: Partial<RunPrep> = {}, extra: Partial<RunPrepData> = {}): void {
-    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, rules: this.rules, ...extra } satisfies RunPrepData);
+    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, rules: this.rules, modCursor: this.modCursor, ...extra } satisfies RunPrepData);
   }
 
   /** Steps through the options of a row (←/→, or Enter on rows that cycle). */
@@ -190,9 +194,9 @@ export class RunPrepScene extends Phaser.Scene {
         return this.refresh({}, { rules: { ...this.rules, difficultyId: next(ids, this.rules.difficultyId) } });
       }
       case 'modifier': {
-        const ids: (string | null)[] = [null, ...RUN_RULES.modifiers.filter((m) => m.status === 'supported').map((m) => m.id)];
-        const picked = next(ids, this.rules.modifierIds[0] ?? null);
-        return this.refresh({}, { rules: { ...this.rules, modifierIds: picked ? [picked] : [] } });
+        // ←/→ choose a modifier; Enter turns it on or off.
+        this.modCursor = (this.modCursor + step + RUN_RULES.modifiers.length) % RUN_RULES.modifiers.length;
+        return this.refresh();
       }
       case 'deathBlock':
         return this.refresh({}, { rules: { ...this.rules, deathBlock: !this.rules.deathBlock } });
@@ -205,6 +209,13 @@ export class RunPrepScene extends Phaser.Scene {
     switch (row) {
       case 'start':
         return this.start();
+      case 'modifier': {
+        const m = RUN_RULES.modifiers[this.modCursor]!;
+        const on = this.rules.modifierIds.includes(m.id);
+        // Turning one on switches off any modifier of the same kind.
+        const others = this.rules.modifierIds.filter((id) => id !== m.id && getModifier(id)!.group !== m.group);
+        return this.refresh({}, { rules: { ...this.rules, modifierIds: on ? others.filter((id) => id !== m.id) : [...others, m.id] } });
+      }
       case 'seed': {
         const value = window.prompt('Seed for this run (leave empty for a random one):', this.seed ?? '');
         if (value === null) return;

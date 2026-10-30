@@ -11,6 +11,7 @@ import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
 import { fishingOffer, raidPreview, totemPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
+import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
@@ -121,9 +122,10 @@ export class MapScene extends Phaser.Scene {
       this.add.text(24, 12, `${region.name} Pokémon League`, textStyle(28, COLORS.textLight));
       this.add.text(26, 44, `Elite Four, then ${leader.title}  ·  Healed after every battle`, textStyle(16, '#d8d0e0'));
     } else {
-      this.add.text(24, 12, `Stage ${stage.index + 1}: ${theme.name}`, textStyle(28, COLORS.textLight));
+      const blind = blindMap(run.rules);
+      this.add.text(24, 12, `Stage ${stage.index + 1}: ${blind ? '???' : theme.name}`, textStyle(28, COLORS.textLight));
       let bx = 26;
-      for (const type of theme.types) {
+      for (const type of blind ? [] : theme.types) {
         const b = badge(this, bx, 44, type, TYPE_COLORS[type] ?? 0x808080, 14);
         bx += b.width + 6;
       }
@@ -302,9 +304,9 @@ export class MapScene extends Phaser.Scene {
         const size = getCampaign(content, run.campaignId).eliteFourSize;
         this.showBanner(region.name, 'Pokémon League', `Elite Four ×${size}, then ${leader.title}  ·  Healed after every battle`);
       } else if (stage.index === 0) {
-        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${theme.name}  ·  ${leader.title}`);
+        this.showBanner(`Region ${run.regionIndex + 1} of ${regions}`, region.name, `Level cap ${cap}  ·  Stage 1: ${blindMap(run.rules) ? '???' : theme.name}  ·  ${leader.title}`);
       } else {
-        this.showBanner(`Stage ${stage.index + 1}`, theme.name, `${theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
+        this.showBanner(`Stage ${stage.index + 1}`, blindMap(run.rules) ? '???' : theme.name, `${blindMap(run.rules) ? 'Blind Research' : theme.types.map((t) => t.toUpperCase()).join(' / ')}  ·  ${leader.title}`);
       }
     }
   }

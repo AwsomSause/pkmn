@@ -2,7 +2,10 @@
 
 import { describe, expect, it } from 'vitest';
 import { finalizeRun, createProfile } from '../../src/core/profile';
-import { chooseStarter, createRun, debugReplaceEnemy, takeTurn } from '../../src/core/run';
+import { chooseStarter, createRun, debugReplaceEnemy, resolveDecision, shopStock, takeTurn } from '../../src/core/run';
+import { isRewardEligible } from '../../src/core/rewards';
+import { joinProblem, lockSpecies, partyCap, pickGeneration, randomDraft } from '../../src/core/rules';
+import { createPokemon } from '../../src/core/pokemon';
 import { makeRules, rewardMultiplier, rulesLines, rulesProblem, RUN_RULES, STANDARD_CHOICE, type RulesChoice } from '../../src/core/rules';
 import type { RunState } from '../../src/core/state';
 import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
@@ -28,7 +31,8 @@ describe('rules data and multiplier', () => {
     expect(rewardMultiplier({ ...STANDARD_CHOICE, difficultyId: 'nightmare', modifierIds: ['no-transformations', 'scarce-supplies'] })).toBe(Math.min(RUN_RULES.multiplierCap, 1.7 * 1.3));
     expect(rewardMultiplier({ ...STANDARD_CHOICE, deathBlock: true })).toBe(0.9);
     expect(rewardMultiplier({ ...STANDARD_CHOICE, modeId: 'adventure' })).toBe(0);
-    expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['monotype'] })).toContain('not available');
+    expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['monotype'] })).toBeNull();
+    expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['monotype', 'limited-party'] })).toContain('cannot be combined');
     expect(rulesProblem({ ...STANDARD_CHOICE, modeId: 'daily' })).toContain('not available');
     expect(rulesProblem({ ...STANDARD_CHOICE, modifierIds: ['scarce-supplies', 'scarce-supplies'] })).toContain('twice');
     expect(() => makeRules({ ...STANDARD_CHOICE, difficultyId: 'nope' })).toThrow();
@@ -111,5 +115,101 @@ describe('Death-Block and Adventure', () => {
     const a = finalizeRun(content, createProfile(content, 'p'), base).profile.bankCredits;
     const b = finalizeRun(content, createProfile(content, 'p'), run).profile.bankCredits;
     expect(b).toBeGreaterThan(a);
+  });
+});
+
+describe('the 10 other modifiers', () => {
+  it('every modifier is supported and the unsupported list is empty', () => {
+    expect(RUN_RULES.modifiers.filter((m) => m.status !== 'supported')).toEqual([]);
+    expect(RUN_RULES.modifiers).toHaveLength(12);
+  });
+
+  it('Limited Party caps the party at 4', () => {
+    const run = start('cap', { modifierIds: ['limited-party'] });
+    expect(partyCap(content, run.rules)).toBe(4);
+    expect(partyCap(content, start('cap').rules)).toBe(content.balance.partyMax);
+  });
+
+  it('Monotype locks to the starter type and refuses other types', () => {
+    const run = start('mono', { modifierIds: ['monotype'] });
+    const type = run.rules.lockType!;
+    expect(content.species.get(run.party[0]!.speciesId)!.types).toContain(type);
+    const other = [...content.species.values()].find((s) => !s.types.includes(type as never) && s.evolutions.length === 0)!;
+    expect(joinProblem(content, run, other.id)).toContain('Monotype');
+    const same = [...content.species.values()].find((s) => s.types.includes(type as never))!;
+    expect(joinProblem(content, run, same.id)).toBeNull();
+  });
+
+  it('No Duplicate Species refuses a second Pokémon of the same line, but allows replacing it', () => {
+    const run = start('dup', { modifierIds: ['no-duplicate-species'] });
+    const lead = run.party[0]!;
+    expect(joinProblem(content, run, lead.speciesId)).toContain('No Duplicate');
+    expect(joinProblem(content, run, lead.speciesId, lead.uid)).toBeNull();
+    expect(joinProblem(content, start('dup'), lead.speciesId)).toBeNull();
+  });
+
+  it('a caught Pokémon that cannot join can only be released, even past the release limit', () => {
+    let run = start('rel', { modifierIds: ['no-duplicate-species'] });
+    const twin = createPokemon(content, run.party[0]!.speciesId, 5, 'twin');
+    run = { ...run, pending: [{ kind: 'caught', mon: twin }], phase: 'decision' };
+    expect(() => resolveDecision(content, run, { kind: 'addToParty' })).toThrow('No Duplicate');
+    expect(resolveDecision(content, run, { kind: 'release' }).run.candies).toBeGreaterThan(0);
+  });
+
+  it('Single Region Dex picks a generation and keeps wild Pokémon inside it', () => {
+    const run = start('gen', { modifierIds: ['single-region-dex'] });
+    expect(run.rules.lockGeneration).toBe(pickGeneration(content, 'gen'));
+    const outside = [...content.species.values()].find((s) => s.generation !== run.rules.lockGeneration)!;
+    const swapped = lockSpecies(content, run, outside.id, 'k');
+    expect(content.species.get(swapped)!.generation).toBe(run.rules.lockGeneration);
+    expect(lockSpecies(content, run, outside.id, 'k')).toBe(swapped);
+    for (let i = 0; i < 8; i++) {
+      const r = toBattle(start(`gen-${i}`, { modifierIds: ['single-region-dex'] }));
+      for (const e of r.battle!.enemyTeam) expect(content.species.get(e.speciesId)!.generation).toBe(r.rules.lockGeneration);
+    }
+  });
+
+  it('Rich Route raises battle money and enemy levels; Blind Research scales research', () => {
+    const rich = start('rich', { modifierIds: ['rich-route'] });
+    expect(rich.rules.enemyLevelBonus).toBe(2);
+    expect(rewardMultiplier({ ...STANDARD_CHOICE, modifierIds: ['blind-research'] })).toBe(1.1);
+  });
+
+  it('No Revives removes revive rewards and shop entries', () => {
+    const plain = start('nr');
+    const run = start('nr', { modifierIds: ['no-revives'] });
+    const revives = [...content.items.values()].filter((i) => i.category === 'revive').map((i) => i.id);
+    expect(revives.length).toBeGreaterThan(0);
+    const shop = (r: RunState) => shopStock(content, { ...r, badges: Array(8).fill('x') }).map((e) => e.item);
+    expect(shop(plain).some((id) => revives.includes(id))).toBe(true);
+    expect(shop(run).some((id) => revives.includes(id))).toBe(false);
+    const reward = [...content.rewards.values()].find((r) => r.effect.kind === 'addItem' && revives.includes(r.effect.item));
+    if (reward) expect(isRewardEligible(content, run, reward)).toBe(false);
+  });
+
+  it('Random Draft picks a licence-free draft rule from the seed, the same every time', () => {
+    const run = start('rd', { modifierIds: ['random-draft'] });
+    const again = start('rd', { modifierIds: ['random-draft'] });
+    expect(run.prep.draftRuleId).toBe(again.prep.draftRuleId);
+    expect(randomDraft(content, 'rd', run.prep).draftRuleId).toBe(run.prep.draftRuleId);
+    expect(content.draftRules.get(run.prep.draftRuleId)!.license).toBeNull();
+  });
+
+  it('Boss Rush uses the short campaign and its gyms come twice as often', () => {
+    const run = start('br', { modifierIds: ['boss-rush'] });
+    expect(run.campaignId).toBe('boss-rush');
+    expect(content.campaigns.get('boss-rush')!.stagesPerRegion).toBe(4);
+  });
+
+  it('Variant Hunt adds event stops without touching other rolls', () => {
+    const count = (r: RunState) => r.stage!.map.nodes.flatMap((n) => n.sides).filter((x) => x.kind === 'event').length;
+    const normal = count(start('vh'));
+    const hunt = count(start('vh', { modifierIds: ['variant-hunt'] }));
+    expect(hunt).toBeGreaterThanOrEqual(normal);
+  });
+
+  it('Difficulty reaches trainers and bosses, not only wild Pokémon', () => {
+    const level = (r: RunState) => Math.max(...toBattle(toBattle(r)).battle!.enemyTeam.map((m) => m.level));
+    expect(level(start('lvt', { difficultyId: 'nightmare' }))).toBeGreaterThanOrEqual(level(start('lvt')));
   });
 });

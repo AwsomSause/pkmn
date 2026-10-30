@@ -111,7 +111,7 @@ import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { disabledByRules, makeRules, startScale, wantsCheckpoint, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -136,13 +136,15 @@ export interface NewRunOptions {
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
-  const prep: RunPrep = opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' };
+  const prep: RunPrep = { ...(opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' }) };
   const resources = startingResources(content, archetype, prep);
   const rules = makeRules(opts.rules ?? { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false });
   const scale = startScale(rules);
   const inventory: Record<string, number> = {};
   for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, scale < 1 ? Math.floor(n * scale) : n);
-  const campaign = getCampaign(content, prep.campaignId);
+  const campaign = getCampaign(content, rulesCampaign(rules) ?? prep.campaignId);
+  if (wantsGenerationLock(rules)) rules.lockGeneration = pickGeneration(content, opts.seed);
+  if (wantsRandomDraft(rules)) Object.assign(prep, randomDraft(content, opts.seed, prep));
   const rng = createStreams(opts.seed);
   const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
   // Used once here, so its own seed-derived generator needs no saved stream.
@@ -249,6 +251,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
   run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(getArchetype(content, run.archetypeId).modifiers)), 'p')];
+  if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = getArchetype(content, run.archetypeId).modifiers;
   const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
@@ -399,8 +402,8 @@ export function releaseLimitReached(content: Content, run: Pick<RunState, 'log' 
   return limit !== null && releasesUsed(run) >= limit;
 }
 
-function assertCanRelease(content: Content, run: RunState): void {
-  if (releaseLimitReached(content, run)) throw new Error('This trainer can only release a few Pokémon per run, and you have used them all');
+function assertCanRelease(content: Content, run: RunState, forced = false): void {
+  if (!forced && releaseLimitReached(content, run)) throw new Error('This trainer can only release a few Pokémon per run, and you have used them all');
 }
 
 export function requireStage(run: RunState): StageState {
@@ -920,7 +923,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
       return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
     });
-    let speciesId = wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods);
+    let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
@@ -979,9 +982,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const bonus = perksOf(activePerks(content, run), 'rival')[0]!.perk.levelBonus;
       plan = { ...plan, name: `Rival ${plan.name}`, members: plan.members.map((m) => ({ ...m, level: m.level + bonus })) };
     }
-    const team = plan.members.map((m) => {
+    const team = plan.members.map((m, i) => {
       const uid = nextUid(run, 'e');
-      return createPlannedPokemon(content, m, uid, `${run.seed}:${uid}`);
+      // Difficulty raises every enemy; Single Region Dex swaps ordinary trainers' species for ones from the locked generation (bosses keep theirs).
+      const speciesId = plan.leaderId ? m.speciesId : lockSpecies(content, run, m.speciesId, `${node.id}:${i}`);
+      const level = Math.max(1, Math.min(100, m.level + run.rules.enemyLevelBonus));
+      return createPlannedPokemon(content, { ...m, speciesId, level }, uid, `${run.seed}:${uid}`);
     });
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });
     run.battle.ai = plan.ai;
@@ -1057,14 +1063,15 @@ export function healParty(content: Content, run: RunState): void {
  * and the Member Card and Wepear Berry put the next locked entries on sale early.
  * Key items you own aren't sold again.
  */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory'>> & MapItemRun): Content['shop'] {
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules'>> & MapItemRun): Content['shop'] {
+  const noRevive = run.rules ? noRevives(run.rules) : false;
   const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
   const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
   const early = content.shop
     .filter((e) => !open(e) && !owned(e))
     .sort((a, b) => shopBadgesNeeded(content, run, a) - shopBadgesNeeded(content, run, b))
     .slice(0, earlyStockCount(content, run));
-  return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e));
+  return content.shop.filter((e) => (open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 
 /** Key items, Mega Stones and Z-Crystals last the whole run, so you only ever need one. */
@@ -1394,6 +1401,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
   let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
 
@@ -1682,18 +1690,22 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     const caught = decision.mon;
     const name = speciesName(content, caught.speciesId);
     if (choice.kind === 'addToParty') {
-      if (run.party.length >= content.balance.partyMax) throw new Error('Your party is full');
+      if (run.party.length >= partyCap(content, run.rules)) throw new Error('Your party is full');
+      const problem = joinProblem(content, run, caught.speciesId);
+      if (problem) throw new Error(problem);
       run.party.push(caught);
       count(run, 'caughtKept');
       message = `${name} joined your party!`;
     } else if (choice.kind === 'replace') {
       const old = run.party[choice.partyIndex];
       if (!old) throw new Error('Choose a party member to replace');
+      const problem = joinProblem(content, run, caught.speciesId, old.uid);
+      if (problem) throw new Error(problem);
       run.party[choice.partyIndex] = caught;
       count(run, 'caughtKept');
       message = `${speciesName(content, old.speciesId)} left the party. ${name} joined!`;
     } else if (choice.kind === 'release') {
-      assertCanRelease(content, run);
+      assertCanRelease(content, run, joinProblem(content, run, caught.speciesId) !== null);
       const candies = candiesForRelease(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);
@@ -1707,7 +1719,9 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     const mon = decision.mon;
     const name = speciesName(content, mon.speciesId);
     if (choice.kind === 'addToParty') {
-      if (run.party.length >= content.balance.partyMax) throw new Error('Your party is full');
+      if (run.party.length >= partyCap(content, run.rules)) throw new Error('Your party is full');
+      const problem = joinProblem(content, run, mon.speciesId);
+      if (problem) throw new Error(problem);
       run.party.push(mon);
       message = `${name} joined your party again!`;
     } else if (choice.kind === 'replace') {
@@ -1887,7 +1901,7 @@ export function debugReplaceEnemy(content: Content, current: RunState, speciesId
 
 /** Debug: adds a Pokémon to the party (if there is room). */
 export function debugAddToParty(content: Content, current: RunState, speciesId: string, level: number): RunState {
-  if (current.party.length >= content.balance.partyMax) throw new Error('Your party is full');
+  if (current.party.length >= partyCap(content, current.rules)) throw new Error('Your party is full');
   const run = structuredClone(current);
   run.party.push(newMon(content, run, speciesId, level, 'p'));
   recordChanges(content, current, run, 'debug');

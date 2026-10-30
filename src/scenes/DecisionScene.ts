@@ -8,6 +8,7 @@ import Phaser from 'phaser';
 import { catchSummary } from '../core/catchSummary';
 import { candiesForRelease } from '../core/encounters';
 import { releaseLimitReached } from '../core/run';
+import { joinProblem, partyCap } from '../core/rules';
 import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
@@ -276,7 +277,9 @@ export class DecisionScene extends Phaser.Scene {
     const run = session.run!;
     const species = getSpecies(content, caught.speciesId);
     const candies = candiesForRelease(content, caught.level);
-    const full = run.party.length >= content.balance.partyMax;
+    const cap = partyCap(content, run.rules);
+    const full = run.party.length >= cap;
+    const blocked = joinProblem(content, run, caught.speciesId);
 
     // A soft spotlight for the new Pokémon to stand on.
     const spot = this.add.graphics();
@@ -287,14 +290,14 @@ export class DecisionScene extends Phaser.Scene {
     const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
     const lines = catchSummary(content, caught, run.party[0]);
-    this.add.text(400, 92, [...lines, '', full ? `Your party is full (${content.balance.partyMax}).` : `Party: ${run.party.length}/${content.balance.partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
+    this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${cap}).` : `Party: ${run.party.length}/${cap}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
     const keepsake = candies * content.balance.reunion.keepsakeCandyMultiplier;
     const keepsakeText = `${keepsake} cand${keepsake === 1 ? 'y' : 'ies'}`;
     const options = [
-      { label: full ? 'Replace a party Pokémon' : 'Add to party' },
-      ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : releaseLimitReached(content, session.run!) ? [] : [{ label: `Release it (+${candyText})` }]),
+      { label: blocked ? "Can't join" : full ? 'Replace a party Pokémon' : 'Add to party', disabled: blocked !== null && !past },
+      ...(past ? [{ label: `Take a keepsake (+${keepsakeText})` }, { label: 'Let it go on its journey' }] : releaseLimitReached(content, session.run!) && !blocked ? [] : [{ label: `Release it (+${candyText})` }]),
     ];
     drawPanel(this, 400, 345, 520, past ? 170 : 130);
     this.menu = new Menu(this, {
@@ -305,6 +308,7 @@ export class DecisionScene extends Phaser.Scene {
       itemHeight: past ? 46 : 52,
       fontSize: 28,
       onSelect: (i) => {
+        if (i === 0 && blocked && !past) return;
         if (i === 0 && !full) this.resolve({ kind: 'addToParty' });
         else if (i === 0) this.openReplace(caught);
         else if (past && i === 1) this.resolve({ kind: 'keepsake' });
