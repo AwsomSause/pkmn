@@ -2006,6 +2006,16 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('eventSeen'), id: z.string() }),
   /** The trainer must not carry this tag (N is "pacifist": no aggressive choices). */
   z.object({ kind: z.literal('noTrainerTag'), tag: z.string() }),
+  /** Event Director: a party member this fond of you (friendship, 0 to 255). */
+  z.object({ kind: z.literal('friendship'), atLeast: z.number().int().min(1).max(255) }),
+  /** Event Director: a rival you have fought at least this many times. */
+  z.object({ kind: z.literal('rivalMet'), atLeast: z.number().int().min(1) }),
+  /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
+  z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
+  /** Event Director: two of your Pokémon share an open bond. */
+  z.object({ kind: z.literal('bond') }),
+  /** Event Director: the region's focus (mystery, rivals, raids, exploration). */
+  z.object({ kind: z.literal('focus'), focus: z.enum(['mystery', 'rivals', 'raids', 'exploration']) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
