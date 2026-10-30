@@ -1622,6 +1622,10 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     for (const mon of run.party) endHeldBattle(mon);
   }
 
+  if (battle.outcome === 'win' && !run.party.some((m) => m.hp > 0)) {
+    // A double KO that the player wins (recoil, Explosion by the foe) must not leave a team that cannot fight again.
+    run.party[battle.activeIndex]!.hp = 1;
+  }
   if (battle.outcome === 'win' || battle.outcome === 'caught') {
     const end = finishBattle(content, run);
     const caught = run.pending.find((d) => d.kind === 'caught');
