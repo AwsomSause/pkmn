@@ -15,6 +15,7 @@ import {
   createRun,
   debugJumpToColumn,
   leaveShop,
+  shopPrice,
   resolveDecision,
   takeTurn,
   visitSide,
@@ -249,9 +250,11 @@ describe('map flow', () => {
     run = visitSide(content, run, 'test-shop').run;
     expect(run.phase).toBe('shop');
     const before = run.inventory['poke-ball'] ?? 0;
+    const ballPrice = shopPrice(content, run, content.shop.find((e) => e.item === 'poke-ball')!);
     run = buyItem(content, run, 'poke-ball').run;
     expect(run.inventory['poke-ball']).toBe(before + 1);
-    expect(run.money).toBe(100);
+    expect(run.money).toBe(300 - ballPrice);
+    run.money = 5;
     expect(() => buyItem(content, run, 'potion')).toThrow(/need/);
     run = leaveShop(content, run);
     expect(run.phase).toBe('map');

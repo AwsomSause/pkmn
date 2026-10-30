@@ -15,7 +15,7 @@
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, singleBattleXpPerk, shopEarlyStockPerk, thirdBossLevels, isUltraBeast, fishingRareTriesPerk, bonusRewardChancePerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, singleBattleXpPerk, shopEarlyStockPerk, shopRefreshPerk, thirdBossLevels, isUltraBeast, fishingRareTriesPerk, bonusRewardChancePerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
@@ -128,6 +128,7 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { withChampionTeam } from './story/championDefense';
 import { gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
@@ -155,6 +156,8 @@ export interface NewRunOptions {
   pastPokemon?: readonly PastPokemon[];
   /** The account's archived rivals; one may shape a rival this run (core/rivals/legacy.ts). */
   rivalArchive?: Profile['rivalArchive'];
+  /** The account's finished runs; the newest win becomes the Champion Defense team (core/story/championDefense.ts). */
+  runHistory?: Profile['runHistory'];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
@@ -224,7 +227,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
-    story: createStoryState(),
+    story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
@@ -1318,10 +1321,21 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 }
 
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
+/** The item on sale right now: one open item, chosen from the stage window (its own seed, so no other roll changes). */
+export function shopSaleItem(content: Content, run: RunState): string | null {
+  const open = shopStock(content, run).filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e) && content.items.get(e.item)?.category !== 'key');
+  if (open.length === 0) return null;
+  const sale = content.balance.shopSale;
+  const every = Math.max(1, Math.ceil(sale.everyStages * shopRefreshPerk(runPerks(content, run))));
+  const stagesPer = getCampaign(content, run.campaignId).stagesPerRegion;
+  const window = Math.floor((run.regionIndex * stagesPer + (run.stage?.index ?? 0)) / every);
+  return new Rng(hashSeed(`${run.seed}::shop-sale::${window}`)).pick(open).item;
+}
+
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
   const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
-  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
+  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1));
 }
 
 /** Base price for an item the shop doesn't list (urge items and other finds), by rarity. */

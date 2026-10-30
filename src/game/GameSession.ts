@@ -88,7 +88,7 @@ export class GameSession {
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition) });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition) });
     this.profile = recordRunStarted(this.profile);
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));

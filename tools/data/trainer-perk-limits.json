@@ -1,5 +1,4 @@
 {
- "blaine-lgpe": "Burn lasts two extra turns has no effect: burns never wear off in this game.",
  "calem": "Mega Evolution costs 20% less has no effect: Mega Evolution costs nothing in this game (the stone is the only requirement).",
  "brigette": "Storage is the new PC (6 slots, map button).",
  "bill": "The PC works anywhere on the map between battles, not only at Pokémon Centers.",
@@ -17,9 +16,7 @@
  "trevor": "Pokédex rewards increase by 20% is read as: Research Points at the end of a run are 20% higher.",
  "volo": "Legendary, Mythical and Ultra Beast Pokémon deal the bonus damage.",
  "wally": "After defeating an enemy is read as: once your side has defeated an enemy in the same trainer battle. It has no effect in wild battles.",
- "plumeria": "Poison lasting one extra turn has no effect: poison never wears off in this game.",
  "raihan": "Only rain and sun are covered: weather-boosted moves in sandstorm and hail are not boosted.",
- "kurt": "Shop inventories refresh 20% less frequently has no effect: the shop stock does not refresh in this game.",
  "juan": "Water-types gain 10% evasion: enemy accuracy against your Water-types is divided by 1.1.",
  "karen": "Status-affected enemies take 15% more damage: any status condition on the target counts.",
  "nemona-v": "Equal-level foes count as the same level (no bonus): the 20% bonus applies to higher-level foes, the 10% penalty to lower-level ones.",

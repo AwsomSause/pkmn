@@ -19,6 +19,8 @@ import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
+import { championTeam } from './story/championDefense';
+import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
@@ -75,6 +77,10 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return crisisAid(run) >= c.atLeast;
     case 'tournament':
       return tournamentRound(run) === c.round;
+    case 'championGhost':
+      return championTeam(run.story).length > 0;
+    case 'hunt':
+      return huntClues(run) >= c.atLeast && huntClues(run) <= c.atMost && !(c.atLeast > 0 && huntDone(run));
     case 'gauntlet':
       return (gauntletLeft(run) > 0) === c.active;
     case 'partyTag':
@@ -125,6 +131,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs allies gathered in this region';
     case 'tournament':
       return 'Needs the tournament bracket to be at this round';
+    case 'championGhost':
+      return 'Needs a won run in your Hall of Fame';
+    case 'hunt':
+      return 'Needs more clues about the Grand-Enemy';
     case 'gauntlet':
       return c.active ? 'Needs a rival gauntlet to be running' : 'Needs no rival gauntlet running';
   }
@@ -413,6 +423,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
     case 'aid':
       return 'allies gathered';
+    case 'hunt':
+      return e.finish ? 'the hunt ends' : 'a clue';
     case 'gauntlet':
       return `${e.rivals} rivals will come for you`;
     case 'tournament':
@@ -579,6 +591,8 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return effectWords(content, e);
     case 'tournament':
       return setTournament(content, run, e.round);
+    case 'hunt':
+      return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
     case 'gauntlet':
       return startGauntlet(content, run, e.rivals) > 0 ? effectWords(content, e) : 'no rivals to face yet';
     case 'count':
@@ -657,7 +671,8 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
-    const team = Array.from({ length: b.size }, (_, i) => {
+    const ghost = b.ghost ? championTeam(run.story) : [];
+    const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
       const speciesId = boss ? boss.signature[i % boss.signature.length]! : pickSpecies(content, run, [], b.types, rng);
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');

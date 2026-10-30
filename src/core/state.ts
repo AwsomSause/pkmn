@@ -26,6 +26,8 @@ export const StatusSchema = z.object({
   id: StatusIdSchema,
   /** Sleep only: turns the Pokémon will still skip. */
   turns: z.number().int().min(0).optional(),
+  /** Burn and poison: turns left before it wears off (absent = until cured). */
+  left: z.number().int().min(0).optional(),
   /** Poison only: badly poisoned (Toxic), `turns` counts up. */
   bad: z.boolean().optional(),
 });
