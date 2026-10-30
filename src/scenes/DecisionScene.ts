@@ -11,6 +11,16 @@ import { releaseLimitReached } from '../core/run';
 import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
+import { pathName, type MentorPath } from '../core/story/mentorship';
+
+const PATH_BLURB: Record<MentorPath, string> = {
+  guardian: 'protecting allies and standing firm under pressure',
+  striker: 'timing attacks and finishing blows',
+  strategist: 'exploiting weaknesses and countering setups',
+  survivor: 'enduring the hardest battles',
+  challenger: 'facing stronger opponents head on',
+  bonded: 'fighting beside a specific teammate',
+};
 import type { MoveSlot, PokemonInstance } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
@@ -62,6 +72,7 @@ export class DecisionScene extends Phaser.Scene {
     else if (decision.kind === 'caught') this.buildCaught(decision.mon);
     else if (decision.kind === 'reunion') this.buildCaught(decision.mon, decision.hallOfFame);
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
+    else if (decision.kind === 'mentorship') this.buildMentorship(decision.mentorUid, decision.proteUid, decision.path);
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
 
@@ -196,6 +207,37 @@ export class DecisionScene extends Phaser.Scene {
         if (i >= shown.length) this.confirm(`Throw away the ${itemName}?`, () => this.resolve({ kind: 'skipMove' }));
         else this.resolve({ kind: 'teachMove', moveIndex: i });
       },
+    });
+  }
+
+  // ---------- a veteran offers to mentor a teammate ----------
+
+  private buildMentorship(mentorUid: string, proteUid: string, path: MentorPath): void {
+    const { session } = services();
+    const content = session.content;
+    const party = session.run!.party;
+    const mentor = party.find((p) => p.uid === mentorUid);
+    const prote = party.find((p) => p.uid === proteUid);
+    if (!mentor || !prote) {
+      this.resolve({ kind: 'mentor', accept: false });
+      return;
+    }
+    const m = getSpecies(content, mentor.speciesId);
+    const p = getSpecies(content, prote.speciesId);
+    pokemonVisual(this, m, 'front', 150, 260, 3, mentor.shiny);
+    pokemonVisual(this, p, 'front', 150, 460, 2, prote.shiny);
+    this.add.text(300, 40, `${p.name} looks up to ${m.name}.`, textStyle(30, COLORS.textLight, { wordWrap: { width: 640 } }));
+    this.add.text(300, 110, `${pathName(path)}: ${PATH_BLURB[path]}`, textStyle(22, '#d8d0e0', { wordWrap: { width: 640 } }));
+    this.add.text(300, 190, 'A mentorship ends when the protégé evolves or catches up. It shapes stories and tactics, not raw stats.', textStyle(18, '#a69cb4', { wordWrap: { width: 640 } }));
+    drawPanel(this, 300, 270, 620, 150);
+    this.menu = new Menu(this, {
+      x: 316,
+      y: 284,
+      options: [{ label: `Let ${m.name} mentor ${p.name}` }, { label: 'Not now' }],
+      itemHeight: 56,
+      itemWidth: 580,
+      fontSize: 26,
+      onSelect: (i) => this.resolve({ kind: 'mentor', accept: i === 0 }),
     });
   }
 

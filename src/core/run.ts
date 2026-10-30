@@ -113,6 +113,7 @@ import { createStoryState } from './story/record';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
+import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
 
 export interface NewRunOptions {
@@ -1442,6 +1443,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     run.pending.splice(caughtPending.length, 0, { kind: 'reunion', mon, hallOfFame: reunion.mon.hallOfFame });
     count(run, 'reunions');
   }
+  // A veteran may offer to mentor a younger teammate.
+  graduateMentorships(content, run);
+  const mentorOffer = !run.victory ? planMentorship(content, run) : null;
+  if (mentorOffer) run.pending.push({ kind: 'mentorship', ...mentorOffer });
   // An event battle you won pays its own rewards.
   const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
@@ -1565,7 +1570,8 @@ export type DecisionChoice =
   | { kind: 'release' }
   | { kind: 'keepsake' }
   | { kind: 'teachMove'; moveIndex: number }
-  | { kind: 'ppUpMove'; moveIndex: number };
+  | { kind: 'ppUpMove'; moveIndex: number }
+  | { kind: 'mentor'; accept: boolean };
 
 export interface DecisionResult {
   run: RunState;
@@ -1643,6 +1649,9 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else {
       throw new Error('Choose what to do with the past Pokémon');
     }
+  } else if (decision.kind === 'mentorship') {
+    if (choice.kind !== 'mentor') throw new Error('Accept or decline the mentorship');
+    message = answerMentorship(content, run, decision, choice.accept);
   } else if (decision.kind === 'teachMove') {
     const mon = run.party.find((p) => p.uid === decision.uid);
     if (!mon) {
