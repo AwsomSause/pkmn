@@ -46046,7 +46046,8 @@
    },
    {
     "to": "gallade",
-    "item": "dawn-stone"
+    "item": "dawn-stone",
+    "gender": "male"
    }
   ],
   "assets": {
@@ -57473,7 +57474,8 @@
    },
    {
     "to": "froslass",
-    "item": "dawn-stone"
+    "item": "dawn-stone",
+    "gender": "female"
    }
   ],
   "assets": {
@@ -64671,19 +64673,23 @@
   "evolutions": [
    {
     "to": "wormadam",
-    "level": 20
+    "level": 20,
+    "gender": "female"
    },
    {
     "to": "mothim",
-    "level": 20
+    "level": 20,
+    "gender": "male"
    },
    {
     "to": "wormadam-sandy",
-    "level": 20
+    "level": 20,
+    "gender": "female"
    },
    {
     "to": "wormadam-trash",
-    "level": 20
+    "level": 20,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -65252,7 +65258,8 @@
   "evolutions": [
    {
     "to": "vespiquen",
-    "level": 21
+    "level": 21,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -85064,11 +85071,13 @@
   "evolutions": [
    {
     "to": "basculegion",
-    "level": 36
+    "level": 36,
+    "gender": "male"
    },
    {
     "to": "basculegion-female",
-    "level": 36
+    "level": 36,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -102608,11 +102617,13 @@
   "evolutions": [
    {
     "to": "meowstic",
-    "level": 25
+    "level": 25,
+    "gender": "male"
    },
    {
     "to": "meowstic-female",
-    "level": 25
+    "level": 25,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -102748,7 +102759,7 @@
    "hidden": "prankster"
   },
   "weight": 8.5,
-  "femaleRatio": 0.5
+  "femaleRatio": 0
  },
  {
   "id": "meowstic-female",
@@ -102876,7 +102887,7 @@
    "hidden": "competitive"
   },
   "weight": 8.5,
-  "femaleRatio": 0.5
+  "femaleRatio": 1
  },
  {
   "id": "meowstic-male-mega",
@@ -115116,7 +115127,8 @@
   "evolutions": [
    {
     "to": "salazzle",
-    "level": 33
+    "level": 33,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -130686,7 +130698,7 @@
    "hidden": "psychic-surge"
   },
   "weight": 28,
-  "femaleRatio": 0.5
+  "femaleRatio": 0
  },
  {
   "id": "indeedee-female",
@@ -130783,7 +130795,7 @@
    "hidden": "psychic-surge"
   },
   "weight": 28,
-  "femaleRatio": 0.5
+  "femaleRatio": 1
  },
  {
   "id": "morpeko",
@@ -134873,7 +134885,7 @@
    "hidden": "mold-breaker"
   },
   "weight": 110,
-  "femaleRatio": 0.5
+  "femaleRatio": 0
  },
  {
   "id": "basculegion-female",
@@ -134998,7 +135010,7 @@
    "hidden": "mold-breaker"
   },
   "weight": 110,
-  "femaleRatio": 0.5
+  "femaleRatio": 1
  },
  {
   "id": "sneasler",
@@ -136509,11 +136521,13 @@
   "evolutions": [
    {
     "to": "oinkologne",
-    "level": 18
+    "level": 18,
+    "gender": "male"
    },
    {
     "to": "oinkologne-female",
-    "level": 18
+    "level": 18,
+    "gender": "female"
    }
   ],
   "assets": {
@@ -136629,7 +136643,7 @@
    "hidden": "thick-fat"
   },
   "weight": 120,
-  "femaleRatio": 0.5
+  "femaleRatio": 0
  },
  {
   "id": "oinkologne-female",
@@ -136733,7 +136747,7 @@
    "hidden": "thick-fat"
   },
   "weight": 120,
-  "femaleRatio": 0.5
+  "femaleRatio": 1
  },
  {
   "id": "tarountula",
