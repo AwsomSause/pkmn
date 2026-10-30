@@ -132,6 +132,15 @@ describe('resist berries', () => {
     expect(berry.taken / base.taken).toBeCloseTo(0.5, 0);
     expect(berry.p.held ?? {}).toEqual({});
   });
+
+  it('a Hyper Occa Berry cuts the hit to a quarter', () => {
+    const run = (items?: Record<string, number>) => {
+      const p = mon('bulbasaur', 50, 'p1', ['splash'], items);
+      const { ctx } = setup(p, mon('charmander', 30, 'e1', ['ember']), 'occa');
+      return hits(resolveTurn(ctx, { kind: 'move', index: 0 }), 'player')[0]!;
+    };
+    expect(run({ 'hyper-occa-berry': 1 }) / run()).toBeCloseTo(0.25, 0);
+  });
 });
 
 describe('battle boosts (X items)', () => {

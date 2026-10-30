@@ -16991,6 +16991,3678 @@
      }
     }
    ]
+  },
+  {
+   "trainerId": "npc-youngster-joey",
+   "name": "Youngster Joey's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Youngster Joey",
+     "story": "Youngster Joey feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Youngster Joey's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Youngster Joey",
+     "story": "Youngster Joey checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-youngster-joey"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Youngster Joey",
+     "story": "Youngster Joey's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Youngster Joey, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-lass-janice",
+   "name": "Lass Janice's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Lass Janice",
+     "story": "Lass Janice feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Lass Janice's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Lass Janice",
+     "story": "Lass Janice checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-lass-janice"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Lass Janice",
+     "story": "Lass Janice's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Lass Janice, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-bug-catcher-wade",
+   "name": "Bug Catcher Wade's Bug Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Bug-types as Bug Catcher Wade",
+     "story": "Bug Catcher Wade feels the Bug-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bug Catcher Wade's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bug Catcher Wade",
+     "story": "Bug Catcher Wade checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-bug-catcher-wade"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Bug-type leading",
+     "story": "The Bug-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.bug",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Bug-types in one run",
+     "story": "A whole run of Bug-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Bug Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bug Catcher Wade",
+     "story": "Bug Catcher Wade's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bug Catcher Wade, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-camper-liam",
+   "name": "Camper Liam's Ground Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ground-types as Camper Liam",
+     "story": "Camper Liam feels the Ground-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Camper Liam's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Camper Liam",
+     "story": "Camper Liam checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-camper-liam"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ground-type leading",
+     "story": "The Ground-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ground",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ground-types in one run",
+     "story": "A whole run of Ground-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ground Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Camper Liam",
+     "story": "Camper Liam's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Camper Liam, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-picnicker-gina",
+   "name": "Picnicker Gina's Grass Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Grass-types as Picnicker Gina",
+     "story": "Picnicker Gina feels the Grass-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Picnicker Gina's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Picnicker Gina",
+     "story": "Picnicker Gina checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-picnicker-gina"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Grass-type leading",
+     "story": "The Grass-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.grass",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Grass-types in one run",
+     "story": "A whole run of Grass-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Grass Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Picnicker Gina",
+     "story": "Picnicker Gina's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Picnicker Gina, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-hiker-anthony",
+   "name": "Hiker Anthony's Rock Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Rock-types as Hiker Anthony",
+     "story": "Hiker Anthony feels the Rock-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Hiker Anthony's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Hiker Anthony",
+     "story": "Hiker Anthony checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-hiker-anthony"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Rock-type leading",
+     "story": "The Rock-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.rock",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Rock-types in one run",
+     "story": "A whole run of Rock-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Rock Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Hiker Anthony",
+     "story": "Hiker Anthony's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Hiker Anthony, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-fisherman-elliot",
+   "name": "Fisherman Elliot's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Fisherman Elliot",
+     "story": "Fisherman Elliot feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Fisherman Elliot's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Fisherman Elliot",
+     "story": "Fisherman Elliot checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-fisherman-elliot"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Fisherman Elliot",
+     "story": "Fisherman Elliot's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Fisherman Elliot, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-bird-keeper-perry",
+   "name": "Bird Keeper Perry's Flying Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Flying-types as Bird Keeper Perry",
+     "story": "Bird Keeper Perry feels the Flying-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Bird Keeper Perry's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Bird Keeper Perry",
+     "story": "Bird Keeper Perry checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-bird-keeper-perry"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Flying-type leading",
+     "story": "The Flying-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.flying",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Flying-types in one run",
+     "story": "A whole run of Flying-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Flying Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Bird Keeper Perry",
+     "story": "Bird Keeper Perry's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Bird Keeper Perry, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-black-belt-kenji",
+   "name": "Black Belt Kenji's Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Black Belt Kenji",
+     "story": "Black Belt Kenji feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Black Belt Kenji's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Black Belt Kenji",
+     "story": "Black Belt Kenji checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-black-belt-kenji"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Black Belt Kenji",
+     "story": "Black Belt Kenji's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Black Belt Kenji, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-biker-ryder",
+   "name": "Biker Ryder's Poison Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Poison-types as Biker Ryder",
+     "story": "Biker Ryder feels the Poison-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Biker Ryder's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Biker Ryder",
+     "story": "Biker Ryder checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-biker-ryder"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Poison-type leading",
+     "story": "The Poison-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.poison",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Poison-types in one run",
+     "story": "A whole run of Poison-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Poison Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Biker Ryder",
+     "story": "Biker Ryder's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Biker Ryder, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-burglar-quinn",
+   "name": "Burglar Quinn's Fire Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fire-types as Burglar Quinn",
+     "story": "Burglar Quinn feels the Fire-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Burglar Quinn's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Burglar Quinn",
+     "story": "Burglar Quinn checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-burglar-quinn"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fire-type leading",
+     "story": "The Fire-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fire",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fire-types in one run",
+     "story": "A whole run of Fire-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fire Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Burglar Quinn",
+     "story": "Burglar Quinn's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Burglar Quinn, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-channeler-hester",
+   "name": "Channeler Hester's Ghost Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ghost-types as Channeler Hester",
+     "story": "Channeler Hester feels the Ghost-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Channeler Hester's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Channeler Hester",
+     "story": "Channeler Hester checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-channeler-hester"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ghost-type leading",
+     "story": "The Ghost-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ghost",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ghost-types in one run",
+     "story": "A whole run of Ghost-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ghost Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Channeler Hester",
+     "story": "Channeler Hester's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Channeler Hester, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-cooltrainer-marcus",
+   "name": "Cooltrainer Marcus's Dragon Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Dragon-types as Cooltrainer Marcus",
+     "story": "Cooltrainer Marcus feels the Dragon-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Cooltrainer Marcus's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Cooltrainer Marcus",
+     "story": "Cooltrainer Marcus checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-cooltrainer-marcus"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Dragon-type leading",
+     "story": "The Dragon-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.dragon",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Dragon-types in one run",
+     "story": "A whole run of Dragon-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Dragon Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Cooltrainer Marcus",
+     "story": "Cooltrainer Marcus's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Cooltrainer Marcus, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-cooltrainer-selene",
+   "name": "Cooltrainer Selene's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Cooltrainer Selene",
+     "story": "Cooltrainer Selene feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Cooltrainer Selene's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Cooltrainer Selene",
+     "story": "Cooltrainer Selene checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-cooltrainer-selene"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Cooltrainer Selene",
+     "story": "Cooltrainer Selene's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Cooltrainer Selene, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-crush-girl-tamsin",
+   "name": "Crush Girl Tamsin's Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Crush Girl Tamsin",
+     "story": "Crush Girl Tamsin feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Crush Girl Tamsin's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Crush Girl Tamsin",
+     "story": "Crush Girl Tamsin checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-crush-girl-tamsin"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Crush Girl Tamsin",
+     "story": "Crush Girl Tamsin's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Crush Girl Tamsin, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-crush-kin-ivan-and-mira",
+   "name": "Crush Kin Ivan and Mira's Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Crush Kin Ivan and Mira",
+     "story": "Crush Kin Ivan and Mira feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Crush Kin Ivan and Mira's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Crush Kin Ivan and Mira",
+     "story": "Crush Kin Ivan and Mira checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-crush-kin-ivan-and-mira"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Crush Kin Ivan and Mira",
+     "story": "Crush Kin Ivan and Mira's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Crush Kin Ivan and Mira, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-cue-ball-dutch",
+   "name": "Cue Ball Dutch's Fighting Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fighting-types as Cue Ball Dutch",
+     "story": "Cue Ball Dutch feels the Fighting-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Cue Ball Dutch's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Cue Ball Dutch",
+     "story": "Cue Ball Dutch checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-cue-ball-dutch"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fighting-type leading",
+     "story": "The Fighting-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fighting",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fighting-types in one run",
+     "story": "A whole run of Fighting-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fighting Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Cue Ball Dutch",
+     "story": "Cue Ball Dutch's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Cue Ball Dutch, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-engineer-baxter",
+   "name": "Engineer Baxter's Electric Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Electric-types as Engineer Baxter",
+     "story": "Engineer Baxter feels the Electric-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Engineer Baxter's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Engineer Baxter",
+     "story": "Engineer Baxter checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-engineer-baxter"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Electric-type leading",
+     "story": "The Electric-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.electric",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Electric-types in one run",
+     "story": "A whole run of Electric-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Electric Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Engineer Baxter",
+     "story": "Engineer Baxter's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Engineer Baxter, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-gambler-lucky",
+   "name": "Gambler Lucky's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Gambler Lucky",
+     "story": "Gambler Lucky feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Gambler Lucky's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Gambler Lucky",
+     "story": "Gambler Lucky checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-gambler-lucky"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Gambler Lucky",
+     "story": "Gambler Lucky's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Gambler Lucky, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-gentleman-alfred",
+   "name": "Gentleman Alfred's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Gentleman Alfred",
+     "story": "Gentleman Alfred feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Gentleman Alfred's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Gentleman Alfred",
+     "story": "Gentleman Alfred checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-gentleman-alfred"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Gentleman Alfred",
+     "story": "Gentleman Alfred's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Gentleman Alfred, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-juggler-pierre",
+   "name": "Juggler Pierre's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Juggler Pierre",
+     "story": "Juggler Pierre feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Juggler Pierre's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Juggler Pierre",
+     "story": "Juggler Pierre checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-juggler-pierre"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Juggler Pierre",
+     "story": "Juggler Pierre's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Juggler Pierre, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-lady-cordelia",
+   "name": "Lady Cordelia's Fairy Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fairy-types as Lady Cordelia",
+     "story": "Lady Cordelia feels the Fairy-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Lady Cordelia's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Lady Cordelia",
+     "story": "Lady Cordelia checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-lady-cordelia"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fairy-type leading",
+     "story": "The Fairy-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fairy",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fairy-types in one run",
+     "story": "A whole run of Fairy-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fairy Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Lady Cordelia",
+     "story": "Lady Cordelia's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Lady Cordelia, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-painter-vera",
+   "name": "Painter Vera's Grass Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Grass-types as Painter Vera",
+     "story": "Painter Vera feels the Grass-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Painter Vera's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Painter Vera",
+     "story": "Painter Vera checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-painter-vera"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Grass-type leading",
+     "story": "The Grass-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.grass",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Grass-types in one run",
+     "story": "A whole run of Grass-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Grass Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Painter Vera",
+     "story": "Painter Vera's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Painter Vera, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-poke-maniac-rex",
+   "name": "Poké Maniac Rex's Rock Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Rock-types as Poké Maniac Rex",
+     "story": "Poké Maniac Rex feels the Rock-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Poké Maniac Rex's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Poké Maniac Rex",
+     "story": "Poké Maniac Rex checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-poke-maniac-rex"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Rock-type leading",
+     "story": "The Rock-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.rock",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Rock-types in one run",
+     "story": "A whole run of Rock-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Rock Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Poké Maniac Rex",
+     "story": "Poké Maniac Rex's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Poké Maniac Rex, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-pokemon-breeder-delia",
+   "name": "Pokémon Breeder Delia's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Pokémon Breeder Delia",
+     "story": "Pokémon Breeder Delia feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Pokémon Breeder Delia's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Pokémon Breeder Delia",
+     "story": "Pokémon Breeder Delia checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-pokemon-breeder-delia"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Pokémon Breeder Delia",
+     "story": "Pokémon Breeder Delia's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Pokémon Breeder Delia, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-pokemon-ranger-hal",
+   "name": "Pokémon Ranger Hal's Grass Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Grass-types as Pokémon Ranger Hal",
+     "story": "Pokémon Ranger Hal feels the Grass-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Pokémon Ranger Hal's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Pokémon Ranger Hal",
+     "story": "Pokémon Ranger Hal checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-pokemon-ranger-hal"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Grass-type leading",
+     "story": "The Grass-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.grass",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Grass-types in one run",
+     "story": "A whole run of Grass-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Grass Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Pokémon Ranger Hal",
+     "story": "Pokémon Ranger Hal's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Pokémon Ranger Hal, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-pokemon-ranger-willa",
+   "name": "Pokémon Ranger Willa's Flying Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Flying-types as Pokémon Ranger Willa",
+     "story": "Pokémon Ranger Willa feels the Flying-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Pokémon Ranger Willa's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Pokémon Ranger Willa",
+     "story": "Pokémon Ranger Willa checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-pokemon-ranger-willa"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Flying-type leading",
+     "story": "The Flying-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.flying",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Flying-types in one run",
+     "story": "A whole run of Flying-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Flying Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Pokémon Ranger Willa",
+     "story": "Pokémon Ranger Willa's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Pokémon Ranger Willa, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-psychic-edmund",
+   "name": "Psychic Edmund's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Psychic Edmund",
+     "story": "Psychic Edmund feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Psychic Edmund's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Psychic Edmund",
+     "story": "Psychic Edmund checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-psychic-edmund"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Psychic Edmund",
+     "story": "Psychic Edmund's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Psychic Edmund, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-psychic-lorna",
+   "name": "Psychic Lorna's Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Psychic Lorna",
+     "story": "Psychic Lorna feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Psychic Lorna's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Psychic Lorna",
+     "story": "Psychic Lorna checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-psychic-lorna"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Psychic Lorna",
+     "story": "Psychic Lorna's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Psychic Lorna, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-rocker-axel",
+   "name": "Rocker Axel's Electric Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Electric-types as Rocker Axel",
+     "story": "Rocker Axel feels the Electric-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Rocker Axel's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Rocker Axel",
+     "story": "Rocker Axel checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-rocker-axel"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Electric-type leading",
+     "story": "The Electric-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.electric",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Electric-types in one run",
+     "story": "A whole run of Electric-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Electric Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Rocker Axel",
+     "story": "Rocker Axel's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Rocker Axel, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-ruin-maniac-hadrian",
+   "name": "Ruin Maniac Hadrian's Ground Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ground-types as Ruin Maniac Hadrian",
+     "story": "Ruin Maniac Hadrian feels the Ground-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Ruin Maniac Hadrian's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Ruin Maniac Hadrian",
+     "story": "Ruin Maniac Hadrian checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-ruin-maniac-hadrian"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ground-type leading",
+     "story": "The Ground-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ground",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ground-types in one run",
+     "story": "A whole run of Ground-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ground Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Ruin Maniac Hadrian",
+     "story": "Ruin Maniac Hadrian's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Ruin Maniac Hadrian, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-sailor-murphy",
+   "name": "Sailor Murphy's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Sailor Murphy",
+     "story": "Sailor Murphy feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sailor Murphy's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sailor Murphy",
+     "story": "Sailor Murphy checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-sailor-murphy"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Sailor Murphy",
+     "story": "Sailor Murphy's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sailor Murphy, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-scientist-dr-orson",
+   "name": "Scientist Dr. Orson's Electric Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Electric-types as Scientist Dr. Orson",
+     "story": "Scientist Dr. Orson feels the Electric-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Scientist Dr. Orson's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Scientist Dr. Orson",
+     "story": "Scientist Dr. Orson checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-scientist-dr-orson"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Electric-type leading",
+     "story": "The Electric-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.electric",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Electric-types in one run",
+     "story": "A whole run of Electric-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Electric Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Scientist Dr. Orson",
+     "story": "Scientist Dr. Orson's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Scientist Dr. Orson, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-sis-and-bro-amy-and-tim",
+   "name": "Sis and Bro Amy and Tim's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Sis and Bro Amy and Tim",
+     "story": "Sis and Bro Amy and Tim feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sis and Bro Amy and Tim's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sis and Bro Amy and Tim",
+     "story": "Sis and Bro Amy and Tim checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-sis-and-bro-amy-and-tim"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Sis and Bro Amy and Tim",
+     "story": "Sis and Bro Amy and Tim's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sis and Bro Amy and Tim, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-super-nerd-miles",
+   "name": "Super Nerd Miles's Poison Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Poison-types as Super Nerd Miles",
+     "story": "Super Nerd Miles feels the Poison-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Super Nerd Miles's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Super Nerd Miles",
+     "story": "Super Nerd Miles checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-super-nerd-miles"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Poison-type leading",
+     "story": "The Poison-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.poison",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Poison-types in one run",
+     "story": "A whole run of Poison-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Poison Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Super Nerd Miles",
+     "story": "Super Nerd Miles's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Super Nerd Miles, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-swimmer-kai",
+   "name": "Swimmer Kai's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Swimmer Kai",
+     "story": "Swimmer Kai feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Swimmer Kai's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Swimmer Kai",
+     "story": "Swimmer Kai checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-swimmer-kai"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Swimmer Kai",
+     "story": "Swimmer Kai's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Swimmer Kai, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-swimmer-marina",
+   "name": "Swimmer Marina's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Swimmer Marina",
+     "story": "Swimmer Marina feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Swimmer Marina's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Swimmer Marina",
+     "story": "Swimmer Marina checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-swimmer-marina"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Swimmer Marina",
+     "story": "Swimmer Marina's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Swimmer Marina, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-swimmer-finn",
+   "name": "Swimmer Finn's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Swimmer Finn",
+     "story": "Swimmer Finn feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Swimmer Finn's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Swimmer Finn",
+     "story": "Swimmer Finn checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-swimmer-finn"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Swimmer Finn",
+     "story": "Swimmer Finn's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Swimmer Finn, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-swimmer-coral",
+   "name": "Swimmer Coral's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Swimmer Coral",
+     "story": "Swimmer Coral feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Swimmer Coral's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Swimmer Coral",
+     "story": "Swimmer Coral checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-swimmer-coral"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Swimmer Coral",
+     "story": "Swimmer Coral's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Swimmer Coral, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-tamer-garrett",
+   "name": "Tamer Garrett's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Tamer Garrett",
+     "story": "Tamer Garrett feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tamer Garrett's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tamer Garrett",
+     "story": "Tamer Garrett checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-tamer-garrett"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tamer Garrett",
+     "story": "Tamer Garrett's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tamer Garrett, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-team-rocket-grunt-boris",
+   "name": "Team Rocket Grunt Boris's Dark Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Dark-types as Team Rocket Grunt Boris",
+     "story": "Team Rocket Grunt Boris feels the Dark-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Team Rocket Grunt Boris's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Team Rocket Grunt Boris",
+     "story": "Team Rocket Grunt Boris checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-team-rocket-grunt-boris"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Dark-type leading",
+     "story": "The Dark-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.dark",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Dark-types in one run",
+     "story": "A whole run of Dark-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Dark Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Team Rocket Grunt Boris",
+     "story": "Team Rocket Grunt Boris's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Team Rocket Grunt Boris, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-team-rocket-grunt-jessa",
+   "name": "Team Rocket Grunt Jessa's Poison Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Poison-types as Team Rocket Grunt Jessa",
+     "story": "Team Rocket Grunt Jessa feels the Poison-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Team Rocket Grunt Jessa's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Team Rocket Grunt Jessa",
+     "story": "Team Rocket Grunt Jessa checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-team-rocket-grunt-jessa"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Poison-type leading",
+     "story": "The Poison-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.poison",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Poison-types in one run",
+     "story": "A whole run of Poison-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Poison Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Team Rocket Grunt Jessa",
+     "story": "Team Rocket Grunt Jessa's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Team Rocket Grunt Jessa, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-tuber-pip",
+   "name": "Tuber Pip's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Tuber Pip",
+     "story": "Tuber Pip feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tuber Pip's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tuber Pip",
+     "story": "Tuber Pip checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-tuber-pip"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tuber Pip",
+     "story": "Tuber Pip's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tuber Pip, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-tuber-dot",
+   "name": "Tuber Dot's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Tuber Dot",
+     "story": "Tuber Dot feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tuber Dot's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tuber Dot",
+     "story": "Tuber Dot checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-tuber-dot"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tuber Dot",
+     "story": "Tuber Dot's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tuber Dot, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-tuber-rudy",
+   "name": "Tuber Rudy's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Tuber Rudy",
+     "story": "Tuber Rudy feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tuber Rudy's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tuber Rudy",
+     "story": "Tuber Rudy checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-tuber-rudy"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tuber Rudy",
+     "story": "Tuber Rudy's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tuber Rudy, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-tuber-sunny",
+   "name": "Tuber Sunny's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Tuber Sunny",
+     "story": "Tuber Sunny feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tuber Sunny's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tuber Sunny",
+     "story": "Tuber Sunny checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-tuber-sunny"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tuber Sunny",
+     "story": "Tuber Sunny's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tuber Sunny, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-twins-nia-and-mia",
+   "name": "Twins Nia and Mia's Fairy Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fairy-types as Twins Nia and Mia",
+     "story": "Twins Nia and Mia feels the Fairy-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Twins Nia and Mia's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Twins Nia and Mia",
+     "story": "Twins Nia and Mia checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-twins-nia-and-mia"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fairy-type leading",
+     "story": "The Fairy-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fairy",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fairy-types in one run",
+     "story": "A whole run of Fairy-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fairy Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Twins Nia and Mia",
+     "story": "Twins Nia and Mia's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Twins Nia and Mia, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-young-couple-dan-and-eri",
+   "name": "Young Couple Dan and Eri's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Young Couple Dan and Eri",
+     "story": "Young Couple Dan and Eri feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Young Couple Dan and Eri's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Young Couple Dan and Eri",
+     "story": "Young Couple Dan and Eri checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-young-couple-dan-and-eri"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Young Couple Dan and Eri",
+     "story": "Young Couple Dan and Eri's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Young Couple Dan and Eri, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-beauty-bianca",
+   "name": "Beauty Bianca's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Beauty Bianca",
+     "story": "Beauty Bianca feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Beauty Bianca's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Beauty Bianca",
+     "story": "Beauty Bianca checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-beauty-bianca"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Beauty Bianca",
+     "story": "Beauty Bianca's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Beauty Bianca, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-aroma-lady-rosalind",
+   "name": "Aroma Lady Rosalind's Grass Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Grass-types as Aroma Lady Rosalind",
+     "story": "Aroma Lady Rosalind feels the Grass-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Aroma Lady Rosalind's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Aroma Lady Rosalind",
+     "story": "Aroma Lady Rosalind checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-aroma-lady-rosalind"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Grass-type leading",
+     "story": "The Grass-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.grass",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Grass-types in one run",
+     "story": "A whole run of Grass-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Grass Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Aroma Lady Rosalind",
+     "story": "Aroma Lady Rosalind's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Aroma Lady Rosalind, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "npc-cool-couple-leon-and-sky",
+   "name": "Cool Couple Leon and Sky's Normal Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Normal-types as Cool Couple Leon and Sky",
+     "story": "Cool Couple Leon and Sky feels the Normal-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Cool Couple Leon and Sky's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Cool Couple Leon and Sky",
+     "story": "Cool Couple Leon and Sky checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-npc-cool-couple-leon-and-sky"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Normal-type leading",
+     "story": "The Normal-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.normal",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Normal-types in one run",
+     "story": "A whole run of Normal-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Normal Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Cool Couple Leon and Sky",
+     "story": "Cool Couple Leon and Sky's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Cool Couple Leon and Sky, Master"
+     }
+    }
+   ]
   }
  ],
  "runQuests": [

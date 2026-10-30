@@ -145,10 +145,24 @@
  },
  "minThemePool": 3,
  "dualTypeWeight": 3,
+ "typeRarity": {
+  "normal": 1.2, "bug": 1.1, "water": 1.1, "grass": 1.1, "flying": 1.1,
+  "fire": 0.9, "electric": 0.9, "ground": 0.9, "poison": 0.9, "rock": 0.9, "fighting": 0.9,
+  "psychic": 0.8, "dark": 0.75, "ghost": 0.7, "steel": 0.7, "ice": 0.7, "fairy": 0.75, "dragon": 0.5
+ },
+ "comboRarity": {
+  "dragon/steel": 0.5, "dragon/ghost": 0.6, "dragon/ice": 0.6, "dragon/fairy": 0.6, "dragon/dark": 0.6,
+  "dragon/electric": 0.6, "dragon/fire": 0.6, "dragon/psychic": 0.6, "dragon/flying": 0.7, "dragon/ground": 0.7, "dragon/water": 0.7,
+  "fairy/steel": 0.6, "fighting/steel": 0.6, "ghost/steel": 0.6, "ice/steel": 0.6, "psychic/steel": 0.6, "dark/steel": 0.6,
+  "ghost/psychic": 0.7, "dark/ghost": 0.7, "dark/psychic": 0.7, "dark/ice": 0.7, "fairy/psychic": 0.7, "fairy/ghost": 0.7,
+  "fire/ghost": 0.7, "fire/psychic": 0.7, "fire/ice": 0.6, "electric/ice": 0.6, "ground/ice": 0.6, "fire/water": 0.6,
+  "grass/steel": 0.6, "fighting/ghost": 0.7, "fighting/psychic": 0.7, "fighting/dark": 0.7, "fire/steel": 0.6, "electric/steel": 0.6, "poison/steel": 0.6
+ },
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
   "levelBst": { "base": 290, "perLevel": 9, "retries": 10 },
- "opening": { "encounters": 4, "maxBaseStats": 340, "levelOffset": 3, "minLevel": 2, "softMovesUntilLevel": 15 },
+ "opening": { "encounters": 4, "maxBaseStats": 340, "levelOffset": 3, "minLevel": 2, "softMovesUntilLevel": 15,
+  "maxLevel": 4 },
  "rival": { "stage": 1, "level": 5, "starters": ["bulbasaur", "charmander", "squirtle", "chikorita", "cyndaquil", "totodile", "treecko", "torchic", "mudkip"] },
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
@@ -159,16 +173,16 @@
   "trainerBabyLevel": 15
  },
  "harderRarityWeights": {
-  "common": 40,
-  "uncommon": 34,
-  "rare": 15.3,
-  "epic": 1.7
+  "common": 50,
+  "uncommon": 30,
+  "rare": 16,
+  "epic": 2.5
  },
  "bossRarityWeights": {
-  "common": 20,
-  "uncommon": 38.25,
-  "rare": 25.5,
-  "epic": 4.25
+  "common": 38,
+  "uncommon": 33,
+  "rare": 22,
+  "epic": 7
  },
  "campaigns": [
   {
@@ -331,6 +345,7 @@
   "checkMax": 95,
   "revealIntelligence": 50,
   "soldGift": 500,
+  "itemRarityWeights": { "common": 60, "uncommon": 25.5, "rare": 8.5, "epic": 0.85 },
   "restPerStage": 2,
   "trainerMoneyPerLevel": 24,
   "explorerItems": [

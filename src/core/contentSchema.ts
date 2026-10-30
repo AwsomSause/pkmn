@@ -1001,7 +1001,7 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('catch'),
     multiplier: z.number().positive(),
-    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk']).optional(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk', 'dream', 'beast', 'safari', 'sport', 'flyer', 'weight100', 'weight300']).optional(),
     after: z.enum(['friend', 'luxury', 'heal']).optional(),
   }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
@@ -1205,7 +1205,7 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   /** At or below `below`: moves first next turn (Custap). */
   z.object({ hook: z.literal('berryFirst'), below: z.number().positive().max(1) }),
   /** Halves one super-effective hit of this type (`any` = any hit of the type, for Chilan). */
-  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional() }),
+  z.object({ hook: z.literal('berryResist'), type: TypeNameSchema, any: z.boolean().optional(), /** Share of the damage that still gets through (default 0.5; Hyper Berries 0.25). */ through: z.number().positive().max(1).optional() }),
   /** Hit by a super-effective move: heal a share of max HP (Enigma). */
   z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
   /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
@@ -1791,6 +1791,10 @@ export const BalanceSchema = z.object({
   minThemePool: z.number().int().min(1),
   /** Weight multiplier for species that have both of the theme's types. */
   dualTypeWeight: z.number().min(1),
+  /** Wild odds multiplier per type (missing = 1): a species uses the average of its types. Lower = rarer. */
+  typeRarity: z.record(z.string(), z.number().min(0.05).max(2)).default({}),
+  /** Extra odds multiplier for a dual-type combo, keyed "a/b" in alphabetical order (missing = 1). */
+  comboRarity: z.record(z.string(), z.number().min(0.05).max(2)).default({}),
   harderRarityWeights: z.record(RaritySchema, z.number().min(0)),
   bossRarityWeights: z.record(RaritySchema, z.number().min(0)),
   money: z.object({
@@ -1845,6 +1849,8 @@ export const BalanceSchema = z.object({
     revealIntelligence: z.number().int(),
     /** Money for an event gift nobody can take (a held item with no free holder, or one you hold the most of). */
     soldGift: z.number().int().min(0),
+    /** Odds of each rarity when an event hands out "one of" a list of items (plain bag items count as common). */
+    itemRarityWeights: z.record(RaritySchema, z.number().min(0)),
     /** Rest spots (stop "rest") placed on every stage. */
     restPerStage: z.number().int().min(0),
     /** Prize money per level of the top Pokémon for an event's trainer (one with no trainer class). */
@@ -1909,7 +1915,7 @@ export const BalanceSchema = z.object({
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
-  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
+  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0), maxLevel: z.number().int().min(1) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */
@@ -2128,6 +2134,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
   /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
+  /** An NPC trainer joins your roster for good (unlocked when the run ends; the run records it in `itemCounters["recruit:<id>"]`). */
+  z.object({ kind: z.literal('recruit'), trainer: z.string().min(1) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;

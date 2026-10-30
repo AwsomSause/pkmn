@@ -255,6 +255,11 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   // The Research Directive: the studied type's counter reached the goal.
   const directive = counts ? directiveProgress(content, run) : null;
   if (counts) {
+    // Trainers recruited by map events (EventEffect "recruit") join the roster for good.
+    for (const key of Object.keys(run.itemCounters ?? {})) {
+      const id = key.startsWith('recruit:') ? key.slice('recruit:'.length) : '';
+      if (id && content.archetypes.has(id) && !profile.unlockedArchetypes.includes(id)) profile.unlockedArchetypes.push(id);
+    }
     const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0, ...(runQuestDone ? { runQuestsDone: (run.log.counters.runQuestsDone ?? 0) + 1 } : {}) };
     for (const [name, value] of Object.entries(runCounters)) {
       if (value <= 0) continue;

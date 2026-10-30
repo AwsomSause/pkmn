@@ -54,15 +54,27 @@ const ORIGINS: Record<string, string> = {
   alain: 'an x', 'ash-kalos': 'an x', ash: 'an k', 'todd-snap': 'an k', trace: 'an k', trevor: 'an k',
 };
 
+/** Ordinary NPC trainers (ids `npc-<class>-<name>`): the game and region their class debuted in (Kanto Red/Blue unless listed). */
+const NPC_ORIGINS: Record<string, string> = {
+  cooltrainer: 'rse h', lady: 'rse h', 'pokemon-breeder': 'rse h', 'ruin-maniac': 'rse h', 'sis-and-bro': 'rse h', tuber: 'rse h', twins: 'rse h', 'young-couple': 'rse h',
+  'aroma-lady': 'rse h', 'crush-girl': 'rse h', 'crush-kin': 'rse h', 'pokemon-ranger': 'dppt s', painter: 'dppt s', 'cool-couple': 'bw u',
+};
+const originOf = (id: string): string | undefined => {
+  if (ORIGINS[id]) return ORIGINS[id];
+  if (!id.startsWith('npc-')) return undefined;
+  const cls = Object.keys(NPC_ORIGINS).find((c) => id.startsWith(`npc-${c}-`));
+  return cls ? NPC_ORIGINS[cls] : 'rby k';
+};
+
 export function trainerGame(a: Archetype, byId: (id: string) => Archetype | undefined = () => undefined): Game {
   const base = a.evolvedFrom ? byId(a.evolvedFrom) : undefined;
-  const code = ORIGINS[(base ?? a).id];
+  const code = originOf((base ?? a).id);
   return code ? (G[code.split(' ')[0]!] ?? 'Other') : 'Other';
 }
 
 export function trainerRegion(a: Archetype, byId: (id: string) => Archetype | undefined = () => undefined): Region {
   const base = a.evolvedFrom ? byId(a.evolvedFrom) : undefined;
-  const code = ORIGINS[(base ?? a).id];
+  const code = originOf((base ?? a).id);
   return code ? (R[code.split(' ')[1]!] ?? 'Other') : 'Other';
 }
 

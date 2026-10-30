@@ -39,6 +39,7 @@ function win(run: RunState): TurnResult {
   let turn: TurnResult | null = null;
   for (let i = 0; i < 80 && run.phase === 'battle'; i++) {
     run.party[0]!.hp = 1_000_000;
+    run.party[0]!.moves[0]!.pp = 64;
     turn = takeTurn(content, run, { kind: 'move', index: 0 });
     run = turn.run;
   }
