@@ -64,3 +64,26 @@ describe('story items', () => {
     expect(chooseEvent(content, run, 'test-event', 0).run.money).toBe(money + 3000);
   });
 });
+
+describe('berries and Pal Pad', () => {
+  it('Razz, Nanab and Pinap Berries work through the encounter system', () => {
+    for (const id of ['razz-berry', 'nanab-berry', 'pinap-berry', 'pal-pad']) expect(getCatalogEntry(content, id).status).toBe('supported');
+  });
+  it('Pal Pad gives +5 levels to the first catch each stage only', async () => {
+    const { palPadLevels } = await import('../../src/core/mapItems');
+    const run = newRun('pal-pad');
+    take(run, 'pal-pad');
+    expect(palPadLevels(content, run)).toBe(5);
+    expect(palPadLevels(content, run)).toBe(0);
+  });
+  it('Pinap Berry drops a cheap item only after a catch, once', async () => {
+    const { catchDrop } = await import('../../src/core/mapItems');
+    const run = newRun('pinap');
+    const stock = [{ item: 'potion', price: 100 }, { item: 'x', price: 900 }, { item: 'y', price: 500 }];
+    run.itemCounters = { 'pinap-drop': 1 };
+    expect(catchDrop(run, stock, true)).toBe('potion');
+    expect(catchDrop(run, stock, true)).toBeNull();
+    run.itemCounters = { 'pinap-drop': 1 };
+    expect(catchDrop(run, stock, false)).toBeNull();
+  });
+});

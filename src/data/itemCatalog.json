@@ -5395,10 +5395,20 @@
   "max": 3,
   "how": "use",
   "icon": "razz-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 1.5
+    }
+   ]
+  }
  },
  {
   "id": "nanab-berry",
@@ -5410,10 +5420,19 @@
   "max": 3,
   "how": "use",
   "icon": "nanab-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "freeTurn"
+    }
+   ]
+  }
  },
  {
   "id": "pinap-berry",
@@ -5425,10 +5444,19 @@
   "max": 3,
   "how": "use",
   "icon": "pinap-berry",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "drop"
+    }
+   ]
+  }
  },
  {
   "id": "bluk-berry",
@@ -12407,10 +12435,19 @@
   "max": 1,
   "how": "passive",
   "icon": "pal-pad",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "palPad",
+     "levels": 5
+    }
+   ]
+  }
  },
  {
   "id": "vs-recorder",

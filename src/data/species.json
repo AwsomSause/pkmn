@@ -116074,6 +116074,109 @@
   "weight": 40
  },
  {
+  "id": "minior-core",
+  "dex": 774,
+  "name": "Core Minior",
+  "generation": 7,
+  "types": [
+   "rock",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 100,
+   "def": 60,
+   "spa": 100,
+   "spd": 60,
+   "spe": 120
+  },
+  "catchRate": 30,
+  "baseExp": 154,
+  "growthRate": "medium-slow",
+  "evolutionStage": 1,
+  "evolvesFrom": null,
+  "tags": [],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 3,
+    "move": "defense-curl"
+   },
+   {
+    "level": 8,
+    "move": "rollout"
+   },
+   {
+    "level": 10,
+    "move": "confuse-ray"
+   },
+   {
+    "level": 15,
+    "move": "swift"
+   },
+   {
+    "level": 17,
+    "move": "ancient-power"
+   },
+   {
+    "level": 22,
+    "move": "self-destruct"
+   },
+   {
+    "level": 24,
+    "move": "stealth-rock"
+   },
+   {
+    "level": 29,
+    "move": "take-down"
+   },
+   {
+    "level": 31,
+    "move": "autotomize"
+   },
+   {
+    "level": 36,
+    "move": "cosmic-power"
+   },
+   {
+    "level": 38,
+    "move": "power-gem"
+   },
+   {
+    "level": 43,
+    "move": "double-edge"
+   },
+   {
+    "level": 45,
+    "move": "shell-smash"
+   },
+   {
+    "level": 50,
+    "move": "explosion"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "774",
+   "icon": "7/774",
+   "cry": "774"
+  },
+  "abilities": {
+   "normal": [
+    "shields-down"
+   ],
+   "hidden": null
+  },
+  "weight": 40,
+  "form": {
+   "kind": "battle",
+   "base": "minior"
+  }
+ },
+ {
   "id": "komala",
   "dex": 775,
   "name": "Komala",

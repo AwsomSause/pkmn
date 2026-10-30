@@ -1117,6 +1117,8 @@ export const EncounterModSchema = z.discriminatedUnion('mod', [
   z.object({ mod: z.literal('species'), species: z.string(), percent: z.number().positive().max(100) }),
   /** The wild Pokémon loses its first turn. */
   z.object({ mod: z.literal('freeTurn') }),
+  /** Catching the wild Pokémon also drops a cheap Bag item (Pinap Berry). */
+  z.object({ mod: z.literal('drop') }),
   /** The wild Pokémon starts with lowered Speed. */
   z.object({ mod: z.literal('foeSpeed'), stages: z.number().int() }),
   /** Ball throws: catch-rate multiplier, only at these types or at shiny Pokémon when given. */
@@ -1191,6 +1193,8 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   z.object({ perk: z.literal('eventKey') }),
   /** Tidal Bell, Clear Bell: this legendary is chosen whenever an event could offer it. */
   z.object({ perk: z.literal('favorSpecies'), species: z.string() }),
+  /** Pal Pad: the first Pokémon caught each stage joins with this many extra levels. */
+  z.object({ perk: z.literal('palPad'), levels: z.number().int().positive() }),
   /** Prop Case: Contest stops give double Charisma. */
   z.object({ perk: z.literal('doubleContest') }),
   /** Explorer Kit: every finished event stop gives one more item. */
