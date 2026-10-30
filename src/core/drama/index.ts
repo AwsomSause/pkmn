@@ -13,6 +13,7 @@ import { currentEnemy } from '../state';
 import { calcStats } from '../pokemon';
 import type { Rival } from '../story/schema';
 import { DRAMA, VOICES, pickIndex, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
+import { rivalBond } from './bond';
 import { libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 
 export * from './schema';
@@ -110,7 +111,9 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
   const battle = run.battle;
   if (!battle || battle.kind !== 'trainer') return [];
   const state = battle.drama;
-  const factor = DRAMA.config.frequency[frequency];
+  // Decisions (what happens, what is recorded) never depend on the setting; it only hides lines. 'high' allows a bigger budget.
+  const factor = frequency === 'high' ? DRAMA.config.frequency.high : DRAMA.config.frequency.normal;
+  const hides = (tier: Tier) => frequency === 'off' || (frequency === 'low' && RANK(tier) < RANK('major'));
   const cls = battleClass(battle);
   const rival = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   const voice = voiceFor(battle, rival);
@@ -131,7 +134,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     if (n === 3) habit = { at: i, moveId: e.moveId, id: `${key}:t${turn}:e${i}:playerHabit` };
   }
 
-  const ctx: PlanCtx = { content, run, battle, prior, events, drama: dramaEvents, rival, voice, cls, turn, key, enemy, foeMon, habit, enemyName: name(enemy.speciesId), foeName: name(foeMon?.speciesId) };
+  const ctx: PlanCtx = { content, run, battle, prior, events, drama: dramaEvents, rival, voice, cls, turn, key, enemy, foeMon, habit, enemyName: name(enemy.speciesId), foeName: name(foeMon?.speciesId), bond: rivalBond(rival) };
   const candidates: Candidate[] = [];
   for (const ev of dramaEvents) {
     if (state.seen.includes(ev.id)) continue;
@@ -158,10 +161,9 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
   let thisTurn = 0;
   for (const c of candidates) {
     const climactic = c.tier === 'climactic';
-    if (factor === 0) continue;
     if (!climactic) {
       if (state.seen.includes('quiet')) continue;
-      if (state.lines >= budget) continue;
+      if (state.lines >= budget && !c.def) continue;
       if (thisTurn >= (opening ? 2 : 1)) continue;
       if (c.tier !== 'major' && turn - state.lastLineTurn < DRAMA.config.minGapTurns) continue;
     }
@@ -185,6 +187,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     thisTurn += 1;
     if (c.def) recordLibraryEvent(ctx, c);
     if (c.def?.id === 'calmBeforeFinish') state.seen.push('quiet');
+    if (hides(c.tier)) continue;
     lines.push({ at: c.ev.at, speaker, text, category: c.category, tier: c.tier, voice, eventId: c.ev.id, cue: c.cue });
   }
   return lines.sort((a, b) => a.at - b.at);
