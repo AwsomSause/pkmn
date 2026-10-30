@@ -17,6 +17,8 @@ export function sceneForRun(run: RunState): string {
       return 'Reward';
     case 'expedition':
       return 'Expedition';
+    case 'minigame':
+      return 'Minigame';
     case 'over':
       return 'GameOver';
   }

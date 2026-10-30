@@ -15,6 +15,7 @@ import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
+import * as Mini from '../core/minigame/flow';
 import * as Run from '../core/run';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
@@ -173,6 +174,22 @@ export class GameSession {
 
   extractExpedition(): RunState {
     return this.setRun(Exp.extractExpedition(this.content, this.requireRun()));
+  }
+
+  beginMinigame(sideId: string, tier: number): RunState {
+    return this.setRun(Mini.beginMinigame(this.content, this.requireRun(), sideId, tier));
+  }
+
+  minigameAct(cellId: string): RunState {
+    return this.setRun(Mini.minigameAct(this.content, this.requireRun(), cellId));
+  }
+
+  minigameTick(): RunState {
+    return this.setRun(Mini.minigameTick(this.content, this.requireRun()));
+  }
+
+  leaveMinigame(): RunState {
+    return this.setRun(Mini.leaveMinigame(this.requireRun()));
   }
 
   private setRun(run: RunState): RunState {

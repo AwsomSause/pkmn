@@ -9,6 +9,7 @@ import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
+import { minigamePreview } from '../core/minigame/flow';
 import { fishingOffer, raidPreview, totemPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { blindMap } from '../core/rules';
@@ -48,8 +49,9 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   totem: { color: 0xe8a020, glyph: 'T' },
   event: { color: 0xd89830, glyph: '!' },
   expedition: { color: 0x38b878, glyph: 'E' },
+  minigame: { color: 0x58c0e8, glyph: 'G' },
 };
-const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition' };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame' };
 /** A hidden event stop: a grey "?" until you reach it. */
 const HIDDEN_STYLE = { color: 0x6b5a73, glyph: '?' };
 
@@ -436,6 +438,10 @@ export class MapScene extends Phaser.Scene {
           if (!option.side.used) this.openExpedition(option.side.id);
           break;
         }
+        if (option.side.kind === 'minigame') {
+          if (!option.side.used) this.openMinigame(option.side.id);
+          break;
+        }
         const message = session.visitSide(option.side.id);
         if (option.side.kind === 'heal') {
           playSfx(this, 'se.level_up', 0.6);
@@ -526,6 +532,40 @@ export class MapScene extends Phaser.Scene {
       rows.push({ action: null, itemId: itemId ?? '', title: source, text, problem: text });
     }
     return rows;
+  }
+
+  /** A minigame stop: shows the rules and the attempts left, and the pick of a difficulty starts the game. */
+  private openMinigame(sideId: string): void {
+    const { session } = services();
+    const pv = minigamePreview(session.content, session.run!, sideId);
+    const picker: Picker = new Picker(this, {
+      title: `${pv.name} — ${pv.attemptsLeft} attempt${pv.attemptsLeft === 1 ? '' : 's'} left`,
+      columns: 1,
+      rowHeight: 120,
+      rows: pv.tiers.map((t) => ({
+        problem: pv.attemptsLeft > 0 ? null : 'No attempts left',
+        hint: `${pv.instructions} ${pv.scoring}`,
+        draw: (scene, box, w) => {
+          box.add(scene.add.text(16, 8, `${pv.name}  ·  ${t.label}`, textStyle(22)));
+          box.add(scene.add.text(16, 40, `${pv.instructions} ${pv.scoring}`, textStyle(15, '#ffd0a0', { wordWrap: { width: w - 32 } })));
+          box.add(scene.add.text(16, 92, `${pv.medals}  ·  Best: ${pv.best}`, textStyle(14, '#a0d0ff', { wordWrap: { width: w - 32 } })));
+        },
+      })),
+      onSelect: (i) => {
+        picker.close();
+        this.picker = null;
+        this.busy = true;
+        playSfx(this, 'ui.select');
+        const run = session.beginMinigame(sideId, i);
+        this.cameras.main.fadeOut(250);
+        this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   /** An expedition gate: shows the briefing (party rules, route length, finale, rewards), then asks to commit. */
