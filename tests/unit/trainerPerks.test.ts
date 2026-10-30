@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { getArchetype, healingMultiplier } from '../../src/core/archetypes';
 import { calcStats, createPokemon, getSpecies } from '../../src/core/pokemon';
-import { chooseStarter, createRun, fishingOffer, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
+import { chooseStarter, createRun, fishingOffer, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, shopSaleItem, withdrawFromBox } from '../../src/core/run';
 import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
 import { applyHype, createBattle } from '../../src/core/battle/engine';
 import { battleTypes } from '../../src/core/battle/transform';
@@ -11,7 +11,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
-  hypeMeterOf, thirdBossLevels, doubleBattleRewardPerk, singleBattleXpPerk, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  hypeMeterOf, thirdBossLevels, doubleBattleRewardPerk, singleBattleXpPerk, shopRefreshPerk, statusLengthPerk, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind, bonusRewardChancePerk, fishingRareTriesPerk,
@@ -718,6 +718,21 @@ describe('trainer perks, batch L (Lana to Lysandre)', () => {
         expect(singleBattleXpPerk(perks(id))).toBeCloseTo(0.9);
       }
       expect(singleBattleXpPerk(perks('hop'))).toBe(1);
+    });
+
+    it('Kurt, Blaine and Plumeria: slower shop sale, longer burn and poison', () => {
+      expect(shopRefreshPerk(perks('kurt'))).toBeCloseTo(1.25);
+      expect(statusLengthPerk(perks('blaine-lgpe'), 'brn')).toBe(2);
+      expect(statusLengthPerk(perks('blaine-lgpe'), 'psn')).toBe(0);
+      expect(statusLengthPerk(perks('plumeria'), 'psn')).toBe(1);
+    });
+
+    it('the shop puts one open item on sale, the same one for the same seed and window', () => {
+      const run = start('red');
+      const item = shopSaleItem(content, run);
+      expect(item).toBe(shopSaleItem(content, run));
+      const entry = content.shop.find((e) => e.item === item);
+      if (entry) expect(shopPrice(content, run, entry)).toBeLessThan(entry.price);
     });
 
     it("Meteor's Prophecy: a bonus type adds a second type without duplicating or touching the species", () => {
