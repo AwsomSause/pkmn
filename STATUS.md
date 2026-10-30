@@ -13,6 +13,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - M8.9-0 story foundation (domain events, effect ledger, cues, histories, Story Log).
 - M8.9 Hyper Phase 1 slices 1, 2, 3, 4, 6.
 - Untitled doc Phase A: drafts offer ≤1 attribute item; base-stat sanity test (tier weights, Mega Stone gating already existed).
+- Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
 - M9 battle animations + settings; boss teams (229 bosses).
 
 ## In progress / next
