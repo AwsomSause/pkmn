@@ -40,7 +40,8 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
-import { battleTrack, victoryTrack } from '../core/presentation/battleMusic';
+import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
+import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
@@ -122,6 +123,7 @@ const tween = (scene: Phaser.Scene, config: Phaser.Types.Tweens.TweenBuilderConf
 export class BattleScene extends Phaser.Scene {
   private message!: Phaser.GameObjects.Text;
   /** Battle log (catalog #115): the last lines said, reopened with the H key. Presentation only. */
+  private weatherLayer: WeatherLayer | null = null;
   private history: string[] = [];
   private historyView: Phaser.GameObjects.Container | null = null;
   private menu: Menu | null = null;
@@ -185,7 +187,8 @@ export class BattleScene extends Phaser.Scene {
     // Lazy music: the GB Sounds loop if owned, and the victory fanfare this battle would end with.
     if (run?.battle) {
       const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
-      queueAssets(this, [...gb, victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+      const raid = this.raidTrack(run.battle);
+      queueAssets(this, [...WEATHER_ASSET_IDS, ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
     }
   }
 
@@ -203,7 +206,7 @@ export class BattleScene extends Phaser.Scene {
     playMusic(
       this,
       battleTrack({
-        raidTrack: this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? null,
+        raidTrack: this.raidTrack(battle),
         trainer: battle.kind === 'trainer',
         gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
       }),
@@ -247,6 +250,8 @@ export class BattleScene extends Phaser.Scene {
       event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
       shadowFoe: Boolean(envFoe?.shadow),
     }), this.motion);
+    this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
+    this.weatherLayer.set(run.battle?.weather?.id ?? null);
     this.fieldBase = this.field.length;
     this.fx = new BattleFx(this, {
       field: this.field,
@@ -670,6 +675,13 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
+  /** The raid or Totem song (presentation only). */
+  private raidTrack(battle: RunState['battle'] & object): string | null {
+    const { content } = services().session;
+    const tier = battle.raid ? content.raids.raids.find((r) => r.id === battle.raid!.id)?.tier ?? 1 : null;
+    return raidMusic(tier, Boolean(battle.totem), battle.raid?.id ?? 'totem');
+  }
+
   private raidArena(battle: RunState['battle'] & object): string | null {
     const { content } = services().session;
     let key: string | null = null;
@@ -1463,6 +1475,12 @@ export class BattleScene extends Phaser.Scene {
       const mon = side ? this.shown[side] : null;
       let preText: string | null = null;
       switch (e.type) {
+        case 'weather':
+          this.weatherLayer?.set(e.weather);
+          break;
+        case 'weatherEnd':
+          this.weatherLayer?.set(null);
+          break;
         case 'focus':
           this.focusOn(e.side, e.uid);
           break;

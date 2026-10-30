@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { battleTrack, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { battleTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
 
 describe('battle music', () => {
@@ -14,6 +15,22 @@ describe('battle music', () => {
     expect(victoryTrack({ trainer: true, boss: true })).toBe('bgm.victory_leader');
     expect(victoryTrack({ trainer: true, boss: false })).toBe('bgm.victory_trainer');
     expect(victoryTrack({ trainer: false, boss: false })).toBe('bgm.victory_wild');
+  });
+});
+
+describe('raid music', () => {
+  it('tier picks the set, the raid id picks a stable variant, every track is in the catalog', () => {
+    expect(raidMusic(null, false, 'x')).toBeNull();
+    expect(raidMusic(1, false, 'a')).toMatch(/^bgm\.raid\.basic/);
+    expect(raidMusic(3, false, 'a')).toMatch(/^bgm\.raid\.ultra/);
+    expect(raidMusic(4, false, 'a')).toMatch(/^bgm\.raid\.max/);
+    expect(raidMusic(6, false, 'a')).toMatch(/^bgm\.raid\.tera/);
+    expect(raidMusic(null, true, 'totem')).toMatch(/^bgm\.raid\.tera/);
+    expect(raidMusic(4, false, 'den-7')).toBe(raidMusic(4, false, 'den-7'));
+    const seen = new Set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((k) => raidMusic(4, false, k)));
+    expect(seen.size).toBeGreaterThan(1);
+    const ids = new Set(FIXED_ASSETS.map((a) => a.id));
+    for (const id of RAID_TRACK_IDS) expect(ids.has(id)).toBe(true);
   });
 });
 
