@@ -45,6 +45,8 @@ import {
   ABSORB,
   AURAS,
   ENTRY_BOOST,
+  UNTRACEABLE,
+  SPREADS_ON_CONTACT,
   PRIORITY_GUARD,
   TYPE_BOOST,
   CONTACT_HURT,
@@ -617,7 +619,7 @@ function switchOutAbility(ctx: BattleContext, mon: PokemonInstance): void {
 // ---------- abilities ----------
 
 function abilityIn(ctx: BattleContext, c: Combatant): string | null {
-  return abilityOf(ctx.content, c.mon);
+  return c.vol.abilityOverride ?? abilityOf(ctx.content, c.mon);
 }
 
 /** The target's ability as the attacker's move sees it: Mold Breaker ignores it. */
@@ -674,6 +676,16 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
     announce(c, ability, events);
     ctx.battle.terrain = { id: terrain, turns: 5 };
     events.push({ type: 'terrain', terrain });
+    return;
+  }
+  if (ability === 'trace') {
+    const foe = other.mon.hp > 0 ? abilityIn(ctx, other) : null;
+    if (foe && !UNTRACEABLE.has(foe)) {
+      announce(c, ability, events);
+      c.vol.abilityOverride = foe;
+      announce(c, foe, events);
+      entryAbility(ctx, c, other, events);
+    }
     return;
   }
   const entryStat = ENTRY_BOOST[ability];
@@ -1329,6 +1341,11 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
 
   const targetsEnemy = move.target === 'enemy';
   const userAbility = abilityIn(ctx, user);
+  // Protean and Libero: the first move after coming in changes its type to the move's.
+  if ((userAbility === 'protean' || userAbility === 'libero') && user.vol.typeShift === null && !move.flags.includes('typeless')) {
+    announce(user, userAbility, events);
+    user.vol.typeShift = move.type;
+  }
   const foeAbility = targetsEnemy ? targetAbility(ctx, user, target) : null;
   const noGuard = userAbility === 'no-guard' || abilityIn(ctx, target) === 'no-guard';
   // A hidden target can only be hit by the moves that reach it (Earthquake hits Dig), or with No Guard.
@@ -1432,7 +1449,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
       power = teraPower(ctx.battle, user.mon, { ...move, type: moveType }, power);
-      const stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
+      let stab = move.flags.includes('typeless') ? 1 : stabMultiplier(content, ctx.battle, user.mon, moveType);
+      if (stab === 1 && user.vol.typeShift === moveType) stab = content.ruleset.stabMultiplier;
       if (fx.doubleBelowHalf && target.mon.hp * 2 <= targetStats.hp) power *= 2;
       if (fx.hitsSemi?.double && target.vol.semi === fx.hitsSemi.semi) power *= 2;
       if (fx.weatherBall && weather) power *= 2;
@@ -1663,6 +1681,10 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
         announce(target, holder, events);
         tryInflictStatus(ctx, target, user, spore, undefined, events, false);
       }
+    }
+    if (SPREADS_ON_CONTACT.has(holder) && userAbility && userAbility !== holder && !SPREADS_ON_CONTACT.has(userAbility) && !UNTRACEABLE.has(userAbility)) {
+      announce(target, holder, events);
+      user.vol.abilityOverride = holder;
     }
     if (CONTACT_HURT.has(holder) && userAbility !== 'magic-guard') {
       announce(target, holder, events);

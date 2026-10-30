@@ -455,7 +455,9 @@ function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, t
 /** A Pokémon's types in this battle: its Tera Type once Terastallized, otherwise its species' types. */
 export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
   const tera = battle.transform.teraTypes[mon.uid];
-  return tera ? [tera] : getSpecies(content, mon.speciesId).types;
+  if (tera) return [tera];
+  const shift = (battle.enemyTeam.includes(mon) ? battle.enemyVolatile : battle.playerVolatile)?.typeShift;
+  return shift ? [shift] : getSpecies(content, mon.speciesId).types;
 }
 
 /** The STAB multiplier for a move of this type (1 = none), counting Terastallization. */
