@@ -33,7 +33,7 @@ export class GameOverScene extends Phaser.Scene {
     drawPanel(this, 24, 72, 440, 286);
     drawPanel(this, 480, 72, GAME_WIDTH - 504, 286, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     const recap = run ? buildRecap(session.content, run) : null;
-    const recapLines = recap ? [recap.ending, ...(recap.legend ? [`Legend: ${recap.legend}`] : []), ...recap.rivals.slice(0, 1), ...(recap.tip ? [recap.tip] : [])] : [];
+    const recapLines = recap ? [recap.ending, ...(recap.legend ? [`Legend: ${recap.legend}`] : []), ...(recap.stamps.length ? [`Stamps: ${recap.stamps.join(' · ')}`] : []), ...recap.rivals.slice(0, 1), ...(recap.tip ? [recap.tip] : [])] : [];
     if (run) {
       const archetype = session.content.archetypes.get(run.archetypeId)?.name ?? run.archetypeId;
       const lead = run.party[0];

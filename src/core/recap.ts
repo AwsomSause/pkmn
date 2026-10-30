@@ -15,11 +15,25 @@ export interface RunRecap {
   narrowest: string | null;
   /** One line per rival: their name and where the rivalry stands. */
   rivals: string[];
+  /** Run-end stamps earned this run (catalog #111), e.g. "Victory", "Untouched". Cosmetic only. */
+  stamps: string[];
   /** A short, kind hint on what to try next time, from the cause of defeat. */
   tip: string | null;
 }
 
 const name = (content: Content, id: string) => content.species.get(id)?.name ?? id;
+
+/** Cosmetic stamps for the end of a run. They never change rewards. */
+export function runStamps(run: RunState): string[] {
+  const histories = Object.values(run.story.histories);
+  const stamps: string[] = [];
+  if (run.victory) stamps.push('Victory');
+  if (run.victory && histories.length > 0 && histories.every((h) => h.knockoutsTaken === 0)) stamps.push('Untouched');
+  if (histories.some((h) => h.survivedFatal >= 3)) stamps.push('Cheated Fate');
+  if (histories.reduce((n, h) => n + h.bossesBeaten, 0) >= 8) stamps.push('Boss Breaker');
+  if (run.log.speciesCaught.length >= 20) stamps.push('Collector');
+  return stamps;
+}
 
 export function buildRecap(content: Content, run: RunState): RunRecap {
   const by = run.log.defeatedBy;
@@ -40,6 +54,7 @@ export function buildRecap(content: Content, run: RunState): RunRecap {
     legend: best && best.battles > 0 ? `${name(content, best.speciesId)}: ${best.battles} battles, ${best.bossesBeaten} boss wins${best.survivedFatal ? `, survived ${best.survivedFatal} knockout blows` : ''}` : null,
     narrowest: stand && stand.longestLowHpStand >= 2 ? `${name(content, stand.speciesId)} fought on at low HP for ${stand.longestLowHpStand} turns in a row` : null,
     rivals: run.story.rivals.map((r) => `${r.name} ${stateText[r.state] ?? r.state}`),
+    stamps: runStamps(run),
     tip: run.victory || !by ? null : `Next time, bring an answer to ${name(content, by.speciesId)}: look at its types in the move panel before the fight.`,
   };
 }
