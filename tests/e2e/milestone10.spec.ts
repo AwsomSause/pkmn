@@ -236,6 +236,23 @@ test('the map has drifting ambience, and the Bond screen shows each Pokémon’s
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   expect(await scene(page)).toBe('Map');
+  // Slice 9: the Summary shows each Pokémon's info & stats page and its moves & story page.
+  await page.evaluate(() => {
+    const map = (window as any).__pkr.game.scene.getScene('Map');
+    map.activate(map.options.findIndex((o: any) => o.kind === 'summary'));
+  });
+  await page.waitForTimeout(1000);
+  const summary: string[] = await page.evaluate(() => {
+    const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+    return (window as any).__pkr.game.scene.getScene('Map').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text);
+  });
+  for (const label of ['Ability', 'Holding', 'Moves', 'This run', 'Sp. Atk', 'Speed']) expect(summary).toContain(label);
+  await page.screenshot({ path: 'test-results/m10-summary.png' });
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  expect(await scene(page)).toBe('Map');
   expect(errors).toEqual([]);
 });
 
