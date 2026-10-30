@@ -332,7 +332,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -442,6 +442,8 @@ export const StoryChainSchema = z.object({
 export type StoryChain = z.infer<typeof StoryChainSchema>;
 
 export const StoryConfigSchema = z.object({
+  /** Protégé system: battles a veteran needs, the level gap to a protégé, and the gap at which it graduates. */
+  mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
   /** Overdrive chains (blueprint §6). */
   chains: z.array(StoryChainSchema).default([]),
   limits: z.object({
