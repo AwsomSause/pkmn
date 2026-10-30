@@ -277,3 +277,26 @@ describe('Field anomalies', () => {
     expect(found).toBe(true);
   });
 });
+
+describe('Grand Region gauntlet', () => {
+  it('calls the met rivals back on arrival in the last region, once', async () => {
+    const g = await import('../../src/core/story/gauntlet');
+    const run = fresh('grand-gaunt');
+    const classId = [...content.trainers.keys()][0]!;
+    run.story.rivals.push({ id: 'a', name: 'a', classId, state: 'recurring', rivalPotential: 50, progress: 0, encounters: 2, cooldown: 0 } as never);
+    run.stage!.index = 0;
+    g.grandGauntlet(content, run);
+    expect(g.gauntletLeft(run)).toBe(0);
+    run.regionIndex = run.regionOrder.length - 1;
+    run.stage!.index = 1;
+    g.grandGauntlet(content, run);
+    expect(g.gauntletLeft(run)).toBe(0);
+    run.stage!.index = 0;
+    g.grandGauntlet(content, run);
+    expect(g.gauntletLeft(run)).toBe(1);
+    expect(run.story.chronicle.at(-1)!.text).toContain('called every rival back');
+    run.story.flags['gaunt:left'] = 0;
+    g.grandGauntlet(content, run);
+    expect(g.gauntletLeft(run)).toBe(0);
+  });
+});
