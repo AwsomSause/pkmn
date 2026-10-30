@@ -128,6 +128,7 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
@@ -1142,7 +1143,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.story.flags[returnFlag(back.id)] = 'returned';
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
-    const rivalBack = rule && !back ? waitingRival(run) : null;
+    const gauntlet = rule && !back ? gauntletRival(content, run) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
@@ -1631,7 +1634,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -1647,7 +1650,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
     if (!defeated) continue;
     const baseExp = getSpecies(content, defeated.speciesId).baseExp;
     // Exp. Share: party members that didn't battle get its percent of the EXP.
-    const share = passivePercent(content, run, 'expShare');
+    const share = Math.max(passivePercent(content, run, 'expShare'), content.balance.difficulty.benchXpPercent);
     const sharers = share > 0 ? run.party.filter((p) => p.hp > 0 && !participants.includes(p.uid)).map((p) => p.uid) : [];
     const leadLevel = run.party[0]?.level ?? 0;
     for (const uid of [...participants, ...sharers]) {

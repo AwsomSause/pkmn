@@ -1738,6 +1738,10 @@ export const BalanceSchema = z.object({
     capMargin: z.number().int().min(0),
     /** Each region raises the level cap by this much (director decision D14). */
     levelCapStep: z.number().int().positive(),
+    /** Multiplies all experience gained (the single knob for how fast the party levels). */
+    xpScale: z.number().positive(),
+    /** Party members that did not battle always get this percent of the EXP (the Exp. Share item can raise it). */
+    benchXpPercent: z.number().min(0).max(100),
     variance: z.number().int().min(0),
     minLevel: z.number().int().min(1),
     maxLevel: z.number().int().max(100),
@@ -1880,6 +1884,8 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
+  levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
   opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
@@ -2023,6 +2029,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('aid'), atLeast: z.number().int().min(1) }),
   /** Rival tournament: the bracket's state (0 not entered, 1 to 3 round waiting, 9 over). */
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: whether a chain of rival fights is running. */
+  z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2076,6 +2084,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('aid'), amount: z.number().int().positive() }),
   /** Rival tournament: sets the bracket's state. */
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
+  z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;

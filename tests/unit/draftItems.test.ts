@@ -26,8 +26,9 @@ function win(run: RunState): TurnResult {
   lead.moves = [{ id: 'flamethrower', pp: 64 }];
   run.party[0] = lead;
   let turn: TurnResult | null = null;
-  for (let i = 0; i < 50 && run.phase === 'battle'; i++) {
+  for (let i = 0; i < 300 && run.phase === 'battle'; i++) {
     run.party[0]!.hp = 1_000_000;
+    run.party[0]!.moves[0]!.pp = 64;
     turn = takeTurn(content, run, { kind: 'move', index: 0 });
     run = turn.run;
   }

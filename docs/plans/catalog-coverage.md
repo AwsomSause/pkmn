@@ -1,6 +1,6 @@
 # Master Expansion Catalog coverage (162 items)
 
-Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Kice: add EVERYTHING. Status: DONE (works, tested), PART, TODO. Owner thread in brackets where another thread owns it. Update in every PR that moves a line.
+Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Kice: add EVERYTHING. Status: DONE (works, tested), PART, TODO. Owner thread in brackets where another thread owns it. **The Overdrive thread owns B (16-25), D (36-47), E (48-61), 96 relics, 148 rival gauntlet, 150 Grand-Enemy hunt and 154 champion defense (agreed 2026-10-30); this thread keeps 149, 76-77, 144, 126-132, 124, 131.** Update in every PR that moves a line.
 
 | Items | Topic | Status |
 |---|---|---|
@@ -28,4 +28,4 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 3. Research Room with collection sets and milestone payouts. DONE.
 4. Wild behaviours, territorial warning, rescue events, ecological chain (`core/wildBehavior.ts`, `tools/events/wild.ts`). DONE (limited: behaviours are framing only, no catch or battle change).
 5a. Quick Route pacing, Solo Run, Contract: No Evolution. DONE. 5b (relics, rival gauntlet, champion defense, boss remix, Living Dex, endless checkpoints): TODO.
-5b. Living Dex titles, pinned objective. DONE. Left in N: 148 rival gauntlet, 149 boss remix, 150 Grand-Enemy hunt, 154 champion defense, 60 Rival Ghost; 96 relics.
+5b. Living Dex titles, pinned objective. DONE. Left in N: (148 rival gauntlet DONE: `core/story/gauntlet.ts`, entry event 'The Rival Gauntlet', ranked rivals one per stage, purse at the end), 149 boss remix, 150 Grand-Enemy hunt, 154 champion defense, 60 Rival Ghost; 96 relics.
