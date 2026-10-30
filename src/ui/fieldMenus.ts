@@ -6,6 +6,7 @@ import { itemEvolutionTargets } from '../core/evolution';
 import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
+import { rivalChronicle } from '../core/rivals/chronicle';
 import { canCashIn } from '../core/run';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
@@ -61,6 +62,13 @@ export function openStoryMenu(host: FieldMenuHost): void {
     const speciesId = run.story.histories[uid]?.speciesId ?? run.party.find((m) => m.uid === uid)?.speciesId;
     return speciesId ? content.species.get(speciesId)?.name : undefined;
   };
+  const rivalRows = rivalChronicle(content, run).map((r) => ({
+    problem: null,
+    hint: `${r.summary}  ${r.memory}`,
+    draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+      box.add(scene.add.text(14, 8, `★ Rival: ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
+    },
+  }));
   const rows = entries.map((entry) => {
     const names = entry.actors.map(who).filter(Boolean).join(' & ');
     const where = `Region ${entry.where.region + 1}${entry.where.stage !== null ? ` · Stage ${entry.where.stage + 1}` : ''}`;
@@ -76,10 +84,10 @@ export function openStoryMenu(host: FieldMenuHost): void {
     };
   });
   const picker: Picker = new Picker(host.scene, {
-    title: rows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
+    title: rows.length + rivalRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
     columns: 1,
     rowHeight: 40,
-    rows,
+    rows: [...rivalRows, ...rows],
     onSelect: () => undefined,
     onBack: () => close(host, picker),
   });
