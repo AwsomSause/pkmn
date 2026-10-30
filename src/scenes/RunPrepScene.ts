@@ -2,6 +2,7 @@
 // the campaign, starter pool, draft rule and one preparation, check the Run
 // Build Summary, save or load a loadout preset, then roll the starters.
 
+import { LICENSES, licenseName, type LicenseId } from '../core/license';
 import Phaser from 'phaser';
 import { decodeSeedCode } from '../core/seedCode';
 import { TYPE_NAMES, type TypeName } from '../core/contentSchema';
@@ -40,8 +41,8 @@ export interface RunPrepData {
   modCursor?: number;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
 export class RunPrepScene extends Phaser.Scene {
   private menu!: Menu;
@@ -95,6 +96,7 @@ export class RunPrepScene extends Phaser.Scene {
       type: `Focus type: ${this.prep.typeFocus ? capitalise(this.prep.typeFocus) : '—'}`,
       token: `Preparation: ${token?.name ?? 'none'}`,
       directive: `Research Directive: ${this.prep.directive ? capitalise(this.prep.directive) : 'none'}`,
+      license: `Field License: ${this.prep.license ? licenseName(this.prep.license) : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
       modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
@@ -191,6 +193,9 @@ export class RunPrepScene extends Phaser.Scene {
       case 'directive':
         // None, then every type: study it this run for bonus Research Points.
         return this.refresh({ directive: next<TypeName | null>([null, ...TYPE_NAMES], this.prep.directive) });
+      case 'license':
+        // None, then each license: one exploration hint for the whole run.
+        return this.refresh({ license: next<LicenseId | null>([null, ...LICENSES.map((l) => l.id)], this.prep.license) });
       case 'mode': {
         const ids = RUN_RULES.modes.filter((m) => m.status === 'supported').map((m) => m.id);
         return this.refresh({}, { rules: { ...this.rules, modeId: next(ids, this.rules.modeId) } });
