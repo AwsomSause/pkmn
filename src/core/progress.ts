@@ -8,6 +8,7 @@
 //   claim       — achievements are claimed automatically when a run ends;
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
+import { getArchetype, researchMultiplier } from './archetypes';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
 import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
@@ -137,10 +138,12 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     newSpeciesCaught = run.log.speciesCaught.filter((id) => !profile.speciesCaught.includes(id));
     profile.speciesSeen.push(...newSpeciesSeen);
     profile.speciesCaught.push(...newSpeciesCaught);
-    researchPoints =
-      research.perSpeciesSeen * newSpeciesSeen.length +
-      research.perSpeciesCaught * newSpeciesCaught.length +
-      research.perShiny * (run.log.counters.shiniesFound ?? 0);
+    researchPoints = Math.round(
+      (research.perSpeciesSeen * newSpeciesSeen.length +
+        research.perSpeciesCaught * newSpeciesCaught.length +
+        research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
+        researchMultiplier(getArchetype(content, run.archetypeId)),
+    );
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
   }

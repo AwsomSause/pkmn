@@ -12,7 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
-import { captureMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, typeModifiers, xpMultiplier } from './archetypes';
+import { captureMultiplier, friendshipMultiplier, getArchetype, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -44,7 +44,7 @@ import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoic
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
 import { passivePercent } from './catalog';
-import { defaultPrep, draftStarters, startingResources } from './runPrep';
+import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import {
   activeMods,
@@ -129,7 +129,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   const campaign = getCampaign(content, prep.campaignId);
   const rng = createStreams(opts.seed);
   const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
-  const starterChoices = draft.choices;
+  // Used once here, so its own seed-derived generator needs no saved stream.
+  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices);
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   const run: RunState = {
     runId: opts.runId,
@@ -464,8 +465,10 @@ export function useMapAction(content: Content, current: RunState, kind: MapActio
 
 /** One map node's preview from a map item: who waits there. */
 export interface NodePreview {
-  /** The item showing it. */
-  itemId: string;
+  /** The item showing it, or null when the trainer's passive does (Cynthia, Oak). */
+  itemId: string | null;
+  /** Who shows it, in words: the item's or the trainer's name. */
+  source: string;
   /** Species in battle order, with levels when they are known. */
   team: { speciesId: string; level: number | null }[];
   trainerName: string | null;
@@ -488,25 +491,30 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
       return effect?.kind === 'perk' && effect.perks.some((p) => p.perk === 'preview' && p.what === what);
     }) ?? null;
   const out: Record<string, NodePreview> = {};
-  const wildItem = perks('wild');
-  const trainerItem = perks('trainers');
+  const archetype = getArchetype(content, run.archetypeId);
+  // An item's preview wins over the trainer's (it names the item); either shows the same battle.
+  const source = (what: 'wild' | 'trainers' | 'gymTeam', itemId: string | null): { itemId: string | null; source: string } | null =>
+    itemId ? { itemId, source: content.catalog.get(itemId)?.name ?? itemId } : trainerPreviews(archetype, what) ? { itemId: null, source: archetype.name } : null;
+  const wildFrom = source('wild', perks('wild'));
+  const trainerFrom = source('trainers', perks('trainers'));
   for (const node of mapChoices(content, run)) {
-    const itemId = node.kind === 'wild' ? wildItem : node.kind === 'trainer' ? trainerItem : null;
-    if (!itemId) continue;
+    const from = node.kind === 'wild' ? wildFrom : node.kind === 'trainer' ? trainerFrom : null;
+    if (!from) continue;
     const copy = structuredClone(run);
     // A preview never stops the map: with no Pokémon able to battle there is nothing to show.
     if (!copy.party.some((p) => p.hp > 0)) break;
     startEncounter(content, copy, node);
     const battle = copy.battle!;
-    out[node.id] = { itemId, team: battle.enemyTeam.map((m) => ({ speciesId: m.speciesId, level: m.level })), trainerName: battle.trainer?.name ?? null };
+    out[node.id] = { ...from, team: battle.enemyTeam.map((m) => ({ speciesId: m.speciesId, level: m.level })), trainerName: battle.trainer?.name ?? null };
   }
   const gym = stage.map.nodes.find((n) => n.kind === 'gym');
   const teamItem = perks('gymTeam') ?? perks('gymAce');
-  if (gym && teamItem) {
+  const teamFrom = teamItem ? source('gymTeam', teamItem) : source('gymTeam', null);
+  if (gym && teamFrom) {
     const campaign = getCampaign(content, run.campaignId);
     const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
-    const shown = perks('gymTeam') ? species : species.slice(-1);
-    out[gym.id] = { itemId: teamItem, team: shown.map((speciesId) => ({ speciesId, level: null })), trainerName: null };
+    const shown = perks('gymTeam') || !teamItem ? species : species.slice(-1);
+    out[gym.id] = { ...teamFrom, team: shown.map((speciesId) => ({ speciesId, level: null })), trainerName: null };
   }
   return out;
 }
@@ -1067,7 +1075,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'win') {
     const { perBattleWon, perBossWon } = content.balance.friendship;
     const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
-    const gainMultiplier = runAttributeEffects(content, run).friendship;
+    const gainMultiplier = runAttributeEffects(content, run).friendship * friendshipMultiplier(getArchetype(content, run.archetypeId));
     for (const mon of run.party) {
       if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
     }

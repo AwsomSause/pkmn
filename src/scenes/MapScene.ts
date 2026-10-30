@@ -459,7 +459,7 @@ export class MapScene extends Phaser.Scene {
     const preview = this.previews[n.id];
     if (!preview) return '';
     const content = services().session.content;
-    const item = content.catalog.get(preview.itemId)!.name;
+    const item = preview.source;
     const names = preview.team.map((m) => `${content.species.get(m.speciesId)?.name ?? m.speciesId}${m.level ? ` Lv${m.level}` : ''}`).join(', ');
     if (n.kind === 'gym') return `${item}: ${preview.team.length === 1 ? 'the ace is' : 'the team is'} ${names}`;
     return `${item}: ${preview.trainerName ? `${preview.trainerName} with ` : ''}${names}`;
@@ -485,9 +485,9 @@ export class MapScene extends Phaser.Scene {
     const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
     const gymText = gym ? this.previewText(gym) : '';
     if (gym && gymText) {
-      const itemId = this.previews[gym.id]!.itemId;
+      const { itemId, source } = this.previews[gym.id]!;
       const text = `Gym leader ${bossInfo(content, 'gym', run.stage!.leaderId).name}: ${gymText.slice(gymText.indexOf(':') + 2)}`;
-      rows.push({ action: null, itemId, title: content.catalog.get(itemId)!.name, text, problem: text });
+      rows.push({ action: null, itemId: itemId ?? '', title: source, text, problem: text });
     }
     return rows;
   }

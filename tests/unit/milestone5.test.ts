@@ -172,10 +172,12 @@ describe('trainer unlocks', () => {
   });
 
   it('a trainer whose systems are not built yet cannot be claimed', () => {
-    const cynthia = getArchetype(content, 'cynthia');
+    const cynthia = { ...getArchetype(content, 'cynthia'), available: false };
+    content.archetypes.set('cynthia', cynthia);
     const profile = profileWith({ championsDefeated: 5 }, { bankCredits: 10_000 });
     expect(trainerStatus(profile, cynthia)).toBe('comingLater');
     expect(() => claimTrainer(content, profile, 'cynthia')).toThrow(/later/);
+    content.archetypes.set('cynthia', { ...cynthia, available: true });
   });
 
   it('Brock: starts with Potions, heals more, and pays more for Poké Balls', () => {
