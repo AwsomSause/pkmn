@@ -5,6 +5,7 @@
 
 import type Phaser from 'phaser';
 import { bondMood, bondOf } from '../core/bond';
+import { partyRoles } from '../core/partyRoles';
 import { BOND_BARS, MOOD_LOOK, bondHint } from './bondLook';
 import type { PokemonInstance, RunState } from '../core/state';
 import type { Content } from '../core/contentSchema';
@@ -28,7 +29,7 @@ function bondRow(content: Content, run: RunState, mon: PokemonInstance, motion: 
       const icon = pokemonIcon(scene, species, 32, 34, 1.4);
       box.add(icon);
       box.add(scene.add.text(64, 10, species.name, textStyle(22)));
-      box.add(scene.add.text(64, 36, `${cap(bond.trait)} · Lv${mon.level}`, textStyle(15, '#bfe9ff')));
+      box.add(scene.add.text(64, 36, `${cap(bond.trait)} · Lv${mon.level} · ${partyRoles(content, mon).join(' / ')}`, textStyle(15, '#bfe9ff')));
       // Mood bubble: a glossy pill that floats.
       const pill = scene.add.container(w - 62, 22);
       const g = scene.add.graphics();
