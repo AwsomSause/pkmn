@@ -3,6 +3,7 @@
 
 import { z } from 'zod';
 import dramaJson from '../../data/drama.json';
+import eventsJson from '../../data/dramaEvents.json';
 
 export const VOICES = ['brash', 'gentle', 'calm', 'grim', 'cheerful'] as const;
 export type Voice = (typeof VOICES)[number];
@@ -47,9 +48,54 @@ export const DramaBattleSchema = z.object({
   lastLineTurn: z.number().int().default(-99),
   /** What the trainer has seen you do (visible moves only). */
   playerMoves: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Enemy Pokémon (uids) allowed to evolve in this battle, and those that already did. */
+  evolvable: z.array(z.string()).default([]),
+  evolved: z.array(z.string()).default([]),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
 export const freshDrama = (): DramaBattle => DramaBattleSchema.parse({});
 
 export const DIALOGUE_FREQUENCIES = ['off', 'low', 'normal', 'high'] as const;
 export type DialogueFrequency = (typeof DIALOGUE_FREQUENCIES)[number];
+
+// ---------- the rare-event library (guide §5, Phase 6) and signature declarations (Phase 4) ----------
+
+
+export const DECLARATION_STYLES = ['warning', 'signature', 'promise', 'desperateGamble', 'tacticalCall', 'showman', 'quietThreat', 'personalCallback'] as const;
+export type DeclarationStyle = (typeof DECLARATION_STYLES)[number];
+
+export const DramaEventDefSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  /** planned: needs a system that is not built yet (no check exists). */
+  status: z.enum(['planned', 'limited', 'supported', 'disabled']),
+  severity: z.enum(['tactical', 'major', 'climactic']),
+  cooldownBattles: z.number().int().min(0),
+  /** Percent chance once eligible (picked by hashing, not by gameplay RNG). */
+  chance: z.number().min(0).max(100),
+  /** Writes a Chronicle entry and a rival memory flag. */
+  records: z.boolean(),
+  requires: z.string(),
+  lines: z.array(z.string()),
+  voices: z.array(z.enum(VOICES)).optional(),
+  classes: z.array(z.enum(['ordinary', 'gym', 'rival', 'boss'])).optional(),
+  /** What a rival says about it the next time you meet. */
+  remember: z.string().optional(),
+});
+export type DramaEventDef = z.infer<typeof DramaEventDefSchema>;
+
+const lineList = z.array(z.string().min(1)).min(1);
+export const DramaLibrarySchema = z.object({
+  note: z.string(),
+  events: z.array(DramaEventDefSchema),
+  declarations: z.object(Object.fromEntries(DECLARATION_STYLES.map((s) => [s, lineList])) as Record<DeclarationStyle, typeof lineList>),
+  aftermath: z.object({ hit: lineList, miss: lineList, ko: lineList }),
+});
+export const DRAMA_LIBRARY = DramaLibrarySchema.parse(eventsJson);
+
+/** Hash text into a small non-negative integer (FNV-1a). Not a gameplay random stream. */
+export function pickIndex(text: string, size: number): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return (h >>> 0) % size;
+}
