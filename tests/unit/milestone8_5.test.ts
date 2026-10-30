@@ -5,7 +5,21 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext, type BattleEvent, type PlayerAction } from '../../src/core/battle/engine';
-import { battleTypes, bossMechanics, megaOptions, revertTransformations, stabMultiplier, stoneForms, teraOption, teraPower, zMoveFor, zMoveOptions } from '../../src/core/battle/transform';
+import {
+  battleTypes,
+  bossMechanics,
+  canDynamax,
+  gmaxFormFor,
+  maxMoveFor,
+  megaOptions,
+  revertTransformations,
+  stabMultiplier,
+  stoneForms,
+  teraOption,
+  teraPower,
+  zMoveFor,
+  zMoveOptions,
+} from '../../src/core/battle/transform';
 import { applyItemToPokemon, itemUseProblem, teraTypeOf } from '../../src/core/items';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { isRewardEligible } from '../../src/core/rewards';
@@ -505,5 +519,169 @@ describe('Z-Moves in a run', () => {
     expect(shopStock(content, r).some((e) => e.item === 'z-ring')).toBe(true);
     r.inventory['z-ring'] = 1;
     expect(shopStock(content, r).some((e) => e.item === 'z-ring')).toBe(false);
+  });
+});
+
+// ---------- Slice 4: Dynamax and Gigantamax ----------
+
+const MAX: PlayerAction = { kind: 'move', index: 0, transform: { kind: 'dynamax' } };
+const BAND = { 'dynamax-band': 1 };
+const movesUsed = (events: BattleEvent[], side: 'player' | 'enemy') => events.flatMap((e) => (e.type === 'move' && e.side === side ? [e.moveId] : []));
+
+describe('Max Move data', () => {
+  it("uses Showdown's Max power: its own number, otherwise the table (lower for Fighting and Poison)", () => {
+    expect(content.maxMoves.power.tackle).toBe(90); // 40 power
+    expect(content.maxMoves.power.thunderbolt).toBe(130); // 90 power
+    expect(content.maxMoves.power['close-combat']).toBe(95); // Fighting, 120 power
+    expect(content.maxMoves.effects['max-flare']).toEqual({ weather: 'sun' });
+  });
+
+  it('gives every Gigantamax form a G-Max Move', () => {
+    const covered = new Set(Object.values(content.maxMoves.gmax).flatMap((g) => g.forms));
+    const forms = [...content.species.values()].filter((s) => s.form?.kind === 'gigantamax').map((s) => s.id);
+    expect(forms.filter((f) => !covered.has(f))).toEqual([]);
+    expect(gmaxFormFor(content, 'charizard')).toBe('charizard-gmax');
+    expect(gmaxFormFor(content, 'snorlax')).toBe('snorlax-gmax');
+    expect(gmaxFormFor(content, 'pidgey')).toBeNull();
+  });
+
+  it('turns moves into Max Moves: never miss, no priority; status moves into Max Guard; G-Max Moves for Gigantamax forms', () => {
+    expect(maxMoveFor(content, 'pikachu', content.moves.get('zap-cannon')!)).toMatchObject({ id: 'max-lightning', type: 'electric', category: 'special', power: 140, accuracy: null, priority: 0, flags: ['max'] }); // 120 power
+    expect(maxMoveFor(content, 'pidgey', content.moves.get('quick-attack')!)).toMatchObject({ id: 'max-strike', priority: 0, effects: { statChanges: [{ stat: 'spe', stages: -1, target: 'enemy', chance: 100 }] } });
+    expect(maxMoveFor(content, 'pidgey', content.moves.get('growl')!)).toMatchObject({ id: 'max-guard', priority: 4, target: 'self', effects: { protect: true } });
+    expect(maxMoveFor(content, 'charizard-gmax', content.moves.get('flamethrower')!)).toMatchObject({ id: 'g-max-wildfire', power: 130 });
+    expect(maxMoveFor(content, 'charizard-gmax', content.moves.get('tackle')!)!.id).toBe('max-strike');
+    expect(maxMoveFor(content, 'cinderace-gmax', content.moves.get('ember')!)).toMatchObject({ id: 'g-max-fireball', power: 160 });
+  });
+});
+
+describe('Dynamax in battle', () => {
+  it('needs the Dynamax Band', () => {
+    const { ctx } = setup([mon('pidgey', 30, 'p1', 'tackle')], [mon('snorlax', 50, 'e1', 'tackle')], {});
+    expect(canDynamax(ctx)).toBe(false);
+    expect(() => resolveTurn(ctx, MAX)).toThrow(/Dynamax Band/);
+  });
+
+  it('doubles HP and uses Max Moves for 3 turns, then shrinks back', () => {
+    const p = mon('pidgey', 30, 'p1', 'tackle');
+    const e = mon('snorlax', 90, 'e1', 'growl');
+    const max = calcStats(content, p).hp;
+    const { ctx, battle } = setup([p], [e], BAND);
+    const first = resolveTurn(ctx, MAX);
+    expect(transforms(first)).toEqual([{ type: 'transform', side: 'player', uid: 'p1', kind: 'dynamax', from: 'pidgey', to: 'pidgey', itemId: null }]);
+    expect(calcStats(content, p).hp).toBe(max * 2);
+    expect(p.hp).toBe(max * 2);
+    expect(movesUsed(first, 'player')).toEqual(['max-strike']);
+    expect(battle.transform.dynamax.p1).toBe(2);
+    expect(movesUsed(resolveTurn(ctx, { kind: 'move', index: 0 }), 'player')).toEqual(['max-strike']);
+    const third = resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(movesUsed(third, 'player')).toEqual(['max-strike']);
+    expect(transforms(third).map((x) => x.type === 'transform' && x.kind)).toEqual(['dynamaxEnd']);
+    expect(p.dynamaxed).toBeUndefined();
+    expect(p.hp).toBe(max);
+    expect(movesUsed(resolveTurn(ctx, { kind: 'move', index: 0 }), 'player')).toEqual(['tackle']);
+    expect(() => resolveTurn(ctx, MAX)).toThrow(/already Dynamaxed|already transformed/);
+  });
+
+  it('Gigantamaxes a Pokémon with a G-Max form, whose type moves become its G-Max Move', () => {
+    const p = mon('charizard', 50, 'p1', 'flamethrower');
+    const { ctx } = setup([p], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    const events = resolveTurn(ctx, MAX);
+    expect(transforms(events)[0]).toMatchObject({ kind: 'gigantamax', from: 'charizard', to: 'charizard-gmax' });
+    expect(movesUsed(events, 'player')).toEqual(['g-max-wildfire']);
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(p.speciesId).toBe('charizard');
+  });
+
+  it('Max Moves add their effects: Max Flare sets the sun, Max Strike lowers Speed, and they never miss', () => {
+    const fire = setup([mon('charmander', 30, 'p1', 'ember')], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    resolveTurn(fire.ctx, MAX);
+    expect(fire.battle.weather?.id).toBe('sun');
+    const normal = setup([mon('pidgey', 30, 'p1', 'tackle')], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    resolveTurn(normal.ctx, MAX);
+    expect(normal.battle.enemyStages.spe).toBe(-1);
+    for (const seed of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      const { ctx } = setup([mon('pikachu', 30, 'p1', 'zap-cannon')], [mon('snorlax', 90, 'e1', 'growl')], BAND, `max-acc-${seed}`);
+      expect(resolveTurn(ctx, MAX).some((x) => x.type === 'miss')).toBe(false);
+    }
+  });
+
+  it('a status move becomes Max Guard, which goes first and blocks the foe', () => {
+    const { ctx } = setup([mon('pidgey', 30, 'p1', 'growl')], [mon('rattata', 40, 'e1', 'quick-attack')], BAND);
+    const events = resolveTurn(ctx, MAX);
+    expect(movesUsed(events, 'player')).toEqual(['max-guard']);
+    expect(events.some((x) => x.type === 'protected' && x.side === 'player')).toBe(true);
+  });
+
+  it("can't be made to flinch", () => {
+    // Pickup, not Technician (a Technician Fake Out would knock the Pidgey out).
+    const ambipom = mon('ambipom', 60, 'e1', 'fake-out');
+    ambipom.abilitySlot = 1;
+    const { ctx } = setup([mon('pidgey', 30, 'p1', 'tackle')], [ambipom], BAND);
+    const events = resolveTurn(ctx, MAX);
+    expect(movesUsed(events, 'enemy')).toEqual(['fake-out']);
+    expect(events.some((x) => x.type === 'cant' && x.reason === 'flinch')).toBe(false);
+    expect(movesUsed(events, 'player')).toEqual(['max-strike']);
+  });
+
+  it('ends early when the Pokémon switches out', () => {
+    const p = mon('pidgey', 30, 'p1', 'tackle');
+    const max = calcStats(content, p).hp;
+    const { ctx, battle } = setup([p, mon('rattata', 30, 'p2', 'tackle')], [mon('snorlax', 90, 'e1', 'growl')], BAND);
+    resolveTurn(ctx, MAX);
+    const events = resolveTurn(ctx, { kind: 'switch', partyIndex: 1 });
+    expect(transforms(events).map((x) => x.type === 'transform' && x.kind)).toEqual(['dynamaxEnd']);
+    expect(p.hp).toBe(max);
+    expect(battle.transform.dynamax).toEqual({});
+  });
+
+  it('can be switched off for a run', () => {
+    const { ctx } = setup([mon('pidgey', 30, 'p1', 'tackle')], [mon('snorlax', 50, 'e1', 'tackle')], BAND);
+    ctx.disabledMechanics = ['dynamax'];
+    expect(canDynamax(ctx)).toBe(false);
+    expect(() => resolveTurn(ctx, MAX)).toThrow(/switched off/);
+  });
+});
+
+describe('Dynamax in a run', () => {
+  const newRun = (seed: string): RunState => {
+    let run = chooseStarter(content, createRun(content, { runId: `r-${seed}`, seed, archetypeId: 'red' }), 0);
+    run = debugReplaceEnemy(content, toBattle(run), 'magikarp', 100);
+    setMoves(run.battle!.enemyTeam[0]!, 'growl');
+    setMoves(run.party[0]!, 'tackle');
+    run.inventory['dynamax-band'] = 1;
+    return run;
+  };
+
+  it('survives save and load mid-Dynamax, and HP is back to normal when the battle ends', () => {
+    let run = takeTurn(content, newRun('max-save'), MAX).run;
+    expect(run.party[0]!.dynamaxed).toBe(true);
+    const saves = new SaveManager(new MemoryStorageProvider(), content);
+    expect(saves.saveRun(run)).toEqual({ ok: true });
+    const loaded = saves.loadRun();
+    expect(loaded).toEqual({ status: 'ok', data: run });
+    run = (loaded as { data: RunState }).data;
+    run.battle!.enemyTeam[0]!.hp = 1;
+    const result = takeTurn(content, run, { kind: 'move', index: 0 });
+    expect(result.end?.outcome).toBe('win');
+    const starter = result.run.party[0]!;
+    expect(starter.dynamaxed).toBeUndefined();
+    expect(starter.hp).toBeLessThanOrEqual(calcStats(content, starter).hp);
+  });
+
+  it('is deterministic', () => {
+    expect(takeTurn(content, newRun('max-det'), MAX).events).toEqual(takeTurn(content, newRun('max-det'), MAX).events);
+  });
+
+  it('offers the Dynamax Band once, and the shop sells it from 3 badges', () => {
+    const r = chooseStarter(content, createRun(content, { runId: 'r-max', seed: 'max', archetypeId: 'red' }), 0);
+    const band = content.rewards.get('dynamax-band')!;
+    expect(isRewardEligible(content, r, band)).toBe(true);
+    r.badges = ['a', 'b', 'c'];
+    expect(shopStock(content, r).some((e) => e.item === 'dynamax-band')).toBe(true);
+    r.inventory['dynamax-band'] = 1;
+    expect(isRewardEligible(content, r, band)).toBe(false);
+    expect(shopStock(content, r).some((e) => e.item === 'dynamax-band')).toBe(false);
   });
 });

@@ -226,6 +226,9 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       if (e.kind === 'tera') return `${before} Terastallized into the ${e.teraType![0]!.toUpperCase()}${e.teraType!.slice(1)} type!`;
       if (e.kind === 'primal') return `${before}'s Primal Reversion! It reverted to its primal form!`;
       if (e.kind === 'zmove') return `${before} surrounded itself with its Z-Power!`;
+      if (e.kind === 'dynamax') return `${before} Dynamaxed!`;
+      if (e.kind === 'gigantamax') return `${before} Gigantamaxed into ${species(e.to)}!`;
+      if (e.kind === 'dynamaxEnd') return `${before} returned to its normal size!`;
       return `${before} has Mega Evolved into ${species(e.to)}!`;
     }
   }

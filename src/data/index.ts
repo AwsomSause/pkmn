@@ -10,6 +10,7 @@ import {
   ArchetypeSchema,
   BalanceSchema,
   ZMoveDataSchema,
+  MaxMoveDataSchema,
   BossProfileSchema,
   BossTeamsFileSchema,
   CatalogEntrySchema,
@@ -42,6 +43,7 @@ import itemCatalogJson from './itemCatalog.json';
 import learnablesJson from './learnables.json';
 import megaStonesJson from './megaStones.json';
 import zMovesJson from './zMoves.json';
+import maxMovesJson from './maxMoves.json';
 import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
@@ -84,6 +86,7 @@ export interface RawContent {
   balance: unknown;
   story: unknown;
   zMoves: unknown;
+  maxMoves: unknown;
 }
 
 /**
@@ -127,6 +130,8 @@ export const RAW_CONTENT: RawContent = {
   story: storyJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
+  // Generated: npm run data:maxmoves.
+  maxMoves: maxMovesJson,
 };
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string, problems: string[]): T | null {
@@ -170,7 +175,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
-  if (!story || !zMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
+  if (!story || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -200,6 +206,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     balance,
     story,
     zMoves,
+    maxMoves,
   };
 
   addCatalog(content, problems);
@@ -292,6 +299,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   // Z-Moves: every crystal's Z-Move and every move named must exist.
   for (const [type, id] of Object.entries(zMoves.byType)) if (!content.moves.has(id)) problems.push(`zMoves.json: the ${type} Z-Move "${id}" is not a move`);
   for (const id of [...Object.keys(zMoves.power), ...Object.keys(zMoves.status)]) if (!content.moves.has(id)) problems.push(`zMoves.json names unknown move "${id}"`);
+  // Max Moves: every Max and G-Max Move and every move named must exist; G-Max forms must be Gigantamax forms.
+  for (const id of [...Object.values(maxMoves.byType), maxMoves.guard, ...Object.keys(maxMoves.gmax), ...Object.keys(maxMoves.power), ...Object.keys(maxMoves.effects)]) {
+    if (!content.moves.has(id)) problems.push(`maxMoves.json names unknown move "${id}"`);
+  }
+  for (const [id, g] of Object.entries(maxMoves.gmax)) {
+    for (const form of g.forms) if (content.species.get(form)?.form?.kind !== 'gigantamax') problems.push(`maxMoves.json: ${id} is for "${form}", which is not a Gigantamax form`);
+  }
   for (const item of content.items.values()) {
     if (item.effect.kind === 'zCrystal' && !zMoves.byType[item.effect.type]) problems.push(`item "${item.id}" is a ${item.effect.type} Z-Crystal, but that type has no Z-Move`);
   }

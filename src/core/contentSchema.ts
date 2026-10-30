@@ -139,9 +139,9 @@ export const MoveSchema = z.object({
   target: z.enum(['enemy', 'self']),
   /**
    * contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them).
-   * `zmove`: a Z-Move made in battle (battle/transform.ts); it hits through Protect for a quarter of its damage.
+   * `zmove`, `max`: a Z-Move or Max Move made in battle (battle/transform.ts); they hit through Protect for a quarter of their damage.
    */
-  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
+  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no
@@ -1011,6 +1011,8 @@ export const BalanceSchema = z.object({
     bossGymFrom: z.number().int().min(1),
     /** Elite Four members and champions always may. */
     league: z.boolean(),
+    /** Turns a Dynamax lasts, counting the turn it starts. */
+    dynamaxTurns: z.number().int().min(1).default(3),
   }),
   /** Friendship (M8.75 part B): how it grows and when friendship evolutions happen. */
   friendship: z.object({
@@ -1206,6 +1208,35 @@ export const ZMoveDataSchema = z.object({
 });
 export type ZMoveData = z.infer<typeof ZMoveDataSchema>;
 
+/** What a Max or G-Max Move does after it hits (maxMoves.json). */
+const MaxEffectSchema = z.object({
+  weather: WeatherSchema.optional(),
+  statChanges: z.array(StatChangeSchema.omit({ chance: true })).optional(),
+  status: StatusIdSchema.optional(),
+  confuse: z.literal(true).optional(),
+  bind: z.literal(true).optional(),
+  breaksProtect: z.literal(true).optional(),
+});
+export type MaxEffect = z.infer<typeof MaxEffectSchema>;
+
+/** maxMoves.json (npm run data:maxmoves, from Pokémon Showdown's move data). */
+export const MaxMoveDataSchema = z.object({
+  /** The Max Move each type's damaging moves become. */
+  byType: z.partialRecord(TypeNameSchema, z.string()),
+  /** What every status move becomes (Max Guard). */
+  guard: z.string(),
+  /** Max Move power for each damaging move. */
+  power: z.record(z.string(), z.number().int().positive()),
+  /** Max Move id -> its side effect. */
+  effects: z.record(z.string(), MaxEffectSchema),
+  /** G-Max Move id -> the Gigantamax forms that use it instead of their type's Max Move. */
+  gmax: z.record(
+    z.string(),
+    z.object({ forms: z.array(z.string()).min(1), type: TypeNameSchema, power: z.number().int().positive().optional(), effects: MaxEffectSchema.optional() }),
+  ),
+});
+export type MaxMoveData = z.infer<typeof MaxMoveDataSchema>;
+
 export interface Content {
   species: Map<string, Species>;
   moves: Map<string, Move>;
@@ -1236,4 +1267,5 @@ export interface Content {
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
   zMoves: ZMoveData;
+  maxMoves: MaxMoveData;
 }

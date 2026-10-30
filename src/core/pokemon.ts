@@ -31,6 +31,8 @@ export function calcStats(content: Content, mon: PokemonInstance): StatBlock {
     const boost = (mon.statBoosts?.[stat] ?? 0) / 100;
     stats[stat] = Math.floor(raw * (1 + perStack * stacks + boost));
   }
+  // Dynamax doubles HP for its turns (battle/transform.ts).
+  if (mon.dynamaxed) stats.hp *= 2;
   return stats;
 }
 

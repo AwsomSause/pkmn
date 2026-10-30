@@ -1,0 +1,950 @@
+{
+  "byType": {
+    "normal": "max-strike",
+    "fighting": "max-knuckle",
+    "flying": "max-airstream",
+    "poison": "max-ooze",
+    "ground": "max-quake",
+    "rock": "max-rockfall",
+    "bug": "max-flutterby",
+    "ghost": "max-phantasm",
+    "steel": "max-steelspike",
+    "fire": "max-flare",
+    "water": "max-geyser",
+    "grass": "max-overgrowth",
+    "electric": "max-lightning",
+    "psychic": "max-mindstorm",
+    "ice": "max-hailstorm",
+    "dragon": "max-wyrmwind",
+    "dark": "max-darkness",
+    "fairy": "max-starfall"
+  },
+  "guard": "max-guard",
+  "power": {
+    "struggle": 100,
+    "tackle": 90,
+    "scratch": 90,
+    "pound": 90,
+    "quick-attack": 90,
+    "headbutt": 120,
+    "take-down": 130,
+    "ember": 90,
+    "fire-fang": 120,
+    "water-gun": 90,
+    "bubble-beam": 120,
+    "vine-whip": 100,
+    "razor-leaf": 110,
+    "seed-bomb": 130,
+    "absorb": 90,
+    "mega-drain": 90,
+    "poison-sting": 70,
+    "acid": 70,
+    "thunder-shock": 90,
+    "spark": 120,
+    "gust": 90,
+    "peck": 90,
+    "wing-attack": 110,
+    "bite": 110,
+    "lick": 90,
+    "night-shade": 100,
+    "karate-chop": 75,
+    "low-sweep": 85,
+    "rock-throw": 100,
+    "mud-slap": 90,
+    "mud-shot": 110,
+    "metal-claw": 100,
+    "confusion": 100,
+    "psybeam": 120,
+    "psychic": 130,
+    "extrasensory": 130,
+    "powder-snow": 90,
+    "ice-shard": 90,
+    "ice-fang": 120,
+    "aurora-beam": 120,
+    "icy-wind": 110,
+    "dragon-breath": 110,
+    "twister": 90,
+    "dragon-claw": 130,
+    "dragon-pulse": 130,
+    "feint-attack": 110,
+    "pursuit": 90,
+    "crunch": 130,
+    "snarl": 110,
+    "night-slash": 120,
+    "fairy-wind": 90,
+    "disarming-voice": 90,
+    "draining-kiss": 100,
+    "play-rough": 130,
+    "bug-bite": 110,
+    "struggle-bug": 100,
+    "fury-cutter": 90,
+    "poison-jab": 90,
+    "rock-tomb": 110,
+    "rock-slide": 130,
+    "astonish": 90,
+    "shadow-sneak": 90,
+    "shadow-ball": 130,
+    "flash-cannon": 130,
+    "iron-head": 130,
+    "thunder-fang": 120,
+    "thunderbolt": 130,
+    "flame-wheel": 110,
+    "flamethrower": 130,
+    "aqua-tail": 130,
+    "water-pulse": 110,
+    "air-slash": 130,
+    "slash": 120,
+    "accelerock": 90,
+    "acid-spray": 70,
+    "aerial-ace": 110,
+    "aeroblast": 130,
+    "air-cutter": 110,
+    "alluring-voice": 130,
+    "apple-acid": 130,
+    "aqua-cutter": 120,
+    "aqua-jet": 90,
+    "aqua-step": 130,
+    "armor-cannon": 140,
+    "attack-order": 130,
+    "aura-sphere": 90,
+    "bitter-blade": 130,
+    "bitter-malice": 130,
+    "blaze-kick": 130,
+    "blizzard": 140,
+    "blue-flare": 140,
+    "body-slam": 130,
+    "bolt-strike": 140,
+    "bone-club": 120,
+    "boomburst": 140,
+    "bouncy-bubble": 130,
+    "branch-poke": 90,
+    "brave-bird": 140,
+    "brick-break": 90,
+    "bubble": 90,
+    "bug-buzz": 130,
+    "bulldoze": 110,
+    "bullet-punch": 90,
+    "buzzy-buzz": 130,
+    "charge-beam": 100,
+    "chilling-water": 100,
+    "chloroblast": 150,
+    "clanging-scales": 140,
+    "close-combat": 95,
+    "crabhammer": 130,
+    "cross-chop": 90,
+    "cross-poison": 85,
+    "crush-claw": 130,
+    "cut": 100,
+    "dark-pulse": 130,
+    "dazzling-gleam": 130,
+    "diamond-storm": 130,
+    "discharge": 130,
+    "double-edge": 140,
+    "draco-meteor": 140,
+    "dragon-ascent": 140,
+    "dragon-rush": 130,
+    "drain-punch": 90,
+    "drill-peck": 130,
+    "drill-run": 130,
+    "drum-beating": 130,
+    "earth-power": 130,
+    "earthquake": 130,
+    "egg-bomb": 130,
+    "electroweb": 110,
+    "energy-ball": 130,
+    "esper-wing": 130,
+    "extreme-speed": 130,
+    "false-surrender": 130,
+    "fiery-dance": 130,
+    "fiery-wrath": 130,
+    "fire-blast": 140,
+    "fire-punch": 130,
+    "flame-charge": 100,
+    "flare-blitz": 140,
+    "fleur-cannon": 140,
+    "floaty-fall": 130,
+    "focus-blast": 95,
+    "force-palm": 80,
+    "freezing-glare": 130,
+    "giga-drain": 130,
+    "glaciate": 120,
+    "gunk-shot": 95,
+    "hammer-arm": 90,
+    "head-charge": 140,
+    "head-smash": 150,
+    "headlong-rush": 140,
+    "heart-stamp": 110,
+    "heat-wave": 130,
+    "horn-attack": 120,
+    "horn-leech": 130,
+    "hydro-pump": 140,
+    "hyper-drill": 130,
+    "hyper-fang": 130,
+    "hyper-voice": 130,
+    "hyperspace-fury": 130,
+    "hyperspace-hole": 130,
+    "ice-beam": 130,
+    "ice-punch": 130,
+    "icicle-crash": 130,
+    "inferno": 130,
+    "iron-tail": 130,
+    "lands-wrath": 130,
+    "lava-plume": 130,
+    "leaf-blade": 130,
+    "leaf-storm": 140,
+    "leaf-tornado": 120,
+    "leech-life": 130,
+    "light-of-ruin": 140,
+    "liquidation": 130,
+    "luster-purge": 130,
+    "mach-punch": 70,
+    "magical-leaf": 110,
+    "magnet-bomb": 110,
+    "mega-kick": 140,
+    "mega-punch": 130,
+    "megahorn": 140,
+    "meteor-mash": 130,
+    "mighty-cleave": 130,
+    "mirror-shot": 120,
+    "mist-ball": 130,
+    "moonblast": 130,
+    "mountain-gale": 130,
+    "mud-bomb": 120,
+    "muddy-water": 130,
+    "mystical-fire": 130,
+    "mystical-power": 120,
+    "needle-arm": 110,
+    "night-daze": 130,
+    "nuzzle": 90,
+    "octazooka": 120,
+    "origin-pulse": 140,
+    "overdrive": 130,
+    "overheat": 140,
+    "parabolic-charge": 120,
+    "petal-blizzard": 130,
+    "poison-tail": 75,
+    "pounce": 100,
+    "power-gem": 130,
+    "power-whip": 140,
+    "precipice-blades": 140,
+    "psycho-boost": 140,
+    "psycho-cut": 120,
+    "psyshield-bash": 120,
+    "pyro-ball": 140,
+    "razor-shell": 130,
+    "rock-smash": 70,
+    "rolling-kick": 80,
+    "sacred-fire": 130,
+    "scald": 130,
+    "searing-shot": 130,
+    "seed-flare": 140,
+    "seismic-toss": 75,
+    "shadow-bone": 130,
+    "shadow-claw": 120,
+    "shadow-punch": 110,
+    "shock-wave": 110,
+    "sizzly-slide": 130,
+    "slam": 130,
+    "sludge": 85,
+    "sludge-bomb": 90,
+    "sludge-wave": 90,
+    "smog": 70,
+    "spacial-rend": 130,
+    "spirit-break": 130,
+    "splishy-splash": 130,
+    "steam-eruption": 140,
+    "steamroller": 120,
+    "steel-wing": 120,
+    "stomp": 120,
+    "stone-edge": 130,
+    "strength": 130,
+    "submission": 90,
+    "supercell-slam": 130,
+    "superpower": 95,
+    "surf": 130,
+    "swift": 110,
+    "temper-flare": 130,
+    "tera-starstorm": 140,
+    "thunder": 140,
+    "thunder-punch": 130,
+    "thunderous-kick": 90,
+    "torch-song": 130,
+    "trailblaze": 100,
+    "trop-kick": 120,
+    "v-create": 150,
+    "vacuum-wave": 70,
+    "vise-grip": 110,
+    "volt-tackle": 140,
+    "waterfall": 130,
+    "wave-crash": 140,
+    "wild-charge": 130,
+    "wood-hammer": 140,
+    "x-scissor": 130,
+    "zap-cannon": 140,
+    "zen-headbutt": 130,
+    "zing-zap": 130,
+    "arm-thrust": 70,
+    "barrage": 90,
+    "bind": 90,
+    "blast-burn": 150,
+    "bone-rush": 130,
+    "bonemerang": 130,
+    "brine": 120,
+    "bullet-seed": 130,
+    "chip-away": 120,
+    "clamp": 90,
+    "comet-punch": 100,
+    "darkest-lariat": 130,
+    "dizzy-punch": 120,
+    "double-hit": 120,
+    "double-kick": 80,
+    "double-slap": 90,
+    "dual-chop": 130,
+    "explosion": 150,
+    "false-swipe": 90,
+    "fire-spin": 90,
+    "fissure": 130,
+    "flail": 130,
+    "frenzy-plant": 150,
+    "frost-breath": 110,
+    "fury-attack": 90,
+    "fury-swipes": 100,
+    "gear-grind": 130,
+    "giga-impact": 150,
+    "guillotine": 130,
+    "hold-back": 90,
+    "horn-drill": 130,
+    "hurricane": 140,
+    "hydro-cannon": 150,
+    "hyper-beam": 150,
+    "icicle-spear": 130,
+    "infestation": 90,
+    "jet-punch": 110,
+    "kowtow-cleave": 130,
+    "magma-storm": 130,
+    "meteor-assault": 100,
+    "pin-missile": 130,
+    "psyshock": 130,
+    "psystrike": 130,
+    "reversal": 100,
+    "roar-of-time": 150,
+    "rock-blast": 130,
+    "rock-climb": 130,
+    "rock-wrecker": 150,
+    "sacred-sword": 90,
+    "sand-tomb": 90,
+    "secret-sword": 90,
+    "self-destruct": 150,
+    "sheer-cold": 130,
+    "signal-beam": 130,
+    "snap-trap": 90,
+    "spike-cannon": 120,
+    "storm-throw": 80,
+    "strange-steam": 130,
+    "tail-slap": 130,
+    "twin-beam": 90,
+    "twineedle": 100,
+    "water-shuriken": 90,
+    "whirlpool": 90,
+    "wrap": 90,
+    "zippy-zap": 100,
+    "ancient-power": 110,
+    "chatter": 120,
+    "dynamic-punch": 90,
+    "ominous-wind": 110,
+    "acrobatics": 110,
+    "anchor-shot": 130,
+    "assurance": 110,
+    "astral-barrage": 140,
+    "aura-wheel": 140,
+    "avalanche": 110,
+    "axe-kick": 95,
+    "baddy-bad": 130,
+    "barb-barrage": 80,
+    "beak-blast": 130,
+    "beat-up": 100,
+    "behemoth-bash": 130,
+    "behemoth-blade": 130,
+    "belch": 95,
+    "bide": 100,
+    "blazing-torque": 130,
+    "bleakwind-storm": 130,
+    "blood-moon": 140,
+    "body-press": 90,
+    "bolt-beak": 130,
+    "bounce": 130,
+    "breaking-swipe": 110,
+    "brutal-swing": 110,
+    "burn-up": 140,
+    "burning-jealousy": 120,
+    "ceaseless-edge": 120,
+    "circle-throw": 80,
+    "clear-smog": 75,
+    "collision-course": 90,
+    "combat-torque": 90,
+    "comeuppance": 90,
+    "constrict": 90,
+    "core-enforcer": 130,
+    "counter": 75,
+    "covet": 110,
+    "crush-grip": 140,
+    "dig": 130,
+    "dire-claw": 90,
+    "dive": 130,
+    "doom-desire": 140,
+    "double-iron-bash": 140,
+    "double-shock": 140,
+    "dragon-darts": 130,
+    "dragon-energy": 150,
+    "dragon-hammer": 130,
+    "dragon-rage": 100,
+    "dragon-tail": 110,
+    "dream-eater": 130,
+    "dual-wingbeat": 130,
+    "dynamax-cannon": 130,
+    "echoed-voice": 90,
+    "eerie-spell": 130,
+    "electro-ball": 130,
+    "electro-drift": 130,
+    "electro-shot": 140,
+    "endeavor": 130,
+    "eruption": 150,
+    "eternabeam": 150,
+    "expanding-force": 130,
+    "facade": 120,
+    "fake-out": 90,
+    "feint": 90,
+    "fell-stinger": 100,
+    "fickle-beam": 130,
+    "final-gambit": 100,
+    "fire-lash": 130,
+    "fire-pledge": 130,
+    "first-impression": 130,
+    "fishious-rend": 130,
+    "flame-burst": 120,
+    "fling": 100,
+    "flip-turn": 110,
+    "flower-trick": 120,
+    "fly": 130,
+    "flying-press": 90,
+    "focus-punch": 100,
+    "foul-play": 130,
+    "freeze-shock": 140,
+    "freeze-dry": 120,
+    "freezy-frost": 130,
+    "frustration": 130,
+    "fusion-bolt": 130,
+    "fusion-flare": 130,
+    "future-sight": 140,
+    "gigaton-hammer": 150,
+    "glacial-lance": 140,
+    "glaive-rush": 140,
+    "glitzy-glow": 130,
+    "grass-knot": 130,
+    "grass-pledge": 130,
+    "grassy-glide": 110,
+    "grav-apple": 130,
+    "gyro-ball": 130,
+    "hard-press": 100,
+    "heat-crash": 130,
+    "heavy-slam": 130,
+    "hex": 120,
+    "hidden-power": 110,
+    "high-horsepower": 130,
+    "high-jump-kick": 95,
+    "hydro-steam": 130,
+    "ice-ball": 90,
+    "ice-burn": 140,
+    "ice-hammer": 130,
+    "ice-spinner": 130,
+    "incinerate": 110,
+    "infernal-parade": 110,
+    "ivy-cudgel": 130,
+    "jaw-lock": 130,
+    "judgment": 130,
+    "jump-kick": 90,
+    "knock-off": 120,
+    "lash-out": 130,
+    "last-resort": 140,
+    "last-respects": 100,
+    "leafage": 90,
+    "low-kick": 100,
+    "lumina-crash": 130,
+    "lunge": 130,
+    "magical-torque": 130,
+    "magnitude": 140,
+    "make-it-rain": 140,
+    "malignant-chain": 90,
+    "matcha-gotcha": 130,
+    "metal-burst": 100,
+    "meteor-beam": 140,
+    "mind-blown": 150,
+    "mirror-coat": 100,
+    "misty-explosion": 130,
+    "moongeist-beam": 130,
+    "mortal-spin": 70,
+    "multi-attack": 95,
+    "natural-gift": 130,
+    "natures-madness": 100,
+    "noxious-torque": 90,
+    "oblivion-wing": 130,
+    "order-up": 130,
+    "outrage": 140,
+    "pay-day": 90,
+    "payback": 100,
+    "petal-dance": 140,
+    "phantom-force": 130,
+    "photon-geyser": 130,
+    "pika-papow": 100,
+    "plasma-fists": 130,
+    "pluck": 110,
+    "poison-fang": 75,
+    "pollen-puff": 130,
+    "poltergeist": 140,
+    "population-bomb": 90,
+    "power-trip": 130,
+    "power-up-punch": 70,
+    "present": 100,
+    "prismatic-laser": 150,
+    "psyblade": 130,
+    "psychic-fangs": 130,
+    "psychic-noise": 130,
+    "psywave": 100,
+    "punishment": 130,
+    "rage": 90,
+    "rage-fist": 100,
+    "raging-bull": 130,
+    "raging-fury": 140,
+    "rapid-spin": 100,
+    "razor-wind": 130,
+    "relic-song": 130,
+    "retaliate": 120,
+    "return": 130,
+    "revelation-dance": 130,
+    "revenge": 80,
+    "rising-voltage": 140,
+    "rollout": 90,
+    "round": 110,
+    "ruination": 90,
+    "salt-cure": 90,
+    "sandsear-storm": 130,
+    "sappy-seed": 130,
+    "scale-shot": 130,
+    "scorching-sands": 120,
+    "secret-power": 120,
+    "shadow-force": 140,
+    "shell-side-arm": 90,
+    "shell-trap": 150,
+    "silver-wind": 110,
+    "skitter-smack": 120,
+    "skull-bash": 140,
+    "sky-attack": 140,
+    "sky-drop": 110,
+    "sky-uppercut": 90,
+    "smack-down": 100,
+    "smart-strike": 120,
+    "smelling-salts": 120,
+    "snipe-shot": 130,
+    "snore": 100,
+    "solar-beam": 140,
+    "solar-blade": 140,
+    "sonic-boom": 100,
+    "sparkling-aria": 130,
+    "sparkly-swirl": 130,
+    "spectral-thief": 130,
+    "spin-out": 130,
+    "spirit-shackle": 130,
+    "spit-up": 100,
+    "springtide-storm": 130,
+    "steel-beam": 140,
+    "steel-roller": 140,
+    "stomping-tantrum": 130,
+    "stone-axe": 120,
+    "stored-power": 130,
+    "sucker-punch": 120,
+    "sunsteel-strike": 130,
+    "super-fang": 100,
+    "surging-strikes": 130,
+    "synchronoise": 140,
+    "syrup-bomb": 110,
+    "tachyon-cutter": 140,
+    "techno-blast": 140,
+    "tera-blast": 130,
+    "terrain-pulse": 130,
+    "thief": 110,
+    "thousand-arrows": 130,
+    "thousand-waves": 130,
+    "thrash": 140,
+    "throat-chop": 130,
+    "thunder-cage": 130,
+    "thunderclap": 120,
+    "tri-attack": 130,
+    "triple-arrows": 90,
+    "triple-axel": 140,
+    "triple-dive": 90,
+    "triple-kick": 80,
+    "trump-card": 130,
+    "u-turn": 120,
+    "upper-hand": 85,
+    "uproar": 130,
+    "veevee-volley": 100,
+    "venoshock": 85,
+    "vital-throw": 85,
+    "volt-switch": 120,
+    "wake-up-slap": 85,
+    "water-pledge": 130,
+    "water-spout": 150,
+    "weather-ball": 130,
+    "wicked-blow": 130,
+    "wicked-torque": 130,
+    "wildbolt-storm": 130,
+    "wring-out": 140
+  },
+  "effects": {
+    "max-strike": {
+      "statChanges": [
+        {
+          "stat": "spe",
+          "stages": -1,
+          "target": "enemy"
+        }
+      ]
+    },
+    "max-knuckle": {
+      "statChanges": [
+        {
+          "stat": "atk",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
+    },
+    "max-airstream": {
+      "statChanges": [
+        {
+          "stat": "spe",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
+    },
+    "max-ooze": {
+      "statChanges": [
+        {
+          "stat": "spa",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
+    },
+    "max-quake": {
+      "statChanges": [
+        {
+          "stat": "spd",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
+    },
+    "max-rockfall": {
+      "weather": "sand"
+    },
+    "max-flutterby": {
+      "statChanges": [
+        {
+          "stat": "spa",
+          "stages": -1,
+          "target": "enemy"
+        }
+      ]
+    },
+    "max-phantasm": {
+      "statChanges": [
+        {
+          "stat": "def",
+          "stages": -1,
+          "target": "enemy"
+        }
+      ]
+    },
+    "max-steelspike": {
+      "statChanges": [
+        {
+          "stat": "def",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
+    },
+    "max-flare": {
+      "weather": "sun"
+    },
+    "max-geyser": {
+      "weather": "rain"
+    },
+    "max-hailstorm": {
+      "weather": "hail"
+    },
+    "max-wyrmwind": {
+      "statChanges": [
+        {
+          "stat": "atk",
+          "stages": -1,
+          "target": "enemy"
+        }
+      ]
+    },
+    "max-darkness": {
+      "statChanges": [
+        {
+          "stat": "spd",
+          "stages": -1,
+          "target": "enemy"
+        }
+      ]
+    }
+  },
+  "gmax": {
+    "g-max-befuddle": {
+      "forms": [
+        "butterfree-gmax"
+      ],
+      "type": "bug"
+    },
+    "g-max-cannonade": {
+      "forms": [
+        "blastoise-gmax"
+      ],
+      "type": "water"
+    },
+    "g-max-centiferno": {
+      "forms": [
+        "centiskorch-gmax"
+      ],
+      "type": "fire",
+      "effects": {
+        "bind": true
+      }
+    },
+    "g-max-chi-strike": {
+      "forms": [
+        "machamp-gmax"
+      ],
+      "type": "fighting"
+    },
+    "g-max-cuddle": {
+      "forms": [
+        "eevee-gmax"
+      ],
+      "type": "normal"
+    },
+    "g-max-depletion": {
+      "forms": [
+        "duraludon-gmax"
+      ],
+      "type": "dragon"
+    },
+    "g-max-drum-solo": {
+      "forms": [
+        "rillaboom-gmax"
+      ],
+      "type": "grass",
+      "power": 160
+    },
+    "g-max-finale": {
+      "forms": [
+        "alcremie-gmax"
+      ],
+      "type": "fairy"
+    },
+    "g-max-fireball": {
+      "forms": [
+        "cinderace-gmax"
+      ],
+      "type": "fire",
+      "power": 160
+    },
+    "g-max-foam-burst": {
+      "forms": [
+        "kingler-gmax"
+      ],
+      "type": "water",
+      "effects": {
+        "statChanges": [
+          {
+            "stat": "spe",
+            "stages": -2,
+            "target": "enemy"
+          }
+        ]
+      }
+    },
+    "g-max-gold-rush": {
+      "forms": [
+        "meowth-gmax"
+      ],
+      "type": "normal"
+    },
+    "g-max-gravitas": {
+      "forms": [
+        "orbeetle-gmax"
+      ],
+      "type": "psychic"
+    },
+    "g-max-hydrosnipe": {
+      "forms": [
+        "inteleon-gmax"
+      ],
+      "type": "water",
+      "power": 160
+    },
+    "g-max-malodor": {
+      "forms": [
+        "garbodor-gmax"
+      ],
+      "type": "poison",
+      "effects": {
+        "status": "psn"
+      }
+    },
+    "g-max-meltdown": {
+      "forms": [
+        "melmetal-gmax"
+      ],
+      "type": "steel"
+    },
+    "g-max-one-blow": {
+      "forms": [
+        "urshifu-single-strike-gmax"
+      ],
+      "type": "dark",
+      "effects": {
+        "breaksProtect": true
+      }
+    },
+    "g-max-rapid-flow": {
+      "forms": [
+        "urshifu-rapid-strike-gmax"
+      ],
+      "type": "water",
+      "effects": {
+        "breaksProtect": true
+      }
+    },
+    "g-max-replenish": {
+      "forms": [
+        "snorlax-gmax"
+      ],
+      "type": "normal"
+    },
+    "g-max-resonance": {
+      "forms": [
+        "lapras-gmax"
+      ],
+      "type": "ice"
+    },
+    "g-max-sandblast": {
+      "forms": [
+        "sandaconda-gmax"
+      ],
+      "type": "ground",
+      "effects": {
+        "bind": true
+      }
+    },
+    "g-max-smite": {
+      "forms": [
+        "hatterene-gmax"
+      ],
+      "type": "fairy",
+      "effects": {
+        "confuse": true
+      }
+    },
+    "g-max-snooze": {
+      "forms": [
+        "grimmsnarl-gmax"
+      ],
+      "type": "dark"
+    },
+    "g-max-steelsurge": {
+      "forms": [
+        "copperajah-gmax"
+      ],
+      "type": "steel"
+    },
+    "g-max-stonesurge": {
+      "forms": [
+        "drednaw-gmax"
+      ],
+      "type": "water"
+    },
+    "g-max-stun-shock": {
+      "forms": [
+        "toxtricity-amped-gmax",
+        "toxtricity-low-key-gmax"
+      ],
+      "type": "electric"
+    },
+    "g-max-sweetness": {
+      "forms": [
+        "appletun-gmax"
+      ],
+      "type": "grass"
+    },
+    "g-max-tartness": {
+      "forms": [
+        "flapple-gmax"
+      ],
+      "type": "grass",
+      "effects": {
+        "statChanges": [
+          {
+            "stat": "eva",
+            "stages": -1,
+            "target": "enemy"
+          }
+        ]
+      }
+    },
+    "g-max-terror": {
+      "forms": [
+        "gengar-gmax"
+      ],
+      "type": "ghost"
+    },
+    "g-max-vine-lash": {
+      "forms": [
+        "venusaur-gmax"
+      ],
+      "type": "grass"
+    },
+    "g-max-volcalith": {
+      "forms": [
+        "coalossal-gmax"
+      ],
+      "type": "rock"
+    },
+    "g-max-volt-crash": {
+      "forms": [
+        "pikachu-gmax"
+      ],
+      "type": "electric",
+      "effects": {
+        "status": "par"
+      }
+    },
+    "g-max-wildfire": {
+      "forms": [
+        "charizard-gmax"
+      ],
+      "type": "fire"
+    },
+    "g-max-wind-rage": {
+      "forms": [
+        "corviknight-gmax"
+      ],
+      "type": "flying"
+    }
+  }
+}

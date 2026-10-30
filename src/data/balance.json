@@ -40,7 +40,8 @@
  },
  "transformations": {
   "bossGymFrom": 5,
-  "league": true
+  "league": true,
+  "dynamaxTurns": 3
  },
  "friendship": {
   "max": 255,

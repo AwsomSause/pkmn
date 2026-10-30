@@ -116,7 +116,9 @@ export function moveStatus(content: Content, m: Move): EntryStatus {
   if (m.supported && m.category === 'status' && Object.keys(m.effects).length === 0) notes.push({ status: 'invalid', note: 'status move with no effect the engine runs' });
   // The type Z-Moves are made in battle from a move and its Z-Crystal (M8.5, battle/transform.ts zMoveFor).
   const zMade = Object.values(content.zMoves.byType).includes(m.id);
+  const maxMade = Object.values(content.maxMoves.byType).includes(m.id) || m.id === content.maxMoves.guard || m.id in content.maxMoves.gmax;
   if (zMade) notes.push({ status: 'limited', note: 'Z-Move: made in battle from a move of its type with the Z-Crystal (M8.5); never learned' });
+  else if (maxMade) notes.push({ status: 'limited', note: 'Max Move: used by a Dynamaxed Pokémon (M8.5); terrain and most G-Max side effects not built yet' });
   else if (!m.supported) notes.push({ status: 'disabled', note: m.needs ? `needs: ${m.needs}` : 'not supported by the battle engine yet' });
   for (const note of KNOWN.moves[m.id] ?? []) notes.push({ status: 'limited', note });
   return { kind: 'move', id: m.id, ...worst(notes) };
@@ -148,7 +150,8 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   const custom = s.tags.some((t) => t === 'delta' || t === 'zform' || t === 'spooky');
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
   if (isTransformation(s)) {
-    if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
+    if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken when its species Dynamaxes (M8.5); most G-Max side effects not built yet' });
+    else if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
     else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
   }
   const usable = new Set(usableLearnset(content, s).map((e) => e.move));

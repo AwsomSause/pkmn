@@ -147,3 +147,41 @@ test('Z-Move from the battle menu', async ({ page }) => {
   await page.screenshot({ path: 'test-results/m8_5-zmove-used.png' });
   expect(errors).toEqual([]);
 });
+
+test('Gigantamax from the battle menu', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await startRun(page, 'e2e-dynamax');
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    session.debugAddToParty('charizard', 50);
+    session.run.party.unshift(session.run.party.pop());
+    session.run.party[0].moves = [{ id: 'flamethrower', pp: 15 }, { id: 'growl', pp: 40 }];
+    session.debugGiveItem('dynamax-band', 1);
+  });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.evaluate(() => {
+    const { session, game } = (window as any).__pkr;
+    session.debugReplaceEnemy('snorlax', 70);
+    session.run.battle.enemyTeam[0].moves = [{ id: 'growl', pp: 40 }];
+    game.scene.getScene('Battle').scene.restart();
+  });
+  await waitForScene(page, 'Battle');
+  await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Max: OFF']);
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => menuLabels(page)).toEqual(['Fight', 'Bag', 'Pokémon', 'Dynamax: ON']);
+  await page.keyboard.press('Enter');
+  // Flamethrower becomes Charizard's G-Max Move; Growl becomes Max Guard.
+  await expect.poll(() => menuLabels(page)).toEqual(['G-Max Wildfire', 'Max Guard']);
+  await page.waitForTimeout(250);
+  await page.keyboard.press('Enter');
+  const species = () => page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId);
+  await expect.poll(species, { timeout: 15_000 }).toBe('charizard-gmax');
+  await expect.poll(() => textureOf(page), { timeout: 15_000 }).toBe('pokemon.back.6-gigantamax');
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: 'test-results/m8_5-gigantamax.png' });
+  expect(errors).toEqual([]);
+});
