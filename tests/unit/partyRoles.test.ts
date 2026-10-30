@@ -40,3 +40,22 @@ describe('reward synergy coverage (catalog #95)', () => {
     expect([...silent]).toEqual([]);
   });
 });
+
+describe('reward comparison (catalog #118)', () => {
+  it('shows now and after for vitamins, level-ups and money without changing the run', async () => {
+    const { compareReward } = await import('../../src/core/rewardCompare');
+    const { createRun, chooseStarter } = await import('../../src/core/run');
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'cmp', archetypeId: 'red' }), 0);
+    const before = JSON.stringify(run);
+    const seen = new Set<string>();
+    for (const r of content.rewards.values()) {
+      const c = compareReward(content, run, r);
+      if (c) {
+        seen.add(r.effect.kind);
+        expect(c.after).not.toBe(c.now);
+      }
+    }
+    expect(seen.has('vitamin') && seen.has('levelUp')).toBe(true);
+    expect(JSON.stringify(run)).toBe(before);
+  });
+});

@@ -13,7 +13,7 @@ import type { RunEvent } from '../run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../state';
 import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
-import { cooldownKey } from './ledger';
+import { cooldownKey, hasBattleEffect } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
 import { RIVAL_PATHS } from '../rivals/schema';
 import { maybeSpark, sparkGain } from '../rivals/manager';
@@ -383,10 +383,13 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
   const tell = (t: StoryTrigger, suppressed: boolean) => {
     const def = content.story.definitions.find((d) => d.id === t.defId)!;
     const actor = t.uid;
+    // Debug timeline (#144): why this moment did or did not change state.
+    const repeat = !suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind) && isBattleEffect(def.effect) && Boolean(run.battle && hasBattleEffect(run.battle, cooldownKey(def, actor)));
+    const reason = suppressed ? 'suppressed: a higher-priority combat effect took this turn' : repeat ? 'ineligible: effect already applied this battle' : def.effect ? 'effect applied' : 'memory only';
     const event = emit(content, run, 'storyMoment', {
       where,
       actors: [actor],
-      data: { def: def.id, suppressed },
+      data: { def: def.id, suppressed, reason },
       importance: def.memoryRecord?.importance ?? 0,
       text: def.memoryRecord ? fill(def.memoryRecord.text, t.names) : undefined,
       emotions: def.emotions,
