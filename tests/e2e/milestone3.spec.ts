@@ -88,6 +88,7 @@ test('the healing spot and the shop work from the map', async ({ page }) => {
     session.run.party[0].hp = 1;
     session.run.money = 500;
     const node = session.run.stage.map.nodes.find((n: any) => n.id === session.run.stage.current);
+    node.sides = node.sides.filter((x: any) => x.kind !== 'event'); // a "?" stop would shift the menu
     node.sides.push({ id: 'e2e-shop', kind: 'shop', used: false });
   });
   await reopenMap(page);

@@ -11835,7 +11835,7 @@
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
-  "icon": "kyurem-white",
+  "icon": null,
   "status": "supported",
   "effect": {
    "kind": "perk",
