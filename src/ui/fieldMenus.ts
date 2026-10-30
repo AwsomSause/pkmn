@@ -10,6 +10,7 @@ import { rivalChronicle } from '../core/rivals/chronicle';
 import { boxCapacity } from '../core/trainerPerks';
 import { runPerks } from '../core/archetypes';
 import { canCashIn, partyCapacity } from '../core/run';
+import { legacyCard } from '../core/story/legacy';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
 import { bagRow, emotionDot, partyRows, Picker, speciesRow } from './partyPanel';
@@ -102,6 +103,18 @@ export function openStoryMenu(host: FieldMenuHost): void {
       box.add(scene.add.text(14, 8, `${r.ultimate ? '★★ Ultimate Rival' : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
     },
   }));
+  const legacyRows = run.party.flatMap((m) => {
+    const card = legacyCard(content, run, m.uid);
+    if (!card || (card.titles.length === 0 && card.tags.length === 0)) return [];
+    const name = content.species.get(card.speciesId)?.name ?? card.speciesId;
+    return [{
+      problem: null,
+      hint: [card.signature && `Signature: ${card.signature}`, card.greatest.length > 1 && `Greatest moments: ${card.greatest.join('; ')}`].filter(Boolean).join('  ·  '),
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, `${name}: ${[...card.titles, ...card.tags].join(' · ')}`, textStyle(20, '#7fe3ff', { fixedWidth: w - 28 })));
+      },
+    }];
+  });
   const rows = entries.map((entry) => {
     const names = entry.actors.map(who).filter(Boolean).join(' & ');
     const where = `Region ${entry.where.region + 1}${entry.where.stage !== null ? ` · Stage ${entry.where.stage + 1}` : ''}`;
@@ -118,10 +131,10 @@ export function openStoryMenu(host: FieldMenuHost): void {
   });
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: rows.length + rivalRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
+    title: rows.length + rivalRows.length + legacyRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
     columns: 1,
     rowHeight: 40,
-    rows: [...rivalRows, ...rows],
+    rows: [...legacyRows, ...rivalRows, ...rows],
     onSelect: () => undefined,
     onBack: () => close(host, picker),
   });
