@@ -6,7 +6,7 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 |---|---|---|
 | 1-15 | A Battle drama, trainer voice, banter, recap cards | PART: Battle Drama Engine covers 1-13 [drama thread]. **14 recap card: TODO (run-end recap done in slice 1)**, 15 PART |
 | 16-25 | B Mid-battle evolution, phases, charge-ups | PART: 16, 20, 22, 23, 25 exist (drama/Hyper/raids) [Hyper thread]; 17-19, 21, 24 TODO |
-| 26-35 | C Wild Pokémon identity | TODO (33-34 PART: shiny/special forms exist) |
+| 26-35 | C Wild Pokémon identity | PART: **26, 27 first-impression behaviours (7, narrative only), 30 territorial warnings, 31 rescue events (no punishment for declining), 32/66 one 3-link ecological chain (disturbed habitat -> poacher hideout -> habitat restored) DONE (slice 4)**; 28 recognized wild rival, 29 pack/habitat encounters, 35 unusual moves as clues TODO; 33-34 PART (shiny/special forms exist) |
 | 36-47 | D Bond and personality | PART: 36-37, 44-46 via Bond screen/engine; 40 mentorship DONE; 38-39, 41-43, 47 TODO |
 | 48-61 | E Rivals and nemesis | PART/DONE [rivals thread]; 60 Rival Ghost, 61 Chronicle page TODO |
 | 62-75 | F World, routes, events | PART: 64-66, 71 events/services exist; 62, 63, 67-70, 72-75 TODO |
@@ -26,3 +26,4 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 1. Run recap, seed code, retry seed, damage details, accessibility profiles (settings v5). DONE.
 2. Party roles, battle log (H), reward synergy line. DONE.
 3. Research Room with collection sets and milestone payouts. DONE.
+4. Wild behaviours, territorial warning, rescue events, ecological chain (`core/wildBehavior.ts`, `tools/events/wild.ts`). DONE (limited: behaviours are framing only, no catch or battle change).

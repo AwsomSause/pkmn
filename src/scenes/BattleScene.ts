@@ -5,6 +5,7 @@
 import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
+import { wildBehavior } from '../core/wildBehavior';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
@@ -776,6 +777,12 @@ export class BattleScene extends Phaser.Scene {
     }
     // Entry abilities (Intimidate, Drizzle) of the first two Pokémon.
     const { session } = services();
+    // A wild Pokémon's first impression (presentation only; a reload may show it again).
+    const framing = battle.kind === 'wild' && battle.turn === 1 ? wildBehavior(session.content, session.run!) : null;
+    if (framing) {
+      await this.say(framing.sign);
+      await this.say(framing.line);
+    }
     for (const line of session.battleOpening()) await this.sayTrainer(line);
     if ((battle.pendingEntry ?? []).length > 0 && !battle.needsSwitch) {
       const before = structuredClone(session.run!);
