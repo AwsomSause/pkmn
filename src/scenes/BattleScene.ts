@@ -557,8 +557,13 @@ export class BattleScene extends Phaser.Scene {
     const level = this.add.text(right, 14, '', textStyle(24)).setOrigin(1, 0);
     container.add([name, level]);
     const hpX = isPlayer ? 210 : 177;
-    container.add(this.add.text(hpX - 8, 63, 'HP', textStyle(15, '#f8a030', { shadow: undefined })).setOrigin(1, 0.5));
-    const hpBar = new Bar(this, hpX, 63, 144, 6, 'hp');
+    // B2W2 "HP" tag: a small dark pill with orange letters, sitting against the gauge.
+    const tag = this.add.graphics();
+    tag.fillStyle(0x303838, 1).fillRoundedRect(hpX - 40, 54, 34, 18, 9);
+    tag.lineStyle(1, 0xf0f0e8, 0.9).strokeRoundedRect(hpX - 40, 54, 34, 18, 9);
+    container.add(tag);
+    container.add(this.add.text(hpX - 23, 63, 'HP', textStyle(13, '#f8a030', { shadow: undefined })).setOrigin(0.5));
+    const hpBar = new Bar(this, hpX, 63, 144, 10, 'hp');
     hpBar.addTo(container);
     const box: InfoBox = { container, isPlayer, name, level, hpBar, statusAt: { x: left, y: isPlayer ? 80 : 80 } };
     if (isPlayer) {
