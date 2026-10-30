@@ -122,11 +122,11 @@ describe('effects: each point is worth the full percentage', () => {
 });
 
 describe('Luck', () => {
-  it('tilts the draft weights (rare 10% → 16% at Luck 100) and leaves common alone', () => {
+  it('tilts the draft weights (rare 8.5% → 15% at Luck 100) and leaves common alone', () => {
     const w = luckWeights(content.balance.rarityWeights, fx({ luck: 100 }));
     const total = w.common! + w.uncommon! + w.rare!;
     expect(w.common).toBe(content.balance.rarityWeights.common);
-    expect(w.rare! / total).toBeCloseTo(0.16, 2);
+    expect(w.rare! / total).toBeCloseTo(0.148, 2);
   });
 
   it('doubles the shiny chance at Luck 100 (1/2000 → 1/1000)', () => {

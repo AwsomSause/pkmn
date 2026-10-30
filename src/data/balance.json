@@ -17,9 +17,9 @@
  "draftSize": 5,
  "rarityWeights": {
   "common": 60,
-  "uncommon": 30,
-  "rare": 10,
-  "epic": 1
+  "uncommon": 25.5,
+  "rare": 8.5,
+  "epic": 0.85
  },
  "repeatFamilyWeight": 0.5,
  "bossHeldItems": {
@@ -160,15 +160,15 @@
  },
  "harderRarityWeights": {
   "common": 40,
-  "uncommon": 40,
-  "rare": 18,
-  "epic": 2
+  "uncommon": 34,
+  "rare": 15.3,
+  "epic": 1.7
  },
  "bossRarityWeights": {
   "common": 20,
-  "uncommon": 45,
-  "rare": 30,
-  "epic": 5
+  "uncommon": 38.25,
+  "rare": 25.5,
+  "epic": 4.25
  },
  "campaigns": [
   {
