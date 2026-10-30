@@ -41,3 +41,14 @@ export function promiseLines(content: Content, run: RunState): string[] {
   }
   return out;
 }
+
+/** The wild species that has beaten your party most (null: none). Ties go to the species listed first. */
+export function oldFoe(run: RunState): string | null {
+  const tally = new Map<string, number>();
+  for (const [key, value] of Object.entries(run.story.flags)) {
+    if (!key.startsWith('lostTo:') || typeof value !== 'number' || value < 1) continue;
+    const id = key.split(':')[2]!;
+    tally.set(id, (tally.get(id) ?? 0) + value);
+  }
+  return [...tally.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? null;
+}
