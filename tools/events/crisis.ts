@@ -1,0 +1,50 @@
+// Regional Crisis reports and the Rival Tournament bracket (Techno §7A/§7B, Electric §2E).
+// Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
+// The bracket: an entry stop, then one round per stage (always placed until played), then the final.
+
+import { $, any, ch, ev, fight, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+
+const D = 'Regional Crisis';
+const T = 'Rival Tournament';
+const crisis = (atLeast: number, atMost = 5): Json => ({ kind: 'crisis', atLeast, atMost });
+const eff = {
+  crisis: (amount: number): Json => ({ kind: 'crisis', amount }),
+  aid: (amount = 1): Json => ({ kind: 'aid', amount }),
+  round: (round: number): Json => ({ kind: 'tournament', round }),
+};
+
+const report = (id: string, name: string, intro: string, tint: string, help: string, prep: string): Json =>
+  ev(id, name, D, { rarity: 'uncommon', minStage: 2, requires: [crisis(2)], cast: ['trainer.psychic_m'], effect: 'glint', tint }, intro, [
+    ch(help, out('You pitch in at once. People remember it, and some of them promise to stand with you.', eff.crisis(-2), eff.aid(1), good(2), rp(15))),
+    ch(prep, out('You gather what the region needs most. The trouble eases a little.', eff.crisis(-1), eff.aid(1), any(...VITAMINS)), { requires: [money(200)], fail: leave() }),
+    ch('Ignore it and keep moving', out('You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.', eff.crisis(1), $(300))),
+  ]);
+
+export const CRISIS_EVENTS: Json[] = [
+  report('crisis-report-industry', 'Smoke on the Horizon', 'A factory on the edge of town has gone wrong. Smoke is rolling over the fields and the workers are waving for help.', '#2a2018', 'Help clear the site (safe)', 'Bring supplies (₽200)'),
+  report('crisis-report-flood', 'The River Is Rising', 'The river has burst its banks. Families are carrying what they can to higher ground.', '#1a2838', 'Help carry people to safety (safe)', 'Bring sandbags and supplies (₽200)'),
+  report('crisis-report-outbreak', 'Something Is Making Pokémon Sick', 'Pokémon across the region are coming down with the same fever. The local ranger looks exhausted.', '#1f2a1d', 'Help treat them (safe)', 'Bring medicine (₽200)'),
+  report('crisis-report-blackout', 'The Lights Went Out', 'Every light in the next town is dark. A stranger stands at the generator: "Whatever it is, it is getting worse."', '#14141f', 'Help restore the power (safe)', 'Bring spare parts (₽200)'),
+  ev('crisis-old-friend', 'They Heard You Were Here', D, { rarity: 'rare', minStage: 3, requires: [crisis(3), { kind: 'rivalMet', atLeast: 2 }], cast: [], effect: 'hearts', tint: '#2a2038' },
+    'A rival you have fought more than once is waiting at the town gate, team at full strength. "Whatever this is, you will not face it alone. Not again."', [
+      ch('Fight side by side', out('You stand together. Your Pokémon feel the difference.', eff.crisis(-2), eff.aid(2), lv(1, 'party'), heal(0.5))),
+      ch('Thank them, but go alone', out('They nod. "Your call."', eff.crisis(-1))),
+    ]),
+];
+
+const entry = (id: string, round: number, name: string, intro: string, cls: string, size: number, lvBonus: number, win: Json[], yes: string): Json =>
+  ev(id, name, T, { rarity: 'common', minStage: 2, requires: [{ kind: 'tournament', round }], cast: ['trainer.psychic_m'], effect: 'sparkle', tint: '#2a1d3a' }, intro, [
+    ch(yes, fight('The crowd roars as the match begins.', trainer(cls, { size, lv: lvBonus, win }))),
+    ch('Withdraw from the bracket', out('You hand back your number. The bracket carries on without you.', eff.round(9))),
+  ]);
+
+export const TOURNAMENT_EVENTS: Json[] = [
+  ev('tournament-entry', 'The Rival Circuit', T, { rarity: 'rare', minStage: 3, requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'tournament', round: 0 }, money(300)], cast: ['trainer.psychic_m'], effect: 'sparkle', tint: '#2a1d3a' },
+    'A banner stretches across the plaza: the Rival Circuit. Trainers you have crossed paths with are signing up. The entry fee is ₽300, and the bracket runs over the next stages.', [
+      ch('Enter the circuit (₽300)', out('You are in. Your first match comes at the next stop.', $(-300), eff.round(1))),
+      ch('Watch from the stands', out('You cheer from the crowd and learn how the best of them fight.', rp(10), eff.round(9))),
+    ]),
+  entry('tournament-quarter', 1, 'Circuit: Quarterfinal', 'Your first match. A lively crowd fills the stands.', 'Circuit Trainer', 3, 0, [$(500), eff.round(2)], 'Play the quarterfinal'),
+  entry('tournament-semi', 2, 'Circuit: Semifinal', 'The field has thinned. Your opponent has clearly studied your last match.', 'Circuit Ace', 4, 1, [$(900), eff.round(3), rp(20)], 'Play the semifinal'),
+  entry('tournament-final', 3, 'Circuit: The Final', 'The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.', 'Circuit Champion', 5, 2, [$(2000), any(...TREASURE), rp(60), eff.round(9), good(2)], 'Play the final'),
+];

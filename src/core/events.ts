@@ -19,6 +19,7 @@ import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
+import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, discover } from './progress';
@@ -67,6 +68,12 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
       return run.story.rivals.some((r) => r.encounters >= c.atLeast);
+    case 'crisis':
+      return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
+    case 'aid':
+      return crisisAid(run) >= c.atLeast;
+    case 'tournament':
+      return tournamentRound(run) === c.round;
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
     case 'bond':
@@ -109,6 +116,12 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs two bonded Pokémon';
     case 'focus':
       return `Only in a ${c.focus}-focused region`;
+    case 'crisis':
+      return c.atLeast > 0 ? 'Needs a serious crisis in this region' : 'Needs the crisis to be under control';
+    case 'aid':
+      return 'Needs allies gathered in this region';
+    case 'tournament':
+      return 'Needs the tournament bracket to be at this round';
   }
 }
 
@@ -170,6 +183,13 @@ export function addEventStops(content: Content, run: RunState): void {
     const node = rng.pick(candidates);
     node.sides.push({ id: `event-${node.sides.length + 1}-${node.id}`, kind: 'event', used: false, eventId, ...(hidden ? { hidden: true } : {}) });
   };
+  // A running tournament round and a serious crisis always get their stop (until played), so neither can be missed by luck.
+  const open = new Set(eligibleEvents(content, run).map((e) => e.id));
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id))].filter((id): id is string => !!id && open.has(id));
+  for (const id of forced) {
+    taken.add(id);
+    place(id, false);
+  }
   const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules));
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
@@ -384,6 +404,12 @@ function effectWords(content: Content, e: EventEffect): string {
       return 'skip ahead to the gym';
     case 'formChange':
       return 'a Pokémon changes form';
+    case 'crisis':
+      return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
+    case 'aid':
+      return 'allies gathered';
+    case 'tournament':
+      return e.round === 9 ? 'tournament over' : 'tournament round';
     case 'count':
       return e.counter === 'eventClues' ? (e.amount === 1 ? 'a clue' : `${e.amount} clues`) : e.counter === 'eventBossesWon' ? 'an event boss beaten' : 'the event finale won';
   }
@@ -538,6 +564,14 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       discover(run, e.to, true);
       return `${to.name} appears!`;
     }
+    case 'crisis':
+      changeCrisis(content, run, e.amount);
+      return effectWords(content, e);
+    case 'aid':
+      changeAid(run, e.amount);
+      return effectWords(content, e);
+    case 'tournament':
+      return setTournament(content, run, e.round);
     case 'count':
       count(run, e.counter, e.amount);
       return effectWords(content, e);

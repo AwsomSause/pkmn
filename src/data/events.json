@@ -20575,6 +20575,744 @@
    ]
   },
   {
+   "id": "crisis-report-industry",
+   "name": "Smoke on the Horizon",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2018",
+    "effect": "glint"
+   },
+   "intro": "A factory on the edge of town has gone wrong. Smoke is rolling over the fields and the workers are waving for help.",
+   "choices": [
+    {
+     "label": "Help clear the site (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring supplies (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-flood",
+   "name": "The River Is Rising",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1a2838",
+    "effect": "glint"
+   },
+   "intro": "The river has burst its banks. Families are carrying what they can to higher ground.",
+   "choices": [
+    {
+     "label": "Help carry people to safety (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring sandbags and supplies (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-outbreak",
+   "name": "Something Is Making Pokémon Sick",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1f2a1d",
+    "effect": "glint"
+   },
+   "intro": "Pokémon across the region are coming down with the same fever. The local ranger looks exhausted.",
+   "choices": [
+    {
+     "label": "Help treat them (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring medicine (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-blackout",
+   "name": "The Lights Went Out",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#14141f",
+    "effect": "glint"
+   },
+   "intro": "Every light in the next town is dark. A stranger stands at the generator: \"Whatever it is, it is getting worse.\"",
+   "choices": [
+    {
+     "label": "Help restore the power (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring spare parts (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-old-friend",
+   "name": "They Heard You Were Here",
+   "group": "Regional Crisis",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 3,
+     "atMost": 5
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2038",
+    "effect": "hearts"
+   },
+   "intro": "A rival you have fought more than once is waiting at the town gate, team at full strength. \"Whatever this is, you will not face it alone. Not again.\"",
+   "choices": [
+    {
+     "label": "Fight side by side",
+     "success": {
+      "text": "You stand together. Your Pokémon feel the difference.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 2
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Thank them, but go alone",
+     "success": {
+      "text": "They nod. \"Your call.\"",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-entry",
+   "name": "The Rival Circuit",
+   "group": "Rival Tournament",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "tournament",
+     "round": 0
+    },
+    {
+     "kind": "money",
+     "atLeast": 300
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "A banner stretches across the plaza: the Rival Circuit. Trainers you have crossed paths with are signing up. The entry fee is ₽300, and the bracket runs over the next stages.",
+   "choices": [
+    {
+     "label": "Enter the circuit (₽300)",
+     "success": {
+      "text": "You are in. Your first match comes at the next stop.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "tournament",
+        "round": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch from the stands",
+     "success": {
+      "text": "You cheer from the crowd and learn how the best of them fight.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-quarter",
+   "name": "Circuit: Quarterfinal",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 1
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "Your first match. A lively crowd fills the stands.",
+   "choices": [
+    {
+     "label": "Play the quarterfinal",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Trainer",
+       "size": 3,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "tournament",
+         "round": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-semi",
+   "name": "Circuit: Semifinal",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 2
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "The field has thinned. Your opponent has clearly studied your last match.",
+   "choices": [
+    {
+     "label": "Play the semifinal",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Ace",
+       "size": 4,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        },
+        {
+         "kind": "tournament",
+         "round": 3
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-final",
+   "name": "Circuit: The Final",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 3
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.",
+   "choices": [
+    {
+     "label": "Play the final",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Champion",
+       "size": 5,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "tournament",
+         "round": 9
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "deliver-oaks-parcel",
    "name": "Oak's Parcel",
    "group": "Story items",
