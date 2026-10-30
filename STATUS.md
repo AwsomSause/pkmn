@@ -74,6 +74,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6i: visual snapshot e2e (`tests/e2e/visualSnapshots.spec.ts`), screenshots in test-results/visual/.
 - Catalog slice 6j: start-up load budget (`npm run report:perf`, in `npm run check`).
 - Catalog slice 6k: Move Mastery (`core/moveMastery.ts`, `profile.moveUses`; no save version bump, the field is optional).
+- Catalog slice 6l: Research notes in the Research Room (`core/researchNotes.ts`, 15 Research Points each, information only).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
