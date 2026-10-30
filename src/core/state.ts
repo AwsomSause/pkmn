@@ -691,6 +691,8 @@ export const RunRulesSchema = z.object({
   lockType: z.string().nullable().default(null),
   /** Single Region Dex: the generation the run draws from. */
   lockGeneration: z.number().int().min(1).max(9).nullable().default(null),
+  /** Endless: laps of the regions finished so far. */
+  loops: z.number().int().min(0).default(0),
   /** Times a wipe sent the run back to its checkpoint. */
   wipes: z.number().int().min(0),
 });
