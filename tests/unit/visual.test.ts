@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AMBIENCE, arenaType } from '../../src/ui/battleFx/ambience';
-import { CATEGORY_ROWS, STATUS_ROWS, TYPE_ROWS } from '../../src/ui/aero';
+import { CATEGORY_ROWS, FLAG_ICONS, STATUS_ROWS, TYPE_ROWS, effectivenessWord } from '../../src/ui/aero';
 import typeChart from '../../src/data/typeChart.json';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { existsSync } from 'node:fs';
@@ -33,7 +33,15 @@ describe('visual slice 1 (Aero battle)', () => {
 
   it('ships every pack file it catalogs', () => {
     const pack = FIXED_ASSETS.filter((a) => a.id.startsWith('pack.'));
-    expect(pack.length).toBe(30);
+    expect(pack.length).toBe(42);
     for (const a of pack) expect(existsSync(`public/assets/${a.path}`), a.path).toBe(true);
+  });
+
+  it('slice 3: every move flag but typeless has an Enhanced Battle UI icon, and effectiveness has words', () => {
+    for (const f of ['contact', 'sound', 'bite', 'powder', 'pulse', 'punch', 'zmove', 'max', 'highCrit']) expect(FLAG_ICONS[f], f).toBeDefined();
+    expect(effectivenessWord(0)).toEqual({ frame: 1, text: 'No effect' });
+    expect(effectivenessWord(0.5).text).toBe('Not very effective');
+    expect(effectivenessWord(2).text).toBe('Super effective');
+    expect(effectivenessWord(1).text).toBe('Normal damage');
   });
 });
