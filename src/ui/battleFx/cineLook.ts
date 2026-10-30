@@ -1,7 +1,7 @@
 // What the transformation cinematics (cinematics.ts) use and how long they
 // run. No Phaser here, so tests can check it.
 
-export type CineKind = 'mega' | 'primal' | 'dynamax' | 'gigantamax' | 'dynamaxEnd' | 'zmove' | 'tera';
+export type CineKind = 'mega' | 'primal' | 'dynamax' | 'gigantamax' | 'dynamaxEnd' | 'zmove' | 'tera' | 'evolve';
 
 /** Everything the cinematics draw, loaded when a battle starts. */
 export const CINE_ASSETS = [
@@ -15,6 +15,6 @@ export const CINE_ASSETS = [
 export const CINE_SOUNDS = ['ess-harden', 'ess-twine', 'ess-refresh', 'ess-shell-smash', 'ess-explosion', 'ess-flash2'];
 
 /** How long each cinematic runs at normal speed, in ms (full motion). */
-export const CINE_MS: Record<CineKind, number> = { mega: 2500, primal: 2500, dynamax: 1800, gigantamax: 1800, dynamaxEnd: 650, zmove: 1900, tera: 1600 };
+export const CINE_MS: Record<CineKind, number> = { mega: 2500, primal: 2500, dynamax: 1800, gigantamax: 1800, dynamaxEnd: 650, zmove: 1900, tera: 1600, evolve: 2700 };
 /** When the new form appears, in ms from the start. */
-export const SWAP_AT: Record<CineKind, number> = { mega: 1350, primal: 1350, dynamax: 900, gigantamax: 900, dynamaxEnd: 250, zmove: 1900, tera: 800 };
+export const SWAP_AT: Record<CineKind, number> = { mega: 1350, primal: 1350, dynamax: 900, gigantamax: 900, dynamaxEnd: 250, zmove: 1900, tera: 800, evolve: 1900 };

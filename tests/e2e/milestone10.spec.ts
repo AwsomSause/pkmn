@@ -345,3 +345,52 @@ test('the Hall of Fame shows records, champion teams with epitaphs, shinies and 
   await waitForScene(page, 'Hub');
   expect(errors).toEqual([]);
 });
+
+test('slice 10: a Pokémon evolves after battle with the light-pulse sequence', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-evolve&debug=1');
+  await waitForScene(page, 'MainMenu');
+  for (const next of ['Hub', 'TrainerSelect', 'RunPrep', 'StarterSelect', 'Briefing', 'Map']) {
+    await page.keyboard.press('Enter');
+    await waitForScene(page, next);
+  }
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  // Charmander one experience point short of level 16 (it evolves at 16), leading.
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    session.debugAddToParty('charmander', 15);
+    session.run.party.unshift(session.run.party.pop());
+    session.run.party[0].xp = 2534;
+    // A sure damaging move first (its learnset may start with a status move).
+    session.run.party[0].moves = [{ id: 'scratch', pp: 35 }];
+  });
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  await page.evaluate(() => {
+    const pkr = (window as any).__pkr;
+    pkr.session.debugReplaceEnemy('rattata', 5);
+    pkr.session.run.battle.enemyTeam[0].hp = 1;
+    pkr.game.scene.getScene('Battle').scene.restart();
+  });
+  const evolving = () => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle')?.children.list.some((c: any) => c.name === 'cine-evolve') ?? false);
+  let seen = false;
+  for (let i = 0; i < 8 && !seen; i++) {
+    await waitForMenu(page).catch(() => undefined);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(300);
+    await page.keyboard.press('Enter');
+    for (let t = 0; t < 120 && !seen; t++) {
+      seen = await evolving();
+      if (!seen && (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu)))) break;
+      // Move the post-battle lines along until the evolution starts.
+      if (!seen && t % 10 === 9) await page.keyboard.press('Enter');
+      await page.waitForTimeout(100);
+    }
+  }
+  expect(seen).toBe(true);
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: 'test-results/m10-evolution.png' });
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.run.party[0].speciesId), { timeout: 10_000 }).toBe('charmeleon');
+  expect(errors).toEqual([]);
+});

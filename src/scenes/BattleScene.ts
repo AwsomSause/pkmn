@@ -21,6 +21,7 @@ import { currentEnemy, type PokemonInstance, type RunState } from '../core/state
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
+import { getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx } from '../ui/audio';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
@@ -37,7 +38,7 @@ import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
-import { cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
+import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
 import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
@@ -1263,13 +1264,47 @@ export class BattleScene extends Phaser.Scene {
       const fromName = getSpecies(content, evo.from).name;
       const toName = getSpecies(content, evo.to).name;
       await this.say(`What? ${fromName} is evolving!`);
-      await burstReveal(this, PLAYER_POS.x, PLAYER_POS.y - 100, 0x9fe8ff, this.motion).done;
+      // The evolution sequence on the evolving Pokémon itself (shown in its old form first).
+      const real = result.run.party.find((m) => m.uid === evo.uid);
+      if (real) {
+        const shownMon = { ...structuredClone(real), speciesId: evo.from };
+        const sprite = this.showSprite('player', shownMon, false);
+        await this.playBeat(
+          cinematic(this, {
+            kind: 'evolve',
+            x: PLAYER_POS.x,
+            y: PLAYER_POS.y - 100,
+            sprite,
+            tint: 0x9fe8ff,
+            motion: this.motion,
+            speed: 1,
+            intensity: services().session.settings.effectIntensity,
+            onSwap: () => this.showSprite('player', { ...shownMon, speciesId: evo.to }),
+          }),
+        );
+      } else await burstReveal(this, PLAYER_POS.x, PLAYER_POS.y - 100, 0x9fe8ff, this.motion).done;
       playSfx(this, 'se.level_up');
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
     }
     await exitWipe(this, this.motion);
     this.scene.start(sceneForRun(result.run));
+  }
+
+  /** The charge-up an event shows, if it is a real charge (and what it does, from the rules). */
+  private chargeFor(e: RunEvent, cue: PresentationCue | undefined): { side: Side; tint: number; label: string } | null {
+    const content = services().session.content;
+    if (e.type === 'charge') {
+      const move = content.moves.get(e.moveId);
+      return move ? { side: e.side, tint: TYPE_COLORS[move.type] ?? 0xffffff, label: `${move.name} strikes next turn` } : null;
+    }
+    const raid = this.run.battle?.raid;
+    if (e.type === 'raid' && e.tone === 'warn' && raid?.charging) {
+      const tele = getRaid(content, raid.id).telegraph;
+      if (tele && tele.text === e.text) return { side: 'enemy', tint: 0xff4fd8, label: `Charged attack: next hit ×${tele.boost}` };
+    }
+    if (cue?.ids?.includes('gathering-everything')) return { side: cue.side, tint: 0xffb040, label: 'Next attack: Attack +2 (a status breaks it)' };
+    return null;
   }
 
   /** The Pokémon as the run has it now (after the turn), for statuses an item gave. */
@@ -1378,14 +1413,24 @@ export class BattleScene extends Phaser.Scene {
           break;
         case 'evolved': {
           // The Pokémon evolves between turns: flash, then the new form and its HP.
-          if (battleAnimations !== 'off' && sprite) {
-            const flash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0).setDepth(40);
-            await tween(this, { targets: flash, alpha: battleAnimations === 'full' ? 0.9 : 0.4, duration: 300, yoyo: true, hold: 200 });
-            flash.destroy();
-          }
-          mon!.speciesId = e.to;
-          mon!.hp = e.hpAfter;
-          this.showSprite(e.side, mon!);
+          const at = this.spotXY(e.side);
+          await this.playBeat(
+            cinematic(this, {
+              kind: 'evolve',
+              x: at.x,
+              y: at.y - 80,
+              sprite: sprite ?? null,
+              tint: 0x9fe8ff,
+              motion: this.motion,
+              speed: 1,
+              intensity: services().session.settings.effectIntensity,
+              onSwap: () => {
+                mon!.speciesId = e.to;
+                mon!.hp = e.hpAfter;
+                return this.showSprite(e.side, mon!);
+              },
+            }),
+          );
           playSfx(this, 'se.level_up');
           await this.refreshInfoBox(box, mon!, false);
           break;
@@ -1497,6 +1542,13 @@ export class BattleScene extends Phaser.Scene {
         const real = this.run.party.find((m) => m.uid === e.targetUid);
         if (real) this.shown.player.status = real.status;
         await this.refreshInfoBox(this.playerBox, this.shown.player, true);
+      }
+      // Signature charge-ups (catalog 21), only where a mechanic really charges: a two-turn move,
+      // a raid boss's telegraphed attack, a boss gathering everything it has.
+      const charge = this.chargeFor(e, storyCues.find((c) => c.at === index));
+      if (charge) {
+        const at = this.spotXY(charge.side);
+        await this.playBeat(chargeUp(this, { x: at.x, y: at.y - 80, tint: charge.tint, label: charge.label, motion: this.motion, intensity: effectIntensity }));
       }
       // A raid/totem phase change gets a banner with its written rule.
       if (e.type === 'raid' && e.tone === 'phase') await this.playBeat(phaseBanner(this, e.text, 0xff4fd8, this.motion));

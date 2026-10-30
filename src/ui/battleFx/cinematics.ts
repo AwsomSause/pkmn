@@ -40,7 +40,8 @@ export interface CineOptions {
   /** 1 normal, 2 fast, 3 quick. */
   speed: number;
   intensity: number;
-  onSwap: () => void;
+  /** Shows the new form; may return its sprite (an evolution fades it in from white). */
+  onSwap: () => Visual | void;
   depth?: number;
 }
 
@@ -56,7 +57,11 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
   const swap = () => {
     if (swapped) return;
     swapped = true;
-    o.onSwap();
+    const shown = o.onSwap();
+    if (shown instanceof Phaser.GameObjects.Sprite && o.kind === 'evolve' && o.motion !== 'off') {
+      shown.setTintFill(0xffffff);
+      scene.time.delayedCall(420 / o.speed, () => shown.active && shown.clearTint());
+    }
   };
   if (o.motion === 'off') {
     swap();
@@ -116,6 +121,8 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
     mega();
   } else if (o.kind === 'dynamax' || o.kind === 'gigantamax' || o.kind === 'tera') {
     storm();
+  } else if (o.kind === 'evolve') {
+    evolve();
   } else if (o.kind === 'dynamaxEnd') {
     if (has('pack.dbk.burst')) {
       const puff = add(scene.add.image(o.x, o.y, 'pack.dbk.burst').setTint(0xff3060).setBlendMode('ADD').setDepth(depth).setScale(1.2));
@@ -231,6 +238,51 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
     fadeAll();
   }
 
+  function evolve(): void {
+    // The classic evolution: the Pokémon turns to light and pulses faster and faster, then bursts into its new form.
+    bars();
+    // A light dim: the field sits under it, so the glowing Pokémon must still read through.
+    const dim = add(scene.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x06101e, 0).setDepth(depth - 1));
+    tw({ targets: dim, fillAlpha: 0.3, duration: 300 });
+    const s = o.sprite;
+    const sx = s && 'scaleX' in s ? s.scaleX : 1;
+    at(200, () => s instanceof Phaser.GameObjects.Sprite && s.active && s.setTintFill(0xffffff));
+    if (has('cine.raid.transitions.impact')) {
+      const rays = cover('cine.raid.transitions.impact', 0.5, depth);
+      tw({ targets: rays, angle: 12, duration: 1800 });
+    }
+    sound('ess-refresh', 0.8);
+    // Pulses: each a little quicker than the last (a fixed rhythm).
+    let t = 250;
+    for (const ms of [300, 260, 220, 180, 150, 120, 100, 80, 70, 60]) {
+      at(t, () => s && s.active && tw({ targets: s, scaleX: sx * 0.7, duration: ms / 2, yoyo: true, ease: 'Sine.easeInOut' }));
+      t += ms;
+    }
+    for (let i = 0; i < 10; i++) {
+      const dx = ((i % 5) - 2) * 36;
+      const mote = add(scene.add.image(o.x + dx, o.y + 80, has('pack.dbk.particle') ? 'pack.dbk.particle' : '__WHITE').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 2).setScale(0.5).setAlpha(0));
+      tw({ targets: mote, y: o.y - 120, alpha: { from: 1, to: 0 }, duration: 700, delay: 200 + i * 120, ease: 'Sine.easeOut' });
+    }
+    at(1100, () => sound('ess-twine', 0.7));
+    at(SWAP_AT.evolve, () => {
+      if (s && s.active && 'setScale' in s) tw({ targets: s, scaleX: sx, duration: 1 });
+      swap();
+      sound('ess-shell-smash', 0.8);
+      whiteFlash(0.9);
+      if (has('pack.dbk.burst')) {
+        const b = add(scene.add.image(o.x, o.y, 'pack.dbk.burst').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 3).setScale(0.3));
+        tw({ targets: b, scale: 1.6, alpha: 0, duration: 650, ease: 'Cubic.easeOut' });
+      }
+      for (let i = 0; i < 6; i++) {
+        if (!has('pack.ebdx.tr.shine2')) break;
+        const a = (i / 6) * Math.PI * 2;
+        const star = add(scene.add.image(o.x, o.y, 'pack.ebdx.tr.shine2').setScale(0.3).setDepth(depth + 4).setBlendMode('ADD'));
+        tw({ targets: star, x: o.x + Math.cos(a) * 140, y: o.y + Math.sin(a) * 100, scale: 0, duration: 650, ease: 'Cubic.easeOut' });
+      }
+    });
+    fadeAll();
+  }
+
   function zPower(): void {
     bars();
     if (has('cine.raid.ultra.bg')) cover('cine.raid.ultra.bg', 0.85);
@@ -277,4 +329,82 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
   });
   timers.push(scene.time.delayedCall(total, () => finish()));
   return { done, skip: () => finish() };
+}
+
+export interface ChargeOptions {
+  x: number;
+  y: number;
+  tint: number;
+  /** What the charge really does, from the mechanic (e.g. "Next hit ×1.5"). Never more than the rules give. */
+  label: string;
+  motion: MotionLevel;
+  intensity: number;
+  depth?: number;
+}
+
+/**
+ * A signature charge-up (Master Expansion Catalog 21): a wind-up aura, motes
+ * drawn in, a rising hum and a preview pill saying what the charge does. Only
+ * played for real mechanics: two-turn moves, raid telegraphs, a boss
+ * gathering its strength.
+ */
+export function chargeUp(scene: Phaser.Scene, o: ChargeOptions): Beat {
+  if (o.motion === 'off') return { done: Promise.resolve(), skip: () => undefined };
+  const depth = o.depth ?? 880;
+  const objs: Phaser.GameObjects.GameObject[] = [];
+  const add = <T extends Phaser.GameObjects.GameObject>(obj: T): T => {
+    obj.setName('cine-charge');
+    objs.push(obj);
+    return obj;
+  };
+  const full = o.motion === 'full';
+  const has = (k: string) => scene.textures.exists(k);
+  if (has('cine.dbk.mega.shine')) {
+    const aura = add(scene.add.image(o.x, o.y, 'cine.dbk.mega.shine').setTint(o.tint).setBlendMode('ADD').setDepth(depth).setScale(0.3).setAlpha(0));
+    scene.tweens.add({ targets: aura, scale: full ? 0.75 : 0.6, alpha: 0.85, duration: 500, ease: 'Sine.easeOut' });
+    if (full) scene.tweens.add({ targets: aura, scale: 0.65, duration: 260, delay: 500, yoyo: true, repeat: 1, ease: 'Sine.easeInOut' });
+  }
+  if (full) {
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + 0.3;
+      const mote = add(scene.add.image(o.x + Math.cos(a) * 130, o.y + Math.sin(a) * 100, has('pack.dbk.particle') ? 'pack.dbk.particle' : '__WHITE').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 1).setScale(0.5));
+      scene.tweens.add({ targets: mote, x: o.x, y: o.y, scale: 0.1, alpha: 0.4, duration: 420, delay: i * 55, ease: 'Quad.easeIn' });
+    }
+    if (has('cine.raid.transitions.shine')) {
+      const ring = add(scene.add.image(o.x, o.y, 'cine.raid.transitions.shine').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 1).setScale(0.9).setAlpha(0));
+      scene.tweens.add({ targets: ring, scale: 0.25, alpha: 0.9, duration: 600, ease: 'Quad.easeIn' });
+    }
+  }
+  const { session } = services();
+  const key = animAssetIds.sound('ess-harden');
+  if (!session.settings.muted && scene.cache.audio.exists(key)) {
+    try {
+      scene.sound.play(key, { volume: session.settings.sfxVolume * 0.7, rate: 0.8 });
+    } catch {
+      // Sound is never critical.
+    }
+  }
+  // The preview pill: what the charge will do.
+  const color = `#${o.tint.toString(16).padStart(6, '0')}`;
+  const text = scene.add.text(0, 0, o.label, textStyle(17, '#ffffff', { stroke: '#0b2a4a', strokeThickness: 4 })).setOrigin(0.5);
+  const w = text.width + 28;
+  const g = scene.add.graphics();
+  g.fillStyle(0x0b2a4a, 0.85).fillRoundedRect(-w / 2, -16, w, 32, 16);
+  g.lineStyle(2, Phaser.Display.Color.HexStringToColor(color).color, 1).strokeRoundedRect(-w / 2, -16, w, 32, 16);
+  const pill = add(scene.add.container(Math.min(GAME_WIDTH - w / 2 - 8, Math.max(w / 2 + 8, o.x)), o.y - 110, [g, text]).setDepth(depth + 2).setScale(full ? 0.4 : 1).setAlpha(full ? 0 : 1));
+  if (full) scene.tweens.add({ targets: pill, scale: 1, alpha: 1, duration: 300, delay: 250, ease: 'Back.easeOut' });
+  let resolveDone: () => void = () => undefined;
+  let over = false;
+  const done = new Promise<void>((resolve) => (resolveDone = resolve));
+  const finish = () => {
+    if (over) return;
+    over = true;
+    for (const x of objs) {
+      scene.tweens.killTweensOf(x);
+      x.destroy();
+    }
+    resolveDone();
+  };
+  scene.time.delayedCall(full ? 1300 : 700, finish);
+  return { done, skip: finish };
 }
