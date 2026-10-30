@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T17:38:46.574Z",
+  "generatedAt": "2026-10-30T18:02:44.076Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -436,6 +436,13 @@
       "category": "ui",
       "path": "images/packs/ebui/info_stats.png",
       "frameSize": 18
+    },
+    {
+      "id": "pack.ess.pockets",
+      "kind": "spritesheet",
+      "category": "ui",
+      "path": "images/packs/ess/bag_pockets.png",
+      "frameSize": 28
     },
     {
       "id": "cine.primega.mega",

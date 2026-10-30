@@ -100,5 +100,14 @@ test('the Briefing shows the run’s attributes, and a shop Plate raises one whe
   expect([5000 - price, 5000 - Math.round(price * 0.8)]).toContain(r.money);
   await page.waitForTimeout(250);
   await page.screenshot({ path: 'test-results/m7-shop-bought.png' });
+  // Visual Bible shops: bag-pocket category icons on every row and a BOUGHT stamp on the row just bought.
+  const names = await page.evaluate(() => {
+    const out: string[] = [];
+    const walk = (o: any) => (o.name && out.push(o.name), o.list?.forEach(walk));
+    (window as any).__pkr.game.scene.getScene('Shop').children.list.forEach(walk);
+    return out;
+  });
+  expect(names.filter((n) => n === 'shop-pocket').length).toBeGreaterThan(1);
+  expect(names).toContain('shop-bought');
   expect(errors).toEqual([]);
 });

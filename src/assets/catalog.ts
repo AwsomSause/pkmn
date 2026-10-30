@@ -105,6 +105,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   // Enhanced Battle UI info art for the Pokémon summary: gender marks and stat arrows.
   { id: 'pack.ebui.gender', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_gender.png', frameSize: 22 },
   { id: 'pack.ebui.statArrows', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_stats.png', frameSize: 18 },
+  // Essentials bag pocket icons (Items, Medicine, Balls, TMs, Berries, Mail, Battle Items, Key Items): shop category icons.
+  { id: 'pack.ess.pockets', kind: 'spritesheet', category: 'ui', path: 'images/packs/ess/bag_pockets.png', frameSize: 28 },
   // Transformation cinematics (battleFx/cinematics.ts): EBDX Primega crystals, Raid Battles Max/Ultra/Tera
   // transition art, Deluxe Battle Kit Mega/Primal orbs. Loaded when a battle starts.
   ...['mega', 'alpha', 'omega'].map((name) => ({ ...atlas(`cine.primega.${name}`, 'ui', `images/packs/ebdx/primega/${name}`), lazy: true })),

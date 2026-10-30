@@ -39,6 +39,8 @@ export interface PickerConfig {
   /** Leave out to make the choice mandatory (e.g. sending out a Pokémon after a faint). */
   onBack?: () => void;
   backLabel?: string;
+  /** The row focused at first (default: the first row without a problem). */
+  start?: number;
   /** Opt-in Aero look (glass panels, glossy rows). Hub screens leave it off. */
   glass?: boolean;
 }
@@ -122,7 +124,7 @@ export class Picker {
       this.footer.setText(config.onBack ? 'Press Esc to go back.' : '');
     }
     const first = config.rows.findIndex((r) => !r.problem);
-    this.focus(first >= 0 ? first : 0, false);
+    this.focus(config.start !== undefined && config.start < config.rows.length ? config.start : first >= 0 ? first : 0, false);
   }
 
   private focus(i: number, sound = true): void {
