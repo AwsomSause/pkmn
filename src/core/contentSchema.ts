@@ -625,6 +625,40 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('startingAttribute'), key: z.string(), value: z.number().int() }),
   /** At most this many Pokémon can be released per run. */
   z.object({ kind: z.literal('releaseLimit'), value: z.number().int().min(0) }),
+  /** Room in the PC for spare Pokémon (deposit and withdraw on the map between battles). */
+  z.object({ kind: z.literal('boxCapacity'), slots: z.number().int().positive() }),
+  /** The party holds this many fewer (negative) or more Pokémon. */
+  z.object({ kind: z.literal('partySizeOffset'), value: z.number().int() }),
+  /** How many different items one Pokémon can hold changes by this much. */
+  z.object({ kind: z.literal('itemSlotOffset'), value: z.number().int() }),
+  /** Newly caught Pokémon start this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('catchLevelOffset'), value: z.number().int() }),
+  /** Wild species of a type turn up less (or more) often. */
+  z.object({ kind: z.literal('typeEncounterWeight'), type: TypeNameSchema, value: z.number().positive() }),
+  /** Burn damage on foes you burn. */
+  z.object({ kind: z.literal('burnDamageMultiplier'), value: z.number().positive() }),
+  /** A stat bonus that only applies in a situation: while burned, or for Pokémon from a three-stage evolution line. */
+  z.object({ kind: z.literal('conditionalStatMultiplier'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), when: z.enum(['burned', 'threeStageLine']), value: z.number().positive() }),
+  /** Moves of a type cost extra PP. */
+  z.object({ kind: z.literal('ppCostExtra'), type: TypeNameSchema, extra: z.number().int().positive() }),
+  /** Rivals always carry a Pokémon of this type. */
+  z.object({ kind: z.literal('rivalTeamType'), type: TypeNameSchema }),
+  /** Rivals counter this many more of your Pokémon on a return. */
+  z.object({ kind: z.literal('rivalCounterBonus'), count: z.number().int().positive() }),
+  /** Chance of the opposing side's Hyper moments (rival Hyper/Overdrive events). */
+  z.object({ kind: z.literal('enemyHyperChanceMultiplier'), value: z.number().positive() }),
+  /** The Pokémon that fought first in a battle deals more damage, every later one less. */
+  z.object({ kind: z.literal('battleOrderDamage'), first: z.number().positive(), later: z.number().positive() }),
+  /** Pokémon of a type recover this share of max HP each turn in a weather. */
+  z.object({ kind: z.literal('weatherHeal'), type: TypeNameSchema, weather: z.enum(['rain', 'sun']), percent: z.number().positive() }),
+  /** Damage dealt by your starter (starter: true) or by everyone else (false). */
+  z.object({ kind: z.literal('starterDamageMultiplier'), starter: z.boolean(), value: z.number().positive() }),
+  /** Damage your Pokémon deal to foes of a type (a signature choice, e.g. Rival's Answer). */
+  z.object({ kind: z.literal('damageVsTypeMultiplier'), foeType: TypeNameSchema, value: z.number().positive() }),
+  /** Wild species whose highest base stat is `stat` turn up more or less often. */
+  z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
+  /** Mega Evolved Pokémon of yours take more damage. */
+  z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -659,6 +693,8 @@ export const ArchetypeSchema = z.object({
   signaturePool: z.string().nullable().default(null),
   /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
   eventTags: z.array(z.string()).default([]),
+  /** The trainer's signature mechanic (core/signature.ts), if any. */
+  signatureMechanic: z.string().nullable().default(null),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
@@ -1580,6 +1616,10 @@ export const BalanceSchema = z.object({
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */
   legendaryMinRegion: z.number().int().min(0),
+  /** How many different items one Pokémon can hold (trainer perks change it). */
+  heldItemSlots: z.number().int().positive(),
+  /** Wild species with at least this base stat total count as rare (trainer perks make them turn up more or less). */
+  rareEncounterBst: z.number().int().positive(),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */

@@ -1,105 +1,673 @@
 {
-  "aaron": [
-    {"kind":"damageMultiplier","type":"bug","value":1.2},
-    {"kind":"groupXpMultiplier","type":"bug","value":1.15},
-    {"kind":"damageTakenMultiplier","type":"bug","value":1.1}
-  ],
-  "acerola": [
-    {"kind":"damageMultiplier","type":"ghost","value":1.2},
-    {"kind":"survivalChance","type":"ghost","chance":0.15},
-    {"kind":"groupXpMultiplier","notType":"ghost","value":0.85}
-  ],
-  "adaman": [
-    {"kind":"damageMultiplier","category":"physical","value":1.15},
-    {"kind":"groupXpMultiplier","speed":"fast","value":1.1},
-    {"kind":"damageMultiplier","category":"special","value":0.9},
-    {"kind":"statMultiplier","stat":"spd","value":0.9}
-  ],
-  "agatha-lgpe": [
-    {"kind":"damageMultiplier","type":"ghost","value":1.1},
-    {"kind":"statusDurationMultiplier","value":1.2},
-    {"kind":"healingMultiplier","value":0.8}
-  ],
-  "alain": [
-    {"kind":"damageMultiplier","type":"fire","value":1.2},
-    {"kind":"permanentMega","minFriendship":220},
-    {"kind":"megaPartyLimit","max":1},
-    {"kind":"nonMegaDamageMultiplier","value":0.95},
-    {"kind":"damageTakenMultiplier","type":"fire","moveType":"water","value":1.15}
-  ],
-  "alder": [
-    {"kind":"lowHpDamageMultiplier","below":0.5,"value":1.25},
-    {"kind":"evolutionLevelOffset","value":5}
-  ],
-  "allister": [
-    {"kind":"groupXpMultiplier","type":"ghost","value":1.2},
-    {"kind":"statusChanceMultiplier","type":"ghost","value":1.15},
-    {"kind":"friendshipMultiplier","value":0.8}
-  ],
-  "anabel-gen-7": [
-    {"kind":"encounterWeightMultiplier","group":"legendary","value":1.15},
-    {"kind":"xpMultiplier","value":0.85}
-  ],
-  "archie-gen-6": [
-    {"kind":"damageMultiplier","type":"water","value":1.2},
-    {"kind":"weatherTurnsBonus","turns":2},
-    {"kind":"damageMultiplier","type":"fire","value":0.75}
-  ],
-  "archie-usum": [
-    {"kind":"weatherDamageMultiplier","weather":"rain","side":"player","value":1.25},
-    {"kind":"statMultiplier","stat":"hp","type":"water","value":1.1},
-    {"kind":"weatherDamageMultiplier","weather":"sun","side":"enemy","value":1.35}
-  ],
-  "arezu": [
-    {"kind":"groupXpMultiplier","speed":"fast","value":1.15},
-    {"kind":"healingMultiplier","value":1.05},
-    {"kind":"damageMultiplier","speed":"slow","value":0.9}
-  ],
-  "ash-kalos": [
-    {"kind":"friendshipMultiplier","value":2},
-    {"kind":"hyperChanceMultiplier","value":2},
-    {"kind":"rivalLevelOffset","value":5},
-    {"kind":"captureMultiplier","value":0.8},
-    {"kind":"damageTakenMultiplier","fromLegendary":true,"value":1.1}
-  ],
-  "ash": [
-    {"kind":"startingAttribute","key":"luck","value":20},
-    {"kind":"starterSignatureMove"},
-    {"kind":"friendshipMultiplier","value":1.2},
-    {"kind":"bossDamageTakenMultiplier","value":1.1},
-    {"kind":"releaseLimit","value":6}
-  ],
-  "az": [
-    {"kind":"statMultiplier","stat":"hp","value":1.25},
-    {"kind":"damageMultiplier","value":1.15},
-    {"kind":"startingLevelOffset","value":3},
-    {"kind":"xpMultiplier","value":0.7}
-  ],
-  "ball-guy": [
-    {"kind":"priceMultiplier","group":"balls","value":0.6},
-    {"kind":"captureMultiplier","value":1.1},
-    {"kind":"priceMultiplier","group":"otherItems","value":1.3}
-  ],
-  "barry": [
-    {"kind":"statMultiplier","stat":"spe","value":1.2},
-    {"kind":"xpMultiplier","value":1.2},
-    {"kind":"priceMultiplier","group":"all","value":1.2}
-  ],
-  "bea": [
-    {"kind":"damageMultiplier","type":"fighting","category":"physical","value":1.25},
-    {"kind":"statMultiplier","stat":"spd","value":0.85}
-  ],
-  "bede": [
-    {"kind":"damageMultiplier","types":["psychic","fairy"],"value":1.2},
-    {"kind":"friendshipBonusesDisabled"}
-  ],
-  "benga": [
-    {"kind":"bossDamageMultiplier","value":1.15},
-    {"kind":"ordinaryXpMultiplier","value":0.8}
-  ],
-  "bianca-pwt": [
-    {"kind":"xpMultiplier","value":1.2},
-    {"kind":"healingMultiplier","value":1.15},
-    {"kind":"regionLevelOffset","value":-1}
-  ]
+ "aaron": [
+  {
+   "kind": "damageMultiplier",
+   "type": "bug",
+   "value": 1.2
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "bug",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "bug",
+   "value": 1.1
+  }
+ ],
+ "acerola": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "survivalChance",
+   "type": "ghost",
+   "chance": 0.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "notType": "ghost",
+   "value": 0.85
+  }
+ ],
+ "adaman": [
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "speed": "fast",
+   "value": 1.1
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "special",
+   "value": 0.9
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "value": 0.9
+  }
+ ],
+ "agatha-lgpe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ghost",
+   "value": 1.1
+  },
+  {
+   "kind": "statusDurationMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.8
+  }
+ ],
+ "alain": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.2
+  },
+  {
+   "kind": "permanentMega",
+   "minFriendship": 220
+  },
+  {
+   "kind": "megaPartyLimit",
+   "max": 1
+  },
+  {
+   "kind": "nonMegaDamageMultiplier",
+   "value": 0.95
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "fire",
+   "moveType": "water",
+   "value": 1.15
+  }
+ ],
+ "alder": [
+  {
+   "kind": "lowHpDamageMultiplier",
+   "below": 0.5,
+   "value": 1.25
+  },
+  {
+   "kind": "evolutionLevelOffset",
+   "value": 5
+  }
+ ],
+ "allister": [
+  {
+   "kind": "groupXpMultiplier",
+   "type": "ghost",
+   "value": 1.2
+  },
+  {
+   "kind": "statusChanceMultiplier",
+   "type": "ghost",
+   "value": 1.15
+  },
+  {
+   "kind": "friendshipMultiplier",
+   "value": 0.8
+  }
+ ],
+ "anabel-gen-7": [
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "legendary",
+   "value": 1.15
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "archie-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "value": 1.2
+  },
+  {
+   "kind": "weatherTurnsBonus",
+   "turns": 2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 0.75
+  }
+ ],
+ "archie-usum": [
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "rain",
+   "side": "player",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "water",
+   "value": 1.1
+  },
+  {
+   "kind": "weatherDamageMultiplier",
+   "weather": "sun",
+   "side": "enemy",
+   "value": 1.35
+  }
+ ],
+ "arezu": [
+  {
+   "kind": "groupXpMultiplier",
+   "speed": "fast",
+   "value": 1.15
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.05
+  },
+  {
+   "kind": "damageMultiplier",
+   "speed": "slow",
+   "value": 0.9
+  }
+ ],
+ "ash-kalos": [
+  {
+   "kind": "friendshipMultiplier",
+   "value": 2
+  },
+  {
+   "kind": "hyperChanceMultiplier",
+   "value": 2
+  },
+  {
+   "kind": "rivalLevelOffset",
+   "value": 5
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 0.8
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "fromLegendary": true,
+   "value": 1.1
+  }
+ ],
+ "ash": [
+  {
+   "kind": "startingAttribute",
+   "key": "luck",
+   "value": 20
+  },
+  {
+   "kind": "starterSignatureMove"
+  },
+  {
+   "kind": "friendshipMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "bossDamageTakenMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "releaseLimit",
+   "value": 6
+  }
+ ],
+ "az": [
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.25
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "startingLevelOffset",
+   "value": 3
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.7
+  }
+ ],
+ "ball-guy": [
+  {
+   "kind": "priceMultiplier",
+   "group": "balls",
+   "value": 0.6
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "otherItems",
+   "value": 1.3
+  }
+ ],
+ "barry": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.2
+  }
+ ],
+ "bea": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "category": "physical",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "value": 0.85
+  }
+ ],
+ "bede": [
+  {
+   "kind": "damageMultiplier",
+   "types": [
+    "psychic",
+    "fairy"
+   ],
+   "value": 1.2
+  },
+  {
+   "kind": "friendshipBonusesDisabled"
+  }
+ ],
+ "benga": [
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "ordinaryXpMultiplier",
+   "value": 0.8
+  }
+ ],
+ "bianca-pwt": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "regionLevelOffset",
+   "value": -1
+  }
+ ],
+ "bill": [
+  {
+   "kind": "boxCapacity",
+   "slots": 6
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "partySizeOffset",
+   "value": -1
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 0.9
+  },
+  {
+   "kind": "itemSlotOffset",
+   "value": -1
+  }
+ ],
+ "blaine-lgpe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.25
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "water",
+   "value": 1.2
+  }
+ ],
+ "blaine": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fire",
+   "value": 1.5
+  },
+  {
+   "kind": "burnDamageMultiplier",
+   "value": 1.25
+  },
+  {
+   "kind": "conditionalStatMultiplier",
+   "stat": "atk",
+   "type": "fire",
+   "when": "burned",
+   "value": 1.2
+  },
+  {
+   "kind": "ppCostExtra",
+   "type": "fire",
+   "extra": 2
+  },
+  {
+   "kind": "typeEncounterWeight",
+   "type": "fire",
+   "value": 0.7
+  },
+  {
+   "kind": "rivalTeamType",
+   "type": "water"
+  }
+ ],
+ "blue-gen-3-champion": [
+  {
+   "kind": "damageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "hyperChanceMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "conditionalStatMultiplier",
+   "stat": "atk",
+   "when": "threeStageLine",
+   "value": 1.1
+  },
+  {
+   "kind": "rivalCounterBonus",
+   "count": 1
+  },
+  {
+   "kind": "enemyHyperChanceMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "blue-gen-7": [
+  {
+   "kind": "battleOrderDamage",
+   "first": 1.25,
+   "later": 0.9
+  }
+ ],
+ "blue-classic": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.1
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.15
+  }
+ ],
+ "brassius": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.2
+  },
+  {
+   "kind": "weatherHeal",
+   "type": "grass",
+   "weather": "sun",
+   "percent": 5
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "grass",
+   "moveType": "fire",
+   "value": 1.15
+  }
+ ],
+ "brawly-gen-6": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "fighting",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "psychic",
+   "value": 1.2
+  }
+ ],
+ "brendan-emerald": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "starterDamageMultiplier",
+   "starter": true,
+   "value": 1.15
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": false,
+   "value": 0.9
+  }
+ ],
+ "brendan-ruby-sapphire": [
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 1.15
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "special",
+   "value": 0.9
+  }
+ ],
+ "brigette": [
+  {
+   "kind": "boxCapacity",
+   "slots": 6
+  },
+  {
+   "kind": "catchLevelOffset",
+   "value": 1
+  },
+  {
+   "kind": "partySizeOffset",
+   "value": -1
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 0.9
+  }
+ ],
+ "brock-masters": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "rock",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "rock",
+   "value": 1.1
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "rock",
+   "value": 0.9
+  }
+ ],
+ "brock-classic": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "rock",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spd",
+   "value": 0.9
+  }
+ ],
+ "bruno-gen-3": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fighting",
+   "category": "physical",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "fighting",
+   "value": 0.9
+  }
+ ],
+ "bruno": [
+  {
+   "kind": "statMultiplier",
+   "stat": "atk",
+   "type": "fighting",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "type": "fighting",
+   "value": 1.1
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.85
+  }
+ ],
+ "bugsy": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "bug",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "bug",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "type": "bug",
+   "moveType": "rock",
+   "value": 1.15
+  }
+ ],
+ "byron": [
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "type": "steel",
+   "value": 1.25
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "steel",
+   "value": 0.85
+  }
+ ],
+ "caitlin": [
+  {
+   "kind": "damageMultiplier",
+   "type": "psychic",
+   "category": "special",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "category": "physical",
+   "value": 0.9
+  }
+ ],
+ "calem": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "megaDamageTakenMultiplier",
+   "value": 1.1
+  }
+ ],
+ "canari": [
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "type": "electric",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.15
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.2
+  }
+ ]
 }

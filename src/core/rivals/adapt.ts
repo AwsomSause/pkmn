@@ -3,11 +3,13 @@
 // It remembers its team, comes back stronger, and swaps ONE member for a Pokémon from the
 // planned team that resists the type of attack you use most; the player is told which.
 
-import { rivalLevelOffset } from '../trainerPerks';
+import { runPerks } from '../archetypes';
+import { rivalCounterBonus, rivalLevelOffset, rivalTeamTypes } from '../trainerPerks';
 import { typeEffectiveness } from '../battle/damage';
 import type { Content, TypeName } from '../contentSchema';
 import type { TrainerPlan } from '../encounters';
 import { getSpecies } from '../pokemon';
+import { wildEligibleSpecies } from '../themes';
 import type { RunState } from '../state';
 import { revisedTeam, type RematchEffect } from '../story/returns';
 import type { EnemyProfile, Rival } from '../story/schema';
@@ -34,6 +36,11 @@ export function waitingRival(run: RunState): Rival | null {
 
 /** The attack type the party's damaging moves use most (ties: the type listed first in the type chart). */
 export function mostUsedType(content: Content, run: RunState): TypeName | null {
+  return usedTypes(content, run)[0] ?? null;
+}
+
+/** Attack types your party's damaging moves use, most used first. */
+export function usedTypes(content: Content, run: RunState): TypeName[] {
   const counts = new Map<TypeName, number>();
   for (const mon of run.party) {
     for (const slot of mon.moves) {
@@ -41,9 +48,7 @@ export function mostUsedType(content: Content, run: RunState): TypeName | null {
       if (move && move.category !== 'status') counts.set(move.type, (counts.get(move.type) ?? 0) + 1);
     }
   }
-  let best: TypeName | null = null;
-  for (const [type, n] of counts) if (best === null || n > counts.get(best)!) best = type;
-  return best;
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([type]) => type);
 }
 
 export interface RivalReturn {
@@ -74,17 +79,46 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
   };
   const mods = rivalMods(rival);
   // Personality: vindictive rivals return stronger. Style: how sharp its move choice is.
-  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) + rivalLevelOffset(content.archetypes.get(run.archetypeId)?.modifiers) }), ai: Math.max(plan.ai, mods.ai) };
+  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) + rivalLevelOffset(runPerks(content, run)) }), ai: Math.max(plan.ai, mods.ai) };
+  const perks = runPerks(content, run);
   const type = mostUsedType(content, run);
   const seen = bondNote(rival);
-  if (!type || !mods.canAdapt || rival.adaptations.length >= mods.adaptCap) return { plan: revised, note: seen };
-  const resist = (speciesId: string) => typeEffectiveness(content.typeChart, type, getSpecies(content, speciesId).types);
+  // A trainer perk (Blue, Gen 3): the rival always carries a Pokémon of some type (Blaine: Water).
+  const planned = withTeamTypes(content, revised, rivalTeamTypes(perks));
+  if (!type || !mods.canAdapt || rival.adaptations.length >= mods.adaptCap) return { plan: planned, note: seen };
   const bias = (speciesId: string) => mods.statBias.reduce((sum, stat) => sum + (getSpecies(content, speciesId).baseStats[stat as 'hp'] ?? 0), 0);
-  const last = revised.members.length - 1;
-  const current = resist(revised.members[last]!.speciesId);
-  const counter = plan.members.map((m) => m.speciesId).filter((id) => !revised.members.some((m) => m.speciesId === id))
-    .sort((a, b) => resist(a) - resist(b) || bias(b) - bias(a) || a.localeCompare(b))[0];
-  if (!counter || resist(counter) >= current) return { plan: revised, note: seen };
-  const members = revised.members.map((m, i) => (i === last ? { ...m, speciesId: counter } : m));
-  return { plan: { ...revised, members }, note: `${rival.name} studied your ${type} moves and brought ${getSpecies(content, counter).name}.${seen ? ` ${seen}` : ''}` };
+  // One counter-pick for the type you use most; a trainer perk adds a counter for the next most used types.
+  const types = usedTypes(content, run).slice(0, 1 + rivalCounterBonus(perks));
+  let members = planned.members;
+  const notes: string[] = [];
+  types.forEach((t, k) => {
+    const slot = members.length - 1 - k;
+    if (slot < 0) return;
+    const resist = (speciesId: string) => typeEffectiveness(content.typeChart, t, getSpecies(content, speciesId).types);
+    const counter = plan.members.map((m) => m.speciesId).filter((id) => !members.some((m) => m.speciesId === id))
+      .sort((a, b) => resist(a) - resist(b) || bias(b) - bias(a) || a.localeCompare(b))[0];
+    if (!counter || resist(counter) >= resist(members[slot]!.speciesId)) return;
+    members = members.map((m, i) => (i === slot ? { ...m, speciesId: counter } : m));
+    notes.push(`${rival.name} studied your ${t} moves and brought ${getSpecies(content, counter).name}.`);
+  });
+  if (notes.length === 0) return { plan: planned, note: seen };
+  return { plan: { ...planned, members }, note: `${notes.join(' ')}${seen ? ` ${seen}` : ''}` };
+}
+
+/** Makes sure the team has a Pokémon of each type, swapping in a species of similar strength for the last members. */
+function withTeamTypes(content: Content, plan: TrainerPlan, types: readonly TypeName[]): TrainerPlan {
+  if (types.length === 0) return plan;
+  let members = plan.members;
+  types.forEach((type, k) => {
+    if (members.some((m) => getSpecies(content, m.speciesId).types.includes(type))) return;
+    const slot = members.length - 1 - k;
+    if (slot < 0) return;
+    const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
+    const target = bst(members[slot]!.speciesId);
+    const pick = wildEligibleSpecies(content)
+      .filter((s) => s.types.includes(type) && !members.some((m) => m.speciesId === s.id))
+      .sort((a, b) => Math.abs(bst(a.id) - target) - Math.abs(bst(b.id) - target) || a.id.localeCompare(b.id))[0];
+    if (pick) members = members.map((m, i) => (i === slot ? { ...m, speciesId: pick.id } : m));
+  });
+  return { ...plan, members };
 }

@@ -32,7 +32,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Blueprint slice 2 Totems: 8 Totems (`totems.json`, `core/totem/`) on stage maps, aura, ally calls (ally takes the field in the Totem's place), phases, home-field weather/terrain/hazards, rare-Pokémon rewards, unlocks. Next: Expeditions, Minigames.
 
 ## In progress / next
-- Trainers.md perks: batches 2–11 (one PR per 20 trainers, then signature mechanics).
+- Trainers.md perks: batch 2 done (Bill to Canari: PC box with deposit/withdraw on the map, party and item-slot limits, PP cost, burn, weather heal, rare/type encounter weights, rival type and counters, and the first signature mechanic: Rival's Answer, `core/signature.ts`, run field `perkEffects`). Batches 3–11 next (one PR per 20 trainers).
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.
 - M8.9 slice 5: A Past Pokémon Wants to Join Your Party (archive across runs).
 - M8.75: items 3b-3b, 3c, 4; C2b terrain + rare moves; C3b remaining abilities and smarter enemy trainers; D Bank tiers/licenses/challenges; E Pokédex/mastery; F trainer passives + more trainers; G party-strength difficulty, levels to 500, custom regions; H later hub systems; A event system (design with director first).

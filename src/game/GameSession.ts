@@ -241,6 +241,16 @@ export class GameSession {
     return result.message;
   }
 
+  depositToBox(partyIndex: number): void {
+    this.run = Run.depositToBox(this.content, this.requireRun(), partyIndex);
+    this.persistRun();
+  }
+
+  withdrawFromBox(boxIndex: number): void {
+    this.run = Run.withdrawFromBox(this.content, this.requireRun(), boxIndex);
+    this.persistRun();
+  }
+
   setLead(partyIndex: number): void {
     this.run = Run.setLead(this.requireRun(), partyIndex);
     this.persistRun();

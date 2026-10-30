@@ -16,7 +16,7 @@
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
 import type { Perks } from '../archetypes';
 import { calcStats, getSpecies } from '../pokemon';
-import { statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
+import { inThreeStageLine, statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { freshHeldState } from '../state';
 import type { BattleState, HeldState, PokemonInstance, Stages, Volatile } from '../state';
@@ -201,7 +201,7 @@ function heal(content: Content, mon: PokemonInstance, amount: number): number {
 
 /** Multiplier on a stat from held items (Choice items, Eviolite, Light Ball, Iron Ball, Everstone...). */
 export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems' | 'perks'>, mon: PokemonInstance, side: Side, stat: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
-  let m = side === 'player' ? statPerk(ctx.perks, stat, getSpecies(ctx.content, mon.speciesId).types) : 1;
+  let m = side === 'player' ? statPerk(ctx.perks, stat, getSpecies(ctx.content, mon.speciesId).types, { burned: mon.status?.id === 'brn', threeStageLine: (ctx.perks ?? []).some((p) => p.kind === 'conditionalStatMultiplier' && p.when === 'threeStageLine') && inThreeStageLine(ctx.content, mon.speciesId) }) : 1;
   for (const { hook } of hooks(hooksOf(ctx, mon, side), 'stat')) {
     if (hook.stat !== stat && hook.stat !== 'all') continue;
     if (hook.canEvolve && getSpecies(ctx.content, mon.speciesId).evolutions.length === 0) continue;

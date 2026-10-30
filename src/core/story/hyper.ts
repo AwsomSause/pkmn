@@ -3,6 +3,7 @@
 // it the run's side of the question: the Pokémon's friendship and memories,
 // what it has already done this run, and the player's attributes.
 
+import { runPerks } from '../archetypes';
 import { effectiveAttributes, type Attributes } from '../attributes';
 import type { HyperAttribute, HyperContext } from '../battle/hyper';
 import type { Content } from '../contentSchema';
@@ -72,7 +73,7 @@ export function hasMemory(history: PokemonHistory | undefined, key: string): boo
 /** Builds the engine's view of the run for one turn. `rng` is the run's "hyper" stream (its state is saved by the caller). */
 export function buildHyperContext(content: Content, run: RunState, rng: Rng): HyperContext {
   const attrs = effectiveAttributes(content, run);
-  const perks = content.archetypes.get(run.archetypeId)?.modifiers;
+  const perks = runPerks(content, run);
   const friendshipOff = (perks ?? []).some((m) => m.kind === 'friendshipBonusesDisabled');
   return {
     rng,
