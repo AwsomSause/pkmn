@@ -169,6 +169,10 @@ export type BattleEvent =
   | { type: 'turningPoint'; side: Side; uid: string; emotion: string }
   | { type: 'evolved'; side: Side; uid: string; from: string; to: string; hpAfter: number }
   | { type: 'switchIn'; side: Side; uid: string; speciesId: string; level: number }
+  /** Double battles: the events that follow are about this Pokémon on `side` (battle/doubles.ts). */
+  | { type: 'focus'; side: Side; uid: string }
+  /** Ally Switch: the two Pokémon on `side` traded spots. */
+  | { type: 'allySwitch'; side: Side }
   | { type: 'item'; itemId: string; targetUid: string; message: string; hpAfter: number }
   | { type: 'ball'; itemId: string; shakes: number; caught: boolean }
   | Held.HeldEvent
@@ -181,9 +185,18 @@ export type PlayerAction =
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number }
   /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
-  | { kind: 'idle' };
+  | { kind: 'idle' }
+  /** A double battle: one command per spot (null for an empty or fainted spot). See battle/doubles.ts. */
+  | { kind: 'double'; commands: (SlotCommand | null)[] };
 
-interface Combatant {
+/** One Pokémon's command in a double battle, and which Pokémon its move is aimed at. */
+export type SlotAction = Exclude<PlayerAction, { kind: 'double' }>;
+export interface SlotCommand {
+  action: SlotAction;
+  target?: { side: Side; spot: 0 | 1 };
+}
+
+export interface Combatant {
   side: Side;
   mon: PokemonInstance;
   stages: Stages;
@@ -235,6 +248,18 @@ export interface BattleContext {
    * once (the user of Explosion loses; the user of a recoil move wins).
    */
   doubleKoLoser?: Side;
+  /** Set during a double battle's turn (battle/doubles.ts). */
+  doublesTurn?: DoublesTurn;
+}
+
+/** What a double battle's turn needs from the shared engine code. */
+export interface DoublesTurn {
+  /** The move being used hits more than one Pokémon (0.75× damage). */
+  spread: boolean;
+  /** Pokémon an ally's Helping Hand powers up this turn (once per Helping Hand). */
+  helped: string[];
+  /** Runs a move on every Pokémon it hits (called by executeMove in place of runMove). */
+  hit?: (user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]) => void;
 }
 
 export function createBattle(
@@ -405,6 +430,7 @@ export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Par
 export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEvent[] {
   const { battle, content, rng } = ctx;
   if (battle.outcome) throw new Error('Battle is already over');
+  if (action.kind === 'double' || battle.doubles) throw new Error('A double battle takes its turn in battle/doubles.ts');
   const events: BattleEvent[] = [];
 
   if (battle.needsSwitch) {
@@ -951,7 +977,7 @@ function switchOutAbility(ctx: BattleContext, mon: PokemonInstance): void {
 function weatherNow(ctx: BattleContext): Weather | null {
   const w = ctx.battle.weather?.id ?? null;
   if (!w) return null;
-  const mons = [ctx.party[ctx.battle.activeIndex], currentEnemy(ctx.battle)];
+  const mons = [ctx.party[ctx.battle.activeIndex], currentEnemy(ctx.battle), ...benchedActives(ctx).map((b) => b.mon)];
   for (const m of mons) {
     const a = m ? abilityOf(ctx.content, m) : null;
     if (a === 'cloud-nine' || a === 'air-lock') return null;
@@ -967,6 +993,7 @@ function abilityIn(ctx: BattleContext, c: Combatant): string | null {
   const mine = party[battle.activeIndex];
   const gas = (mon: PokemonInstance | undefined, v: { abilityOverride: string | null }) => mon && mon.hp > 0 && (v.abilityOverride ?? abilityOf(content, mon)) === 'neutralizing-gas';
   if (gas(mine, battle.playerVolatile) || gas(currentEnemy(battle), battle.enemyVolatile)) return null;
+  if (battle.doubles && benchedActives(ctx).some((b) => gas(b.mon, b.vol))) return null;
   return own;
 }
 
@@ -992,6 +1019,64 @@ function activeCombatants(ctx: BattleContext): { player: Combatant; enemy: Comba
     player: { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false },
     enemy: { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false },
   };
+}
+
+/** In a double battle, the Pokémon beside `c` (null in singles, or when the spot is empty or fainted). */
+function allyCombatant(ctx: BattleContext, c: Combatant): Combatant | null {
+  const d = ctx.battle.doubles;
+  if (!d) return null;
+  const { battle } = ctx;
+  const team = c.side === 'player' ? ctx.party : battle.enemyTeam;
+  const primary = c.side === 'player' ? { mon: ctx.party[battle.activeIndex], stages: battle.playerStages, vol: battle.playerVolatile } : { mon: battle.enemyTeam[battle.enemyIndex], stages: battle.enemyStages, vol: battle.enemyVolatile };
+  const slot = d[c.side];
+  const other = slot.index >= 0 ? { mon: team[slot.index], stages: slot.stages, vol: slot.vol } : null;
+  const pick = primary.mon?.uid === c.mon.uid ? other : other?.mon?.uid === c.mon.uid ? primary : null;
+  if (!pick?.mon || pick.mon.hp <= 0) return null;
+  return { side: c.side, mon: pick.mon, stages: pick.stages, vol: pick.vol, flinched: false, protected: false };
+}
+
+/** The ally's ability (or null): what Friend Guard, Battery, the Veils and the like need. */
+function allyAbility(ctx: BattleContext, c: Combatant): string | null {
+  const ally = allyCombatant(ctx, c);
+  return ally ? abilityIn(ctx, ally) : null;
+}
+
+/** The Pokémon waiting in a double battle's second spots (both sides), for field-wide abilities. */
+function benchedActives(ctx: BattleContext): { mon: PokemonInstance; vol: Volatile }[] {
+  const d = ctx.battle.doubles;
+  if (!d) return [];
+  const out: { mon: PokemonInstance; vol: Volatile }[] = [];
+  const p = d.player.index >= 0 ? ctx.party[d.player.index] : undefined;
+  const e = d.enemy.index >= 0 ? ctx.battle.enemyTeam[d.enemy.index] : undefined;
+  if (p && p.hp > 0) out.push({ mon: p, vol: d.player.vol });
+  if (e && e.hp > 0) out.push({ mon: e, vol: d.enemy.vol });
+  return out;
+}
+
+/**
+ * Double-battle damage changes: spread moves (0.75×), Helping Hand (1.5×), the user's ally's
+ * Battery / Power Spot / Steely Spirit / Plus-Minus / Flower Gift and the target's ally's
+ * Friend Guard / Flower Gift. 1 in singles.
+ */
+function doublesDamageMultiplier(ctx: BattleContext, user: Combatant, target: Combatant, physical: boolean, moveType: TypeName): number {
+  const turn = ctx.doublesTurn;
+  if (!ctx.battle.doubles || !turn) return 1;
+  let m = turn.spread ? 0.75 : 1;
+  for (const uid of turn.helped) if (uid === user.mon.uid) m *= 1.5;
+  const sun = weatherNow(ctx) === 'sun';
+  const mine = allyAbility(ctx, user);
+  if (mine === 'battery' && !physical) m *= 1.3;
+  if (mine === 'power-spot') m *= 1.3;
+  if (mine === 'steely-spirit' && moveType === 'steel') m *= 1.5;
+  if (mine === 'flower-gift' && sun && physical) m *= 1.5;
+  const own = abilityIn(ctx, user);
+  if (!physical && (own === 'plus' || own === 'minus') && (mine === 'plus' || mine === 'minus')) m *= 1.5;
+  if (user.side !== target.side || user.mon.uid !== target.mon.uid) {
+    const theirs = moveIgnoresAbility ? null : allyAbility(ctx, target);
+    if (theirs === 'friend-guard') m *= 0.75;
+    if (theirs === 'flower-gift' && sun && !physical) m /= 1.5;
+  }
+  return m;
 }
 
 /**
@@ -1494,7 +1579,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
   const perks = ctx.perks;
-  const rivalry = rivalryMultiplier(ctx, user, target);
+  const rivalry = rivalryMultiplier(ctx, user, target) * doublesDamageMultiplier(ctx, user, target, physical, moveType);
   if (!mods && !attrs && !perks && rivalry === 1) return damage;
   let multiplier = rivalry;
   const weather = weatherNow(ctx);
@@ -1928,7 +2013,8 @@ function executeMove(
     return;
   }
   const mark = events.length;
-  runMove(ctx, user, target, move, movedFirst, events);
+  if (ctx.doublesTurn?.hit) ctx.doublesTurn.hit(user, target, move, movedFirst, events);
+  else runMove(ctx, user, target, move, movedFirst, events);
   user.vol.lastFailed = events.slice(mark).some((e) => (e.type === 'fail' || e.type === 'miss' || e.type === 'noEffect' || e.type === 'protected') && (e.type === 'noEffect' ? e.side === target.side : e.type === 'protected' ? e.side === target.side : e.side === user.side));
   if (move.effects.powerRule === 'rollout') {
     if (user.vol.lastFailed) {
@@ -2936,11 +3022,11 @@ function forceOut(ctx: BattleContext, target: Combatant, events: BattleEvent[]):
   if (target.mon.hp <= 0 || target.mon.dynamaxed) return;
   if (target.side === 'enemy') {
     if (battle.kind !== 'trainer') return;
-    const others = battle.enemyTeam.map((m, i) => ({ m, i })).filter(({ m, i }) => i !== battle.enemyIndex && m.hp > 0);
+    const others = battle.enemyTeam.map((m, i) => ({ m, i })).filter(({ m, i }) => i !== battle.enemyIndex && i !== battle.doubles?.enemy.index && m.hp > 0);
     if (!others.length) return;
     swapInEnemy(ctx, rng.pick(others).i, events);
   } else {
-    const others = ctx.party.map((m, i) => ({ m, i })).filter(({ m, i }) => i !== battle.activeIndex && m.hp > 0);
+    const others = ctx.party.map((m, i) => ({ m, i })).filter(({ m, i }) => i !== battle.activeIndex && i !== battle.doubles?.player.index && m.hp > 0);
     if (!others.length) return;
     const outgoing = ctx.party[battle.activeIndex]!;
     events.push({ type: 'switchOut', side: 'player', uid: outgoing.uid });
@@ -3029,6 +3115,10 @@ function disrupt(ctx: BattleContext, user: Combatant, target: Combatant, kind: N
     events.push({ type: 'fail', side: user.side });
     return false;
   };
+  if (kind !== 'spite' && kind !== 'throatChop' && user.side !== target.side && (targetAbility(ctx, user, target) === 'aroma-veil' || (!moveIgnoresAbility && allyAbility(ctx, target) === 'aroma-veil'))) {
+    announce(target, 'aroma-veil', events);
+    return fail();
+  }
   switch (kind) {
     case 'disable':
       if (!last || target.vol.disabled) return fail();
@@ -3090,8 +3180,15 @@ function tickDelayed(ctx: BattleContext, player: Combatant, enemy: Combatant, ev
 
 function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
   tickDelayed(ctx, player, enemy, events);
-  for (const c of [player, enemy]) {
-    if (c.mon.hp <= 0) continue;
+  for (const c of [player, enemy]) endTurnMon(ctx, c, c === player ? enemy : player, events);
+  endTurnField(ctx, events);
+  recordFaints(ctx, player, enemy, events);
+}
+
+/** One Pokémon's end-of-turn states (Nightmare, Curse, Wish, Yawn, Perish Song...). */
+function endTurnMon(ctx: BattleContext, c: Combatant, foe: Combatant, events: BattleEvent[]): void {
+  {
+    if (c.mon.hp <= 0) return;
     const max = calcStats(ctx.content, c.mon).hp;
     if (c.vol.nightmare && c.mon.status?.id !== 'slp') c.vol.nightmare = false;
     if (c.vol.nightmare) abilityHurt(ctx, c, Math.max(1, Math.floor(max / 4)), events);
@@ -3118,7 +3215,7 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
     c.vol.powdered = false;
     c.vol.beakHeat = false;
     c.vol.electrified = false;
-    if (c.mon.hp <= 0) continue;
+    if (c.mon.hp <= 0) return;
     const heal = (amount: number) => {
       if (c.vol.healBlock > 0) return;
       const gain = Math.min(max - c.mon.hp, Math.max(1, amount));
@@ -3150,7 +3247,6 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
       if (down.length) applyStageChange(ctx, c, down[ctx.rng.int(0, down.length - 1)]!, -1, events);
     }
     if (c.vol.yawn > 0 && --c.vol.yawn === 0 && !c.mon.status) {
-      const foe = c === player ? enemy : player;
       tryInflictStatus(ctx, foe, c, 'slp', undefined, events, false);
     }
     if (c.vol.perish > 0) {
@@ -3159,13 +3255,16 @@ function endTurnStates(ctx: BattleContext, player: Combatant, enemy: Combatant, 
       if (c.vol.perish === 0) c.mon.hp = 0;
     }
   }
+}
+
+/** Field-wide counters at the end of a turn (Wonder Room, Gravity, Trick Room...). */
+function endTurnField(ctx: BattleContext, events: BattleEvent[]): void {
   ctx.battle.extra.ionDeluge = false;
   if (ctx.battle.extra.wonderRoom > 0 && --ctx.battle.extra.wonderRoom === 0) events.push({ type: 'fieldEnd', field: 'wonderRoom' });
   Held.tickItemRooms(ctx.battle);
   for (const key of ['gravity', 'trickRoom', 'waterSport', 'mudSport'] as const) {
     if (ctx.battle.field[key] > 0 && --ctx.battle.field[key] === 0) events.push({ type: 'fieldEnd', field: key });
   }
-  recordFaints(ctx, player, enemy, events);
 }
 
 const HAZARDS = ['spikes', 'toxicSpikes', 'stealthRock', 'stickyWeb'] as const;
@@ -4187,6 +4286,19 @@ function statusAbilityBlock(ctx: BattleContext, source: Combatant, target: Comba
   if (STATUS_IMMUNE[ability]?.includes(status)) return ability;
   if (ability === 'leaf-guard' && weatherNow(ctx) === 'sun') return ability;
   if (ability === 'shields-down' && target.mon.hp * 2 > calcStats(ctx.content, target.mon).hp) return ability;
+  return veilBlock(ctx, source, target, status, ability);
+}
+
+/** Sweet Veil (sleep), Pastel Veil (poison) and Flower Veil (Grass types) on the target or, in doubles, its ally. */
+function veilBlock(ctx: BattleContext, source: Combatant, target: Combatant, status: StatusId, own: string | null): string | null {
+  if (source === target) return null;
+  const ally = moveIgnoresAbility ? null : allyAbility(ctx, target);
+  const grass = getSpecies(ctx.content, target.mon.speciesId).types.includes('grass');
+  for (const a of [own, ally]) {
+    if (a === 'sweet-veil' && status === 'slp') return a;
+    if (a === 'pastel-veil' && status === 'psn') return a;
+    if (a === 'flower-veil' && grass) return a;
+  }
   return null;
 }
 
@@ -4256,6 +4368,11 @@ function applyStageChange(ctx: BattleContext, c: Combatant, stat: BoostStat, sta
   if (source && stages < 0 && ability === 'mirror-armor' && source.side !== c.side) {
     announce(c, ability, events);
     applyStageChange(ctx, source, stat, stages, events);
+    return false;
+  }
+  if (source && stages < 0 && source.side !== c.side && getSpecies(ctx.content, c.mon.speciesId).types.includes('grass') && (ability === 'flower-veil' || (!moveIgnoresAbility && allyAbility(ctx, c) === 'flower-veil'))) {
+    announce(c, 'flower-veil', events);
+    events.push({ type: 'fail', side: c.side });
     return false;
   }
   if (ability === 'contrary') stages = -stages;
@@ -4344,7 +4461,7 @@ function terrainBlocksStatus(ctx: BattleContext, target: Combatant, status: Stat
 }
 
 /** End of turn: Grassy Terrain heals a grounded Pokémon 1/16 of its HP; the terrain runs down. */
-function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
+function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEvent[], tick = true): void {
   const terrain = ctx.battle.terrain;
   if (!terrain) return;
   if (terrain.id === 'grassy') {
@@ -4356,6 +4473,7 @@ function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEven
       events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
     }
   }
+  if (!tick) return;
   terrain.turns -= 1;
   if (terrain.turns <= 0) {
     ctx.battle.terrain = null;
@@ -4375,7 +4493,7 @@ function applyTurnHeal(ctx: BattleContext, c: Combatant, events: BattleEvent[]):
 }
 const enemyHealingBlockedFor = (ctx: BattleContext, c: Combatant) => c.side === 'enemy' && enemyHealingBlocked(ctx.perks);
 
-function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
+function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[], tick = true): void {
   const weather = ctx.battle.weather;
   if (!weather) return;
   const negated = weatherNow(ctx) === null;
@@ -4416,6 +4534,7 @@ function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEven
       if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
     }
   }
+  if (!tick) return;
   weather.turns -= 1;
   if (weather.turns <= 0) {
     ctx.battle.weather = null;
@@ -4570,3 +4689,41 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
   events.push({ type: 'raid', tone: 'phase', text: "Champion's Aura! Your Pokémon feels the Champion's resolve!" });
   applyStageChange(ctx, player, best, stages, events);
 }
+
+/** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
+export const doublesSteps = {
+  executeMove,
+  runMove,
+  resolveMove,
+  speedOf,
+  priorityOf,
+  abilityIn,
+  targetAbility,
+  announce,
+  applyStageChange,
+  recordFaints,
+  switchIn,
+  switchOutAbility,
+  enterField,
+  enterExtras,
+  applyHazards,
+  entryAbility,
+  applyWeather,
+  applyTurnHeal,
+  applyTerrain,
+  tickSides,
+  statusCureAbility,
+  applyResidual,
+  endTurnMon,
+  endTurnField,
+  tickDelayed,
+  syncForms,
+  validateAction,
+  choiceLock,
+  moveValue,
+  useItemInBattle,
+  freshVolatileKeeping,
+  healMon,
+  allyCombatant,
+  weatherNow,
+};

@@ -3910,6 +3910,10 @@
     "spriteAssetId": "boss.emmet",
     "modifiers": [
       {
+        "kind": "doubleBattleRewardMultiplier",
+        "value": 1.25
+      },
+      {
         "kind": "spreadMoveDamageMultiplier",
         "spread": true,
         "value": 1.15

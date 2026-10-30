@@ -382,6 +382,10 @@
    "amount": 1
   }
  ],
+ "doubles": {
+  "chance": 0.3,
+  "fromStage": 1
+ },
  "trainerAi": {
   "healBelow": 0.3,
   "healFraction": 0.5,

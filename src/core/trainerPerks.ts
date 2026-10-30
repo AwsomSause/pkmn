@@ -378,7 +378,7 @@ export function enemyHealingBlocked(perks: Perks | undefined): boolean {
   return of(perks, 'enemyHealingBlocked').length > 0;
 }
 
-/** Moves that hit every foe in the real games' double battles (the game here is singles, so this only picks the perk's damage rule). */
+/** Moves that hit every foe in double battles (for the perk's damage rule; battle/doubles.ts has the full target list). */
 const SPREAD_MOVES = new Set([
   'earthquake', 'surf', 'rock-slide', 'blizzard', 'heat-wave', 'discharge', 'razor-leaf', 'muddy-water', 'bulldoze', 'dazzling-gleam', 'hyper-voice',
   'icy-wind', 'snarl', 'electroweb', 'sludge-wave', 'eruption', 'water-spout', 'boomburst', 'lava-plume', 'sparkling-aria', 'origin-pulse',
@@ -406,6 +406,10 @@ export function burnDamageTakenPerk(perks: Perks | undefined): number {
 
 export function bossMoneyPerk(perks: Perks | undefined): number {
   return product(perks, 'bossMoneyMultiplier');
+}
+
+export function doubleBattleRewardPerk(perks: Perks | undefined): number {
+  return product(perks, 'doubleBattleRewardMultiplier');
 }
 
 export function statusMoveAccuracyPerk(perks: Perks | undefined): number {

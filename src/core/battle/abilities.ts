@@ -195,19 +195,20 @@ const SUPPORTED = new Set<string>([
   'long-reach', 'scrappy', 'simple', 'contrary', 'defiant', 'competitive', 'synchronize', 'leaf-guard', 'own-tempo',
   'inner-focus', 'steadfast', 'early-bird', 'truant', 'damp', 'quick-feet', 'prankster', 'gale-wings', 'triage',
   'speed-boost', 'rain-dish', 'ice-body', 'shed-skin', 'hydration', 'poison-heal', 'natural-cure', 'regenerator', 'anger-point',
+  // Double battles (battle/doubles.ts and the ally hooks in engine.ts).
+  'symbiosis', 'healer', 'friend-guard', 'telepathy', 'plus', 'minus', 'battery', 'power-spot', 'steely-spirit', 'curious-medicine',
+  'flower-veil', 'aroma-veil', 'receiver', 'power-of-alchemy', 'costar', 'commander', 'dancer', 'stalwart', 'propeller-tail', 'hospitality',
 ]);
 
 /**
  * Abilities that only affect things this game doesn't have: held items,
- * genders and attraction, double battles, running away, wild-encounter rates,
+ * genders and attraction, running away, wild-encounter rates,
  * forced switching and the overworld.
  */
 const NO_EFFECT = new Set<string>([
   'run-away', 'pickup', 'honey-gather', 'illuminate', 'ball-fetch', 'frisk', 'anticipation', 'forewarn', 'pickpocket',
-  'magician', 'sticky-hold', 'klutz', 'unburden', 'gluttony', 'harvest', 'cheek-pouch', 'ripen', 'cud-chew', 'symbiosis',
-  'healer', 'friend-guard', 'telepathy', 'plus', 'minus', 'battery', 'power-spot', 'steely-spirit', 'curious-medicine',
-  'cute-charm', 'rivalry', 'suction-cups', 'unnerve', 'flower-veil', 'aroma-veil', 'receiver', 'power-of-alchemy',
-  'costar', 'commander', 'dancer', 'stalwart', 'propeller-tail', 'hospitality', 'supersweet-syrup', 'emergency-exit', 'wimp-out',
+  'magician', 'sticky-hold', 'klutz', 'unburden', 'gluttony', 'harvest', 'cheek-pouch', 'ripen', 'cud-chew',
+  'cute-charm', 'rivalry', 'suction-cups', 'unnerve', 'supersweet-syrup', 'emergency-exit', 'wimp-out',
   'heavy-metal', 'light-metal', 'infiltrator', 'screen-cleaner', 'rks-system',
 ]);
 

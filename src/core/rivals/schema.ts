@@ -99,6 +99,12 @@ export const RivalWorldSchema = z.object({
   standing: z.object({ bossLeague: z.number(), bossSyndicate: z.number(), rivalWinLeague: z.number(), sponsorFaction: z.number(), hostileAt: z.number(), patronAt: z.number(), min: z.number(), max: z.number() }),
   debts: z.object({ repayAfterBosses: z.number().int(), owedToPlayerLevels: z.number().int(), sponsorRivalLevels: z.number().int(), rivalSponsorChance: z.number(), rivalSponsorMinAmbition: z.number() }),
   context: z.object({ crisisEvents: z.number().int(), copyTypes: z.number().int() }),
+  transfer: z.object({
+    note: z.string(), releaseChance: z.number(), releaseMaxTrust: z.number(), releaseMinStrain: z.number(), tradeChance: z.number(), rehomeChance: z.number(),
+    rehomeMinAffection: z.number(), rehomeMinStrain: z.number(), minTeam: z.number().int(), maxTeam: z.number().int(), tradeTrustLoss: z.number(),
+    releaseEmpathy: z.number(), tradeEmpathy: z.number(), rehomeEmpathy: z.number(),
+  }),
+  interrupt: z.object({ note: z.string(), sideKinds: z.array(z.string()), states: z.array(z.string()), minVindictiveness: z.number(), chance: z.number().min(0).max(1) }),
 });
 export const RIVAL_WORLD = RivalWorldSchema.parse(worldJson);
 
