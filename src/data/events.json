@@ -22540,6 +22540,60 @@
    ]
   },
   {
+   "id": "route-detour",
+   "name": "A Hand-Painted Detour Sign",
+   "group": "Routes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a20",
+    "effect": "none"
+   },
+   "intro": "A sign points down a side trail: \"Shortcut. Probably safe.\" Another, in different handwriting: \"Clinic ahead. Rest awhile.\"",
+   "choices": [
+    {
+     "label": "Take the shortcut (risky)",
+     "chance": 0.6,
+     "success": {
+      "text": "The trail cuts straight through. You arrive close to the end of the route.",
+      "effects": [
+       {
+        "kind": "skipAhead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "The trail is washed out. You lose time and a few supplies.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the clinic sign",
+     "success": {
+      "text": "A volunteer has set up a healing stop beside the road.",
+      "effects": [
+       {
+        "kind": "addStop",
+        "stop": "heal"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay on the main road",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "habitat-migration",
    "name": "A Migrating Flock",
    "group": "Habitats",

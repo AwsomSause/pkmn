@@ -3378,7 +3378,8 @@
     ]
   },
   "gauntlet": {
-    "money": 2500
+    "money": 2500,
+    "grandRivals": 4
   },
   "elitePhilosophies": [
     {
@@ -3439,5 +3440,65 @@
       "statName": "Speed",
       "line": "{enemy} wants to move first every turn. Slow it down or hit it before it settles."
     }
-  ]
+  ],
+  "anomalies": {
+    "chance": 0.2,
+    "minRegion": 1,
+    "list": [
+      {
+        "id": "gravity-distortion",
+        "name": "Gravity Distortion",
+        "description": "Gravity is warped here: Flying types and Levitate are grounded for the first 5 turns of every battle.",
+        "counterplay": "Lean on Ground and Electric-proof teammates, or finish fights fast.",
+        "field": {
+          "gravity": 5
+        }
+      },
+      {
+        "id": "time-scarred-ruins",
+        "name": "Time-Scarred Ruins",
+        "description": "Time runs backwards in these ruins: the slowest Pokémon moves first for the first 5 turns of every battle.",
+        "counterplay": "Put your slow, bulky Pokémon in front, or use Trick Room yourself to turn it back.",
+        "field": {
+          "trickRoom": 5
+        }
+      },
+      {
+        "id": "shadow-zone",
+        "name": "Shadow Zone",
+        "description": "A choking dust fills this zone: a sandstorm blows through every battle.",
+        "counterplay": "Rock, Ground and Steel Pokémon are safe from it; weather-changing moves clear it.",
+        "field": {
+          "weather": "sand"
+        }
+      },
+      {
+        "id": "crystal-cavern",
+        "name": "Crystallized Cavern",
+        "description": "Crystals glow with a soft mist: Misty Terrain protects grounded Pokémon from status and weakens Dragon moves.",
+        "counterplay": "Use Fairy, Poison or Steel moves, or lean on damage instead of status.",
+        "field": {
+          "terrain": "misty"
+        }
+      },
+      {
+        "id": "unstable-energy",
+        "name": "Unstable Energy Site",
+        "description": "Electric energy surges through the ground: Electric Terrain boosts Electric moves and keeps grounded Pokémon awake.",
+        "counterplay": "Ground types are immune to the Electric moves; avoid relying on sleep.",
+        "field": {
+          "terrain": "electric"
+        }
+      },
+      {
+        "id": "dimension-crack",
+        "name": "Dimension Crack",
+        "description": "A crack in the sky pulls the rain in: it rains in every battle.",
+        "counterplay": "Fire moves are weaker and Water moves stronger; use Sun or Water-resistant Pokémon.",
+        "field": {
+          "weather": "rain"
+        }
+      }
+    ]
+  }
 }

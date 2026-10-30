@@ -515,7 +515,12 @@ export const StoryConfigSchema = z.object({
   mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
   /** The Grand-Enemy (Techno §5): its name, where its phases begin (share of the campaign), and the title it leaves. */
   elitePhilosophies: z.array(z.object({ id: z.string(), name: z.string(), types: z.array(z.string()).min(1), trigger: z.enum(['eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo']), stat: z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']), statName: z.string(), line: z.string() })).min(1),
-  gauntlet: z.object({ money: z.number().int().positive() }),
+  anomalies: z.object({
+    chance: z.number().min(0).max(1),
+    minRegion: z.number().int().min(0),
+    list: z.array(z.object({ id: z.string(), name: z.string(), description: z.string(), counterplay: z.string(), field: z.object({ gravity: z.number().int().min(1).optional(), trickRoom: z.number().int().min(1).optional(), weather: z.enum(['rain', 'sun', 'sand', 'snow', 'hail']).optional(), terrain: z.enum(['electric', 'grassy', 'misty', 'psychic']).optional() }) })).min(1),
+  }),
+  gauntlet: z.object({ money: z.number().int().positive(), grandRivals: z.number().int().min(1).max(6) }),
   grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0), influenceRare: z.number().gt(1).max(2), huntClues: z.number().int().min(1).max(10), huntTitle: z.string() }),
   /** Legacy titles (Techno §6.1): earned from a Pokémon's own history; recognition only, never a stat. */
   legacyTitles: z
@@ -577,3 +582,5 @@ export const StoryConfigSchema = z.object({
 export type StoryConfig = z.infer<typeof StoryConfigSchema>;
 
 export type ElitePhilosophy = z.infer<typeof StoryConfigSchema>['elitePhilosophies'][number];
+
+export type FieldAnomaly = z.infer<typeof StoryConfigSchema>['anomalies']['list'][number];
