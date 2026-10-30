@@ -1,0 +1,95 @@
+// Regional Crisis and the Rival Tournament bracket (Techno §7A/§7B).
+
+import { describe, expect, it } from 'vitest';
+import { addEventStops, chooseEvent, eligibleEvents } from '../../src/core/events';
+import { chooseStarter, createRun } from '../../src/core/run';
+import { changeAid, changeCrisis, crisisAid, crisisLevel, crisisMoments, growCrisis, setTournament, tournamentEventId, tournamentRound } from '../../src/core/story/crisis';
+import { content } from './helpers';
+
+function fresh(seed: string) {
+  const run = structuredClone(chooseStarter(content, createRun(content, { runId: seed, seed, archetypeId: 'red' }), 0));
+  run.regionIndex = Math.min(2, run.regionOrder.length - 1);
+  return run;
+}
+const stops = (run: ReturnType<typeof fresh>) => run.stage!.map.nodes.flatMap((n) => n.sides).flatMap((s) => (s.eventId ? [s.eventId] : []));
+
+describe('Regional Crisis', () => {
+  it('worsens once per stage from the second, stays within 0 to 5, and is per region', () => {
+    const run = fresh('crisis-grow');
+    run.stage!.index = 0;
+    growCrisis(content, run);
+    expect(crisisLevel(run)).toBe(0);
+    run.stage!.index = 1;
+    growCrisis(content, run);
+    growCrisis(content, run);
+    expect(crisisLevel(run)).toBe(1);
+    changeCrisis(content, run, 20);
+    expect(crisisLevel(run)).toBe(5);
+    changeCrisis(content, run, -20);
+    expect(crisisLevel(run)).toBe(0);
+    run.regionIndex += 1;
+    expect(crisisLevel(run)).toBe(0);
+  });
+
+  it('boss moments follow the meter and the Aid; the chronicle notes a serious crisis', () => {
+    const run = fresh('crisis-moments');
+    expect(crisisMoments(run)).toEqual([]);
+    changeCrisis(content, run, 3);
+    expect(run.story.chronicle.at(-1)!.text).toContain('grown serious');
+    changeAid(run, 2);
+    expect(crisisMoments(run)).toEqual(['crisisLoom', 'crisisAid']);
+    expect(crisisAid(run)).toBe(2);
+  });
+
+  it('a serious crisis always gets its report stop, and helping eases the meter and gathers Aid', () => {
+    const run = fresh('crisis-event');
+    expect(eligibleEvents(content, run).some((e) => e.id.startsWith('crisis-report'))).toBe(false);
+    changeCrisis(content, run, 3);
+    addEventStops(content, run);
+    const id = stops(run).find((s) => s.startsWith('crisis-report'))!;
+    expect(id).toBeDefined();
+    const node = run.stage!.map.nodes.find((n) => n.sides.some((s) => s.eventId === id))!;
+    run.stage!.current = node.id;
+    const side = node.sides.find((s) => s.eventId === id)!;
+    const result = chooseEvent(content, run, side.id, 0);
+    expect(crisisLevel(result.run)).toBe(1);
+    expect(crisisAid(result.run)).toBe(1);
+  });
+});
+
+describe('Rival Tournament', () => {
+  it('can be entered once a rival is met, then each round is placed until played, ending in the final', () => {
+    const run = fresh('tour-flow');
+    run.money = 2000;
+    run.story.rivals.push({ encounters: 2 } as never);
+    expect(eligibleEvents(content, run).map((e) => e.id)).toContain('tournament-entry');
+    expect(eligibleEvents(content, run).map((e) => e.id)).not.toContain('tournament-quarter');
+    expect(tournamentEventId(run)).toBeNull();
+    setTournament(content, run, 1);
+    expect(eligibleEvents(content, run).map((e) => e.id)).not.toContain('tournament-entry');
+    addEventStops(content, run);
+    expect(stops(run)).toContain('tournament-quarter');
+    setTournament(content, run, 3);
+    expect(tournamentEventId(run)).toBe('tournament-final');
+    setTournament(content, run, 9);
+    expect(tournamentRound(run)).toBe(9);
+    expect(tournamentEventId(run)).toBeNull();
+    expect(run.story.chronicle.at(-1)!.text).toContain('circuit finished');
+  });
+
+  it('entering costs the fee; the round fights pay the next round on a win', () => {
+    const run = fresh('tour-enter');
+    run.money = 1000;
+    run.story.rivals.push({ encounters: 1 } as never);
+    const node = run.stage!.map.nodes[0]!;
+    node.sides.push({ id: 'event-t', kind: 'event', used: false, eventId: 'tournament-entry' });
+    run.stage!.current = node.id;
+    const r = chooseEvent(content, run, 'event-t', 0);
+    expect(r.run.money).toBe(700);
+    expect(tournamentRound(r.run)).toBe(1);
+    const quarter = content.events.get('tournament-quarter')!;
+    const winEffects = quarter.choices[0]!.success.battle!.win.map((e) => e.kind);
+    expect(winEffects).toContain('tournament');
+    expect(content.events.get('tournament-final')!.choices[0]!.success.battle!.win.some((e) => e.kind === 'tournament' && e.round === 9)).toBe(true);
+  });
+});

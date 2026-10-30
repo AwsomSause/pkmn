@@ -2859,6 +2859,80 @@
         "determination"
       ],
       "variants": {}
+    },
+    {
+      "id": "crisis-loom",
+      "displayName": "The Crisis Presses In",
+      "messagePool": [
+        "{enemy} has grown stronger from the trouble in this region!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "crisisLoom"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Faced {enemy} empowered by a regional crisis"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff8a3d",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "crisis-aid",
+      "displayName": "Allies Stand With You",
+      "messagePool": [
+        "Allies from the region stand with {name}!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "crisisAid"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Fought with the region's allies at its side"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7be0ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -3081,7 +3155,8 @@
       "lastLesson",
       "grandGrudge",
       "rivalRespect",
-      "promiseKept"
+      "promiseKept",
+      "crisisAid"
     ]
   }
 }

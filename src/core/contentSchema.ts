@@ -2016,6 +2016,12 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bond') }),
   /** Event Director: the region's focus (mystery, rivals, raids, exploration). */
   z.object({ kind: z.literal('focus'), focus: z.enum(['mystery', 'rivals', 'raids', 'exploration']) }),
+  /** Regional crisis: this region's meter is at least / at most this (0 to 5). */
+  z.object({ kind: z.literal('crisis'), atLeast: z.number().int().min(0).max(5).default(0), atMost: z.number().int().min(0).max(5).default(5) }),
+  /** Regional crisis: the Aid gathered in this region. */
+  z.object({ kind: z.literal('aid'), atLeast: z.number().int().min(1) }),
+  /** Rival tournament: the bracket's state (0 not entered, 1 to 3 round waiting, 9 over). */
+  z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2063,6 +2069,12 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
   z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
   /** Adds to a run counter: a holiday event's clue, boss or finale (game event objectives count these). */
+  /** Regional crisis: moves this region's meter (negative eases it). */
+  z.object({ kind: z.literal('crisis'), amount: z.number().int() }),
+  /** Regional crisis: allies and supplies gathered for the region's boss. */
+  z.object({ kind: z.literal('aid'), amount: z.number().int().positive() }),
+  /** Rival tournament: sets the bracket's state. */
+  z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
