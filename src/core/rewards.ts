@@ -111,6 +111,7 @@ export function generateDraft(
   const byTier = new Map<Rarity, Reward[]>(RARITIES.map((t) => [t, eligible.filter((r) => r.rarity === t)]));
   const repeatWeight = content.balance.repeatFamilyWeight * (1 - draftVariety);
   const chosen: string[] = [...forced];
+  if (forced.some((id) => content.rewards.get(id)!.category === 'attribute')) for (const p of byTier.values()) for (let i = p.length - 1; i >= 0; i--) if (p[i]!.category === 'attribute') p.splice(i, 1);
   const families = new Set<string>(forced.map((id) => rewardFamily(content.rewards.get(id)!)));
   while (chosen.length < size) {
     const tier = rng.weighted(
@@ -124,6 +125,8 @@ export function generateDraft(
     const members = pool.filter((r) => rewardFamily(r) === family);
     const reward = members[rng.int(0, members.length - 1)]!;
     pool.splice(pool.indexOf(reward), 1);
+    // At most one attribute item per draft: once one is in, the rest leave every tier.
+    if (reward.category === 'attribute') for (const p of byTier.values()) for (let i = p.length - 1; i >= 0; i--) if (p[i]!.category === 'attribute') p.splice(i, 1);
     families.add(family);
     chosen.push(reward.id);
   }
