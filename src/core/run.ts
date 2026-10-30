@@ -1634,7 +1634,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -1650,7 +1650,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
     if (!defeated) continue;
     const baseExp = getSpecies(content, defeated.speciesId).baseExp;
     // Exp. Share: party members that didn't battle get its percent of the EXP.
-    const share = passivePercent(content, run, 'expShare');
+    const share = Math.max(passivePercent(content, run, 'expShare'), content.balance.difficulty.benchXpPercent);
     const sharers = share > 0 ? run.party.filter((p) => p.hp > 0 && !participants.includes(p.uid)).map((p) => p.uid) : [];
     const leadLevel = run.party[0]?.level ?? 0;
     for (const uid of [...participants, ...sharers]) {
