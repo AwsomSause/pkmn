@@ -29,7 +29,7 @@ import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
-import { burstReveal, hop, introTransition, type IntroKind } from '../ui/battleFx/spectacle';
+import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind } from '../ui/battleFx/spectacle';
 import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
@@ -43,6 +43,9 @@ const MESSAGE_Y = 396;
 /** A Dynamaxed Pokémon is drawn this much larger (a stand-in until the M9.5 effect). */
 const DYNAMAX_SCALE = 1.35;
 const COMMAND_X = 588;
+
+/** Databox and title-card rim colour for each kind of opponent. */
+const ROLE_RIMS = { wild: 0xff4fd8, trainer: 0xff8a3c, rival: 0xff3048, gym: 0xffc840, elite: 0xb070ff, champion: 0xfff4a0 } as const;
 
 interface InfoBox {
   container: Phaser.GameObjects.Container;
@@ -314,7 +317,7 @@ export class BattleScene extends Phaser.Scene {
     container.add(
       isPlayer
         ? drawGlass(this, 16, 2, 366, 128, { rim: AERO.rim, radius: 20 })
-        : drawGlass(this, 6, 4, 360, 100, { rim: AERO.neon, tint: 0x2a1240, radius: 20 }),
+        : drawGlass(this, 6, 4, 360, 100, { rim: this.foeRim(), tint: 0x2a1240, radius: 20 }),
     );
     // Text and bar positions follow the old art's slots (art pixel × 3).
     const left = isPlayer ? 48 : 24;
@@ -557,12 +560,34 @@ export class BattleScene extends Phaser.Scene {
     const art = this.trainerArt();
     const darkArena = ['ghost', 'dark', 'rock', 'poison'].includes(this.arenaTypes[0] ?? '');
     const kind: IntroKind = !battle.trainer ? (darkArena ? 'wild-dark' : 'wild') : this.boss() ? 'boss' : battle.rivalId || battle.rival ? 'rival' : 'trainer';
-    const intro = introTransition(this, kind, this.motion, art ? (x, y) => trainerVisual(this, art.assetId, art.label, x, y, 2.5) : undefined);
+    await this.playBeat(introTransition(this, kind, this.motion, art ? (x, y) => trainerVisual(this, art.assetId, art.label, x, y, 2.5) : undefined));
+    // Bosses and rivals get a title card: who they are and what they specialise in.
+    const boss = this.boss();
+    const title = this.trainerTitle();
+    if (boss) {
+      const types = boss.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join(' / ');
+      await this.playBeat(titleCard(this, boss.title, types ? `${types} specialist` : '', ROLE_RIMS[boss.role], this.motion));
+    } else if (title && (battle.rivalId || battle.rival)) {
+      await this.playBeat(titleCard(this, 'RIVAL', title, ROLE_RIMS.rival, this.motion));
+    }
+  }
+
+  /** The foe's rim: neon pink for wild Pokémon, orange for trainers, red for rivals, gold / violet / pale gold for bosses. */
+  private foeRim(): number {
+    const battle = this.run.battle;
+    const boss = this.boss();
+    if (boss) return ROLE_RIMS[boss.role];
+    if (!battle?.trainer) return ROLE_RIMS.wild;
+    return battle.rivalId || battle.rival ? ROLE_RIMS.rival : ROLE_RIMS.trainer;
+  }
+
+  /** Waits for a presentation beat; confirm/back skips it. */
+  private async playBeat(b: Beat): Promise<void> {
     let over = false;
     this.time.delayedCall(150, () => {
-      if (!over) this.advance = intro.skip;
+      if (!over) this.advance = b.skip;
     });
-    await intro.done;
+    await b.done;
     over = true;
     this.advance = null;
   }
@@ -834,11 +859,13 @@ export class BattleScene extends Phaser.Scene {
     }
     if (result.raidFailed) {
       await this.say('The fight is over... your Pokémon were pulled back to safety.');
+      await exitWipe(this, this.motion);
       this.scene.start(sceneForRun(result.run));
       return;
     }
     if (result.defeated) {
       await this.say('You have no Pokémon that can fight!');
+      await exitWipe(this, this.motion);
       this.scene.start('GameOver');
       return;
     }
@@ -850,13 +877,17 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     const end = result.end!;
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
-    if (end.outcome === 'win' && trainer) await this.say(`You defeated ${trainer}!`);
+    if (end.outcome === 'win' && trainer) {
+      await this.playBeat(stamp(this, 'VICTORY!', trainer, this.foeRim(), this.motion));
+      await this.say(`You defeated ${trainer}!`);
+    }
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
     for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
+      await this.playBeat(stamp(this, 'BADGE GET!', `${leaderName}'s badge`, ROLE_RIMS.gym, this.motion));
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
       const campaign = content.campaigns.get(result.run.campaignId);
       const leagueNext = result.run.stage?.kind === 'stage' && campaign && result.run.stage.index + 1 >= campaign.stagesPerRegion;
@@ -865,6 +896,7 @@ export class BattleScene extends Phaser.Scene {
     if (end.regionCleared) {
       playSfx(this, 'se.level_up');
       const region = content.regions.get(end.regionCleared)?.name ?? end.regionCleared;
+      await this.playBeat(stamp(this, 'CHAMPION!', region, ROLE_RIMS.champion, this.motion));
       await this.say(`You are the ${region} Champion!`);
       await this.say(end.victory ? 'You have conquered every region!' : 'A new region awaits…');
     }
@@ -878,6 +910,7 @@ export class BattleScene extends Phaser.Scene {
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
     }
+    await exitWipe(this, this.motion);
     this.scene.start(sceneForRun(result.run));
   }
 
@@ -995,6 +1028,12 @@ export class BattleScene extends Phaser.Scene {
             this.showSprite(e.side, this.shown[e.side]);
             this.applyTeraTint(e.side, this.shown[e.side]);
             await this.refreshInfoBox(e.side === 'enemy' ? this.enemyBox : this.playerBox, this.shown[e.side], false);
+            // A trainer's last Pokémon is their ace: one special beat when it comes out.
+            const team = this.run.battle?.enemyTeam ?? [];
+            if (e.side === 'enemy' && this.run.battle?.trainer && team.length > 1 && team[team.length - 1]!.uid === e.uid) {
+              void burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 80, this.foeRim(), this.motion);
+              await this.playBeat(stamp(this, 'ACE!', this.speciesName(this.shown.enemy), this.foeRim(), this.motion));
+            }
           }
           break;
         }
