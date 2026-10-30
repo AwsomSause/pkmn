@@ -27389,6 +27389,3474 @@
      }
     }
    ]
+  },
+  {
+   "id": "npc-meet-youngster-joey",
+   "name": "Meet Youngster Joey",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Youngster Joey spots you on the road. My Rattata is in the top percentage of Rattata!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Youngster Joey accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Youngster Joey",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-youngster-joey"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Youngster Joey grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-youngster-joey"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Youngster Joey shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-lass-janice",
+   "name": "Meet Lass Janice",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_lass"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Lass Janice spots you on the road. Be gentle, okay? They are my friends.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Lass Janice accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Lass Janice",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-lass-janice"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Lass Janice grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-lass-janice"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Lass Janice shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-bug-catcher-wade",
+   "name": "Meet Bug Catcher Wade",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_bugcatcher"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Bug Catcher Wade spots you on the road. Bugs are way tougher than they look!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Bug Catcher Wade accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Bug Catcher Wade",
+       "size": 2,
+       "types": [
+        "bug"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-bug-catcher-wade"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Bug Catcher Wade grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-bug-catcher-wade"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Bug Catcher Wade shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-camper-liam",
+   "name": "Meet Camper Liam",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_camper"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Camper Liam spots you on the road. Nothing beats a night under the stars.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Camper Liam accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Camper Liam",
+       "size": 2,
+       "types": [
+        "ground"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-camper-liam"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Camper Liam grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-camper-liam"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Camper Liam shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-picnicker-gina",
+   "name": "Meet Picnicker Gina",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_picnicker"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Picnicker Gina spots you on the road. We packed sandwiches for the whole team!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Picnicker Gina accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Picnicker Gina",
+       "size": 2,
+       "types": [
+        "grass"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-picnicker-gina"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Picnicker Gina grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-picnicker-gina"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Picnicker Gina shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-hiker-anthony",
+   "name": "Meet Hiker Anthony",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_hiker"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Hiker Anthony spots you on the road. Mountains make for stubborn Pokémon.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Hiker Anthony accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hiker Anthony",
+       "size": 2,
+       "types": [
+        "rock"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-hiker-anthony"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Hiker Anthony grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-hiker-anthony"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Hiker Anthony shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-fisherman-elliot",
+   "name": "Meet Fisherman Elliot",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_fisherman"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Fisherman Elliot spots you on the road. Patience is the whole trick.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Fisherman Elliot accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Fisherman Elliot",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-fisherman-elliot"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Fisherman Elliot grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-fisherman-elliot"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Fisherman Elliot shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-bird-keeper-perry",
+   "name": "Meet Bird Keeper Perry",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_birdkeeper"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Bird Keeper Perry spots you on the road. Watch them ride the wind!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Bird Keeper Perry accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Bird Keeper Perry",
+       "size": 2,
+       "types": [
+        "flying"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-bird-keeper-perry"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Bird Keeper Perry grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-bird-keeper-perry"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Bird Keeper Perry shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-black-belt-kenji",
+   "name": "Meet Black Belt Kenji",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_blackbelt"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Black Belt Kenji spots you on the road. Hup! Train the body, train the Pokémon.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Black Belt Kenji accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Black Belt Kenji",
+       "size": 2,
+       "types": [
+        "fighting"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-black-belt-kenji"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Black Belt Kenji grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-black-belt-kenji"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Black Belt Kenji shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-biker-ryder",
+   "name": "Meet Biker Ryder",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_biker"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Biker Ryder spots you on the road. Out of my way, rookie!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Biker Ryder accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Biker Ryder",
+       "size": 2,
+       "types": [
+        "poison"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-biker-ryder"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Biker Ryder grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-biker-ryder"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Biker Ryder shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-burglar-quinn",
+   "name": "Meet Burglar Quinn",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_burglar"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Burglar Quinn spots you on the road. Finders keepers, right?",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Burglar Quinn accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Burglar Quinn",
+       "size": 2,
+       "types": [
+        "fire"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-burglar-quinn"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Burglar Quinn grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-burglar-quinn"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Burglar Quinn shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-channeler-hester",
+   "name": "Meet Channeler Hester",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_channeler"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Channeler Hester spots you on the road. I feel something behind you...",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Channeler Hester accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Channeler Hester",
+       "size": 2,
+       "types": [
+        "ghost"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-channeler-hester"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Channeler Hester grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-channeler-hester"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Channeler Hester shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-cooltrainer-marcus",
+   "name": "Meet Cooltrainer Marcus",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_cooltrainer_m"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Cooltrainer Marcus spots you on the road. Only the best trainers get my respect.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Cooltrainer Marcus accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Cooltrainer Marcus",
+       "size": 2,
+       "types": [
+        "dragon"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-cooltrainer-marcus"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Cooltrainer Marcus grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-cooltrainer-marcus"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Cooltrainer Marcus shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-cooltrainer-selene",
+   "name": "Meet Cooltrainer Selene",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_cooltrainer_f"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Cooltrainer Selene spots you on the road. My strategy is flawless.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Cooltrainer Selene accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Cooltrainer Selene",
+       "size": 2,
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-cooltrainer-selene"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Cooltrainer Selene grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-cooltrainer-selene"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Cooltrainer Selene shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-crush-girl-tamsin",
+   "name": "Meet Crush Girl Tamsin",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_crushgirl"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Crush Girl Tamsin spots you on the road. Throw a punch, then another!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Crush Girl Tamsin accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Crush Girl Tamsin",
+       "size": 2,
+       "types": [
+        "fighting"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-crush-girl-tamsin"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Crush Girl Tamsin grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-crush-girl-tamsin"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Crush Girl Tamsin shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-crush-kin-ivan-and-mira",
+   "name": "Meet Crush Kin Ivan and Mira",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_crushkin"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Crush Kin Ivan and Mira spots you on the road. Two trainers, double the pressure!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Crush Kin Ivan and Mira accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Crush Kin Ivan and Mira",
+       "size": 2,
+       "types": [
+        "fighting"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-crush-kin-ivan-and-mira"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Crush Kin Ivan and Mira grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-crush-kin-ivan-and-mira"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Crush Kin Ivan and Mira shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-cue-ball-dutch",
+   "name": "Meet Cue Ball Dutch",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_cueball"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Cue Ball Dutch spots you on the road. Show me what you have got!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Cue Ball Dutch accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Cue Ball Dutch",
+       "size": 2,
+       "types": [
+        "fighting"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-cue-ball-dutch"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Cue Ball Dutch grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-cue-ball-dutch"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Cue Ball Dutch shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-engineer-baxter",
+   "name": "Meet Engineer Baxter",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_engineer"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Engineer Baxter spots you on the road. Everything runs on current, even teams.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Engineer Baxter accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Engineer Baxter",
+       "size": 2,
+       "types": [
+        "electric"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-engineer-baxter"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Engineer Baxter grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-engineer-baxter"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Engineer Baxter shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-gambler-lucky",
+   "name": "Meet Gambler Lucky",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_gambler"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Gambler Lucky spots you on the road. Double or nothing on this battle!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Gambler Lucky accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Gambler Lucky",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-gambler-lucky"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Gambler Lucky grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-gambler-lucky"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Gambler Lucky shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-gentleman-alfred",
+   "name": "Meet Gentleman Alfred",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_gentleman"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Gentleman Alfred spots you on the road. Proper form, proper manners.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Gentleman Alfred accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Gentleman Alfred",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-gentleman-alfred"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Gentleman Alfred grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-gentleman-alfred"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Gentleman Alfred shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-juggler-pierre",
+   "name": "Meet Juggler Pierre",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_juggler"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Juggler Pierre spots you on the road. Keep your eyes on the ball. And the Pokémon.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Juggler Pierre accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Juggler Pierre",
+       "size": 2,
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-juggler-pierre"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Juggler Pierre grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-juggler-pierre"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Juggler Pierre shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-lady-cordelia",
+   "name": "Meet Lady Cordelia",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_lady"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Lady Cordelia spots you on the road. My Pokémon are only the finest.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Lady Cordelia accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Lady Cordelia",
+       "size": 2,
+       "types": [
+        "fairy"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-lady-cordelia"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Lady Cordelia grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-lady-cordelia"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Lady Cordelia shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-painter-vera",
+   "name": "Meet Painter Vera",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_painter"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Painter Vera spots you on the road. Every battle is a canvas.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Painter Vera accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Painter Vera",
+       "size": 2,
+       "types": [
+        "grass"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-painter-vera"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Painter Vera grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-painter-vera"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Painter Vera shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-poke-maniac-rex",
+   "name": "Meet Poké Maniac Rex",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemaniac"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Poké Maniac Rex spots you on the road. I collect them all, and I mean all!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Poké Maniac Rex accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Poké Maniac Rex",
+       "size": 2,
+       "types": [
+        "rock"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-poke-maniac-rex"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Poké Maniac Rex grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-poke-maniac-rex"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Poké Maniac Rex shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-pokemon-breeder-delia",
+   "name": "Meet Pokémon Breeder Delia",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonbreeder"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Pokémon Breeder Delia spots you on the road. Raised with love since the egg.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Pokémon Breeder Delia accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Pokémon Breeder Delia",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-pokemon-breeder-delia"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Pokémon Breeder Delia grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-pokemon-breeder-delia"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Pokémon Breeder Delia shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-pokemon-ranger-hal",
+   "name": "Meet Pokémon Ranger Hal",
+   "group": "Trainers and challenges",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_m"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Pokémon Ranger Hal spots you on the road. Keep the wild safe, and the wild keeps us safe.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Pokémon Ranger Hal accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Pokémon Ranger Hal",
+       "size": 2,
+       "types": [
+        "grass"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-pokemon-ranger-hal"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Pokémon Ranger Hal grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-pokemon-ranger-hal"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Pokémon Ranger Hal shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-pokemon-ranger-willa",
+   "name": "Meet Pokémon Ranger Willa",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_f"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Pokémon Ranger Willa spots you on the road. Capture on, ranger style!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Pokémon Ranger Willa accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Pokémon Ranger Willa",
+       "size": 2,
+       "types": [
+        "flying"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-pokemon-ranger-willa"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Pokémon Ranger Willa grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-pokemon-ranger-willa"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Pokémon Ranger Willa shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-psychic-edmund",
+   "name": "Meet Psychic Edmund",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_psychic_m"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Psychic Edmund spots you on the road. I knew you were coming.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Psychic Edmund accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Psychic Edmund",
+       "size": 2,
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-psychic-edmund"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Psychic Edmund grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-psychic-edmund"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Psychic Edmund shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-psychic-lorna",
+   "name": "Meet Psychic Lorna",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_psychic_f"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Psychic Lorna spots you on the road. Your next move is already in my head.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Psychic Lorna accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Psychic Lorna",
+       "size": 2,
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-psychic-lorna"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Psychic Lorna grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-psychic-lorna"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Psychic Lorna shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-rocker-axel",
+   "name": "Meet Rocker Axel",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_rocker"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Rocker Axel spots you on the road. Turn it up to eleven!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Rocker Axel accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rocker Axel",
+       "size": 2,
+       "types": [
+        "electric"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-rocker-axel"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Rocker Axel grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-rocker-axel"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Rocker Axel shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-ruin-maniac-hadrian",
+   "name": "Meet Ruin Maniac Hadrian",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_ruinmaniac"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Ruin Maniac Hadrian spots you on the road. These ruins hold such secrets.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Ruin Maniac Hadrian accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ruin Maniac Hadrian",
+       "size": 2,
+       "types": [
+        "ground"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-ruin-maniac-hadrian"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Ruin Maniac Hadrian grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-ruin-maniac-hadrian"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Ruin Maniac Hadrian shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-sailor-murphy",
+   "name": "Meet Sailor Murphy",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_sailor"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Sailor Murphy spots you on the road. Hoist the sails, matey!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Sailor Murphy accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Sailor Murphy",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-sailor-murphy"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Sailor Murphy grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-sailor-murphy"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Sailor Murphy shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-scientist-dr-orson",
+   "name": "Meet Scientist Dr. Orson",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_scientist"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Scientist Dr. Orson spots you on the road. A fascinating battle sample.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Scientist Dr. Orson accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Scientist Dr. Orson",
+       "size": 2,
+       "types": [
+        "electric"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-scientist-dr-orson"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Scientist Dr. Orson grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-scientist-dr-orson"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Scientist Dr. Orson shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-sis-and-bro-amy-and-tim",
+   "name": "Meet Sis and Bro Amy and Tim",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_sisandbro"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Sis and Bro Amy and Tim spots you on the road. We always fight together!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Sis and Bro Amy and Tim accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Sis and Bro Amy and Tim",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-sis-and-bro-amy-and-tim"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Sis and Bro Amy and Tim grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-sis-and-bro-amy-and-tim"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Sis and Bro Amy and Tim shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-super-nerd-miles",
+   "name": "Meet Super Nerd Miles",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_supernerd"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Super Nerd Miles spots you on the road. I did the math on your odds.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Super Nerd Miles accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Super Nerd Miles",
+       "size": 2,
+       "types": [
+        "poison"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-super-nerd-miles"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Super Nerd Miles grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-super-nerd-miles"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Super Nerd Miles shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-swimmer-kai",
+   "name": "Meet Swimmer Kai",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_swimmer_m"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Swimmer Kai spots you on the road. The water is perfect today!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Swimmer Kai accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Swimmer Kai",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-swimmer-kai"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Swimmer Kai grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-swimmer-kai"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Swimmer Kai shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-swimmer-marina",
+   "name": "Meet Swimmer Marina",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_swimmer_f"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Swimmer Marina spots you on the road. Dive in with me!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Swimmer Marina accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Swimmer Marina",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-swimmer-marina"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Swimmer Marina grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-swimmer-marina"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Swimmer Marina shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-swimmer-finn",
+   "name": "Meet Swimmer Finn",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_swimmer2_m"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Swimmer Finn spots you on the road. Cannonball into battle!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Swimmer Finn accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Swimmer Finn",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-swimmer-finn"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Swimmer Finn grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-swimmer-finn"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Swimmer Finn shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-swimmer-coral",
+   "name": "Meet Swimmer Coral",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_swimmer2_f"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Swimmer Coral spots you on the road. Swim and splash!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Swimmer Coral accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Swimmer Coral",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-swimmer-coral"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Swimmer Coral grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-swimmer-coral"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Swimmer Coral shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-tamer-garrett",
+   "name": "Meet Tamer Garrett",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_tamer"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Tamer Garrett spots you on the road. Wild or not, they listen to me.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Tamer Garrett accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Tamer Garrett",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-tamer-garrett"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Tamer Garrett grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-tamer-garrett"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Tamer Garrett shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-team-rocket-grunt-boris",
+   "name": "Meet Team Rocket Grunt Boris",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_teamrocket_m"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Team Rocket Grunt Boris spots you on the road. Hand over your Pokémon!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Team Rocket Grunt Boris accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Team Rocket Grunt Boris",
+       "size": 2,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-team-rocket-grunt-boris"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Team Rocket Grunt Boris grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-team-rocket-grunt-boris"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Team Rocket Grunt Boris shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-team-rocket-grunt-jessa",
+   "name": "Meet Team Rocket Grunt Jessa",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_teamrocket_f"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Team Rocket Grunt Jessa spots you on the road. Prepare for trouble, rookie!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Team Rocket Grunt Jessa accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Team Rocket Grunt Jessa",
+       "size": 2,
+       "types": [
+        "poison"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-team-rocket-grunt-jessa"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Team Rocket Grunt Jessa grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-team-rocket-grunt-jessa"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Team Rocket Grunt Jessa shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-tuber-pip",
+   "name": "Meet Tuber Pip",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_tuber_m"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Tuber Pip spots you on the road. Float on, battle later.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Tuber Pip accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Tuber Pip",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-tuber-pip"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Tuber Pip grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-tuber-pip"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Tuber Pip shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-tuber-dot",
+   "name": "Meet Tuber Dot",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_tuber_f"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Tuber Dot spots you on the road. Splash fight!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Tuber Dot accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Tuber Dot",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-tuber-dot"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Tuber Dot grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-tuber-dot"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Tuber Dot shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-tuber-rudy",
+   "name": "Meet Tuber Rudy",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_tuber2_m"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Tuber Rudy spots you on the road. Tube life is the best life.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Tuber Rudy accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Tuber Rudy",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-tuber-rudy"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Tuber Rudy grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-tuber-rudy"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Tuber Rudy shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-tuber-sunny",
+   "name": "Meet Tuber Sunny",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_tuber2_f"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Tuber Sunny spots you on the road. Come join the waves!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Tuber Sunny accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Tuber Sunny",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-tuber-sunny"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Tuber Sunny grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-tuber-sunny"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Tuber Sunny shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-twins-nia-and-mia",
+   "name": "Meet Twins Nia and Mia",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_twins"
+    ],
+    "tint": "#1c3040",
+    "effect": "none"
+   },
+   "intro": "Twins Nia and Mia spots you on the road. Two for the price of one!",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Twins Nia and Mia accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Twins Nia and Mia",
+       "size": 2,
+       "types": [
+        "fairy"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-twins-nia-and-mia"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Twins Nia and Mia grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-twins-nia-and-mia"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Twins Nia and Mia shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-young-couple-dan-and-eri",
+   "name": "Meet Young Couple Dan and Eri",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_youngcouple"
+    ],
+    "tint": "#40301c",
+    "effect": "none"
+   },
+   "intro": "Young Couple Dan and Eri spots you on the road. Together we cannot lose.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Young Couple Dan and Eri accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Young Couple Dan and Eri",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-young-couple-dan-and-eri"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Young Couple Dan and Eri grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-young-couple-dan-and-eri"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Young Couple Dan and Eri shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-beauty-bianca",
+   "name": "Meet Beauty Bianca",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_beauty"
+    ],
+    "tint": "#301c40",
+    "effect": "none"
+   },
+   "intro": "Beauty Bianca spots you on the road. My Pokémon sparkle, and so do I.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Beauty Bianca accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Beauty Bianca",
+       "size": 2,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-beauty-bianca"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Beauty Bianca grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-beauty-bianca"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Beauty Bianca shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-aroma-lady-rosalind",
+   "name": "Meet Aroma Lady Rosalind",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_aromalady"
+    ],
+    "tint": "#40281c",
+    "effect": "none"
+   },
+   "intro": "Aroma Lady Rosalind spots you on the road. Smell the flowers, then fall to them.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Aroma Lady Rosalind accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Aroma Lady Rosalind",
+       "size": 2,
+       "types": [
+        "grass"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-aroma-lady-rosalind"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Aroma Lady Rosalind grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-aroma-lady-rosalind"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Aroma Lady Rosalind shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "npc-meet-cool-couple-leon-and-sky",
+   "name": "Meet Cool Couple Leon and Sky",
+   "group": "Trainers and challenges",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "boss.npc_coolcouple"
+    ],
+    "tint": "#28401c",
+    "effect": "none"
+   },
+   "intro": "Cool Couple Leon and Sky spots you on the road. Stylish and strong, that is us.",
+   "choices": [
+    {
+     "label": "Battle for a spot on your roster",
+     "success": {
+      "text": "Cool Couple Leon and Sky accepts the challenge!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Cool Couple Leon and Sky",
+       "size": 2,
+       "types": [
+        "normal"
+       ],
+       "levelBonus": 0,
+       "ghost": false,
+       "win": [
+        {
+         "kind": "recruit",
+         "trainer": "npc-cool-couple-leon-and-sky"
+        },
+        {
+         "kind": "research",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask them to join",
+     "chance": 0.4,
+     "success": {
+      "text": "Cool Couple Leon and Sky grins. \"Why not? Count me in.\"",
+      "effects": [
+       {
+        "kind": "recruit",
+        "trainer": "npc-cool-couple-leon-and-sky"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Cool Couple Leon and Sky shakes their head. \"Beat me first.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
   }
  ]
 }

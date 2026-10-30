@@ -91,7 +91,7 @@ const LADDER: Array<[string, number, string]> = [
   ['wildDefeated', 60, 'Defeat 60 wild Pokémon'], ['regionsCleared', 1, 'Clear a region'],
 ];
 
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const slug = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const aPath = join(root, 'src/data/archetypes.json');
 const rPath = join(root, 'src/data/runPrep.json');
 const arch: Array<{ id: string }> = JSON.parse(readFileSync(aPath, 'utf8')).filter((a: { id: string }) => !a.id.startsWith('npc-'));

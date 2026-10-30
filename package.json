@@ -44,6 +44,7 @@
     "data:events": "node tools/build-events.ts",
     "data:quests": "node tools/build-quests.ts",
     "data:npc-trainers": "node tools/build-npc-trainers.ts",
+    "data:npc-events": "node tools/build-npc-events.ts",
     "data:trainer-unlocks": "node tools/build-trainer-unlocks.ts",
     "data:game-events": "node tools/build-game-events.ts"
   },

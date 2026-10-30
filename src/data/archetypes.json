@@ -12523,7 +12523,7 @@
     "unlockStatus": "supported"
   },
   {
-    "id": "npc-pok-maniac-rex",
+    "id": "npc-poke-maniac-rex",
     "name": "Poké Maniac Rex",
     "title": "The Poké Maniac",
     "description": "Catch rates are 15% better — Earn 5% less money.",
@@ -12562,7 +12562,7 @@
       "aerodactyl",
       "lileep"
     ],
-    "signaturePool": "trainer-npc-pok-maniac-rex",
+    "signaturePool": "trainer-npc-poke-maniac-rex",
     "eventTags": [
       "npc"
     ],
@@ -12571,7 +12571,7 @@
     "unlockStatus": "supported"
   },
   {
-    "id": "npc-pok-mon-breeder-delia",
+    "id": "npc-pokemon-breeder-delia",
     "name": "Pokémon Breeder Delia",
     "title": "The Pokémon Breeder",
     "description": "Healing items work 15% better — Moves deal 5% less damage.",
@@ -12610,7 +12610,7 @@
       "igglybuff",
       "azurill"
     ],
-    "signaturePool": "trainer-npc-pok-mon-breeder-delia",
+    "signaturePool": "trainer-npc-pokemon-breeder-delia",
     "eventTags": [
       "npc"
     ],
@@ -12619,7 +12619,7 @@
     "unlockStatus": "supported"
   },
   {
-    "id": "npc-pok-mon-ranger-hal",
+    "id": "npc-pokemon-ranger-hal",
     "name": "Pokémon Ranger Hal",
     "title": "The Pokémon Ranger",
     "description": "Catch rates are 15% better — Earn 5% less money.",
@@ -12658,7 +12658,7 @@
       "pikachu",
       "growlithe"
     ],
-    "signaturePool": "trainer-npc-pok-mon-ranger-hal",
+    "signaturePool": "trainer-npc-pokemon-ranger-hal",
     "eventTags": [
       "npc"
     ],
@@ -12667,7 +12667,7 @@
     "unlockStatus": "supported"
   },
   {
-    "id": "npc-pok-mon-ranger-willa",
+    "id": "npc-pokemon-ranger-willa",
     "name": "Pokémon Ranger Willa",
     "title": "The Pokémon Ranger",
     "description": "Catch rates are 15% better — Earn 5% less money.",
@@ -12706,7 +12706,7 @@
       "hoothoot",
       "spearow"
     ],
-    "signaturePool": "trainer-npc-pok-mon-ranger-willa",
+    "signaturePool": "trainer-npc-pokemon-ranger-willa",
     "eventTags": [
       "npc"
     ],

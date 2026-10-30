@@ -5362,7 +5362,7 @@
    "unlockText": "Catch 4 Pokémon"
   },
   {
-   "id": "trainer-npc-pok-maniac-rex",
+   "id": "trainer-npc-poke-maniac-rex",
    "name": "Poké Maniac Rex’s Team",
    "description": "The Poké Maniac’s everyday team, as first stages.",
    "category": "trainer",
@@ -5381,7 +5381,7 @@
    "unlockText": "Finish a run"
   },
   {
-   "id": "trainer-npc-pok-mon-breeder-delia",
+   "id": "trainer-npc-pokemon-breeder-delia",
    "name": "Pokémon Breeder Delia’s Team",
    "description": "The Pokémon Breeder’s everyday team, as first stages.",
    "category": "trainer",
@@ -5400,7 +5400,7 @@
    "unlockText": "Use 4 healing stops"
   },
   {
-   "id": "trainer-npc-pok-mon-ranger-hal",
+   "id": "trainer-npc-pokemon-ranger-hal",
    "name": "Pokémon Ranger Hal’s Team",
    "description": "The Pokémon Ranger’s everyday team, as first stages.",
    "category": "trainer",
@@ -5419,7 +5419,7 @@
    "unlockText": "Win 16 battles"
   },
   {
-   "id": "trainer-npc-pok-mon-ranger-willa",
+   "id": "trainer-npc-pokemon-ranger-willa",
    "name": "Pokémon Ranger Willa’s Team",
    "description": "The Pokémon Ranger’s everyday team, as first stages.",
    "category": "trainer",
