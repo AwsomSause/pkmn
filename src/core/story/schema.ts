@@ -185,7 +185,7 @@ export const RivalSchema = z.object({
   traits: TraitsSchema,
   /** The hidden score: how much this trainer wants to beat you. */
   rivalPotential: z.number().min(0),
-  origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.literal('spark') }),
+  origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.string() }),
   /** Where it is on the ladder from a name you remember to a contender; ally and retired are endings of its rivalry with you. */
   state: z.enum(['recognized', 'recurring', 'active', 'nemesis', 'contender', 'ally', 'retired']).default('recognized'),
   /** Battles with you since the Spark, and times a loss shook it. */

@@ -2,6 +2,7 @@
 // Run state only; account-wide rival state is a separate layer (not built yet).
 
 import { z } from 'zod';
+import pathsJson from '../../data/rivalPaths.json';
 import profilesJson from '../../data/rivalProfiles.json';
 import rivalsJson from '../../data/rivals.json';
 
@@ -17,6 +18,8 @@ export const RivalConfigSchema = z.object({
     closeHpShare: z.number().min(0).max(1),
     flawlessGain: z.number().min(0),
     threshold: z.number().min(1),
+    dominantHpShare: z.number().min(0).max(1),
+    dominantMaxTurns: z.number().int().min(1),
   }),
   traitSpread: z.number().int().min(0).max(50),
   states: z.object({ recurringAt: z.number(), activeAt: z.number(), nemesisAt: z.number(), nemesisMinVindictiveness: z.number(), contenderAt: z.number(), contenderMinAmbition: z.number() }),
@@ -42,3 +45,26 @@ export const RIVAL_PROFILES = RivalProfilesSchema.parse(profilesJson);
 export const RIVAL_CONFIG: RivalConfig = RivalConfigSchema.parse(rivalsJson);
 
 export type { Rival } from '../story/schema';
+
+export const RivalPathsSchema = z.object({
+  note: z.string(),
+  paths: z.array(
+    z.object({
+      id: z.string(),
+      when: z.object({
+        dominant: z.boolean().optional(),
+        close: z.boolean().optional(),
+        returning: z.boolean().optional(),
+        secondInRegion: z.boolean().optional(),
+        personalities: z.array(z.string()).optional(),
+        minPride: z.number().optional(),
+        minAmbition: z.number().optional(),
+        minRegion: z.number().int().optional(),
+      }),
+      traitNudge: z.record(z.string(), z.number()),
+      potentialBonus: z.number(),
+      line: z.string(),
+    }),
+  ).min(1),
+});
+export const RIVAL_PATHS = RivalPathsSchema.parse(pathsJson);

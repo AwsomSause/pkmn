@@ -5,7 +5,9 @@
   "closeGain": 12,
   "closeHpShare": 0.3,
   "flawlessGain": 15,
-  "threshold": 12
+  "threshold": 12,
+  "dominantHpShare": 0.9,
+  "dominantMaxTurns": 4
  },
  "traitSpread": 10,
  "states": {

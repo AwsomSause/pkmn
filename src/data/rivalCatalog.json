@@ -6,7 +6,7 @@
    "name": "The Unexpected Nemesis",
    "group": "Paths created by the player's actions",
    "text": "You defeat a seemingly ordinary trainer. They take the loss personally, study your team, and begin preparing specifically for you.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "accidental-hero",
@@ -27,14 +27,14 @@
    "name": "The Merciful Victor",
    "group": "Paths created by the player's actions",
    "text": "You defeat them but spare their pride, offer advice, or help their injured Pokémon. They may become grateful, obsessed with repaying you, or frustrated by your pity.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "public-humiliation",
    "name": "The Public Humiliation",
    "group": "Paths created by the player's actions",
    "text": "A battle goes badly for them in front of spectators. They may seek revenge, reinvent their style, or withdraw from competition.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "shared-disaster",
@@ -62,7 +62,7 @@
    "name": "The Rival You Neglected",
    "group": "Paths created by the player's actions",
    "text": "You repeatedly defeat or encounter them without acknowledging them. They interpret your indifference in a way that drives their next decisions.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "debt",
@@ -76,7 +76,7 @@
    "name": "The Self-Made Challenger",
    "group": "Paths created by the rival's own ambitions",
    "text": "They independently decide that you are the best benchmark for their progress.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "chosen-successor",
@@ -90,35 +90,35 @@
    "name": "The Family Legacy",
    "group": "Paths created by the rival's own ambitions",
    "text": "They come from a famous battling family and see your success as either a threat to their inheritance or a chance to prove themselves.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "fallen-prodigy",
    "name": "The Fallen Prodigy",
    "group": "Paths created by the rival's own ambitions",
    "text": "Once considered exceptional, they are now struggling to recover their former ability.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "late-bloomer",
    "name": "The Late Bloomer",
    "group": "Paths created by the rival's own ambitions",
    "text": "They begin with an unimpressive team but develop unusually strong bonds and steadily improve.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "researcher",
    "name": "The Researcher",
    "group": "Paths created by the rival's own ambitions",
    "text": "They study Pokémon behavior, battle data, Hyper surges, or Overdrive events. You become their most fascinating case study.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "collector-s-rival",
    "name": "The Collector's Rival",
    "group": "Paths created by the rival's own ambitions",
    "text": "They pursue rare Pokémon, unusual forms, or remarkable team combinations. They compete with you for discoveries rather than badges alone.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "regional-idealist",
@@ -139,7 +139,7 @@
    "name": "The World Traveler",
    "group": "Paths created by the rival's own ambitions",
    "text": "They have their own journey across regions and may return with new partners, strategies, and attitudes.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "assigned-opponent",
@@ -188,14 +188,14 @@
    "name": "The Ideological Opponent",
    "group": "Paths created by circumstances and other characters",
    "text": "They believe your approach to training, evolution, Hyper, or Overdrive is fundamentally wrong.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "accidental-competitor",
    "name": "The Accidental Competitor",
    "group": "Paths created by circumstances and other characters",
    "text": "You keep meeting at contests, routes, raids, or events. Neither initially cares, until the pattern becomes personal.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "inherited-conflict",
