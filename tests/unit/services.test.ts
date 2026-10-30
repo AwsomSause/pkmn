@@ -225,6 +225,17 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(out.run.money).toBeLessThan(5000);
     expect(() => useService(content, out.run, 'svc-test', `class:${run.party[0]!.uid}`)).toThrow();
   });
+  it('the black market sells shop stock your badges have not opened, once, at a markup', () => {
+    const run = stopRun('market');
+    run.money = 50000;
+    run.badges = [];
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options.length).toBeGreaterThan(0);
+    const opt = view.options[0]!;
+    const out = useService(content, run, 'svc-test', opt.id);
+    expect(out.run.money).toBe(50000 - opt.cost);
+    expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
