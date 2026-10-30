@@ -5,6 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
+import { freshSos } from '../../src/core/battle/sos';
 import { createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
@@ -68,6 +69,7 @@ describe('memories carry emotion tags', () => {
     const foe = createPokemon(content, 'rattata', 5, 'e1');
     foe.hp = 1;
     run.battle = createBattle('wild', [foe], 0, lead.uid);
+    run.battle.sos = { ...freshSos(), answered: 1 }; // scripted fight: no SOS call
     emit(content, run, 'knockout', { actors: ['fallen', 'e1'], data: { side: 'player' } });
     const after = takeTurn(content, run, { kind: 'move', index: 0 }).run;
     const avenged = after.story.histories[lead.uid]!.memories.find((m) => m.text.startsWith('Avenged'));

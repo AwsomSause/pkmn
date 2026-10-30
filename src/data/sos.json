@@ -1,0 +1,2228 @@
+{
+ "abomasnow": {
+  "rate": 6
+ },
+ "abra": {
+  "rate": 9
+ },
+ "absol": {
+  "rate": 3
+ },
+ "aipom": {
+  "rate": 9,
+  "allies": [
+   "aipom",
+   "ambipom"
+  ]
+ },
+ "alomomola": {
+  "rate": 6
+ },
+ "altaria": {
+  "rate": 6
+ },
+ "applin": {
+  "rate": 9
+ },
+ "araquanid": {
+  "rate": 6
+ },
+ "arbok": {
+  "rate": 6
+ },
+ "arctibax": {
+  "rate": 6
+ },
+ "ariados": {
+  "rate": 6
+ },
+ "aron": {
+  "rate": 9
+ },
+ "arrokuda": {
+  "rate": 9,
+  "allies": [
+   "arrokuda",
+   "cramorant"
+  ]
+ },
+ "avalugg": {
+  "rate": 6
+ },
+ "axew": {
+  "rate": 9
+ },
+ "azurill": {
+  "rate": 15,
+  "allies": [
+   "azurill",
+   "marill",
+   "happiny"
+  ]
+ },
+ "bagon": {
+  "rate": 9
+ },
+ "baltoy": {
+  "rate": 15
+ },
+ "banette": {
+  "rate": 6
+ },
+ "barbaracle": {
+  "rate": 6
+ },
+ "barboach": {
+  "rate": 9,
+  "allies": [
+   "barboach",
+   "whiscash"
+  ]
+ },
+ "barraskewda": {
+  "rate": 6
+ },
+ "basculin": {
+  "rate": 9
+ },
+ "beartic": {
+  "rate": 6
+ },
+ "beheeyem": {
+  "rate": 15
+ },
+ "beldum": {
+  "rate": 9
+ },
+ "bellibolt": {
+  "rate": 6
+ },
+ "bellsprout": {
+  "rate": 9
+ },
+ "bergmite": {
+  "rate": 9
+ },
+ "bewear": {
+  "rate": 6
+ },
+ "bibarel": {
+  "rate": 6
+ },
+ "bidoof": {
+  "rate": 9
+ },
+ "binacle": {
+  "rate": 9
+ },
+ "bisharp": {
+  "rate": 15,
+  "allies": [
+   "pawniard",
+   "tinkatuff"
+  ]
+ },
+ "blipbug": {
+  "rate": 9
+ },
+ "blitzle": {
+  "rate": 9
+ },
+ "boldore": {
+  "rate": 6
+ },
+ "boltund": {
+  "rate": 6
+ },
+ "bombirdier": {
+  "rate": 3
+ },
+ "bonsly": {
+  "rate": 15,
+  "allies": [
+   "bonsly",
+   "sudowoodo",
+   "happiny"
+  ]
+ },
+ "bouffalant": {
+  "rate": 9
+ },
+ "bounsweet": {
+  "rate": 9
+ },
+ "brambleghast": {
+  "rate": 6
+ },
+ "bramblin": {
+  "rate": 9
+ },
+ "braviary": {
+  "rate": 6
+ },
+ "breloom": {
+  "rate": 6
+ },
+ "bronzong": {
+  "rate": 6
+ },
+ "bronzor": {
+  "rate": 9
+ },
+ "bruxish": {
+  "rate": 6
+ },
+ "budew": {
+  "rate": 15,
+  "allies": [
+   "budew",
+   "roselia",
+   "happiny"
+  ]
+ },
+ "buizel": {
+  "rate": 9
+ },
+ "buneary": {
+  "rate": 9
+ },
+ "bunnelby": {
+  "rate": 9
+ },
+ "burmy": {
+  "rate": 15,
+  "allies": [
+   "burmy",
+   "wormadam",
+   "mothim"
+  ]
+ },
+ "cacnea": {
+  "rate": 9
+ },
+ "cacturne": {
+  "rate": 6
+ },
+ "camerupt": {
+  "rate": 6
+ },
+ "capsakid": {
+  "rate": 9
+ },
+ "carbink": {
+  "rate": 9,
+  "allies": [
+   "carbink",
+   "sableye"
+  ]
+ },
+ "carkol": {
+  "rate": 6
+ },
+ "carnivine": {
+  "rate": 9
+ },
+ "carvanha": {
+  "rate": 9,
+  "allies": [
+   "carvanha",
+   "sharpedo"
+  ]
+ },
+ "cascoon": {
+  "rate": 15,
+  "allies": [
+   "wurmple",
+   "dustox"
+  ]
+ },
+ "caterpie": {
+  "rate": 15
+ },
+ "centiskorch": {
+  "rate": 6
+ },
+ "cetoddle": {
+  "rate": 9
+ },
+ "chansey": {
+  "rate": 9,
+  "allies": [
+   "chansey",
+   "blissey"
+  ]
+ },
+ "charcadet": {
+  "rate": 9
+ },
+ "charjabug": {
+  "rate": 15,
+  "allies": [
+   "grubbin",
+   "charjabug"
+  ]
+ },
+ "chatot": {
+  "rate": 9
+ },
+ "cherrim": {
+  "rate": 6
+ },
+ "cherubi": {
+  "rate": 9
+ },
+ "chewtle": {
+  "rate": 9
+ },
+ "chimecho": {
+  "rate": 6
+ },
+ "chinchou": {
+  "rate": 9,
+  "allies": [
+   "chinchou",
+   "lanturn"
+  ]
+ },
+ "chingling": {
+  "rate": 15,
+  "allies": [
+   "chingling",
+   "chimecho",
+   "happiny"
+  ]
+ },
+ "clamperl": {
+  "rate": 15
+ },
+ "clauncher": {
+  "rate": 9
+ },
+ "clawitzer": {
+  "rate": 6
+ },
+ "claydol": {
+  "rate": 15
+ },
+ "clefairy": {
+  "rate": 6
+ },
+ "cleffa": {
+  "rate": 15,
+  "allies": [
+   "cleffa",
+   "clefairy",
+   "happiny"
+  ]
+ },
+ "clobbopus": {
+  "rate": 9
+ },
+ "cofagrigus": {
+  "rate": 6
+ },
+ "combee": {
+  "rate": 15
+ },
+ "comfey": {
+  "rate": 9
+ },
+ "copperajah": {
+  "rate": 6
+ },
+ "corphish": {
+  "rate": 9,
+  "allies": [
+   "corphish",
+   "crawdaunt"
+  ]
+ },
+ "corsola": {
+  "rate": 9,
+  "allies": [
+   "corsola",
+   "mareanie"
+  ]
+ },
+ "corvisquire": {
+  "rate": 6
+ },
+ "cottonee": {
+  "rate": 9
+ },
+ "crabrawler": {
+  "rate": 9
+ },
+ "cramorant": {
+  "rate": 3
+ },
+ "crawdaunt": {
+  "rate": 6
+ },
+ "croagunk": {
+  "rate": 9
+ },
+ "crustle": {
+  "rate": 6
+ },
+ "cryogonal": {
+  "rate": 9
+ },
+ "cubchoo": {
+  "rate": 9,
+  "allies": [
+   "cubchoo",
+   "beartic"
+  ]
+ },
+ "cubone": {
+  "rate": 15,
+  "allies": [
+   "cubone",
+   "kangaskhan"
+  ]
+ },
+ "cufant": {
+  "rate": 9
+ },
+ "cursola": {
+  "rate": 6
+ },
+ "cutiefly": {
+  "rate": 9
+ },
+ "cyclizar": {
+  "rate": 3
+ },
+ "dachsbun": {
+  "rate": 6
+ },
+ "darmanitan": {
+  "rate": 6
+ },
+ "darumaka": {
+  "rate": 9
+ },
+ "dedenne": {
+  "rate": 9,
+  "allies": [
+   "dedenne",
+   "togedemaru"
+  ]
+ },
+ "deerling": {
+  "rate": 9,
+  "allies": [
+   "deerling",
+   "sawsbuck"
+  ]
+ },
+ "deino": {
+  "rate": 9
+ },
+ "delcatty": {
+  "rate": 6
+ },
+ "delibird": {
+  "rate": 9
+ },
+ "dewgong": {
+  "rate": 6
+ },
+ "dewpider": {
+  "rate": 9
+ },
+ "dhelmise": {
+  "rate": 3
+ },
+ "diggersby": {
+  "rate": 6
+ },
+ "diglett": {
+  "rate": 9
+ },
+ "dipplin": {
+  "rate": 6
+ },
+ "ditto": {
+  "rate": 9
+ },
+ "dodrio": {
+  "rate": 6
+ },
+ "doduo": {
+  "rate": 9
+ },
+ "dolliv": {
+  "rate": 9
+ },
+ "dondozo": {
+  "rate": 3
+ },
+ "dottler": {
+  "rate": 6
+ },
+ "dragalge": {
+  "rate": 6
+ },
+ "dragonair": {
+  "rate": 6
+ },
+ "drakloak": {
+  "rate": 6
+ },
+ "drampa": {
+  "rate": 3
+ },
+ "drapion": {
+  "rate": 6
+ },
+ "dratini": {
+  "rate": 9,
+  "allies": [
+   "dratini",
+   "dragonair"
+  ]
+ },
+ "drednaw": {
+  "rate": 6
+ },
+ "dreepy": {
+  "rate": 9,
+  "allies": [
+   "dreepy",
+   "drakloak"
+  ]
+ },
+ "drifblim": {
+  "rate": 6
+ },
+ "drifloon": {
+  "rate": 9
+ },
+ "drilbur": {
+  "rate": 9
+ },
+ "drowzee": {
+  "rate": 9
+ },
+ "druddigon": {
+  "rate": 3
+ },
+ "dubwool": {
+  "rate": 6
+ },
+ "ducklett": {
+  "rate": 9
+ },
+ "dugtrio": {
+  "rate": 6
+ },
+ "dunsparce": {
+  "rate": 3
+ },
+ "duosion": {
+  "rate": 6
+ },
+ "duraludon": {
+  "rate": 3
+ },
+ "durant": {
+  "rate": 9,
+  "allies": [
+   "durant",
+   "heatmor"
+  ]
+ },
+ "dusclops": {
+  "rate": 6
+ },
+ "duskull": {
+  "rate": 9
+ },
+ "dwebble": {
+  "rate": 9
+ },
+ "eelektrik": {
+  "rate": 9
+ },
+ "eevee": {
+  "rate": 9
+ },
+ "eiscue": {
+  "rate": 9
+ },
+ "ekans": {
+  "rate": 9
+ },
+ "eldegoss": {
+  "rate": 6
+ },
+ "electabuzz": {
+  "rate": 6
+ },
+ "electrike": {
+  "rate": 9
+ },
+ "elekid": {
+  "rate": 15,
+  "allies": [
+   "elekid",
+   "electabuzz",
+   "happiny"
+  ]
+ },
+ "elgyem": {
+  "rate": 15
+ },
+ "emolga": {
+  "rate": 9
+ },
+ "espathra": {
+  "rate": 6
+ },
+ "espurr": {
+  "rate": 9
+ },
+ "excadrill": {
+  "rate": 6
+ },
+ "exeggcute": {
+  "rate": 15
+ },
+ "falinks": {
+  "rate": 3
+ },
+ "farfetchd": {
+  "rate": 9
+ },
+ "fearow": {
+  "rate": 6
+ },
+ "feebas": {
+  "rate": 9
+ },
+ "ferroseed": {
+  "rate": 9
+ },
+ "ferrothorn": {
+  "rate": 6
+ },
+ "fidough": {
+  "rate": 9
+ },
+ "finizen": {
+  "rate": 9
+ },
+ "finneon": {
+  "rate": 9,
+  "allies": [
+   "finneon",
+   "lumineon"
+  ]
+ },
+ "flaaffy": {
+  "rate": 6
+ },
+ "flabebe": {
+  "rate": 15
+ },
+ "flamigo": {
+  "rate": 3
+ },
+ "fletchinder": {
+  "rate": 6
+ },
+ "fletchling": {
+  "rate": 9,
+  "allies": [
+   "fletchling",
+   "fletchinder"
+  ]
+ },
+ "flittle": {
+  "rate": 9
+ },
+ "floatzel": {
+  "rate": 6
+ },
+ "floette": {
+  "rate": 9
+ },
+ "fomantis": {
+  "rate": 9,
+  "allies": [
+   "fomantis",
+   "cutiefly"
+  ]
+ },
+ "foongus": {
+  "rate": 9
+ },
+ "forretress": {
+  "rate": 6
+ },
+ "fraxure": {
+  "rate": 6
+ },
+ "frigibax": {
+  "rate": 9
+ },
+ "frillish": {
+  "rate": 9
+ },
+ "frosmoth": {
+  "rate": 6
+ },
+ "furfrou": {
+  "rate": 6
+ },
+ "furret": {
+  "rate": 6
+ },
+ "galvantula": {
+  "rate": 6
+ },
+ "garbodor": {
+  "rate": 6
+ },
+ "gastly": {
+  "rate": 9
+ },
+ "gastrodon": {
+  "rate": 6
+ },
+ "geodude": {
+  "rate": 9
+ },
+ "gible": {
+  "rate": 9
+ },
+ "girafarig": {
+  "rate": 9
+ },
+ "glalie": {
+  "rate": 3
+ },
+ "glameow": {
+  "rate": 9
+ },
+ "gligar": {
+  "rate": 9
+ },
+ "glimmet": {
+  "rate": 9
+ },
+ "glimmora": {
+  "rate": 6
+ },
+ "gloom": {
+  "rate": 6
+ },
+ "gogoat": {
+  "rate": 6
+ },
+ "golbat": {
+  "rate": 9
+ },
+ "goldeen": {
+  "rate": 9,
+  "allies": [
+   "goldeen",
+   "seaking"
+  ]
+ },
+ "golduck": {
+  "rate": 6
+ },
+ "golett": {
+  "rate": 15
+ },
+ "golurk": {
+  "rate": 15
+ },
+ "goomy": {
+  "rate": 9
+ },
+ "gossifleur": {
+  "rate": 9
+ },
+ "gothita": {
+  "rate": 9
+ },
+ "gothorita": {
+  "rate": 6
+ },
+ "grafaiai": {
+  "rate": 6
+ },
+ "granbull": {
+  "rate": 6
+ },
+ "grapploct": {
+  "rate": 6
+ },
+ "graveler": {
+  "rate": 6
+ },
+ "greavard": {
+  "rate": 9
+ },
+ "greedent": {
+  "rate": 6
+ },
+ "grimer": {
+  "rate": 9
+ },
+ "growlithe": {
+  "rate": 9
+ },
+ "grubbin": {
+  "rate": 9
+ },
+ "grumpig": {
+  "rate": 6
+ },
+ "gulpin": {
+  "rate": 9
+ },
+ "gumshoos": {
+  "rate": 6
+ },
+ "gurdurr": {
+  "rate": 6
+ },
+ "gyarados": {
+  "rate": 3
+ },
+ "hakamo-o": {
+  "rate": 6
+ },
+ "hariyama": {
+  "rate": 6
+ },
+ "hatenna": {
+  "rate": 9
+ },
+ "hattrem": {
+  "rate": 6
+ },
+ "haunter": {
+  "rate": 6,
+  "allies": [
+   "haunter",
+   "gengar"
+  ]
+ },
+ "hawlucha": {
+  "rate": 3
+ },
+ "heliolisk": {
+  "rate": 6
+ },
+ "helioptile": {
+  "rate": 9
+ },
+ "heracross": {
+  "rate": 3
+ },
+ "herdier": {
+  "rate": 6
+ },
+ "hippopotas": {
+  "rate": 9
+ },
+ "hippowdon": {
+  "rate": 6
+ },
+ "hitmonchan": {
+  "rate": 3,
+  "allies": [
+   "hitmonchan",
+   "hitmonlee",
+   "hitmontop"
+  ]
+ },
+ "hitmonlee": {
+  "rate": 3,
+  "allies": [
+   "hitmonlee",
+   "hitmonchan",
+   "hitmontop"
+  ]
+ },
+ "hitmontop": {
+  "rate": 3,
+  "allies": [
+   "hitmontop",
+   "hitmonlee",
+   "hitmonchan"
+  ]
+ },
+ "honchkrow": {
+  "rate": 15,
+  "allies": [
+   "murkrow"
+  ]
+ },
+ "honedge": {
+  "rate": 9
+ },
+ "hoothoot": {
+  "rate": 9,
+  "allies": [
+   "hoothoot",
+   "noctowl"
+  ]
+ },
+ "hoppip": {
+  "rate": 9
+ },
+ "horsea": {
+  "rate": 9,
+  "allies": [
+   "horsea",
+   "seadra"
+  ]
+ },
+ "houndoom": {
+  "rate": 6
+ },
+ "houndour": {
+  "rate": 9
+ },
+ "houndstone": {
+  "rate": 6
+ },
+ "hypno": {
+  "rate": 6
+ },
+ "igglybuff": {
+  "rate": 15,
+  "allies": [
+   "igglybuff",
+   "jigglypuff",
+   "happiny"
+  ]
+ },
+ "illumise": {
+  "rate": 9,
+  "allies": [
+   "illumise",
+   "volbeat"
+  ]
+ },
+ "impidimp": {
+  "rate": 9
+ },
+ "indeedee": {
+  "rate": 9
+ },
+ "inkay": {
+  "rate": 9
+ },
+ "jangmo-o": {
+  "rate": 9,
+  "allies": [
+   "hakamo-o",
+   "kommo-o"
+  ]
+ },
+ "jellicent": {
+  "rate": 6
+ },
+ "jigglypuff": {
+  "rate": 6
+ },
+ "joltik": {
+  "rate": 9,
+  "allies": [
+   "joltik",
+   "galvantula"
+  ]
+ },
+ "kadabra": {
+  "rate": 6
+ },
+ "kakuna": {
+  "rate": 15,
+  "allies": [
+   "weedle",
+   "beedrill"
+  ]
+ },
+ "kangaskhan": {
+  "rate": 3
+ },
+ "karrablast": {
+  "rate": 9,
+  "allies": [
+   "karrablast",
+   "shelmet"
+  ]
+ },
+ "kecleon": {
+  "rate": 9
+ },
+ "kilowattrel": {
+  "rate": 6
+ },
+ "kingler": {
+  "rate": 6
+ },
+ "kirlia": {
+  "rate": 6
+ },
+ "klang": {
+  "rate": 6
+ },
+ "klawf": {
+  "rate": 3
+ },
+ "klefki": {
+  "rate": 6
+ },
+ "klink": {
+  "rate": 9
+ },
+ "koffing": {
+  "rate": 9
+ },
+ "krabby": {
+  "rate": 9
+ },
+ "kricketot": {
+  "rate": 15
+ },
+ "kricketune": {
+  "rate": 9
+ },
+ "krokorok": {
+  "rate": 6
+ },
+ "lairon": {
+  "rate": 6
+ },
+ "lampent": {
+  "rate": 6
+ },
+ "lanturn": {
+  "rate": 6
+ },
+ "lapras": {
+  "rate": 3
+ },
+ "larvesta": {
+  "rate": 3,
+  "allies": [
+   "larvesta",
+   "volcarona"
+  ]
+ },
+ "larvitar": {
+  "rate": 9
+ },
+ "lechonk": {
+  "rate": 9
+ },
+ "ledian": {
+  "rate": 6
+ },
+ "ledyba": {
+  "rate": 9
+ },
+ "lickitung": {
+  "rate": 3
+ },
+ "liepard": {
+  "rate": 6
+ },
+ "lillipup": {
+  "rate": 9
+ },
+ "linoone": {
+  "rate": 6
+ },
+ "litleo": {
+  "rate": 9
+ },
+ "litwick": {
+  "rate": 9
+ },
+ "lokix": {
+  "rate": 9
+ },
+ "lombre": {
+  "rate": 6
+ },
+ "lopunny": {
+  "rate": 6
+ },
+ "lotad": {
+  "rate": 9
+ },
+ "loudred": {
+  "rate": 6
+ },
+ "lumineon": {
+  "rate": 6
+ },
+ "lunatone": {
+  "rate": 9
+ },
+ "lurantis": {
+  "rate": 3
+ },
+ "luvdisc": {
+  "rate": 6
+ },
+ "luxio": {
+  "rate": 6
+ },
+ "lycanroc": {
+  "rate": 3
+ },
+ "mabosstiff": {
+  "rate": 6
+ },
+ "machoke": {
+  "rate": 6
+ },
+ "machop": {
+  "rate": 9
+ },
+ "magby": {
+  "rate": 15,
+  "allies": [
+   "magby",
+   "magmar",
+   "happiny"
+  ]
+ },
+ "magcargo": {
+  "rate": 6
+ },
+ "magikarp": {
+  "rate": 9,
+  "allies": [
+   "magikarp",
+   "gyarados"
+  ]
+ },
+ "magmar": {
+  "rate": 6
+ },
+ "magnemite": {
+  "rate": 9
+ },
+ "magneton": {
+  "rate": 6
+ },
+ "makuhita": {
+  "rate": 9
+ },
+ "malamar": {
+  "rate": 6
+ },
+ "mandibuzz": {
+  "rate": 6
+ },
+ "manectric": {
+  "rate": 6
+ },
+ "mankey": {
+  "rate": 9
+ },
+ "mantyke": {
+  "rate": 15,
+  "allies": [
+   "mantyke",
+   "remoraid"
+  ]
+ },
+ "maractus": {
+  "rate": 9
+ },
+ "mareep": {
+  "rate": 9
+ },
+ "marill": {
+  "rate": 9
+ },
+ "marowak": {
+  "rate": 3
+ },
+ "maschiff": {
+  "rate": 9
+ },
+ "masquerain": {
+  "rate": 6
+ },
+ "maushold": {
+  "rate": 6
+ },
+ "mawile": {
+  "rate": 6
+ },
+ "medicham": {
+  "rate": 6
+ },
+ "meditite": {
+  "rate": 9
+ },
+ "meowstic": {
+  "rate": 6
+ },
+ "meowth": {
+  "rate": 9
+ },
+ "metang": {
+  "rate": 6
+ },
+ "metapod": {
+  "rate": 15,
+  "allies": [
+   "caterpie",
+   "butterfree"
+  ]
+ },
+ "mienfoo": {
+  "rate": 6
+ },
+ "mienshao": {
+  "rate": 3
+ },
+ "mightyena": {
+  "rate": 6
+ },
+ "milcery": {
+  "rate": 9
+ },
+ "miltank": {
+  "rate": 3,
+  "allies": [
+   "miltank",
+   "tauros"
+  ]
+ },
+ "mime-jr": {
+  "rate": 15,
+  "allies": [
+   "mime-jr",
+   "mr-mime",
+   "happiny"
+  ]
+ },
+ "mimikyu": {
+  "rate": 9
+ },
+ "minccino": {
+  "rate": 9
+ },
+ "minun": {
+  "rate": 15,
+  "allies": [
+   "minun",
+   "plusle"
+  ]
+ },
+ "misdreavus": {
+  "rate": 9
+ },
+ "morelull": {
+  "rate": 9
+ },
+ "morgrem": {
+  "rate": 6
+ },
+ "morpeko": {
+  "rate": 9
+ },
+ "mudbray": {
+  "rate": 9
+ },
+ "mudsdale": {
+  "rate": 6
+ },
+ "muk": {
+  "rate": 6
+ },
+ "munchlax": {
+  "rate": 6,
+  "allies": [
+   "munchlax",
+   "snorlax",
+   "happiny"
+  ]
+ },
+ "munna": {
+  "rate": 9
+ },
+ "murkrow": {
+  "rate": 9
+ },
+ "nacli": {
+  "rate": 9
+ },
+ "naclstack": {
+  "rate": 6
+ },
+ "natu": {
+  "rate": 9,
+  "allies": [
+   "natu",
+   "xatu"
+  ]
+ },
+ "nickit": {
+  "rate": 9
+ },
+ "nidorina": {
+  "rate": 9,
+  "allies": [
+   "nidorina",
+   "nidorino"
+  ]
+ },
+ "nidorino": {
+  "rate": 6,
+  "allies": [
+   "nidorino",
+   "nidorina"
+  ]
+ },
+ "nincada": {
+  "rate": 9
+ },
+ "ninjask": {
+  "rate": 6,
+  "allies": [
+   "ninjask",
+   "shedinja"
+  ]
+ },
+ "noctowl": {
+  "rate": 6
+ },
+ "noibat": {
+  "rate": 9
+ },
+ "noivern": {
+  "rate": 6
+ },
+ "nosepass": {
+  "rate": 9
+ },
+ "numel": {
+  "rate": 9
+ },
+ "nuzleaf": {
+  "rate": 6
+ },
+ "nymble": {
+  "rate": 15
+ },
+ "oddish": {
+  "rate": 9
+ },
+ "oinkologne": {
+  "rate": 6
+ },
+ "onix": {
+  "rate": 9,
+  "allies": [
+   "geodude",
+   "onix"
+  ]
+ },
+ "oranguru": {
+  "rate": 6
+ },
+ "oricorio": {
+  "rate": 6
+ },
+ "orthworm": {
+  "rate": 3
+ },
+ "pachirisu": {
+  "rate": 9
+ },
+ "palossand": {
+  "rate": 6
+ },
+ "palpitoad": {
+  "rate": 6
+ },
+ "pancham": {
+  "rate": 9,
+  "allies": [
+   "pancham",
+   "pangoro"
+  ]
+ },
+ "panpour": {
+  "rate": 9,
+  "allies": [
+   "panpour",
+   "pansage",
+   "pansear"
+  ]
+ },
+ "pansage": {
+  "rate": 9,
+  "allies": [
+   "pansage",
+   "pansear",
+   "panpour"
+  ]
+ },
+ "pansear": {
+  "rate": 9,
+  "allies": [
+   "pansear",
+   "pansage",
+   "panpour"
+  ]
+ },
+ "paras": {
+  "rate": 9
+ },
+ "parasect": {
+  "rate": 6
+ },
+ "passimian": {
+  "rate": 6,
+  "allies": [
+   "oranguru"
+  ]
+ },
+ "patrat": {
+  "rate": 9
+ },
+ "pawmi": {
+  "rate": 9
+ },
+ "pawmo": {
+  "rate": 6
+ },
+ "pawniard": {
+  "rate": 9,
+  "allies": [
+   "pawniard",
+   "tinkatuff"
+  ]
+ },
+ "pelipper": {
+  "rate": 6
+ },
+ "perrserker": {
+  "rate": 6
+ },
+ "persian": {
+  "rate": 6
+ },
+ "petilil": {
+  "rate": 9
+ },
+ "phanpy": {
+  "rate": 9
+ },
+ "phantump": {
+  "rate": 9
+ },
+ "pichu": {
+  "rate": 15,
+  "allies": [
+   "pichu",
+   "pikachu",
+   "happiny"
+  ]
+ },
+ "pidgeotto": {
+  "rate": 6
+ },
+ "pidgey": {
+  "rate": 9,
+  "allies": [
+   "pidgey",
+   "pidgeotto"
+  ]
+ },
+ "pidove": {
+  "rate": 9
+ },
+ "pikachu": {
+  "rate": 6
+ },
+ "pikipek": {
+  "rate": 15
+ },
+ "piloswine": {
+  "rate": 6
+ },
+ "pincurchin": {
+  "rate": 9
+ },
+ "pineco": {
+  "rate": 9
+ },
+ "pinsir": {
+  "rate": 3
+ },
+ "plusle": {
+  "rate": 15,
+  "allies": [
+   "plusle",
+   "minun"
+  ]
+ },
+ "poliwag": {
+  "rate": 9
+ },
+ "poliwhirl": {
+  "rate": 6
+ },
+ "poltchageist": {
+  "rate": 9
+ },
+ "polteageist": {
+  "rate": 6
+ },
+ "ponyta": {
+  "rate": 9
+ },
+ "poochyena": {
+  "rate": 9
+ },
+ "primeape": {
+  "rate": 6
+ },
+ "psyduck": {
+  "rate": 15
+ },
+ "pumpkaboo": {
+  "rate": 9
+ },
+ "pupitar": {
+  "rate": 9
+ },
+ "purrloin": {
+  "rate": 9
+ },
+ "purugly": {
+  "rate": 6
+ },
+ "pyroar": {
+  "rate": 6
+ },
+ "pyukumuku": {
+  "rate": 6,
+  "allies": [
+   "pyukumuku",
+   "wingull"
+  ]
+ },
+ "qwilfish": {
+  "rate": 9
+ },
+ "rabsca": {
+  "rate": 6
+ },
+ "ralts": {
+  "rate": 9
+ },
+ "rapidash": {
+  "rate": 6
+ },
+ "raticate": {
+  "rate": 6
+ },
+ "rattata": {
+  "rate": 9
+ },
+ "relicanth": {
+  "rate": 3
+ },
+ "rellor": {
+  "rate": 9
+ },
+ "remoraid": {
+  "rate": 3,
+  "allies": [
+   "remoraid",
+   "octillery"
+  ]
+ },
+ "revavroom": {
+  "rate": 6
+ },
+ "rhydon": {
+  "rate": 6
+ },
+ "rhyhorn": {
+  "rate": 9
+ },
+ "ribombee": {
+  "rate": 6
+ },
+ "riolu": {
+  "rate": 15,
+  "allies": [
+   "riolu",
+   "lucario",
+   "happiny"
+  ]
+ },
+ "rockruff": {
+  "rate": 9
+ },
+ "roggenrola": {
+  "rate": 9
+ },
+ "rolycoly": {
+  "rate": 9
+ },
+ "rookidee": {
+  "rate": 9
+ },
+ "roselia": {
+  "rate": 9
+ },
+ "rufflet": {
+  "rate": 9
+ },
+ "runerigus": {
+  "rate": 6
+ },
+ "salandit": {
+  "rate": 9
+ },
+ "salazzle": {
+  "rate": 15,
+  "allies": [
+   "salandit"
+  ]
+ },
+ "sandaconda": {
+  "rate": 6
+ },
+ "sandile": {
+  "rate": 9
+ },
+ "sandshrew": {
+  "rate": 9
+ },
+ "sandygast": {
+  "rate": 9
+ },
+ "sawk": {
+  "rate": 6,
+  "allies": [
+   "sawk",
+   "throh"
+  ]
+ },
+ "sawsbuck": {
+  "rate": 15,
+  "allies": [
+   "deerling"
+  ]
+ },
+ "scatterbug": {
+  "rate": 15
+ },
+ "scrafty": {
+  "rate": 6
+ },
+ "scraggy": {
+  "rate": 9
+ },
+ "scyther": {
+  "rate": 3
+ },
+ "seadra": {
+  "rate": 6
+ },
+ "seaking": {
+  "rate": 6
+ },
+ "sealeo": {
+  "rate": 6
+ },
+ "seedot": {
+  "rate": 9
+ },
+ "seel": {
+  "rate": 9
+ },
+ "sentret": {
+  "rate": 9
+ },
+ "seviper": {
+  "rate": 9,
+  "allies": [
+   "seviper",
+   "zangoose"
+  ]
+ },
+ "sewaddle": {
+  "rate": 9
+ },
+ "sharpedo": {
+  "rate": 3
+ },
+ "shelgon": {
+  "rate": 6
+ },
+ "shellder": {
+  "rate": 9
+ },
+ "shellos": {
+  "rate": 9
+ },
+ "shelmet": {
+  "rate": 9,
+  "allies": [
+   "shelmet",
+   "karrablast"
+  ]
+ },
+ "shiftry": {
+  "rate": 15,
+  "allies": [
+   "seedot",
+   "nuzleaf"
+  ]
+ },
+ "shiinotic": {
+  "rate": 6
+ },
+ "shinx": {
+  "rate": 9
+ },
+ "shroodle": {
+  "rate": 9
+ },
+ "shroomish": {
+  "rate": 9
+ },
+ "shuckle": {
+  "rate": 3
+ },
+ "shuppet": {
+  "rate": 9
+ },
+ "silcoon": {
+  "rate": 15,
+  "allies": [
+   "wurmple",
+   "beautifly"
+  ]
+ },
+ "silicobra": {
+  "rate": 9
+ },
+ "simipour": {
+  "rate": 6,
+  "allies": [
+   "simipour",
+   "simisage",
+   "simisear"
+  ]
+ },
+ "simisage": {
+  "rate": 6,
+  "allies": [
+   "simisage",
+   "simisear",
+   "simipour"
+  ]
+ },
+ "simisear": {
+  "rate": 6,
+  "allies": [
+   "simisear",
+   "simisage",
+   "simipour"
+  ]
+ },
+ "sinistcha": {
+  "rate": 6
+ },
+ "sinistea": {
+  "rate": 9
+ },
+ "sirfetchd": {
+  "rate": 3
+ },
+ "sizzlipede": {
+  "rate": 9
+ },
+ "skarmory": {
+  "rate": 6
+ },
+ "skiddo": {
+  "rate": 9
+ },
+ "skiploom": {
+  "rate": 6
+ },
+ "skitty": {
+  "rate": 9
+ },
+ "skorupi": {
+  "rate": 9
+ },
+ "skrelp": {
+  "rate": 9
+ },
+ "skuntank": {
+  "rate": 6
+ },
+ "skwovet": {
+  "rate": 9
+ },
+ "slakoth": {
+  "rate": 9
+ },
+ "sliggoo": {
+  "rate": 6
+ },
+ "slowbro": {
+  "rate": 3
+ },
+ "slowking": {
+  "rate": 3
+ },
+ "slowpoke": {
+  "rate": 9
+ },
+ "slugma": {
+  "rate": 9
+ },
+ "smeargle": {
+  "rate": 9
+ },
+ "smoliv": {
+  "rate": 15
+ },
+ "smoochum": {
+  "rate": 15,
+  "allies": [
+   "smoochum",
+   "jynx",
+   "happiny"
+  ]
+ },
+ "sneasel": {
+  "rate": 9
+ },
+ "snom": {
+  "rate": 15
+ },
+ "snorunt": {
+  "rate": 9
+ },
+ "snover": {
+  "rate": 9
+ },
+ "snubbull": {
+  "rate": 9
+ },
+ "solosis": {
+  "rate": 9
+ },
+ "solrock": {
+  "rate": 9
+ },
+ "spearow": {
+  "rate": 9
+ },
+ "spewpa": {
+  "rate": 15,
+  "allies": [
+   "scatterbug",
+   "vivillon"
+  ]
+ },
+ "spheal": {
+  "rate": 9
+ },
+ "spidops": {
+  "rate": 9
+ },
+ "spinarak": {
+  "rate": 9
+ },
+ "spinda": {
+  "rate": 6
+ },
+ "spoink": {
+  "rate": 9
+ },
+ "spritzee": {
+  "rate": 9
+ },
+ "squawkabilly": {
+  "rate": 9
+ },
+ "stantler": {
+  "rate": 9
+ },
+ "staravia": {
+  "rate": 6
+ },
+ "starly": {
+  "rate": 9
+ },
+ "staryu": {
+  "rate": 9,
+  "allies": [
+   "staryu",
+   "starmie"
+  ]
+ },
+ "steenee": {
+  "rate": 6
+ },
+ "stonjourner": {
+  "rate": 3
+ },
+ "stufful": {
+  "rate": 9
+ },
+ "stunfisk": {
+  "rate": 9
+ },
+ "stunky": {
+  "rate": 9
+ },
+ "sunkern": {
+  "rate": 9
+ },
+ "surskit": {
+  "rate": 9
+ },
+ "swablu": {
+  "rate": 9
+ },
+ "swadloon": {
+  "rate": 6
+ },
+ "swalot": {
+  "rate": 6
+ },
+ "swanna": {
+  "rate": 6
+ },
+ "swellow": {
+  "rate": 6
+ },
+ "swinub": {
+  "rate": 9
+ },
+ "swirlix": {
+  "rate": 9
+ },
+ "swoobat": {
+  "rate": 6
+ },
+ "tadbulb": {
+  "rate": 9
+ },
+ "taillow": {
+  "rate": 9
+ },
+ "tandemaus": {
+  "rate": 9
+ },
+ "tangela": {
+  "rate": 9
+ },
+ "tarountula": {
+  "rate": 15,
+  "allies": [
+   "tarountula",
+   "spidops"
+  ]
+ },
+ "tatsugiri": {
+  "rate": 6,
+  "allies": [
+   "tatsugiri"
+  ]
+ },
+ "tauros": {
+  "rate": 3,
+  "allies": [
+   "tauros",
+   "miltank"
+  ]
+ },
+ "teddiursa": {
+  "rate": 9,
+  "allies": [
+   "teddiursa",
+   "ursaring"
+  ]
+ },
+ "tentacool": {
+  "rate": 15
+ },
+ "tentacruel": {
+  "rate": 6
+ },
+ "thievul": {
+  "rate": 6
+ },
+ "throh": {
+  "rate": 6,
+  "allies": [
+   "throh",
+   "sawk"
+  ]
+ },
+ "timburr": {
+  "rate": 9
+ },
+ "tinkatink": {
+  "rate": 9
+ },
+ "tinkatuff": {
+  "rate": 6
+ },
+ "toedscool": {
+  "rate": 9
+ },
+ "toedscruel": {
+  "rate": 6
+ },
+ "togedemaru": {
+  "rate": 9,
+  "allies": [
+   "togedemaru",
+   "dedenne"
+  ]
+ },
+ "togepi": {
+  "rate": 15,
+  "allies": [
+   "togepi",
+   "togetic",
+   "happiny"
+  ]
+ },
+ "torkoal": {
+  "rate": 6
+ },
+ "toxel": {
+  "rate": 9,
+  "allies": [
+   "toxel",
+   "toxtricity",
+   "happiny"
+  ]
+ },
+ "toxicroak": {
+  "rate": 6
+ },
+ "toxtricity": {
+  "rate": 6
+ },
+ "tranquill": {
+  "rate": 6
+ },
+ "trapinch": {
+  "rate": 9
+ },
+ "tropius": {
+  "rate": 3
+ },
+ "trubbish": {
+  "rate": 9,
+  "allies": [
+   "trubbish",
+   "garbodor"
+  ]
+ },
+ "trumbeak": {
+  "rate": 9
+ },
+ "turtonator": {
+  "rate": 3
+ },
+ "tympole": {
+  "rate": 9
+ },
+ "tynamo": {
+  "rate": 15,
+  "allies": [
+   "tynamo",
+   "eelektrik"
+  ]
+ },
+ "tyrogue": {
+  "rate": 15,
+  "allies": [
+   "tyrogue",
+   "hitmonchan",
+   "hitmonlee",
+   "hitmontop",
+   "happiny"
+  ]
+ },
+ "unown": {
+  "rate": 15
+ },
+ "vanillish": {
+  "rate": 6
+ },
+ "vanillite": {
+  "rate": 9
+ },
+ "varoom": {
+  "rate": 9
+ },
+ "veluza": {
+  "rate": 9
+ },
+ "venipede": {
+  "rate": 9
+ },
+ "venomoth": {
+  "rate": 6
+ },
+ "venonat": {
+  "rate": 9
+ },
+ "vespiquen": {
+  "rate": 15,
+  "allies": [
+   "combee"
+  ]
+ },
+ "vibrava": {
+  "rate": 6
+ },
+ "vigoroth": {
+  "rate": 6
+ },
+ "volbeat": {
+  "rate": 9,
+  "allies": [
+   "volbeat",
+   "illumise"
+  ]
+ },
+ "voltorb": {
+  "rate": 15
+ },
+ "vullaby": {
+  "rate": 9
+ },
+ "vulpix": {
+  "rate": 9
+ },
+ "wailmer": {
+  "rate": 9
+ },
+ "wailord": {
+  "rate": 6
+ },
+ "watchog": {
+  "rate": 6
+ },
+ "wattrel": {
+  "rate": 9
+ },
+ "weedle": {
+  "rate": 15
+ },
+ "weepinbell": {
+  "rate": 6
+ },
+ "weezing": {
+  "rate": 6
+ },
+ "whirlipede": {
+  "rate": 6
+ },
+ "whiscash": {
+  "rate": 6
+ },
+ "whismur": {
+  "rate": 9
+ },
+ "wiglett": {
+  "rate": 9
+ },
+ "wingull": {
+  "rate": 9
+ },
+ "wishiwashi": {
+  "rate": 9
+ },
+ "woobat": {
+  "rate": 9
+ },
+ "wooloo": {
+  "rate": 9
+ },
+ "wooper": {
+  "rate": 9,
+  "allies": [
+   "wooper",
+   "quagsire"
+  ]
+ },
+ "wugtrio": {
+  "rate": 6
+ },
+ "wurmple": {
+  "rate": 15
+ },
+ "xatu": {
+  "rate": 6
+ },
+ "yamask": {
+  "rate": 9
+ },
+ "yamper": {
+  "rate": 9
+ },
+ "yanma": {
+  "rate": 9,
+  "allies": [
+   "yanma",
+   "yanmega"
+  ]
+ },
+ "yungoos": {
+  "rate": 9
+ },
+ "zangoose": {
+  "rate": 9,
+  "allies": [
+   "zangoose",
+   "seviper"
+  ]
+ },
+ "zebstrika": {
+  "rate": 6
+ },
+ "zigzagoon": {
+  "rate": 9
+ },
+ "zoroark": {
+  "rate": 6
+ },
+ "zorua": {
+  "rate": 9
+ },
+ "zubat": {
+  "rate": 15
+ },
+ "zweilous": {
+  "rate": 6
+ }
+}
