@@ -3603,6 +3603,306 @@
     "atLeast": 1800
    },
    "unlockText": "Defeat 1800 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-glacia",
+   "name": "Glacia’s Team",
+   "description": "Pokémon from Glacia’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "glacia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 810
+   },
+   "unlockText": "Defeat 810 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-gladion-masters-2",
+   "name": "Gladion (Masters 2)’s Team",
+   "description": "Pokémon from Gladion (Masters 2)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "gladion"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 820
+   },
+   "unlockText": "Defeat 820 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-gladion-stance",
+   "name": "Gladion (Stance)’s Team",
+   "description": "Pokémon from Gladion (Stance)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "gladion"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 830
+   },
+   "unlockText": "Defeat 830 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-gloria-league",
+   "name": "Gloria (League)’s Team",
+   "description": "Pokémon from Gloria (League)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "gloria"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 840
+   },
+   "unlockText": "Defeat 840 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-grace",
+   "name": "Grace’s Team",
+   "description": "Pokémon from Grace’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "grace"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 850
+   },
+   "unlockText": "Defeat 850 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-grant",
+   "name": "Grant’s Team",
+   "description": "Pokémon from Grant’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "grant"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 860
+   },
+   "unlockText": "Defeat 860 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-green-classic",
+   "name": "Green’s Team",
+   "description": "Pokémon from Green’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "green"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 870
+   },
+   "unlockText": "Defeat 870 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-grimsley-gen-7",
+   "name": "Grimsley (Gen 7)’s Team",
+   "description": "Pokémon from Grimsley (Gen 7)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "grimsley"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 880
+   },
+   "unlockText": "Defeat 880 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-grusha",
+   "name": "Grusha’s Team",
+   "description": "Pokémon from Grusha’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "grusha"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 890
+   },
+   "unlockText": "Defeat 890 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-guzma",
+   "name": "Guzma’s Team",
+   "description": "Pokémon from Guzma’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "guzma"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 900
+   },
+   "unlockText": "Defeat 900 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hala",
+   "name": "Hala’s Team",
+   "description": "Pokémon from Hala’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hala"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 910
+   },
+   "unlockText": "Defeat 910 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hapu",
+   "name": "Hapu’s Team",
+   "description": "Pokémon from Hapu’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hapu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 920
+   },
+   "unlockText": "Defeat 920 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-harmony",
+   "name": "Harmony’s Team",
+   "description": "Pokémon from Harmony’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "harmony"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 930
+   },
+   "unlockText": "Defeat 930 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hau-stance",
+   "name": "Hau (Stance)’s Team",
+   "description": "Pokémon from Hau (Stance)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hau"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 940
+   },
+   "unlockText": "Defeat 940 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hilbert",
+   "name": "Hilbert’s Team",
+   "description": "Pokémon from Hilbert’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hilbert"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 950
+   },
+   "unlockText": "Defeat 950 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hilda",
+   "name": "Hilda’s Team",
+   "description": "Pokémon from Hilda’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hilda"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 960
+   },
+   "unlockText": "Defeat 960 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hop",
+   "name": "Hop’s Team",
+   "description": "Pokémon from Hop’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hop"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 970
+   },
+   "unlockText": "Defeat 970 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-hugh",
+   "name": "Hugh’s Team",
+   "description": "Pokémon from Hugh’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "hugh"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 980
+   },
+   "unlockText": "Defeat 980 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-ilima",
+   "name": "Ilima’s Team",
+   "description": "Pokémon from Ilima’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "ilima"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 990
+   },
+   "unlockText": "Defeat 990 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-ingo",
+   "name": "Ingo’s Team",
+   "description": "Pokémon from Ingo’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "ingo"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1000
+   },
+   "unlockText": "Defeat 1000 trainers in total across your runs"
   }
  ],
  "draftRules": [

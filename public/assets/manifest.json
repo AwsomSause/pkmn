@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T13:48:36.810Z",
+  "generatedAt": "2026-10-30T13:52:01.027Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -70314,6 +70314,114 @@
       "path": "images/bosses/ryuki.png"
     },
     {
+      "id": "boss.glacia",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/glacia.png"
+    },
+    {
+      "id": "boss.gladion-stance",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/gladion-stance.png"
+    },
+    {
+      "id": "boss.gloria-league",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/gloria-league.png"
+    },
+    {
+      "id": "boss.grace",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/grace.png"
+    },
+    {
+      "id": "boss.grant",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/grant.png"
+    },
+    {
+      "id": "boss.grimsley-gen7",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/grimsley-gen7.png"
+    },
+    {
+      "id": "boss.grusha",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/grusha.png"
+    },
+    {
+      "id": "boss.guzma",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/guzma.png"
+    },
+    {
+      "id": "boss.hala",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hala.png"
+    },
+    {
+      "id": "boss.hapu",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hapu.png"
+    },
+    {
+      "id": "boss.harmony",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/harmony.png"
+    },
+    {
+      "id": "boss.hau-stance",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hau-stance.png"
+    },
+    {
+      "id": "boss.hilbert",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hilbert.png"
+    },
+    {
+      "id": "boss.hilda",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hilda.png"
+    },
+    {
+      "id": "boss.hop",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hop.png"
+    },
+    {
+      "id": "boss.hugh",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/hugh.png"
+    },
+    {
+      "id": "boss.ilima",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/ilima.png"
+    },
+    {
+      "id": "boss.ingo",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/ingo.png"
+    },
+    {
       "id": "trainer.hex_maniac",
       "kind": "atlas",
       "category": "trainer",
@@ -70584,12 +70692,6 @@
       "path": "images/bosses/juan.png"
     },
     {
-      "id": "boss.glacia",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/glacia.png"
-    },
-    {
       "id": "boss.brendan-e",
       "kind": "image",
       "category": "trainer",
@@ -70754,29 +70856,11 @@
       "atlasPath": "images/trainer/shauntal.json"
     },
     {
-      "id": "boss.grimsley-gen7",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/grimsley-gen7.png"
-    },
-    {
       "id": "trainer.marshal",
       "kind": "atlas",
       "category": "trainer",
       "path": "images/trainer/marshal.png",
       "atlasPath": "images/trainer/marshal.json"
-    },
-    {
-      "id": "boss.hilbert",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hilbert.png"
-    },
-    {
-      "id": "boss.hilda",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hilda.png"
     },
     {
       "id": "boss.nate",
@@ -70785,22 +70869,10 @@
       "path": "images/bosses/nate.png"
     },
     {
-      "id": "boss.hugh",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hugh.png"
-    },
-    {
       "id": "boss.juniper",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/juniper.png"
-    },
-    {
-      "id": "boss.ingo",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/ingo.png"
     },
     {
       "id": "trainer.viola",
@@ -70808,12 +70880,6 @@
       "category": "trainer",
       "path": "images/trainer/viola.png",
       "atlasPath": "images/trainer/viola.json"
-    },
-    {
-      "id": "boss.grant",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/grant.png"
     },
     {
       "id": "boss.korrina",
@@ -70862,18 +70928,6 @@
       "path": "images/bosses/ash-kalos.png"
     },
     {
-      "id": "boss.grace",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/grace.png"
-    },
-    {
-      "id": "boss.ilima",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/ilima.png"
-    },
-    {
       "id": "boss.lana",
       "kind": "image",
       "category": "trainer",
@@ -70892,12 +70946,6 @@
       "path": "images/bosses/mallow.png"
     },
     {
-      "id": "boss.hala",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hala.png"
-    },
-    {
       "id": "boss.olivia",
       "kind": "image",
       "category": "trainer",
@@ -70908,12 +70956,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/nanu.png"
-    },
-    {
-      "id": "boss.hapu",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hapu.png"
     },
     {
       "id": "boss.molayne",
@@ -70932,18 +70974,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/kukui.png"
-    },
-    {
-      "id": "boss.hau-stance",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hau-stance.png"
-    },
-    {
-      "id": "boss.gladion-stance",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/gladion-stance.png"
     },
     {
       "id": "boss.gladion-masters2",
@@ -70968,12 +70998,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/lusamine-nihilego.png"
-    },
-    {
-      "id": "boss.guzma",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/guzma.png"
     },
     {
       "id": "boss.mina",
@@ -71017,18 +71041,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/marnie-masters4.png"
-    },
-    {
-      "id": "boss.hop",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/hop.png"
-    },
-    {
-      "id": "boss.gloria-league",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/gloria-league.png"
     },
     {
       "id": "boss.leon-masters",
@@ -71088,12 +71100,6 @@
       "category": "trainer",
       "path": "images/trainer/tulip.png",
       "atlasPath": "images/trainer/tulip.json"
-    },
-    {
-      "id": "boss.grusha",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/grusha.png"
     },
     {
       "id": "trainer.rika",
@@ -71206,12 +71212,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/matt.png"
-    },
-    {
-      "id": "boss.harmony",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/harmony.png"
     },
     {
       "id": "boss.jacinthe",

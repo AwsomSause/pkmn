@@ -10,6 +10,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
+  startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
@@ -319,6 +320,48 @@ describe('trainer perks, batch 2', () => {
     it('every batch-4 trainer plays battles without errors, and the same seed plays the same way', () => {
       for (const id of [...content.archetypes.keys()].slice(69, 89)) {
         const play = () => autoplay({ seed: `perk4-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
+
+  describe('batch 5 (Glacia to Ingo)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+    const taken = { targetTypes: ['normal'] as const, moveType: 'normal' as const, attackerIsLegendary: false, attackerIsBoss: false, weather: null };
+
+    it('Gladion (Stance) and Ingo guard a Pokémon that just came in; Gladion hits softer once settled', () => {
+      expect(damageTakenPerk(perks('gladion-stance'), { ...taken, targetTurnsOut: 0 })).toBeCloseTo(0.9);
+      expect(damageTakenPerk(perks('gladion-stance'), { ...taken, targetTurnsOut: 1 })).toBe(1);
+      expect(damageDealtPerk(perks('gladion-stance'), { ...base, turnsOut: 1 })).toBeCloseTo(0.9);
+      expect(damageDealtPerk(perks('gladion-stance'), { ...base, turnsOut: 0 })).toBe(1);
+      expect(damageTakenPerk(perks('ingo'), { ...taken, targetTurnsOut: 0 })).toBeCloseTo(0.9);
+    });
+
+    it('Hop: super-effective hits work both ways', () => {
+      expect(damageDealtPerk(perks('hop'), { ...base, effectiveness: 2 })).toBeCloseTo(1.1);
+      expect(damageDealtPerk(perks('hop'), { ...base, effectiveness: 1 })).toBe(1);
+      expect(damageTakenPerk(perks('hop'), { ...taken, effectiveness: 2 })).toBeCloseTo(1.1);
+    });
+
+    it('money, crit chance and friendship perks', () => {
+      expect(championMoneyPerk(perks('gloria-league'))).toBeCloseTo(1.2);
+      expect(ordinaryMoneyPerk(perks('gloria-league'))).toBeCloseTo(0.85);
+      expect(critChancePerk(perks('guzma'))).toBeCloseTo(1.1);
+      expect(critChancePerk(perks('grimsley-gen-7'))).toBeCloseTo(1.15);
+      expect(bonusFriendship(perks('harmony'), 100)).toBeCloseTo(120);
+      expect(bonusFriendship(perks('red'), 100)).toBe(100);
+    });
+
+    it('Hugh trades damage by level gap; Green starts a level lower', () => {
+      expect(damageDealtPerk(perks('hugh'), { ...base, targetLevel: 20 })).toBeCloseTo(1.2);
+      expect(damageDealtPerk(perks('hugh'), { ...base, targetLevel: 5 })).toBeCloseTo(0.9);
+      expect(startingLevelOffset(perks('green-classic'))).toBe(-1);
+    });
+
+    it('every batch-5 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of ["glacia", "gladion-masters-2", "gladion-stance", "gloria-league", "grace", "grant", "green-classic", "grimsley-gen-7", "grusha", "guzma", "hala", "hapu", "harmony", "hau-stance", "hilbert", "hilda", "hop", "hugh", "ilima", "ingo"]) {
+        const play = () => autoplay({ seed: `perk5-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
         const a = play();
         expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
       }

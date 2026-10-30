@@ -14,7 +14,7 @@
 
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
@@ -98,6 +98,7 @@ import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRa
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
+import { placeServiceStop } from './services/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -353,6 +354,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeTotem(content, run);
   placeExpeditionGate(content, run);
   placeMinigameStop(content, run);
+  placeServiceStop(run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -1062,6 +1064,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
+  if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -1469,7 +1472,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const mapItemMoney = prizeMoneyFromItems(content, run, battle.kind, theme);
   // A VS Seeker rematch pays double.
   const rematch = battle.rematch ? 2 : 1;
-  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) : 1) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
+  let moneyGained = Math.floor(base * rematch * moneyMultiplier(archetype) * (isBossClass(classId) ? bossMoneyPerk(archetype.modifiers) * (classId === CHAMPION_CLASS ? championMoneyPerk(archetype.modifiers) : 1) : ordinaryMoneyPerk(archetype.modifiers)) * runAttributeEffects(content, run).money * (1 + (itemBonus + mapItemMoney.percent) / 100)) + mapItemMoney.flat;
   // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));

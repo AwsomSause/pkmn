@@ -756,6 +756,22 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
   z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
+  /** Damage taken by a Pokémon on its first turn after it enters battle (switching in). */
+  z.object({ kind: z.literal('switchGuard'), value: z.number().positive() }),
+  /** Damage dealt by a Pokémon that has been out for at least a full turn. */
+  z.object({ kind: z.literal('stayingDamageMultiplier'), value: z.number().positive() }),
+  /** Prize money from champion battles. */
+  z.object({ kind: z.literal('championMoneyMultiplier'), value: z.number().positive() }),
+  /** Prize money from ordinary (non-boss) battles. */
+  z.object({ kind: z.literal('ordinaryMoneyMultiplier'), value: z.number().positive() }),
+  /** Chance of critical hits by your Pokémon. */
+  z.object({ kind: z.literal('critChanceMultiplier'), value: z.number().positive() }),
+  /** Friendship-based bonuses (Return power, friendship Hyper moments) count friendship this much higher. */
+  z.object({ kind: z.literal('friendshipBonusMultiplier'), value: z.number().positive() }),
+  /** Damage dealt by super-effective hits of your Pokémon. */
+  z.object({ kind: z.literal('superEffectiveDamageMultiplier'), value: z.number().positive() }),
+  /** Damage your Pokémon take from super-effective hits. */
+  z.object({ kind: z.literal('superEffectiveTakenMultiplier'), value: z.number().positive() }),
   /** Elite Four members are this many levels higher (negative: lower). */
   z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
   /** Foes can't heal with moves, drains or healing effects. */
