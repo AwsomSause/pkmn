@@ -4341,6 +4341,206 @@
     "atLeast": 1000
    },
    "unlockText": "Defeat 1000 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lana",
+   "name": "Lana’s Team",
+   "description": "Pokémon from Lana’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lana"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1210
+   },
+   "unlockText": "Defeat 1210 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lance",
+   "name": "Lance’s Team",
+   "description": "Pokémon from Lance’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lance"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1220
+   },
+   "unlockText": "Defeat 1220 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-leaf-gen-3",
+   "name": "Leaf (Gen 3)’s Team",
+   "description": "Pokémon from Leaf (Gen 3)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "leaf"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1230
+   },
+   "unlockText": "Defeat 1230 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-leon-masters",
+   "name": "Leon (Masters)’s Team",
+   "description": "Pokémon from Leon (Masters)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "leon"
+   ],
+   "species": [
+    "charmander",
+    "dracovish",
+    "charizard"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1240
+   },
+   "unlockText": "Defeat 1240 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lillie-z",
+   "name": "Lillie (Z)’s Team",
+   "description": "Pokémon from Lillie (Z)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lillie"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1250
+   },
+   "unlockText": "Defeat 1250 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lisia",
+   "name": "Lisia’s Team",
+   "description": "Pokémon from Lisia’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lisia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1260
+   },
+   "unlockText": "Defeat 1260 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lorelei-lgpe",
+   "name": "Lorelei (LGPE)’s Team",
+   "description": "Pokémon from Lorelei (LGPE)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lorelei"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1270
+   },
+   "unlockText": "Defeat 1270 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lt-surge",
+   "name": "Lt. Surge’s Team",
+   "description": "Pokémon from Lt. Surge’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lt-surge"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1280
+   },
+   "unlockText": "Defeat 1280 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lucas-gen-4-platinum",
+   "name": "Lucas (Gen 4 Platinum)’s Team",
+   "description": "Pokémon from Lucas (Gen 4 Platinum)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lucas"
+   ],
+   "species": [
+    "turtwig",
+    "chimchar",
+    "piplup"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1290
+   },
+   "unlockText": "Defeat 1290 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lucas",
+   "name": "Lucas’s Team",
+   "description": "Pokémon from Lucas’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lucas"
+   ],
+   "species": [
+    "turtwig",
+    "chimchar",
+    "piplup"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1300
+   },
+   "unlockText": "Defeat 1300 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lyra",
+   "name": "Lyra’s Team",
+   "description": "Pokémon from Lyra’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lyra"
+   ],
+   "species": [
+    "chikorita",
+    "cyndaquil",
+    "totodile"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1330
+   },
+   "unlockText": "Defeat 1330 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-lysandre",
+   "name": "Lysandre’s Team",
+   "description": "Pokémon from Lysandre’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "lysandre"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1340
+   },
+   "unlockText": "Defeat 1340 trainers in total across your runs"
   }
  ],
  "draftRules": [

@@ -2932,5 +2932,198 @@
    "stat": "spe",
    "value": 0.9
   }
+ ],
+ "lana": [
+  {
+   "kind": "damageMultiplier",
+   "type": "water",
+   "value": 1.2,
+   "category": "special"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "electric",
+   "value": 1.2
+  }
+ ],
+ "lance": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dragon",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 1.1,
+   "type": "dragon"
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "type": "dragon",
+   "value": 0.8
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ice",
+   "value": 1.15
+  }
+ ],
+ "leaf-gen-3": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.15
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.15
+  }
+ ],
+ "leon-masters": [
+  {
+   "kind": "bossDamageMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.85
+  }
+ ],
+ "lillie-z": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.15,
+   "category": "special"
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "damageMultiplier",
+   "value": 0.9
+  }
+ ],
+ "lisia": [
+  {
+   "kind": "damageMultiplier",
+   "type": "fairy",
+   "value": 1.2
+  },
+  {
+   "kind": "encounterWeightMultiplier",
+   "group": "rare",
+   "value": 1.1
+  },
+  {
+   "kind": "xpMultiplier",
+   "value": 0.9
+  }
+ ],
+ "lorelei-lgpe": [
+  {
+   "kind": "damageMultiplier",
+   "type": "ice",
+   "value": 1.2
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "def",
+   "value": 1.1,
+   "type": "ice"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "fire",
+   "value": 1.2
+  }
+ ],
+ "lt-surge": [
+  {
+   "kind": "damageMultiplier",
+   "type": "electric",
+   "value": 1.25
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "spe",
+   "value": 1.15,
+   "type": "electric"
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "moveType": "ground",
+   "value": 1.25
+  }
+ ],
+ "lucas-gen-4-platinum": [
+  {
+   "kind": "groupXpMultiplier",
+   "starter": true,
+   "value": 1.2
+  },
+  {
+   "kind": "starterDamageMultiplier",
+   "starter": true,
+   "value": 1.1
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "starter": false,
+   "value": 0.9
+  }
+ ],
+ "lucas": [
+  {
+   "kind": "xpMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "priceMultiplier",
+   "group": "all",
+   "value": 1.1
+  }
+ ],
+ "lyra": [
+  {
+   "kind": "damageMultiplier",
+   "type": "grass",
+   "value": 1.15
+  },
+  {
+   "kind": "captureMultiplier",
+   "value": 1.1
+  },
+  {
+   "kind": "damageTakenMultiplier",
+   "value": 1.05
+  }
+ ],
+ "lysandre": [
+  {
+   "kind": "damageMultiplier",
+   "type": "dark",
+   "value": 1.2
+  },
+  {
+   "kind": "bossMoneyMultiplier",
+   "value": 1.2
+  },
+  {
+   "kind": "healingMultiplier",
+   "value": 0.8
+  }
  ]
 }

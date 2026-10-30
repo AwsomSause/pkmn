@@ -601,3 +601,42 @@ describe('trainer perks, batch Z4 (Magnus to Olivia)', () => {
     }
   }, 300_000);
 });
+
+describe('trainer perks, batch L (Lana to Lysandre)', () => {
+  const L = ['lana', 'lance', 'leaf-gen-3', 'leon-masters', 'lillie-z', 'lisia', 'lorelei-lgpe', 'lt-surge', 'lucas-gen-4-platinum', 'lucas', 'lyra', 'lysandre'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'electric' | 'ice' | 'fire' | 'ground') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all are playable trainers', () => {
+    for (const id of L) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers: damage, stats, weaknesses', () => {
+    expect(damageDealtPerk(perks('lana'), { ...info, userTypes: ['water'], physical: false })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('lana'), { ...info, userTypes: ['water'], physical: true })).toBe(1);
+    expect(taken('lana', 'electric')).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('lance'), { ...info, userTypes: ['dragon'] })).toBeCloseTo(1.25);
+    expect(taken('lance', 'ice')).toBeCloseTo(1.15);
+    expect(statPerk(perks('lt-surge'), 'spe', ['electric'])).toBeCloseTo(1.15);
+    expect(taken('lt-surge', 'ground')).toBeCloseTo(1.25);
+    expect(statPerk(perks('lorelei-lgpe'), 'def', ['ice'])).toBeCloseTo(1.1);
+  });
+
+  it('Lucas (Platinum): starter damage and experience', () => {
+    expect(damageDealtPerk(perks('lucas-gen-4-platinum'), { ...info, isStarter: true })).toBeCloseTo(1.1);
+    expect(damageDealtPerk(perks('lucas-gen-4-platinum'), { ...info, isStarter: false })).toBe(1);
+  });
+
+  it('Leon: boss damage; Lysandre: weaker healing', () => {
+    expect(damageDealtPerk(perks('leon-masters'), { ...info, targetIsBoss: true })).toBeCloseTo(1.2);
+    expect(healingMultiplier(getArchetype(content, 'lysandre'))).toBeCloseTo(0.8);
+  });
+
+  it('every trainer of the batch plays the same way twice', () => {
+    for (const id of L) {
+      const play = () => autoplay({ seed: `perkL-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 300_000);
+});
