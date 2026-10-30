@@ -77,7 +77,11 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Report per active move (mechanic, visual, sound, fallback, test, duration) | BUILT | `npm run report:anims -- --write` → `docs/quality/MOVE_ANIMATIONS.md` (family, first choice, stand-by, status) |
 | Essentials pack move animations (PkmnAnimations.rxdata, 212 moves + 11 status) | BUILT | slice 8: `npm run data:pack-anims`, played first |
 | EBDX scripted move animations (442 Ruby scripts) | LIMITED | code, not frame data; graphics reused for cinematics (slice 8c) |
-| Z-Move / Max Move attack animations | LIMITED | no pack has them; they borrow a same-type anim + signature family |
+| Z-Move / Max Move attack animations | LIMITED | no pack has them; they borrow a same-type anim, then the signature family burst plays on top |
+| Mega / Primal cinematic | BUILT | slice 8c: EBDX Primega crystal builds, cracks and shatters into the new form (Mega purple, Groudon Omega, Kyogre Alpha) |
+| Dynamax / Gigantamax / end cinematic | BUILT | slice 8c: Raid Battles Max storm (bg, spirals, Max icon), red energy, shake; red puff when it ends |
+| Z-Power cinematic | BUILT | slice 8c: cinematic bars, Raid Ultra cosmos + Z crystal, type-coloured rings, the Z-Move's name |
+| Terastal cinematic | BUILT | slice 8c: Raid Tera crystal sky, spiral and icon in the Tera Type colour |
 
 ## V4 — other gameplay screens (BR 5, VB 5–6, CR 6)
 | Item | Status | Where / note |
