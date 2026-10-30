@@ -978,6 +978,10 @@ export const LegacyRecordSchema = z.object({
   titles: z.array(z.string()),
   tags: z.array(z.string()),
   signature: z.string().nullable(),
+  /** Its mentor's species, when it was a protégé ("It Carried Its Mentor's Legacy"). Older saves: none. */
+  mentor: z.string().nullable().default(null),
+  /** Legacy Records it earned (Hall of Fame chains such as The Long Gauntlet). Older saves: none. */
+  records: z.array(z.string()).default([]),
 });
 export type LegacyRecord = z.infer<typeof LegacyRecordSchema>;
 

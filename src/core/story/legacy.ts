@@ -19,6 +19,10 @@ export interface LegacyCard {
   /** Up to four of its greatest moments, most important first. */
   greatest: string[];
   titles: string[];
+  /** Its mentor's species, if it was a protégé. */
+  mentor: string | null;
+  /** Titles of finished Hall of Fame chains (Legacy Records). */
+  records: string[];
 }
 
 const nameOf = (content: Content, speciesId: string) => content.species.get(speciesId)?.name ?? speciesId;
@@ -43,7 +47,8 @@ export function legacyCard(content: Content, run: RunState, uid: string): Legacy
   if (!history) return null;
   const memories = rankedMemories(history);
   const mentored = run.story.relationships.some((r) => r.kind === 'mentorship' && r.a.id === uid);
-  const protege = run.story.relationships.some((r) => r.kind === 'mentorship' && r.b.id === uid);
+  const mentorship = run.story.relationships.find((r) => r.kind === 'mentorship' && r.b.id === uid);
+  const protege = mentorship !== undefined;
   const tags: string[] = [];
   if (runAce(run) === uid) tags.push('Run Ace');
   if (mentored) tags.push('Mentor');
@@ -59,6 +64,8 @@ export function legacyCard(content: Content, run: RunState, uid: string): Legacy
     signature: memories[0]?.text ?? null,
     greatest: memories.slice(0, 4).map((m) => m.text),
     titles: [...history.titles],
+    mentor: mentorship ? (run.story.histories[mentorship.a.id]?.speciesId ?? null) : null,
+    records: content.story.chains.filter((c) => c.hallOfFame && history.titles.includes(c.title)).map((c) => c.title),
   };
 }
 

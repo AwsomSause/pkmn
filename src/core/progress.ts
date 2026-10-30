@@ -310,11 +310,13 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       epitaph: runEpitaph(content, run),
       legacy: run.party.flatMap((m) => {
         const card = legacyCard(content, run, m.uid);
-        return card ? [{ speciesId: m.speciesId, level: m.level, shiny: m.shiny, titles: card.titles, tags: card.tags, signature: card.signature }] : [];
+        return card ? [{ speciesId: m.speciesId, level: m.level, shiny: m.shiny, titles: card.titles, tags: card.tags, signature: card.signature, mentor: card.mentor, records: card.records }] : [];
       }),
     },
     ...profile.runHistory,
-  ].slice(0, content.balance.runHistorySize);
+  ];
+  // The newest runs, plus any older run holding a Legacy Record: those stay in the Hall of Fame for good.
+  profile.runHistory = profile.runHistory.filter((r, i) => i < content.balance.runHistorySize || r.legacy.some((c) => c.records.length > 0));
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
