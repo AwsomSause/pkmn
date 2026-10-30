@@ -2450,6 +2450,11 @@
    "kind": "groupXpMultiplier",
    "type": "ghost",
    "value": 0.9
+  },
+  {
+   "kind": "evasionMultiplier",
+   "type": "ghost",
+   "value": 1.1
   }
  ],
  "palmer": [
@@ -3007,6 +3012,11 @@
    "stat": "hp",
    "value": 0.9,
    "type": "ghost"
+  },
+  {
+   "kind": "evasionMultiplier",
+   "type": "ghost",
+   "value": 1.1
   }
  ],
  "molayne": [
@@ -3229,6 +3239,10 @@
   {
    "kind": "damageMultiplier",
    "value": 0.9
+  },
+  {
+   "kind": "evasionMultiplier",
+   "value": 1.15
   }
  ],
  "mallow": [
@@ -3456,6 +3470,37 @@
   {
    "kind": "healingMultiplier",
    "value": 0.8
+  }
+ ],
+ "lusamine-masters": [
+  {
+   "kind": "damageMultiplier",
+   "ultraBeast": true,
+   "value": 1.25
+  },
+  {
+   "kind": "groupXpMultiplier",
+   "ultraBeast": false,
+   "value": 0.85
+  }
+ ],
+ "lusamine-nihilego": [
+  {
+   "kind": "damageMultiplier",
+   "types": [
+    "poison",
+    "psychic"
+   ],
+   "value": 1.2
+  },
+  {
+   "kind": "statusedFoeDamageMultiplier",
+   "value": 1.15
+  },
+  {
+   "kind": "statMultiplier",
+   "stat": "hp",
+   "value": 0.9
   }
  ]
 }

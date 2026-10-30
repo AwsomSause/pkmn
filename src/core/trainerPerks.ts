@@ -30,6 +30,8 @@ export const SLOW_BASE_SPEED = 60;
 
 const ULTRA_BEASTS = new Set(['nihilego', 'buzzwole', 'pheromosa', 'xurkitree', 'celesteela', 'kartana', 'guzzlord', 'necrozma', 'poipole', 'naganadel', 'stakataka', 'blacephalon']);
 
+export const isUltraBeast = (speciesId: string): boolean => ULTRA_BEASTS.has(speciesId);
+
 /** Legendary, Mythical or Ultra Beast (the groups Trainers.md perks name together). */
 export function isLegendaryLike(species: { id: string; tags: readonly string[] }): boolean {
   return species.tags.includes('legendary') || species.tags.includes('mythical') || ULTRA_BEASTS.has(species.id);
@@ -74,6 +76,7 @@ export interface DamageDealtInfo {
   partyIndex?: number;
   partySize?: number;
   userLegendary?: boolean;
+  userUltraBeast?: boolean;
   /** `unusual` / `common`: see unusualKind. */
   userRarity?: 'unusual' | 'common' | null;
   moveFlags?: readonly string[];
@@ -87,7 +90,7 @@ export interface DamageDealtInfo {
 /** Damage multiplier for a hit your Pokémon deals (stacks with the older type modifiers). */
 export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): number {
   let v = 1;
-  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)));
+  v *= product(perks, 'damageMultiplier', (m) => (!m.type || i.userTypes.includes(m.type)) && (!m.types || m.types.some((t) => i.userTypes.includes(t))) && (!m.category || (m.category === 'physical') === i.physical) && (!m.speed || (m.speed === 'fast' ? i.userBaseSpeed >= FAST_BASE_SPEED : i.userBaseSpeed <= SLOW_BASE_SPEED)) && (m.legendary === undefined || m.legendary === Boolean(i.userLegendary)) && (m.ultraBeast === undefined || m.ultraBeast === Boolean(i.userUltraBeast)));
   if (i.sameSpecies) v *= product(perks, 'sameSpeciesDamageMultiplier');
   v *= product(perks, 'moveStyleDamage', (m) => m.style === i.moveStyle);
   v *= product(perks, 'moveFlagDamage', (m) => m.flags.some((f) => i.moveFlags?.includes(f)));
@@ -156,6 +159,7 @@ export interface XpInfo {
   baseSpeed: number;
   isStarter: boolean;
   isBossBattle: boolean;
+  ultraBeast?: boolean;
 }
 
 /** Experience multiplier for one Pokémon (group perks and ordinary-battle perks). */
@@ -166,6 +170,7 @@ export function xpPerk(perks: Perks | undefined, i: XpInfo): number {
     if (m.speed === 'fast' && i.baseSpeed < FAST_BASE_SPEED) return false;
     if (m.speed === 'slow' && i.baseSpeed > SLOW_BASE_SPEED) return false;
     if (m.starter !== undefined && m.starter !== i.isStarter) return false;
+    if (m.ultraBeast !== undefined && m.ultraBeast !== Boolean(i.ultraBeast)) return false;
     return true;
   });
   if (!i.isBossBattle) v *= product(perks, 'ordinaryXpMultiplier');

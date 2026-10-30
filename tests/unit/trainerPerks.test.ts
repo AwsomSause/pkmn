@@ -705,3 +705,47 @@ describe('trainer perk systems: N, Rei, Looker, Mallow', () => {
     expect(foodCount(perks('red'), 'razz-berry', 1)).toBe(1);
   });
 });
+
+describe('trainer perk systems: evasion and Lusamine', () => {
+  const info = { ...hit, userTypes: ['normal'] as const };
+
+  it('evasion for Morty and Phoebe (Ghost-types only) and Marley (everyone)', () => {
+    expect(evasionPerk(perks('morty'), ['ghost'])).toBeCloseTo(1.1);
+    expect(evasionPerk(perks('morty'), ['normal'])).toBe(1);
+    expect(evasionPerk(perks('phoebe-gen-6'), ['ghost', 'dark'])).toBeCloseTo(1.1);
+    expect(evasionPerk(perks('marley'), ['normal'])).toBeCloseTo(1.15);
+  });
+
+  it('Lusamine (Masters): Ultra Beasts hit harder, the rest earn less experience', () => {
+    expect(damageDealtPerk(perks('lusamine-masters'), { ...info, userUltraBeast: true })).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('lusamine-masters'), { ...info, userUltraBeast: false })).toBe(1);
+    const xp = (ultraBeast: boolean) => xpPerk(perks('lusamine-masters'), { types: ['poison'], baseSpeed: 70, isStarter: false, isBossBattle: false, ultraBeast });
+    expect(xp(true)).toBe(1);
+    expect(xp(false)).toBeCloseTo(0.85);
+  });
+
+  it('Lusamine (Nihilego): Poison and Psychic damage, less HP', () => {
+    expect(damageDealtPerk(perks('lusamine-nihilego'), { ...info, userTypes: ['poison'] })).toBeCloseTo(1.2);
+    expect(statPerk(perks('lusamine-nihilego'), 'hp', ['poison'])).toBeCloseTo(0.9);
+  });
+
+  it('Beautiful Parasite: one Assimilation after each boss, two at most, each costing 5% more damage taken', () => {
+    const run = chooseStarter(content, createRun(content, { runId: 't', seed: 'bp', archetypeId: 'lusamine-nihilego' }), 0);
+    const foe = { ...run.party[0]!, uid: 'e1', speciesId: 'charizard', level: 30 };
+    const gym = createBattle('trainer', [foe], 0, run.party[0]!.uid, { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' });
+    gym.outcome = 'win';
+    const ordinary = createBattle('trainer', [foe], 0, run.party[0]!.uid, { classId: 'youngster', name: 'Joey', leaderId: null });
+    ordinary.outcome = 'win';
+    expect(signatureDecisions(content, run, ordinary)).toHaveLength(0);
+    run.pending = signatureDecisions(content, run, gym);
+    expect(run.pending[0]!.kind === 'signature' && run.pending[0]!.options).toHaveLength(3);
+    chooseSignatureOption(run, 0);
+    expect(statPerk(run.perkEffects, 'spa', ['normal'])).toBeCloseTo(1.1);
+    run.pending = signatureDecisions(content, run, gym);
+    chooseSignatureOption(run, 2);
+    expect(statPerk(run.perkEffects, 'spe', ['normal'])).toBeCloseTo(1.1);
+    const taken = damageTakenPerk(run.perkEffects, { targetTypes: ['normal'], moveType: 'normal', attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+    expect(taken).toBeCloseTo(1.05 * 1.05);
+    expect(signatureDecisions(content, run, gym)).toHaveLength(0);
+  });
+});

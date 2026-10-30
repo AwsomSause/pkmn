@@ -173,5 +173,15 @@
   "chikorita",
   "cyndaquil",
   "totodile"
+ ],
+ "lusamine-masters": [
+  "cosmog",
+  "clefairy",
+  "nihilego"
+ ],
+ "lusamine-nihilego": [
+  "nihilego",
+  "cosmog",
+  "poipole"
  ]
 }
