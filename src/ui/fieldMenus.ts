@@ -66,7 +66,7 @@ export function openStoryMenu(host: FieldMenuHost): void {
     problem: null,
     hint: `${r.summary}  ${r.memory}`,
     draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
-      box.add(scene.add.text(14, 8, `★ Rival: ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
+      box.add(scene.add.text(14, 8, `${r.ultimate ? '★★ Ultimate Rival' : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
     },
   }));
   const rows = entries.map((entry) => {

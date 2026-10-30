@@ -7,5 +7,35 @@
   "flawlessGain": 15,
   "threshold": 12
  },
- "traitSpread": 10
+ "traitSpread": 10,
+ "states": {
+  "recurringAt": 25,
+  "activeAt": 40,
+  "nemesisAt": 60,
+  "nemesisMinVindictiveness": 50,
+  "contenderAt": 80,
+  "contenderMinAmbition": 60
+ },
+ "outcomes": {
+  "allyAt": 30,
+  "allyMinEncounters": 2,
+  "allyMinEmpathy": 75,
+  "allyMaxPride": 40,
+  "discourageMaxResilience": 35,
+  "discourageLoss": 10,
+  "retireAtSetbacks": 3
+ },
+ "ultimate": {
+  "weights": {
+   "intensity": 25,
+   "history": 20,
+   "threat": 15,
+   "stakes": 15,
+   "relevance": 10,
+   "progression": 10,
+   "unresolved": 5
+  },
+  "minEncounters": 1,
+  "switchMargin": 10
+ }
 }
