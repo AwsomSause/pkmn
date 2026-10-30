@@ -6692,7 +6692,7 @@
   "status": "supported",
   "effect": {
    "kind": "care",
-   "revive": 1.0
+   "revive": 1
   }
  },
  {
@@ -6708,7 +6708,7 @@
   "status": "supported",
   "effect": {
    "kind": "teamCare",
-   "revive": 1.0
+   "revive": 1
   }
  },
  {
@@ -6724,7 +6724,7 @@
   "status": "supported",
   "effect": {
    "kind": "care",
-   "revive": 1.0,
+   "revive": 1,
    "friendship": -10
   }
  },
@@ -7641,10 +7641,18 @@
   "max": 1,
   "how": "passive",
   "icon": "silph-scope",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "revealEvents"
+    }
+   ]
+  }
  },
  {
   "id": "devon-scope",
@@ -7884,10 +7892,18 @@
   "max": 1,
   "how": "passive",
   "icon": "explorer-kit",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventBonus"
+    }
+   ]
+  }
  },
  {
   "id": "coin-case",
@@ -10007,10 +10023,19 @@
   "max": null,
   "how": "use",
   "icon": "inquiry-mail",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "eventInsight"
+    }
+   ]
+  }
  },
  {
   "id": "rsvp-mail",
@@ -10170,10 +10195,21 @@
   "max": null,
   "how": "use",
   "icon": "bridgemail-v",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "event",
+     "where": "nextNode"
+    }
+   ]
+  }
  },
  {
   "id": "oaks-parcel",
@@ -10200,10 +10236,18 @@
   "max": 1,
   "how": "passive",
   "icon": "oaks-letter",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "letter",
@@ -10260,10 +10304,18 @@
   "max": 1,
   "how": "passive",
   "icon": "ss-ticket",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "card-key",
@@ -10275,10 +10327,18 @@
   "max": 1,
   "how": "passive",
   "icon": "card-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "secret-key",
@@ -10290,10 +10350,18 @@
   "max": 1,
   "how": "passive",
   "icon": "secret-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "lift-key",
@@ -10305,10 +10373,18 @@
   "max": 1,
   "how": "passive",
   "icon": "lift-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "basement-key",
@@ -10320,10 +10396,18 @@
   "max": 1,
   "how": "passive",
   "icon": "basement-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "storage-key",
@@ -10335,10 +10419,18 @@
   "max": 1,
   "how": "passive",
   "icon": "storage-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "suite-key",
@@ -10350,10 +10442,18 @@
   "max": 1,
   "how": "passive",
   "icon": "suite-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "works-key",
@@ -10365,10 +10465,18 @@
   "max": 1,
   "how": "passive",
   "icon": "works-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "rm-1-key",
@@ -10380,10 +10488,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rm-1-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "rm-2-key",
@@ -10395,10 +10511,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rm-2-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "rm-4-key",
@@ -10410,10 +10534,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rm-4-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "rm-6-key",
@@ -10425,10 +10557,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rm-6-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "scanner",
@@ -10455,10 +10595,18 @@
   "max": 1,
   "how": "passive",
   "icon": "galactic-key",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "magma-emblem",
@@ -10470,10 +10618,18 @@
   "max": 1,
   "how": "passive",
   "icon": "magma-emblem",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "red-chain",
@@ -10485,10 +10641,18 @@
   "max": 1,
   "how": "passive",
   "icon": "red-chain",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "eon-ticket",
@@ -10500,10 +10664,18 @@
   "max": 1,
   "how": "passive",
   "icon": "eon-ticket",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "mysticticket",
@@ -10515,10 +10687,18 @@
   "max": 1,
   "how": "passive",
   "icon": "mysticticket",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "auroraticket",
@@ -10530,10 +10710,18 @@
   "max": 1,
   "how": "passive",
   "icon": "auroraticket",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "old-sea-map",
@@ -10545,10 +10733,18 @@
   "max": 1,
   "how": "passive",
   "icon": "old-sea-map",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "liberty-pass",
@@ -10560,10 +10756,18 @@
   "max": 1,
   "how": "passive",
   "icon": "liberty-pass",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "azure-flute",
@@ -10575,10 +10779,18 @@
   "max": 1,
   "how": "passive",
   "icon": "azure-flute",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "meteorite",
@@ -10635,10 +10847,19 @@
   "max": 1,
   "how": "passive",
   "icon": "tidal-bell",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "favorSpecies",
+     "species": "lugia"
+    }
+   ]
+  }
  },
  {
   "id": "clear-bell",
@@ -10650,10 +10871,19 @@
   "max": 1,
   "how": "passive",
   "icon": "clear-bell",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "favorSpecies",
+     "species": "ho-oh"
+    }
+   ]
+  }
  },
  {
   "id": "god-stone",
@@ -10680,10 +10910,18 @@
   "max": 1,
   "how": "passive",
   "icon": "dark-stone",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "light-stone",
@@ -10695,10 +10933,18 @@
   "max": 1,
   "how": "passive",
   "icon": "light-stone",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "dragon-skull",
@@ -10833,10 +11079,18 @@
   "max": 1,
   "how": "passive",
   "icon": "magma-stone",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "lunar-wing",
@@ -10863,10 +11117,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rainbow-wing",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "silver-wing",
@@ -10878,10 +11140,18 @@
   "max": 1,
   "how": "passive",
   "icon": "silver-wing",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "keldeo-resolution",
@@ -11038,10 +11308,18 @@
   "max": 1,
   "how": "passive",
   "icon": "tri-pass",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "rainbow-pass",
@@ -11053,10 +11331,18 @@
   "max": 1,
   "how": "passive",
   "icon": "rainbow-pass",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "pass-orb",
@@ -11092,10 +11378,18 @@
   "max": 1,
   "how": "passive",
   "icon": "contest-pass",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "eventKey"
+    }
+   ]
+  }
  },
  {
   "id": "blue-card",
@@ -11257,10 +11551,18 @@
   "max": 1,
   "how": "passive",
   "icon": "prop-case",
-  "status": "pending",
-  "needs": [
-   "events"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "doubleContest"
+    }
+   ]
+  }
  },
  {
   "id": "seal-case",
