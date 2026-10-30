@@ -33,7 +33,41 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
 | The Battle Drama Engine (9 phases) | TODO |
 | Overdrive Hyper Techno Supreme Z | PART: §1 Phase 1 events + §2 emotions tags + §4 Hyper evolutions (4 transform moments + Determination Evolution memory) DONE; §4 Signature Move Awakening DONE (also §3 "It Mastered the Power Within"); §3 other 29 events, §5 (6 unusual events), §6 chains, §7 generator TODO |
-| Blueprint: Raids, Totems, Expeditions, Minigames | TODO |
+| Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
 | Trainers.md perks | TODO |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
+
+
+## Blueprint: Raids, Mega-Expeditions, Totem Pokémon & Minigames (every item)
+Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data/raids.json`.
+
+### 1. Raids (slice 1, DONE except the TODO lines)
+| Item | Status |
+|---|---|
+| Boss HP pool, configurable per raid (`hpBoostPercent`) | DONE |
+| Raid shield at HP thresholds (1–3 per raid), blocks the boss until broken | DONE |
+| Boss phases at HP thresholds (boost, weather, cleanse, clear player stages) | DONE |
+| Telegraphed attacks (charged hit, shown in the battle header; breaking a shield cancels it) | DONE |
+| Extra actions per round (one bonus attack under an HP line, strict `max`) | DONE; "more than four moves" TODO |
+| Battle timer (tiers 5–6), warnings at 10 and 5 turns | DONE |
+| Raid modifiers: weather field | DONE; terrain, elemental surge, healing restriction, rotating weaknesses TODO |
+| Victory rewards: money, items, extra draft choices, boss joins | DONE; crafting materials, Mega resources, rare-encounter tokens TODO (need Expeditions) |
+| Tiers 1, 2, 3, 4, 5, 6/Apex (8 raids, one fully featured Apex) | DONE |
+| Discover (den on the map), Prepare (preview: tier, mechanics, rewards, cost), Battle, Resolve, Progress (run raid record) | DONE; unlocking tiers across runs TODO |
+| Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |
+| Reference plugin (Raid Battles DBK): mechanics rebuilt natively, nothing copied | DONE |
+| Overworld raid dens | DONE (map side stop `raid`); Raid Adventures mode = Expedition below |
+| Use encounter availability for the boss pool | PART (species are listed in `raids.json`; `availability.json` is not wired yet) |
+
+### 2. Mega-Expeditions — TODO (every item)
+Nodes: wild, trainer, elite, rest, item cache, research station, mystery event, recruit/rental, Mega-energy deposit, Totem, raid, final boss. Route generation (5–9 nodes, valid graph, visible route). Party modes: own, rental, recruit one, draft, combined. Attrition and recovery (rest node). Mega Energy, Mega Stones, temporary Mega, Mega bosses, Mega research, exclusive encounters/achievements. Extraction and failure rules. Progression by region. Briefing, route choice, checkpoint, finale, extract.
+
+### 3. Totem Pokémon — TODO (every item)
+Aura (5 kinds), ally calls (cap, no loops, interrupt, resummon rule), behaviour phases, environmental advantage, rewards (rare encounters, held items, evolution items, Mega energy/stones, unlocks, research, achievements, routes), progression table, battle validation.
+
+### 4. Minigames — TODO (every item)
+Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimit, attemptLimit, scoringRules, rewardTable, failureOutcome, replayRules, uiConfiguration, accessibilityOptions), standard result, reward caps and medals. Memory, Catching Challenge, Rhythm, Foraging/Berry Picking, Knowledge Quiz, Fossil Excavation. Extra concepts: fishing, battle puzzle, type-match, tracking, berry-growing, trainer's trial, treasure hunt, reaction.
+
+### Blueprint acceptance and milestones
+M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4–M8 TODO.

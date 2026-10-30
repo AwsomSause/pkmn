@@ -56,6 +56,8 @@ import themesJson from './themes.json';
 import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
+import raidsJson from './raids.json';
+import { RaidFileSchema } from '../core/raid/schema';
 
 export class ContentError extends Error {
   constructor(public readonly problems: string[]) {
@@ -85,6 +87,7 @@ export interface RawContent {
   ruleset: unknown;
   balance: unknown;
   story: unknown;
+  raids: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -128,6 +131,7 @@ export const RAW_CONTENT: RawContent = {
   ruleset: rulesetJson,
   balance: balanceJson,
   story: storyJson,
+  raids: raidsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -174,9 +178,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
+  const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!story || !raids || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -205,6 +210,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
     story,
+    raids,
     zMoves,
     maxMoves,
   };
@@ -244,6 +250,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const usable = (id: string) => content.moves.get(id)?.supported === true;
   for (const r of content.rewards.values()) {
     if (r.effect.kind === 'addItem' && !content.items.has(r.effect.item)) problems.push(`reward "${r.id}" gives unknown item "${r.effect.item}"`);
+  }
+  // Raids: every boss species, reward item and phase must exist (the boss must be able to fight).
+  for (const raid of raids.raids) {
+    for (const id of raid.species) if (!content.species.has(id)) problems.push(`raids.json "${raid.id}" has unknown species "${id}"`);
+    for (const r of raid.rewards.items) if (!content.items.has(r.item)) problems.push(`raids.json "${raid.id}" gives unknown item "${r.item}"`);
+    if (raid.shield && raid.shield.at.length * raid.shield.points >= 0.9) problems.push(`raids.json "${raid.id}" shields are too big`);
+    if (raid.phases.some((p, i) => i > 0 && p.atHp >= raid.phases[i - 1]!.atHp)) problems.push(`raids.json "${raid.id}" phases must go down in HP`);
   }
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {

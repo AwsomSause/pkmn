@@ -127,6 +127,13 @@ export class GameSession {
     return this.run;
   }
 
+  /** Pays for a raid den and starts the boss fight. */
+  enterRaid(sideId: string): RunState {
+    this.run = Run.enterRaid(this.content, this.requireRun(), sideId);
+    this.persistRun();
+    return this.run;
+  }
+
   /** Uses a map item from the map's Items menu (Escape Rope, a bike, VS Seeker). */
   useMapAction(kind: Run.MapActionKind): string {
     const result = Run.useMapAction(this.content, this.requireRun(), kind);
