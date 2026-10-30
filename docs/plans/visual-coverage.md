@@ -89,7 +89,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |
 | Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
-| Hall of Fame screen (champion teams, unusual wins, rare forms, records, Legacy Cards, epitaphs) | TODO | requested 2026-10-30 (Legacy Cards, PR #128) |
+| Hall of Fame screen (champion teams, unusual wins, rare forms, records, Legacy Cards, epitaphs) | BUILT | Hub **Events → Hall of Fame**: glass rows for records, champion teams with epitaph and why a win was unusual, shiny Pokémon, Legacy Cards with titles; icons bob, shinies sparkle (`core/hallOfFame.ts`, `scenes/HallOfFameScene.ts`). Runs from before profile v12 have no epitaph or cards |
 | Bond screen for the Bond Engine (traits, mood, bond level) | BUILT | map **Bonds** button: glass card per Pokémon, trait, floating mood bubble, 7 bars that fill with a bounce, hint explains the mood, practiced partners and refusal risk (`ui/bondMenu.ts`) |
 
 ## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)

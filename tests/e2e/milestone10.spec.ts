@@ -295,3 +295,36 @@ test('slice 7: a trainer line shows in a speech bubble that goes away with the l
   await expect.poll(() => hasNamed(page, 'speech-bubble'), { timeout: 3000, intervals: [100] }).toBe(false);
   expect(errors).toEqual([]);
 });
+
+test('the Hall of Fame shows records, champion teams with epitaphs, shinies and Legacy Cards', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/');
+  await waitForScene(page, 'MainMenu');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Hub');
+  await page.evaluate(() => {
+    const pkr = (window as any).__pkr;
+    const base = { endedAt: '2026-10-30T12:00:00Z', seed: 'hof', archetypeId: 'red', campaignId: 'kanto', regionsCleared: 1, regions: 1, defeatedBy: null, bankCredits: 0, researchPoints: 0, achievements: [], moments: [], journal: [] };
+    pkr.session.profile.runHistory = [
+      { ...base, runId: 'hof-1', victory: true, badges: 8, encounters: 42, party: [{ speciesId: 'pikachu', level: 55, shiny: true }, { speciesId: 'onix', level: 52, shiny: false }], epitaph: 'Pikachu, The Unbroken, carried this journey: held on at 1 HP against the Champion.', legacy: [{ speciesId: 'pikachu', level: 55, shiny: true, titles: ['The Unbroken'], tags: ['Run Ace'], signature: 'Held on at 1 HP against the Champion' }] },
+    ];
+    pkr.game.scene.getScene('Hub').scene.start('HallOfFame');
+  });
+  await waitForScene(page, 'HallOfFame');
+  await page.waitForTimeout(800);
+  const texts: string[] = await page.evaluate(() => {
+    const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+    return (window as any).__pkr.game.scene.getScene('HallOfFame').children.list.flatMap(all).filter((o: any) => o.type === 'Text').map((o: any) => o.text);
+  });
+  expect(texts).toContain('Hall of Fame');
+  expect(texts.some((t) => t.startsWith('♛ Champion team'))).toBe(true);
+  expect(texts.some((t) => t.includes('carried this journey'))).toBe(true);
+  expect(texts.some((t) => t.includes('The Unbroken'))).toBe(true);
+  expect(texts).toContain('✦ Rare forms');
+  await page.screenshot({ path: 'test-results/m10-hall-of-fame.png' });
+  await page.keyboard.press('Escape');
+  await waitForScene(page, 'Hub');
+  expect(errors).toEqual([]);
+});

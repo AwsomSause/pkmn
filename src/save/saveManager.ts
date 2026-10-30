@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 11, run: 22, settings: 5, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 22, settings: 5, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -83,6 +83,20 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const d = data as Json & { lastPrep?: Json | null; presets?: (Json | null)[] };
       const withDirective = (p: Json | null | undefined) => (p ? { ...p, directive: null } : p ?? null);
       return { ...d, cardFrame: 'classic', lastPrep: withDirective(d.lastPrep), presets: (d.presets ?? []).map(withDirective) };
+    },
+    // v12 (Hall of Fame): Run History entries keep the run's epitaph and Legacy Cards,
+    // and whether each party Pokémon was shiny. Older runs kept none of these.
+    11: (data) => {
+      const profile = data as Json;
+      return {
+        ...profile,
+        runHistory: ((profile.runHistory as Json[]) ?? []).map((r) => ({
+          ...r,
+          party: ((r.party as Json[]) ?? []).map((m) => ({ ...m, shiny: false })),
+          epitaph: null,
+          legacy: [],
+        })),
+      };
     },
   },
   run: {
