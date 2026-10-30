@@ -76,6 +76,7 @@ export class GameOverScene extends Phaser.Scene {
       if (summary.achievements.length) lines.push('', 'Achievements earned:', ...summary.achievements.slice(0, 5).map((a) => `  ★ ${a.name}`));
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
       if (summary.runQuestDone) lines.push('', `Run Quest done: ${summary.runQuestDone.text} (+${summary.runQuestDone.researchPoints} Research Points)`);
+      if (summary.directive) lines.push(summary.directive.done ? `Research Directive done: ${summary.directive.target} ${summary.directive.type}-types (+${summary.directive.researchPoints} Research Points)` : `Research Directive: ${summary.directive.current}/${summary.directive.target} ${summary.directive.type}-types`);
       for (const q of summary.questSteps) lines.push(`Quest step ${q.index + 1}/5 done: ${q.step.goal}. "${q.step.story}"`);
       for (const g of summary.gameEvents ?? []) {
         for (const o of g.objectives) lines.push(`${g.event.name}: ${o.text} done (+${gameRewardText(session.content, o.reward)})`);

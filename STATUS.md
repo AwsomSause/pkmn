@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 10, run 21, settings 4, meta 1. Next free versions: run 22, profile 11 (check `origin/main` first; another thread may have taken them).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 11, run 22, settings 4, meta 1. Next free versions: run 23, profile 12 (check `origin/main` first; another thread may have taken them).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -24,6 +24,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 10, run
 - Trainer quests (plan Part 2b + Part 0): claim ledger `profile.claims` (pays once), per-trainer counters, 29 five-step quest lines (`trainerQuests.json`, built by `npm run data:quests`), 22 Run Quests (one per run, own seed stream; briefing shows it). Hub > Trainers > Trainer Quests. Special trainers' last step unlocks their Trainer Evolution (`evolution:<id>` claim). Profile v8, run v18.
 - Weekly game events (plan Part 4b): 9 weekly events rotate by ISO week (UTC), each with rules, featured map events, objectives and a once-only reward (`core/gameEvents.ts`, `gameEvents.json`). Hub > Events > Event Hall.
 - Holiday events and the Spooky pack (plan Part 4b): 12 yearly holiday/themed events with their own stops, the Event Archive (one missed holiday back each week), the Spooky Set and the Hex Maniac trainer as Spooky Season's reward.
+- Part 5 extras: Challenge Contracts (Empty Bag, No Rest), the Research Directive prep row, and the Wardrobe (titles and card frames). Saves: profile v11, run v22.
 - Trainer Evolutions (plan Part 2c): Champion Red, Champion Blue, Champion Cynthia, Rocket Boss Giovanni, King N, Champion Oak unlock from quest lines; each has its own mechanic (`core/trainerEvolution.ts`).
 - Species Mastery (plan Part 3): every species ranks Seen → Master from its runs (`core/mastery.ts`); a family's rank unlocks egg moves, Hidden Ability, ability choice and an awakened move for Pokémon of it that join; ranks pay Research Points once; "Mastered" starter set. Hub > Unlocks > Species Mastery.
 - Trainer identity (plan Part 2a): signature types/species/set on `archetypes.json`; a signature Pokémon may take the last starter slot (50%, own seed, never forced); Cynthia (sees gym teams), Oak (+50% Research Points, sees wild Pokémon, −15% money) and N (+50% friendship) are playable.
