@@ -19,7 +19,7 @@ import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
 import { itemVisual, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
-import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, textStyle } from '../ui/theme';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
@@ -27,6 +27,8 @@ import { planCues } from '../core/presentation/cues';
 import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
+import { addAmbience, ambienceFor } from '../ui/battleFx/ambience';
+import { AERO, bounceIn, breathe, categoryIcon, drawGlass, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -63,6 +65,8 @@ export class BattleScene extends Phaser.Scene {
   private menu: Menu | null = null;
   private picker: Picker | null = null;
   private moveInfo!: Phaser.GameObjects.Text;
+  /** The focused move's type label and category icon (Essentials art). */
+  private moveBadges: Phaser.GameObjects.Container | null = null;
   private commandWindow!: Phaser.GameObjects.Graphics;
   private playerBox!: InfoBox;
   private enemyBox!: InfoBox;
@@ -137,6 +141,8 @@ export class BattleScene extends Phaser.Scene {
       const key = `${bg}.${side}`;
       if (assets.has(key) && this.textures.exists(key)) this.field.add(this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE));
     }
+    // Drifting clouds, bubbles, snow or embers over the arena (EBDX scenery).
+    addAmbience(this, this.field, this.field.length, ambienceFor(bg), this.motion);
     this.fieldBase = this.field.length;
     this.fx = new BattleFx(this, {
       field: this.field,
@@ -151,12 +157,10 @@ export class BattleScene extends Phaser.Scene {
     this.updateHeader();
 
     // PokeRogue's message bar along the bottom, with the command window on its right.
-    if (this.textures.exists('ui.message_bg')) {
-      this.add.image(0, MESSAGE_Y, 'ui.message_bg').setOrigin(0).setScale(PIXEL_SCALE).setCrop(0, 0, 320, 48);
-    } else {
-      drawPanel(this, 0, MESSAGE_Y, GAME_WIDTH, GAME_HEIGHT - MESSAGE_Y);
-    }
-    this.commandWindow = drawPanel(this, COMMAND_X, MESSAGE_Y, GAME_WIDTH - COMMAND_X, GAME_HEIGHT - MESSAGE_Y).setVisible(false);
+    // A glossy glass message bar (Aero), with the command window on its right.
+    const bar = drawGlass(this, 8, MESSAGE_Y + 8, GAME_WIDTH - 16, GAME_HEIGHT - MESSAGE_Y - 16, { radius: 22 });
+    slideIn(this, bar, 0, 60, this.motion);
+    this.commandWindow = drawGlass(this, COMMAND_X, MESSAGE_Y + 14, GAME_WIDTH - COMMAND_X - 16, GAME_HEIGHT - MESSAGE_Y - 28, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 18 }).setVisible(false);
     this.message = this.add.text(36, MESSAGE_Y + 24, '', textStyle(30, COLORS.textLight, { wordWrap: { width: 520 }, lineSpacing: 6 }));
     this.moveInfo = this.add.text(COMMAND_X + 30, MESSAGE_Y + 24, '', textStyle(24, COLORS.textLight, { lineSpacing: 8 })).setVisible(false);
 
@@ -164,6 +168,11 @@ export class BattleScene extends Phaser.Scene {
     this.input.on('pointerdown', () => this.advance?.());
 
     void this.intro();
+  }
+
+  /** How much motion the player allows (the battle animation setting). */
+  private get motion(): MotionLevel {
+    return services().session.settings.battleAnimations;
   }
 
   private get run(): RunState {
@@ -227,18 +236,32 @@ export class BattleScene extends Phaser.Scene {
     // Gigantamax art is already drawn huge, so only a plain Dynamax grows.
     const grow = mon.dynamaxed && species.form?.kind !== 'gigantamax' ? DYNAMAX_SCALE : 1;
     if (side === 'player') {
-      this.playerSprite?.destroy();
+      this.dropSprite(this.playerSprite);
       this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, (PIXEL_SCALE + 1) * grow, mon.shiny);
       this.field.add(this.playerSprite);
       this.prefetchMoves(mon);
+      this.liven(this.playerSprite, cry);
       return this.playerSprite;
     }
-    this.enemySprite?.destroy();
+    this.dropSprite(this.enemySprite);
     this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE * grow, mon.shiny);
     // The foe stands behind the player's Pokémon.
     this.field.addAt(this.enemySprite, this.fieldBase);
     this.prefetchMoves(mon);
+    this.liven(this.enemySprite, cry);
     return this.enemySprite;
+  }
+
+  private dropSprite(visual: Visual | null): void {
+    if (!visual) return;
+    this.tweens.killTweensOf(visual);
+    visual.destroy();
+  }
+
+  /** A bouncy entrance (when it is sent out) and then a slow idle breath. */
+  private liven(visual: Visual, entering: boolean): void {
+    if (entering) bounceIn(this, visual, this.motion);
+    breathe(this, visual, this.motion, entering ? 450 : 0);
   }
 
   /** Starts loading the animations of a Pokémon's moves while the player reads. */
@@ -264,14 +287,13 @@ export class BattleScene extends Phaser.Scene {
 
   private makeInfoBox(x: number, y: number, isPlayer: boolean): InfoBox {
     const container = this.add.container(x, y);
-    const art = isPlayer ? 'ui.pbinfo_player' : 'ui.pbinfo_enemy';
-    if (this.textures.exists(art)) {
-      // PokeRogue's info box art (130×42 for the player, 130×31 for the foe), drawn 3× larger.
-      container.add(this.add.image(0, 0, art).setOrigin(0).setScale(PIXEL_SCALE));
-    } else {
-      container.add(drawPanel(this, isPlayer ? 18 : 0, 12, 372, isPlayer ? 102 : 66));
-    }
-    // Text and bar positions follow the art's slots (art pixel × 3).
+    // A glossy glass databox (Aero), cyan-rimmed for you and pink-rimmed for the foe.
+    container.add(
+      isPlayer
+        ? drawGlass(this, 16, 2, 366, 128, { rim: AERO.rim, radius: 20 })
+        : drawGlass(this, 6, 4, 360, 100, { rim: AERO.neon, tint: 0x2a1240, radius: 20 }),
+    );
+    // Text and bar positions follow the old art's slots (art pixel × 3).
     const left = isPlayer ? 48 : 24;
     const right = isPlayer ? 366 : 342;
     const name = this.add.text(left, 14, '', textStyle(26));
@@ -298,6 +320,7 @@ export class BattleScene extends Phaser.Scene {
   private refreshInfoBox(box: InfoBox, mon: PokemonInstance, animate: boolean): Promise<void> {
     const content = services().session.content;
     const max = calcStats(content, mon).hp;
+    if (!box.container.visible) slideIn(this, box.container, box === this.playerBox ? 420 : -420, 0, this.motion);
     box.container.setVisible(true);
     box.name.setText(`${this.speciesName(mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
@@ -306,7 +329,9 @@ export class BattleScene extends Phaser.Scene {
     box.statusBadge = undefined;
     if (mon.status) {
       const s = STATUS_LABELS[mon.status.id]!;
-      box.statusBadge = badge(this, box.statusAt.x, box.statusAt.y, s.label, s.color, 16);
+      // Essentials' status icon when the art is there, else a coloured label.
+      const icon = statusIcon(this, 0, 0, mon.status.id, 1.75);
+      box.statusBadge = icon ? this.add.container(box.statusAt.x, box.statusAt.y - 2, [icon]) : badge(this, box.statusAt.x, box.statusAt.y, s.label, s.color, 16);
       box.container.add(box.statusBadge);
     }
     box.teraBadge?.destroy();
@@ -398,6 +423,8 @@ export class BattleScene extends Phaser.Scene {
     this.picker?.close();
     this.picker = null;
     this.moveInfo.setVisible(false);
+    this.moveBadges?.destroy();
+    this.moveBadges = null;
     this.commandWindow.setVisible(false);
     this.message.setVisible(true);
   }
@@ -510,6 +537,8 @@ export class BattleScene extends Phaser.Scene {
       itemHeight: 50,
       fontSize: 30,
       color: COLORS.textLight,
+      // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
+      glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8], motion: this.motion },
       onSelect: (i) => {
         if (i === 0) this.showMoveMenu();
         else if (i === 1) this.openBag();
@@ -554,16 +583,36 @@ export class BattleScene extends Phaser.Scene {
       itemHeight: 50,
       fontSize: 28,
       color: COLORS.textLight,
+      // Each move sits on a glass pill in its type's colour.
+      glass: {
+        tints: options.map((_, i) => {
+          const slot = mon.moves[i];
+          const move = slot ? (zMoves?.[i] ?? maxMoves?.[i] ?? content.moves.get(slot.id)) : undefined;
+          return move ? mixColor(TYPE_COLORS[move.type] ?? 0x888888, 0x000000, 0.35) : undefined;
+        }),
+        motion: this.motion,
+      },
       onFocus: (i) => {
+        this.moveBadges?.destroy();
+        this.moveBadges = null;
         const slot = mon.moves[i];
         if (!anyPp || !slot) {
-          this.moveInfo.setText('Your Pokémon has no PP left');
+          this.moveInfo.setText('Your Pokémon has no PP left').setY(MESSAGE_Y + 30);
           return;
         }
         const move = zMoves?.[i] ?? maxMoves?.[i] ?? content.moves.get(slot.id)!;
         const power = move.power ?? fixedDamageLabel(move.effects.fixedDamage);
-        this.moveInfo.setText(`PP  ${slot.pp}/${maxPp(content, slot)}\n${move.type.toUpperCase()}  ·  ${move.category}\nPower ${power}`);
-        this.moveInfo.setColor(Phaser.Display.Color.IntegerToColor(TYPE_COLORS[move.type] ?? 0xffffff).rgba);
+        // Type label and category icon from Essentials; plain text if the art is missing.
+        const type = typeLabel(this, 0, 0, move.type, 1.5);
+        const cat = categoryIcon(this, 120, 0, move.category, 1.5);
+        const art = [type, cat].filter((o): o is Phaser.GameObjects.Image => o !== null);
+        const label = art.length === 2 ? '' : `${move.type.toUpperCase()}  ·  ${move.category}\n`;
+        if (art.length === 2) {
+          this.moveBadges = this.add.container(COMMAND_X + 28, MESSAGE_Y + 46, art);
+          bounceIn(this, this.moveBadges, this.motion);
+        } else art.forEach((o) => o.destroy());
+        this.moveInfo.setText(`${label}PP  ${slot.pp}/${maxPp(content, slot)}\nPower ${power}`).setY(art.length === 2 ? MESSAGE_Y + 70 : MESSAGE_Y + 30);
+        this.moveInfo.setColor(COLORS.textLight);
       },
       onSelect: (i) => {
         const transform = this.transformChoice;
@@ -784,9 +833,11 @@ export class BattleScene extends Phaser.Scene {
         case 'faint':
           mon!.hp = 0;
           playSfx(this, 'se.faint');
+          if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, y: sprite.y + 30, duration: 400 });
           break;
         case 'switchOut':
+          if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, duration: 250 });
           break;
         case 'switchIn': {
@@ -924,6 +975,7 @@ export class BattleScene extends Phaser.Scene {
     playSfx(this, 'se.ball_throw');
     const targetY = ENEMY_POS.y - 60;
     await tween(this, { targets: ball, x: ENEMY_POS.x, y: targetY, duration: 450, ease: 'Quad.easeOut' });
+    if (this.enemySprite) this.tweens.killTweensOf(this.enemySprite);
     if (this.enemySprite) await tween(this, { targets: this.enemySprite, scale: 0.01, alpha: 0, duration: 250 });
     await tween(this, { targets: ball, y: ENEMY_POS.y - 20, duration: 250, ease: 'Bounce.easeOut' });
     for (let i = 0; i < shakes; i++) {

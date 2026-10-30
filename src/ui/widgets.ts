@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import { BAR_SHADES, COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, mixColor, textStyle } from './theme';
 import { playSfx } from './audio';
 import type { InputAction } from './input';
+import { AERO, paintGlass, type MotionLevel } from './aero';
 
 const U = PIXEL_SCALE;
 
@@ -141,6 +142,11 @@ export interface MenuConfig {
   onSelect: (index: number) => void;
   onFocus?: (index: number) => void;
   onBack?: () => void;
+  /**
+   * Opt-in Aero look: each option sits on a glossy glass pill (optionally
+   * tinted per option) and the focused one glows and bounces.
+   */
+  glass?: { tints?: (number | undefined)[]; motion?: MotionLevel };
 }
 
 /**
@@ -157,6 +163,7 @@ export class Menu {
   private readonly columns: number;
   private readonly itemWidth: number;
   private readonly itemHeight: number;
+  private readonly pills: Phaser.GameObjects.Graphics[] = [];
 
   constructor(private readonly scene: Phaser.Scene, private readonly config: MenuConfig) {
     this.columns = config.columns ?? 1;
@@ -164,6 +171,13 @@ export class Menu {
     this.itemHeight = config.itemHeight ?? 44;
     const size = config.fontSize ?? 28;
     this.container = scene.add.container(config.x, config.y);
+    if (config.glass) {
+      config.options.forEach((_, i) => {
+        const pill = scene.add.graphics();
+        this.pills.push(pill);
+        this.container.add(pill);
+      });
+    }
     config.options.forEach((opt, i) => {
       const { x, y } = this.position(i);
       const text = scene.add
@@ -195,6 +209,29 @@ export class Menu {
     this.focus(first >= 0 ? first : 0, false);
   }
 
+  /** Top-left of option i inside the menu's container (for icons drawn on top). */
+  slot(i: number): { x: number; y: number } {
+    return this.position(i);
+  }
+
+  private paintPills(focused: number): void {
+    const size = this.config.fontSize ?? 28;
+    this.pills.forEach((pill, i) => {
+      const { x, y } = this.position(i);
+      const opt = this.config.options[i]!;
+      const tint = this.config.glass?.tints?.[i] ?? AERO.glass;
+      const on = i === focused && !opt.disabled;
+      pill.clear();
+      paintGlass(pill, x - 4, y - 8, this.itemWidth - 12, Math.max(size + 14, this.itemHeight - 8), {
+        tint: on ? tint : mixColor(tint, AERO.glass, 0.45),
+        rim: on ? AERO.rim : 0x9fb8d0,
+        alpha: opt.disabled ? 0.45 : on ? 1 : 0.7,
+        glow: on,
+        radius: 20,
+      });
+    });
+  }
+
   private position(i: number): { x: number; y: number } {
     return { x: (i % this.columns) * this.itemWidth, y: Math.floor(i / this.columns) * this.itemHeight };
   }
@@ -205,6 +242,15 @@ export class Menu {
     this.index = i;
     const { x, y } = this.position(i);
     this.cursor.setPosition(x + 4, y + this.cursorOffsetY);
+    if (this.config.glass) {
+      this.paintPills(i);
+      const label = this.labels[i];
+      if (label && this.config.glass.motion === 'full') {
+        this.scene.tweens.killTweensOf(label);
+        label.setScale(1);
+        this.scene.tweens.add({ targets: label, scale: 1.08, duration: 110, yoyo: true, ease: 'Back.easeOut' });
+      }
+    }
     this.config.onFocus?.(i);
   }
 
