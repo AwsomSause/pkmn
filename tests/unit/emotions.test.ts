@@ -55,7 +55,7 @@ describe('memories carry emotion tags', () => {
 
   it('every Hyper moment that changes your side has at least one emotion', () => {
     for (const def of content.story.definitions) {
-      if (def.category === 'enemy' && def.triggerConditions.trigger === 'enemyRiledUp') continue;
+      if (def.category === 'enemy') continue;
       expect(def.emotions.length, def.id).toBeGreaterThan(0);
     }
   });

@@ -926,6 +926,38 @@
   "shared-rival": {
    "status": "limited",
    "note": "Up to 3 rivals can target the player; each does not yet have its own interpretation of a win."
+  },
+  "rival-to-rival-pok-mon-influence": {
+   "status": "limited",
+   "note": "Enemy rivals' Pok\u00e9mon spar off-screen: the winner gains confidence, the loser loses it (bonds). No battle preferences yet."
+  },
+  "training-exchange": {
+   "status": "limited",
+   "note": "Friends and partners swap methods: each drifts toward the other on the trait where they differ most."
+  },
+  "rivalry-triangle": {
+   "status": "limited",
+   "note": "Beating a rival moves its graph neighbours: a vindictive friend wants revenge (+potential), an enemy is spurred on (+potential)."
+  },
+  "rival-s-substitute": {
+   "status": "limited",
+   "note": "A worn-out ace sits out its return; the next Pok\u00e9mon leads and the player is told."
+  },
+  "legacy-encounter": {
+   "status": "limited",
+   "note": "A rival that remembers a close last battle says so before the rematch. It does not rebuild the circumstances."
+  },
+  "public-reputation-system": {
+   "status": "limited",
+   "note": "Derived from bonds and ambition (respected/feared/disliked); shown on the Story screen. Other trainers do not react in battle yet."
+  },
+  "signature-technique": {
+   "status": "limited",
+   "note": "After two fights a rival's battle habit becomes its known tell (Story screen). It is flavour; it does not change moves."
+  },
+  "conflicting-account": {
+   "status": "limited",
+   "note": "Distorted rumours say a second account differs; the player is not told which is right. No investigation yet."
   }
  }
 }

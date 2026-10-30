@@ -26,6 +26,7 @@ export const RivalConfigSchema = z.object({
   states: z.object({ recurringAt: z.number(), activeAt: z.number(), nemesisAt: z.number(), nemesisMinVindictiveness: z.number(), contenderAt: z.number(), contenderMinAmbition: z.number() }),
   outcomes: z.object({ allyAt: z.number(), allyMinEncounters: z.number().int(), allyMinEmpathy: z.number(), allyMaxPride: z.number(), discourageMaxResilience: z.number(), discourageLoss: z.number(), retireAtSetbacks: z.number().int() }),
   world: z.object({ unseenWinBase: z.number(), progressCap: z.number().int(), unseenWinPotential: z.number(), privateGoalChance: z.number(), privateGoalMinAmbition: z.number(), fragileResilience: z.number(), toughResilience: z.number(), edgeChance: z.number(), distortedRumorChance: z.number(), friendMinEmpathy: z.number(), rivalMinAmbition: z.number() }),
+  relations: z.object({ exchangeChance: z.number(), exchangeShift: z.number(), influenceConfidence: z.number(), triangleGain: z.number(), triangleMinVindictiveness: z.number(), substituteStrain: z.number(), legacyCloseNote: z.boolean() }),
   ultimate: z.object({
     weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),
     minEncounters: z.number().int().min(0),

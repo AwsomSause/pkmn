@@ -16,6 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
+import { freshDrama } from '../drama/schema';
 import type { TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
 import { TYPE_NAMES } from '../contentSchema';
@@ -228,6 +229,7 @@ export function createBattle(
     enemyTeam,
     enemyIndex: 0,
     trainer,
+    drama: freshDrama(),
     playerStages: freshStages(),
     enemyStages: freshStages(),
     playerVolatile: freshVolatile(),

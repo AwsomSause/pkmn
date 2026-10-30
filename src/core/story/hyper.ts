@@ -11,7 +11,7 @@ import type { RunState } from '../state';
 import type { HyperChance, PokemonHistory, StoryEffectSpec, StoryTriggerKind } from './schema';
 
 /** The one effect the engine knows for each trigger (checked when content loads). */
-export const HYPER_EFFECTS: Record<StoryTriggerKind, StoryEffectSpec['kind']> = {
+export const HYPER_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['kind']>> = {
   toughenedItOut: 'endure',
   feltABond: 'endureOrCure',
   pushedBackUp: 'revive',

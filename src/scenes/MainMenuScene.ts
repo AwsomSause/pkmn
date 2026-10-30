@@ -75,6 +75,12 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.cycleSpeed(),
     });
 
+    const talkLabels = { off: 'Off', low: 'Low', normal: 'Normal', high: 'High' } as const;
+    options.push({
+      option: { label: `Trainer talk: ${talkLabels[session.settings.dialogueFrequency]}` },
+      action: () => this.cycleTalk(),
+    });
+
     this.menu = new Menu(this, {
       x: 78,
       y: 206,
@@ -120,6 +126,15 @@ export class MainMenuScene extends Phaser.Scene {
     const order = ['full', 'reduced', 'off'] as const;
     const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleAnimations: next });
+    this.scene.restart({ focus: this.menu.index });
+  }
+
+  /** Trainer dialogue: normal → high → off → low. */
+  private cycleTalk(): void {
+    const { session } = services();
+    const order = ['normal', 'high', 'off', 'low'] as const;
+    const next = order[(order.indexOf(session.settings.dialogueFrequency) + 1) % order.length]!;
+    session.saveSettings({ ...session.settings, dialogueFrequency: next });
     this.scene.restart({ focus: this.menu.index });
   }
 

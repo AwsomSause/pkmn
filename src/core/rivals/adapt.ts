@@ -12,6 +12,7 @@ import { revisedTeam, type RematchEffect } from '../story/returns';
 import type { EnemyProfile, Rival } from '../story/schema';
 import { bondNote, bondShift } from './bonds';
 import { isHostile } from './outcome';
+import { legacyNote, substitute } from './relations';
 import { rivalMods } from './profile';
 
 /** The story flag holding the region a rival last came back in. */
@@ -52,6 +53,15 @@ export interface RivalReturn {
 
 /** The rival's team for its return: its old Pokémon at the new levels, with one counter-pick. */
 export function rivalReturn(content: Content, run: RunState, rival: Rival, plan: TrainerPlan, effect: RematchEffect): RivalReturn {
+  const base = baseReturn(content, run, rival, plan, effect);
+  // A worn-out ace sits out; a rival that remembers a close battle says so.
+  const sub = substitute(content, run, rival, base.plan.members);
+  const members = sub ? sub.order.map((i) => base.plan.members[i]!) : base.plan.members;
+  const note = [base.note, sub?.note, legacyNote(rival)].filter(Boolean).join(' ') || null;
+  return { plan: { ...base.plan, members }, note };
+}
+
+function baseReturn(content: Content, run: RunState, rival: Rival, plan: TrainerPlan, effect: RematchEffect): RivalReturn {
   const profile: EnemyProfile = {
     id: rival.id,
     name: rival.name,
