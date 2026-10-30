@@ -208,12 +208,17 @@ export class TrainerSelectScene extends Phaser.Scene {
       this.tweens.add({ targets: sprite, alpha: 1, duration: 200 });
     }
 
-    let y = 258;
+    // Everything below the picture goes in one layer that shrinks to fit the panel
+    // when a trainer has a lot to say (long pros/cons, record, unlock text).
+    const TOP = 258;
+    const lower = add(this.add.container(0, 0));
+    const addLow = <T extends Phaser.GameObjects.GameObject>(o: T): T => (lower.add(o), o);
+    let y = TOP;
     const section = (label: string, lines: string[], color: string) => {
-      add(this.add.text(36, y, label, textStyle(20, color)));
+      addLow(this.add.text(36, y, label, textStyle(20, color)));
       y += 22;
       for (const line of lines) {
-        const t = add(this.add.text(44, y, line, textStyle(16, COLORS.textLight, { wordWrap: { width: LEFT_W - 52 } })));
+        const t = addLow(this.add.text(44, y, line, textStyle(16, COLORS.textLight, { wordWrap: { width: LEFT_W - 52 } })));
         y += t.height + 2;
       }
       y += 6;
@@ -225,22 +230,28 @@ export class TrainerSelectScene extends Phaser.Scene {
       if (strong.length + weak.length > 0) {
         let bx = 36;
         for (const [type, up] of [...strong.map((t) => [t, true] as const), ...weak.map((t) => [t, false] as const)]) {
-          const b = add(badge(this, bx, y, `${up ? '+' : '−'}${type}`, TYPE_COLORS[type] ?? 0x808080, 14));
+          const b = addLow(badge(this, bx, y, `${up ? '+' : '−'}${type}`, TYPE_COLORS[type] ?? 0x808080, 14));
           bx += b.width + 6;
         }
         y += 30;
       }
-      const summary = add(this.add.text(36, y, a.description, textStyle(16, COLORS.textMuted, { wordWrap: { width: LEFT_W - 44 } })));
+      const summary = addLow(this.add.text(36, y, a.description, textStyle(16, COLORS.textMuted, { wordWrap: { width: LEFT_W - 44 } })));
       y += summary.height + 12;
       // This trainer's record from past runs.
       const runs = services().session.profile.runHistory.filter((r) => r.archetypeId === a.id);
       const best = runs.reduce((m, r) => Math.max(m, r.regionsCleared), 0);
       const wins = runs.filter((r) => r.victory).length;
-      add(this.add.text(36, y, 'Record', textStyle(20, COLORS.gold)));
-      add(this.add.text(44, y + 24, runs.length === 0 ? 'No runs yet' : `${runs.length} run${runs.length === 1 ? '' : 's'}  ·  ${wins} won  ·  best ${best} region${best === 1 ? '' : 's'}`, textStyle(16)));
+      addLow(this.add.text(36, y, 'Record', textStyle(20, COLORS.gold)));
+      addLow(this.add.text(44, y + 24, runs.length === 0 ? 'No runs yet' : `${runs.length} run${runs.length === 1 ? '' : 's'}  ·  ${wins} won  ·  best ${best} region${best === 1 ? '' : 's'}`, textStyle(16)));
     } else {
       const how = slot.status === 'comingLater' ? `${a.name} arrives in a later update.` : `How to unlock: ${a.unlockText}${a.unlockCost ? `, then ${a.unlockCost} Bank Credits in the Trainer Archive` : ''}.`;
-      add(this.add.text(36, y, how, textStyle(20, COLORS.textLight, { wordWrap: { width: LEFT_W - 44 } })));
+      addLow(this.add.text(36, y, how, textStyle(20, COLORS.textLight, { wordWrap: { width: LEFT_W - 44 } })));
+    }
+    const bottom = lower.getBounds().bottom;
+    const room = GAME_HEIGHT - 32 - TOP;
+    if (bottom > GAME_HEIGHT - 32 && bottom > TOP) {
+      const k = Math.max(0.6, room / (bottom - TOP));
+      lower.setScale(k).setPosition(36 * (1 - k), TOP * (1 - k));
     }
   }
 

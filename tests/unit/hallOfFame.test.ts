@@ -37,12 +37,12 @@ describe('Hall of Fame', () => {
     expect(hof.records.find((r) => r.label === 'Fastest win')!.value).toBe('—');
   });
 
-  it('an older (version 10) profile keeps its Run History, with no epitaphs, cards or shinies', () => {
+  it('a version 11 profile keeps its Run History, with no epitaphs, cards or shinies', () => {
     const storage = new MemoryStorageProvider();
     const old = createProfile(content, 'old') as Record<string, unknown>;
     const { epitaph: _e, legacy: _l, party: _p, ...run } = record({ runId: 'old-run', victory: true });
     old.runHistory = [{ ...run, party: [{ speciesId: 'pikachu', level: 40 }] }];
-    storage.set('pkr.profile', JSON.stringify({ format: 'pkmn-roguelike', record: 'profile', schemaVersion: 10, savedAt: '', data: old }));
+    storage.set('pkr.profile', JSON.stringify({ format: 'pkmn-roguelike', record: 'profile', schemaVersion: 11, savedAt: '', data: old }));
     const { profile, warning } = new SaveManager(storage, content).loadOrCreateProfile(() => 'new');
     expect(warning).toBeUndefined();
     expect(profile.runHistory[0]).toMatchObject({ runId: 'old-run', epitaph: null, legacy: [], party: [{ speciesId: 'pikachu', level: 40, shiny: false }] });
