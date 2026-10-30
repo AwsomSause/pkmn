@@ -2,7 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { createProfile, finalizeRun } from '../../src/core/profile';
-import { RIVAL_SEEN_ANY, rivalSeenFlag, scheduleKey, waitingRival } from '../../src/core/rivals/adapt';
+import { allianceFlag, allianceHelp, formAlliances, grudgeType, identityNote, mentorType } from '../../src/core/rivals/relations';
+import { withTeamTypes, RIVAL_SEEN_ANY, rivalSeenFlag, scheduleKey, waitingRival } from '../../src/core/rivals/adapt';
 import { applyLegacy, archiveRivals, legacyLine, pickLegacyRival } from '../../src/core/rivals/legacy';
 import { RIVAL_CONFIG } from '../../src/core/rivals/schema';
 import { chooseStarter, createRun } from '../../src/core/run';
@@ -111,5 +112,63 @@ describe('rival archive and legacy layer', () => {
     const loaded = saves.loadOrCreateProfile(() => 'fresh');
     expect(loaded.profile.rivalArchive).toEqual([]);
     expect(loaded.warning ?? '').toBe('');
+  });
+});
+
+describe('alliance, mentor and team identity shift', () => {
+  const withGraph = (kind: 'friends' | 'enemies') => {
+    const a = rival('a', { memory: { lastBattle: { eventId: 'x', result: 'win', hpLeftShare: 0.8, turns: 5, team: ['pidgey', 'rattata'] } } });
+    const b = rival('b', { memory: { lastBattle: { eventId: 'y', result: 'win', hpLeftShare: 0.8, turns: 5, team: ['charizard', 'rattata'] } } });
+    const run = runWith([a, b]);
+    run.story.rivalGraph = [{ a: 'a', b: 'b', kind }];
+    return run;
+  };
+  it('friends who both lost to you can ally; enemies never do; it forms once', () => {
+    let formed = 0;
+    for (let i = 0; i < 40; i++) {
+      const run = withGraph('friends');
+      run.seed = `al${i}`;
+      if (formAlliances(run, '0.1').length === 1) { formed++; expect(formAlliances(run, '0.2')).toHaveLength(0); }
+    }
+    expect(formed).toBeGreaterThan(3);
+    expect(formed).toBeLessThan(40);
+    const enemies = withGraph('enemies');
+    expect(formAlliances(enemies, '0.1')).toHaveLength(0);
+  });
+  it('an ally lends its best Pokémon for one battle, then they compete again', () => {
+    const run = withGraph('friends');
+    run.story.flags[allianceFlag('a', 'b')] = '0.1';
+    const plan = { classId: 'youngster', name: 'a', leaderId: null, members: [{ speciesId: 'pidgey', level: 10 }], levelInfo: [], ai: 0.3 } as never;
+    const out = allianceHelp(content, run, run.story.rivals[0]!, plan);
+    expect(out.plan.members.map((m) => m.speciesId)).toEqual(['pidgey', 'charizard']);
+    expect(out.note).toMatch(/lent/);
+    expect(run.story.flags[allianceFlag('a', 'b')]).toBe('ended');
+    expect(allianceHelp(content, run, run.story.rivals[0]!, plan).plan.members).toHaveLength(1);
+  });
+  it('a mentor type comes from the gym leader just beaten, only for adaptable rivals', () => {
+    const run = runWith([]);
+    run.usedLeaders = ['brock'];
+    const adaptable = rival('x', { traits: { ...traits, adaptability: 90 } });
+    const stubborn = rival('y', { traits: { ...traits, adaptability: 10 } });
+    let got = 0;
+    for (let i = 0; i < 40; i++) {
+      run.seed = `m${i}`;
+      const m = mentorType(content, run, adaptable, `${i}`);
+      if (m) { got++; expect(m).toEqual({ type: content.bosses.get('brock')!.types[0], by: 'Brock' }); }
+      expect(mentorType(content, run, stubborn, `${i}`)).toBeNull();
+    }
+    expect(got).toBeGreaterThan(3);
+  });
+  it('a grudge picks a type that resists your most-used type, and the roster includes it with a note', () => {
+    const run = runWith([]);
+    const r = rival('g', { setbacks: 3, traits: { ...traits, empathy: 10 } });
+    const t = grudgeType(content, run, r, 'fire')!;
+    expect(t).toBeTruthy();
+    expect(grudgeType(content, run, rival('kind', { setbacks: 3, traits: { ...traits, empathy: 90 } }), 'fire')).toBeNull();
+    r.identity = { type: t, source: 'grudge', by: 'g' };
+    const plan = { classId: 'youngster', name: 'g', leaderId: null, members: [{ speciesId: 'pidgey', level: 10 }, { speciesId: 'rattata', level: 10 }], levelInfo: [], ai: 0.3 } as never;
+    const withType = withTeamTypes(content, plan, [t as never]);
+    expect(withType.members.some((m) => content.species.get(m.speciesId)!.types.includes(t as never))).toBe(true);
+    expect(identityNote(content, r, withType).note).toMatch(/rebuilt the team/);
   });
 });
