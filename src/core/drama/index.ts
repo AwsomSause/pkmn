@@ -14,7 +14,7 @@ import { calcStats } from '../pokemon';
 import type { Rival } from '../story/schema';
 import { DRAMA, VOICES, pickIndex, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
 import { rivalBond } from './bond';
-import { libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
+import { pickWitness, libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 
 export * from './schema';
 
@@ -134,7 +134,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     if (n === 3) habit = { at: i, moveId: e.moveId, id: `${key}:t${turn}:e${i}:playerHabit` };
   }
 
-  const ctx: PlanCtx = { content, run, battle, prior, events, drama: dramaEvents, rival, voice, cls, turn, key, enemy, foeMon, habit, enemyName: name(enemy.speciesId), foeName: name(foeMon?.speciesId), bond: rivalBond(rival) };
+  const ctx: PlanCtx = { content, run, battle, prior, events, drama: dramaEvents, rival, voice, cls, turn, key, enemy, foeMon, habit, enemyName: name(enemy.speciesId), foeName: name(foeMon?.speciesId), bond: rivalBond(rival, enemy.speciesId), witness: pickWitness(run, battle, cls, !prior, key) };
   const candidates: Candidate[] = [];
   for (const ev of dramaEvents) {
     if (state.seen.includes(ev.id)) continue;
@@ -188,7 +188,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     if (c.def) recordLibraryEvent(ctx, c);
     if (c.def?.id === 'calmBeforeFinish') state.seen.push('quiet');
     if (hides(c.tier)) continue;
-    lines.push({ at: c.ev.at, speaker, text, category: c.category, tier: c.tier, voice, eventId: c.ev.id, cue: c.cue });
+    lines.push({ at: c.ev.at, speaker: c.speaker ?? speaker, text, category: c.category, tier: c.tier, voice, eventId: c.ev.id, cue: c.cue });
   }
   return lines.sort((a, b) => a.at - b.at);
 }

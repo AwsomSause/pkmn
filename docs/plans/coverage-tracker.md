@@ -34,7 +34,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Untitled doc Phase C–G rest | TODO: C prep slots (Field License, Research Directive, Challenge Contract) and effective-attribute layers (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
-| The Battle Drama Engine (9 phases) | DONE except planned events (see table below) |
+| The Battle Drama Engine (9 phases) | DONE except the 2 Overdrive events (see table below) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
 | Trainers.md perks | PART: batches 1–2 of 11 (40 of 220 trainers, Aaron to Canari); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
@@ -114,7 +114,7 @@ Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.tes
 | P3 Dialogue: voices, rival voice from traits, rival callbacks from real history, no repeats, budgets, observed player habit | DONE (limited: archetype/arc/bond-based picks and encouragement/post-battle callbacks TODO) |
 | P4 Signature attacks: 8 declaration styles (warning, signature, promise, desperate gamble, tactical call, showman, quiet threat, personal callback) chosen from the situation, only for named trainers / last Pokémon / low HP, once per Pokémon+move; aftermath reactions (hit, miss, KO); banner + sound that follow the animation settings. Presentation only | DONE (limited: no custom per-move camera/sound files; no declaration for the player's side) |
 | P5 Mid-battle evolution (`core/drama/evolution.ts`): a returning rival's ace is brought in one stage below its final form when already at its evolution level; it evolves at a turn boundary (turn 3+ or half HP) with the one `evolve()` implementation (status, damage taken, moves carry over; Everstone blocks; once per Pokémon, saved); trainer reacts, Chronicle entry, rival remembers it next battle; AI reads the new species/moves next decision | DONE (limited: rivals only; no separate "became eligible" event) |
-| P6 Event library `dramaEvents.json`: all 20 events of guide §5 listed with eligibility, severity, cooldown, rarity roll, Chronicle record and rival memory flag; 14 run now (Breakthrough Evolution, Last-Second Resolve [enemy Hyper], Tactical Revelation, Comeback Call, Ace Reveal, Failed Technique, Veteran's Adjustment, Desperate Switch, Unfinished Grudge, Mercy Moment, Breaking Point, Calm Before the Finish, Rematch Reversal, Unexpected Respect); 8 planned: Refusal, New Move, Unplanned Combination, Overdrive Breakthrough/Misfire (Overdrive thread), Rival Interruption, Pokémon Takes Initiative, Pokémon Recognition, Emotional Turning Point (need bond/autonomy/enemy-emotion systems) | PART |
+| P6 Event library `dramaEvents.json`: all 20 events of guide §5 + 2 extras, each with eligibility, severity, cooldown, rarity roll, Chronicle record, rival memory flag, optional fair AI shift / trait shift. 21 run: Last-Second Resolve, Refusal, New Move, Tactical Revelation, Comeback Call, Ace Reveal, Unplanned Combination, Failed Technique, Veteran's Adjustment, Desperate Switch, Rival Interruption, Unfinished Grudge, Mercy Moment, Breaking Point, Calm Before the Finish, Pokémon Takes Initiative, Rematch Reversal, Unexpected Respect, Pokémon Recognition, Emotional Turning Point, Breakthrough Evolution. 2 planned: Overdrive Breakthrough and Overdrive Misfire (owned by the Overdrive thread) | DONE except the 2 Overdrive events |
 | P7 Bond values (`core/drama/bond.ts`: trust, affection, respect, synchronization, confidence, autonomy, strain) derived from rival traits + record (the Bond Engine itself isn't built) gate Comeback Call, Mercy Moment, Breaking Point, Unfinished Grudge; they change who may speak / traits, never stats. Rival traits pick the voice; rivals bring up real earlier moments | DONE (limited: no Pokémon-specific personality until the Bond Engine) |
 | P8 Pacing director: tiers ambient/tactical/major/climactic, gaps, budgets by class, one big moment per turn, quiet after Calm Before the Finish; "Trainer talk" off/low/normal/high (settings v4: off hides all, low keeps major+, never changes what is recorded); animation speed + reduced motion already exist; lines are skippable like all battle text | DONE |
 | P9 Tests (`tests/unit/drama.test.ts`, 33): eligibility+cooldowns, voice differences, ordering, no duplicates, evolution + status/state, Hyper-gated Last-Second Resolve, rival callbacks from real history only, no hidden info, fair AI shift, save round trip, skip/hide (off/low), 3 scripted scenarios (ordinary, rival rematch, major evolution). Hyper/Overdrive breakthrough tests belong to the Overdrive thread | DONE (limited) |
@@ -161,3 +161,18 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
 
 - Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.
+
+### Bond Engine for your Pokémon (`src/core/bond/`, built for the Drama follow-up)
+The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do too, in the same `Bond` record, saved in the Pokémon's story history (`bond`, optional, created on first use).
+| Item | Status |
+|---|---|
+| Seven values + trait (12 traits shared with rival Pokémon), starting values by how it joined | DONE |
+| Growth and strain: faints strain, Hyper moments and knockouts deepen, won battles raise trust and sync | DONE |
+| Refusal: willful (autonomy 60+) and distrusting (trust 35−) Pokémon refuse a reckless order (a move that faints the user) once per battle; the turn is spent (`idle` action); foreshadowed by "(may refuse)" in the move list | DONE |
+| Pokémon Takes Initiative: sync 70+ and trust 60+ swaps an immune-target command for its best working move, once per battle | DONE |
+| Unplanned Combination: an open Bond relationship pair (sync 50+) hands over with +1 attacking stat; rivals with bonds do the same for their next Pokémon | DONE |
+| New Move: at half HP a trusted Pokémon (or a confident rival Pokémon) reveals the strongest valid learnset move, replacing its weakest if full | DONE |
+| Pokémon Recognition: rival memory now stores which of your Pokémon fought it (`foes`); its Pokémon recognises them | DONE |
+| Rival Interruption: a second living rival watches gym/boss/rival battles; a rival-graph tie or a rivalry step forms | DONE |
+| Emotional Turning Point: five feelings counted from real events for both sides; yours become tagged memories, a rival's trainer comments and remembers | DONE |
+| Bond screens (summary UI for the seven values), bond-based evolution/moves outside battle | TODO (UI belongs to the visual thread) |

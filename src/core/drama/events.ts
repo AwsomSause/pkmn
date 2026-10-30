@@ -32,6 +32,8 @@ export interface PlanCtx {
   enemyName: string;
   foeName: string;
   bond: Bond;
+  /** Another rival watching this big battle from the side (only when the battle starts). */
+  witness: Rival | undefined;
 }
 
 export interface Candidate {
@@ -43,6 +45,8 @@ export interface Candidate {
   def?: DramaEventDef;
   vars?: Record<string, string>;
   cue?: { event?: string; style?: string; moveId?: string };
+  /** Who says it, when not the trainer you are fighting. */
+  speaker?: string;
 }
 
 const flagCd = (id: string) => `drama:cd:${id}`;
@@ -160,6 +164,38 @@ export const CHECKS: Record<string, Check> = {
     const i = c.events.findIndex((e) => e.type === 'evolved' && e.side === 'enemy');
     return i >= 0 ? { at: i, vars: { foeMove: c.content.species.get((c.events[i] as { to: string }).to)?.name ?? 'it' } } : null;
   },
+  refusal: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'refused');
+    return i >= 0 ? { at: i } : null;
+  },
+  takesInitiative: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'initiative');
+    return i >= 0 ? { at: i } : null;
+  },
+  unplannedCombination: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'combo');
+    return i >= 0 ? { at: i } : null;
+  },
+  newMove: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'newMove');
+    const e = c.events[i];
+    return e && e.type === 'newMove' ? { at: i, vars: { foeMove: c.content.moves.get(e.moveId)?.name ?? 'a new move' } } : null;
+  },
+  emotionalTurningPoint: (c) => {
+    const i = c.events.findIndex((e) => e.type === 'turningPoint');
+    const e = c.events[i];
+    return e && e.type === 'turningPoint' ? { at: i, vars: { foeMove: e.emotion } } : null;
+  },
+  pokemonRecognition: (c) => {
+    const last = c.rival?.memory.lastBattle;
+    const foes = last?.foes ?? [];
+    if (!c.rival || !last || !last.team.includes(c.enemy.speciesId) || !c.foeMon || !foes.includes(c.foeMon.uid)) return null;
+    // At the start of the battle, or when that very Pokémon comes in.
+    if (!c.prior) return { at: -1 };
+    const send = c.drama.find((e) => e.kind === 'enemySwitch');
+    return send ? { at: send.at } : null;
+  },
+  rivalInterruption: (c) => (c.witness ? { at: -1 } : null),
   rematchReversal: (c) => (!c.prior && c.rival && c.rival.adaptations.length > 0 ? { at: -1 } : null),
   unexpectedRespect: (c) => {
     const ace = c.battle.enemyTeam[c.battle.enemyTeam.length - 1]?.uid;
@@ -201,6 +237,7 @@ export function libraryCandidates(c: PlanCtx): Candidate[] {
       def,
       vars: hit.vars,
       cue: { event: def.id },
+      speaker: def.id === 'rivalInterruption' && c.witness ? `${c.content.trainers.get(c.witness.classId)?.name ?? 'Trainer'} ${c.witness.name}` : undefined,
     });
   }
   return out;
@@ -209,6 +246,7 @@ export function libraryCandidates(c: PlanCtx): Candidate[] {
 /** Called when the director accepted a library event: cooldown, rival memory and Chronicle. */
 export function recordLibraryEvent(c: PlanCtx, cand: Candidate): void {
   const def = cand.def!;
+  if (def.id === 'rivalInterruption' && c.witness) witnessEffects(c);
   const flags = c.run.story.flags;
   c.battle.drama.seen.push(`ev:${def.id}`);
   flags[flagCd(def.id)] = battleNo(c.run);
@@ -244,4 +282,29 @@ export function memoryCallback(c: PlanCtx): Candidate | null {
   if (!best) return null;
   const remember = best.def.remember!;
   return { ev: { id: `${c.key}:t${c.turn}:e-1:memory`, kind: 'battleStart', turn: c.turn, at: -1, data: {} }, category: 'event', tier: 'major', pool: [remember], def: undefined, vars: { foeMove: best.move || 'that move' }, cue: { event: `memory:${best.def.id}` } };
+}
+
+/** Another rival who happens to be watching a big battle (gym, boss or rival fights; chosen by hashing the battle, never by gameplay RNG). */
+export function pickWitness(run: RunState, battle: BattleState, cls: BattleClass, atStart: boolean, key: string): Rival | undefined {
+  if (!atStart || cls === 'ordinary') return undefined;
+  const others = run.story.rivals.filter((r) => r.id !== battle.rivalId && r.state !== 'retired' && r.cooldown === 0);
+  if (others.length === 0 || pickIndex(`${key}|witness|roll`, 100) >= 50) return undefined;
+  return others[pickIndex(`${key}|witness`, others.length)];
+}
+
+function witnessEffects(c: PlanCtx): string {
+  const w = c.witness!;
+  const fighting = c.rival;
+  if (fighting) {
+    // The two rivals meet: how they feel about each other follows their traits.
+    const kind = w.traits.empathy >= 55 && fighting.traits.empathy >= 55 ? 'friends' : w.traits.pride >= 55 && w.traits.ambition >= 55 ? 'enemies' : 'partners';
+    const graph = c.run.story.rivalGraph;
+    const has = graph.some((g) => (g.a === w.id && g.b === fighting.id) || (g.a === fighting.id && g.b === w.id));
+    if (!has) graph.push({ a: w.id, b: fighting.id, kind });
+    return `${kind}`;
+  }
+  // Watching you fight makes the witness take more interest in you.
+  if (w.state === 'recognized') w.state = 'recurring';
+  else if (w.state === 'recurring') w.state = 'active';
+  return w.state;
 }
