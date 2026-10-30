@@ -502,6 +502,8 @@ export const BASE_COUNTER_NAMES = [
   'runQuestsDone',
   /** Raid dens and Totems beaten, and battles won against a rival. */
   'raidsWon',
+  /** Pokémon swapped at a Trade Post. */
+  'tradesMade',
   'totemsWon',
   'rivalBattlesWon',
   /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
@@ -512,11 +514,14 @@ export const BASE_COUNTER_NAMES = [
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
  * and enemy Pokémon defeated or caught, by each of their types, as "defeatedOrCaught.<type>".
+ * Trainer unlock feats: "bossWinsMono.<type>" (a boss won while every Pokémon in the party has that type) and "bossWinsSolo" (a boss won with a one-Pokémon party).
  */
 export const COUNTER_NAMES: readonly string[] = [
   ...BASE_COUNTER_NAMES,
   ...TYPE_NAMES.map((t) => `bossWinsLead.${t}`),
   ...TYPE_NAMES.map((t) => `defeatedOrCaught.${t}`),
+  ...TYPE_NAMES.map((t) => `bossWinsMono.${t}`),
+  'bossWinsSolo',
 ];
 export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes(s), { message: 'unknown counter' });
 
@@ -528,13 +533,21 @@ export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes
  *   achievement — another achievement has been earned
  *   claim       — a claim-ledger key exists (e.g. a game event's reward, "event:spooky-season:reward")
  */
-export const RequirementSchema = z.discriminatedUnion('kind', [
+const LeafRequirementSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('total'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('best'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('distinct'), set: z.enum(['speciesSeen', 'speciesCaught']), atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('achievement'), id: z.string() }),
   z.object({ kind: z.literal('claim'), key: z.string().min(1) }),
+  /** A species caught at least once (any run). */
+  z.object({ kind: z.literal('caught'), species: z.string().min(1) }),
 ]);
+export const RequirementSchema = z.union([
+  LeafRequirementSchema,
+  /** Every part must be met (trainer unlock challenges). */
+  z.object({ kind: z.literal('all'), parts: z.array(LeafRequirementSchema).min(2).max(4) }),
+]);
+export type LeafRequirement = z.infer<typeof LeafRequirementSchema>;
 export type Requirement = z.infer<typeof RequirementSchema>;
 
 /** What earning an achievement pays out. */
@@ -838,6 +851,12 @@ export const ArchetypeSchema = z.object({
   unlockText: z.string().default(''),
   /** Bank Credits to claim the trainer once its requirement is met. */
   unlockCost: z.number().int().min(0).default(0),
+  /** Difficulty of the unlock challenge, 1 (easy) to 5 (Champion-hard); set from trainerUnlocks.json. */
+  unlockTier: z.number().int().min(1).max(5).optional(),
+  /** A line of the trainer's voice shown with the challenge. */
+  unlockFlavor: z.string().optional(),
+  /** "supported" = the exact feat runs; "limited" = approximated with the closest counter (see the file's note). */
+  unlockStatus: z.enum(['supported', 'limited']).optional(),
   /** False for trainers whose passives need systems that don't exist yet; shown as "coming later". */
   available: z.boolean().default(true),
   spriteAssetId: z.string(),
@@ -2186,3 +2205,18 @@ export interface Content {
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }
+
+/** One trainer's unlock challenge (trainerUnlocks.json, built by `npm run data:trainer-unlocks`). */
+export const TrainerUnlockSchema = z.object({
+  trainerId: z.string(),
+  tier: z.number().int().min(1).max(5),
+  /** Plain-language challenge shown in the Trainer Archive. */
+  text: z.string().min(1),
+  flavor: z.string().min(1),
+  requirement: RequirementSchema,
+  cost: z.number().int().min(0),
+  status: z.enum(['supported', 'limited']),
+  /** For "limited": what the closest counter leaves out. */
+  note: z.string().optional(),
+});
+export const TrainerUnlocksFileSchema = z.object({ unlocks: z.array(TrainerUnlockSchema) });
