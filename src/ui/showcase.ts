@@ -23,15 +23,16 @@ export function arenaKeys(scene: Phaser.Scene): string[] {
  * sits there (for a Pokémon to stand on).
  */
 export class ArenaBackdrop {
-  private readonly keys: string[];
+  private keys: string[];
   private index: number;
   private layer: Phaser.GameObjects.Container | null = null;
 
   constructor(
     private readonly scene: Phaser.Scene,
-    private readonly opts: { platformAt?: { x: number; y: number }; dim?: number; everyMs?: number } = {},
+    private readonly opts: { platformAt?: { x: number; y: number }; dim?: number; everyMs?: number; only?: string } = {},
   ) {
     this.keys = arenaKeys(scene).sort();
+    if (opts.only && this.keys.includes(opts.only)) this.keys = [opts.only];
     if (this.keys.length === 0 && scene.textures.exists('bg.battle')) this.keys.push('bg.battle');
     // Pick up where the clock says, so moving between screens keeps the same arena.
     this.index = this.keys.length > 0 ? Math.floor(Date.now() / (opts.everyMs ?? 6500)) % this.keys.length : 0;

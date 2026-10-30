@@ -31,3 +31,15 @@ export function setCardFrame(current: Profile, id: string): Profile {
   if (!frameOpen(current, frame)) throw new Error(`The ${frame.name} frame isn't open yet: ${frame.unlockText}`);
   return { ...current, cardFrame: id };
 }
+
+/** Title-screen arenas open once you have earned any run-end stamp (catalog #111). */
+export const arenasOpen = (profile: Pick<Profile, 'stamps'>): boolean => Object.values(profile.stamps ?? {}).some((n) => n > 0);
+
+/** Picks the title-screen arena (null = cycle through all). Returns a new profile. */
+export function setMenuArena(current: Profile, key: string | null): Profile {
+  if (key !== null && !arenasOpen(current)) throw new Error('Earn a run-end stamp to open the arenas.');
+  const next = { ...current };
+  if (key === null) delete next.menuArena;
+  else next.menuArena = key;
+  return next;
+}

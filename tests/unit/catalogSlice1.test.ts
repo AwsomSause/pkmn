@@ -82,3 +82,16 @@ describe('Run-end stamps (#111)', () => {
     expect(runStamps(run)).not.toContain('Untouched');
   });
 });
+
+describe('Stamp collection and title arenas (#111)', () => {
+  it('opens the arenas only once a stamp is earned, and the pick can be cleared', async () => {
+    const { arenasOpen, setMenuArena } = await import('../../src/core/wardrobe');
+    const profile = { stamps: {} } as never;
+    expect(arenasOpen(profile)).toBe(false);
+    expect(() => setMenuArena(profile, 'bg.arena.cave')).toThrow(/stamp/);
+    const earned = { stamps: { Victory: 1 } } as never;
+    const picked = setMenuArena(earned, 'bg.arena.cave');
+    expect(picked.menuArena).toBe('bg.arena.cave');
+    expect(setMenuArena(picked, null).menuArena).toBeUndefined();
+  });
+});
