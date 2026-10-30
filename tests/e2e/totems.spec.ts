@@ -52,7 +52,7 @@ test('a Totem territory shows its preview, then starts a Totem fight that surviv
   expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Map').picker))).toBe(true);
   await page.keyboard.press('Enter'); // challenge
   await waitForScene(page, 'Battle');
-  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').header.text), { timeout: 10_000 }).toContain('TOTEM');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').status.text), { timeout: 10_000 }).toContain('TOTEM');
   expect(await page.evaluate(() => (window as any).__pkr.session.run.totems.entered)).toBe(1);
 
   // Reload mid-fight: the Totem fight is still there, entered once.
