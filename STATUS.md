@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 10, settings 3, meta 1. Next free run version: 11 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 11, settings 3, meta 1. Next free run version: 12 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -27,6 +27,6 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 
 ## Biggest known gaps
 - 498 moves unsupported (terrain, rare moves); 170 items without effects.
-- Relationships/nemesis records exist but only rivalries and returning trainers create them.
+- Rivals slice 1 built (`src/core/rivals`, `src/data/rivals.json`): a flawless or close win over an ordinary trainer makes ONE rival (archetype, traits, memory of that battle; run save v11). Next: slice 2 counter-adaptation, slice 3 Chronicle screen. Relationships/nemesis records are still only created by rivalries and returning trainers.
 - Event types `traded`, `trainerEscaped`, `transformed`, `eventChoice` are defined but never emitted.
 - CI workflow exists but has never run on GitHub.
