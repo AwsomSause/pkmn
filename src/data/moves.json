@@ -8915,11 +8915,18 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Reduces weight and sharply raises Speed."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "avalanche",
@@ -9181,9 +9188,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May burn the opponent."
+  "effects": {
+   "status": {
+    "id": "brn",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "bleakwind-storm",
@@ -9197,9 +9207,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May lower opponent's Speed."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 30
+    }
+   ]
+  }
  },
  {
   "id": "block",
@@ -9299,9 +9316,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits multiple opponents and lowers their attack."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "breakneck-blitz",
@@ -9613,9 +9637,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May paralyze the opponent."
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "comeuppance",
@@ -9647,9 +9674,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "May lower opponent's Speed by one stage."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 10
+    }
+   ]
+  }
  },
  {
   "id": "continental-crush",
@@ -10008,9 +10042,13 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits twice in one turn; may cause flinching."
+  "effects": {
+   "hits": [
+    2,
+    2
+   ],
+   "flinchChance": 30
+  }
  },
  {
   "id": "double-shock",
@@ -10056,9 +10094,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User attacks twice."
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
  },
  {
   "id": "dragon-energy",
@@ -10090,9 +10131,7 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user uses its body like a hammer to attack the target and inflict damage."
+  "effects": {}
  },
  {
   "id": "dragon-rage",
@@ -10158,9 +10197,12 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user slams the target with its wings. The target is hit twice in a row."
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
  },
  {
   "id": "dynamax-cannon",
@@ -10554,9 +10596,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user strikes the target with a burning lash. This also lowers the target's Defense stat."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "fire-pledge",
@@ -10621,9 +10670,19 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent, but raises its Special Attack."
+  "effects": {
+   "confuse": {
+    "chance": 100
+   },
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": 2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "fling",
@@ -11560,9 +11619,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user attacks by hurling a blizzard-cloaked icicle lance at opposing Pokémon."
+  "effects": {}
  },
  {
   "id": "glaive-rush",
@@ -11676,9 +11733,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers the opponent's Defense stat."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "gravity",
@@ -12008,9 +12072,7 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user fiercely attacks the target using its entire body."
+  "effects": {}
  },
  {
   "id": "high-jump-kick",
@@ -12056,13 +12118,20 @@
   "pp": 40,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Attack of allies."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "hydro-steam",
@@ -12129,9 +12198,16 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user swings and hits with its strong, heavy fist. It lowers the user's Speed, however."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "ice-spinner",
@@ -12460,9 +12536,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Strikes opponent with leaves."
+  "effects": {}
  },
  {
   "id": "lets-snuggle-forever",
@@ -12592,9 +12666,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Harshly lowers target’s Special Defense."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spd",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "lunar-blessing",
@@ -12642,9 +12723,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "magic-coat",
@@ -12708,9 +12796,11 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May confuse the opponent."
+  "effects": {
+   "confuse": {
+    "chance": 30
+   }
+  }
  },
  {
   "id": "magnet-rise",
@@ -12772,9 +12862,16 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers user's Special Attack. Money is earned after the battle."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "malicious-moonsault",
@@ -12806,9 +12903,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May poison the opponent."
+  "effects": {
+   "status": {
+    "id": "psn",
+    "chance": 50
+   }
+  }
  },
  {
   "id": "mat-block",
@@ -13576,9 +13676,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May poison the opponent."
+  "effects": {
+   "status": {
+    "id": "psn",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "oblivion-wing",
@@ -13592,9 +13695,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User recovers most of the HP inflicted on opponent."
+  "effects": {
+   "drain": 0.75
+  }
  },
  {
   "id": "obstruct",
@@ -13846,9 +13949,12 @@
    "bite",
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "May badly poison opponent."
+  "effects": {
+   "status": {
+    "id": "psn",
+    "chance": 50
+   }
+  }
  },
  {
   "id": "pollen-puff",
@@ -14013,9 +14119,16 @@
    "contact",
    "punch"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Attack."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "present",
@@ -14096,9 +14209,7 @@
    "bite",
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "The user bites the target with its psychic capabilities. This can also destroy Light Screen and Reflect."
+  "effects": {}
  },
  {
   "id": "psychic-noise",
@@ -14412,9 +14523,12 @@
   "flags": [
    "sound"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "May put the target to sleep."
+  "effects": {
+   "status": {
+    "id": "slp",
+    "chance": 10
+   }
+  }
  },
  {
   "id": "rest",
@@ -14696,9 +14810,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May burn target."
+  "effects": {
+   "status": {
+    "id": "brn",
+    "chance": 20
+   }
+  }
  },
  {
   "id": "sappy-seed",
@@ -14743,10 +14860,29 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 2-5 times in one turn. Boosts user's Speed but lowers its Defense."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "hits": [
+    2,
+    5
+   ],
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "scorching-sands",
@@ -14760,9 +14896,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May burn the target."
+  "effects": {
+   "status": {
+    "id": "brn",
+    "chance": 30
+   }
+  }
  },
  {
   "id": "searing-sunraze-smash",
@@ -14856,11 +14995,42 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sharply raises user's Attack, Special Attack and Speed but lowers Defense and Special Defense."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spa",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spd",
+     "stages": -1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "shell-trap",
@@ -14888,11 +15058,24 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises user's Attack and sharply raises Speed."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "silk-trap",
@@ -15004,9 +15187,16 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Sp. Attack."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "sky-drop",
@@ -15119,12 +15309,10 @@
   "accuracy": 100,
   "pp": 15,
   "priority": 0,
-  "critStage": 0,
+  "critStage": 1,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ignores moves and abilities that draw in moves. High critical hit ratio."
+  "effects": {}
  },
  {
   "id": "snore",
@@ -15274,9 +15462,22 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Harshly lowers the opponent's Defense and sharply raises their Attack."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 2,
+     "target": "enemy",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": -2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "spider-web",
@@ -15337,10 +15538,19 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Harshly lowers user’s Speed."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "spirit-shackle",
@@ -15353,10 +15563,10 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Prevents the opponent from switching out."
+  "flags": [
+   "contact"
+  ],
+  "effects": {}
  },
  {
   "id": "spit-up",
@@ -15767,9 +15977,19 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Confuses opponent, but sharply raises its Attack."
+  "effects": {
+   "confuse": {
+    "chance": 100
+   },
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 2,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "swallow",
@@ -15847,9 +16067,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Guaranteed to hit twice in a row."
+  "effects": {
+   "hits": [
+    2,
+    2
+   ]
+  }
  },
  {
   "id": "tailwind",
@@ -15927,9 +16150,22 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user gets teary eyed to make the target lose its combative spirit. This lowers the target's Attack and Sp. Atk stats."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    },
+    {
+     "stat": "spa",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "teatime",
@@ -16107,9 +16343,7 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot flee or switch."
+  "effects": {}
  },
  {
   "id": "throat-chop",
@@ -16253,9 +16487,20 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Poisons opponent and lowers its Speed."
+  "effects": {
+   "status": {
+    "id": "psn",
+    "chance": 100
+   },
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "transform",
@@ -16346,12 +16591,20 @@
   "accuracy": 100,
   "pp": 10,
   "priority": 0,
-  "critStage": 0,
+  "critStage": 1,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "High critical hit ratio. May lower opponent's Defense or cause them to flinch."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "def",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 50
+    }
+   ],
+   "flinchChance": 30
+  }
  },
  {
   "id": "triple-axel",
@@ -16383,9 +16636,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Hits 3 times in a row."
+  "effects": {
+   "hits": [
+    3,
+    3
+   ]
+  }
  },
  {
   "id": "triple-kick",
@@ -16551,11 +16807,30 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises Attack and Defense."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "vital-throw",
@@ -16704,9 +16979,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May put opponent to sleep."
+  "effects": {
+   "status": {
+    "id": "slp",
+    "chance": 10
+   }
+  }
  },
  {
   "id": "wide-guard",
@@ -16736,9 +17014,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "May paralyze target."
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 20
+   }
+  }
  },
  {
   "id": "wish",
