@@ -5,16 +5,64 @@
 
 import { getArchetype } from './archetypes';
 import { attributesLine, readAttributes } from './attributes';
-import type { Archetype, Content, DraftRule, License, PrepToken, StarterPool, TypeName } from './contentSchema';
+import type { Archetype, Content, DraftRule, License, PrepToken, Species, StarterPool, TypeName } from './contentSchema';
 import { requirementProgress } from './progress';
 import type { Rng } from './rng';
+import { baseStatTotal, isNative, isWildEligible, wildEligibleSpecies } from './themes';
 import type { LoadoutPreset, Profile, RunPrep } from './state';
 
 // ---------- starter pools ----------
 
-/** The pool's species that are in the game and first-stage, without repeats, in data order. */
+/** The first stage of a species' line (Charizard → Charmander); babies don't count, as in evolutionStage. */
+export function firstStage(content: Content, id: string): Species | undefined {
+  let s = content.species.get(id);
+  while (s && s.evolutionStage > 1 && s.evolvesFrom) s = content.species.get(s.evolvesFrom);
+  return s;
+}
+
+/**
+ * A listed species can be a starter if it could be met in the wild, not
+ * counting moves: one with no usable move stays in so the content report
+ * flags it instead of the pool hiding it.
+ */
+function isStarterEligible(content: Content, s: Species): boolean {
+  if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
+  if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
+  return baseStatTotal(s) <= content.balance.wildMaxBaseStats;
+}
+
+const eligibleCache = new WeakMap<StarterPool, string[]>();
+
+/**
+ * The pool's starters, without repeats, in data order: its listed species and
+ * its bosses' signature Pokémon (each as its first stage), then every species
+ * its filter matches. A pool never offers a legendary, a Mega or a Pokémon too
+ * strong for the wild.
+ */
 export function eligibleSpecies(content: Content, pool: StarterPool): string[] {
-  return [...new Set(pool.species)].filter((id) => content.species.get(id)?.evolutionStage === 1);
+  const cached = eligibleCache.get(pool);
+  if (cached) return cached;
+  const ids = new Set<string>();
+  for (const id of pool.species) {
+    const s = firstStage(content, id);
+    if (s && isStarterEligible(content, s)) ids.add(s.id);
+  }
+  // Bosses' Pokémon are picked for their final forms, so a first stage with no usable move (Abra) is skipped.
+  for (const id of pool.bosses.flatMap((b) => content.bosses.get(b)?.signature ?? [])) {
+    const s = firstStage(content, id);
+    if (s && isWildEligible(content, s)) ids.add(s.id);
+  }
+  const filter = pool.filter;
+  if (filter) {
+    for (const s of wildEligibleSpecies(content)) {
+      if (filter.types && !s.types.some((t) => filter.types!.includes(t))) continue;
+      if (filter.region && !isNative(content, s, filter.region)) continue;
+      ids.add(s.id);
+    }
+  }
+  const result = [...ids];
+  eligibleCache.set(pool, result);
+  return result;
 }
 
 /**

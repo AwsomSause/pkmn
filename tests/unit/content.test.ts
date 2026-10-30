@@ -17,10 +17,9 @@ describe('game data', () => {
     expect(() => buildContent({ ...RAW_CONTENT, species })).toThrow(ContentError);
   });
 
-  it('reports an evolved species in the starter pool', () => {
-    const species = structuredClone(RAW_CONTENT.species) as { id: string; evolutionStage: number }[];
-    species.find((s) => s.id === 'bulbasaur')!.evolutionStage = 2;
-    expect(() => buildContent({ ...RAW_CONTENT, species })).toThrow(/not a first-stage/);
+  it('reports an unknown species in a starter pool', () => {
+    const species = (structuredClone(RAW_CONTENT.species) as { id: string }[]).filter((s) => s.id !== 'bulbasaur');
+    expect(() => buildContent({ ...RAW_CONTENT, species })).toThrow(/unknown species "bulbasaur"/);
   });
 
   it('every species that can be met knows at least one supported move at level 1', () => {

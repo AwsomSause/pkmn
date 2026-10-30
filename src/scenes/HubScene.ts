@@ -5,7 +5,7 @@
 
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
-import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, type Achievement, type Archetype, type Species } from '../core/contentSchema';
+import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { RunRecord } from '../core/state';
@@ -27,7 +27,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'archive', label: 'Trainer Archive', blurb: 'Every trainer, what they change, and how to unlock them.' },
   { room: 'achievements', label: 'Achievement Hall', blurb: 'Milestones and their rewards. Progress counts automatically.' },
   { room: 'bank', label: 'Bank', blurb: 'Your permanent currencies, what your last run paid, and licenses to buy (Enter).' },
-  { room: 'lab', label: 'Starter Laboratory', blurb: 'Starter pools to unlock with Research Points (Enter).' },
+  { room: 'lab', label: 'Starter Laboratory', blurb: 'Starter sets by category: regions, types, teams, leagues and more (Enter).' },
   { room: 'attributes', label: 'Attributes', blurb: 'Your permanent attributes, what they do, and how they grow (Enter for details).' },
   { room: 'history', label: 'Run History', blurb: 'Your recent runs: how far they got and what ended them.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
@@ -39,6 +39,19 @@ const STATUS_LABEL: Record<TrainerStatus, string> = {
   claimable: 'Ready to claim',
   locked: 'Locked',
   comingLater: 'Coming later',
+};
+
+const POOL_CATEGORY_LABEL: Record<StarterPoolCategory, string> = {
+  classic: 'Classic',
+  region: 'Regions',
+  type: 'Types',
+  role: 'Roles',
+  trainer: 'Trainers',
+  evilTeam: 'Villainous Teams',
+  league: 'Pokémon League',
+  spinOff: 'Spin-off Games',
+  research: 'Research',
+  rare: 'Rare',
 };
 
 const POOL_LABEL: Record<PoolStatus, string> = {
@@ -356,7 +369,11 @@ export class HubScene extends Phaser.Scene {
       case 'lab': {
         y = this.line(y, 'Starter Laboratory', 22);
         y = this.line(y, `Research Points: ${p.researchPoints}`, 16);
-        for (const pool of session.content.starterPools.values()) y = this.line(y, `${pool.name}  ·  ${POOL_LABEL[poolStatus(session.content, p, pool)]}`, 16);
+        for (const c of STARTER_POOL_CATEGORIES) {
+          const pools = [...session.content.starterPools.values()].filter((pool) => pool.category === c);
+          const open = pools.filter((pool) => poolStatus(session.content, p, pool) === 'unlocked').length;
+          if (pools.length > 0) y = this.line(y, `${POOL_CATEGORY_LABEL[c]}  ·  ${open}/${pools.length} unlocked`, 16);
+        }
         break;
       }
       case 'attributes': {
@@ -513,11 +530,43 @@ export class HubScene extends Phaser.Scene {
     });
   }
 
+  /** The Starter Laboratory: first the categories of starter sets, then the sets in one. */
   private openLab(): void {
     const { session } = services();
     const p = session.profile;
     const content = session.content;
-    const pools = [...content.starterPools.values()];
+    const categories = STARTER_POOL_CATEGORIES.filter((c) => [...content.starterPools.values()].some((pool) => pool.category === c));
+    const rows: PickerRow[] = categories.map((c) => {
+      const pools = [...content.starterPools.values()].filter((pool) => pool.category === c);
+      const open = pools.filter((pool) => poolStatus(content, p, pool) === 'unlocked').length;
+      const ready = pools.filter((pool) => poolStatus(content, p, pool) === 'buyable').length;
+      return {
+        problem: null,
+        hint: `${POOL_CATEGORY_LABEL[c]}: ${pools.length} starter set${pools.length === 1 ? '' : 's'}.${ready ? `  ${ready} ready to unlock.` : ''}`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, h / 2, POOL_CATEGORY_LABEL[c], textStyle(19)).setOrigin(0, 0.5));
+          box.add(scene.add.text(w - 12, h / 2, `${open}/${pools.length} unlocked${ready ? `  ·  ${ready} ready` : ''}`, textStyle(16, ready ? COLORS.good : COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({
+      title: `Starter Laboratory  ·  ${p.researchPoints} Research Points`,
+      rows,
+      columns: 2,
+      rowHeight: 48,
+      onSelect: (i) => {
+        this.closePicker();
+        this.openLabCategory(categories[i]!);
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  private openLabCategory(category: StarterPoolCategory): void {
+    const { session } = services();
+    const p = session.profile;
+    const content = session.content;
+    const pools = [...content.starterPools.values()].filter((pool) => pool.category === category);
     const rows: PickerRow[] = pools.map((pool) => {
       const status = poolStatus(content, p, pool);
       const species = eligibleSpecies(content, pool);
@@ -533,7 +582,7 @@ export class HubScene extends Phaser.Scene {
       };
     });
     this.openPicker({
-      title: `Starter Laboratory  ·  ${p.researchPoints} Research Points`,
+      title: `${POOL_CATEGORY_LABEL[category]}  ·  ${p.researchPoints} Research Points`,
       rows,
       columns: 1,
       rowHeight: 64,
@@ -547,7 +596,10 @@ export class HubScene extends Phaser.Scene {
         playSfx(this, 'se.level_up', 0.6);
         this.restart(`The ${pool.name} pool is unlocked. Choose it on the Preparation Desk.`, 'lab');
       },
-      onBack: () => this.closePicker(),
+      onBack: () => {
+        this.closePicker();
+        this.openLab();
+      },
     });
   }
 
