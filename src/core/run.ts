@@ -98,6 +98,7 @@ import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRa
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
+import { placeServiceStop } from './services/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
@@ -353,6 +354,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeTotem(content, run);
   placeExpeditionGate(content, run);
   placeMinigameStop(content, run);
+  placeServiceStop(run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -1062,6 +1064,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
+  if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {

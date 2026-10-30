@@ -1,0 +1,93 @@
+{
+  "note": "Untitled doc §19: building/service stops on the stage map. One stop per stage at most, placed with its own seeded roll so older seeds keep their maps. Status is honest: only \"supported\" services can appear. Others are listed so the tracker shows what is left.",
+  "stopChance": 0.55,
+  "services": [
+    {
+      "id": "center",
+      "name": "Pokémon Center",
+      "status": "supported",
+      "weight": 4,
+      "minBadges": 0,
+      "reusable": true,
+      "blurb": "Paid care: heal, cure status or revive. A clear menu, not a free full heal."
+    },
+    {
+      "id": "tutor",
+      "name": "Move Tutor",
+      "status": "supported",
+      "weight": 3,
+      "minBadges": 1,
+      "reusable": false,
+      "blurb": "Teach one move a Pokémon could learn by TM or tutor. The move it forgets is shown first."
+    },
+    {
+      "id": "reminder",
+      "name": "Move Reminder",
+      "status": "supported",
+      "weight": 3,
+      "minBadges": 0,
+      "reusable": true,
+      "blurb": "Relearn a level-up move the Pokémon has forgotten or skipped."
+    },
+    {
+      "id": "lab",
+      "name": "Research Lab",
+      "status": "supported",
+      "weight": 3,
+      "minBadges": 0,
+      "reusable": false,
+      "blurb": "Pay for field research (Research Points at the end of the run) or scan the map for hidden \"?\" stops."
+    },
+    {
+      "id": "trade",
+      "name": "Trade Post",
+      "status": "supported",
+      "weight": 2,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Swap a party Pokémon for one of similar strength. Special forms are only offered here and at events."
+    },
+    {
+      "id": "lookout",
+      "name": "Scout Tower",
+      "status": "supported",
+      "weight": 2,
+      "minBadges": 0,
+      "reusable": false,
+      "blurb": "Reveals the stage boss's specialty so you can prepare."
+    },
+    {
+      "id": "mart2",
+      "name": "Specialist Mart",
+      "status": "planned",
+      "weight": 0,
+      "minBadges": 2,
+      "reusable": true,
+      "blurb": "Evolution items, held items and battle-mechanic resources for eligible party members."
+    },
+    {
+      "id": "dojo",
+      "name": "Training Dojo",
+      "status": "planned",
+      "weight": 0,
+      "minBadges": 1,
+      "reusable": false,
+      "blurb": "Small stat training or one limited team drill."
+    }
+  ],
+  "costs": {
+    "regionScale": 0.25,
+    "healPerMon": 40,
+    "curePerMon": 15,
+    "revivePerMon": 60,
+    "tutor": 200,
+    "reminder": 60,
+    "researchPrice": 120,
+    "researchPoints": 4,
+    "scan": 90,
+    "tradeFee": 50,
+    "scout": 40,
+    "tradeSpecialChance": 0.25,
+    "tradeBstSpread": 0.12
+  }
+}
