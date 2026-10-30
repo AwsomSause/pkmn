@@ -124,7 +124,7 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { extendEndless, spookyWild, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { extendEndless, spookyWild, noBattleItems, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
@@ -338,7 +338,7 @@ export function prepareLoadedRun(content: Content, run: RunState): RunState {
 }
 
 /** Journal: writes down the stops of the stage that just ended (mutates `run`). */
-function noteJournal(content: Content, run: RunState): void {
+export function noteJournal(content: Content, run: RunState): void {
   if (!run.stage || !hasPerk(content, run, 'journal')) return;
   const stops = run.stage.visited.map((id) => findNode(run.stage!.map, id).kind).join(' > ');
   run.journal = [...(run.journal ?? []), `Region ${run.regionIndex + 1}, ${run.stage.kind} ${run.stage.index + 1}: ${stops || 'no stops'}`];
@@ -1168,6 +1168,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
+  if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
   if (side.kind === 'heal') {
     healParty(content, run);
     runSide.used = true;
@@ -1356,6 +1357,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     inventory: run.inventory,
     rng,
     captureRng,
+    speciesCaught: run.log.speciesCaught,
     catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
@@ -1365,6 +1367,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     disabledMechanics: run.disabledMechanics,
     hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
     teamItems: run.passives,
+    noBattleItems: noBattleItems(run.rules),
   };
 }
 
@@ -1630,6 +1633,11 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
     shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)) + palPadLevels(content, run));
+    // Friend, Luxury and Heal Ball.
+    const ball = battle.ball ? content.items.get(battle.ball)?.effect : undefined;
+    if (ball?.kind === 'catch' && ball.after === 'friend') caught.friendship = Math.max(caught.friendship, 200);
+    if (ball?.kind === 'catch' && ball.after === 'luxury') caught.friendship = Math.min(255, caught.friendship + 40);
+    if (ball?.kind === 'catch' && ball.after === 'heal') caught.hp = maxHp(content, caught);
     caughtSpeciesId = caught.speciesId;
     count(run, 'pokemonCaught');
     // Photo Album: a species caught for the first time this run gives Love.

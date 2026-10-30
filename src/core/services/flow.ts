@@ -11,7 +11,8 @@ import { maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
 import { addItem, itemUseProblem } from '../items';
 import { isHostile } from '../rivals/outcome';
-import type { Content, StatName } from '../contentSchema';
+import { changeFriendship } from '../friendship';
+import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
 import type { PokemonInstance, RunState, SideStop } from '../state';
 import { getService, SERVICES, type ServiceDef } from './schema';
 
@@ -104,6 +105,35 @@ export function tradeOffer(content: Content, run: RunState, sideId: string, mon:
   return normal.length > 0 ? normal[rng.int(0, normal.length - 1)]!.id : null;
 }
 
+
+/** Three shrine offers: which attribute rises and which falls, from the seed. */
+function relicPairs(run: RunState, sideId: string): [string, string][] {
+  const keys = ATTRIBUTE_KEYS.filter((k) => !METER_ATTRIBUTES.includes(k as never)) as string[];
+  const rng = new Rng(hashSeed(`${run.seed}::relic::${sideId}`));
+  const out: [string, string][] = [];
+  while (out.length < 3) {
+    const gain = rng.pick(keys);
+    const lose = rng.pick(keys.filter((k) => k !== gain));
+    if (!out.some(([g, l]) => g === gain && l === lose)) out.push([gain, lose]);
+  }
+  return out;
+}
+
+/** The auction's three lots with their opening bids. */
+function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
+  const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
+  const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
+  const lots: [Item, number][] = [];
+  const rest = [...pool];
+  while (lots.length < 3 && rest.length > 0) lots.push([rest.splice(rng.int(0, rest.length - 1), 1)[0]!, Math.round(price(run, C.auctionReserve) * (0.6 + rng.float() * 0.8))]);
+  return lots;
+}
+
+/** The room's hidden best bid on a lot: fixed by the seed, so reloading never changes the result. */
+function hiddenBid(run: RunState, sideId: string, itemId: string, reserve: number): number {
+  return Math.round(reserve * (0.9 + new Rng(hashSeed(`${run.seed}::auction-room::${sideId}:${itemId}`)).float() * 0.9));
+}
+
 export function serviceView(content: Content, run: RunState, sideId: string): ServiceView {
   const side = findStop(run, sideId);
   const service = getService(side.serviceId!);
@@ -172,6 +202,26 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
         add(`size:${r.id}`, `Size up ${who}`, `See their last team and what they have learned about you.`, 0, used);
         add(`truce:${r.id}`, `Ask ${who} for a truce`, 'They skip their next appearance.', price(run, C.truce), used);
       }
+      break;
+    }
+    case 'lodge':
+      for (const m of run.party) add(`rest:${m.uid}`, `Rest with ${monName(content, m)}`, `Friendship +${C.lodgeFriendship} (now ${m.friendship}).`, 0, side.used ? 'You already rested here.' : m.hp <= 0 ? 'It has fainted.' : null);
+      break;
+    case 'relic':
+      for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
+      break;
+    case 'auction':
+      for (const [it, reserve] of auctionLots(content, run, sideId)) {
+        add(`bid:${it.id}:low`, `${it.name}: bid ₽${reserve}`, `Pays only if you win. The room's best bid is hidden; a higher bid wins more often.`, reserve, side.used ? 'You already bid today.' : null);
+        add(`bid:${it.id}:high`, `${it.name}: bid ₽${Math.round(reserve * C.auctionHighBid)}`, 'A strong bid. Still pays only if you win.', Math.round(reserve * C.auctionHighBid), side.used ? 'You already bid today.' : null);
+      }
+      break;
+    case 'hall':
+      add('read', 'Read the board', 'Shows the event editions counting for this run.', 0);
+      break;
+    case 'observatory': {
+      const dens = requireStage(run).map.nodes.flatMap((n) => n.sides).filter((s) => s.kind === 'raid');
+      add('survey', 'Survey the raid dens', `${dens.length} den${dens.length === 1 ? '' : 's'} on this map.`, 0, side.used ? 'You already surveyed from here.' : dens.length === 0 ? 'There are no raid dens on this map.' : null);
       break;
     }
     default:
@@ -256,6 +306,36 @@ export function useService(content: Content, current: RunState, sideId: string, 
       const r = run.story.rivals.find((x) => x.id === uid)!;
       r.cooldown = Math.max(r.cooldown, 2);
       message = `${r.name} agrees to stay out of your way for a while.`;
+      break;
+    }
+    case 'rest': {
+      changeFriendship(content, mon!, C.lodgeFriendship);
+      message = `${monName(content, mon!)} had a lovely rest and trusts you more.`;
+      break;
+    }
+    case 'relic': {
+      run.attributeModifiers = { ...run.attributeModifiers, [uid!]: (run.attributeModifiers[uid!] ?? 0) + C.relicGain, [arg!]: (run.attributeModifiers[arg!] ?? 0) - C.relicLoss };
+      message = `The shrine hums: ${uid} +${C.relicGain}, ${arg} -${C.relicLoss}.`;
+      break;
+    }
+    case 'bid': {
+      const lot = auctionLots(content, current, sideId).find(([i]) => i.id === uid);
+      const need = lot ? hiddenBid(current, sideId, uid!, lot[1]) : Infinity;
+      if (option.cost >= need) {
+        addItem(run.inventory, uid!, 1);
+        message = `You won the auction: ${content.items.get(uid!)?.name ?? uid}!`;
+      } else {
+        run.money += option.cost;
+        message = 'Someone in the room outbid you. You keep your money.';
+      }
+      break;
+    }
+    case 'read':
+      message = run.gameEvents.length > 0 ? `Event editions counting for this run: ${run.gameEvents.join(', ')}.` : 'No event edition is running for this run.';
+      break;
+    case 'survey': {
+      const dens = requireStage(run).map.nodes.flatMap((n) => n.sides).filter((s) => s.kind === 'raid');
+      message = dens.map((s) => { const r = content.raids.raids.find((x) => x.id === s.raidId); return r ? `${r.name} (tier ${r.tier}): ${r.blurb}` : 'an unknown den'; }).join(' ');
       break;
     }
     case 'scout': {

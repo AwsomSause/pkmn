@@ -426,7 +426,7 @@ describe('save upgrades (v1 → v2)', () => {
   it('rejects a save that refers to an item that no longer exists', () => {
     const storage = new MemoryStorageProvider();
     const saves = new SaveManager(storage, content);
-    saves.saveRun({ ...newRun('bad-item'), inventory: { 'master-ball': 1 } });
+    saves.saveRun({ ...newRun('bad-item'), inventory: { 'no-such-ball': 1 } });
     expect(saves.loadRun()).toMatchObject({ status: 'corrupt' });
   });
 });

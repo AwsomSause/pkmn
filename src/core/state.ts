@@ -467,6 +467,8 @@ export type ExpeditionState = z.infer<typeof ExpeditionStateSchema>;
 
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
+  /** The ball that caught the wild Pokémon (Friend, Luxury and Heal Ball change it afterwards). */
+  ball: z.string().optional(),
   turn: z.number().int().min(1),
   /** Index into run.party of the Pokémon currently fighting. */
   activeIndex: z.number().int().min(0),
@@ -674,6 +676,8 @@ export const RunPrepSchema = z.object({
   typeFocus: TypeNameSchema.nullable(),
   /** The preparation token for this run, or none. */
   tokenId: z.string().nullable(),
+  /** The Research Directive (plan Part 5): a type to study this run for bonus Research Points, or none. */
+  directive: TypeNameSchema.nullable(),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 
@@ -948,6 +952,8 @@ export const ProfileSchema = z.object({
   /** Titles earned from achievements, and the one on show. */
   titles: z.array(z.string()),
   activeTitle: z.string().nullable(),
+  /** The card frame on show around the trainer card (Wardrobe, core/wardrobe.ts). */
+  cardFrame: z.string(),
   lifetimeBankCredits: z.number().int().min(0),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */

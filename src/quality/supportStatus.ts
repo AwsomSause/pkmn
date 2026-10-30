@@ -22,7 +22,7 @@ import knownLimits from './knownLimits.json';
 export const SUPPORT_STATUSES = ['supported', 'limited', 'disabled', 'invalid'] as const;
 export type SupportStatus = (typeof SUPPORT_STATUSES)[number];
 
-export const ENTRY_KINDS = ['species', 'form', 'move', 'ability', 'item', 'evolution'] as const;
+export const ENTRY_KINDS = ['species', 'form', 'move', 'ability', 'item', 'evolution', 'mechanic'] as const;
 export type EntryKind = (typeof ENTRY_KINDS)[number];
 
 export interface EntryStatus {

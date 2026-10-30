@@ -162,9 +162,9 @@ describe('berry system and gadgets', () => {
   it('Apricorn Box turns an Apricorn into a ball', () => {
     const run = newRun('apricorn');
     take(run, 'apricorn-box');
-    const before = run.inventory['great-ball'] ?? 0;
+    const before = run.inventory['level-ball'] ?? 0;
     take(run, 'red-apricorn');
-    expect(run.inventory['great-ball']).toBe(before + 1);
+    expect(run.inventory['level-ball']).toBe(before + 1);
   });
   it('the X-Transceiver heals the team once per stage', async () => {
     const { mapActions, useMapAction } = await import('../../src/core/run');

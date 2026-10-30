@@ -194,3 +194,55 @@ describe('Specialist Mart, Training Dojo and Rival Meeting Place', () => {
     expect(meeting).toBe(0);
   });
 });
+
+describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', () => {
+  it('the lodge raises friendship once and not for a fainted Pokémon', () => {
+    const run = stopRun('lodge');
+    run.party[0]!.friendship = 50;
+    const out = useService(content, run, 'svc-test', `rest:${run.party[0]!.uid}`);
+    expect(out.run.party[0]!.friendship).toBe(50 + SERVICES.costs.lodgeFriendship);
+    expect(() => useService(content, out.run, 'svc-test', `rest:${run.party[0]!.uid}`)).toThrow();
+    run.party[0]!.hp = 0;
+    expect(serviceView(content, run, 'svc-test').options[0]!.problem).toMatch(/fainted/);
+  });
+  it('the shrine shows both sides and applies a run-only exchange', () => {
+    const run = stopRun('relic');
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options).toHaveLength(3);
+    const opt = view.options[0]!;
+    const [, gain, lose] = opt.id.split(':');
+    expect(opt.text).toContain(gain!);
+    expect(opt.text).toContain(lose!);
+    const out = useService(content, run, 'svc-test', opt.id);
+    expect(out.run.attributeModifiers[gain!]).toBe((run.attributeModifiers[gain!] ?? 0) + SERVICES.costs.relicGain);
+    expect(out.run.attributeModifiers[lose!]).toBe((run.attributeModifiers[lose!] ?? 0) - SERVICES.costs.relicLoss);
+    expect(serviceView(content, structuredClone(run), 'svc-test').options.map((o) => o.id)).toEqual(view.options.map((o) => o.id));
+  });
+  it('an auction bid costs money only when it wins, the result is fixed by the seed, and there is one bid', () => {
+    const run = stopRun('auction');
+    const view = serviceView(content, run, 'svc-test');
+    expect(view.options.length).toBe(6);
+    let wins = 0;
+    for (const o of view.options) {
+      const out = useService(content, structuredClone(run), 'svc-test', o.id);
+      const again = useService(content, structuredClone(run), 'svc-test', o.id);
+      expect(out.message).toBe(again.message);
+      const won = /won the auction/.test(out.message);
+      expect(out.run.money).toBe(won ? 5000 - o.cost : 5000);
+      if (won) wins++;
+    }
+    expect(wins).toBeGreaterThan(0);
+    const done = useService(content, run, 'svc-test', view.options[1]!.id);
+    expect(() => useService(content, done.run, 'svc-test', view.options[0]!.id)).toThrow();
+  });
+  it('the hall reads the run\'s editions and the observatory lists raid dens', () => {
+    const run = stopRun('hall');
+    run.gameEvents = ['rivalry-week@2026-W44'];
+    expect(useService(content, run, 'svc-test', 'read').message).toMatch(/rivalry-week/);
+    const obs = stopRun('observatory');
+    expect(serviceView(content, obs, 'svc-test').options[0]!.problem).toMatch(/no raid dens/);
+    const raidId = content.raids.raids[0]!.id;
+    obs.stage!.map.nodes.find((n) => n.column === 2)!.sides = [{ id: 'den', kind: 'raid', raidId, used: false }];
+    expect(useService(content, obs, 'svc-test', 'survey').message).toContain(content.raids.raids[0]!.name);
+  });
+});

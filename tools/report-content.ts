@@ -6,6 +6,7 @@
 //   npm run report:content -- --status      every entry that isn't fully supported, with the reasons
 //   npm run report:content -- --json <file> the whole report as JSON
 //   npm run report:content -- --write       also write docs/quality/CONTENT_REPORT.md
+//   npm run report:content -- --html        also write docs/quality/dashboard.html (counts, ids, mechanics)
 //   npm run report:content -- --check       exit 1 if any number is worse than tools/content-baseline.json (CI)
 //   npm run report:content -- --update-baseline   accept the current numbers as the new baseline
 //
@@ -14,6 +15,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type * as Report from '../src/quality/contentReport.ts';
+import type * as Dashboard from '../src/quality/dashboard.ts';
 import type * as Data from '../src/data/index.ts';
 import type * as Save from '../src/save/saveManager.ts';
 import { readCatalogInputs } from './catalogInputs.ts';
@@ -37,6 +39,7 @@ function walk(dir: string, skip: string[] = []): string[] {
 }
 
 const { getContent } = await loadModule<typeof Data>('/src/data/index.ts');
+const { dashboardHtml } = await loadModule<typeof Dashboard>('/src/quality/dashboard.ts');
 const { buildContentReport, gateNumbers, improvements, regressions } = await loadModule<typeof Report>('/src/quality/contentReport.ts');
 const { MIGRATIONS } = await loadModule<typeof Save>('/src/save/saveManager.ts');
 await closeModules();
@@ -54,6 +57,8 @@ const report = buildContentReport(content, {
   gameSources: walk(join(root, 'src'), ['src/data', 'src/quality', 'src/core/contentSchema.ts']).map((f) => readFileSync(f, 'utf8')),
   testSources: walk(join(root, 'tests', 'unit')).map((f) => readFileSync(f, 'utf8')),
   migrations: Object.fromEntries(Object.entries(MIGRATIONS).map(([record, m]) => [record, Object.keys(m).map(Number)])),
+  mechanics: JSON.parse(readFileSync(join(root, 'src', 'quality', 'mechanics.json'), 'utf8')),
+  fileExists: (path) => existsSync(join(root, path)),
   catalogIds: { trainerAssetIds: catalog.trainerAssetIds, itemAssetIds: catalog.itemAssetIds, backgroundAssetIds: catalog.backgroundAssetIds },
 });
 
@@ -63,11 +68,21 @@ if (jsonPath) {
   console.log(`Wrote ${relative(process.cwd(), jsonPath)}`);
 }
 
+if (flag('--html')) {
+  const dir = join(root, 'docs', 'quality');
+  mkdirSync(dir, { recursive: true });
+  const baseline = JSON.parse(readFileSync(baselinePath, 'utf8')) as Record<string, number>;
+  writeFileSync(join(dir, 'dashboard.html'), dashboardHtml(report, baseline, new Date().toISOString().slice(0, 10)));
+  console.log('Wrote docs/quality/dashboard.html');
+}
+
 if (flag('--write')) {
   const md: string[] = ['# Content report', '', 'Made by `npm run report:content -- --write`. Read-only: nothing in the game data was changed. Statuses and checks are explained in QUALITY_GATES.md.', ''];
   md.push(`Totals: ${Object.entries(report.totals).map(([k, v]) => `${k} ${v}`).join(', ')}.`, '');
   md.push('## Support status', '', '| Kind | Supported | Limited | Disabled | Invalid |', '|---|---|---|---|---|');
   for (const [kind, c] of Object.entries(report.summary)) md.push(`| ${kind} | ${c.supported} | ${c.limited} | ${c.disabled} | ${c.invalid} |`);
+  md.push('', '## Mechanics', '', '| Mechanic | Status | Notes |', '|---|---|---|');
+  for (const e of report.statuses.filter((x) => x.kind === 'mechanic')) md.push(`| ${e.id} | ${e.status} | ${e.notes.join('; ')} |`);
   md.push('', '## Checks', '', '| Check | Count | What it means |', '|---|---|---|');
   for (const c of report.checks) md.push(`| ${c.title} (\`${c.id}\`) | ${c.count} | ${c.explain} |`);
   for (const c of report.checks.filter((x) => x.count > 0)) {
