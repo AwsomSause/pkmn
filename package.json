@@ -38,6 +38,7 @@
     "report:assets": "node tools/report-assets.ts",
     "report:economy": "node tools/report-economy.ts",
     "report:anims": "node tools/report-anims.ts",
+    "test:walk": "FULL_WALK=1 vitest run tests/unit/fullCampaignWalk.test.ts",
     "report:qa": "node tools/report-qa.ts",
     "report:perf": "node tools/report-perf.ts",
     "data:events": "node tools/build-events.ts",
