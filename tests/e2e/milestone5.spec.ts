@@ -27,6 +27,7 @@ test('the Hub shows the Bank, the Trainer Archive and the Achievement Hall', asy
 
   // The Hub is a row of tiles: Settings, Trainers, New Run (focused), Past Runs, Unlocks.
   await page.keyboard.press('ArrowLeft'); // Trainers
+  await page.keyboard.press('Enter'); // open the Trainers menu
   await page.keyboard.press('Enter'); // Trainer Archive
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').picker !== null)).toBe(true);
@@ -108,6 +109,7 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   });
   await waitForScene(page, 'Hub');
   await page.keyboard.press('ArrowLeft'); // Trainers
+  await page.keyboard.press('Enter'); // open the Trainers menu
   await page.keyboard.press('Enter'); // Trainer Archive
   await page.waitForTimeout(300);
   for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight'); // Red, Blue, Green, Brock
