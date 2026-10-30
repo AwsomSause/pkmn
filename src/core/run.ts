@@ -1749,6 +1749,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       count(run, role);
       const lead = run.party[battle.activeIndex];
       for (const type of lead ? getSpecies(content, lead.speciesId).types : []) count(run, `bossWinsLead.${type}`);
+      // Trainer unlock feats: every Pokémon in the party shares a type, or the party is one Pokémon.
+      const partyTypes = run.party.map((m) => getSpecies(content, m.speciesId).types);
+      if (partyTypes.length > 0) for (const type of partyTypes[0]!) if (partyTypes.every((t) => t.includes(type))) count(run, `bossWinsMono.${type}`);
+      if (run.party.length === 1) count(run, 'bossWinsSolo');
     } else {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
     }

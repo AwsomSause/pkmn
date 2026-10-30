@@ -15,7 +15,7 @@ import { permanentAttributes, readAttributes, type Attributes } from './attribut
 import { getCampaign } from './regions';
 import { noteJournal } from './run';
 import { researchScale, scaleReward } from './rules';
-import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
+import type { Achievement, Archetype, Content, LeafRequirement, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
@@ -42,6 +42,78 @@ export interface RequirementProgress {
 }
 
 export function requirementProgress(profile: Profile, req: Requirement): RequirementProgress {
+  // A challenge with several parts: the bar fills by parts met (each part counts by how close it is), and it is met when all are.
+  if (req.kind === 'all') {
+    const parts = req.parts.map((p) => leafProgress(profile, p));
+    const done = parts.reduce((sum, p) => sum + p.current / p.target, 0);
+    return { current: Math.floor(done * 100), target: req.parts.length * 100, met: parts.every((p) => p.met) };
+  }
+  return leafProgress(profile, req);
+}
+
+/** The parts of a requirement with their own progress and a short label (one part for a plain requirement). */
+export function requirementParts(profile: Profile, req: Requirement): Array<RequirementProgress & { label: string }> {
+  const leaves: LeafRequirement[] = req.kind === 'all' ? req.parts : [req];
+  return leaves.map((leaf) => ({ ...leafProgress(profile, leaf), label: describeRequirement(leaf) }));
+}
+
+const COUNTER_WORDS: Record<string, string> = {
+  trainersDefeated: 'trainers defeated',
+  battlesWon: 'battles won',
+  gymLeadersDefeated: 'gym leaders beaten',
+  eliteFourDefeated: 'Elite Four members beaten',
+  championsDefeated: 'Champions beaten',
+  regionsCleared: 'regions cleared',
+  pokemonCaught: 'Pokémon caught',
+  caughtKept: 'caught Pokémon kept',
+  shiniesFound: 'shiny Pokémon found',
+  evolutions: 'evolutions',
+  moneyEarned: 'money earned',
+  moneySpent: 'money spent',
+  tradesMade: 'trades made',
+  raidsWon: 'raids won',
+  totemsWon: 'Totems beaten',
+  rivalBattlesWon: 'rival battles won',
+  eventsCompleted: 'events completed',
+  candiesEarned: 'candies earned',
+  statsBoosted: 'stat boosts',
+  healStopsUsed: 'rest stops used',
+  runsFinished: 'runs finished',
+  runsWon: 'runs won',
+  bossWinsSolo: 'boss wins with a one-Pokémon party',
+  regionsClearedNoCharm: 'regions cleared without a charm',
+  regionsClearedWithStarter: 'regions cleared with the starter',
+  runQuestsDone: 'Run Quests done',
+  wildDefeated: 'wild Pokémon defeated',
+  encountersCompleted: 'encounters completed',
+};
+
+/** Plain words for one requirement part, e.g. "Win 3 boss battles with an all-Rock party". */
+export function describeRequirement(req: LeafRequirement): string {
+  switch (req.kind) {
+    case 'total':
+    case 'best': {
+      const scope = req.kind === 'best' ? ' in a single run' : '';
+      const mono = /^bossWinsMono\.(\w+)$/.exec(req.counter);
+      if (mono) return `Win ${req.atLeast} boss battle${req.atLeast === 1 ? '' : 's'} with an all-${mono[1]![0]!.toUpperCase()}${mono[1]!.slice(1)} party${scope}`;
+      const lead = /^bossWinsLead\.(\w+)$/.exec(req.counter);
+      if (lead) return `Win ${req.atLeast} boss battle${req.atLeast === 1 ? '' : 's'} with a ${lead[1]}-type leading${scope}`;
+      const type = /^defeatedOrCaught\.(\w+)$/.exec(req.counter);
+      if (type) return `Defeat or catch ${req.atLeast} ${type[1]}-type Pokémon${scope}`;
+      return `${(COUNTER_WORDS[req.counter] ?? req.counter).replace(/^./, (c) => c.toUpperCase())}: ${req.atLeast.toLocaleString('en-US')}${scope}`;
+    }
+    case 'distinct':
+      return `${req.set === 'speciesSeen' ? 'See' : 'Catch'} ${req.atLeast} different species`;
+    case 'achievement':
+      return `Earn the "${req.id}" achievement`;
+    case 'claim':
+      return 'Finish the linked event reward';
+    case 'caught':
+      return `Catch ${req.species.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}`;
+  }
+}
+
+function leafProgress(profile: Profile, req: LeafRequirement): RequirementProgress {
   let current: number;
   let target: number;
   switch (req.kind) {
@@ -63,6 +135,10 @@ export function requirementProgress(profile: Profile, req: Requirement): Require
       break;
     case 'claim':
       current = profile.claims?.[req.key] ? 1 : 0;
+      target = 1;
+      break;
+    case 'caught':
+      current = profile.speciesCaught.includes(req.species) ? 1 : 0;
       target = 1;
       break;
   }

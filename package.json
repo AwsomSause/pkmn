@@ -18,7 +18,7 @@
     "data:moves": "node tools/import-moves.ts",
     "data:species": "node tools/import-species.ts",
     "data:bosses": "node tools/build-boss-teams.ts",
-    "data:trainer-perks": "node tools/import-trainer-perks.ts && node tools/build-quests.ts",
+    "data:trainer-perks": "node tools/import-trainer-perks.ts && node tools/build-quests.ts && node tools/build-trainer-unlocks.ts",
     "data:custom": "node tools/import-custom-forms.ts",
     "data:abilities": "node tools/import-abilities.ts",
     "data:availability": "node tools/import-availability.ts",
@@ -34,6 +34,7 @@
     "report:balance": "node tools/report-balance.ts",
     "data:events": "node tools/build-events.ts",
     "data:quests": "node tools/build-quests.ts",
+    "data:trainer-unlocks": "node tools/build-trainer-unlocks.ts",
     "data:game-events": "node tools/build-game-events.ts"
   },
   "devDependencies": {
