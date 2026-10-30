@@ -40,6 +40,7 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
+import { pickWipe, wipeAssetId } from '../ui/battleFx/ruleWipe';
 import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
 import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
@@ -188,7 +189,8 @@ export class BattleScene extends Phaser.Scene {
     if (run?.battle) {
       const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
       const raid = this.raidTrack(run.battle);
-      queueAssets(this, [...WEATHER_ASSET_IDS, ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+      const wipe = this.wipeMask();
+      queueAssets(this, [...WEATHER_ASSET_IDS, ...(wipe ? [wipeAssetId(wipe)] : []), ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
     }
   }
 
@@ -675,6 +677,13 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
+  /** The screen wipe this battle ends with (UIE rule masks; null = glass shutters). Stable per battle, presentation only. */
+  private wipeMask() {
+    const run = services().session.run;
+    const foe = run?.battle?.enemyTeam[0];
+    return run?.battle && foe ? pickWipe(`${run.seed}:${foe.uid}`) : null;
+  }
+
   /** The raid or Totem song (presentation only). */
   private raidTrack(battle: RunState['battle'] & object): string | null {
     const { content } = services().session;
@@ -1314,7 +1323,7 @@ export class BattleScene extends Phaser.Scene {
     }
     if (result.raidFailed) {
       await this.say('The fight is over... your Pokémon were pulled back to safety.');
-      await exitWipe(this, this.motion);
+      await exitWipe(this, this.motion, this.wipeMask());
       this.scene.start(sceneForRun(result.run));
       return;
     }
@@ -1325,7 +1334,7 @@ export class BattleScene extends Phaser.Scene {
     }
     if (result.defeated) {
       await this.say('You have no Pokémon that can fight!');
-      await exitWipe(this, this.motion);
+      await exitWipe(this, this.motion, this.wipeMask());
       this.scene.start('GameOver');
       return;
     }
@@ -1411,7 +1420,7 @@ export class BattleScene extends Phaser.Scene {
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
     }
-    await exitWipe(this, this.motion);
+    await exitWipe(this, this.motion, this.wipeMask());
     this.scene.start(sceneForRun(result.run));
   }
 

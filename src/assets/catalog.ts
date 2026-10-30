@@ -142,6 +142,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
     ([id, file]): AssetEntry => ({ id: `fx.weather.${id}`, kind: 'image', category: 'ui', path: `images/packs/uie/weather/${file}.png`, lazy: true }),
   ),
   ...['basic', 'ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.adventure.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_adventure_${n}.mp3`, lazy: true })),
+  // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
+  ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
+    (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
+  ),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
   { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },
