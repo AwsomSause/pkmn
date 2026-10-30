@@ -261,6 +261,8 @@ export const ArchivedRivalSchema = z.object({
   state: z.string(),
   encounters: z.number().int().min(0),
   resolution: z.enum(['good', 'bad']).nullable(),
+  /** Its team the last time you fought it (the rival ghost brings its first Pokémon back). */
+  team: z.array(z.string()).max(6).optional(),
 });
 export type ArchivedRival = z.infer<typeof ArchivedRivalSchema>;
 

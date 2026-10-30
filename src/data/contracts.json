@@ -1,0 +1,160 @@
+{
+ "daily": 3,
+ "weekly": 2,
+ "contracts": [
+  {
+   "id": "d-wins",
+   "period": "daily",
+   "text": "Win 6 battles in one run",
+   "counter": "battlesWon",
+   "atLeast": 6,
+   "reward": {
+    "researchPoints": 10
+   }
+  },
+  {
+   "id": "d-trainers",
+   "period": "daily",
+   "text": "Beat 4 trainers in one run",
+   "counter": "trainersDefeated",
+   "atLeast": 4,
+   "reward": {
+    "researchPoints": 10
+   }
+  },
+  {
+   "id": "d-catch",
+   "period": "daily",
+   "text": "Catch 2 Pokémon in one run",
+   "counter": "pokemonCaught",
+   "atLeast": 2,
+   "reward": {
+    "candies": 3
+   }
+  },
+  {
+   "id": "d-event",
+   "period": "daily",
+   "text": "Finish 2 map events in one run",
+   "counter": "eventsCompleted",
+   "atLeast": 2,
+   "reward": {
+    "researchPoints": 10
+   }
+  },
+  {
+   "id": "d-evolve",
+   "period": "daily",
+   "text": "Evolve a Pokémon in one run",
+   "counter": "evolutions",
+   "atLeast": 1,
+   "reward": {
+    "candies": 4
+   }
+  },
+  {
+   "id": "d-gym",
+   "period": "daily",
+   "text": "Beat a Gym Leader",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 1,
+   "reward": {
+    "bankCredits": 20
+   }
+  },
+  {
+   "id": "d-wild",
+   "period": "daily",
+   "text": "Defeat 8 wild Pokémon in one run",
+   "counter": "wildDefeated",
+   "atLeast": 8,
+   "reward": {
+    "candies": 3
+   }
+  },
+  {
+   "id": "d-shop",
+   "period": "daily",
+   "text": "Spend ₽1500 in shops in one run",
+   "counter": "moneySpent",
+   "atLeast": 1500,
+   "reward": {
+    "bankCredits": 15
+   }
+  },
+  {
+   "id": "w-region",
+   "period": "weekly",
+   "text": "Clear 2 regions in one run",
+   "counter": "regionsCleared",
+   "atLeast": 2,
+   "reward": {
+    "researchPoints": 40,
+    "bankCredits": 40
+   }
+  },
+  {
+   "id": "w-win",
+   "period": "weekly",
+   "text": "Win a run",
+   "counter": "runsWon",
+   "atLeast": 1,
+   "reward": {
+    "researchPoints": 50,
+    "bankCredits": 60
+   }
+  },
+  {
+   "id": "w-gyms",
+   "period": "weekly",
+   "text": "Beat 5 Gym Leaders in one run",
+   "counter": "gymLeadersDefeated",
+   "atLeast": 5,
+   "reward": {
+    "researchPoints": 35,
+    "bankCredits": 30
+   }
+  },
+  {
+   "id": "w-elite",
+   "period": "weekly",
+   "text": "Beat an Elite Four member",
+   "counter": "eliteFourDefeated",
+   "atLeast": 1,
+   "reward": {
+    "researchPoints": 40
+   }
+  },
+  {
+   "id": "w-shiny",
+   "period": "weekly",
+   "text": "Find a shiny Pokémon",
+   "counter": "shiniesFound",
+   "atLeast": 1,
+   "reward": {
+    "researchPoints": 60
+   }
+  },
+  {
+   "id": "w-evolve",
+   "period": "weekly",
+   "text": "Evolve 3 Pokémon in one run",
+   "counter": "evolutions",
+   "atLeast": 3,
+   "reward": {
+    "researchPoints": 35,
+    "candies": 10
+   }
+  },
+  {
+   "id": "w-events",
+   "period": "weekly",
+   "text": "Finish 6 map events in one run",
+   "counter": "eventsCompleted",
+   "atLeast": 6,
+   "reward": {
+    "researchPoints": 35
+   }
+  }
+ ]
+}
