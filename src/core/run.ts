@@ -22,7 +22,7 @@ import { createBattle, resolveTurn, startBattle, type BattleContext, type Battle
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
-import { RARITIES, TYPE_NAMES, type ArchetypeModifier, type AttributeKey, type Content, type TypeName } from './contentSchema';
+import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
   bossTeamSpecies,
   candiesForRelease,
@@ -105,6 +105,7 @@ import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRa
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
+import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
@@ -210,6 +211,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     stage: null,
     usedThemes: [],
     usedLeaders: [],
+    materials: {},
     badges: [],
     campaignId: campaign.id,
     regionOrder,
@@ -1061,8 +1063,6 @@ function failRaid(content: Content, run: RunState): void {
   run.phase = 'map';
 }
 
-/** A rare-encounter token: rare Pokémon x3 and Legendaries x2 in the encounter table (same as Omen of Rarity). */
-const RARE_TOKEN_EFFECTS: ArchetypeModifier[] = [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 }, { kind: 'encounterWeightMultiplier', group: 'legendary', value: 2 }];
 
 /** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
@@ -1474,6 +1474,8 @@ export interface BattleEndResult {
   victory: boolean;
   /** King N's Voice of Pokémon: the defeated wild species that asked to join (its decision comes next). */
   voiceJoined?: string | null;
+  /** Crafting materials this win dropped (material id → count). */
+  materials?: Record<string, number>;
 }
 
 export interface TurnResult {
@@ -1869,6 +1871,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     itemsFoundByRaid.push(...raidWin.items);
     moneyGained += raidWin.money;
   }
+  // Crafting materials from the foe's type (own generator; a catch pays none).
+  let materialsGained: Record<string, number> = {};
+  if (outcome === 'win') {
+    const foe = battle.kind === 'trainer' ? battle.enemyTeam[0]! : currentEnemy(battle);
+    const kind = battle.trainer?.leaderId ? 'boss' : battle.kind === 'trainer' ? 'trainer' : 'wild';
+    materialsGained = gainBattleMaterials(run, getSpecies(content, foe.speciesId).types, kind, battle.raid ? getRaid(content, battle.raid.id).tier : 0, battle.raid?.id ?? 'b');
+  }
   const won = outcome === 'win' && battle.trainer?.leaderId ? battle.trainer.leaderId : null;
   const badge = won && classId === GYM_LEADER_CLASS ? won : null;
   if (badge) {
@@ -1976,7 +1985,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

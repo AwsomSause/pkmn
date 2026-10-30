@@ -3,6 +3,7 @@
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
 import { buildEpilogue } from '../core/ending';
+import { materialName } from '../core/crafting';
 import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
@@ -1275,6 +1276,8 @@ export class BattleScene extends Phaser.Scene {
     }
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
+    const mats = Object.entries(end.materials ?? {});
+    if (mats.length > 0) await this.say(`Materials: ${mats.map(([id, n]) => `${n} ${materialName(id)}`).join(', ')}.`);
     for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
     for (const n of end.shadowPurified) await this.say(`The Shadow haze lifts from ${n}! It is purified!`);
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);

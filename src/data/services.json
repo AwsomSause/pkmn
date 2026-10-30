@@ -191,6 +191,15 @@
       "minBadges": 1,
       "reusable": false,
       "blurb": "Reveals every raid den on this stage map: the boss, its tier and what it asks."
+    },
+    {
+      "id": "workshop",
+      "name": "Workshop",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 0,
+      "reusable": true,
+      "blurb": "Craft potions, balls, Revives, rare-encounter tokens and Mega Stones from battle materials."
     }
   ],
   "costs": {

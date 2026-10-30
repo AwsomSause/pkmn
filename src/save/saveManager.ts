@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 23, settings: 5, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 24, settings: 5, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -257,6 +257,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v23 (Shadow Pokémon): an optional heart gauge on a Pokémon; older runs simply have none.
     22: (data) => data as Json,
+    // v24 (crafting): runs started before it hold no materials.
+    23: (data) => ({ ...(data as Json), materials: {} }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

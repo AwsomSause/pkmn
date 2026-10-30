@@ -15,6 +15,7 @@ import { abilityOf, addLevels, createPokemon, maxHp, maxPp, usableLearnset, getS
 import { specialFamily } from '../specialForms';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
+import { applyRecipe, CRAFTING, materialName, recipeProblem } from '../crafting';
 import { isHostile } from '../rivals/outcome';
 import { changeFriendship } from '../friendship';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
@@ -302,6 +303,12 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
         add(`bid:${it.id}:high`, `${it.name}: bid ₽${Math.round(reserve * C.auctionHighBid)}`, 'A strong bid. Still pays only if you win.', Math.round(reserve * C.auctionHighBid), side.used ? 'You already bid today.' : null);
       }
       break;
+    case 'workshop': {
+      const have = Object.entries(run.materials).filter(([, n]) => n > 0).map(([id, n]) => `${n} ${materialName(id)}`).join(', ');
+      add('look', 'Check your materials', have ? `You hold: ${have}.` : 'You hold no materials yet. Win battles and raids to collect them.', 0);
+      for (const r of CRAFTING.recipes) add(`craft:${r.id}`, r.name, `Costs ${Object.entries(r.cost).map(([id, n]) => `${n} ${materialName(id)}`).join(', ')}${r.money ? ` and ₽${r.money}` : ''}.`, 0, recipeProblem(content, run, r));
+      break;
+    }
     case 'hall':
       add('read', 'Read the board', 'Shows the event editions counting for this run.', 0);
       break;
@@ -441,6 +448,14 @@ export function useService(content: Content, current: RunState, sideId: string, 
       const evolved = evolveFully(content, mon!, run.regionOrder[run.regionIndex], 0);
       for (const evo of evolved) count(run, 'evolutions');
       message = `${monName(content, mon!)} reached level ${result.newLevel}.${evolved.length ? ` It evolved into ${evolved.map((e) => getSpecies(content, e.to).name).join(', then ')}!` : ''}${result.skippedMoves.length ? ' It had no room for some new moves.' : ''}`;
+      break;
+    }
+    case 'look':
+      message = 'The workbench is yours.';
+      break;
+    case 'craft': {
+      const recipe = CRAFTING.recipes.find((r) => r.id === uid)!;
+      message = applyRecipe(content, run, recipe);
       break;
     }
     case 'fossil': {

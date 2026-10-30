@@ -110,3 +110,5 @@ To look something up: `grep -n '"id": "pikachu"' src/data/species.json` then rea
 ## Outside the repo
 
 Director's source packs and plan copies are in the project files folder (`/mnt/project-files/`): `images.zip`, `audio.zip`, `bosses/`, `items/`, `data/move-dataset/`, `plan/`. Only open them when importing.
+
+- `src/core/crafting.ts` + `src/data/crafting.json`: crafting materials, drops, recipes; the Workshop is a service in `core/services/flow.ts`.
