@@ -144,6 +144,7 @@ const showsText = (page: Page, text: string) =>
   page.evaluate((t) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.text === t || o.list?.some((c: any) => c.text === t)), text);
 
 test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp', async ({ page }) => {
+  test.setTimeout(150_000); // the fights play out in real time and a move can miss
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/?seed=m10-boss&debug=1');
@@ -153,6 +154,8 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   // Turn it into a gym battle against Brock with two weak Pokémon (the second is the ace).
   await page.evaluate(() => {
     const pkr = (window as any).__pkr;
+    // A fixed Normal-type foe: the random first enemy can be a Ghost that Scratch cannot hurt.
+    pkr.session.debugReplaceEnemy('rattata', 5);
     const battle = pkr.session.run.battle;
     battle.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
     const team = battle.enemyTeam;
@@ -164,15 +167,26 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   await page.screenshot({ path: 'test-results/m10-boss-title.png' });
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
-  await page.keyboard.press('Enter');
-  await expect.poll(() => showsText(page, 'ACE!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  // A move can miss, so attack (first move, Enter twice) until the banner shows.
+  const attackUntil = async (text: string) => {
+    for (let i = 0; i < 8; i++) {
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(300);
+      await page.keyboard.press('Enter');
+      await page.waitForTimeout(800);
+      // Wait for the banner; if the command menu comes back first, the move missed: attack again.
+      for (let t = 0; t < 150; t++) {
+        if (await showsText(page, text)) return;
+        if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) break;
+        await page.waitForTimeout(100);
+      }
+    }
+  };
+  await attackUntil('ACE!');
+  expect(await showsText(page, 'ACE!')).toBe(true);
   await waitForMenu(page);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(300);
-  await page.keyboard.press('Enter');
-  await expect.poll(() => showsText(page, 'VICTORY!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await attackUntil('VICTORY!');
+  expect(await showsText(page, 'VICTORY!')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-victory.png' });
   expect(errors).toEqual([]);
 });
