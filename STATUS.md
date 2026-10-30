@@ -68,6 +68,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6e: type sound vocabulary (`core/presentation/typeSound.ts`), used as the fallback when a move has no animation.
 - Catalog slice 6f: move menu says why a move is blocked (`core/battle/moveBlock.ts`).
 - Catalog slice 6g: `npm run report:qa` prints the catalog coverage per area (#145).
+- Catalog slice 6h: input buffering across scene changes (`core/inputBuffer.ts`, `ui/input.ts`).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
