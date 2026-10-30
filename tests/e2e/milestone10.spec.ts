@@ -168,6 +168,8 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   });
   await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 6000, intervals: [100] }).toBe(true);
   await page.screenshot({ path: 'test-results/m10-boss-title.png' });
+  // Catalog 67: this seed's first stage is The Chemical Plant, so lab light panels hang behind the battle.
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.some((o: any) => o.name === 'env-lab'))).toBe(true);
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
   // A move can miss, so attack (first move, Enter twice) until the banner shows.

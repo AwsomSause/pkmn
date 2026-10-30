@@ -45,6 +45,9 @@ import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
+import { addEnvironment } from '../ui/battleFx/environment';
+import { environmentStory } from '../core/presentation/environmentStory';
+import { crisisLevel } from '../core/story/crisis';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
@@ -215,6 +218,16 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    // Environmental storytelling (catalog 67): crisis weather, villain banners, ruins, lab panels, Shadow miasma.
+    const envEvent = run.battle?.event ? session.content.events.get(run.battle.event.eventId) : undefined;
+    const envFoe = run.battle ? run.battle.enemyTeam[run.battle.enemyIndex] : undefined;
+    addEnvironment(this, this.field, this.field.length, environmentStory({
+      crisis: crisisLevel(run),
+      legendClues: Number(run.story.flags['ev:legend-clue'] ?? 0),
+      themeName: run.stage ? getTheme(session.content, run.stage.themeId).name : '',
+      event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
+      shadowFoe: Boolean(envFoe?.shadow),
+    }), this.motion);
     this.fieldBase = this.field.length;
     this.fx = new BattleFx(this, {
       field: this.field,
