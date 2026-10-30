@@ -209,6 +209,8 @@ export const BattleStateSchema = z.object({
   mapItems: z.object({ freeTurns: z.number().int().min(0), thrown: z.number().int().min(0) }).optional(),
   /** A VS Seeker rematch: double prize money. */
   rematch: z.boolean().optional(),
+  /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
+  fishing: z.boolean().optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -216,8 +218,8 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop']),
-  /** A healing stop works once; a shop can be visited again. */
+  kind: z.enum(['heal', 'shop', 'fish']),
+  /** A healing stop and a fishing spot work once; a shop can be visited again. */
   used: z.boolean(),
 });
 export type SideStop = z.infer<typeof SideStopSchema>;

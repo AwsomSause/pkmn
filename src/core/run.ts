@@ -21,6 +21,8 @@ import {
   bossTeamSpecies,
   candiesForRelease,
   CHAMPION_CLASS,
+  enemyLevel,
+  rollShiny,
   ELITE_FOUR_CLASS,
   GYM_LEADER_CLASS,
   createPlannedPokemon,
@@ -46,9 +48,12 @@ import { defaultPrep, draftStarters, startingResources } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import {
   activeMods,
+  addBridgeStops,
+  addItemStops,
   afterPurchase,
   afterTrainerWin,
   earlyStockCount,
+  fishingRod,
   hiddenItemFound,
   hiddenItemNode,
   hasPerk,
@@ -78,8 +83,8 @@ import {
   wildSpeciesWithItems,
 } from './mapItems';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type MapNode, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
-import { getTheme, pickGymLeader, pickTheme } from './themes';
+import { currentEnemy, type MapNode, type SideStop, type RunPrep, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
   recordBattleStarted,
@@ -235,6 +240,8 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.usedLeaders.push(leader.id);
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   startStageEffects(run);
+  // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map.
+  addItemStops(content, run);
   run.battle = null;
   run.phase = 'map';
 }
@@ -302,6 +309,8 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   if (mode && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, perkItem(content, run, mode)!);
   stage.current = nodeId;
   stage.visited.push(nodeId);
+  // Bridge Mail adds a stop beside the node the player reaches.
+  addBridgeStops(content, run, nodeId);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
   // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
   if (mode === 'machBike' && node.kind === 'wild') {
@@ -519,6 +528,70 @@ export function nextGymLeaders(content: Content, run: RunState): { leaderId: str
   return out;
 }
 
+// ---------- fishing (M8.75 slice 3b-3) ----------
+
+/** The fishing spot beside the current node, checked for use. */
+function fishingSpot(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
+  const stage = requireStage(run);
+  if (stage.current === null) throw new Error('Choose a node first');
+  const node = findNode(stage.map, stage.current);
+  const side = node.sides.find((s) => s.id === sideId);
+  if (!side || side.kind !== 'fish') throw new Error(`No fishing spot "${sideId}" here`);
+  if (side.used) throw new Error('You already fished here');
+  return { node, side };
+}
+
+/**
+ * What a fishing spot offers: Water Pokémon at this level of the stage, one
+ * without a Rod or with the Old Rod, two with the Good Rod, three with the
+ * Super Rod (the last the strongest of four). Rolled by a generator of the
+ * spot's own, so looking changes nothing and the offer is the same every time.
+ */
+export function fishingOffer(content: Content, run: RunState, sideId: string): { speciesId: string; level: number; shiny: boolean }[] {
+  const { node } = fishingSpot(run, sideId);
+  const stage = run.stage!;
+  const rod = fishingRod(content, run) ?? { choices: 1, rare: false };
+  const rng = new Rng(hashSeed(`${run.seed}::fishing::${stageKey(run)}::${node.id}::${sideId}`));
+  const pool = typesPool(content, ['water'], run.regionOrder[run.regionIndex]).map((p) => ({ item: p.speciesId, weight: p.weight }));
+  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
+  const scale = levelScale(content, getCampaign(content, run.campaignId), run.regionIndex, stage.index, node.column);
+  const archetype = getArchetype(content, run.archetypeId);
+  const shinyChance = runAttributeEffects(content, run).shinyChance;
+  const out: { speciesId: string; level: number; shiny: boolean }[] = [];
+  for (let i = 0; i < rod.choices; i++) {
+    let speciesId = rng.weighted(pool);
+    for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = rng.weighted(pool);
+    if (rod.rare && i === rod.choices - 1) {
+      for (let j = 0; j < 3; j++) {
+        const other = rng.weighted(pool);
+        if (bst(other) > bst(speciesId)) speciesId = other;
+      }
+    }
+    out.push({ speciesId, level: enemyLevel(content, archetype, scale, 0, rng).level, shiny: rollShiny(content, rng, shinyChance) });
+  }
+  return out;
+}
+
+/** Fishes up one of the offered Pokémon and starts a wild battle with it; the spot is used up. */
+export function fish(content: Content, current: RunState, sideId: string, index: number): RunState {
+  assertPhase(current, 'map');
+  const pick = fishingOffer(content, current, sideId)[index];
+  if (!pick) throw new Error(`No fishing choice ${index}`);
+  const activeIndex = current.party.findIndex((p) => p.hp > 0);
+  if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
+  const run = structuredClone(current);
+  fishingSpot(run, sideId).side.used = true;
+  const enemy = createPokemon(content, pick.speciesId, pick.level, nextUid(run, 'e'));
+  enemy.shiny = pick.shiny;
+  if (pick.shiny) count(run, 'shiniesFound');
+  run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
+  run.battle.fishing = true;
+  discover(run, enemy.speciesId, false);
+  run.phase = 'battle';
+  recordBattleStarted(content, run);
+  return run;
+}
+
 /**
  * Sets up the battle for a map node (mutates `run`). A VS Seeker rematch passes
  * a generator of its own, so the encounter stream (and every later battle) is unchanged.
@@ -598,6 +671,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   const side = findNode(stage.map, stage.current).sides.find((s) => s.id === sideId);
   if (!side) throw new Error(`No side stop "${sideId}" here`);
   if (side.kind === 'heal' && side.used) throw new Error('This healing stop has already been used');
+  if (side.kind === 'fish') throw new Error('Choose a Pokémon to fish for (fishingOffer, then fish)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal') {
@@ -979,6 +1053,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     if (charisma > 0) addRunAttribute(content, run, 'charisma', charisma);
   }
   // Loot Sack and Blue Card: Bag items after trainer wins, from a generator of their own.
+  // Bridge Mail S: the next trainer's reward draft gets the gym leader's odds.
+  const bridge = perkItem(content, run, 'betterDraft');
+  if (outcome === 'win' && battle.kind === 'trainer' && bridge) {
+    spendUse(run, bridge);
+    run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
+  }
   const stock = shopStock(content, run).map((e) => ({ item: e.item, price: e.price }));
   const itemsFound =
     outcome === 'win' && battle.kind === 'trainer'
@@ -1014,7 +1094,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.encountersCompleted += 1;
   count(run, 'encountersCompleted');
   run.log.battlesWon += 1;
-  run.afterDecisions = 'reward';
+  // A fished Pokémon is an extra catch: no reward draft after it.
+  run.afterDecisions = battle.fishing ? 'map' : 'reward';
   continueAfterDecisions(content, run);
   return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
 }
@@ -1050,7 +1131,9 @@ function continueAfterDecisions(content: Content, run: RunState): void {
     return;
   }
   if (run.afterDecisions === 'reward') {
-    const weights = luckWeights(rewardWeights(content, run), runAttributeEffects(content, run));
+    const better = (run.itemCounters?.['better-draft'] ?? 0) > 0;
+    if (better) run.itemCounters = Object.fromEntries(Object.entries(run.itemCounters!).filter(([key]) => key !== 'better-draft'));
+    const weights = luckWeights(better ? content.balance.bossRarityWeights : rewardWeights(content, run), runAttributeEffects(content, run));
     run.draft = withStream(run.rng, 'reward', (r) => generateDraft(content, run, r, weights));
     run.phase = 'reward';
     return;

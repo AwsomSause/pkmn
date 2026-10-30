@@ -726,6 +726,13 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   z.object({ perk: z.literal('nextLeaders') }),
   /** Each stage, one wild stop hides a Bag item; win there to find it (Itemfinder). */
   z.object({ perk: z.literal('hiddenItem') }),
+  // ---------- extra map stops (slice 3b-3) ----------
+  /** Each stage gets a fishing spot; fishing shows `choices` Pokémon to pick from, the last one stronger with `rare` (Rods). */
+  z.object({ perk: z.literal('fishing'), choices: z.number().int().min(1).max(3), rare: z.boolean() }),
+  /** An extra stop beside a node: somewhere on the stage when it starts (Wave, Tropic and Harbor Mail), or at the next node the player moves to (Bridge Mail). */
+  z.object({ perk: z.literal('extraStop'), kind: z.enum(['heal', 'shop', 'fish']), where: z.enum(['stage', 'nextNode']) }),
+  /** The next trainer's reward draft uses the gym leader's odds (Bridge Mail S). */
+  z.object({ perk: z.literal('betterDraft') }),
 ]);
 export type Perk = z.infer<typeof PerkSchema>;
 

@@ -7506,46 +7506,76 @@
   "id": "old-rod",
   "name": "Old Rod",
   "family": "Map and encounter items",
-  "description": "Water stops on the map can be fished once for an extra catch",
+  "description": "Each stage gets a fishing spot: fish once for an extra Water Pokémon to battle and catch",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "old-rod",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "fishing",
+     "choices": 1,
+     "rare": false
+    }
+   ]
+  }
  },
  {
   "id": "good-rod",
   "name": "Good Rod",
   "family": "Map and encounter items",
-  "description": "Fishing shows 2 Pokémon to pick from",
+  "description": "Each stage gets a fishing spot, and fishing shows 2 Pokémon to pick from",
   "rarity": "rare",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "good-rod",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "fishing",
+     "choices": 2,
+     "rare": false
+    }
+   ]
+  }
  },
  {
   "id": "super-rod",
   "name": "Super Rod",
   "family": "Map and encounter items",
-  "description": "Fishing shows 3 Pokémon, one of them uncommon",
+  "description": "Each stage gets a fishing spot, and fishing shows 3 Pokémon, the last a strong one",
   "rarity": "epic",
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
   "icon": "super-rod",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "fishing",
+     "choices": 3,
+     "rare": true
+    }
+   ]
+  }
  },
  {
   "id": "town-map",
@@ -9559,31 +9589,51 @@
   "id": "wave-mail",
   "name": "Wave Mail",
   "family": "Mail",
-  "description": "Next stage: one extra Water stop for fishing",
+  "description": "Next stage: one extra fishing spot",
   "rarity": "common",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "wave-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "fish",
+     "where": "stage"
+    }
+   ]
+  }
  },
  {
   "id": "tropic-mail",
   "name": "Tropic Mail",
   "family": "Mail",
-  "description": "Next stage: one extra heal stop",
+  "description": "Next stage: one extra healing spot",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "tropic-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "heal",
+     "where": "stage"
+    }
+   ]
+  }
  },
  {
   "id": "harbor-mail",
@@ -9595,10 +9645,20 @@
   "max": null,
   "how": "use",
   "icon": "harbor-mail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "nextStage"
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "shop",
+     "where": "stage"
+    }
+   ]
+  }
  },
  {
   "id": "mosaic-mail",
@@ -9922,61 +9982,101 @@
   "id": "bridgemail-d",
   "name": "Bridge Mail D",
   "family": "Mail",
-  "description": "Next fork: add a bridge to a shop",
+  "description": "The next stop you reach gets a shop beside it",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "bridgemail-d",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "shop",
+     "where": "nextNode"
+    }
+   ]
+  }
  },
  {
   "id": "bridgemail-m",
   "name": "Bridge Mail M",
   "family": "Mail",
-  "description": "Next fork: add a bridge to a heal stop",
+  "description": "The next stop you reach gets a healing spot beside it",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "bridgemail-m",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "extraStop",
+     "kind": "heal",
+     "where": "nextNode"
+    }
+   ]
+  }
  },
  {
   "id": "bridgemail-s",
   "name": "Bridge Mail S",
   "family": "Mail",
-  "description": "Next fork: add a bridge to a trainer with a Rare reward",
+  "description": "The next trainer you beat gives a reward draft with a gym leader's odds",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "bridgemail-s",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "betterDraft"
+    }
+   ]
+  }
  },
  {
   "id": "bridgemail-t",
   "name": "Bridge Mail T",
   "family": "Mail",
-  "description": "Next fork: add a bridge to a rare wild Pokémon",
+  "description": "The next wild Pokémon is the strongest of three",
   "rarity": "uncommon",
   "stacksOn": "player",
   "max": null,
   "how": "use",
   "icon": "bridgemail-t",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 1
+   },
+   "mods": [
+    {
+     "mod": "rare"
+    }
+   ]
+  }
  },
  {
   "id": "bridgemail-v",
