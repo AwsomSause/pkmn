@@ -216,6 +216,15 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(out.run.money).toBeLessThan(5000);
     expect(() => useService(content, out.run, 'svc-test', view.options[1]!.id)).toThrow();
   });
+  it('the training school adds levels once, never past the cap or for a fainted Pokémon', () => {
+    const run = stopRun('school');
+    run.money = 5000;
+    run.party[0]!.level = 5;
+    const out = useService(content, run, 'svc-test', `class:${run.party[0]!.uid}`);
+    expect(out.run.party[0]!.level).toBeGreaterThanOrEqual(5 + SERVICES.costs.schoolLevels);
+    expect(out.run.money).toBeLessThan(5000);
+    expect(() => useService(content, out.run, 'svc-test', `class:${run.party[0]!.uid}`)).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;
