@@ -73,6 +73,8 @@ export const RaidFileSchema = z.object({
   tiersByRegion: z.array(z.array(z.number().int().min(1).max(6)).min(1)).min(1),
   /** After a lost or abandoned raid: the party is back on its feet at this share of max HP. */
   failureHealFraction: z.number().min(0.1).max(1),
+  /** Raid tiers open from the very first run. A higher tier opens for later runs once a raid one tier below it is won (in any run). */
+  openTiers: z.number().int().min(1).max(6).default(3),
   raids: z.array(RaidDefSchema).min(1),
 });
 export type RaidFile = z.infer<typeof RaidFileSchema>;

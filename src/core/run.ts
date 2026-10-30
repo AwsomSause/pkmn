@@ -169,6 +169,8 @@ export interface NewRunOptions {
   mastery?: Profile['mastery'];
   /** Game event editions on right now (core/gameEvents.ts activeGameEvents): their rules apply to this run. */
   gameEvents?: string[];
+  /** The best raid tier the account has won (profile best counter "raidBestTier"); higher tiers stay closed. Default: every tier open. */
+  raidTierUnlocked?: number;
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -234,7 +236,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
-    raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
+    raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
@@ -1089,6 +1091,8 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   run.raids.won += 1;
   count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
+  // Kept as a counter so the account remembers it (profile best "raidBestTier") and opens the next tier in later runs.
+  run.log.counters.raidBestTier = run.raids.bestTier;
   run.raids.done.push(def.id);
   if (def.grand) endGrandBattle(content, run, true, run.party[battle.activeIndex]?.uid);
   return { items, draftExtra: def.rewards.draftExtra, money };

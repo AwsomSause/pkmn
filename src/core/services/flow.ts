@@ -20,6 +20,7 @@ import { changeFriendship } from '../friendship';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
 import type { PokemonInstance, RunState, SideStop } from '../state';
 import { getService, SERVICES, type ServiceDef } from './schema';
+import { highestOpenTier } from '../raid/raid';
 
 export interface ServiceOption {
   id: string;
@@ -306,7 +307,7 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       break;
     case 'observatory': {
       const dens = requireStage(run).map.nodes.flatMap((n) => n.sides).filter((s) => s.kind === 'raid');
-      add('survey', 'Survey the raid dens', `${dens.length} den${dens.length === 1 ? '' : 's'} on this map.`, 0, side.used ? 'You already surveyed from here.' : dens.length === 0 ? 'There are no raid dens on this map.' : null);
+      add('survey', 'Survey the raid dens', `${dens.length} den${dens.length === 1 ? '' : 's'} on this map. Raid tiers open: 1–${highestOpenTier(content, run)} (win a raid to open the next tier for later runs).`, 0, side.used ? 'You already surveyed from here.' : dens.length === 0 ? 'There are no raid dens on this map.' : null);
       break;
     }
     default:

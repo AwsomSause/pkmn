@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { applyBossHp, freshRaidBattle, getRaid, absorbHit, chargedDamage, placeRaidDens } from '../../src/core/raid/raid';
+import { applyBossHp, freshRaidBattle, getRaid, absorbHit, chargedDamage, highestOpenTier, pickRaidFor, placeRaidDens } from '../../src/core/raid/raid';
 import { RaidFileSchema } from '../../src/core/raid/schema';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, enterRaid, raidPreview, takeTurn, visitSide } from '../../src/core/run';
@@ -226,6 +226,31 @@ describe('raid runs', () => {
     expect(res.run.perkEffects).toContainEqual({ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 });
   });
 
+  it('higher raid tiers open across runs: tiers 1-3 at first, then one above the best tier ever won', () => {
+    const fresh = createRun(content, { runId: 'u', seed: 'unlock', archetypeId: 'red', raidTierUnlocked: 0 });
+    expect(fresh.raids.unlockedTier).toBe(0);
+    expect(highestOpenTier(content, fresh)).toBe(3);
+    // The last region's dens are tier 5-6; with only tier 3 open they hold tier 3 raids instead.
+    for (let i = 0; i < 20; i++) expect(pickRaidFor(content, { ...fresh, regionIndex: 9 }, `k${i}`).tier).toBe(3);
+    // Winning a tier 4 raid in an earlier run opens tier 5; winning tier 5 in this run opens tier 6 straight away.
+    const veteran = createRun(content, { runId: 'v', seed: 'unlock', archetypeId: 'red', raidTierUnlocked: 4 });
+    expect(highestOpenTier(content, veteran)).toBe(5);
+    veteran.raids.bestTier = 5;
+    expect(highestOpenTier(content, veteran)).toBe(6);
+    // Without the option (tests, tools, older saves) every tier is open, so existing seeds keep their dens.
+    expect(highestOpenTier(content, createRun(content, { runId: 'o', seed: 'unlock', archetypeId: 'red' }))).toBe(6);
+  });
+
+  it('a raid win is remembered as the "raidBestTier" counter for the account', () => {
+    const run = enterRaid(content, mapRun('rd-best'), 'raid-test');
+    run.battle!.enemyTeam[0]!.hp = 1;
+    run.battle!.raid!.pendingShields = [];
+    run.party[0]!.moves = [{ id: 'tackle', pp: 35 }];
+    run.party[0]!.level = 60;
+    const res = takeTurn(content, run, { kind: 'move', index: 0 });
+    expect(res.run.log.counters.raidBestTier).toBe(getRaid(content, 'sleeping-snorlax').tier);
+  });
+
   it('survives a save and reload mid-raid', () => {
     const run = enterRaid(content, mapRun('rd-4'), 'raid-test');
     run.battle!.raid!.shieldHp = 7;
@@ -242,6 +267,6 @@ describe('raid runs', () => {
     storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 12, savedAt: '', data: old }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
-    if (loaded.status === 'ok') expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] });
+    if (loaded.status === 'ok') expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6 });
   });
 });
