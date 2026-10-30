@@ -132,7 +132,7 @@ export class BattleScene extends Phaser.Scene {
     const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
-    playMusic(this, battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle');
+    playMusic(this, this.raidArena(battle)?.replace('bg.raid.', 'bgm.raid.').replace('tera2', 'tera') ?? (battle.kind === 'trainer' ? 'bgm.battle_trainer' : 'bgm.battle'));
     this.menu = null;
     this.picker = null;
     this.advance = null;
@@ -146,7 +146,8 @@ export class BattleScene extends Phaser.Scene {
     const boss = this.boss();
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
     const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
-    const bg = arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle';
+    const raidArena = this.raidArena(battle);
+    const bg = raidArena ?? (arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
     else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
@@ -418,6 +419,18 @@ export class BattleScene extends Phaser.Scene {
     box.container.addAt(g, 0);
     box.danger = g;
     if (this.motion === 'full') this.tweens.add({ targets: g, alpha: 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
+
+  /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
+  private raidArena(battle: RunState['battle'] & object): string | null {
+    const { content } = services().session;
+    let key: string | null = null;
+    if (battle.raid) {
+      const tier = content.raids.raids.find((r) => r.id === battle.raid!.id)?.tier ?? 1;
+      key = tier <= 2 ? 'ultra' : tier <= 4 ? 'max' : 'tera';
+    } else if (battle.totem) key = 'tera2';
+    const id = key ? `bg.raid.${key}` : null;
+    return id && this.textures.exists(id) ? id : null;
   }
 
   /** The normal header, plus a raid status line (shield, phase count, charged attack, timer). */

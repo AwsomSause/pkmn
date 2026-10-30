@@ -74,6 +74,19 @@ describe('expedition data and routes', () => {
   });
 });
 
+describe('every expedition', () => {
+  for (const def of content.expeditions.expeditions) {
+    it(`${def.id} can be played to the end, won or lost, with the party and loot intact`, () => {
+      const won = walk(beginExpedition(content, gateRun(`e-all-${def.id}`, def.id), 'gate-test'));
+      expect(won.phase).not.toBe('expedition');
+      expect(won.expedition).toBeNull();
+      const lost = walk(beginExpedition(content, gateRun(`e-all-${def.id}`, def.id), 'gate-test'), { loseAt: 1 });
+      expect(lost.phase).not.toBe('expedition');
+      expect(lost.party.length).toBeGreaterThan(0);
+    });
+  }
+});
+
 describe('party modes', () => {
   it('own: the party is unchanged', () => {
     const run = beginExpedition(content, gateRun('e-own', 'ember-trail'), 'gate-test');
