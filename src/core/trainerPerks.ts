@@ -421,6 +421,11 @@ export function doubleBattleRewardPerk(perks: Perks | undefined): number {
   return product(perks, 'doubleBattleRewardMultiplier');
 }
 
+/** EXP multiplier for single battles only (double battles are untouched). */
+export function singleBattleXpPerk(perks: Perks | undefined): number {
+  return product(perks, 'singleBattleXpMultiplier');
+}
+
 export function statusMoveAccuracyPerk(perks: Perks | undefined): number {
   return product(perks, 'statusMoveAccuracy');
 }
