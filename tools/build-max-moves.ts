@@ -57,6 +57,9 @@ type StatChange = { stat: string; stages: number; target: 'self' | 'enemy' };
 interface MaxEffect {
   weather?: string;
   terrain?: string;
+  heal?: number;
+  cureUser?: true;
+  randomStatus?: string[];
   statChanges?: StatChange[];
   status?: string;
   confuse?: true;
@@ -88,6 +91,10 @@ const EFFECTS: Record<string, MaxEffect> = {
 /** G-Max side effects the game can run exactly; the others deal damage only. */
 const G_MAX_EFFECTS: Record<string, MaxEffect> = {
   'g-max-volt-crash': { status: 'par' },
+  'g-max-finale': { heal: 0.1667 },
+  'g-max-sweetness': { cureUser: true },
+  'g-max-stun-shock': { randomStatus: ['par', 'psn'] },
+  'g-max-befuddle': { randomStatus: ['par', 'psn', 'slp'] },
   'g-max-malodor': { status: 'psn' },
   'g-max-smite': { confuse: true },
   'g-max-foam-burst': foe('spe', -2),

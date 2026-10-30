@@ -1275,6 +1275,12 @@ export type ZMoveData = z.infer<typeof ZMoveDataSchema>;
 const MaxEffectSchema = z.object({
   weather: WeatherSchema.optional(),
   terrain: TerrainSchema.optional(),
+  /** Heals the user this fraction of its max HP after the hit (G-Max Finale). */
+  heal: z.number().positive().max(1).optional(),
+  /** Cures the user's status after the hit (G-Max Sweetness). */
+  cureUser: z.literal(true).optional(),
+  /** Inflicts one of these statuses on the target after the hit, picked at random (G-Max Stun Shock, Befuddle). */
+  randomStatus: z.array(StatusIdSchema).min(1).optional(),
   statChanges: z.array(StatChangeSchema.omit({ chance: true })).optional(),
   status: StatusIdSchema.optional(),
   confuse: z.literal(true).optional(),

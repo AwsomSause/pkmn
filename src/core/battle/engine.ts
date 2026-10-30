@@ -61,7 +61,7 @@ import {
 } from './abilities';
 import * as Held from './held';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
-import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
+import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
 
@@ -375,7 +375,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
   const enemyChoice = choiceLock(battle, enemy.mon);
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
-  const enemyMoveIndex =
+  let enemyMoveIndex =
     enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
   let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
@@ -399,6 +399,16 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!battle.outcome) {
     const move = action.kind === 'move' ? action : undefined;
     applyTransformations(ctx, move?.transform, events as TransformStepEvent[], move?.index);
+  }
+  // A boss that unleashed its Z-Power this turn uses that Z-Move instead of the move it chose.
+  const bossZ = (events as TransformStepEvent[]).find((e) => e.type === 'transform' && e.side === 'enemy' && e.kind === 'zmove');
+  if (bossZ?.type === 'transform' && bossZ.moveId) {
+    const zMove = zMoveFor(content, content.moves.get(bossZ.moveId)!);
+    const slot = enemy.mon.moves.findIndex((m) => m.id === bossZ.moveId);
+    if (zMove && slot >= 0) {
+      enemyMove = zMove;
+      enemyMoveIndex = slot;
+    }
   }
   // A Dynamaxed Pokémon uses Max Moves.
   enemyMove = battleMove(content, battle, enemy.mon, enemyMove);
@@ -1550,6 +1560,23 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   if (maxTerrain && ctx.battle.terrain?.id !== maxTerrain) {
     ctx.battle.terrain = { id: maxTerrain, turns: 5 };
     events.push({ type: 'terrain', terrain: maxTerrain });
+  }
+  // G-Max Finale heals, Sweetness cures, Stun Shock and Befuddle inflict a random status.
+  const extras = move.flags.includes('max') && dealt > 0 ? maxMoveExtras(content, move.id) : null;
+  if (extras?.heal && user.mon.hp > 0) {
+    const max = calcStats(content, user.mon).hp;
+    const amount = Math.min(max - user.mon.hp, Math.max(1, Math.floor(max * extras.heal)));
+    if (amount > 0) {
+      user.mon.hp += amount;
+      events.push({ type: 'heal', side: user.side, amount, hpAfter: user.mon.hp });
+    }
+  }
+  if (extras?.cureUser && user.mon.status) {
+    user.mon.status = null;
+    events.push({ type: 'cured', side: user.side });
+  }
+  if (extras?.randomStatus && target.mon.hp > 0 && !target.mon.status) {
+    tryInflictStatus(ctx, user, target, rng.pick(extras.randomStatus), undefined, events, false);
   }
 
   if (landed > 0) afterHitAbilities(ctx, user, target, move, moveType, contact, anyCrit, events);

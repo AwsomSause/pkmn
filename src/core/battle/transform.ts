@@ -273,6 +273,12 @@ export function maxMoveWeather(content: Content, moveId: string): MaxEffect['wea
   return content.maxMoves.effects[moveId]?.weather ?? null;
 }
 
+/** A Max or G-Max Move's after-hit effects the engine runs itself (heal, cure, random status), or null. */
+export function maxMoveExtras(content: Content, moveId: string): MaxEffect | null {
+  const effect = content.maxMoves.effects[moveId] ?? content.maxMoves.gmax[moveId]?.effects;
+  return effect && (effect.heal || effect.cureUser || effect.randomStatus) ? effect : null;
+}
+
 /** The terrain a Max Move sets after it hits (Max Lightning: Electric Terrain), or null. */
 export function maxMoveTerrain(content: Content, moveId: string): MaxEffect['terrain'] | null {
   return content.maxMoves.effects[moveId]?.terrain ?? null;
@@ -394,6 +400,13 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
     if (option) {
       changeForm(ctx, 'enemy', enemy, 'mega', { ...option, itemId: null }, events);
       battle.transform.used.enemy.push('mega');
+    } else if (may('zmove') && bossZMove(content, enemy)) {
+      const move = bossZMove(content, enemy)!;
+      battle.transform.mechanics[enemy.uid] = 'zmove';
+      battle.transform.used.enemy.push('zmove');
+      events.push({ type: 'transform', side: 'enemy', uid: enemy.uid, kind: 'zmove', from: enemy.speciesId, to: enemy.speciesId, itemId: null, moveId: move.id, zMoveId: zMoveFor(content, move)!.id });
+    } else if (may('dynamax')) {
+      dynamax(ctx, 'enemy', enemy, events);
     } else if (may('tera')) {
       // A type specialist Terastallizes into their speciality.
       const specialty = battle.trainer?.leaderId ? content.bosses.get(battle.trainer.leaderId)?.types[0] : undefined;
@@ -494,6 +507,20 @@ export function bossMechanics(content: Content, role: 'gym' | 'elite' | 'champio
   const rules = content.balance.transformations;
   const allowed = role === 'gym' ? gymNumber >= rules.bossGymFrom : role !== null && rules.league;
   if (!allowed) return [];
-  // Bosses don't use Z-Moves or Dynamax yet.
-  return (['mega', 'tera'] as TransformKind[]).filter((m) => !disabled.includes(m));
+  // The Elite Four's aces unleash a Z-Move and the champion's ace Dynamaxes, once a battle; a Mega form or Tera comes first for the rest.
+  const mechanics: TransformKind[] = ['mega', 'tera'];
+  if (role === 'elite') mechanics.push('zmove');
+  if (role === 'champion') mechanics.push('dynamax');
+  return mechanics.filter((m) => !disabled.includes(m));
+}
+
+/** The boss's strongest damaging move that has a Z-Move, or null. */
+function bossZMove(content: Content, mon: PokemonInstance): Move | null {
+  let best: Move | null = null;
+  for (const slot of mon.moves) {
+    const move = content.moves.get(slot.id);
+    if (!move || move.category === 'status' || !zMoveFor(content, move)) continue;
+    if (!best || (content.zMoves.power[move.id] ?? 0) > (content.zMoves.power[best.id] ?? 0)) best = move;
+  }
+  return best;
 }
