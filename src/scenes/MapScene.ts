@@ -4,9 +4,11 @@
 // After a region's last stage the same screen shows its Pokémon League: one
 // straight line of Elite Four members, then the champion.
 
+import { licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
+import { pinnedObjective } from '../core/objectives';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
 import { boxCapacity } from '../core/trainerPerks';
@@ -22,6 +24,7 @@ import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
 import { openBondMenu } from '../ui/bondMenu';
+import { openSummaryMenu } from '../ui/summaryMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
@@ -75,6 +78,7 @@ type Option =
   | { kind: 'items' }
   | { kind: 'story' }
   | { kind: 'bond' }
+  | { kind: 'summary' }
   | { kind: 'box' };
 
 export class MapScene extends Phaser.Scene {
@@ -167,6 +171,9 @@ export class MapScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+
+    const pinned = pinnedObjective(content, run);
+    if (pinned) this.add.text(GAME_WIDTH - 24, 66, `★ ${pinned.text} (${pinned.current}/${pinned.target})`, textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 
     // ---------- the map (scrolls sideways) ----------
     // A bike chosen from the Items menu changes where the player can go.
@@ -340,14 +347,16 @@ export class MapScene extends Phaser.Scene {
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
-    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
-    let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
+    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel }, { option: { kind: 'summary' }, label: 'Summary', color: COLORS.panel });
+    // Narrower buttons when there are many, so they never run into the info line.
+    const bw = buttons.length > 7 ? Math.max(76, Math.floor((GAME_WIDTH - 48) / buttons.length) - 8) : 92;
+    let x = GAME_WIDTH - 24 - buttons.length * (bw + 8) + 4;
     for (const b of buttons) {
       const bxPos = x;
-      drawGlass(this, bxPos, 444, 92, 52, { tint: b.color === COLORS.panel ? AERO.glass : mixColor(b.color, 0x000000, 0.25), rim: b.color === COLORS.panel ? AERO.rim : mixColor(b.color, 0xffffff, 0.45), radius: 16, alpha: 0.95 });
-      this.add.text(bxPos + 46, 470, b.label, textStyle(b.label.length > 7 ? 16 : 22, '#ffffff')).setOrigin(0.5);
-      this.addOption(b.option, () => this.boxCursor(bxPos, 444, 92, 52), { x: bxPos, y: 444, w: 92, h: 52 });
-      x += 100;
+      drawGlass(this, bxPos, 444, bw, 52, { tint: b.color === COLORS.panel ? AERO.glass : mixColor(b.color, 0x000000, 0.25), rim: b.color === COLORS.panel ? AERO.rim : mixColor(b.color, 0xffffff, 0.45), radius: 16, alpha: 0.95 });
+      this.add.text(bxPos + bw / 2, 470, b.label, textStyle(b.label.length > 6 || bw < 92 ? 16 : 22, '#ffffff')).setOrigin(0.5);
+      this.addOption(b.option, () => this.boxCursor(bxPos, 444, bw, 52), { x: bxPos, y: 444, w: bw, h: 52 });
+      x += bw + 8;
     }
 
     // Without a notice, the corner shows the map items that are working (Repel ×2 · Black Flute...).
@@ -490,6 +499,8 @@ export class MapScene extends Phaser.Scene {
         return 'Use medicine or evolution items on your Pokémon.';
       case 'items':
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
+      case 'summary':
+        return 'Look at each Pokémon: types, ability, held items, stats, moves and its story this run.';
       case 'bond':
         return 'See how each Pokémon feels about you: trust, affection, sync and more.';
       case 'story':
@@ -590,6 +601,9 @@ export class MapScene extends Phaser.Scene {
       case 'items':
         this.openItems();
         break;
+      case 'summary':
+        openSummaryMenu(this.fieldHost());
+        break;
       case 'bond':
         openBondMenu(this.fieldHost());
         break;
@@ -659,6 +673,8 @@ export class MapScene extends Phaser.Scene {
       const text = leaders.map((l) => `${bossInfo(content, 'gym', l.leaderId).name} (${l.types.map((t) => t.toUpperCase()).join('/')})`).join(', ');
       rows.push({ action: null, itemId: 'fame-checker', title: 'Fame Checker', text: `Next gym leaders: ${text}`, problem: `Next gym leaders: ${text}` });
     }
+    const licenseText = licenseNote(content, run);
+    if (licenseText) rows.push({ action: null, itemId: '', title: `Field License: ${licenseName(run.prep.license!)}`, text: licenseText, problem: licenseText });
     const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
     const gymText = gym ? this.previewText(gym) : '';
     if (gym && gymText) {

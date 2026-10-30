@@ -134,3 +134,50 @@ describe('game events in saves', () => {
     expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(21);
   });
 });
+
+describe('event registry and scheduling boundaries', () => {
+  const at = (iso: string) => new Date(iso);
+  it('the weekly event changes exactly at Monday 00:00 UTC and not a millisecond before', () => {
+    const sunday = activeGameEvents(content, at('2026-11-01T23:59:59.999Z')).find((a) => !a.archive && a.event.schedule.kind === 'weeklyRotation')!;
+    const monday = activeGameEvents(content, at('2026-11-02T00:00:00.000Z')).find((a) => !a.archive && a.event.schedule.kind === 'weeklyRotation')!;
+    expect(sunday.edition).not.toBe(monday.edition);
+    expect(sunday.endsIn).toBe(1);
+    expect(monday.endsIn).toBe(7 * 86_400_000);
+  });
+  it('a New Year week that belongs to the old ISO year keeps one edition all week', () => {
+    // 2026-12-31 is a Thursday, so the week of 2026-12-28 to 2027-01-03 is 2026-W53.
+    const days = ['2026-12-28', '2026-12-31', '2027-01-03'].map((d) => activeGameEvents(content, at(`${d}T12:00:00Z`)).find((a) => a.event.schedule.kind === 'weeklyRotation')!.edition);
+    expect(new Set(days).size).toBe(1);
+    expect(days[0]).toMatch(/@2026-W53$/);
+  });
+  it('a window that wraps the new year stays one edition on both sides', () => {
+    const wrap = [...content.gameEvents.values()].find((e) => e.schedule.kind === 'yearly' && e.schedule.start > e.schedule.end);
+    if (!wrap || wrap.schedule.kind !== 'yearly') return;
+    const [sm, sd] = wrap.schedule.start.split('-');
+    const [em, ed] = wrap.schedule.end.split('-');
+    const before = activeGameEvents(content, at(`2026-${sm}-${sd}T00:00:00Z`)).find((a) => a.event.id === wrap.id)!;
+    const after = activeGameEvents(content, at(`2027-${em}-${ed}T12:00:00Z`)).find((a) => a.event.id === wrap.id)!;
+    expect(before.edition).toBe(after.edition);
+  });
+  it('every event id and objective claim key is stable and unique across the registry', () => {
+    const keys = new Set<string>();
+    for (const e of content.gameEvents.values()) {
+      expect(e.id).not.toMatch(/[@:]/);
+      for (const o of e.objectives) {
+        const k = `${e.id}:${o.id}`;
+        expect(keys.has(k), k).toBe(false);
+        keys.add(k);
+        expect(['reward', 'fallback']).not.toContain(o.id);
+      }
+    }
+  });
+  it('the content check refuses an objective named like a reward key and a window on a day that does not exist', () => {
+    const raw = structuredClone(RAW_CONTENT) as any;
+    raw.gameEvents.events[0].objectives[0].id = 'reward';
+    expect(() => buildContent(raw)).toThrow('collides with a reward claim key');
+    const raw2 = structuredClone(RAW_CONTENT) as any;
+    const yearly = raw2.gameEvents.events.find((e: any) => e.schedule.kind === 'yearly');
+    yearly.schedule.end = '04-31';
+    expect(() => buildContent(raw2)).toThrow('not a calendar day');
+  });
+});

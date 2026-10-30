@@ -5,8 +5,8 @@
 // percentage, so 100 Strength doubles physical damage); the numbers live in
 // balance.json.
 
-import { runPerks } from './archetypes';
-import { friendshipPerk } from './trainerPerks';
+import { getArchetype, runPerks } from './archetypes';
+import { friendshipPerk, startingAttributes } from './trainerPerks';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type AttributeKey, type Content, type Rarity } from './contentSchema';
 import type { Profile, RunState } from './state';
 import { hyperChance } from './story/hyper';
@@ -47,11 +47,37 @@ export function permanentAttributes(content: Content, profile: Profile): Attribu
   return out;
 }
 
+/** The layers an effective attribute is built from (Untitled doc §6), before clamping. */
+export interface AttributeLayers {
+  /** The profile's permanent value when the run began. */
+  baseline: Attributes;
+  /** What the chosen trainer's own profile adds. */
+  trainer: Attributes;
+  /** Everything the run itself earned or lost since: rewards, shops, events. Kept in the save, so it survives battles, stages and reloads. */
+  earned: Attributes;
+  /** The clamped total the game uses. */
+  effective: Attributes;
+}
+
+/** The one place the layers are combined: clamp(baseline + trainer + run-earned). Temporary battle effects are a separate layer and never touch these. */
+export function attributeLayers(content: Content, run: Pick<RunState, 'archetypeId' | 'baseAttributes' | 'attributeModifiers'>): AttributeLayers {
+  const trainerStart = startingAttributes(getArchetype(content, run.archetypeId).modifiers);
+  const baseline = zeroAttributes();
+  const trainer = zeroAttributes();
+  const earned = zeroAttributes();
+  const effective = zeroAttributes();
+  for (const k of ATTRIBUTE_KEYS) {
+    baseline[k] = run.baseAttributes[k] ?? 0;
+    trainer[k] = trainerStart[k] ?? 0;
+    earned[k] = (run.attributeModifiers[k] ?? 0) - trainer[k];
+    effective[k] = clampAttribute(content, k, baseline[k] + trainer[k] + earned[k]);
+  }
+  return { baseline, trainer, earned, effective };
+}
+
 /** The run's effective attributes: the permanent value at the start plus the run's modifiers, clamped. */
 export function effectiveAttributes(content: Content, run: RunState): Attributes {
-  return Object.fromEntries(
-    ATTRIBUTE_KEYS.map((k) => [k, clampAttribute(content, k, (run.baseAttributes[k] ?? 0) + (run.attributeModifiers[k] ?? 0))]),
-  ) as Attributes;
+  return attributeLayers(content, run).effective;
 }
 
 /** What the attributes add up to, as multipliers and chances. 1 (or 0 for chances) means no effect. */

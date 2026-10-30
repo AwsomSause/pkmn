@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { applyBossHp, freshRaidBattle, getRaid, absorbHit, placeRaidDens } from '../../src/core/raid/raid';
+import { applyBossHp, freshRaidBattle, getRaid, absorbHit, chargedDamage, placeRaidDens } from '../../src/core/raid/raid';
 import { RaidFileSchema } from '../../src/core/raid/schema';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, enterRaid, raidPreview, takeTurn, visitSide } from '../../src/core/run';
@@ -100,6 +100,20 @@ describe('raid mechanics', () => {
     }
     expect(warned).toEqual([4, 9]);
     expect(battle.raid!.charging).toBe(true);
+  });
+
+  it('a charged attack is interrupted by sleep, paralysis or freeze, and burn does not stop it', () => {
+    const { battle, boss } = fight('storm-gyarados');
+    const boost = getRaid(content, 'storm-gyarados').telegraph!.boost;
+    battle.raid!.charging = true;
+    boss.status = { id: 'brn' };
+    expect(chargedDamage(content, battle, 100)).toBe(Math.floor(100 * boost));
+    battle.raid!.charging = true;
+    boss.status = { id: 'par' };
+    expect(chargedDamage(content, battle, 100)).toBe(100);
+    expect(battle.raid!.charging).toBe(false);
+    expect(battle.raid!.nextCharge).toBe(getRaid(content, 'storm-gyarados').telegraph!.everyTurns);
+    expect(battle.raid!.notes.at(-1)!.text).toContain('interrupted');
   });
 
   it('extra actions only fire under the HP line and never more than max', () => {

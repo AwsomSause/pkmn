@@ -90,3 +90,50 @@ describe('Grand-Enemy battles', () => {
     expect(run.story.chronicle.at(-1)!.text).toContain('learned how it fights');
   });
 });
+
+describe('Grand-Enemy influence and Grudge target', () => {
+  it('stirs the wild once from escalation, and prepares a Speed boost against the Pokémon that stood against it most', async () => {
+    const g = await import('../../src/core/story/grandEnemy');
+    const { run, mon } = fresh('ge-influence');
+    const last = run.regionOrder.length - 1;
+    const rare = (r: typeof run) => (r.perkEffects ?? []).filter((e) => e.kind === 'encounterWeightMultiplier' && e.group === 'rare').length;
+    run.regionIndex = 0;
+    g.applyGrandInfluence(content, run);
+    expect(rare(run)).toBe(0);
+    run.regionIndex = Math.ceil(last * 0.6);
+    g.applyGrandInfluence(content, run);
+    g.applyGrandInfluence(content, run);
+    expect(rare(run)).toBe(1);
+
+    expect(g.grudgeTarget(run)).toBeNull();
+    run.story.flags[`ge:fought:${mon.uid}`] = 4;
+    expect(g.grudgeTarget(run)).toBe(mon.uid);
+    run.battle = { enemyStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } } as never;
+    g.startGrandBattle(content, run);
+    expect((run.battle as unknown as { enemyStages: Record<string, number> }).enemyStages.spe).toBe(1);
+  });
+});
+
+
+describe('Grand-Enemy hunt', () => {
+  it('clues reveal weaknesses before any fight, the lair unlocks at the last clue, and finishing gives the title once', async () => {
+    const g = await import('../../src/core/story/grandEnemy');
+    const { eligibleEvents } = await import('../../src/core/events');
+    const { run, mon } = fresh('ge-hunt');
+    run.regionIndex = Math.min(3, run.regionOrder.length - 1);
+    const need = content.story.grandEnemy.huntClues;
+    const ids = () => eligibleEvents(content, run).map((e) => e.id);
+    expect(ids()).toContain('hunt-clue-scorch');
+    expect(ids()).not.toContain('hunt-lair');
+    expect(g.grandWeaknesses(content, run, 'lugia')).toEqual([]);
+    for (let i = 0; i < need + 2; i++) g.addHuntClue(content, run);
+    expect(g.huntClues(run)).toBe(need);
+    expect(g.grandWeaknesses(content, run, 'lugia').length).toBeGreaterThan(0);
+    expect(ids()).not.toContain('hunt-clue-scorch');
+    expect(ids()).toContain('hunt-lair');
+    expect(g.finishHunt(content, run)).toContain(content.story.grandEnemy.huntTitle);
+    expect(g.finishHunt(content, run)).toBe('');
+    expect(run.story.histories[mon.uid]!.titles.filter((t) => t === content.story.grandEnemy.huntTitle)).toHaveLength(1);
+    expect(ids()).not.toContain('hunt-lair');
+  });
+});

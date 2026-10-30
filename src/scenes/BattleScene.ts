@@ -8,7 +8,7 @@ import Phaser from 'phaser';
 import { wildBehavior } from '../core/wildBehavior';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
-import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
+import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
@@ -32,10 +32,11 @@ import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { wouldRefuse } from '../core/bond';
-import { presentationFor } from '../core/presentation/moveAnims';
+import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
+import { cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
 import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
@@ -479,8 +480,9 @@ export class BattleScene extends Phaser.Scene {
 
   /** Starts loading the animations of a Pokémon's moves while the player reads. */
   private prefetchMoves(mon: PokemonInstance): void {
+    prefetchCinematics(this);
     const data = moveAnims();
-    this.fx.prefetch(mon.moves.map((m) => presentationFor(data, m.id).anim));
+    this.fx.prefetch(mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim));
   }
 
   /**
@@ -1415,25 +1417,48 @@ export class BattleScene extends Phaser.Scene {
           break;
         }
         case 'transform': {
-          // Presentation cue only: a flash and the new form's sprite (full cinematics are M9.5).
+          // Presentation only: a cinematic for the big moments (battleFx/cinematics.ts), then the new form's sprite.
           if (e.kind === 'mega' && e.itemId) await this.say(`${this.speciesName(mon!)}'s ${content.items.get(e.itemId)?.name ?? 'Mega Stone'} is reacting to your Mega Ring!`);
           // A Z-Move flashes in its type's colour.
-          const zType = e.kind === 'zmove' && e.moveId ? content.moves.get(e.moveId)?.type : undefined;
-          // A radiant burst on the Pokémon (Deluxe Battle Kit art), in the Z-Move's or Tera Type's colour.
+          const zBase = e.kind === 'zmove' && e.moveId ? content.moves.get(e.moveId) : undefined;
+          const zType = zBase?.type;
           const teraType = e.kind === 'tera' ? this.run.battle?.transform.teraTypes[mon!.uid] : undefined;
-          const glowColor = zType ? (TYPE_COLORS[zType] ?? 0xffffff) : teraType ? (TYPE_COLORS[teraType] ?? 0xffffff) : e.kind.startsWith('dynamax') || e.kind === 'gigantamax' ? 0xff3060 : 0x9fe8ff;
-          const at = this.spotXY(e.side);
-          if (e.kind !== 'illusion') await burstReveal(this, at.x, at.y - 80, glowColor, this.motion).done;
-          if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
-          else {
+          const isMax = e.kind === 'dynamax' || e.kind === 'gigantamax' || e.kind === 'dynamaxEnd';
+          const glowColor = zType ? (TYPE_COLORS[zType] ?? 0xffffff) : teraType ? (TYPE_COLORS[teraType] ?? 0xffffff) : isMax ? 0xff3060 : e.kind === 'primal' ? (e.to.includes('kyogre') ? 0x3a7bff : 0xff4a2a) : 0xd070ff;
+          const swapForm = () => {
+            if (e.kind === 'tera' || e.kind === 'zmove') return;
             // Dynamax doubles HP (and its end halves it again), the same way the battle rules do.
-            const dynamaxChange = e.kind === 'dynamax' || e.kind === 'gigantamax' || e.kind === 'dynamaxEnd';
             const before = calcStats(content, mon!).hp;
             mon!.speciesId = e.to;
             if (e.kind === 'dynamaxEnd') delete mon!.dynamaxed;
-            else if (dynamaxChange) mon!.dynamaxed = true;
-            if ((dynamaxChange || e.kind === 'ability') && mon!.hp > 0) mon!.hp = Math.max(1, Math.round((mon!.hp * calcStats(content, mon!).hp) / before));
+            else if (isMax) mon!.dynamaxed = true;
+            if ((isMax || e.kind === 'ability') && mon!.hp > 0) mon!.hp = Math.max(1, Math.round((mon!.hp * calcStats(content, mon!).hp) / before));
             this.showSprite(e.side, mon!, e.kind !== 'dynamaxEnd');
+          };
+          const at = this.spotXY(e.side);
+          const cine: CineKind | null = e.kind === 'mega' || e.kind === 'primal' || e.kind === 'dynamax' || e.kind === 'gigantamax' || e.kind === 'dynamaxEnd' || e.kind === 'zmove' || e.kind === 'tera' ? e.kind : null;
+          if (cine) {
+            const zMove = zBase ? zMoveFor(content, zBase) : null;
+            await this.playBeat(
+              cinematic(this, {
+                kind: cine,
+                x: at.x,
+                y: at.y - 80,
+                sprite: e.side === 'player' ? this.playerSprite : this.enemySprite,
+                tint: glowColor,
+                crystal: e.kind === 'primal' ? (e.to.includes('kyogre') ? 'alpha' : 'omega') : 'mega',
+                title: zMove?.name,
+                motion: this.motion,
+                // The scene's clock already runs at the battle speed.
+                speed: 1,
+                intensity: services().session.settings.effectIntensity,
+                onSwap: swapForm,
+              }),
+            );
+            if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
+          } else {
+            if (e.kind !== 'illusion') await burstReveal(this, at.x, at.y - 80, glowColor, this.motion).done;
+            swapForm();
           }
           this.applyTeraTint(e.side, mon!);
           await this.refreshInfoBox(box, mon!, false);

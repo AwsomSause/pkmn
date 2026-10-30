@@ -7,6 +7,7 @@
 import { chemistryOf } from './chemistry';
 import { lossesTo, noteLoss, promiseDoneFlag, promiseOf } from './promises';
 import { openingFor, rivalFeeling } from '../rivals/feelings';
+import { crisisMoments } from './crisis';
 import { grandMoment } from './grandEnemy';
 import type { Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
@@ -56,6 +57,8 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   grandOmen: 'flair',
   grandShadow: 'enemyStage',
   grandGrudge: 'statStage',
+  crisisLoom: 'enemyStage',
+  crisisAid: 'statStage',
   studentLearned: 'statStage',
   studentSurpassed: 'flair',
   lastLesson: 'flair',
@@ -290,6 +293,7 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (boss) {
       const g = grandMoment(content, run, lead.uid);
       if (g) fire(g, g === 'grandShadow' ? 'enemy' : 'player', g === 'grandShadow' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+      for (const c of crisisMoments(run)) fire(c, c === 'crisisLoom' ? 'enemy' : 'player', c === 'crisisLoom' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     }
     // Wild Encounter Recognition: a species that beat your team ambushes; a wild kin of a party member is recognised.
     if (battle.kind === 'wild') {

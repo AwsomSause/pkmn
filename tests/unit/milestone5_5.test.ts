@@ -225,6 +225,6 @@ describe('content checks and save upgrades', () => {
     storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 5, savedAt: 'x', data: oldRun }));
     const result = saves.loadRun();
     expect(result.status).toBe('ok');
-    if (result.status === 'ok') expect(result.data.prep).toEqual({ campaignId: 'dev', poolId: 'classic', draftRuleId: 'standard', typeFocus: null, tokenId: null, note: null, directive: null });
+    if (result.status === 'ok') expect(result.data.prep).toEqual({ campaignId: 'dev', poolId: 'classic', draftRuleId: 'standard', typeFocus: null, tokenId: null, note: null, directive: null, license: null });
   });
 });

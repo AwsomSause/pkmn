@@ -2,7 +2,7 @@
 // territorial warnings (#30) and one ecological chain (#32, #65, #66): clue -> choice -> consequence -> callback.
 // Chains use `requires: eventSeen`, so a later link only appears if the earlier one really happened this run.
 
-import { $, ch, ev, fight, fr, good, item, join, leave, out, rp, hurt, wild, type Json, any, BERRIES } from './dsl.ts';
+import { $, ch, ev, fight, fr, good, heal, item, join, leave, lv, out, rp, hurt, wild, type Json, any, BERRIES } from './dsl.ts';
 
 const W = 'Wild Pokémon scenes';
 const seen = (id: string): Json => ({ kind: 'eventSeen', id });
@@ -36,5 +36,29 @@ export const WILD_EVENTS: Json[] = [
   ev('habitat-restored', 'The Habitat Recovers', W, { rarity: 'rare', minStage: 3, requires: [seen('poacher-hideout')], effect: 'hearts', tint: '#183020' }, 'The grove you helped is alive again. The Pokémon here remember you.', [
     ch('Walk through', fight('A rare Pokémon steps out of the grove, calm and curious.', wild({ lv: 2, shiny: 3 }), fr(3))),
     ch('Rest by the water', out('The Pokémon bring you berries and keep you company.', any(...BERRIES), fr(5), good(1))),
+  ]),
+];
+
+// ---- Shadow arc (#76-77): sighting -> rescue -> stabilize -> purify. Each link needs the one before it this run. ----
+const SH = 'Shadow Pokémon';
+export const SHADOW_EVENTS: Json[] = [
+  ev('shadow-sighting', 'A Dark Aura', SH, { rarity: 'uncommon', minStage: 2, effect: 'fog', tint: '#150a20' }, 'A Pokémon stands very still, wrapped in a purple haze. Its eyes are empty.', [
+    ch('Watch from the trees', out('It moves like something is steering it. You write down what you see.', rp(10))),
+    ch('Throw it a berry', out('The haze flickers for a moment. It does not eat, but it does not attack.', fr(2), good(1))),
+    ch('Back away', leave('The haze fades behind you.')),
+  ]),
+  ev('shadow-sanctuary', 'The Shadow Sanctuary', SH, { rarity: 'rare', minStage: 3, requires: [seen('shadow-sighting')], effect: 'flicker', tint: '#120820' }, 'A ruined hut hides a caged Pokémon wrapped in the same dark haze. A tired caretaker keeps watch.', [
+    ch('Break the cage open', fight('The shadowed Pokémon lashes out, scared and strong!', wild({ types: ['dark', 'ghost', 'poison'], lv: 3, win: [item('rare-candy')] }), good(2)), { check: 'strength', fail: out('The lock holds and the caretaker shoos you away.', hurt(0.05)) }),
+    ch('Help the caretaker', out('Together you calm it. It chooses to follow you, still shaded.', good(3), join({ types: ['dark', 'ghost', 'poison'], lv: -1 }))),
+    ch('Leave them to it', leave('You close the door softly.')),
+  ]),
+  ev('shadow-stabilize', 'Steadying the Shadow', SH, { rarity: 'rare', minStage: 4, requires: [seen('shadow-sanctuary')], effect: 'glint', tint: '#1a1030' }, 'Your shadowed friend flinches at loud noises. Slow, steady care seems to ease the haze.', [
+    ch('Sit with it through the night', out('By morning the haze is thinner. It leans against you.', fr(6), good(2), heal(0.5))),
+    ch('Train it gently', out('Its moves are sharper, and its eyes flash with a spark of itself.', lv(1, 'lead'), fr(3))),
+    ch('Give it space', leave('It settles down alone.')),
+  ]),
+  ev('shadow-purified', 'The Haze Lifts', SH, { rarity: 'rare', minStage: 5, requires: [seen('shadow-stabilize')], effect: 'hearts', tint: '#2a1850' }, 'The last of the haze lifts from your friend like smoke. It looks at you, finally clear-eyed.', [
+    ch('Celebrate together', out('It cries out with joy. Warmth floods your whole party.', fr(8), good(3), heal(1))),
+    ch('Share a quiet moment', out('It brushes a strange glowing stone toward you.', item('rare-candy'), rp(15))),
   ]),
 ];

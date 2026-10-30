@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { directiveText } from '../core/directive';
+import { licenseName } from '../core/license';
 import { getArchetype } from '../core/archetypes';
 import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
@@ -55,6 +56,7 @@ export class BriefingScene extends Phaser.Scene {
     line('Rules', `${pool?.name ?? run.prep.poolId} pool, ${rule?.name ?? run.prep.draftRuleId}${run.prep.typeFocus ? ` (${capitalise(run.prep.typeFocus)})` : ''}; preparation: ${token?.name ?? 'none'}`);
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
     if (run.prep.directive) line('Directive', directiveText(content, run.prep.directive));
+    if (run.prep.license) line('Field License', licenseName(run.prep.license));
     for (const edition of run.gameEvents) {
       const ge = content.gameEvents.get(eventIdOf(edition));
       if (ge) line(ge.name, ge.ruleText);

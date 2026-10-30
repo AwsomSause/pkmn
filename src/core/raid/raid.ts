@@ -95,8 +95,17 @@ export function absorbHit(content: Content, battle: BattleState, boss: PokemonIn
 export function chargedDamage(content: Content, battle: BattleState, amount: number): number {
   const raid = battle.raid;
   if (!raid || !raid.charging) return amount;
-  const boost = getRaid(content, raid.id).telegraph?.boost ?? 1;
-  return Math.floor(amount * boost);
+  const tele = getRaid(content, raid.id).telegraph;
+  // Counterplay: a boss under sleep, paralysis or freeze loses its charge.
+  const boss = battle.enemyTeam[battle.enemyIndex];
+  const status = boss?.status?.id;
+  if (tele && status && (tele.interruptedBy as string[]).includes(status)) {
+    raid.charging = false;
+    raid.nextCharge = tele.everyTurns;
+    raid.notes.push({ tone: 'info', text: 'The charged attack was interrupted!' });
+    return amount;
+  }
+  return Math.floor(amount * (tele?.boost ?? 1));
 }
 
 export type RaidAction =
@@ -166,7 +175,7 @@ export function describeMechanics(def: RaidDef): string[] {
   const out = [`HP pool ×${(1 + def.hpBoostPercent / 100).toFixed(1)}`];
   if (def.shield) out.push(`${def.shield.at.length} shield${def.shield.at.length > 1 ? 's' : ''}`);
   if (def.phases.length > 0) out.push(`${def.phases.length} phase${def.phases.length > 1 ? 's' : ''}`);
-  if (def.telegraph) out.push('charged attack');
+  if (def.telegraph) out.push(`charged attack (${def.telegraph.interruptedBy.map((s) => ({ slp: "sleep", par: "paralysis", frz: "freeze" })[s]).join(', ')} interrupts it)`);
   if (def.extraActions) out.push('bonus attacks');
   if (def.timerTurns) out.push(`${def.timerTurns}-turn timer`);
   if (def.weather) out.push(`${def.weather} field`);

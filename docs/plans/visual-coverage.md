@@ -33,7 +33,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Layer 3 sprites: idle breathing, entry | BUILT | slice 1 |
 | Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
 | Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
-| Held item / ability badges when supported | TODO | slice 5 (party/detail info panel, Enhanced Battle UI `info_*` art) |
+| Held item / ability badges when supported | BUILT | slice 9 Summary: ability + description, held item icons, EBUI gender marks and stat arrows |
 | Boss phase indicator | BUILT | header phase count (other thread) + NEW PHASE banner with the phase's rule (slice 7) |
 | Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
 | Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
@@ -62,7 +62,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Phase-change banner with written rule | BUILT | `phaseBanner` in `battleFx/spectacle.ts`: raid/totem phase events (slice 7) |
 | Ace entry beat | BUILT | last Pokémon of a trainer team: burst + ACE! stamp (slice 4) |
 | Victory pose / particles / Chronicle stamp | BUILT | hop + VICTORY!/BADGE GET!/CHAMPION! stamps with sparkles (slice 4) |
-| Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
+| Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | BUILT | full cinematics (slice 8c, `battleFx/cinematics.ts`); before: DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); EBDX Mega/Dynamax symbols in the databox (slice 3) |
 | Evolution sequence | PART | burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
 | Rival callouts from real memory | BUILT | rival lines come from Drama/rival memory and show in the speech bubble (slice 7) |
 | Gym leader intro and defeat sequence, gym motif | PART | intro card, badge stamp (slice 4); per-gym motif = type ambience of the leader's type |
@@ -71,11 +71,17 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Item | Status | Where / note |
 |---|---|---|
 | Validated adapter into project schema | BUILT | `core/presentation/animFormat.ts`, `moveAnims.ts` |
-| Data-driven startup/travel/impact/aftermath/camera/audio/fallback | PART | PokeRogue anims + fallback; family schema: slice 6 |
-| 26 animation families | TODO | slice 6 |
-| Per-type visual vocabulary table (VB 7) | PART | type-coloured telegraph; family grammar slice 6 |
-| Report per active move (mechanic, visual, sound, fallback, test, duration) | TODO | slice 6 (`report:anims`) |
-| EBDX move animation sheets (Graphics/EBDX/Animations/Moves, 635) | TODO | slice 6: use for moves with no PokeRogue anim |
+| Data-driven startup/travel/impact/aftermath/camera/audio/fallback | BUILT | slice 8: Essentials pack anim → PokeRogue anim → family recipe (`core/presentation/families.ts`, `ui/battleFx/familyFx.ts`) |
+| 26 animation families | BUILT | slice 8: all 26 in use (`docs/quality/MOVE_ANIMATIONS.md`) |
+| Per-type visual vocabulary table (VB 7) | BUILT | type colour + type→family (`TYPE_FAMILY`) |
+| Report per active move (mechanic, visual, sound, fallback, test, duration) | BUILT | `npm run report:anims -- --write` → `docs/quality/MOVE_ANIMATIONS.md` (family, first choice, stand-by, status) |
+| Essentials pack move animations (PkmnAnimations.rxdata, 212 moves + 11 status) | BUILT | slice 8: `npm run data:pack-anims`, played first |
+| EBDX scripted move animations (442 Ruby scripts) | LIMITED | code, not frame data; graphics reused for cinematics (slice 8c) |
+| Z-Move / Max Move attack animations | LIMITED | no pack has them; they borrow a same-type anim, then the signature family burst plays on top |
+| Mega / Primal cinematic | BUILT | slice 8c: EBDX Primega crystal builds, cracks and shatters into the new form (Mega purple, Groudon Omega, Kyogre Alpha) |
+| Dynamax / Gigantamax / end cinematic | BUILT | slice 8c: Raid Battles Max storm (bg, spirals, Max icon), red energy, shake; red puff when it ends |
+| Z-Power cinematic | BUILT | slice 8c: cinematic bars, Raid Ultra cosmos + Z crystal, type-coloured rings, the Z-Move's name |
+| Terastal cinematic | BUILT | slice 8c: Raid Tera crystal sky, spiral and icon in the Tera Type colour |
 
 ## V4 — other gameplay screens (BR 5, VB 5–6, CR 6)
 | Item | Status | Where / note |
@@ -83,7 +89,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Map: clear node states, icon language, risk text, travelling highlight, parallax, boss column | BUILT | slice 6: glass header/footer and pill buttons; stage-type ambience + drifting scenery; open paths glow with travelling lights; breathing halo on reachable nodes, ✓ on visited ones; bouncy focus ring; glowing boss column; "Risk: high / boss" in the info line; a token hops to the chosen node before the battle |
 | Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | BUILT | glass cards with rarity rim, deal-in, focus lift, chosen card flies off with a burst (slice 5) |
 | Shop: money/price labels, category icons, SOLD state, focus details | PART | glass shop/bag/party lists and Aero backdrop (slice 5); category icons + SOLD stamp: slice 8 |
-| Party/detail: tabs, moves with type/category, memories | TODO | slice 9 |
+| Party/detail: tabs, moves with type/category, memories | BUILT | slice 9: map → Summary (`ui/summaryMenu.ts`): Info & stats page, Moves & story page per Pokémon |
 | Event choice: illustration, 2–4 options with costs, consequence ack | PART | Aero backdrop + glass pickers on event/decision screens (slice 5); illustration frame: slice 9 |
 | League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); league escalation: slice 10 |
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
@@ -105,7 +111,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 |---|---|---|
 | Layer order: ambience → grounded sprites → panels → effect → command | BUILT | BattleScene |
 | Palette (plum/red/amber) | PART | Kice's later direction (Aero/DS/Wii/cyber, 2026-10-30) wins for battle and gameplay screens; HP green and EXP blue kept; Hub/Trainer keep the plum palette |
-| Effect templates: contact, projectile, beam, elemental, status, healing, protection, field, signature | TODO | slice 6 |
+| Effect templates: contact, projectile, beam, elemental, status, healing, protection, field, signature | BUILT | 26 families (slice 8, `familyFx.ts`) |
 | Effects explain the action (wind-up → direction → impact → consequence) | PART | telegraph + anim + impact cues (M9) |
 | Menus tactile and readable, no overlapping panels | BUILT | slice 1 |
 | Gameplay authoritative; missing animation never breaks a battle | BUILT | cues layer + fallback |

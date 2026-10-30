@@ -200,6 +200,16 @@ export function statusTurnsPerk(perks: Perks | undefined, turns: number): number
   return Math.ceil(turns * product(perks, 'statusDurationMultiplier')) + sum(perks, 'statusDurationBonus', (m) => m.turns);
 }
 
+/** Extra turns a burn or poison you inflict lasts. */
+/** How much longer the shop sale lasts before it changes (Kurt: 1.25). */
+export function shopRefreshPerk(perks: Perks | undefined): number {
+  return product(perks, 'shopRefreshMultiplier');
+}
+
+export function statusLengthPerk(perks: Perks | undefined, status: 'brn' | 'psn'): number {
+  return sum(perks, 'statusLengthBonus', (m) => (m.status === status ? m.turns : 0));
+}
+
 export function statusChancePerk(perks: Perks | undefined, userTypes: readonly TypeName[], status?: string): number {
   return product(perks, 'statusChanceMultiplier', (m) => (!m.type || userTypes.includes(m.type)) && (!m.status || m.status === status));
 }
@@ -421,6 +431,11 @@ export function hatchLevelOffset(perks: Perks | undefined): number {
 
 export function doubleBattleRewardPerk(perks: Perks | undefined): number {
   return product(perks, 'doubleBattleRewardMultiplier');
+}
+
+/** EXP multiplier for single battles only (double battles are untouched). */
+export function singleBattleXpPerk(perks: Perks | undefined): number {
+  return product(perks, 'singleBattleXpMultiplier');
 }
 
 export function statusMoveAccuracyPerk(perks: Perks | undefined): number {

@@ -20575,6 +20575,1352 @@
    ]
   },
   {
+   "id": "crisis-report-industry",
+   "name": "Smoke on the Horizon",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2018",
+    "effect": "glint"
+   },
+   "intro": "A factory on the edge of town has gone wrong. Smoke is rolling over the fields and the workers are waving for help.",
+   "choices": [
+    {
+     "label": "Help clear the site (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring supplies (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-flood",
+   "name": "The River Is Rising",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1a2838",
+    "effect": "glint"
+   },
+   "intro": "The river has burst its banks. Families are carrying what they can to higher ground.",
+   "choices": [
+    {
+     "label": "Help carry people to safety (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring sandbags and supplies (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-outbreak",
+   "name": "Something Is Making Pokémon Sick",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1f2a1d",
+    "effect": "glint"
+   },
+   "intro": "Pokémon across the region are coming down with the same fever. The local ranger looks exhausted.",
+   "choices": [
+    {
+     "label": "Help treat them (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring medicine (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-report-blackout",
+   "name": "The Lights Went Out",
+   "group": "Regional Crisis",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 2,
+     "atMost": 5
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#14141f",
+    "effect": "glint"
+   },
+   "intro": "Every light in the next town is dark. A stranger stands at the generator: \"Whatever it is, it is getting worse.\"",
+   "choices": [
+    {
+     "label": "Help restore the power (safe)",
+     "success": {
+      "text": "You pitch in at once. People remember it, and some of them promise to stand with you.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bring spare parts (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "You gather what the region needs most. The trouble eases a little.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       },
+       {
+        "kind": "aid",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Ignore it and keep moving",
+     "success": {
+      "text": "You are not the only one who walks on. The trouble keeps growing, but a grateful merchant pays you for your silence.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "crisis-old-friend",
+   "name": "They Heard You Were Here",
+   "group": "Regional Crisis",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "crisis",
+     "atLeast": 3,
+     "atMost": 5
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2038",
+    "effect": "hearts"
+   },
+   "intro": "A rival you have fought more than once is waiting at the town gate, team at full strength. \"Whatever this is, you will not face it alone. Not again.\"",
+   "choices": [
+    {
+     "label": "Fight side by side",
+     "success": {
+      "text": "You stand together. Your Pokémon feel the difference.",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -2
+       },
+       {
+        "kind": "aid",
+        "amount": 2
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Thank them, but go alone",
+     "success": {
+      "text": "They nod. \"Your call.\"",
+      "effects": [
+       {
+        "kind": "crisis",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "camp-council",
+   "name": "Camp Council",
+   "group": "Camp",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#20281f",
+    "effect": "hearts"
+   },
+   "intro": "A quiet camp between two roads. You have an hour. Your team is looking at you to decide how to spend it.",
+   "choices": [
+    {
+     "label": "Study a move together",
+     "chance": 0.6,
+     "success": {
+      "text": "Your lead works on a technique it has been curious about.",
+      "effects": [
+       {
+        "kind": "eggMove"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nothing clicks today, but the effort counts.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Settle a disagreement",
+     "success": {
+      "text": "You listen to both sides. The air clears, and the team is closer for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Scout ahead",
+     "success": {
+      "text": "You climb a ridge and see the road ahead.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "gymPreview"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Care for the injured",
+     "success": {
+      "text": "You tend every scrape and bruise.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "relic-shrine",
+   "name": "The Relic Shrine",
+   "group": "Relics",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2410",
+    "effect": "glint"
+   },
+   "intro": "Three relics rest on a stone table. A plaque reads: \"Each gift has its price. You may take only one.\"",
+   "choices": [
+    {
+     "label": "The Glass Crown (more Hyper, tougher rivals)",
+     "success": {
+      "text": "The crown hums on your head. Rivals will feel it too.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "glass-crown",
+        "name": "Glass Crown",
+        "effects": [
+         {
+          "kind": "hyperChanceMultiplier",
+          "value": 1.5
+         },
+         {
+          "kind": "rivalLevelOffset",
+          "value": 3
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Wanderer's Compass (more rare finds, weaker catches)",
+     "success": {
+      "text": "The needle spins toward strange places.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "wanderer-compass",
+        "name": "Wanderer's Compass",
+        "effects": [
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.6
+         },
+         {
+          "kind": "catchLevelOffset",
+          "value": -2
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Heavy Heart (an extra held item, slower evolution)",
+     "success": {
+      "text": "Your Pokémon feel steadier, and slower to change.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "heavy-heart",
+        "name": "Heavy Heart",
+        "effects": [
+         {
+          "kind": "itemSlotOffset",
+          "value": 1
+         },
+         {
+          "kind": "evolutionLevelOffset",
+          "value": 4
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-feud",
+   "name": "Two Rivals, One Argument",
+   "group": "Rival Feud",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "feud"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d1d",
+    "effect": "glint"
+   },
+   "intro": "Two trainers you have both met are in the middle of the road, shouting. Each sees you and demands you take a side. A crowd is already gathering.",
+   "choices": [
+    {
+     "label": "Back the stronger rival",
+     "success": {
+      "text": "You stand beside them. The crowd goes quiet.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "first"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Back the underdog",
+     "success": {
+      "text": "You stand beside them. The crowd goes quiet.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "second"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay out of it",
+     "success": {
+      "text": "You walk through the crowd without a word.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "stay-out"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Work the crowd (risky)",
+     "chance": 0.7,
+     "success": {
+      "text": "While everyone is watching them, you collect a fair amount from the distracted crowd.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "exploit"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       }
+      ]
+     },
+     "failure": {
+      "text": "Someone spots you. You leave in a hurry with nothing, and both rivals saw it.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "exploit"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "champion-defense",
+   "name": "The Champion Who Came Before",
+   "group": "Hall of Fame",
+   "rarity": "rare",
+   "minStage": 6,
+   "requires": [
+    {
+     "kind": "championGhost"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2410",
+    "effect": "sparkle"
+   },
+   "intro": "A banner bears the name of a champion team you built in another life. Today the Hall has rebuilt that team and put it on the field. It is not a replay of how you won, just the same Pokémon at the same strength, fighting as hard as they know how.",
+   "choices": [
+    {
+     "label": "Defend your name",
+     "success": {
+      "text": "The old champions walk out.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hall of Fame Team",
+       "ghost": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 100
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Salute and walk on",
+     "success": {
+      "text": "You tip your cap to the old team and leave them to their stage.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-gauntlet-entry",
+   "name": "The Rival Gauntlet",
+   "group": "Rival Tournament",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "gauntlet",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#38202a",
+    "effect": "sparkle"
+   },
+   "intro": "A hand-painted sign on the wall: \"Everyone you have ever beaten wants a word.\" Rivals you have crossed paths with are lining up, each with the team they have trained since.",
+   "choices": [
+    {
+     "label": "Take on the gauntlet",
+     "success": {
+      "text": "Word spreads fast. One rival will meet you on each of the next stops, in order of how dangerous they are. Beat them all for a big purse.",
+      "effects": [
+       {
+        "kind": "gauntlet",
+        "rivals": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-scorch",
+   "name": "Scorch Marks in a Perfect Circle",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d18",
+    "effect": "fog"
+   },
+   "intro": "The grass is burned in a ring, as wide as a house. Nothing living would do this. Something very large landed here.",
+   "choices": [
+    {
+     "label": "Study the marks",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-witness",
+   "name": "A Shaken Witness",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "fog"
+   },
+   "intro": "A ranger sits on a stump with a blanket over her shoulders. \"It was in the clouds. It looked at me. It was not afraid of me.\"",
+   "choices": [
+    {
+     "label": "Hear her out",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-feather",
+   "name": "A Feather That Hums",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a2630",
+    "effect": "fog"
+   },
+   "intro": "A single feather lies on the road. It hums faintly, and every Pokémon you own turns to look at it.",
+   "choices": [
+    {
+     "label": "Take the feather",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-lair",
+   "name": "Where the Storm Rests",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#14141f",
+    "effect": "glint"
+   },
+   "intro": "Everything you have gathered points to one place. A figure in a storm-grey coat steps out and bows. \"You have been looking for us. Then show us what you know.\"",
+   "choices": [
+    {
+     "label": "Face the herald",
+     "success": {
+      "text": "Lightning splits the sky as the herald sends out its team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Storm Herald",
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "hunt",
+         "finish": true
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not yet",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-entry",
+   "name": "The Rival Circuit",
+   "group": "Rival Tournament",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "tournament",
+     "round": 0
+    },
+    {
+     "kind": "money",
+     "atLeast": 300
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "A banner stretches across the plaza: the Rival Circuit. Trainers you have crossed paths with are signing up. The entry fee is ₽300, and the bracket runs over the next stages.",
+   "choices": [
+    {
+     "label": "Enter the circuit (₽300)",
+     "success": {
+      "text": "You are in. Your first match comes at the next stop.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "tournament",
+        "round": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch from the stands",
+     "success": {
+      "text": "You cheer from the crowd and learn how the best of them fight.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-quarter",
+   "name": "Circuit: Quarterfinal",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 1
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "Your first match. A lively crowd fills the stands.",
+   "choices": [
+    {
+     "label": "Play the quarterfinal",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Trainer",
+       "size": 3,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "tournament",
+         "round": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-semi",
+   "name": "Circuit: Semifinal",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 2
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "The field has thinned. Your opponent has clearly studied your last match.",
+   "choices": [
+    {
+     "label": "Play the semifinal",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Ace",
+       "size": 4,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        },
+        {
+         "kind": "tournament",
+         "round": 3
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tournament-final",
+   "name": "Circuit: The Final",
+   "group": "Rival Tournament",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "tournament",
+     "round": 3
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d3a",
+    "effect": "sparkle"
+   },
+   "intro": "The final. The best of the circuit stands across from you, and the whole plaza has gone quiet.",
+   "choices": [
+    {
+     "label": "Play the final",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Circuit Champion",
+       "size": 5,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "tournament",
+         "round": 9
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw from the bracket",
+     "success": {
+      "text": "You hand back your number. The bracket carries on without you.",
+      "effects": [
+       {
+        "kind": "tournament",
+        "round": 9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "deliver-oaks-parcel",
    "name": "Oak's Parcel",
    "group": "Story items",
@@ -23203,6 +24549,279 @@
         "kind": "attribute",
         "key": "goodEvil",
         "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-sighting",
+   "name": "A Dark Aura",
+   "group": "Shadow Pokémon",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#150a20",
+    "effect": "fog"
+   },
+   "intro": "A Pokémon stands very still, wrapped in a purple haze. Its eyes are empty.",
+   "choices": [
+    {
+     "label": "Watch from the trees",
+     "success": {
+      "text": "It moves like something is steering it. You write down what you see.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Throw it a berry",
+     "success": {
+      "text": "The haze flickers for a moment. It does not eat, but it does not attack.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Back away",
+     "success": {
+      "text": "The haze fades behind you.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-sanctuary",
+   "name": "The Shadow Sanctuary",
+   "group": "Shadow Pokémon",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "eventSeen",
+     "id": "shadow-sighting"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#120820",
+    "effect": "flicker"
+   },
+   "intro": "A ruined hut hides a caged Pokémon wrapped in the same dark haze. A tired caretaker keeps watch.",
+   "choices": [
+    {
+     "label": "Break the cage open",
+     "check": "strength",
+     "success": {
+      "text": "The shadowed Pokémon lashes out, scared and strong!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "dark",
+        "ghost",
+        "poison"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        }
+       ]
+      }
+     },
+     "failure": {
+      "text": "The lock holds and the caretaker shoos you away.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help the caretaker",
+     "success": {
+      "text": "Together you calm it. It chooses to follow you, still shaded.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [
+         "dark",
+         "ghost",
+         "poison"
+        ],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them to it",
+     "success": {
+      "text": "You close the door softly.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-stabilize",
+   "name": "Steadying the Shadow",
+   "group": "Shadow Pokémon",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "eventSeen",
+     "id": "shadow-sanctuary"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a1030",
+    "effect": "glint"
+   },
+   "intro": "Your shadowed friend flinches at loud noises. Slow, steady care seems to ease the haze.",
+   "choices": [
+    {
+     "label": "Sit with it through the night",
+     "success": {
+      "text": "By morning the haze is thinner. It leans against you.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train it gently",
+     "success": {
+      "text": "Its moves are sharper, and its eyes flash with a spark of itself.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give it space",
+     "success": {
+      "text": "It settles down alone.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-purified",
+   "name": "The Haze Lifts",
+   "group": "Shadow Pokémon",
+   "rarity": "rare",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "eventSeen",
+     "id": "shadow-stabilize"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1850",
+    "effect": "hearts"
+   },
+   "intro": "The last of the haze lifts from your friend like smoke. It looks at you, finally clear-eyed.",
+   "choices": [
+    {
+     "label": "Celebrate together",
+     "success": {
+      "text": "It cries out with joy. Warmth floods your whole party.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share a quiet moment",
+     "success": {
+      "text": "It brushes a strange glowing stone toward you.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "research",
+        "amount": 15
        }
       ]
      }

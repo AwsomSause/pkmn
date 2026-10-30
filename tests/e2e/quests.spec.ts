@@ -10,11 +10,16 @@ async function waitForScene(page: Page, key: string, timeout = 20_000) {
   await page.waitForTimeout(250);
 }
 
+// Text objects in the scene, including those inside containers (the briefing lays its rows out in one).
 const texts = (page: Page, key: string) =>
   page.evaluate((key) => {
-    // Texts inside containers count too (the briefing lays its rows out in one).
-    const all = (list: any[]): string[] => list.flatMap((o: any) => (typeof o.text === 'string' ? [o.text] : Array.isArray(o.list) ? all(o.list) : []));
-    return all((window as any).__pkr.game.scene.getScene(key).children.list).join('\n');
+    const out: string[] = [];
+    const visit = (o: any) => {
+      if (typeof o.text === 'string') out.push(o.text);
+      for (const c of o.list ?? []) visit(c);
+    };
+    for (const o of (window as any).__pkr.game.scene.getScene(key).children.list) visit(o);
+    return out.join('\n');
   }, key);
 
 test('the Hub shows quest lines and the briefing shows the Run Quest', async ({ page }) => {

@@ -15,7 +15,7 @@
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
-import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, shopEarlyStockPerk, thirdBossLevels, isUltraBeast, fishingRareTriesPerk, bonusRewardChancePerk } from './trainerPerks';
+import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, doubleBattleRewardPerk, singleBattleXpPerk, shopEarlyStockPerk, shopRefreshPerk, thirdBossLevels, isUltraBeast, fishingRareTriesPerk, bonusRewardChancePerk } from './trainerPerks';
 import { createBattle, resolveTurn, startBattle, type BattleContext, type BattleEvent, type PlayerAction } from './battle/engine';
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
@@ -127,11 +127,14 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { withChampionTeam } from './story/championDefense';
+import { gauntletRival, markGauntletFight } from './story/gauntlet';
+import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
 import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
-import { endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
+import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
@@ -153,6 +156,8 @@ export interface NewRunOptions {
   pastPokemon?: readonly PastPokemon[];
   /** The account's archived rivals; one may shape a rival this run (core/rivals/legacy.ts). */
   rivalArchive?: Profile['rivalArchive'];
+  /** The account's finished runs; the newest win becomes the Champion Defense team (core/story/championDefense.ts). */
+  runHistory?: Profile['runHistory'];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
   /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
@@ -222,7 +227,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
-    story: createStoryState(),
+    story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [] },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
@@ -411,6 +416,8 @@ function enterStage(content: Content, run: RunState, index: number): void {
   simulateRivalWorld(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
+  applyGrandInfluence(content, run);
+  growCrisis(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);
@@ -779,7 +786,7 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
   const teamFrom = teamItem ? source('gymTeam', teamItem) : (source('gymTeam', null) ?? (eventGymPreview(run) ? { itemId: null, source: 'Your scouting' } : null));
   if (gym && teamFrom) {
     const campaign = getCampaign(content, run.campaignId);
-    const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
+    const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index, bossRemix(run.rules));
     const shown = perks('gymTeam') || !teamItem ? species : species.slice(-1);
     out[gym.id] = { ...teamFrom, team: shown.map((speciesId) => ({ speciesId, level: null })), trainerName: null };
   }
@@ -1125,14 +1132,14 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let plan: TrainerPlan = roll((r) => {
       switch (node.kind) {
         case 'gym':
-          return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r);
+          return planGymLeader(content, archetype, stage.leaderId, stageNumber, scale, r, bossRemix(run.rules));
         case 'elite': {
           const memberId = stage.eliteFour[node.column - 1];
           if (!memberId) throw new Error(`No Elite Four member for column ${node.column}`);
-          return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r);
+          return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r, bossRemix(run.rules));
         }
         case 'champion':
-          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r);
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules));
         default:
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
@@ -1151,7 +1158,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.story.flags[returnFlag(back.id)] = 'returned';
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
-    const rivalBack = rule && !back ? waitingRival(run) : null;
+    const gauntlet = rule && !back ? gauntletRival(content, run) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
@@ -1326,10 +1335,21 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 }
 
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
+/** The item on sale right now: one open item, chosen from the stage window (its own seed, so no other roll changes). */
+export function shopSaleItem(content: Content, run: RunState): string | null {
+  const open = shopStock(content, run).filter((e) => run.badges.length >= shopBadgesNeeded(content, run, e) && content.items.get(e.item)?.category !== 'key');
+  if (open.length === 0) return null;
+  const sale = content.balance.shopSale;
+  const every = Math.max(1, Math.ceil(sale.everyStages * shopRefreshPerk(runPerks(content, run))));
+  const stagesPer = getCampaign(content, run.campaignId).stagesPerRegion;
+  const window = Math.floor((run.regionIndex * stagesPer + (run.stage?.index ?? 0)) / every);
+  return new Rng(hashSeed(`${run.seed}::shop-sale::${window}`)).pick(open).item;
+}
+
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
   const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
-  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
+  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1));
 }
 
 /** Base price for an item the shop doesn't list (urge items and other finds), by rarity. */
@@ -1642,7 +1662,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -1658,7 +1678,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
     if (!defeated) continue;
     const baseExp = getSpecies(content, defeated.speciesId).baseExp;
     // Exp. Share: party members that didn't battle get its percent of the EXP.
-    const share = passivePercent(content, run, 'expShare');
+    const share = Math.max(passivePercent(content, run, 'expShare'), content.balance.difficulty.benchXpPercent);
     const sharers = share > 0 ? run.party.filter((p) => p.hp > 0 && !participants.includes(p.uid)).map((p) => p.uid) : [];
     const leadLevel = run.party[0]?.level ?? 0;
     for (const uid of [...participants, ...sharers]) {

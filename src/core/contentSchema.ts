@@ -773,6 +773,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
   /** Prize money from double battles. */
   z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
+  z.object({ kind: z.literal('shopRefreshMultiplier'), value: z.number().positive() }),
+  z.object({ kind: z.literal('statusLengthBonus'), status: z.enum(['brn', 'psn']), turns: z.number().int().positive() }),
   /** Experience from single (one-on-one) battles; double battles are unaffected. */
   z.object({ kind: z.literal('singleBattleXpMultiplier'), value: z.number().positive() }),
   /** Pokémon hatched from Eggs start this many levels higher. */
@@ -1629,6 +1631,10 @@ export const RulesetSchema = z.object({
   burnAttackMultiplier: z.number(),
   burnResidualFraction: z.number(),
   poisonResidualFraction: z.number(),
+  /** Turns a burn lasts (0 = until cured). */
+  burnTurns: z.number().int().min(0),
+  /** Turns a poisoning lasts (0 = until cured). */
+  poisonTurns: z.number().int().min(0),
   paralysisSpeedMultiplier: z.number(),
   fullParalysisChance: z.number().min(0).max(1),
   freezeThawChance: z.number().min(0).max(1),
@@ -1662,6 +1668,8 @@ export const BalanceSchema = z.object({
   doubles: z
     .object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0), wildChance: z.number().min(0).max(1).default(0), bossIds: z.array(z.string()).default([]) })
     .default({ chance: 0.3, fromStage: 1, wildChance: 0, bossIds: [] }),
+  /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
+  shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
@@ -1742,6 +1750,10 @@ export const BalanceSchema = z.object({
     capMargin: z.number().int().min(0),
     /** Each region raises the level cap by this much (director decision D14). */
     levelCapStep: z.number().int().positive(),
+    /** Multiplies all experience gained (the single knob for how fast the party levels). */
+    xpScale: z.number().positive(),
+    /** Party members that did not battle always get this percent of the EXP (the Exp. Share item can raise it). */
+    benchXpPercent: z.number().min(0).max(100),
     variance: z.number().int().min(0),
     minLevel: z.number().int().min(1),
     maxLevel: z.number().int().max(100),
@@ -1884,6 +1896,8 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
+  levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
   opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
@@ -2021,6 +2035,20 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('bond') }),
   /** Event Director: the region's focus (mystery, rivals, raids, exploration). */
   z.object({ kind: z.literal('focus'), focus: z.enum(['mystery', 'rivals', 'raids', 'exploration']) }),
+  /** Regional crisis: this region's meter is at least / at most this (0 to 5). */
+  z.object({ kind: z.literal('crisis'), atLeast: z.number().int().min(0).max(5).default(0), atMost: z.number().int().min(0).max(5).default(5) }),
+  /** Regional crisis: the Aid gathered in this region. */
+  z.object({ kind: z.literal('aid'), atLeast: z.number().int().min(1) }),
+  /** Rival tournament: the bracket's state (0 not entered, 1 to 3 round waiting, 9 over). */
+  z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: whether a chain of rival fights is running. */
+  z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
+  /** Grand-Enemy hunt: clues found so far (at least / at most). */
+  /** Rival feud: two rivals who are enemies of each other have an unsettled feud. */
+  z.object({ kind: z.literal('feud') }),
+  /** Champion defense: you have a Hall of Fame team on record. */
+  z.object({ kind: z.literal('championGhost') }),
+  z.object({ kind: z.literal('hunt'), atLeast: z.number().int().min(0).default(0), atMost: z.number().int().min(0).default(99) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2068,6 +2096,20 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
   z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
   /** Adds to a run counter: a holiday event's clue, boss or finale (game event objectives count these). */
+  /** Regional crisis: moves this region's meter (negative eases it). */
+  z.object({ kind: z.literal('crisis'), amount: z.number().int() }),
+  /** Regional crisis: allies and supplies gathered for the region's boss. */
+  z.object({ kind: z.literal('aid'), amount: z.number().int().positive() }),
+  /** Rival tournament: sets the bracket's state. */
+  z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
+  z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
+  /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
+  /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */
+  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(2).max(3) }),
+  /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
+  z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
+  z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
@@ -2087,6 +2129,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     /** A trainer class from trainers.json, or a boss id (its signature team). */
     classId: z.string().optional(),
     bossId: z.string().optional(),
+    /** Champion defense: the team is your newest Hall of Fame team (core/story/championDefense.ts). */
+    ghost: z.boolean().default(false),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     types: z.array(TypeNameSchema).default([]),

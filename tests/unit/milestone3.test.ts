@@ -15,6 +15,7 @@ import {
   createRun,
   debugJumpToColumn,
   leaveShop,
+  shopPrice,
   resolveDecision,
   takeTurn,
   visitSide,
@@ -182,14 +183,14 @@ describe('difficulty', () => {
     }
   });
 
-  it('the gym leader of stage 1 has an ace around level 20', () => {
+  it('the gym leader of stage 1 has an ace around level 11', () => {
     const theme = content.themes.get('water-normal') ?? content.themes.get('normal-water')!;
     const leader = pickGymLeader(content, theme, [], new Rng(hashSeed('ace')));
     for (let i = 0; i < 20; i++) {
       const plan = planGymLeader(content, RED, leader.id, 0, scaleAt(0, 20), new Rng(hashSeed(`ace-${i}`)));
       const top = Math.max(...plan.members.map((m) => m.level));
-      expect(top).toBeGreaterThanOrEqual(18);
-      expect(top).toBeLessThanOrEqual(23);
+      expect(top).toBeGreaterThanOrEqual(9);
+      expect(top).toBeLessThanOrEqual(14);
       expect(plan.leaderId).toBe(leader.id);
     }
   });
@@ -249,9 +250,11 @@ describe('map flow', () => {
     run = visitSide(content, run, 'test-shop').run;
     expect(run.phase).toBe('shop');
     const before = run.inventory['poke-ball'] ?? 0;
+    const ballPrice = shopPrice(content, run, content.shop.find((e) => e.item === 'poke-ball')!);
     run = buyItem(content, run, 'poke-ball').run;
     expect(run.inventory['poke-ball']).toBe(before + 1);
-    expect(run.money).toBe(100);
+    expect(run.money).toBe(300 - ballPrice);
+    run.money = 5;
     expect(() => buyItem(content, run, 'potion')).toThrow(/need/);
     run = leaveShop(content, run);
     expect(run.phase).toBe('map');

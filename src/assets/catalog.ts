@@ -102,6 +102,18 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['burst', 'shine', 'particle', 'pulse'].map(
     (name): AssetEntry => ({ id: `pack.dbk.${name}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png` }),
   ),
+  // Enhanced Battle UI info art for the Pokémon summary: gender marks and stat arrows.
+  { id: 'pack.ebui.gender', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_gender.png', frameSize: 22 },
+  { id: 'pack.ebui.statArrows', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_stats.png', frameSize: 18 },
+  // Transformation cinematics (battleFx/cinematics.ts): EBDX Primega crystals, Raid Battles Max/Ultra/Tera
+  // transition art, Deluxe Battle Kit Mega/Primal orbs. Loaded when a battle starts.
+  ...['mega', 'alpha', 'omega'].map((name) => ({ ...atlas(`cine.primega.${name}`, 'ui', `images/packs/ebdx/primega/${name}`), lazy: true })),
+  ...['max/bg', 'max/icon', 'max/spiral', 'max/spiral2', 'ultra/bg', 'ultra/icon', 'tera/bg', 'tera/icon', 'tera/spiral', 'transitions/black_bars', 'transitions/impact', 'transitions/shine'].map(
+    (name): AssetEntry => ({ id: `cine.raid.${name.replace('/', '.')}`, kind: 'image', category: 'ui', path: `images/packs/raid/${name}.png`, lazy: true }),
+  ),
+  ...['mega/orb_1', 'mega/shine', 'primal/icon_groudon', 'primal/icon_kyogre'].map(
+    (name): AssetEntry => ({ id: `cine.dbk.${name.replace('/', '.')}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png`, lazy: true }),
+  ),
   // Item pictures used as menu icons (the Hub's tiles and currency counters).
   ...MENU_ICON_ITEMS.map((name) => itemEntry(`item.${name}`)),
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },

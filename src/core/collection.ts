@@ -76,6 +76,8 @@ export function claimCollectionMilestones(content: Content, profile: Profile, no
       if (!claim(profile, milestoneKey(set.id, pct), now)) continue;
       const researchPoints = MILESTONE_PAY[MILESTONES.indexOf(pct as (typeof MILESTONES)[number])]!;
       profile.researchPoints += researchPoints;
+      // A finished set also earns a title for the Wardrobe (Living Dex contract, catalog #151).
+      if (pct === 100 && !profile.titles.includes(`Complete: ${set.name}`)) profile.titles = [...profile.titles, `Complete: ${set.name}`];
       paid.push({ setName: set.name, pct, researchPoints });
     }
   }

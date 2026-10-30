@@ -110,9 +110,26 @@ function wildWeightMod(content: Content, archetype: Archetype): ((speciesId: str
   };
 }
 
+/** The most total base stats a regular enemy may have at `level`: a level-9 route never throws a 550-BST brute at a level-5 party. */
+export function bstCeilingAt(content: Content, level: number): number {
+  const { base, perLevel } = content.balance.levelBst;
+  return Math.min(content.balance.wildMaxBaseStats, base + perLevel * level);
+}
+
+/** Draws up to `levelBst.retries` candidates and keeps the first that fits the level's BST ceiling (else the weakest drawn). */
+export function pickFittingSpecies(content: Content, level: number, rng: Rng, draw: () => string): string {
+  const ceiling = bstCeilingAt(content, level);
+  let best = draw();
+  for (let i = 0; i < content.balance.levelBst.retries && baseStatTotal(getSpecies(content, best)) > ceiling; i++) {
+    const next = draw();
+    if (baseStatTotal(getSpecies(content, next)) < baseStatTotal(getSpecies(content, best))) best = next;
+  }
+  return best;
+}
+
 export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
-  const speciesId = pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype));
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
+  const speciesId = pickFittingSpecies(content, levelInfo.level, rng, () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype)));
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }
 
@@ -161,7 +178,7 @@ function buildTeam(
   const members = Array.from({ length: size }, (_, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === size - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
-    return { speciesId: evolvedFormAt(content, pick(i), info.level, rng), level: info.level };
+    return { speciesId: pickFittingSpecies(content, info.level, rng, () => evolvedFormAt(content, pick(i), info.level, rng)), level: info.level };
   });
   return { members, levelInfo };
 }
@@ -203,8 +220,17 @@ export function bossTeamIndex(role: BossRole, number: number): number {
 }
 
 /** The species of a boss's team, in battle order (the last one is the ace). Needs no roll, so map previews can show it. */
-export function bossTeamSpecies(content: Content, role: BossRole, bossId: string, number: number): string[] {
-  return getBoss(content, bossId).teams[role][bossTeamIndex(role, number)]!.members.map((m) => m.speciesId);
+export function bossTeamSpecies(content: Content, role: BossRole, bossId: string, number: number, remix = false): string[] {
+  return remixMembers(getBoss(content, bossId).teams[role][bossTeamIndex(role, number)]!.members, remix, `${role}:${bossId}:${number}`).map((m) => m.speciesId);
+}
+
+const textHash = (text: string): number => [...text].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
+
+/** Boss Remix (catalog #149): the same team in a different order, so the lead and the ace change. Hashed from the boss, so it needs no run roll and previews match the fight. */
+export function remixMembers<T>(members: readonly T[], remix: boolean, key: string): T[] {
+  if (!remix || members.length < 2) return [...members];
+  const turn = 1 + (textHash(key) % (members.length - 1));
+  return [...members.slice(turn), ...members.slice(0, turn)];
 }
 
 /**
@@ -212,12 +238,12 @@ export function bossTeamSpecies(content: Content, role: BossRole, bossId: string
  * bossTeams.json; levels follow the difficulty curve with the role's bonus,
  * and the last Pokémon (the ace) gets `aceBonus` more.
  */
-function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId: string, number: number, scale: LevelScale, bonus: number, classId: string, rng: Rng): TrainerPlan {
+function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId: string, number: number, scale: LevelScale, bonus: number, classId: string, rng: Rng, remix = false): TrainerPlan {
   const boss = getBoss(content, bossId);
   const team: BossTeam = boss.teams[role][bossTeamIndex(role, number)]!;
   const { aceBonus } = content.balance.difficulty;
   const levelInfo: EnemyLevelBreakdown[] = [];
-  const members = team.members.map((m, i) => {
+  const members = remixMembers(team.members, remix, `${role}:${bossId}:${number}`).map((m, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === team.members.length - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
     return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training };
@@ -226,18 +252,18 @@ function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId
 }
 
 /** The gym leader's team for the run's `stageNumber`-th stage (0-based). */
-export function planGymLeader(content: Content, archetype: Archetype, leaderId: string, stageNumber: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  return planBoss(content, archetype, 'gym', leaderId, stageNumber, scale, content.balance.difficulty.gymBonus, GYM_LEADER_CLASS, rng);
+export function planGymLeader(content: Content, archetype: Archetype, leaderId: string, stageNumber: number, scale: LevelScale, rng: Rng, remix = false): TrainerPlan {
+  return planBoss(content, archetype, 'gym', leaderId, stageNumber, scale, content.balance.difficulty.gymBonus, GYM_LEADER_CLASS, rng, remix);
 }
 
 /** An Elite Four member's team for region `regionIndex` (0-based). Teams get harder every region. */
-export function planEliteFour(content: Content, archetype: Archetype, memberId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus + eliteLevelOffset(archetype.modifiers), ELITE_FOUR_CLASS, rng);
+export function planEliteFour(content: Content, archetype: Archetype, memberId: string, regionIndex: number, scale: LevelScale, rng: Rng, remix = false): TrainerPlan {
+  return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus + eliteLevelOffset(archetype.modifiers), ELITE_FOUR_CLASS, rng, remix);
 }
 
 /** The champion's team for region `regionIndex` (0-based): the hardest battle of the region. */
-export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, scale: LevelScale, rng: Rng): TrainerPlan {
-  return planBoss(content, archetype, 'champion', championId, regionIndex, scale, content.balance.difficulty.championBonus, CHAMPION_CLASS, rng);
+export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, scale: LevelScale, rng: Rng, remix = false): TrainerPlan {
+  return planBoss(content, archetype, 'champion', championId, regionIndex, scale, content.balance.difficulty.championBonus, CHAMPION_CLASS, rng, remix);
 }
 
 /** Rolls whether a wild Pokémon is shiny (D8: 1/2000, raised by Luck through `multiplier`). */

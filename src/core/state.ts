@@ -26,6 +26,8 @@ export const StatusSchema = z.object({
   id: StatusIdSchema,
   /** Sleep only: turns the Pokémon will still skip. */
   turns: z.number().int().min(0).optional(),
+  /** Burn and poison: turns left before it wears off (absent = until cured). */
+  left: z.number().int().min(0).optional(),
   /** Poison only: badly poisoned (Toxic), `turns` counts up. */
   bad: z.boolean().optional(),
 });
@@ -716,6 +718,8 @@ export const RunPrepSchema = z.object({
   tokenId: z.string().nullable(),
   /** The Research Directive (plan Part 5): a type to study this run for bonus Research Points, or none. */
   directive: TypeNameSchema.nullable(),
+  /** The Field License (Untitled doc §10): one exploration hint for the run, or none. */
+  license: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 

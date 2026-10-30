@@ -18,6 +18,7 @@ import {
   debugReplaceEnemy,
   resolveDecision,
   shopPrice,
+  shopSaleItem,
   shopStock,
   takeTurn,
   visitSide,
@@ -188,8 +189,11 @@ describe('trainer unlocks', () => {
     applyItemToPokemon(content, getItem(content, 'potion'), mon, { healMultiplier: 1.5 });
     expect(mon.hp).toBe(Math.min(maxHp(content, mon), 1 + 30));
     const ball = content.shop.find((e) => e.item === 'poke-ball')!;
-    expect(shopPrice(content, run, ball)).toBe(Math.round(ball.price * 1.5));
-    expect(shopPrice(content, newRun('red'), ball)).toBe(ball.price);
+    // The weekly sale takes 20% off whichever item it picks (the same for both runs, same seed).
+    const offFor = (r: RunState) => (shopSaleItem(content, r) === 'poke-ball' ? 1 - content.balance.shopSale.discount : 1);
+    expect(shopPrice(content, run, ball)).toBe(Math.round(ball.price * 1.5 * offFor(run)));
+    const plain = newRun('red');
+    expect(shopPrice(content, plain, ball)).toBe(Math.round(ball.price * offFor(plain)));
   });
 
   it('Giovanni: shop stock unlocks two badges sooner and healing costs more', () => {

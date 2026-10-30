@@ -19,6 +19,11 @@ import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
+import { championTeam } from './story/championDefense';
+import { openFeud, settleFeud } from './story/feud';
+import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
+import { gauntletLeft, startGauntlet } from './story/gauntlet';
+import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, discover } from './progress';
@@ -67,6 +72,20 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
       return run.story.rivals.some((r) => r.encounters >= c.atLeast);
+    case 'crisis':
+      return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
+    case 'aid':
+      return crisisAid(run) >= c.atLeast;
+    case 'tournament':
+      return tournamentRound(run) === c.round;
+    case 'feud':
+      return openFeud(run) !== null;
+    case 'championGhost':
+      return championTeam(run.story).length > 0;
+    case 'hunt':
+      return huntClues(run) >= c.atLeast && huntClues(run) <= c.atMost && !(c.atLeast > 0 && huntDone(run));
+    case 'gauntlet':
+      return (gauntletLeft(run) > 0) === c.active;
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
     case 'bond':
@@ -109,6 +128,20 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs two bonded Pokémon';
     case 'focus':
       return `Only in a ${c.focus}-focused region`;
+    case 'crisis':
+      return c.atLeast > 0 ? 'Needs a serious crisis in this region' : 'Needs the crisis to be under control';
+    case 'aid':
+      return 'Needs allies gathered in this region';
+    case 'tournament':
+      return 'Needs the tournament bracket to be at this round';
+    case 'feud':
+      return 'Needs two rivals who are feuding';
+    case 'championGhost':
+      return 'Needs a won run in your Hall of Fame';
+    case 'hunt':
+      return 'Needs more clues about the Grand-Enemy';
+    case 'gauntlet':
+      return c.active ? 'Needs a rival gauntlet to be running' : 'Needs no rival gauntlet running';
   }
 }
 
@@ -170,6 +203,13 @@ export function addEventStops(content: Content, run: RunState): void {
     const node = rng.pick(candidates);
     node.sides.push({ id: `event-${node.sides.length + 1}-${node.id}`, kind: 'event', used: false, eventId, ...(hidden ? { hidden: true } : {}) });
   };
+  // A running tournament round and a serious crisis always get their stop (until played), so neither can be missed by luck.
+  const open = new Set(eligibleEvents(content, run).map((e) => e.id));
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id))].filter((id): id is string => !!id && open.has(id));
+  for (const id of forced) {
+    taken.add(id);
+    place(id, false);
+  }
   const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules));
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
@@ -384,6 +424,20 @@ function effectWords(content: Content, e: EventEffect): string {
       return 'skip ahead to the gym';
     case 'formChange':
       return 'a Pokémon changes form';
+    case 'crisis':
+      return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
+    case 'aid':
+      return 'allies gathered';
+    case 'relic':
+      return `the ${e.name}`;
+    case 'feud':
+      return 'a feud is settled';
+    case 'hunt':
+      return e.finish ? 'the hunt ends' : 'a clue';
+    case 'gauntlet':
+      return `${e.rivals} rivals will come for you`;
+    case 'tournament':
+      return e.round === 9 ? 'tournament over' : 'tournament round';
     case 'count':
       return e.counter === 'eventClues' ? (e.amount === 1 ? 'a clue' : `${e.amount} clues`) : e.counter === 'eventBossesWon' ? 'an event boss beaten' : 'the event finale won';
   }
@@ -538,6 +592,27 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       discover(run, e.to, true);
       return `${to.name} appears!`;
     }
+    case 'crisis':
+      changeCrisis(content, run, e.amount);
+      return effectWords(content, e);
+    case 'aid':
+      changeAid(run, e.amount);
+      return effectWords(content, e);
+    case 'tournament':
+      return setTournament(content, run, e.round);
+    case 'relic': {
+      if (run.story.flags[`relic:${e.id}`]) return '';
+      run.story.flags[`relic:${e.id}`] = true;
+      run.perkEffects = [...(run.perkEffects ?? []), ...e.effects];
+      emit(content, run, 'storyMoment', { actors: [], data: { def: 'relic', suppressed: false }, importance: 75, text: `Took the ${e.name}` });
+      return effectWords(content, e);
+    }
+    case 'feud':
+      return settleFeud(content, run, e.choice);
+    case 'hunt':
+      return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
+    case 'gauntlet':
+      return startGauntlet(content, run, e.rivals) > 0 ? effectWords(content, e) : 'no rivals to face yet';
     case 'count':
       count(run, e.counter, e.amount);
       return effectWords(content, e);
@@ -614,7 +689,8 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
-    const team = Array.from({ length: b.size }, (_, i) => {
+    const ghost = b.ghost ? championTeam(run.story) : [];
+    const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
       const speciesId = boss ? boss.signature[i % boss.signature.length]! : pickSpecies(content, run, [], b.types, rng);
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');

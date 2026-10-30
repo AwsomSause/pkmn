@@ -49,6 +49,8 @@ export const RunRulesDataSchema = z.object({
       noHealStops: z.boolean().optional(),
       /** Challenge Contracts: nothing evolves (level-ups and evolution items). */
       noEvolution: z.boolean().optional(),
+      /** Boss Remix (catalog #149): gym, Elite Four and champion teams come in a different order. */
+      bossRemix: z.boolean().optional(),
     }),
   ),
   modeRewards: z.array(z.object({
@@ -174,6 +176,8 @@ export const noRevives = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(
 export const noBattleItems = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noBattleItems);
 /** The No Evolution contract is on. */
 export const noEvolution = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noEvolution);
+/** Boss Remix is on. */
+export const bossRemix = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.bossRemix);
 export const noHealStops = (rules: Pick<RunRules, 'modifierIds'>): boolean => has(rules, (m) => m.noHealStops);
 export const battleMoneyScale = (rules: Pick<RunRules, 'modifierIds'>): number => product(rules, (m) => m.battleMoney);
 export const researchScale = (rules: Pick<RunRules, 'modifierIds'>): number => product(rules, (m) => m.researchScale);

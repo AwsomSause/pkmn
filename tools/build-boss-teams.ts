@@ -411,7 +411,7 @@ const usedLineups = new Set<string>();
 let repeated = 0;
 function distinctTeam(boss: Boss, spec: TeamSpec): BossTeam {
   let team = buildTeam(boss, spec, warnings);
-  for (let variety = 1; usedLineups.has(lineupKey(team)) && variety <= 30; variety++) team = buildTeam(boss, spec, warnings, variety);
+  for (let variety = 1; usedLineups.has(lineupKey(team)) && variety <= 400; variety++) team = buildTeam(boss, spec, warnings, variety);
   if (usedLineups.has(lineupKey(team))) repeated++;
   usedLineups.add(lineupKey(team));
   return team;

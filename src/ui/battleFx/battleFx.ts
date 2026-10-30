@@ -13,12 +13,14 @@ import { animAssetIds } from '../../assets/catalog';
 import type { Side } from '../../core/battle/engine';
 import { CompactAnimSchema, type CompactAnim } from '../../core/presentation/animFormat';
 import type { Cue } from '../../core/presentation/cues';
+import type { FamilyId } from '../../core/presentation/families';
 import { moveAnims } from '../../data/presentation';
 import { services } from '../../game/services';
 import { loadAssets } from '../lazyAssets';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
 import { playAnim, type PlayHandle } from './animPlayer';
+import { playFamily } from './familyFx';
 
 /** How long to wait for a move's files the first time before playing the fallback instead. */
 const LOAD_TIMEOUT_MS = 1500;
@@ -111,11 +113,11 @@ export class BattleFx {
       case 'telegraph':
         return this.telegraph(cue.side, cue.color, cue.style);
       case 'moveAnim':
-        return this.moveAnim(cue.user, cue.target, cue.anim, cue.color);
+        return this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family);
       case 'pulse':
         return this.pulse(cue.side, cue.color);
       case 'commonAnim':
-        return this.commonAnim(cue.side, cue.anim);
+        return this.commonAnim(cue.side, cue.anim, cue.alt);
       case 'impact':
         return this.impact(cue);
       case 'number':
@@ -209,29 +211,44 @@ export class BattleFx {
     this.scene.time.delayedCall(500, () => parts.forEach((p) => p.destroy()));
   }
 
-  private async moveAnim(user: Side, target: Side, name: string, color: string): Promise<void> {
+  /** The first of `name`, `alt` that loads in time (the pack file, then the PokeRogue one). */
+  private async readyFirst(name: string, alt?: string): Promise<CompactAnim | null> {
+    return (await this.ready(name)) ?? (alt && !this.skipping ? this.ready(alt) : null);
+  }
+
+  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId): Promise<void> {
     const userVisual = this.opts.sprite(user);
     const targetVisual = this.opts.sprite(target);
     if (!userVisual || !targetVisual || this.skipping) return;
-    const anim = await this.ready(name);
+    const anim = await this.readyFirst(name, alt);
     if (this.skipping || !this.scene.sys.isActive()) return;
-    if (!anim) return this.fallback(userVisual, targetVisual, color);
+    if (!anim) return family ? this.familyFallback(userVisual, targetVisual, color, family) : this.fallback(userVisual, targetVisual, color);
     this.current = playAnim(
       { scene: this.scene, field: this.opts.field, backgroundIndex: this.opts.backgroundIndex(), user: userVisual, target: targetVisual, userIsPlayer: user === 'player' },
       anim,
     );
     await this.current.done;
     this.current = null;
+    // Z-Moves and Max Moves borrow another move's animation; their signature burst goes on top.
+    if (family === 'signature' && !this.skipping) await this.familyFallback(userVisual, targetVisual, color, family);
   }
 
-  private async commonAnim(side: Side, name: string): Promise<void> {
+  private async commonAnim(side: Side, name: string, alt?: string): Promise<void> {
     const visual = this.opts.sprite(side);
     if (!visual || this.skipping) return;
-    const anim = await this.ready(name);
+    const anim = await this.readyFirst(name, alt);
     if (!anim || this.skipping || !this.scene.sys.isActive()) return;
     this.current = playAnim({ scene: this.scene, field: this.opts.field, backgroundIndex: this.opts.backgroundIndex(), user: visual, target: visual, userIsPlayer: side === 'player' }, anim);
     await this.current.done;
     this.current = null;
+  }
+
+  /** When no animation file can play: the move's family effect (Visual Bible §4.4) in its type colour. */
+  private async familyFallback(user: Visual, target: Visual, color: string, family: FamilyId): Promise<void> {
+    // speed 1: the battle scene's clock already runs at the battle speed.
+    const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: this.settings.effectIntensity, speed: 1 }, family);
+    // Skipping cuts the wait; the effect cleans itself up.
+    await Promise.race([done, new Promise<void>((resolve) => { const check = () => (this.skipping ? resolve() : this.scene.time.delayedCall(50, check)); check(); })]);
   }
 
   /** The quick stand-in when a move's animation is missing: the user lunges and the target flashes. */

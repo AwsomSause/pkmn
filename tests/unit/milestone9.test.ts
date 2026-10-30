@@ -7,7 +7,7 @@ import { createBattle, resolveTurn, type BattleContext, type BattleEvent } from 
 import { createPokemon } from '../../src/core/pokemon';
 import { CompactAnimSchema, Focus, FrameTarget, placeFrame, type CompactFrame } from '../../src/core/presentation/animFormat';
 import { planCues, type Cue, type PresentationSettings } from '../../src/core/presentation/cues';
-import { animCatalogInputs } from '../../src/core/presentation/moveAnims';
+import { animCatalogInputs, animChoice, commonChoice } from '../../src/core/presentation/moveAnims';
 import { hashSeed, Rng } from '../../src/core/rng';
 import type { PokemonInstance } from '../../src/core/state';
 import { moveAnims } from '../../src/data/presentation';
@@ -56,6 +56,32 @@ describe('move presentation data', () => {
     for (const s of files.sounds) expect(existsSync(join(assets, 'audio', 'battle_anims', `${s}.m4a`)), s).toBe(true);
   });
 
+  it('plays the Essentials pack animation first and keeps the PokeRogue one as the stand-by', () => {
+    const packed = Object.entries(data.moves).filter(([, look]) => look.pack);
+    expect(packed.length).toBeGreaterThanOrEqual(200);
+    for (const [id, look] of packed) {
+      expect(look.pack).toBe(`ess-${id}`);
+      expect(data.anims[look.pack!], id).toBeDefined();
+      expect(animChoice(look)).toEqual({ anim: look.pack, alt: look.anim });
+    }
+    expect(animChoice(data.moves['thunderbolt']!).anim).toBe('ess-thunderbolt');
+    // A move the pack doesn't have plays its own animation with no stand-by.
+    const plain = Object.values(data.moves).find((look) => !look.pack)!;
+    expect(animChoice(plain)).toEqual({ anim: plain.anim });
+    expect(commonChoice(data, 'status.brn')).toEqual({ anim: data.commonPack['status.brn'], alt: 'common-burn' });
+    expect(commonChoice(data, 'bind')).toEqual({ anim: 'common-bind' });
+    expect(commonChoice(data, 'nothing')).toEqual({ anim: '' });
+  });
+
+  it('the opponent version of a pack animation is its second variant', () => {
+    const anim = CompactAnimSchema.parse(JSON.parse(readFileSync(join(assets, 'battle-anims', 'ess-aerial-ace.json'), 'utf8')));
+    expect(anim.variants).toHaveLength(2);
+    // Pack positions are halved onto PokeRogue's field: the user's own frame sits on its spot.
+    const thunder = CompactAnimSchema.parse(JSON.parse(readFileSync(join(assets, 'battle-anims', 'ess-thunderbolt.json'), 'utf8')));
+    const user = thunder.variants[0]!.frames[0]!.find((f) => f[0] === FrameTarget.USER)!;
+    expect([user[2], user[3]]).toEqual([0, 0]);
+  });
+
   it('lists every animation in the asset manifest so it can be loaded on demand', () => {
     const manifest = JSON.parse(readFileSync(join(assets, 'manifest.json'), 'utf8')) as { assets: { id: string; lazy?: boolean }[] };
     const anim = manifest.assets.filter((a) => a.id.startsWith('anim.'));
@@ -98,6 +124,7 @@ describe('presentation cues', () => {
   it('plays the move animation, then the hit with its number and badges', () => {
     const cues = planCues(tackleHit, content, data, FULL);
     expect(cues[0]!.map((c) => c.kind)).toEqual(['telegraph', 'moveAnim']);
+    expect(cues[0]![1]).toMatchObject({ anim: 'ess-tackle', alt: 'tackle', family: 'contact' });
     expect(cues[1]!.map((c) => c.kind)).toEqual(['impact', 'number', 'badge', 'badge']);
     const impact = cues[1]![0] as Extract<Cue, { kind: 'impact' }>;
     expect(impact.hitStopMs).toBeGreaterThan(0);
