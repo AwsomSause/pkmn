@@ -18,7 +18,7 @@ import { hashSeed, Rng } from '../rng';
 import { getRaid } from '../raid/raid';
 import { getTotem } from '../totem/totem';
 import { newMon, requireStage, startEncounter, startRaidBattle, startTotemBattle } from '../run';
-import type { Content } from '../contentSchema';
+import type { Content, Item } from '../contentSchema';
 import type { ExpeditionState, MapNode, RunState } from '../state';
 import { generateRoute, validateRoute, type RouteNode } from './graph';
 import type { ExpeditionDef, ExpeditionNodeKind } from './schema';
@@ -416,16 +416,22 @@ function finish(content: Content, run: RunState, outcome: 'completed' | 'extract
   return run;
 }
 
-/** Mega Stones for good: up to `max`, for party Pokémon that can use one and do not have it yet. */
-function grantStones(content: Content, run: RunState, max: number, rng: Rng): string[] {
-  const out: string[] = [];
+/** Mega Stones for good: up to `max`, for party Pokémon that can use one and do not have it yet. Returns their names. */
+export function grantStones(content: Content, run: RunState, max: number, rng: Rng): string[] {
+  return pickStones(content, run, max, rng).map((stone) => {
+    addItem(run.inventory, stone.id, 1);
+    return stone.name;
+  });
+}
+
+/** The Mega Stones `grantStones` would give (one per Pokémon, never a stone already owned), without giving them. */
+export function pickStones(content: Content, run: RunState, max: number, rng: Rng): Item[] {
+  const out: Item[] = [];
   const items = [...content.items.values()].filter((i) => i.effect.kind === 'megaStone' && !i.effect.primal);
   for (const mon of rng.shuffle([...run.party])) {
     if (out.length >= max) break;
-    const stone = items.find((i) => i.effect.kind === 'megaStone' && mon.speciesId in i.effect.forms && itemCount(run.inventory, i.id) === 0);
-    if (!stone) continue;
-    addItem(run.inventory, stone.id, 1);
-    out.push(stone.name);
+    const stone = items.find((i) => i.effect.kind === 'megaStone' && mon.speciesId in i.effect.forms && itemCount(run.inventory, i.id) === 0 && !out.includes(i));
+    if (stone) out.push(stone);
   }
   return out;
 }
