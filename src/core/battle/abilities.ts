@@ -157,7 +157,7 @@ const SUPPORTED = new Set<string>([
   ...Object.keys(AURAS),
   ...Object.keys(ENTRY_BOOST),
   ...PRIORITY_GUARD,
-  'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
+  'cloud-nine', 'air-lock', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',
   'thick-fat', 'heatproof', 'fluffy', 'ice-scales', 'filter', 'solid-rock', 'prism-armor', 'multiscale', 'shadow-shield',
