@@ -6,8 +6,9 @@ import { bossInfo } from '../regions';
 import { count, discover } from '../progress';
 import { baseStatTotal, wildEligibleSpecies } from '../themes';
 import { hashSeed, Rng } from '../rng';
-import { healParty, newMon, requireStage } from '../run';
-import { maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
+import { healParty, newMon, partyCapacity, requireStage } from '../run';
+import { runLevelCap } from '../regions';
+import { createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
 import { applyCatalog, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
@@ -121,6 +122,13 @@ function relicPairs(run: RunState, sideId: string): [string, string][] {
 }
 
 /** The auction's three lots with their opening bids. */
+/** The two fossils on offer at a stop: fixed by the seed, so reloading never changes them. */
+function fossilLots(content: Content, run: RunState, sideId: string): { id: string; name: string; species: string }[] {
+  const pool = [...content.catalog.values()].filter((e) => e.status === 'supported' && e.effect?.kind === 'fossil' && content.species.has(e.effect.species)).sort((a, b) => a.id.localeCompare(b.id));
+  const rng = new Rng(hashSeed(`${run.seed}::fossil::${sideId}`));
+  return rng.shuffle(pool).slice(0, 2).map((e) => ({ id: e.id, name: e.name, species: (e.effect as { species: string }).species }));
+}
+
 function auctionLots(content: Content, run: RunState, sideId: string): [Item, number][] {
   const pool = [...content.items.values()].filter((i) => ['healing', 'pp', 'revive', 'evolution'].includes(i.category)).sort((a, b) => a.id.localeCompare(b.id));
   const rng = new Rng(hashSeed(`${run.seed}::auction::${sideId}`));
@@ -210,6 +218,9 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       break;
     case 'nursery':
       add('egg', 'Buy a Mystery Egg', 'Hatches after 3 stages into a first-stage Pokémon (shiny chance x4). It is not a party member until it hatches.', price(run, C.eggPrice), side.used ? 'The nursery has no more eggs for you.' : null);
+      break;
+    case 'fossil':
+      for (const f of fossilLots(content, run, sideId)) add(`fossil:${f.id}`, `Restore the ${f.name}`, `Brings back ${getSpecies(content, f.species).name} at your party's average level.`, price(run, C.fossilPrice), side.used ? 'The restorer has finished for today.' : null);
       break;
     case 'relic':
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
@@ -315,6 +326,18 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'rest': {
       changeFriendship(content, mon!, C.lodgeFriendship);
       message = `${monName(content, mon!)} had a lovely rest and trusts you more.`;
+      break;
+    }
+    case 'fossil': {
+      const lot = fossilLots(content, current, sideId).find((f) => f.id === uid)!;
+      const levels = run.party.map((m) => m.level);
+      const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length))));
+      const born = createPokemon(content, lot.species, level, `p${run.nextUid}`);
+      run.nextUid += 1;
+      discover(run, born.speciesId, true);
+      const toParty = run.party.length < partyCapacity(content, run);
+      (toParty ? run.party : run.box).push(born);
+      message = `The ${lot.name} was restored: ${getSpecies(content, born.speciesId).name} ${toParty ? 'joins your party' : 'waits in the PC'}!`;
       break;
     }
     case 'egg': {

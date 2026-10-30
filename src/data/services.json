@@ -103,6 +103,15 @@
       "blurb": "Buy a Mystery Egg. It hatches into a first-stage Pokémon after 3 stages. One per stop."
     },
     {
+      "id": "fossil",
+      "name": "Fossil Restoration",
+      "status": "supported",
+      "weight": 1,
+      "minBadges": 2,
+      "reusable": false,
+      "blurb": "Pay to restore one of two fossils into a living Pokémon. It joins the party, or the PC if the party is full."
+    },
+    {
       "id": "relic",
       "name": "Relic Shrine",
       "status": "supported",
@@ -161,6 +170,7 @@
     "relicGain": 2,
     "relicLoss": 1,
     "lodgeFriendship": 25,
-    "eggPrice": 450
+    "eggPrice": 450,
+    "fossilPrice": 650
   }
 }
