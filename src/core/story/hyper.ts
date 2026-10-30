@@ -85,7 +85,7 @@ export function buildHyperContext(content: Content, run: RunState, rng: Rng): Hy
       if (cond.minFriendship !== undefined && (bonusFriendship(perks, mon.friendship) < cond.minFriendship || friendshipOff)) return null;
       if (cond.needsMemory && !cond.needsMemory.some((m) => hasMemory(history, m))) return null;
       const again = (history?.hyper[def.id] ?? 0) > 0 && def.variants.again !== undefined;
-      return { def, chance: def.chance ? Math.min(1, hyperChance(def.chance, attrs, again) * hyperChancePerk(perks)) : 1, variant: again ? 'again' : null };
+      return { def, chance: def.chance ? Math.min(1, hyperChance(def.chance, attrs, again) * hyperChancePerk(perks) * content.story.rarity.hyperScale) : 1, variant: again ? 'again' : null };
     },
     attributeShare(attribute) {
       return Math.min(1, attributePoints(attrs, attribute) / content.balance.attributeMax);

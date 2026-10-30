@@ -189,6 +189,14 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D2 (§19), slice 3: Lodge, Relic Shrine, Auction House, Event Hall, Raid Observatory done. Limited/left: Nursery (no egg system), Ability Researcher (waits on ability mechanics), Fossil Restoration, Safari, Black Market, Garden, School.
 - Rival world slice A (`rivals/standing.ts`, `rivalWorld.json`, `story.standing` defaults so no save bump): 6 sponsors (advance + stipend, advance called in after 2 more boss wins), 4 factions (League up, Syndicate down on boss wins), debts (player owes a sponsor; a spared rival owes a favour and goes 1 level easier once), rival sponsors (+1 level), Story screen Standing row. Left: arcs (slice B), Pokémon transfer and unscheduled challenge (slice C).
 
+### Hyper and Overdrive rarity (Kice, 2026-10-30: "significantly more rare, they need to feel rewarding and not just guaranteed")
+| Change | Status |
+|---|---|
+| Every Overdrive moment that helps your side now passes a seeded roll (30%; 50% for banner-only moments), fixed by the run's seed and never a gameplay stream; enemy-side moments are unchanged so difficulty does not drop | DONE (`story.rarity` in story.json) |
+| At most 1 helpful moment per battle (2 in a boss fight), ordinary battles at least 2 battles apart | DONE |
+| Original Hyper chance rules are scaled to 40% (e.g. Toughened It Out 15% becomes 6%) | DONE |
+| Signature Move Awakening needs 14 uses (was 8) and one per Pokémon (was 2); a mentor needs 10 battles (was 6) | DONE |
+| Exempt (earned once, or a player's own choice): Mega/Z/Dynamax/Tera banners, Evolved Beyond, Student Surpassed, Teacher's Last Lesson, Grand-Enemy Grudge, Rival Respect | by design |
 - Rival world slice B: 19 bond/Overdrive arcs (`rivalBondArcs.test.ts`: each fits its trigger, none repeats, a running arc is never replaced). Left: Pokémon transfer and unscheduled challenge (slice C).
 
 - Rival world slice C: Pokémon transfer + unscheduled challenge (`rivalTransfer.test.ts`). All 24 §8 mechanics now run.

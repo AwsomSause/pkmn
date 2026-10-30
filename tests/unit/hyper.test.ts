@@ -138,7 +138,7 @@ describe('Felt a Bond', () => {
     run.party[0]!.friendship = 230;
     expect(eligible()).toBeNull();
     run.story.histories[mon.uid]!.closeCalls = 1;
-    expect(eligible()?.chance).toBeCloseTo(0.1);
+    expect(eligible()?.chance).toBeCloseTo(0.1 * content.story.rarity.hyperScale);
   });
 
   it('shakes off a status at the end of the turn', () => {
@@ -179,7 +179,7 @@ describe('Pushed Itself Back Up', () => {
     expect(ctx().eligibility('pushedBackUp', run.party[0]!)).toBeNull();
     run = structuredClone(run);
     run.story.histories[run.party[0]!.uid]!.hyper['felt-a-bond'] = 1;
-    expect(ctx().eligibility('pushedBackUp', run.party[0]!)?.chance).toBeCloseTo(0.03);
+    expect(ctx().eligibility('pushedBackUp', run.party[0]!)?.chance).toBeCloseTo(0.03 * content.story.rarity.hyperScale);
   });
 });
 
@@ -244,7 +244,7 @@ describe('Hyper moments in a run', () => {
 
   it('tells the moment: a banner, a memory, a survived knockout, and the count for "again"', () => {
     let found = 0;
-    for (let i = 0; i < 80 && found < 2; i++) {
+    for (let i = 0; i < 400 && found < 2; i++) {
       const run = doomed(`tough-${i}`);
       const result = takeTurn(content, run, { kind: 'move', index: 0 });
       const at = result.events.findIndex((e) => e.type === 'hyper');
@@ -263,7 +263,7 @@ describe('Hyper moments in a run', () => {
       // Later in the run it is "again", at half the chance.
       const again = buildHyperContext(content, result.run, new Rng(hashSeed('x'))).eligibility('toughenedItOut', result.run.party[0]!)!;
       expect(again.variant).toBe('again');
-      expect(again.chance).toBeCloseTo(0.075);
+      expect(again.chance).toBeCloseTo(0.075 * content.story.rarity.hyperScale);
     }
     expect(found).toBe(2);
   });

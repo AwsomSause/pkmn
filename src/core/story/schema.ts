@@ -494,6 +494,21 @@ export const StoryChainSchema = z.object({
 export type StoryChain = z.infer<typeof StoryChainSchema>;
 
 export const StoryConfigSchema = z.object({
+  /**
+   * How rare Hyper and Overdrive moments are, so each feels like a reward. Moments that help your side must pass a
+   * seeded roll (fixed by the run's seed, never a gameplay stream); at most `perBattle` (`perBossBattle` in a boss fight)
+   * may happen in a battle, and ordinary battles must be `cooldownBattles` apart. `hyperScale` shrinks the Hyper chance
+   * rules. `exempt` lists the earned, once-in-a-run triggers that are never gated.
+   */
+  rarity: z.object({
+    momentChance: z.number().min(0).max(1),
+    flairChance: z.number().min(0).max(1),
+    perBattle: z.number().int().min(1),
+    perBossBattle: z.number().int().min(1),
+    cooldownBattles: z.number().int().min(0),
+    hyperScale: z.number().gt(0).max(1),
+    exempt: z.array(z.string()),
+  }),
   /** Protégé system: battles a veteran needs, the level gap to a protégé, and the gap at which it graduates. */
   mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
   /** The Grand-Enemy (Techno §5): its name, where its phases begin (share of the campaign), and the title it leaves. */
