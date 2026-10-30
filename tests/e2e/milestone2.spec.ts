@@ -78,7 +78,29 @@ test('throw a ball from the Bag, catch the Pokémon and add it to the party', as
   await page.screenshot({ path: 'test-results/m2-action-menu.png' });
 
   const ballsBefore = (await run(page)).inventory['poke-ball'];
+  const atRootMenu = () =>
+    page.evaluate(() => {
+      const pkr = (window as any).__pkr;
+      // Caught: the Decision screen is coming, so no further key may be pressed (it would answer it).
+      if (pkr.session.run.pending.some((d: any) => d.kind === 'caught')) return 'caught';
+      const m = pkr.game.scene.getScene('Battle')?.menu;
+      return m ? m.config.options[1]?.label === 'Bag' : null; // null: no menu (messages playing)
+    });
   for (let attempt = 0; attempt < 10 && (await scene(page)) === 'Battle'; attempt++) {
+    // Wait for the Fight / Bag / Pokémon menu (Enter only skips messages when no menu is up).
+    await expect
+      .poll(
+        async () => {
+          if ((await scene(page)) !== 'Battle') return 'left';
+          const root = await atRootMenu();
+          if (root === 'caught') return 'left';
+          if (root === null) await page.keyboard.press('Enter');
+          return root ? 'root' : 'busy';
+        },
+        { timeout: 20_000, intervals: [300] },
+      )
+      .not.toBe('busy');
+    if ((await scene(page)) !== 'Battle' || (await atRootMenu()) === 'caught') break;
     await page.keyboard.press('ArrowRight'); // Bag
     await page.keyboard.press('Enter');
     if (attempt === 0) {
@@ -86,16 +108,10 @@ test('throw a ball from the Bag, catch the Pokémon and add it to the party', as
       await page.screenshot({ path: 'test-results/m2-bag.png' });
     }
     await page.keyboard.press('Enter'); // first item: Poké Ball
-    // Wait for the throw to finish: either the decision screen or the menu again.
+    // The throw has started once the root menu is gone; the next loop waits for it to come back.
     await expect
-      .poll(async () => {
-        const s = await scene(page);
-        if (s !== 'Battle') return s;
-        const ready = await page.evaluate(() => !!(window as any).__pkr.game.scene.getScene('Battle').menu);
-        if (!ready) await page.keyboard.press('Enter');
-        return ready ? 'menu' : 'busy';
-      }, { timeout: 20_000, intervals: [300] })
-      .not.toBe('busy');
+      .poll(async () => (await scene(page)) !== 'Battle' || (await atRootMenu()) !== true, { timeout: 10_000, intervals: [100] })
+      .toBe(true);
   }
   await waitForScene(page, 'Decision');
   const atDecision = await run(page);
