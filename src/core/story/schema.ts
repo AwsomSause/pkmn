@@ -246,6 +246,8 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statStage'), stat: BoostStatSchema, stages: z.number().int().min(-6).max(6) }),
   /** Battle scope: the Pokémon hangs on at 1 HP (the engine does it; the effect records that it was used). */
   z.object({ kind: z.literal('endure') }),
+  /** Presentation and a memory only: the moment changes nothing in the battle (Hyper evolutions). */
+  z.object({ kind: z.literal('flair') }),
   /** Battle scope: a knocked-out Pokémon gets back up with this share of its max HP (the engine does it). */
   z.object({ kind: z.literal('revive'), hpShare: z.number().gt(0).max(1) }),
   /** Battle scope: hangs on at 1 HP against a fatal hit, or shakes off a status at the end of a turn (the engine does it). */
@@ -302,7 +304,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -322,6 +324,8 @@ export const TriggerConditionsSchema = z.object({
   turns: z.number().int().positive().optional(),
   /** Super-effective hits survived this battle (a variant's condition). */
   superEffectiveHits: z.number().int().positive().optional(),
+  /** Only at a decisive moment: a boss or Champion fight, or the Pokémon at or below half HP (Hyper evolutions). */
+  decisive: z.boolean().optional(),
   /** Friendship needed. */
   minFriendship: z.number().int().min(0).max(255).optional(),
   /** Hits (moves that damaged it) an opposing Pokémon must take. */
