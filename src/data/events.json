@@ -22473,6 +22473,127 @@
    ]
   },
   {
+   "id": "secret-route-path",
+   "name": "A Hidden Path",
+   "group": "Form Research",
+   "rarity": "rare",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-met",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1b2a2a",
+    "effect": "fog"
+   },
+   "intro": "Behind the hollow you studied, a gap in the rock opens onto a path no map shows. The grass here grows in odd colours.",
+   "choices": [
+    {
+     "label": "Take the hidden path",
+     "success": {
+      "text": "Something rare watches from the tall grass.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "tauros-paldea-combat-breed",
+        "mr-mime-galar",
+        "stunfisk-galar",
+        "yamask-galar",
+        "darumaka-galar",
+        "qwilfish-hisui"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 120
+        },
+        {
+         "kind": "flag",
+         "key": "secret-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Mark it on your map",
+     "success": {
+      "text": "You note the way for later. The research is worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "route-detour",
+   "name": "A Hand-Painted Detour Sign",
+   "group": "Routes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a20",
+    "effect": "none"
+   },
+   "intro": "A sign points down a side trail: \"Shortcut. Probably safe.\" Another, in different handwriting: \"Clinic ahead. Rest awhile.\"",
+   "choices": [
+    {
+     "label": "Take the shortcut (risky)",
+     "chance": 0.6,
+     "success": {
+      "text": "The trail cuts straight through. You arrive close to the end of the route.",
+      "effects": [
+       {
+        "kind": "skipAhead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "The trail is washed out. You lose time and a few supplies.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the clinic sign",
+     "success": {
+      "text": "A volunteer has set up a healing stop beside the road.",
+      "effects": [
+       {
+        "kind": "addStop",
+        "stop": "heal"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay on the main road",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "habitat-migration",
    "name": "A Migrating Flock",
    "group": "Habitats",
@@ -22603,60 +22724,6 @@
     },
     {
      "label": "Wade past",
-     "success": {
-      "text": "You leave it be and walk on.",
-      "effects": []
-     }
-    }
-   ]
-  },
-  {
-   "id": "route-detour",
-   "name": "A Hand-Painted Detour Sign",
-   "group": "Routes",
-   "rarity": "uncommon",
-   "minStage": 2,
-   "scene": {
-    "cast": [],
-    "tint": "#2a2a20",
-    "effect": "none"
-   },
-   "intro": "A sign points down a side trail: \"Shortcut. Probably safe.\" Another, in different handwriting: \"Clinic ahead. Rest awhile.\"",
-   "choices": [
-    {
-     "label": "Take the shortcut (risky)",
-     "chance": 0.6,
-     "success": {
-      "text": "The trail cuts straight through. You arrive close to the end of the route.",
-      "effects": [
-       {
-        "kind": "skipAhead"
-       }
-      ]
-     },
-     "failure": {
-      "text": "The trail is washed out. You lose time and a few supplies.",
-      "effects": [
-       {
-        "kind": "loseItem"
-       }
-      ]
-     }
-    },
-    {
-     "label": "Follow the clinic sign",
-     "success": {
-      "text": "A volunteer has set up a healing stop beside the road.",
-      "effects": [
-       {
-        "kind": "addStop",
-        "stop": "heal"
-       }
-      ]
-     }
-    },
-    {
-     "label": "Stay on the main road",
      "success": {
       "text": "You leave it be and walk on.",
       "effects": []
