@@ -8,7 +8,7 @@
    "severity": "major",
    "cooldownBattles": 2,
    "chance": 100,
-   "records": false,
+   "records": true,
    "requires": "Enemy Pokémon has a Hyper moment (existing story rules apply the effect)",
    "lines": [
     "{name} holds on... and so do I!",
@@ -55,7 +55,8 @@
     "rival",
     "boss"
    ],
-   "remember": "Last time you leaned on {foeMove}. Not happening again."
+   "remember": "Last time you leaned on {foeMove}. Not happening again.",
+   "aiShift": 0.15
   },
   {
    "id": "comebackCall",
@@ -163,7 +164,8 @@
    "classes": [
     "gym",
     "boss"
-   ]
+   ],
+   "aiShift": 0.2
   },
   {
    "id": "desperateSwitch",
@@ -214,7 +216,7 @@
    "severity": "major",
    "cooldownBattles": 1,
    "chance": 100,
-   "records": false,
+   "records": true,
    "requires": "Kind trainer; your Pokémon is nearly down",
    "lines": [
     "I won't press that. You've fought hard.",
@@ -222,7 +224,18 @@
    ],
    "voices": [
     "gentle"
-   ]
+   ],
+   "classes": [
+    "rival",
+    "gym",
+    "boss"
+   ],
+   "remember": "I used to think winning was all that mattered. I don't think that anymore.",
+   "traitShift": {
+    "empathy": 10,
+    "vindictiveness": -10
+   },
+   "shiftText": "changed their training philosophy"
   },
   {
    "id": "breakingPoint",
@@ -240,7 +253,8 @@
    "voices": [
     "brash",
     "cheerful"
-   ]
+   ],
+   "aiShift": -0.15
   },
   {
    "id": "calmBeforeFinish",
@@ -286,7 +300,8 @@
    ],
    "classes": [
     "rival"
-   ]
+   ],
+   "aiShift": 0.1
   },
   {
    "id": "unexpectedRespect",
@@ -305,7 +320,8 @@
     "gentle",
     "calm",
     "cheerful"
-   ]
+   ],
+   "remember": "I spent weeks figuring out how you broke through our defense with {foeMove}."
   },
   {
    "id": "pokemonRecognition",
@@ -345,7 +361,12 @@
    "classes": [
     "rival"
    ],
-   "remember": "You remember the battle where {foeMove} evolved, don't you? It has only grown since."
+   "remember": "You remember the battle where {foeMove} evolved, don't you? It has only grown since.",
+   "traitShift": {
+    "ambition": 8,
+    "pride": 6
+   },
+   "shiftText": "found a new battle style"
   }
  ],
  "declarations": {
