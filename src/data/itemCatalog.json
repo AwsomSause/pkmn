@@ -1731,7 +1731,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "pixie-plate",
   "status": "existing",
   "existing": "pixie-plate"
  },
@@ -3766,7 +3766,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "ice-stone",
   "status": "existing",
   "existing": "ice-stone",
   "cashIn": {
@@ -3782,7 +3782,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "linking-cord",
   "status": "existing",
   "existing": "linking-cord",
   "cashIn": {
@@ -3799,7 +3799,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "auspicious-armor",
   "status": "existing",
   "existing": "auspicious-armor",
   "cashIn": {
@@ -3816,7 +3816,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "malicious-armor",
   "status": "existing",
   "existing": "malicious-armor",
   "cashIn": {
@@ -3833,7 +3833,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "black-augurite",
   "status": "existing",
   "existing": "black-augurite",
   "cashIn": {
@@ -3850,7 +3850,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "galarica-cuff",
   "status": "existing",
   "existing": "galarica-cuff",
   "cashIn": {
@@ -3867,7 +3867,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "galarica-wreath",
   "status": "existing",
   "existing": "galarica-wreath",
   "cashIn": {
@@ -3884,7 +3884,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "metal-alloy",
   "status": "existing",
   "existing": "metal-alloy",
   "cashIn": {
@@ -3901,7 +3901,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "peat-block",
   "status": "existing",
   "existing": "peat-block",
   "cashIn": {
@@ -3918,7 +3918,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "sachet",
   "status": "existing",
   "existing": "sachet",
   "cashIn": {
@@ -3935,7 +3935,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "whipped-dream",
   "status": "existing",
   "existing": "whipped-dream",
   "cashIn": {
@@ -3952,7 +3952,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "strawberry-sweet",
   "status": "existing",
   "existing": "strawberry-sweet",
   "cashIn": {
@@ -3969,7 +3969,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "scroll-of-darkness",
   "status": "existing",
   "existing": "scroll-of-darkness",
   "cashIn": {
@@ -3986,7 +3986,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "scroll-of-waters",
   "status": "existing",
   "existing": "scroll-of-waters",
   "cashIn": {
@@ -4003,7 +4003,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "sweet-apple",
   "status": "existing",
   "existing": "sweet-apple",
   "cashIn": {
@@ -4020,7 +4020,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "tart-apple",
   "status": "existing",
   "existing": "tart-apple",
   "cashIn": {
@@ -4037,7 +4037,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "syrupy-apple",
   "status": "existing",
   "existing": "syrupy-apple",
   "cashIn": {
@@ -4054,7 +4054,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "cracked-pot",
   "status": "existing",
   "existing": "cracked-pot",
   "cashIn": {
@@ -4071,7 +4071,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "unremarkable-teacup",
   "status": "existing",
   "existing": "unremarkable-teacup",
   "cashIn": {
@@ -5823,7 +5823,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "love-sweet",
   "status": "existing",
   "existing": "love-sweet"
  },
@@ -5836,7 +5836,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "charm-coin",
   "status": "existing",
   "existing": "charm-coin"
  },
@@ -5849,7 +5849,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "lucky-charm",
   "status": "existing",
   "existing": "lucky-charm"
  },
@@ -5862,7 +5862,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "shiny-charm",
   "status": "existing",
   "existing": "shiny-charm"
  },
@@ -5875,7 +5875,7 @@
   "stacksOn": "player",
   "max": null,
   "how": "use",
-  "icon": null,
+  "icon": "last-stand-charm",
   "status": "existing",
   "existing": "last-stand-charm"
  },
@@ -6532,7 +6532,7 @@
   "name": "Slowpoke Tail",
   "family": "Valuables",
   "description": "+₽600, +2 toward Evil (you sold a Slowpoke tail...)",
-  "rarity": "uncommon",
+  "rarity": "rare",
   "stacksOn": "player",
   "max": null,
   "how": "use",
@@ -11920,7 +11920,7 @@
   "stacksOn": "player",
   "max": 1,
   "how": "passive",
-  "icon": null,
+  "icon": "kyurem-white",
   "status": "supported",
   "effect": {
    "kind": "perk",
@@ -12826,12 +12826,214 @@
   "stacksOn": "player",
   "max": 1,
   "how": "use",
-  "icon": null,
+  "icon": "master-ball",
   "status": "supported",
   "effect": {
    "kind": "bagItem",
    "item": "master-ball",
    "count": 1
+  }
+ },
+ {
+  "id": "fairy-gem",
+  "name": "Fairy Gem",
+  "family": "Gems (held, one burst per battle)",
+  "description": "First Fairy move each battle x1.5",
+  "rarity": "common",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "fairy-gem",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "gem",
+     "type": "fairy",
+     "multiplier": 1.5
+    }
+   ]
+  }
+ },
+ {
+  "id": "fairy-feather",
+  "name": "Fairy Feather",
+  "family": "Type boosters (held)",
+  "description": "Fairy moves +20%",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 5,
+  "how": "held",
+  "icon": "fairy-feather",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "typePower",
+     "types": [
+      "fairy"
+     ],
+     "percent": 20
+    }
+   ]
+  }
+ },
+ {
+  "id": "assault-vest",
+  "name": "Assault Vest",
+  "family": "Battle held items",
+  "description": "Sp. Def x1.5",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "assault-vest",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "stat",
+     "stat": "spd",
+     "multiplier": 1.5
+    }
+   ]
+  }
+ },
+ {
+  "id": "safety-goggles",
+  "name": "Safety Goggles",
+  "family": "Battle held items",
+  "description": "No damage from sandstorm or hail",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "safety-goggles",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "weatherImmune",
+     "weathers": [
+      "sand",
+      "hail"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "max-potion",
+  "name": "Max Potion",
+  "family": "Healing and status items",
+  "description": "Fully restores one Pokémon's HP",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "max-potion",
+  "status": "supported",
+  "effect": {
+   "kind": "care",
+   "heal": 9999
+  }
+ },
+ {
+  "id": "lumiose-galette",
+  "name": "Lumiose Galette",
+  "family": "Healing and status items",
+  "description": "Cures one Pokémon's status, +5 friendship",
+  "rarity": "common",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "lumiose-galette",
+  "status": "supported",
+  "effect": {
+   "kind": "care",
+   "cure": true,
+   "friendship": 5
+  }
+ },
+ {
+  "id": "big-malasada",
+  "name": "Big Malasada",
+  "family": "Healing and status items",
+  "description": "Heals 60 HP, +10 friendship",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "big-malasada",
+  "status": "supported",
+  "effect": {
+   "kind": "care",
+   "heal": 60,
+   "friendship": 10
+  }
+ },
+ {
+  "id": "pewter-crunchies",
+  "name": "Pewter Crunchies",
+  "family": "Healing and status items",
+  "description": "Heals 40 HP and cures status",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": null,
+  "how": "use",
+  "icon": "pewter-crunchies",
+  "status": "supported",
+  "effect": {
+   "kind": "care",
+   "heal": 40,
+   "cure": true
+  }
+ },
+ {
+  "id": "sandwich",
+  "name": "Sandwich",
+  "family": "Healing and status items",
+  "description": "Heals the whole team by 30%, +1 Love",
+  "rarity": "rare",
+  "stacksOn": "team",
+  "max": null,
+  "how": "use",
+  "icon": "sandwich",
+  "status": "supported",
+  "effect": {
+   "kind": "teamCare",
+   "heal": 0.3,
+   "changes": {
+    "love": 1
+   }
+  }
+ },
+ {
+  "id": "catching-charm",
+  "name": "Catching Charm",
+  "family": "Map and encounter items",
+  "description": "Every wild Pokémon is 1.25x easier to catch",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": 1,
+  "how": "passive",
+  "icon": "catching-charm",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "run"
+   },
+   "mods": [
+    {
+     "mod": "catch",
+     "multiplier": 1.25
+    }
+   ]
   }
  }
 ]
