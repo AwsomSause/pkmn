@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { AMBIENCE, arenaType } from '../../src/ui/battleFx/ambience';
-import { CATEGORY_ROWS, FLAG_ICONS, STATUS_ROWS, TYPE_ROWS, effectivenessWord } from '../../src/ui/aero';
+import { CATEGORY_ROWS, FLAG_ICONS, STATUS_ROWS, TYPE_ROWS, effectivenessWord, moveFlagNames } from '../../src/ui/aero';
 import typeChart from '../../src/data/typeChart.json';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { existsSync } from 'node:fs';
+import { content } from './helpers';
 
 // M10 visual slice 1: the pack art the battle screen uses, and arena ambience.
 describe('visual slice 1 (Aero battle)', () => {
@@ -33,8 +34,22 @@ describe('visual slice 1 (Aero battle)', () => {
 
   it('ships every pack file it catalogs', () => {
     const pack = FIXED_ASSETS.filter((a) => a.id.startsWith('pack.'));
-    expect(pack.length).toBe(51);
+    expect(pack.length).toBe(60);
     for (const a of pack) expect(existsSync(`public/assets/${a.path}`), a.path).toBe(true);
+  });
+
+  it('all 18 Enhanced Battle UI move flags show on the moves that have them', () => {
+    const icons = (id: string) => moveFlagNames(content.moves.get(id)!);
+    expect(icons('swords-dance')).toContain('Dance');
+    expect(icons('feint')).toContain('NoProtect');
+    expect(icons('flame-wheel')).toContain('ThawsUser');
+    expect(icons('stomp')).toContain('TramplesMinimize');
+    expect(icons('volt-tackle')).toContain('ElectrocuteUser');
+    expect(icons('shadow-ball')).toContain('Bomb');
+    expect(icons('x-scissor')).toContain('Slicing');
+    expect(icons('hurricane')).toContain('Wind');
+    expect(icons('tackle')).not.toContain('NoMirrorMove');
+    expect(icons('focus-punch')).toContain('NoMirrorMove');
   });
 
   it('slice 3: every move flag but typeless has an Enhanced Battle UI icon, and effectiveness has words', () => {

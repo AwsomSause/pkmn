@@ -40,7 +40,7 @@ import { BattleFx } from '../ui/battleFx/battleFx';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
 import { burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
-import { AERO, FLAG_ICONS, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
+import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
 
@@ -1084,7 +1084,7 @@ export class BattleScene extends Phaser.Scene {
    */
   private moveExtras(move: Move): Phaser.GameObjects.GameObject[] {
     const out: Phaser.GameObjects.GameObject[] = [];
-    const flags = [...move.flags, ...(move.critStage > 0 ? ['highCrit'] : [])].map((f) => FLAG_ICONS[f]).filter((f): f is string => Boolean(f));
+    const flags = moveFlagNames(move);
     flags.slice(0, 4).forEach((name, n) => {
       const key = `pack.ebui.flag.${name}`;
       if (this.textures.exists(key)) out.push(this.add.image(192 + n * 32, 0, key).setOrigin(0, 0.5).setScale(1.1));

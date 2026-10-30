@@ -5,6 +5,7 @@
 // Hub and Trainer screens keep the classic look (theme.ts); only screens that
 // call these helpers change.
 
+import moveFlagsJson from '../data/moveFlags.json';
 import type Phaser from 'phaser';
 import { COLORS, mixColor } from './theme';
 
@@ -154,8 +155,18 @@ export function statusIcon(scene: Phaser.Scene, x: number, y: number, status: st
 /** Enhanced Battle UI flag icon for each move flag (and a high critical-hit ratio). */
 export const FLAG_ICONS: Record<string, string> = {
   contact: 'Contact', sound: 'Sound', bite: 'Biting', powder: 'Powder', pulse: 'Pulse', punch: 'Punching',
-  highCrit: 'HighCriticalHitRate', zmove: 'ZMove', max: 'DynamaxMove',
+  highCrit: 'HighCriticalHitRate', zmove: 'ZMove', max: 'DynamaxMove', bullet: 'Bomb', slicing: 'Slicing', wind: 'Wind',
+  // From src/data/moveFlags.json (Essentials PBS flags moves.json doesn't carry).
+  dance: 'Dance', noProtect: 'NoProtect', thaw: 'ThawsUser', minimize: 'TramplesMinimize', electrocute: 'ElectrocuteUser', noMirror: 'NoMirrorMove',
 };
+
+const EXTRA_FLAGS = Object.entries(moveFlagsJson as Record<string, string[]>).map(([flag, ids]) => [flag, new Set(ids)] as const);
+
+/** Every flag a move shows an icon for: its own data flags, high crit, then the Essentials extras. */
+export function moveFlagNames(move: { id: string; flags: readonly string[]; critStage: number }): string[] {
+  const flags = [...move.flags, ...(move.critStage > 0 ? ['highCrit'] : []), ...EXTRA_FLAGS.filter(([, ids]) => ids.has(move.id)).map(([flag]) => flag)];
+  return flags.map((f) => FLAG_ICONS[f]).filter((f): f is string => Boolean(f));
+}
 
 /** Words for a type-chart multiplier, so the hint never relies on colour alone. */
 export function effectivenessWord(multiplier: number): { frame: number; text: string } {

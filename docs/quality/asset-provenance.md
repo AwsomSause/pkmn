@@ -24,6 +24,8 @@ Older assets (species sprites, arenas, PokeRogue UI, audio) come from the PokeRo
 | `images/packs/ebdx/hatch/shine7.png` | same | `Graphics/EBDX/Pictures/Hatching/shine7.png` | same | Hatch screen backdrop and shine | 2026-10-30 |
 | `audio/se/egg_get.ogg` | same | `Audio/ME/Egg get.ogg` | same | Jingle when an Egg hatches | 2026-10-30 |
 | `images/packs/ebui/flags/{Contact,Sound,Biting,Powder,Pulse,Punching,HighCriticalHitRate,ZMove,DynamaxMove}.png` | Enhanced Battle UI.zip (v2.1.1) | `Graphics/Plugins/Enhanced Battle UI/Move Flags/<name>.png` | Lucidious89 | Move panel flag icons | 2026-10-30 |
+| `images/packs/ebui/flags/{Bomb,Dance,ElectrocuteUser,NoMirrorMove,NoProtect,Slicing,ThawsUser,TramplesMinimize,Wind}.png` | same | same | Lucidious89 | Move panel flag icons (the other 9) | 2026-10-30 |
+| `src/data/moveFlags.json` (data) | Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip | `PBS/moves.txt` (`Flags`, `Target`) | Pokémon Essentials team | Dance / no-Protect / thaw / Minimize / electrocute / no-Mirror-Move icons (`npm run data:move-flags`) | 2026-10-30 |
 | `images/packs/ebui/move_effectiveness.png` | Enhanced Battle UI.zip | `Graphics/Plugins/Enhanced Battle UI/move_effectiveness.png` | Lucidious89 | Move panel effectiveness tag | 2026-10-30 |
 | `images/bosses/giovanni-rocketboss.png` | Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip | `Graphics/Trainers/ROCKETBOSS.png` (copied unchanged, 128×128) | Pokémon Essentials (Maruno and contributors); Nintendo/Game Freak character | Trainer Evolution "Rocket Boss Giovanni" | 2026-10-30 |
 
