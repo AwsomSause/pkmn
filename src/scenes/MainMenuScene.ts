@@ -10,6 +10,7 @@ import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
 import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { loadAssets } from '../ui/lazyAssets';
 import { pokemonAssetIds } from '../assets/catalog';
+import { BATTLE_UI_LABELS, BATTLE_UI_STYLES } from '../ui/battleUiStyles';
 import { sceneForRun } from './routing';
 
 export class MainMenuScene extends Phaser.Scene {
@@ -92,6 +93,10 @@ export class MainMenuScene extends Phaser.Scene {
     settingsOptions.push({
       option: { label: `Accessibility: ${PROFILE_INFO[session.settings.accessibilityProfile].label}` },
       action: () => this.cycleProfile(),
+    });
+    settingsOptions.push({
+      option: { label: `Battle UI: ${BATTLE_UI_LABELS[session.settings.battleUi]}` },
+      action: () => this.cycleBattleUi(),
     });
     settingsOptions.push({
       option: { label: `Damage details: ${session.settings.damageDetails ? 'On' : 'Off'}` },
@@ -177,6 +182,14 @@ export class MainMenuScene extends Phaser.Scene {
   private toggleDetails(): void {
     const { session } = services();
     session.saveSettings({ ...session.settings, damageDetails: !session.settings.damageDetails, accessibilityProfile: 'custom' });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
+  }
+
+  /** Battle UI style: Aero Glass → Essentials Kit → Essentials Kit (long foe). */
+  private cycleBattleUi(): void {
+    const { session } = services();
+    const next = BATTLE_UI_STYLES[(BATTLE_UI_STYLES.indexOf(session.settings.battleUi) + 1) % BATTLE_UI_STYLES.length]!;
+    session.saveSettings({ ...session.settings, battleUi: next });
     this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 

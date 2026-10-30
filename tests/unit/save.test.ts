@@ -72,7 +72,7 @@ describe('save manager', () => {
     MIGRATIONS.settings[original] = (data) => ({ ...(data as object), muted: true });
     try {
       storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 1, savedAt: '', data: { musicVolume: 0.1, sfxVolume: 0.2, muted: false } }));
-      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false });
+      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' });
     } finally {
       CURRENT_VERSIONS.settings = original;
       delete MIGRATIONS.settings[original];

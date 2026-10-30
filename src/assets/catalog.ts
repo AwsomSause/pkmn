@@ -102,6 +102,18 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['burst', 'shine', 'particle', 'pulse'].map(
     (name): AssetEntry => ({ id: `pack.dbk.${name}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png` }),
   ),
+  // Deluxe Battle Kit databox art for the selectable battle UI styles (ui/battleUiStyles.ts).
+  ...(
+    [
+      ['basicPlayer', 'basic_player'],
+      ['basicFoe', 'basic_foe'],
+      ['longFoe', 'long_foe'],
+      ['basicHpPlayer', 'basic_hp_player'],
+      ['basicHpFoe', 'basic_hp_foe'],
+      ['longHpFoe', 'long_hp_foe'],
+      ['basicExp', 'basic_exp'],
+    ] as const
+  ).map(([id, file]): AssetEntry => ({ id: `pack.dbk.box.${id}`, kind: 'image', category: 'ui', path: `images/packs/dbk/databoxes/${file}.png` })),
   // Enhanced Battle UI info art for the Pokémon summary: gender marks and stat arrows.
   { id: 'pack.ebui.gender', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_gender.png', frameSize: 22 },
   { id: 'pack.ebui.statArrows', kind: 'spritesheet', category: 'ui', path: 'images/packs/ebui/info_stats.png', frameSize: 18 },

@@ -1106,6 +1106,8 @@ export const SettingsSchema = z.object({
   /** How trainer lists are sorted (core/trainerSort.ts), and whether that order is flipped. */
   trainerSort: z.enum(['default', 'game', 'region', 'name', 'obtainment', 'tier', 'owned', 'recent']).default('default'),
   trainerSortReverse: z.boolean().default(false),
+  /** Which battle UI style draws the databoxes (ui/battleUiStyles.ts). */
+  battleUi: z.enum(['aero', 'kit', 'kitLong']).default('aero'),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T19:26:34.652Z",
+  "generatedAt": "2026-10-30T20:50:37.169Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -422,6 +422,48 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/dbk/pulse.png"
+    },
+    {
+      "id": "pack.dbk.box.basicPlayer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/basic_player.png"
+    },
+    {
+      "id": "pack.dbk.box.basicFoe",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/basic_foe.png"
+    },
+    {
+      "id": "pack.dbk.box.longFoe",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/long_foe.png"
+    },
+    {
+      "id": "pack.dbk.box.basicHpPlayer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/basic_hp_player.png"
+    },
+    {
+      "id": "pack.dbk.box.basicHpFoe",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/basic_hp_foe.png"
+    },
+    {
+      "id": "pack.dbk.box.longHpFoe",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/long_hp_foe.png"
+    },
+    {
+      "id": "pack.dbk.box.basicExp",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/dbk/databoxes/basic_exp.png"
     },
     {
       "id": "pack.ebui.gender",
@@ -72271,6 +72313,24 @@
       "path": "images/items/fairium_z.png"
     },
     {
+      "id": "item.exp_candy_s",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/exp_candy_s.png"
+    },
+    {
+      "id": "item.exp_candy_m",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/exp_candy_m.png"
+    },
+    {
+      "id": "item.exp_candy_l",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/exp_candy_l.png"
+    },
+    {
       "id": "item.fist_plate",
       "kind": "image",
       "category": "item",
@@ -73525,10 +73585,10 @@
       "path": "images/items/gen5/dread-plate.png"
     },
     {
-      "id": "item.gen5/0",
+      "id": "item.gen5/pixie-plate",
       "kind": "image",
       "category": "item",
-      "path": "images/items/gen5/0.png"
+      "path": "images/items/gen5/pixie-plate.png"
     },
     {
       "id": "item.gen5/draco-plate",
@@ -74071,6 +74131,120 @@
       "path": "images/items/gen5/shiny-stone.png"
     },
     {
+      "id": "item.gen5/ice-stone",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/ice-stone.png"
+    },
+    {
+      "id": "item.gen5/linking-cord",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/linking-cord.png"
+    },
+    {
+      "id": "item.gen5/auspicious-armor",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/auspicious-armor.png"
+    },
+    {
+      "id": "item.gen5/malicious-armor",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/malicious-armor.png"
+    },
+    {
+      "id": "item.gen5/black-augurite",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/black-augurite.png"
+    },
+    {
+      "id": "item.gen5/galarica-cuff",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/galarica-cuff.png"
+    },
+    {
+      "id": "item.gen5/galarica-wreath",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/galarica-wreath.png"
+    },
+    {
+      "id": "item.gen5/metal-alloy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/metal-alloy.png"
+    },
+    {
+      "id": "item.gen5/peat-block",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/peat-block.png"
+    },
+    {
+      "id": "item.gen5/sachet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sachet.png"
+    },
+    {
+      "id": "item.gen5/whipped-dream",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/whipped-dream.png"
+    },
+    {
+      "id": "item.gen5/strawberry-sweet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/strawberry-sweet.png"
+    },
+    {
+      "id": "item.gen5/scroll-of-darkness",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/scroll-of-darkness.png"
+    },
+    {
+      "id": "item.gen5/scroll-of-waters",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/scroll-of-waters.png"
+    },
+    {
+      "id": "item.gen5/sweet-apple",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sweet-apple.png"
+    },
+    {
+      "id": "item.gen5/tart-apple",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/tart-apple.png"
+    },
+    {
+      "id": "item.gen5/syrupy-apple",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/syrupy-apple.png"
+    },
+    {
+      "id": "item.gen5/cracked-pot",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/cracked-pot.png"
+    },
+    {
+      "id": "item.gen5/unremarkable-teacup",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/unremarkable-teacup.png"
+    },
+    {
       "id": "item.gen5/oval-stone",
       "kind": "image",
       "category": "item",
@@ -74567,6 +74741,36 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/heart-scale.png"
+    },
+    {
+      "id": "item.gen5/love-sweet",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/love-sweet.png"
+    },
+    {
+      "id": "item.gen5/charm-coin",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/charm-coin.png"
+    },
+    {
+      "id": "item.gen5/lucky-charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lucky-charm.png"
+    },
+    {
+      "id": "item.gen5/shiny-charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/shiny-charm.png"
+    },
+    {
+      "id": "item.gen5/last-stand-charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/last-stand-charm.png"
     },
     {
       "id": "item.gen5/red-shard",
@@ -76081,6 +76285,12 @@
       "path": "images/items/gen5/kyurem-black.png"
     },
     {
+      "id": "item.gen5/kyurem-white",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/kyurem-white.png"
+    },
+    {
       "id": "item.gen5/tornadus-therian",
       "kind": "image",
       "category": "item",
@@ -76295,6 +76505,186 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/ring-target.png"
+    },
+    {
+      "id": "item.gen5/master-ball",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/master-ball.png"
+    },
+    {
+      "id": "item.gen5/fairy-gem",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fairy-gem.png"
+    },
+    {
+      "id": "item.gen5/fairy-feather",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/fairy-feather.png"
+    },
+    {
+      "id": "item.gen5/assault-vest",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/assault-vest.png"
+    },
+    {
+      "id": "item.gen5/safety-goggles",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/safety-goggles.png"
+    },
+    {
+      "id": "item.gen5/max-potion",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/max-potion.png"
+    },
+    {
+      "id": "item.gen5/lumiose-galette",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/lumiose-galette.png"
+    },
+    {
+      "id": "item.gen5/big-malasada",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/big-malasada.png"
+    },
+    {
+      "id": "item.gen5/pewter-crunchies",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pewter-crunchies.png"
+    },
+    {
+      "id": "item.gen5/sandwich",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/sandwich.png"
+    },
+    {
+      "id": "item.gen5/catching-charm",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/catching-charm.png"
+    },
+    {
+      "id": "item.gen5/electric-seed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/electric-seed.png"
+    },
+    {
+      "id": "item.gen5/grassy-seed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/grassy-seed.png"
+    },
+    {
+      "id": "item.gen5/misty-seed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/misty-seed.png"
+    },
+    {
+      "id": "item.gen5/psychic-seed",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/psychic-seed.png"
+    },
+    {
+      "id": "item.gen5/red-canari-plush-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-canari-plush-1.png"
+    },
+    {
+      "id": "item.gen5/red-canari-plush-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-canari-plush-2.png"
+    },
+    {
+      "id": "item.gen5/red-canari-plush-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/red-canari-plush-3.png"
+    },
+    {
+      "id": "item.gen5/blue-canari-plush-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-canari-plush-1.png"
+    },
+    {
+      "id": "item.gen5/blue-canari-plush-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-canari-plush-2.png"
+    },
+    {
+      "id": "item.gen5/blue-canari-plush-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/blue-canari-plush-3.png"
+    },
+    {
+      "id": "item.gen5/green-canari-plush-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/green-canari-plush-1.png"
+    },
+    {
+      "id": "item.gen5/green-canari-plush-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/green-canari-plush-2.png"
+    },
+    {
+      "id": "item.gen5/green-canari-plush-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/green-canari-plush-3.png"
+    },
+    {
+      "id": "item.gen5/pink-canari-plush-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pink-canari-plush-1.png"
+    },
+    {
+      "id": "item.gen5/pink-canari-plush-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pink-canari-plush-2.png"
+    },
+    {
+      "id": "item.gen5/pink-canari-plush-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/pink-canari-plush-3.png"
+    },
+    {
+      "id": "item.gen5/gold-canari-plush-1",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gold-canari-plush-1.png"
+    },
+    {
+      "id": "item.gen5/gold-canari-plush-2",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gold-canari-plush-2.png"
+    },
+    {
+      "id": "item.gen5/gold-canari-plush-3",
+      "kind": "image",
+      "category": "item",
+      "path": "images/items/gen5/gold-canari-plush-3.png"
     },
     {
       "id": "bg.arena.plains",

@@ -38,6 +38,7 @@ import { bossVictory } from '../ui/battleFx/victoryLook';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
+import { KIT_LAYOUTS, KitBar, kitTexturesReady, type GaugeLike } from '../ui/battleUiStyles';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { battleTrack, victoryTrack } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
@@ -100,9 +101,9 @@ interface InfoBox {
   level: Phaser.GameObjects.Text;
   /** Where a status badge goes inside the box. */
   statusAt: { x: number; y: number };
-  hpBar: Bar;
+  hpBar: GaugeLike;
   hpText?: Phaser.GameObjects.Text;
-  xpBar?: Bar;
+  xpBar?: GaugeLike;
   teamText?: Phaser.GameObjects.Text;
   statusBadge?: Phaser.GameObjects.Container;
   /** "TERA WATER" while the Pokémon is Terastallized. */
@@ -544,12 +545,16 @@ export class BattleScene extends Phaser.Scene {
 
   private makeInfoBox(x: number, y: number, isPlayer: boolean): InfoBox {
     const container = this.add.container(x, y);
-    // A glossy glass databox (Aero), cyan-rimmed for you and pink-rimmed for the foe.
-    container.add(
-      isPlayer
-        ? drawGlass(this, 16, 2, 366, 128, { rim: AERO.rim, radius: 20 })
-        : drawGlass(this, 6, 4, 360, 100, { rim: this.foeRim(), tint: 0x2a1240, radius: 20 }),
-    );
+    const style = services().session.settings.battleUi;
+    const kit = style !== 'aero' && kitTexturesReady(this) ? KIT_LAYOUTS[style][isPlayer ? 'player' : 'foe'] : null;
+    // A glossy glass databox (Aero), cyan-rimmed for you and pink-rimmed for the foe; or the Deluxe Battle Kit's databox art.
+    if (kit) container.add(this.add.image(kit.x, kit.y, kit.box).setOrigin(0, 0).setScale(kit.scale));
+    else
+      container.add(
+        isPlayer
+          ? drawGlass(this, 16, 2, 366, 128, { rim: AERO.rim, radius: 20 })
+          : drawGlass(this, 6, 4, 360, 100, { rim: this.foeRim(), tint: 0x2a1240, radius: 20 }),
+      );
     // Text and bar positions follow the old art's slots (art pixel × 3).
     const left = isPlayer ? 48 : 24;
     const right = isPlayer ? 366 : 342;
@@ -557,19 +562,28 @@ export class BattleScene extends Phaser.Scene {
     const level = this.add.text(right, 14, '', textStyle(24)).setOrigin(1, 0);
     container.add([name, level]);
     const hpX = isPlayer ? 210 : 177;
-    // B2W2 "HP" tag: a small dark pill with orange letters, sitting against the gauge.
-    const tag = this.add.graphics();
-    tag.fillStyle(0x303838, 1).fillRoundedRect(hpX - 40, 54, 34, 18, 9);
-    tag.lineStyle(1, 0xf0f0e8, 0.9).strokeRoundedRect(hpX - 40, 54, 34, 18, 9);
-    container.add(tag);
-    container.add(this.add.text(hpX - 23, 63, 'HP', textStyle(13, '#f8a030', { shadow: undefined })).setOrigin(0.5));
-    const hpBar = new Bar(this, hpX, 63, 144, 10, 'hp');
+    let hpBar: GaugeLike;
+    if (kit) {
+      const bx = kit.x + kit.hp.artX * kit.scale;
+      const by = kit.y + kit.hp.artY * kit.scale;
+      container.add(this.add.text(bx - 8, by + (kit.hp.rowH * kit.scale) / 2, 'HP', textStyle(15, '#f8a030', { shadow: undefined })).setOrigin(1, 0.5));
+      hpBar = new KitBar(this, bx, by, kit.hp.tex, 3, kit.hp.rowH, kit.scale, 'hp');
+    } else {
+      // B2W2 "HP" tag: a small dark pill with orange letters, sitting against the gauge.
+      const tag = this.add.graphics();
+      tag.fillStyle(0x303838, 1).fillRoundedRect(hpX - 40, 54, 34, 18, 9);
+      tag.lineStyle(1, 0xf0f0e8, 0.9).strokeRoundedRect(hpX - 40, 54, 34, 18, 9);
+      container.add(tag);
+      container.add(this.add.text(hpX - 23, 63, 'HP', textStyle(13, '#f8a030', { shadow: undefined })).setOrigin(0.5));
+      hpBar = new Bar(this, hpX, 63, 144, 10, 'hp');
+    }
     hpBar.addTo(container);
     const box: InfoBox = { container, isPlayer, name, level, hpBar, statusAt: { x: left, y: isPlayer ? 80 : 80 } };
     if (isPlayer) {
       box.hpText = this.add.text(right, 76, '', textStyle(24)).setOrigin(1, 0);
       container.add(box.hpText);
-      box.xpBar = new Bar(this, 123, 120, 255, 6, 'xp');
+      if (kit) box.xpBar = new KitBar(this, 123, 120, 'pack.dbk.box.basicExp', 1, 6, 2.7, 'xp');
+      else box.xpBar = new Bar(this, 123, 120, 255, 6, 'xp');
       box.xpBar.addTo(container);
     } else {
       box.teamText = this.add.text(right, 80, '', textStyle(18, '#f8f8f8', { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);

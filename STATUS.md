@@ -3,9 +3,10 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run 24, settings 6, meta 1. Next free versions: run 25, profile 13, settings 7 (check `origin/main` first; another thread may have taken them).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run 24, settings 7, meta 1. Next free versions: run 25, profile 13, settings 8 (check `origin/main` first; another thread may have taken them).
 
 ## Done
+- Battle UI styles (settings v7, `battleUi`; Settings > Battle UI cycles it): Aero Glass (default), Essentials Kit and Essentials Kit (long foe). The kit styles draw the Deluxe Battle Kit databox frames and its green/yellow/red HP strips and EXP strip (`ui/battleUiStyles.ts`, art in `public/assets/images/packs/dbk/databoxes/`, source: Deluxe Battle Kit.zip). Limited: the kit art has no name/level plates, so text sits on the battlefield; the long style only changes the foe box. Presentation only.
 - Event screens restyled (`scenes/EventScene.ts`): HUB-style glass header tab, PokeRogue-style bottom row (typed dialogue box with the focused option's odds/risk/cost, vertical option list on the right). Presentation only; outcomes unchanged. Spec `tests/e2e/events.spec.ts`.
 - Battle HP bars restyled B2W2-style (`ui/widgets.ts` `Bar`, `BattleScene.makeInfoBox`): rounded pill gauge with pale rim, three-band fill (green above 50%, yellow above 20%, red below), lost-HP strip that catches up, dark `HP` tag. Drawn originally (no copied art). Also used by the party panel. XP bar unchanged.
 - Item audit round 2: new `terrainSeed` held hook (Electric/Grassy/Misty/Psychic Seed raise Defense or Sp. Def once under their terrain), 15 Canari Plush valuables (Red/Blue/Green/Pink/Gold, Lv.1-3, money + Charisma), Exp. Candy S/M/L reward cards (1/2/3 levels), "(already in game)" removed from 33 descriptions. Limited: Mints (no natures), Memories (no Silvally forms), Hyper Berries and special Poké Balls (new catch rules) still wait; XS/XL candies skipped (too close to Rare Candy).
