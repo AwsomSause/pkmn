@@ -462,3 +462,57 @@ describe('trainer perks, batch Z2 (Sabrina LGPE to Tabitha)', () => {
     }
   }, 240_000);
 });
+
+describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
+  const Z3 = ['olympia', 'opal', 'ortega', 'palmer', 'peonia', 'peony', 'phoebe-gen-6', 'piers', 'plumeria', 'pryce', 'raihan', 'red-classic', 'red-masters', 'rei', 'riley', 'rosa', 'rowan', 'roxanne-gen-6', 'roxie-masters', 'ryuki'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'dark' | 'water' | 'psychic' | 'steel' | 'fairy') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all 20 are playable trainers', () => {
+    for (const id of Z3) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers deal more damage of their type', () => {
+    expect(damageDealtPerk(perks('ryuki'), { ...info, userTypes: ['dragon'] })).toBeCloseTo(1.25);
+    expect(damageDealtPerk(perks('olympia'), { ...info, userTypes: ['psychic'] })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('riley'), { ...info, userTypes: ['fighting'] })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('pryce'), { ...info, userTypes: ['ice'] })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('red-masters'), info)).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('red-classic'), info)).toBe(1);
+  });
+
+  it('weaknesses to the named move types', () => {
+    expect(taken('olympia', 'dark')).toBeCloseTo(1.2);
+    expect(taken('roxanne-gen-6', 'water')).toBeCloseTo(1.2);
+    expect(taken('roxie-masters', 'psychic')).toBeCloseTo(1.2);
+    expect(taken('ortega', 'steel')).toBeCloseTo(1.2);
+    expect(taken('riley', 'fairy')).toBeCloseTo(1.15);
+  });
+
+  it('stats: Pryce, Peony, Piers, Opal', () => {
+    expect(statPerk(perks('pryce'), 'def', ['ice'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('pryce'), 'spe', ['ice'])).toBeCloseTo(0.85);
+    expect(statPerk(perks('peony'), 'atk', ['steel'])).toBeCloseTo(1.1);
+    expect(statPerk(perks('piers'), 'spe', ['dark'])).toBeCloseTo(0.9);
+    expect(statPerk(perks('opal'), 'spe', ['fairy'])).toBeCloseTo(0.9);
+  });
+
+  it('Piers: sound moves, Rei: fast and slow Pokémon', () => {
+    expect(damageDealtPerk(perks('piers'), { ...info, moveFlags: ['sound'] })).toBeCloseTo(1.15);
+    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 100 })).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('rei'), { ...info, userBaseSpeed: 40 })).toBeCloseTo(0.9);
+  });
+
+  it('Palmer: boss damage; Rowan: lower start level', () => {
+    expect(damageDealtPerk(perks('palmer'), { ...info, targetIsBoss: true })).toBeCloseTo(1.2);
+    expect(perks('rowan').find((m) => m.kind === 'startingLevelOffset')).toMatchObject({ value: -1 });
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z3) {
+      const play = () => autoplay({ seed: `perkZ3-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 240_000);
+});
