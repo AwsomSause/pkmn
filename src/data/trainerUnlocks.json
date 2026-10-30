@@ -5075,6 +5075,51 @@
    },
    "cost": 500,
    "status": "supported"
+  },
+  {
+   "trainerId": "lusamine-masters",
+   "tier": 3,
+   "text": "Catch Clefable; Raids won: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "clefable"
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lusamine-nihilego",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Poison party; Defeat or catch 40 Poison-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.poison",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 40
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
   }
  ]
 }
