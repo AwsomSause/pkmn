@@ -24,6 +24,7 @@ import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
 import { emotionOf } from './emotions';
+import { clearMomentFlags, detectMoments } from './moments';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
@@ -237,8 +238,15 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   if (lead && !battle.outcome) noteLowHpTurn(run, lead.uid, lead.hp > 0 && lead.hp <= maxHp(content, lead) * cfg.lowHpShare);
 
   if (battle.outcome === 'win') trainerVow(content, run, triggers, events.length - 1, where);
+  for (const m of detectMoments(content, before, run, events)) {
+    const def = content.story.definitions.find((d) => d.triggerConditions.trigger === m.trigger)!;
+    triggers.push({ ...makeTrigger(run, def, m.at, triggers.length, m.names, null, m.uid), side: m.side, combat: false });
+  }
   const cues = resolveTriggers(content, run, triggers, where);
-  if (battle.outcome) recordBattleEnd(content, run, where);
+  if (battle.outcome) {
+    recordBattleEnd(content, run, where);
+    clearMomentFlags(run);
+  }
   return cues;
 }
 
@@ -381,6 +389,34 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
   return result.cues;
 }
 
+/** They're More Than Just Teammates: two Pokémon that fought together through three boss wins form a bond. */
+function noteDuos(content: Content, run: RunState, fought: string[], where: Where): void {
+  const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'moreThanTeammates');
+  if (!def) return;
+  const team = fought.filter((uid) => run.party.some((m) => m.uid === uid)).sort();
+  for (let i = 0; i < team.length; i++) {
+    for (let j = i + 1; j < team.length; j++) {
+      const a = team[i]!;
+      const b = team[j]!;
+      const key = `duo:${a}:${b}`;
+      const n = Number(run.story.flags[key] ?? 0) + 1;
+      run.story.flags[key] = n;
+      if (n !== 3) continue;
+      const nameA = name(content, run.party.find((m) => m.uid === a)!.speciesId);
+      const nameB = name(content, run.party.find((m) => m.uid === b)!.speciesId);
+      const cause = emit(content, run, 'storyMoment', {
+        where,
+        actors: [a, b],
+        data: { def: def.id, suppressed: false },
+        importance: def.memoryRecord?.importance ?? 0,
+        text: fill(def.memoryRecord?.text ?? '', { name: nameA, other: nameB }),
+        emotions: def.emotions,
+      });
+      openRelationship(content, run, 'bond', { kind: 'pokemon', id: a }, { kind: 'pokemon', id: b }, cause);
+    }
+  }
+}
+
 /** The battle's outcome: boss wins and losses, and how close it was. */
 function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const battle = run.battle!;
@@ -453,6 +489,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       data: { leaderId: trainer.leaderId, role: trainer.classId, name: trainer.name },
       text: `Defeated ${role} ${trainer.name}`,
     });
+    noteDuos(content, run, fought, where);
     // A milestone: the story may now follow a different rival.
     const chosen = evaluateUltimate(run);
     if (chosen) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: chosen.id, outcome: 'ultimate' }, text: `${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey` });
@@ -514,6 +551,11 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
       // Determination Evolution: the evolution rules are unchanged; an exceptional story (a boss beaten
       // after surviving a fatal hit) only earns it a named memory and its own record.
       const h = run.story.histories[mon.uid];
+      const beyond = content.story.definitions.find((d) => d.id === 'evolved-beyond');
+      if (h && beyond && h.bossesBeaten >= 3 && !h.hyper[beyond.id]) {
+        h.hyper[beyond.id] = 1;
+        emit(content, run, 'storyMoment', { actors: [mon.uid], data: { def: beyond.id, suppressed: false }, importance: beyond.memoryRecord?.importance ?? 0, text: fill(beyond.memoryRecord?.text ?? '', { name: name(content, mon.speciesId) }), emotions: beyond.emotions });
+      }
       if (h && h.bossesBeaten > 0 && h.survivedFatal > 0) {
         h.hyper['determination-evolution'] = (h.hyper['determination-evolution'] ?? 0) + 1;
         emit(content, run, 'storyMoment', {
@@ -528,6 +570,12 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
     for (const mark of content.story.friendshipMilestones) {
       if (prev.friendship < mark && mon.friendship >= mark) {
         emit(content, run, 'friendshipMilestone', { actors: [mon.uid], data: { value: mark }, text: `Its friendship with you reached ${mark}` });
+        const believe = content.story.definitions.find((d) => d.id === 'knows-you-believe');
+        const h = run.story.histories[mon.uid];
+        if (believe && h && h.battles >= 10 && mark === Math.max(...content.story.friendshipMilestones) && !h.hyper[believe.id]) {
+          h.hyper[believe.id] = 1;
+          emit(content, run, 'storyMoment', { actors: [mon.uid], data: { def: believe.id, suppressed: false }, importance: believe.memoryRecord?.importance ?? 0, text: fill(believe.memoryRecord?.text ?? '', { name: name(content, mon.speciesId) }), emotions: believe.emotions });
+        }
       }
     }
   }

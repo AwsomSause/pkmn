@@ -31,6 +31,7 @@ import {
 } from '../core/contentSchema';
 import abilitiesJson from './abilities.json';
 import { HISTORY_MEMORIES, HYPER_EFFECTS } from '../core/story/hyper';
+import { MOMENT_EFFECTS } from '../core/story/moments';
 import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import runPrepJson from './runPrep.json';
@@ -263,7 +264,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const id of def.followUpEvents) if (!storyIds.has(id)) problems.push(`story.json "${def.id}" follows up with unknown event "${id}"`);
     if (def.effect?.kind === 'item' && !content.items.has(def.effect.itemId)) problems.push(`story.json "${def.id}" gives unknown item "${def.effect.itemId}"`);
     // Hyper moments are decided by the battle engine, which only knows one effect for each trigger.
-    const expected = HYPER_EFFECTS[def.triggerConditions.trigger];
+    const expected = HYPER_EFFECTS[def.triggerConditions.trigger] ?? MOMENT_EFFECTS[def.triggerConditions.trigger];
     const duration = expected === 'rematch' ? 'run' : 'battle';
     if (def.effect?.kind !== expected || def.duration !== duration) {
       problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and ${duration} duration`);
