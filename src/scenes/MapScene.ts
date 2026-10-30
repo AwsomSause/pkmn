@@ -2,7 +2,10 @@
 // The player picks one of the next nodes to fight, can stop at a healing spot
 // or shop beside the node they're on, and can use the Party and Bag menus.
 // After a region's last stage the same screen shows its Pokémon League: one
-// straight line of Elite Four members, then the champion.
+// straight line of Elite Four members, then the champion. The League climbs:
+// columns spread across the screen, each battle sits higher on a taller glass
+// pillar with a bigger token, and the champion stands in turning gold rays
+// (Visual Bible: "a deliberate escalation from normal stages").
 
 import { licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
@@ -43,6 +46,8 @@ const ROW_SPACING = 92;
 const MAP_LEFT = 70;
 const MAP_MID_Y = 245;
 const NODE_RADIUS = 24;
+/** How far the League's last battle sits above its first. */
+const LEAGUE_RISE = 120;
 
 const KIND_STYLE: Record<MapNode['kind'], { color: number; glyph: string; label: string }> = {
   wild: { color: 0x48a860, glyph: 'W', label: 'Wild Pokémon' },
@@ -90,6 +95,7 @@ export class MapScene extends Phaser.Scene {
   private info: Phaser.GameObjects.Text | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
   private busy = false;
+  private colSpacing = COL_SPACING;
   /** What map items show about nodes (Devon Scope, Town Map, Rule Book, Orange Mail). */
   private previews: Record<string, NodePreview> = {};
   /** Where each node is drawn inside the scrolling map layer (for the travel animation). */
@@ -184,17 +190,21 @@ export class MapScene extends Phaser.Scene {
     const mapLayer = this.add.container(0, 0);
     this.mapLayer = mapLayer;
     this.nodePos = new Map();
-    const totalWidth = MAP_LEFT * 2 + (stage.map.columns - 1) * COL_SPACING;
+    const colSpacing = league ? Math.min(200, (GAME_WIDTH - MAP_LEFT * 2 - 40) / Math.max(1, stage.map.columns - 1)) : COL_SPACING;
+    this.colSpacing = colSpacing;
+    const totalWidth = MAP_LEFT * 2 + (stage.map.columns - 1) * colSpacing;
     const focusCol = Math.max(column, 1);
-    const scroll = Phaser.Math.Clamp(MAP_LEFT + (focusCol - 1) * COL_SPACING - 300, 0, Math.max(0, totalWidth - GAME_WIDTH));
+    const scroll = Phaser.Math.Clamp(MAP_LEFT + (focusCol - 1) * colSpacing - 300, 0, Math.max(0, totalWidth - GAME_WIDTH));
     mapLayer.x = -scroll;
     const maskShape = this.make.graphics({}, false).fillRect(0, 74, GAME_WIDTH, 346);
     mapLayer.setMask(maskShape.createGeometryMask());
 
     const widthOf = (col: number) => stage.map.nodes.filter((n) => n.column === col).length;
+    // In the League each battle sits a step higher than the last.
+    const rise = league ? LEAGUE_RISE / Math.max(1, stage.map.columns - 1) : 0;
     const pos = (n: MapNode) => ({
-      x: MAP_LEFT + (n.column - 1) * COL_SPACING,
-      y: MAP_MID_Y + (n.row - (widthOf(n.column) - 1) / 2) * ROW_SPACING,
+      x: MAP_LEFT + (n.column - 1) * colSpacing,
+      y: MAP_MID_Y + (n.row - (widthOf(n.column) - 1) / 2) * ROW_SPACING + (league ? LEAGUE_RISE / 2 - (n.column - 1) * rise : 0),
     });
 
     const lines = this.add.graphics();
@@ -202,9 +212,17 @@ export class MapScene extends Phaser.Scene {
     const openPaths: [{ x: number; y: number }, { x: number; y: number }][] = [];
     // The boss column: a glowing band behind the gym leader (or each League battle).
     for (const n of stage.map.nodes.filter((m) => BOSS_KINDS.includes(m.kind))) {
-      const bx = pos(n).x;
-      const band = drawGlass(this, bx - 46, 98, 92, 300, { tint: KIND_STYLE[n.kind].color, rim: mixColor(KIND_STYLE[n.kind].color, 0xffffff, 0.4), alpha: 0.28, radius: 24 });
+      const { x: bx, y: by } = pos(n);
+      const top = league ? by - 56 : 98;
+      const band = drawGlass(this, bx - 46, top, 92, 398 - top, { tint: KIND_STYLE[n.kind].color, rim: mixColor(KIND_STYLE[n.kind].color, 0xffffff, 0.4), alpha: 0.28, radius: 24 });
       mapLayer.addAt(band, 0);
+      if (league) band.setName('league-step');
+      if (n.kind === 'champion') {
+        const rays = this.add.star(bx, by, 12, 18, 96, 0xf8d050, 0.32).setBlendMode('ADD').setName('league-rays');
+        mapLayer.addAt(rays, 1);
+        if (this.motion === 'full') this.tweens.add({ targets: rays, angle: 360, duration: 14000, repeat: -1 });
+        if (this.motion !== 'off') this.tweens.add({ targets: rays, scale: 1.12, alpha: 0.5, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      }
       if (this.motion === 'full') this.tweens.add({ targets: band, alpha: 0.6, duration: 1600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }
     for (const n of stage.map.nodes) {
@@ -237,7 +255,7 @@ export class MapScene extends Phaser.Scene {
 
     // Trainer column markers along the bottom.
     for (const col of stage.map.trainerColumns) {
-      const x = MAP_LEFT + (col - 1) * COL_SPACING;
+      const x = MAP_LEFT + (col - 1) * colSpacing;
       mapLayer.add(this.add.text(x, 402, 'Trainers', textStyle(14, '#f8a850')).setOrigin(0.5));
     }
 
@@ -250,7 +268,7 @@ export class MapScene extends Phaser.Scene {
       const reachable = choiceIds.has(n.id);
       const dim = !visited && !reachable && n.column <= column;
       const isBoss = BOSS_KINDS.includes(n.kind);
-      const r = isBoss ? NODE_RADIUS + 6 : NODE_RADIUS;
+      const r = (isBoss ? NODE_RADIUS + 6 : NODE_RADIUS) + (league ? (n.column - 1) * 2 : 0);
       const alpha = dim ? 0.35 : visited && !isCurrent ? 0.6 : 1;
       // A pixel token: dark rim, the kind's colour, a lighter top and a darker bottom.
       const g = this.add.graphics();
@@ -298,7 +316,7 @@ export class MapScene extends Phaser.Scene {
       if (n.id === hidden && !visited) mapLayer.add(this.add.text(x - r + 2, y - r + 2, '✦', textStyle(22, '#f8e070', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5));
       this.drawPreview(mapLayer, n, x, y, r);
       if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
-      if (league && boss) mapLayer.add(this.add.text(x, y + NODE_RADIUS + 14, boss.name, textStyle(15, COLORS.textLight)).setOrigin(0.5, 0));
+      if (league && boss) mapLayer.add(this.add.text(x, y + r + 12, n.kind === 'champion' ? `★ ${boss.name} ★` : boss.name, textStyle(n.kind === 'champion' ? 17 : 15, n.kind === 'champion' ? '#ffe080' : COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
@@ -312,7 +330,7 @@ export class MapScene extends Phaser.Scene {
         mapLayer.add(this.add.text(sx, sy, s.glyph, textStyle(18, '#ffffff', { stroke: '#181818', strokeThickness: 3 })).setOrigin(0.5).setAlpha(side.used ? 0.4 : 1));
       });
       if (reachable) {
-        this.addOption({ kind: 'node', node: n }, () => this.ringCursor(mapLayer, x, y, BOSS_KINDS.includes(n.kind) ? NODE_RADIUS + 14 : NODE_RADIUS + 10), {
+        this.addOption({ kind: 'node', node: n }, () => this.ringCursor(mapLayer, x, y, r + (isBoss ? 8 : 10)), {
           x: x - scroll - NODE_RADIUS,
           y: y - NODE_RADIUS,
           w: NODE_RADIUS * 2,
@@ -412,7 +430,7 @@ export class MapScene extends Phaser.Scene {
     const to = this.nodePos.get(node.id);
     if (this.motion !== 'full' || !layer || !to) return 0;
     const stage = services().session.run!.stage!;
-    const from = (stage.current && this.nodePos.get(stage.current)) || { x: to.x - COL_SPACING, y: to.y };
+    const from = (stage.current && this.nodePos.get(stage.current)) || { x: to.x - this.colSpacing, y: to.y };
     const orb = this.add.circle(from.x, from.y, 9, AERO.white, 1).setBlendMode('ADD');
     const aura = this.add.circle(from.x, from.y, 16, AERO.rim, 0.45).setBlendMode('ADD');
     layer.add([aura, orb]);

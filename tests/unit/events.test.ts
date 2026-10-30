@@ -2,7 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { applyCatalog, getCatalogEntry } from '../../src/core/catalog';
-import { addEventStops, chooseEvent, eventView, stopIsHidden } from '../../src/core/events';
+import { addEventStops, choiceRisk, chooseEvent, eventView, stopIsHidden } from '../../src/core/events';
+import { EventChoiceSchema } from '../../src/core/contentSchema';
 import { createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, takeTurn, type TurnResult } from '../../src/core/run';
@@ -183,5 +184,35 @@ describe('events in saves', () => {
     expect(loaded.migratedFrom).toBe(14);
     expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(15);
     expect(eventStops(loaded.data).length).toBe(eventStops(run).length);
+  });
+});
+
+describe('choice cards: cost and kind of risk (Visual Bible event screens)', () => {
+  const choice = (c: object) => EventChoiceSchema.parse({ label: 'x', success: { text: 's' }, ...c });
+
+  it('a sure choice says it is certain and names what it costs, not what it gives', () => {
+    const r = choiceRisk(content, choice({ success: { text: 's', effects: [{ kind: 'money', amount: -400 }, { kind: 'item', id: 'great-ball', count: 3 }] } }));
+    expect(r).toEqual({ cost: '−₽400', risk: 'Certain outcome' });
+    expect(choiceRisk(content, choice({ success: { text: 's', battle: { kind: 'wild', species: ['rattata'] } } })).risk).toBe('Certain · leads to a battle');
+  });
+
+  it('an uncertain choice says what it depends on and what failing means', () => {
+    expect(choiceRisk(content, choice({ check: 'luck', failure: { text: 'f' } })).risk).toBe('Depends on your Luck · nothing lost if it fails');
+    expect(choiceRisk(content, choice({ chance: 0.5, failure: { text: 'f', effects: [{ kind: 'damage', share: 0.2 }] } })).risk).toBe('Luck of the draw · a setback if it fails');
+    const fight = content.events.get('fight-or-flight-2')!.choices.find((c) => c.check && c.failure?.battle)!;
+    expect(choiceRisk(content, fight).risk).toMatch(/^Depends on your \w+ · a fight if it fails$/);
+  });
+
+  it('a cost paid either way counts; a cost only on success does not (it would spoil the outcome)', () => {
+    const both = { kind: 'money', amount: -100 };
+    expect(choiceRisk(content, choice({ chance: 0.5, success: { text: 's', effects: [both] }, failure: { text: 'f', effects: [both] } })).cost).toBe('−₽100');
+    expect(choiceRisk(content, choice({ chance: 0.5, success: { text: 's', effects: [both] }, failure: { text: 'f' } })).cost).toBeNull();
+  });
+
+  it('every event view carries a risk line for each choice', () => {
+    const run = atEvent(newRun('risk'), 'department-store-sale');
+    const view = eventView(content, run, 'test-event');
+    expect(view.choices.every((c) => c.risk.length > 0)).toBe(true);
+    expect(view.choices[0]!.cost).toBe('−₽400');
   });
 });

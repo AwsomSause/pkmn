@@ -9,7 +9,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 |---|---|---|
 | Check git state, run checks before edits | BUILT | Every slice PR reports them |
 | Baseline screenshots at fixed seeds: battle, move picker, map | BUILT | slice 1 (seed `visual-base`) |
-| Baseline screenshots: reward, shop, event, league, run end | TODO | slice V4 |
+| Baseline screenshots: reward, shop, event, league, run end | BUILT | `tests/e2e/visualBaseline.spec.ts` (seed `visual-base`, 960×540, 800×450, 480×800 → `test-results/visual/baseline-*.png`) |
 | Repo visibility / asset rights decision | BUILT | D4 private; director approved pack imports 2026-10-30 |
 | Asset provenance manifest | BUILT | `docs/quality/asset-provenance.md` |
 | Record sizes, load time, frame pacing baseline | TODO | slice V5 perf pass |
@@ -88,10 +88,10 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 |---|---|---|
 | Map: clear node states, icon language, risk text, travelling highlight, parallax, boss column | BUILT | slice 6: glass header/footer and pill buttons; stage-type ambience + drifting scenery; open paths glow with travelling lights; breathing halo on reachable nodes, ✓ on visited ones; bouncy focus ring; glowing boss column; "Risk: high / boss" in the info line; a token hops to the chosen node before the battle |
 | Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | BUILT | glass cards with rarity rim, deal-in, focus lift, chosen card flies off with a burst (slice 5) |
-| Shop: money/price labels, category icons, SOLD state, focus details | PART | glass shop/bag/party lists and Aero backdrop (slice 5); category icons + SOLD stamp: slice 8 |
+| Shop: money/price labels, category icons, SOLD state, focus details | BUILT | slice 12: Essentials bag-pocket icons, red price when you can't afford it, BOUGHT stamp on the row just bought (stock is unlimited, so it stays listed), focus hint with category, who can use it and how many you own (`ui/shopLook.ts`) |
 | Party/detail: tabs, moves with type/category, memories | BUILT | slice 9: map → Summary (`ui/summaryMenu.ts`): Info & stats page, Moves & story page per Pokémon |
-| Event choice: illustration, 2–4 options with costs, consequence ack | PART | Aero backdrop + glass pickers on event/decision screens (slice 5); illustration frame: slice 9 |
-| League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); league escalation: slice 10 |
+| Event choice: illustration, 2–4 options with costs, consequence ack | BUILT | slice 11: glass illustration frame with data-driven motif (rarity rim, group pill, emblem bubble when no cast), cards with the kind of risk and sure costs (`choiceRisk`), sparkle/shudder chips and a money pill that rolls to the new total |
+| League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); **league escalation BUILT (slice 13: rising glass steps, growing tokens, champion gold rays)**; **run-end composition BUILT (slice 14: last party beside the title, victory hop + confetti, dimmed settle on defeat)**. Not built: region stamps and a distinct final music cue for victory (no assets yet) |
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |
 | Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
@@ -101,7 +101,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 ## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)
 | Item | Status | Where / note |
 |---|---|---|
-| Lazy-load and release art/audio; repeated-battle leak test | PART | lazy loading exists; leak test slice 11 |
+| Lazy-load and release art/audio; repeated-battle leak test | BUILT | lazy loading; `visualBaseline.spec.ts` restarts a battle 5 times: textures, objects and tweens stay flat (1192 / 10 / 20 before and after) |
 | Frame pacing / memory budget measurements | TODO | slice 11 |
 | Narrow viewport, no text overlap | PART | slice 1 screenshots at 960×540, 800×450, 480×800 |
 | Every asset listed in provenance | BUILT | ongoing |
