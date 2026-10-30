@@ -42,7 +42,7 @@ export class MainMenuScene extends Phaser.Scene {
     drawLogo(this, 60, 24, 64);
     this.add.text(64, 158, 'Milestone 5 prototype', textStyle(16, COLORS.textMuted));
 
-    drawPanel(this, 48, 186, 400, 290, { alpha: 0.95 });
+    drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });
 
     const saved = session.savedRun;
     const damaged = saved.status === 'corrupt' || saved.status === 'incompatible';
@@ -69,12 +69,18 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.cycleIntensity(),
     });
 
+    const speedLabels = { normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
+    options.push({
+      option: { label: `Battle speed: ${speedLabels[session.settings.battleSpeed]}` },
+      action: () => this.cycleSpeed(),
+    });
+
     this.menu = new Menu(this, {
       x: 78,
       y: 206,
       options: options.map((o) => o.option),
-      itemHeight: 52,
-      fontSize: 30,
+      itemHeight: 46,
+      fontSize: 28,
       onSelect: (i) => options[i]!.action(),
     });
     if (data?.focus) this.menu.focus(data.focus, false);
@@ -114,6 +120,15 @@ export class MainMenuScene extends Phaser.Scene {
     const order = ['full', 'reduced', 'off'] as const;
     const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleAnimations: next });
+    this.scene.restart({ focus: this.menu.index });
+  }
+
+  /** Battle speed: normal → fast → quick. */
+  private cycleSpeed(): void {
+    const { session } = services();
+    const order = ['normal', 'fast', 'quick'] as const;
+    const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
+    session.saveSettings({ ...session.settings, battleSpeed: next });
     this.scene.restart({ focus: this.menu.index });
   }
 

@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 10, settings 2, meta 1. Next free run version: 11 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 10, settings 3, meta 1. Next free run version: 11 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -15,6 +15,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - Balancing phases 1+3 (start): audit in `docs/quality/encounter-audit.md`; `availability.json` (1025 species, "suggested", unused yet). +100/region deferred to part G.
 - Untitled doc Phase A: drafts offer ≤1 attribute item; base-stat sanity test (tier weights, Mega Stone gating already existed).
 - Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
+- Untitled doc Phase B (settings): battle speed (normal/fast/quick) in settings v3. Reduced motion already existed (battleAnimations). Still open: trainer bands, new NPC classes.
 - M9 battle animations + settings; boss teams (229 bosses).
 
 ## In progress / next
