@@ -339,7 +339,7 @@ export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng, brain?: EnemyB
 }
 
 /** Rough value of a move for a clever enemy (higher is better). */
-function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
+export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
   const { content, target, stages } = brain;
   const move = content.moves.get(moveId);
   if (!move) return 0;

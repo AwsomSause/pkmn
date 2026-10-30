@@ -6,6 +6,7 @@ import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
 import { wildBehavior } from '../core/wildBehavior';
+import { enemyIntent } from '../core/battle/intent';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
@@ -965,7 +966,9 @@ export class BattleScene extends Phaser.Scene {
             : choice?.kind === 'dynamax'
               ? ' It will Dynamax!'
               : '';
-    this.message.setText(`What will ${this.speciesName(this.activeMon())} do?${ready}`);
+    // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
+    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon()) : null;
+    this.message.setText(`${intent ? `${intent.text}\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
     const label = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
