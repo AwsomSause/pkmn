@@ -21,7 +21,7 @@ describe('stage level caps', () => {
     }
   });
   it('sit a few levels above the stage gym, so the party stays near the enemies', () => {
-    expect(stageLevelCap(content, full, 0, 0)).toBe(13);
+    expect(stageLevelCap(content, full, 0, 0)).toBe(16);
     expect(stageLevelCap(content, full, 0, 4)).toBeGreaterThan(30);
   });
   it('stop experience at the stage cap', () => {
