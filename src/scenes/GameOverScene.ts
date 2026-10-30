@@ -3,6 +3,7 @@
 // before this screen appears; the right side shows what they paid out.
 
 import { RANK_NAMES } from '../core/mastery';
+import { contractRewardText } from '../core/contracts';
 import { gameRewardText } from '../core/gameEvents';
 import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
@@ -89,6 +90,7 @@ export class GameOverScene extends Phaser.Scene {
         for (const o of g.objectives) lines.push(`${g.event.name}: ${o.text} done (+${gameRewardText(session.content, o.reward)})`);
         if (g.final) lines.push(`${g.event.name} complete! ${g.final.fallback ? 'Repeat reward' : 'Reward'}: ${gameRewardText(session.content, g.final.reward)}`);
       }
+      for (const c of summary.contracts ?? []) lines.push(`Contract done: ${c.contract.text} (+${contractRewardText(c.contract.reward)})`);
       for (const m of summary.modeRewards ?? []) lines.push(`${m.first ? 'New reward' : 'Repeat reward'}: ${m.text}`);
       const ups = summary.masteryUps ?? [];
       if (ups.length > 0) lines.push(`Mastery: ${ups.slice(0, 6).map((u) => `${session.content.species.get(u.speciesId)?.name ?? u.speciesId} ${RANK_NAMES[u.rank]}`).join(', ')}${ups.length > 6 ? ` and ${ups.length - 6} more` : ''}`);
