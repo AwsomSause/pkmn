@@ -12,7 +12,7 @@ import { activeGameEvents, durationText, gameRewardText, holidayCalendar, object
 import { moveLore, moveRank, topMoves } from '../core/moveMastery';
 import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
-import { arenasOpen, CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
+import { arenasOpen, CARD_FRAMES, CRY_THEMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
@@ -711,12 +711,13 @@ export class HubScene extends Phaser.Scene {
     const p = session.profile;
     const motion = session.settings.battleAnimations;
     const arenaIds = services().assets.entries().map((e) => e.id).filter((id) => /^bg\.arena\.[a-z_]+$/.test(id)).sort();
-    const choices: ({ kind: 'title'; title: string | null } | { kind: 'frame'; frame: CardFrame } | { kind: 'arena'; key: string | null })[] = [
+    const choices: ({ kind: 'title'; title: string | null } | { kind: 'frame'; frame: CardFrame } | { kind: 'arena'; key: string | null } | { kind: 'cry'; id: string })[] = [
       { kind: 'title', title: null },
       ...p.titles.map((title) => ({ kind: 'title' as const, title })),
       ...CARD_FRAMES.map((frame) => ({ kind: 'frame' as const, frame })),
       { kind: 'arena' as const, key: null },
       ...arenaIds.map((key) => ({ kind: 'arena' as const, key })),
+      ...CRY_THEMES.map((t) => ({ kind: 'cry' as const, id: t.id })),
     ];
     const rows: PickerRow[] = choices.map((c) => {
       if (c.kind === 'title') {
@@ -727,6 +728,19 @@ export class HubScene extends Phaser.Scene {
           draw: (scene, box, w, h) => {
             box.add(scene.add.text(12, h / 2, `Title: ${c.title ?? 'none'}`, textStyle(17, on ? COLORS.gold : COLORS.textLight)).setOrigin(0, 0.5));
             if (on) box.add(scene.add.text(w - 12, h / 2, 'ON', textStyle(15, COLORS.good)).setOrigin(1, 0.5));
+          },
+        };
+      }
+      if (c.kind === 'cry') {
+        const theme = CRY_THEMES.find((t) => t.id === c.id)!;
+        const open = c.id === 'normal' || arenasOpen(p);
+        const on = (p.cryTheme ?? 'normal') === c.id;
+        return {
+          problem: open ? null : 'Earn a run-end stamp to open the cry themes.',
+          hint: open ? 'Pitches every Pokémon cry up or down. Enter picks it.' : 'Locked: earn a run-end stamp.',
+          draw: (scene, box, w, h) => {
+            box.add(scene.add.text(12, h / 2, `Cry theme: ${theme.name}`, textStyle(17, open ? (on ? COLORS.gold : COLORS.textLight) : COLORS.textMuted)).setOrigin(0, 0.5));
+            box.add(scene.add.text(w - 12, h / 2, on ? 'ON' : open ? '' : 'locked', textStyle(14, on ? COLORS.good : COLORS.textMuted)).setOrigin(1, 0.5));
           },
         };
       }
@@ -771,6 +785,9 @@ export class HubScene extends Phaser.Scene {
         if (c.kind === 'title') {
           session.setActiveTitle(c.title);
           this.restart(c.title ? `Now showing the title "${c.title}".` : 'No title on show.', 'wardrobe');
+        } else if (c.kind === 'cry') {
+          session.setCryTheme(c.id);
+          this.restart(`Cries now use the ${CRY_THEMES.find((t) => t.id === c.id)!.name} theme.`, 'wardrobe');
         } else if (c.kind === 'arena') {
           session.setMenuArena(c.key);
           this.restart(c.key ? 'The title screen now shows that arena.' : 'The title screen cycles through all arenas.', 'wardrobe');

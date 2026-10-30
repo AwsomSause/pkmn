@@ -43,3 +43,27 @@ export function setMenuArena(current: Profile, key: string | null): Profile {
   else next.menuArena = key;
   return next;
 }
+
+/** Cry themes (catalog #111): the same cries, pitched up or down. Open after the first run-end stamp. */
+export const CRY_THEMES = [
+  { id: 'normal', name: 'Normal', detune: 0 },
+  { id: 'deep', name: 'Deep', detune: -400 },
+  { id: 'bright', name: 'Bright', detune: 400 },
+  { id: 'tiny', name: 'Tiny', detune: 800 },
+  { id: 'boom', name: 'Boom', detune: -800 },
+] as const;
+
+export type CryThemeId = (typeof CRY_THEMES)[number]['id'];
+
+/** The pitch shift (in cents) for the chosen theme; 0 when unset or unknown. */
+export const cryDetune = (profile: Pick<Profile, 'cryTheme'>): number => CRY_THEMES.find((t) => t.id === profile.cryTheme)?.detune ?? 0;
+
+/** Picks a cry theme. Returns a new profile. */
+export function setCryTheme(current: Profile, id: string): Profile {
+  if (!CRY_THEMES.some((t) => t.id === id)) throw new Error(`Unknown cry theme "${id}"`);
+  if (id !== 'normal' && !arenasOpen(current)) throw new Error('Earn a run-end stamp to open the cry themes.');
+  const next = { ...current };
+  if (id === 'normal') delete next.cryTheme;
+  else next.cryTheme = id;
+  return next;
+}
