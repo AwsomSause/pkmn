@@ -32,6 +32,9 @@ export function createProfile(content: Content, profileId: string): Profile {
     lastPrep: null,
     finalizedRunIds: [],
     pastPokemon: [],
+    claims: {},
+    trainerCounters: {},
+    trainerBest: {},
   };
 }
 

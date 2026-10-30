@@ -178,7 +178,12 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 - [x] Slice 2: trainer identity: signature types, species and set for all 9 trainers; signature Pokémon in the starter draw; Cynthia, Oak and N passives.
 - [x] Slice 3: "?" event stops: 170 events (every event and map stop in Kice's plan, one per type, rest spots, 30 key-item/ticket events, Lost Property and other key sources). Choices can need money, items, party types, attributes or a trainer tag (N won't make aggressive choices); attribute checks; battles with prizes; Pokémon joining; gym scouting. Event items (slice 4b): Silph Scope, Inquiry Mail, Bridge Mail V, Explorer Kit, Prop Case, Tidal Bell, Clear Bell and all keys/tickets. Animated scene (bouncy cards, cast, ambient effects; calm when animations are reduced). Tests: `tests/unit/events.test.ts`, `tests/e2e/events.spec.ts`.
 - [x] Slice 3b: doubled events: 134 more (304 in all): 17 PokeRogue-style encounters (Dark Deal, Safari Zone, Teleporting Hijinks, Delibird-y, Absolute Avarice, Clowning Around, Part-Timer, Dancing Lessons, GTS, Fun and Games, Bug-Type Superfan, An Unlikely Ally, Trash to Treasure, Field Trip…), about 11 more in every group, a new Places and weather group, and 3 more rest spots.
-- [ ] Trainer quests + claim ledger; species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+- [x] Slice 4: trainer quests + claim ledger: every trainer has a 5-step line done in order across runs (counters count only runs as that trainer); rewards are Research Points, Bank Credits, candies, titles, the trainer's starter set, and (Red, Blue, Cynthia, Giovanni, N, Oak) the Trainer Evolution unlock. One Run Quest per run (22 goals). Tests: `tests/unit/quests.test.ts`, `tests/e2e/quests.spec.ts`.
+- [ ] Species mastery (egg moves, Hidden Abilities); trainer evolutions for special trainers; weekly events; holiday/themed events (Spooky).
+
+### Known limits in slice 4
+- Per-trainer counters start at zero for old profiles (runs before v8 don't count toward quest lines).
+- Trainers added later need `npm run data:quests` (the content check fails until they have a line).
 
 ### Known limits in slice 3
 - Scanner (trade at a shop) still needs the shop; Room 6's event trades it on the spot for an Epic item instead.

@@ -72,6 +72,8 @@ export class GameOverScene extends Phaser.Scene {
       if (grew) lines.push(`Attributes: ${grew}`);
       if (summary.achievements.length) lines.push('', 'Achievements earned:', ...summary.achievements.slice(0, 5).map((a) => `  ★ ${a.name}`));
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
+      if (summary.runQuestDone) lines.push('', `Run Quest done: ${summary.runQuestDone.text} (+${summary.runQuestDone.researchPoints} Research Points)`);
+      for (const q of summary.questSteps) lines.push(`Quest step ${q.index + 1}/5 done: ${q.step.goal}. "${q.step.story}"`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);
       if (run && !session.content.campaigns.get(run.campaignId)?.countsForProgress) lines.push('', 'Test campaign: achievements and unlocks were not counted.');
       if (run && !run.rules.progressionEligible) lines.push('', 'Adventure run: no Bank Credits, Research Points, candies, unlocks or achievements were earned.');

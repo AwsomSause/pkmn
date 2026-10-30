@@ -13,9 +13,10 @@ import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
 import { researchScale, scaleReward } from './rules';
-import type { Achievement, Archetype, Content, Requirement, UnlockReward } from './contentSchema';
+import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
+import { addTrainerCounters, awardQuestSteps, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
 /** Adds to one of this run's counters (mutates `run`). */
 export function count(run: RunState, counter: string, amount = 1): void {
@@ -113,6 +114,10 @@ export interface RunEndSummary {
   /** Permanent attributes before and after this run (they grow from lifetime counters). */
   attributesBefore: Attributes;
   attributesAfter: Attributes;
+  /** Trainer quest steps finished by this run, in order. */
+  questSteps: QuestStepDone[];
+  /** The Run Quest, when this run finished it. */
+  runQuestDone: RunQuest | null;
 }
 
 /**
@@ -130,8 +135,11 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   let newSpeciesSeen: string[] = [];
   let newSpeciesCaught: string[] = [];
 
+  // The Run Quest: done when its counter reached the goal; it pays Research Points and counts for quest lines.
+  const runQuest = runQuestOf(content, run);
+  const runQuestDone = counts && runQuest !== null && runQuestProgress(content, run)!.met;
   if (counts) {
-    const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 };
+    const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0, ...(runQuestDone ? { runQuestsDone: (run.log.counters.runQuestsDone ?? 0) + 1 } : {}) };
     for (const [name, value] of Object.entries(runCounters)) {
       if (value <= 0) continue;
       profile.counters[name] = (profile.counters[name] ?? 0) + value;
@@ -148,9 +156,12 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
         researchMultiplier(getArchetype(content, run.archetypeId)),
     ) + eventResearch(run);
     researchPoints = scaleReward(Math.round(researchPoints * researchScale(run.rules)), run.rules);
+    if (runQuestDone) researchPoints += runQuest.researchPoints;
     profile.researchPoints += researchPoints;
     profile.attributes = permanentAttributes(content, profile);
+    addTrainerCounters(profile, run.archetypeId, runCounters);
   }
+  const questSteps = counts ? awardQuestSteps(content, profile, run.archetypeId, now) : [];
 
   const raw = runPayout(content, run);
   // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
@@ -187,7 +198,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

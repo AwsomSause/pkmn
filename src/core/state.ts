@@ -763,6 +763,8 @@ export const RunStateSchema = z.object({
   rules: RunRulesSchema,
   /** Adventure and Death-Block: where a wipe sends you back to (a copy of the run without its own checkpoint). */
   checkpoint: z.record(z.string(), z.unknown()).optional(),
+  /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
+  runQuest: z.string().nullable().default(null),
   /** Permanent attributes when the run started (the profile's, copied so the rules stay pure). */
   baseAttributes: z.record(z.string(), z.number()),
   /** Run-only additions to the attributes (from rewards). */
@@ -878,6 +880,11 @@ export const ProfileSchema = z.object({
   finalizedRunIds: z.array(z.string()),
   /** Party Pokémon of past runs, newest first; one may come back to join a later run. */
   pastPokemon: z.array(PastPokemonSchema),
+  /** The claim ledger: every one-time reward paid, by key ("quest:misty:3"), so nothing pays twice. */
+  claims: z.record(z.string(), z.object({ at: z.string() })),
+  /** Counters summed over the runs played as each trainer, and their best single run (for quest lines). */
+  trainerCounters: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
+  trainerBest: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 
