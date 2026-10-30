@@ -36281,5 +36281,2691 @@
    "kind": "mega",
    "base": "whimsicott"
   }
+ },
+ {
+  "id": "silvally-fighting",
+  "dex": 773,
+  "name": "Silvally (Fighting)",
+  "generation": 7,
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "close-combat"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-fighting",
+   "icon": "custom/silvally-fighting",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-flying",
+  "dex": 773,
+  "name": "Silvally (Flying)",
+  "generation": 7,
+  "types": [
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "aerial-ace"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-flying",
+   "icon": "custom/silvally-flying",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-poison",
+  "dex": 773,
+  "name": "Silvally (Poison)",
+  "generation": 7,
+  "types": [
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "sludge-bomb"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-poison",
+   "icon": "custom/silvally-poison",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-ground",
+  "dex": 773,
+  "name": "Silvally (Ground)",
+  "generation": 7,
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "earthquake"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-ground",
+   "icon": "custom/silvally-ground",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-rock",
+  "dex": 773,
+  "name": "Silvally (Rock)",
+  "generation": 7,
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "rock-slide"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-rock",
+   "icon": "custom/silvally-rock",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-bug",
+  "dex": 773,
+  "name": "Silvally (Bug)",
+  "generation": 7,
+  "types": [
+   "bug"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "x-scissor"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-bug",
+   "icon": "custom/silvally-bug",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-ghost",
+  "dex": 773,
+  "name": "Silvally (Ghost)",
+  "generation": 7,
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "shadow-ball"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-ghost",
+   "icon": "custom/silvally-ghost",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-steel",
+  "dex": 773,
+  "name": "Silvally (Steel)",
+  "generation": 7,
+  "types": [
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "iron-head"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-steel",
+   "icon": "custom/silvally-steel",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-fire",
+  "dex": 773,
+  "name": "Silvally (Fire)",
+  "generation": 7,
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "flamethrower"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-fire",
+   "icon": "custom/silvally-fire",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-water",
+  "dex": 773,
+  "name": "Silvally (Water)",
+  "generation": 7,
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "surf"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-water",
+   "icon": "custom/silvally-water",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-grass",
+  "dex": 773,
+  "name": "Silvally (Grass)",
+  "generation": 7,
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "energy-ball"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-grass",
+   "icon": "custom/silvally-grass",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-electric",
+  "dex": 773,
+  "name": "Silvally (Electric)",
+  "generation": 7,
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "thunderbolt"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-electric",
+   "icon": "custom/silvally-electric",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-psychic",
+  "dex": 773,
+  "name": "Silvally (Psychic)",
+  "generation": 7,
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "psychic"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-psychic",
+   "icon": "custom/silvally-psychic",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-ice",
+  "dex": 773,
+  "name": "Silvally (Ice)",
+  "generation": 7,
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "ice-beam"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-ice",
+   "icon": "custom/silvally-ice",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-dragon",
+  "dex": 773,
+  "name": "Silvally (Dragon)",
+  "generation": 7,
+  "types": [
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "dragon-claw"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-dragon",
+   "icon": "custom/silvally-dragon",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-dark",
+  "dex": 773,
+  "name": "Silvally (Dark)",
+  "generation": 7,
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "crunch"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-dark",
+   "icon": "custom/silvally-dark",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
+ },
+ {
+  "id": "silvally-fairy",
+  "dex": 773,
+  "name": "Silvally (Fairy)",
+  "generation": 7,
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 95,
+   "def": 95,
+   "spa": 95,
+   "spd": 95,
+   "spe": 95
+  },
+  "catchRate": 3,
+  "baseExp": 257,
+  "growthRate": "slow",
+  "evolutionStage": 2,
+  "evolvesFrom": null,
+  "tags": [
+   "legendary",
+   "zform"
+  ],
+  "learnset": [
+   {
+    "level": 1,
+    "move": "multi-attack"
+   },
+   {
+    "level": 1,
+    "move": "heal-block"
+   },
+   {
+    "level": 1,
+    "move": "imprison"
+   },
+   {
+    "level": 1,
+    "move": "iron-head"
+   },
+   {
+    "level": 1,
+    "move": "poison-fang"
+   },
+   {
+    "level": 1,
+    "move": "fire-fang"
+   },
+   {
+    "level": 1,
+    "move": "ice-fang"
+   },
+   {
+    "level": 1,
+    "move": "thunder-fang"
+   },
+   {
+    "level": 1,
+    "move": "tackle"
+   },
+   {
+    "level": 1,
+    "move": "explosion"
+   },
+   {
+    "level": 5,
+    "move": "rage"
+   },
+   {
+    "level": 8,
+    "move": "bite"
+   },
+   {
+    "level": 10,
+    "move": "pursuit"
+   },
+   {
+    "level": 10,
+    "move": "aerial-ace"
+   },
+   {
+    "level": 15,
+    "move": "scary-face"
+   },
+   {
+    "level": 25,
+    "move": "crush-claw"
+   },
+   {
+    "level": 32,
+    "move": "metal-sound"
+   },
+   {
+    "level": 35,
+    "move": "double-hit"
+   },
+   {
+    "level": 37,
+    "move": "x-scissor"
+   },
+   {
+    "level": 45,
+    "move": "take-down"
+   },
+   {
+    "level": 45,
+    "move": "air-slash"
+   },
+   {
+    "level": 47,
+    "move": "crunch"
+   },
+   {
+    "level": 55,
+    "move": "tri-attack"
+   },
+   {
+    "level": 65,
+    "move": "punishment"
+   },
+   {
+    "level": 67,
+    "move": "double-edge"
+   },
+   {
+    "level": 70,
+    "move": "razor-wind"
+   },
+   {
+    "level": 72,
+    "move": "parting-shot"
+   },
+   {
+    "level": 50,
+    "move": "dazzling-gleam"
+   }
+  ],
+  "evolutions": [],
+  "assets": {
+   "sprite": "custom/silvally-fairy",
+   "icon": "custom/silvally-fairy",
+   "cry": "773"
+  },
+  "abilities": {
+   "normal": [
+    "rks-system"
+   ],
+   "hidden": null
+  },
+  "weight": 100.5,
+  "femaleRatio": null,
+  "form": {
+   "kind": "alternate",
+   "base": "silvally"
+  }
  }
 ]

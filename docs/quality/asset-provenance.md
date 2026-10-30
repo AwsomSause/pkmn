@@ -58,3 +58,4 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 
 | `public/assets/images/pokemon/**` (415 species/forms re-imported) | Pokémon Essentials 21 + Unofficial EBDX, Graphics/Pokemon (Front, Back, Front shiny, Back shiny), converted by `tools/importPackSprites.py` | Animated strips repacked as atlases |
 | `public/assets/images/pokemon/icons/**` (1,132 icons re-imported) | Pokémon Essentials 21 + Unofficial EBDX, `Graphics/Pokemon/Icons`, halved to 32 px by `tools/importPackIcons.py` | Two-frame bobbing menu icons |
+| `public/assets/images/pokemon/**/custom/silvally-*` and `icons/custom/silvally-*` (17 forms) | Pokémon Essentials 21 + Unofficial EBDX, `Graphics/Pokemon` (Front, Back, shiny, Icons, SILVALLY_1 to 18), converted by `tools/import-silvally-forms.py` | Animated; shown when a Silvally holds a Memory in battle |

@@ -19,7 +19,8 @@ describe('Memories', () => {
   it('all 17 exist with art and a memory hook of their own type', () => {
     for (const ty of ['fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel', 'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark', 'fairy']) {
       const e = getCatalogEntry(content, `${ty}-memory`);
-      expect((e.effect as { hooks: unknown[] }).hooks[0]).toEqual({ hook: 'memory', type: ty });
+      expect((e.effect as { hooks: unknown[] }).hooks).toEqual([{ hook: 'memory', type: ty }, { hook: 'formHeld', from: 'silvally', to: `silvally-${ty}` }]);
+      expect(content.species.get(`silvally-${ty}`)?.types).toEqual([ty]);
     }
   });
 
@@ -50,5 +51,19 @@ describe('Multi-Attack in battle', () => {
     };
     expect(hit({ 'fire-memory': 1 })).toBe(2);
     expect(hit()).toBe(1);
+  });
+});
+
+describe('Silvally forms', () => {
+  it('a held Memory turns Silvally into its type form in battle', () => {
+    const p = createPokemon(content, 'silvally', 50, 'p1');
+    p.moves = [{ id: 'multi-attack', pp: 10 }];
+    p.held = { 'water-memory': 1 };
+    const e = createPokemon(content, 'snorlax', 100, 'e1');
+    e.moves = [{ id: 'splash', pp: 40 }];
+    const battle = createBattle('wild', [e], 0, p.uid, null);
+    const ctx: BattleContext = { content, battle, party: [p], inventory: {}, rng: new Rng(hashSeed('m')), captureRng: new Rng(hashSeed('c')), catchMultiplier: 1 };
+    const events = resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(events.some((x) => x.type === 'transform' && x.to === 'silvally-water')).toBe(true);
   });
 });

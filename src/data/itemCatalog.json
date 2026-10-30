@@ -14131,6 +14131,11 @@
     {
      "hook": "memory",
      "type": "fighting"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-fighting"
     }
    ]
   }
@@ -14152,6 +14157,11 @@
     {
      "hook": "memory",
      "type": "flying"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-flying"
     }
    ]
   }
@@ -14173,6 +14183,11 @@
     {
      "hook": "memory",
      "type": "poison"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-poison"
     }
    ]
   }
@@ -14194,6 +14209,11 @@
     {
      "hook": "memory",
      "type": "ground"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-ground"
     }
    ]
   }
@@ -14215,6 +14235,11 @@
     {
      "hook": "memory",
      "type": "rock"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-rock"
     }
    ]
   }
@@ -14236,6 +14261,11 @@
     {
      "hook": "memory",
      "type": "bug"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-bug"
     }
    ]
   }
@@ -14257,6 +14287,11 @@
     {
      "hook": "memory",
      "type": "ghost"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-ghost"
     }
    ]
   }
@@ -14278,6 +14313,11 @@
     {
      "hook": "memory",
      "type": "steel"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-steel"
     }
    ]
   }
@@ -14299,6 +14339,11 @@
     {
      "hook": "memory",
      "type": "fire"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-fire"
     }
    ]
   }
@@ -14320,6 +14365,11 @@
     {
      "hook": "memory",
      "type": "water"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-water"
     }
    ]
   }
@@ -14341,6 +14391,11 @@
     {
      "hook": "memory",
      "type": "grass"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-grass"
     }
    ]
   }
@@ -14362,6 +14417,11 @@
     {
      "hook": "memory",
      "type": "electric"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-electric"
     }
    ]
   }
@@ -14383,6 +14443,11 @@
     {
      "hook": "memory",
      "type": "psychic"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-psychic"
     }
    ]
   }
@@ -14404,6 +14469,11 @@
     {
      "hook": "memory",
      "type": "ice"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-ice"
     }
    ]
   }
@@ -14425,6 +14495,11 @@
     {
      "hook": "memory",
      "type": "dragon"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-dragon"
     }
    ]
   }
@@ -14446,6 +14521,11 @@
     {
      "hook": "memory",
      "type": "dark"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-dark"
     }
    ]
   }
@@ -14467,6 +14547,11 @@
     {
      "hook": "memory",
      "type": "fairy"
+    },
+    {
+     "hook": "formHeld",
+     "from": "silvally",
+     "to": "silvally-fairy"
     }
    ]
   }
