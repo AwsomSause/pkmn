@@ -25,6 +25,14 @@ describe('collection sets (catalog #105, #112)', () => {
     expect(claimCollectionMilestones(content, p, '2026-10-30T00:00:00Z')).toEqual([]);
     expect(setProgress(gen1, p).caught).toBe(p.speciesCaught.length);
   });
+  it('a finished set earns a title once', () => {
+    const p = createProfile(content, 'p');
+    const set = sets[0]!;
+    p.speciesCaught = [...set.members];
+    claimCollectionMilestones(content, p, '2026-10-30T00:00:00Z');
+    claimCollectionMilestones(content, p, '2026-10-30T00:00:00Z');
+    expect(p.titles.filter((t) => t === `Complete: ${set.name}`)).toHaveLength(1);
+  });
   it('totals start at zero', () => {
     expect(researchTotals(content, createProfile(content, 'p'))).toMatchObject({ met: 0, caught: 0, evolved: 0 });
   });
