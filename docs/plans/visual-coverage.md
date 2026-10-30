@@ -1,0 +1,109 @@
+# Visual coverage tracker (guide 9)
+
+Every item in `VISUAL_BIBLE.md`, `COMPLETE VISUAL REMASTER.md`, `CLAUDE_VISUAL_REVAMP_BRIEF.md` and `VISUAL_REFERENCE_BOARD.html` (project files), with its status. Director's direction (2026-10-30): use or heavily reference Enhanced Battle UI, Essentials 21 (EBDX/UIE), Deluxe Battle Kit art; aesthetic Frutiger Aero, DS era, Wii era, Cyber-Maximalism; everything flowy, bouncy, animated. Hub and Trainer Select stay unchanged (all three docs).
+
+Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is). "VB" = Visual Bible §, "CR" = Complete Remaster §, "BR" = Brief phase.
+
+## Phase 0 / V0 — audit and baseline (BR 0, VB 13 V0, CR 3)
+| Item | Status | Where / note |
+|---|---|---|
+| Check git state, run checks before edits | BUILT | Every slice PR reports them |
+| Baseline screenshots at fixed seeds: battle, move picker, map | BUILT | slice 1 (seed `visual-base`) |
+| Baseline screenshots: reward, shop, event, league, run end | TODO | slice V4 |
+| Repo visibility / asset rights decision | BUILT | D4 private; director approved pack imports 2026-10-30 |
+| Asset provenance manifest | BUILT | `docs/quality/asset-provenance.md` |
+| Record sizes, load time, frame pacing baseline | TODO | slice V5 perf pass |
+
+## V1 — visual system (BR 1, VB 3, VB 13 V1, CR 4)
+| Item | Status | Where / note |
+|---|---|---|
+| Keep 960×540 space and 320×180 pixel baseline | KEEP | `ui/theme.ts` |
+| Panel roles (glass, glass-low, foe/ally rims) | BUILT | `ui/aero.ts` `paintGlass` |
+| Focus / hover / disabled states | BUILT | `Menu` `glass` option (glow + bounce; disabled dimmed) |
+| Rarity and type cues paired with label/icon (never colour alone) | PART | type label art in move picker; rarity labels on reward cards TODO (V4) |
+| Motion primitives (bounce, slide, breathe, float) respecting settings | BUILT | `ui/aero.ts` |
+| Shared components in the widget layer, not per-scene | BUILT | `aero.ts`, `widgets.ts` |
+| Trainer/Hub untouched (scope-safe variants) | BUILT | opt-in only |
+
+## V2 — battle renderer (BR 2, VB 4.1–4.6, CR 5)
+| Item | Status | Where / note |
+|---|---|---|
+| Layer 1 arena + weather/ambient animation | BUILT | `battleFx/ambience.ts`: preset per type (all 18), second type adds accents (slice 2) |
+| Layer 2 platforms, contact shadows, edge lights | PART | PokeRogue bases already draw a shadow patch under each side; edge lights: slice 4 |
+| Layer 3 sprites: idle breathing, entry | BUILT | slice 1 |
+| Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
+| Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
+| Held item / ability badges when supported | TODO | slice 3 (Enhanced Battle UI info panel) |
+| Boss phase indicator | TODO | slice 4 |
+| Layer 5 move effects, numbers, effectiveness, shake | BUILT | M9 cues + BattleFx |
+| Layer 6 command UI (glossy buttons, type/category art) | BUILT | slice 1 |
+| Move flag icons (Enhanced Battle UI, 18) | TODO | slice 3 |
+| Effectiveness hint on moves (from what the player can see) | TODO | slice 3 |
+| Layer 7 cinematic accents (portrait, banner, reveal, stamp) | PART | Hyper moment banner exists; slice 4 |
+| HP drains smoothly; damage number; crit emphasis | BUILT | M9 |
+| Low-HP subtle danger pulse on panel | BUILT | slice 2 (`dangerGlow`, ≤25 % HP) |
+| Catch: throw arc, shakes, burst, success/fail cue | BUILT | M2 arc/shakes + DBK burst on success (slice 2) |
+| Shiny reveal sparkle (once) | BUILT | `shinySparkle` |
+| Battle intro transition (EBDX transitions) | BUILT | `battleFx/spectacle.ts`: wild streak + ball wipe (indoor streaks in dark arenas), VS screens for trainers / rivals (Evil) / bosses (Skull); skippable (slice 2) |
+| Exit transition / victory beat | PART | victory hop (slice 2); exit wipe: slice 4 |
+| Animation profiles fast / standard / showcase | PART | battle speed normal/fast/quick exists (settings v3); showcase: slice 4 |
+| Reduced motion, reduced flash, shake option, skip | BUILT | battleAnimations + effectIntensity + skip |
+| Reduce particles option | PART | ambience off when animations off/reduced |
+| Pause ambient loops when tab hidden | BUILT | Phaser pauses the loop on hidden tabs |
+| Test: hit/miss, status, faint/replace, switch, catch, transform, reload | PART | existing e2e (m2, m8_5, m9); add visual asserts per slice |
+
+## V3 — signature moments (BR 4, VB 4.7–4.8, CR 6 gyms/E4/champion)
+| Item | Status | Where / note |
+|---|---|---|
+| Trainer reaction cue from real events | TODO | slice 4 (portrait + speech bubble) |
+| Moment hierarchy: line → callout → bond/Hyper → signature/phase | PART | Hyper moments exist; slice 4 |
+| Boss intro title/role card + field transition + music | TODO | slice 4 |
+| Champion framing, ace indicator, unique motif | TODO | slice 4 |
+| Phase-change banner with written rule | TODO | slice 4 (needs boss phases in core; else documented gap) |
+| Ace entry beat | TODO | slice 4 |
+| Victory pose / particles / Chronicle stamp | PART | hop (slice 2); stamp + particles: slice 4 |
+| Transformation reveal (Mega, Primal, Tera, Dynamax, Z) with DBK art | PART | DBK burst/shine/pulse reveal in the form's colour replaces the full-screen flash (slice 2); Mega/Primal orb icons: slice 3 |
+| Evolution sequence | PART | burst reveal instead of white flash (slice 2); silhouette sequence: slice 5 |
+| Rival callouts from real memory | PART | rival note line exists; bubble: slice 4 |
+| Gym leader intro and defeat sequence, gym motif | TODO | slice 4 |
+
+## Effect pipeline (BR 3, VB 4.4, VB 7, CR 5.3)
+| Item | Status | Where / note |
+|---|---|---|
+| Validated adapter into project schema | BUILT | `core/presentation/animFormat.ts`, `moveAnims.ts` |
+| Data-driven startup/travel/impact/aftermath/camera/audio/fallback | PART | PokeRogue anims + fallback; family schema: slice 6 |
+| 26 animation families | TODO | slice 6 |
+| Per-type visual vocabulary table (VB 7) | PART | type-coloured telegraph; family grammar slice 6 |
+| Report per active move (mechanic, visual, sound, fallback, test, duration) | TODO | slice 6 (`report:anims`) |
+| EBDX move animation sheets (Graphics/EBDX/Animations/Moves, 635) | TODO | slice 6: use for moves with no PokeRogue anim |
+
+## V4 — other gameplay screens (BR 5, VB 5–6, CR 6)
+| Item | Status | Where / note |
+|---|---|---|
+| Map: clear node states, icon language, risk text, travelling highlight, parallax, boss column | TODO | slice 7 |
+| Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | TODO | slice 8 |
+| Shop: money/price labels, category icons, SOLD state, focus details | TODO | slice 8 |
+| Party/detail: tabs, moves with type/category, memories | TODO | slice 9 |
+| Event choice: illustration, 2–4 options with costs, consequence ack | TODO | slice 9 |
+| League escalation, game over, run recap, victory | TODO | slice 10 |
+| Briefing, loading transitions, visual settings | TODO | slice 10 |
+| Level-up / reward reveal / milestone transitions | TODO | slice 8 |
+| Regional progression look (new palettes per region) | TODO | slice 7 |
+
+## V5 — coverage, performance, polish (VB 9, VB 13 V5, CR 9–12)
+| Item | Status | Where / note |
+|---|---|---|
+| Lazy-load and release art/audio; repeated-battle leak test | PART | lazy loading exists; leak test slice 11 |
+| Frame pacing / memory budget measurements | TODO | slice 11 |
+| Narrow viewport, no text overlap | PART | slice 1 screenshots at 960×540, 800×450, 480×800 |
+| Every asset listed in provenance | BUILT | ongoing |
+
+## Reference board (`VISUAL_REFERENCE_BOARD.html`)
+| Item | Status | Where / note |
+|---|---|---|
+| Layer order: ambience → grounded sprites → panels → effect → command | BUILT | BattleScene |
+| Palette (plum/red/amber) | PART | Kice's later direction (Aero/DS/Wii/cyber, 2026-10-30) wins for battle and gameplay screens; HP green and EXP blue kept; Hub/Trainer keep the plum palette |
+| Effect templates: contact, projectile, beam, elemental, status, healing, protection, field, signature | TODO | slice 6 |
+| Effects explain the action (wind-up → direction → impact → consequence) | PART | telegraph + anim + impact cues (M9) |
+| Menus tactile and readable, no overlapping panels | BUILT | slice 1 |
+| Gameplay authoritative; missing animation never breaks a battle | BUILT | cues layer + fallback |

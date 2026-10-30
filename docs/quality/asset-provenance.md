@@ -10,4 +10,7 @@ Older assets (species sprites, arenas, PokeRogue UI, audio) come from the PokeRo
 | `images/packs/ebdx/ui/category.png` | same | `Graphics/EBDX/Pictures/UI/category.png` | same | Move picker category icon | 2026-10-30 |
 | `images/packs/ebdx/ui/status.png` | same | `Graphics/EBDX/Pictures/UI/status.png` | same | Databox status icon | 2026-10-30 |
 | `images/packs/ebdx/elements/{cloud1,cloud2,bubble,snow,star,sun,lightA,lightB,fog}.png` | same | `Graphics/EBDX/Battlebacks/elements/<name>.png` | same | Arena ambience (`src/ui/battleFx/ambience.ts`) | 2026-10-30 |
-| `images/packs/dbk/{burst,shine,particle,pulse}.png` | Deluxe Battle Kit.zip (v1.3.1) | `Graphics/Plugins/Deluxe Battle Kit/<name>.png` | Lucidious89 | Ember/sparkle particles; burst/shine/pulse reserved for the next slice (intros, transformations) | 2026-10-30 |
+| `images/packs/ebdx/elements/bubbleDark.png` | same | `Graphics/EBDX/Battlebacks/elements/bubbleDark.png` | same | Poison ambience | 2026-10-30 |
+| `images/packs/ebdx/transitions/{ball,outdoor,indoor,vs,vsBar,glow,shine2}.png` | same | `Graphics/EBDX/Transitions/Common/<name>.png` | same | Battle intro wipe and VS screen (`battleFx/spectacle.ts`) | 2026-10-30 |
+| `images/packs/ebdx/transitions/vs_{background,layer}{,Evil,Skull}.png` | same | `Graphics/EBDX/Transitions/Default/<name>.png` | same | VS screen backgrounds (trainer / rival / boss) | 2026-10-30 |
+| `images/packs/dbk/{burst,shine,particle,pulse}.png` | Deluxe Battle Kit.zip (v1.3.1) | `Graphics/Plugins/Deluxe Battle Kit/<name>.png` | Lucidious89 | Ambience particles; burst/shine/pulse = transformation, evolution and catch reveal | 2026-10-30 |

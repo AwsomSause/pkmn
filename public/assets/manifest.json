@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T09:57:59.858Z",
+  "generatedAt": "2026-10-30T10:16:58.318Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -80,6 +80,12 @@
       "path": "images/packs/ebdx/elements/bubble.png"
     },
     {
+      "id": "pack.ebdx.bubbleDark",
+      "kind": "image",
+      "category": "background",
+      "path": "images/packs/ebdx/elements/bubbleDark.png"
+    },
+    {
       "id": "pack.ebdx.snow",
       "kind": "image",
       "category": "background",
@@ -114,6 +120,84 @@
       "kind": "image",
       "category": "background",
       "path": "images/packs/ebdx/elements/fog.png"
+    },
+    {
+      "id": "pack.ebdx.tr.ball",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/ball.png"
+    },
+    {
+      "id": "pack.ebdx.tr.outdoor",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/outdoor.png"
+    },
+    {
+      "id": "pack.ebdx.tr.indoor",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/indoor.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vsBar",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vsBar.png"
+    },
+    {
+      "id": "pack.ebdx.tr.glow",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/glow.png"
+    },
+    {
+      "id": "pack.ebdx.tr.shine2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/shine2.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_background",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_background.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_backgroundEvil",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_backgroundEvil.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_backgroundSkull",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_backgroundSkull.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layer.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layerEvil",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layerEvil.png"
+    },
+    {
+      "id": "pack.ebdx.tr.vs_layerSkull",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/ebdx/transitions/vs_layerSkull.png"
     },
     {
       "id": "pack.dbk.burst",
