@@ -57,3 +57,4 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 | `images/packs/ebui/{info_gender,info_stats}.png` | Enhanced Battle UI.zip (v2.1.1) | `Graphics/Plugins/Enhanced Battle UI/<name>.png` (copied unchanged) | Lucidious89 | Summary screen gender marks and raised-stat arrows (`src/ui/summaryMenu.ts`) | 2026-10-30 |
 
 | `public/assets/images/pokemon/**` (415 species/forms re-imported) | Pokémon Essentials 21 + Unofficial EBDX, Graphics/Pokemon (Front, Back, Front shiny, Back shiny), converted by `tools/importPackSprites.py` | Animated strips repacked as atlases |
+| `public/assets/images/pokemon/icons/**` (1,132 icons re-imported) | Pokémon Essentials 21 + Unofficial EBDX, `Graphics/Pokemon/Icons`, halved to 32 px by `tools/importPackIcons.py` | Two-frame bobbing menu icons |

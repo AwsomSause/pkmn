@@ -32,7 +32,7 @@ export interface AssetEntry {
 export interface PokemonArt {
   /** "25" → images/pokemon/25.png (+ back/, shiny/, back/shiny/). Regional forms use PokeRogue's numbers (Alolan Rattata is 2019). */
   sprite: string;
-  /** "<generation folder>/<name>" → images/pokemon/icons/7/2019.png. */
+  /** "<generation folder>/<name>" → images/pokemon/icons/7/2019.png (a 1 or 2 frame atlas, json beside it). */
   icon: string;
   /** "25" → audio/cry/25.m4a. */
   cry: string;
@@ -226,7 +226,7 @@ export function pokemonEntries(art: PokemonArt): AssetEntry[] {
     atlas(ids.back, 'pokemon', `images/pokemon/back/${art.sprite}`),
     atlas(ids.shinyFront, 'pokemon', `images/pokemon/shiny/${art.sprite}`),
     atlas(ids.shinyBack, 'pokemon', `images/pokemon/back/shiny/${art.sprite}`),
-    { id: ids.icon, kind: 'image', category: 'pokemon', path: `images/pokemon/icons/${art.icon}.png` },
+    atlas(ids.icon, 'pokemon', `images/pokemon/icons/${art.icon}`),
     { id: ids.cry, kind: 'audio', category: 'sound', path: `audio/cry/${art.cry}.m4a` },
   ];
   return entries.map(lazy);
