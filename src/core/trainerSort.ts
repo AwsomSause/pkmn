@@ -21,14 +21,14 @@ export const TRAINER_SORT_LABELS: Record<TrainerSortKey, string> = {
 };
 
 /** Games in release order (also the sort order). */
-export const GAMES = ['Red/Blue/Yellow', 'Gold/Silver/Crystal', 'Ruby/Sapphire/Emerald', 'FireRed/LeafGreen', 'Diamond/Pearl/Platinum', 'Black/White', 'Black 2/White 2', 'X/Y', 'Omega Ruby/Alpha Sapphire', 'Sun/Moon', 'Ultra Sun/Ultra Moon', "Let's Go Pikachu/Eevee", 'Sword/Shield', 'Legends: Arceus', 'Scarlet/Violet', 'Masters EX', 'Anime', 'Other'] as const;
+export const GAMES = ['Red/Blue/Yellow', 'Gold/Silver/Crystal', 'Ruby/Sapphire/Emerald', 'FireRed/LeafGreen', 'Diamond/Pearl/Platinum', 'Black/White', 'Black 2/White 2', 'X/Y', 'Omega Ruby/Alpha Sapphire', 'Sun/Moon', 'Ultra Sun/Ultra Moon', "Let's Go Pikachu/Eevee", 'Sword/Shield', 'Legends: Arceus', 'Scarlet/Violet', 'Legends: Z-A', 'Masters EX', 'Anime', 'Other'] as const;
 export type Game = (typeof GAMES)[number];
 
 /** Regions in the usual order. */
 export const REGIONS = ['Kanto', 'Johto', 'Hoenn', 'Sinnoh', 'Unova', 'Kalos', 'Alola', 'Galar', 'Hisui', 'Paldea', 'Pasio', 'Other'] as const;
 export type Region = (typeof REGIONS)[number];
 
-const G: Record<string, Game> = { rby: 'Red/Blue/Yellow', gsc: 'Gold/Silver/Crystal', rse: 'Ruby/Sapphire/Emerald', frlg: 'FireRed/LeafGreen', dppt: 'Diamond/Pearl/Platinum', bw: 'Black/White', b2: 'Black 2/White 2', xy: 'X/Y', oras: 'Omega Ruby/Alpha Sapphire', sm: 'Sun/Moon', usum: 'Ultra Sun/Ultra Moon', lgpe: "Let's Go Pikachu/Eevee", ss: 'Sword/Shield', la: 'Legends: Arceus', sv: 'Scarlet/Violet', ms: 'Masters EX', an: 'Anime', ot: 'Other' };
+const G: Record<string, Game> = { rby: 'Red/Blue/Yellow', gsc: 'Gold/Silver/Crystal', rse: 'Ruby/Sapphire/Emerald', frlg: 'FireRed/LeafGreen', dppt: 'Diamond/Pearl/Platinum', bw: 'Black/White', b2: 'Black 2/White 2', xy: 'X/Y', oras: 'Omega Ruby/Alpha Sapphire', sm: 'Sun/Moon', usum: 'Ultra Sun/Ultra Moon', lgpe: "Let's Go Pikachu/Eevee", ss: 'Sword/Shield', la: 'Legends: Arceus', sv: 'Scarlet/Violet', za: 'Legends: Z-A', ms: 'Masters EX', an: 'Anime', ot: 'Other' };
 const R: Record<string, Region> = { k: 'Kanto', j: 'Johto', h: 'Hoenn', s: 'Sinnoh', u: 'Unova', x: 'Kalos', a: 'Alola', g: 'Galar', i: 'Hisui', p: 'Paldea', m: 'Pasio', o: 'Other' };
 
 /** "game region" codes per trainer id. */
@@ -50,7 +50,7 @@ const ORIGINS: Record<string, string> = {
   allister: 'ss g', bea: 'ss g', bede: 'ss g', 'gloria-league': 'ss g', hop: 'ss g', kabu: 'ss g', klara: 'ss g', melony: 'ss g', milo: 'ss g', nessa: 'ss g', opal: 'ss g', peonia: 'ss g', peony: 'ss g', piers: 'ss g', raihan: 'ss g', sonia: 'ss g', 'sordward-shielbert': 'ss g', 'leon-masters': 'ms g', 'marnie-masters-4': 'ms g',
   adaman: 'la i', arezu: 'la i', cogita: 'la i', rei: 'la i', volo: 'la i', irida: 'la i',
   'ball-guy': 'sv p', brassius: 'sv p', canari: 'sv p', carmine: 'sv p', geeta: 'sv p', giacomo: 'sv p', grusha: 'sv p', iono: 'sv p', katy: 'sv p', 'nemona-v': 'sv p', ortega: 'sv p',
-  'the-royal': 'sm a', 'hex-maniac': 'xy x', thorton: 'ms m', brigette: 'ms m', grace: 'ms m', harmony: 'ms m', jacinthe: 'ms m', magnus: 'ms m', marley: 'ms m', ryuki: 'ms m',
+  'the-royal': 'sm a', 'hex-maniac': 'xy x', thorton: 'dppt s', brigette: 'dppt s', grace: 'xy x', harmony: 'ms m', jacinthe: 'za x', magnus: 'ms m', marley: 'ms m', ryuki: 'ms m',
   alain: 'an x', 'ash-kalos': 'an x', ash: 'an k', 'todd-snap': 'an k', trace: 'an k', trevor: 'an k',
 };
 
