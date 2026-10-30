@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu, confirmUntil } from './battleInput';
 
 // Milestone 8.9 in a real browser: a Hyper moment (Toughened It Out) shows as
 // a story moment (banner + its own line), the debug Story Log lists the events
@@ -45,7 +46,7 @@ test('Toughened It Out shows as a story moment, the Story Log shows it, and the 
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.run.story.events.some((e: any) => e.type === 'storyMoment')), { timeout: 10_000 }).toBe(true);
   // The banner appears when the moment is played back.
   const bannerShown = () => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.type === 'Text' && o.text === 'Toughened It Out!'));
-  await expect.poll(bannerShown, { timeout: 15_000, intervals: [100] }).toBe(true);
+  await confirmUntil(page, bannerShown);
   await page.waitForTimeout(250);
   await page.screenshot({ path: 'test-results/m89-love-moment.png' });
   const party = await page.evaluate(() => (window as any).__pkr.session.run.party[0]);
@@ -102,7 +103,7 @@ test('The Enemy Is Getting Riled Up: a banner a turn ahead and a "Riled up!" bad
     await page.waitForTimeout(400);
   }
   expect(await warned()).toBe('warned');
-  await expect.poll(async () => (await texts()).includes('The Enemy Is Getting Riled Up!'), { timeout: 15_000, intervals: [100] }).toBe(true);
+  await confirmUntil(page, async () => (await texts()).includes('The Enemy Is Getting Riled Up!'));
   await page.screenshot({ path: 'test-results/m89-riled-up-banner.png' });
   await expect.poll(async () => (await texts()).includes('RILED UP!'), { timeout: 15_000 }).toBe(true);
   await page.waitForTimeout(1600);

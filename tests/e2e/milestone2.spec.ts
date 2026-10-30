@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmUntil } from './battleInput';
 
 
 // Milestone 2 in a real browser: the Fight / Bag / Pokémon menu, throwing a
@@ -113,6 +114,7 @@ test('throw a ball from the Bag, catch the Pokémon and add it to the party', as
       .poll(async () => (await scene(page)) !== 'Battle' || (await atRootMenu()) !== true, { timeout: 10_000, intervals: [100] })
       .toBe(true);
   }
+  await confirmUntil(page, async () => (await scene(page)) === 'Decision', 20_000);
   await waitForScene(page, 'Decision');
   const atDecision = await run(page);
   expect(atDecision.inventory['poke-ball'] ?? 0).toBeLessThan(ballsBefore);

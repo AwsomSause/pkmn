@@ -59,6 +59,8 @@ import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
+/** Battle events whose lines advance on their own; everything else waits for a confirm press. */
+const AUTO_EVENTS = new Set<string>(['move', 'noPp', 'miss', 'damage', 'noEffect', 'fail']);
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
 const ENEMY_POS = { x: 648, y: 246 };
 const PLAYER_POS = { x: 312, y: 400 };
@@ -722,15 +724,15 @@ export class BattleScene extends Phaser.Scene {
     this.menu?.handle(action);
   }
 
-  /** Shows one message; resolves when the player presses confirm or after a short delay. */
-  private say(text: string): Promise<void> {
-    this.message.setText(text);
+  /** Shows one message. Move and damage lines (`auto`) move on after a short delay; every other line waits for a confirm press. */
+  private say(text: string, auto = false): Promise<void> {
+    this.message.setText(auto ? text : `${text} ▼`);
     this.history.push(text);
     if (this.history.length > 60) this.history.shift();
     return new Promise((resolve) => {
-      const timer = this.time.delayedCall(MESSAGE_AUTO_ADVANCE_MS, () => done());
+      const timer = auto ? this.time.delayedCall(MESSAGE_AUTO_ADVANCE_MS, () => done()) : null;
       const done = () => {
-        timer.remove(false);
+        timer?.remove(false);
         this.advance = null;
         resolve();
       };
@@ -1650,7 +1652,7 @@ export class BattleScene extends Phaser.Scene {
         for (const line of cue.messages) await this.say(line);
       } else {
         const text = eventText(content, this.names(trainer), e, session.settings.damageDetails);
-        if (text) await this.say(text);
+        if (text) await this.say(text, AUTO_EVENTS.has(e.type));
       }
       // What the trainer says about it (spoken lines, after the event's own text).
       for (const line of drama.filter((d) => d.at === index)) await this.sayTrainer(line);

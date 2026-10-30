@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu } from './battleInput';
 
 // Visual Bible V0/V5: baseline screenshots of the gameplay screens at a fixed
 // seed (reward, shop, event, League map, run end) at three window sizes, saved
@@ -100,7 +101,7 @@ test('repeated battles do not pile up textures, objects or tweens', async ({ pag
   const restart = async () => {
     await page.evaluate(() => void (window as any).__pkr.game.scene.getScene('Battle').scene.restart());
     await waitForScene(page, 'Battle');
-    await expect.poll(() => page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu)), { timeout: 20_000 }).toBe(true);
+    await confirmToMenu(page);
     await page.waitForTimeout(400);
   };
   await page.keyboard.press('Enter'); // the first node: a battle

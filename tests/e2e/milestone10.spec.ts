@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu, confirmUntil } from './battleInput';
 
 // Milestone 10 visual slice 1: the Aero battle screen (glass panels, glossy
 // buttons, Essentials type/category/status art, arena ambience) and its
@@ -31,7 +32,7 @@ async function startBattle(page: Page) {
 
 /** Waits until the battle shows its action menu. */
 async function waitForMenu(page: Page) {
-  await expect.poll(() => page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu)), { timeout: 20_000 }).toBe(true);
+  await confirmToMenu(page);
   await page.waitForTimeout(200);
 }
 
@@ -182,6 +183,7 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
       // Wait for the banner; if the command menu comes back first, the move missed: attack again.
       for (let t = 0; t < 150; t++) {
         if (await showsText(page, text)) return;
+        if (!(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu)))) await page.keyboard.press('Enter');
         if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) break;
         await page.waitForTimeout(100);
       }
@@ -299,7 +301,7 @@ test('slice 7: a Totem fight shows a NEW PHASE banner with its rule', async ({ p
   for (let i = 0; i < 120 && !seen; i++) {
     seen = await hasNamed(page, 'phase-banner');
     if (seen) break;
-    if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu))) await page.keyboard.press('Enter');
+    await page.keyboard.press('Enter');
     await page.waitForTimeout(150);
   }
   expect(seen).toBe(true);

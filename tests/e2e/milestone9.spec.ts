@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu } from './battleInput';
 
 // Milestone 9: move animations load on demand and play in a real battle, and
 // the animation settings work from the title screen.
@@ -30,7 +31,7 @@ async function startBattle(page: Page) {
 
 /** Waits until the battle shows its action menu. */
 async function waitForMenu(page: Page) {
-  await expect.poll(() => page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu)), { timeout: 20_000 }).toBe(true);
+  await confirmToMenu(page);
   await page.waitForTimeout(200);
 }
 

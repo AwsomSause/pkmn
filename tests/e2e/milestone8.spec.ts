@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu } from './battleInput';
 
 // Milestone 8 in a real browser: the director's custom forms are drawn with
 // their converted sprites (a Delta Pokémon as the enemy, a Spooky form as the
@@ -56,6 +57,7 @@ test('custom forms are drawn with their own sprites in battle', async ({ page })
     (window as any).__pkr.game.scene.getScene('Battle').scene.restart();
   });
   await waitForScene(page, 'Battle');
+  await confirmToMenu(page);
   await expect.poll(() => textureOf(page, 'enemySprite'), { timeout: 10_000 }).toBe('pokemon.front.custom/venusaur-delta');
   await expect.poll(() => textureOf(page, 'playerSprite'), { timeout: 10_000 }).toBe('pokemon.back.custom/chandelure-spooky');
   await page.screenshot({ path: 'test-results/m8-custom-battle.png' });

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu, confirmUntil } from './battleInput';
 
 // Milestone 8.5 in a real browser: with the Mega Ring and Venusaurite in the
 // Bag, the battle menu offers "Mega", and choosing it before a move turns
@@ -33,7 +34,7 @@ const menuLabels = (page: Page) =>
 /** Waits for a transformation cinematic (battleFx/cinematics.ts) to be on screen, then screenshots it. */
 async function seeCinematic(page: Page, kind: string, shot: string, after = 900) {
   const showing = () => page.evaluate((k) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((c: any) => c.name === `cine-${k}`), kind);
-  await expect.poll(showing, { timeout: 15_000 }).toBe(true);
+  await confirmUntil(page, showing);
   await page.waitForTimeout(after);
   await page.screenshot({ path: `test-results/${shot}.png` });
 }
@@ -62,6 +63,7 @@ test('Mega Evolution happens by itself in battle', async ({ page }) => {
     game.scene.getScene('Battle').scene.restart();
   });
   await waitForScene(page, 'Battle');
+  await confirmToMenu(page);
   await expect.poll(() => textureOf(page), { timeout: 10_000 }).toBe('pokemon.back.3');
   // PokeRogue style: no Mega button; it Mega Evolves before its first move.
   await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon']);
@@ -95,6 +97,7 @@ test('Terastallization from the battle menu', async ({ page }) => {
     game.scene.getScene('Battle').scene.restart();
   });
   await waitForScene(page, 'Battle');
+  await confirmToMenu(page);
   await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Tera: OFF']);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowDown');
@@ -135,6 +138,7 @@ test('Z-Move from the battle menu', async ({ page }) => {
     game.scene.getScene('Battle').scene.restart();
   });
   await waitForScene(page, 'Battle');
+  await confirmToMenu(page);
   await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Z: OFF']);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowDown');
@@ -174,6 +178,7 @@ test('Gigantamax from the battle menu', async ({ page }) => {
     game.scene.getScene('Battle').scene.restart();
   });
   await waitForScene(page, 'Battle');
+  await confirmToMenu(page);
   await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toEqual(['Fight', 'Bag', 'Pokémon', 'Max: OFF']);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('ArrowDown');

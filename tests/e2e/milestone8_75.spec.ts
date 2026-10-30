@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { confirmToMenu } from './battleInput';
 
 // M8.75 item effects in a real browser: catalog items show on the reward
 // screen with the director's icons, a maxed team item is a free re-roll, and
@@ -111,6 +112,7 @@ test('held items: Leftovers from the draft heal in battle, and an X Attack raise
   });
   await waitForScene(page, 'Battle');
   const hpBefore = (await run(page)).party[0].hp;
+  await confirmToMenu(page);
   await expect.poll(() => menuLabels(page), { timeout: 15_000 }).toContain('Fight');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(250);
