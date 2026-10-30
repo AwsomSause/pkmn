@@ -2177,6 +2177,10 @@
   {
    "kind": "hiddenItemChance",
    "chance": 0.2
+  },
+  {
+   "kind": "bonusRewardChance",
+   "chance": 0.2
   }
  ],
  "spr-pt-lucas": [
@@ -3321,6 +3325,10 @@
    "kind": "damageTakenMultiplier",
    "moveType": "electric",
    "value": 1.2
+  },
+  {
+   "kind": "fishingRareTries",
+   "tries": 2
   }
  ],
  "lance": [

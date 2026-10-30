@@ -466,6 +466,16 @@ export function moveStyleOf(move: { power: number | null; priority: number }): '
   return move.priority > 0 || move.power <= 60 ? 'agile' : null;
 }
 
+/** Extra tries at a stronger Pokémon for every fishing choice. */
+export function fishingRareTriesPerk(perks: Perks | undefined): number {
+  return sum(perks, 'fishingRareTries', (m) => m.tries);
+}
+
+/** Chance of one more reward choice after a won battle. */
+export function bonusRewardChancePerk(perks: Perks | undefined): number {
+  return Math.min(1, sum(perks, 'bonusRewardChance', (m) => m.chance));
+}
+
 /** Food for the perks that name it: Berries and Honey. */
 export function isFoodItem(itemId: string): boolean {
   return itemId === 'honey' || itemId.endsWith('-berry');

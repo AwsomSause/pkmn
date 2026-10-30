@@ -2,8 +2,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { getArchetype, healingMultiplier } from '../../src/core/archetypes';
-import { calcStats, createPokemon } from '../../src/core/pokemon';
-import { chooseStarter, createRun, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
+import { calcStats, createPokemon, getSpecies } from '../../src/core/pokemon';
+import { chooseStarter, createRun, fishingOffer, tickTempEffects, depositToBox, partyCapacity, releaseLimitReached, shopPrice, withdrawFromBox } from '../../src/core/run';
 import { chooseSignatureOption, signatureDecisions } from '../../src/core/signature';
 import { applyHype, createBattle } from '../../src/core/battle/engine';
 import { battleTypes } from '../../src/core/battle/transform';
@@ -14,7 +14,7 @@ import {
   hypeMeterOf, thirdBossLevels, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
-  critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind,
+  critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind, bonusRewardChancePerk, fishingRareTriesPerk,
 } from '../../src/core/trainerPerks';
 import { hiddenItemNode } from '../../src/core/mapItems';
 import { autoplay, gameplayFingerprint } from './autoplay';
@@ -841,5 +841,39 @@ describe('trainer perk systems: evasion and Lusamine', () => {
     const taken = damageTakenPerk(run.perkEffects, { targetTypes: ['normal'], moveType: 'normal', attackerIsLegendary: false, attackerIsBoss: false, weather: null });
     expect(taken).toBeCloseTo(1.05 * 1.05);
     expect(signatureDecisions(content, run, gym)).toHaveLength(0);
+  });
+});
+
+describe('trainer perk systems: Lana fishing and Looker bonus rewards', () => {
+  const runOf = (seed: string, archetypeId: string) => chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId }), 0);
+  const spots = (run: ReturnType<typeof runOf>) => run.stage!.map.nodes.flatMap((n) => n.sides.filter((s) => s.kind === 'fish').map((s) => ({ node: n.id, side: s.id })));
+
+  it('Lana gets a fishing spot every stage without a Rod; others do not', () => {
+    const lana = runOf('lana-fish', 'lana');
+    expect(spots(lana).length).toBeGreaterThan(0);
+    expect(spots(runOf('lana-fish', 'red'))).toHaveLength(0);
+  });
+
+  it('Lana: her offers are the same every time, and on average stronger than a plain Old Rod', () => {
+    const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
+    let withPerk = 0;
+    let without = 0;
+    for (let i = 0; i < 30; i++) {
+      const run = runOf(`lana-odds-${i}`, 'lana');
+      const spot = spots(run)[0]!;
+      run.stage!.current = spot.node;
+      const offer = fishingOffer(content, run, spot.side);
+      expect(fishingOffer(content, run, spot.side)).toEqual(offer);
+      withPerk += bst(offer[0]!.speciesId);
+      const plain = { ...run, archetypeId: 'red' };
+      without += bst(fishingOffer(content, plain, spot.side)[0]!.speciesId);
+    }
+    expect(withPerk).toBeGreaterThan(without);
+  });
+
+  it('Looker: the bonus reward chance is 20%, others have none', () => {
+    expect(bonusRewardChancePerk(perks('spr-pt-looker'))).toBeCloseTo(0.2);
+    expect(bonusRewardChancePerk(perks('red'))).toBe(0);
+    expect(fishingRareTriesPerk(perks('lana'))).toBe(2);
   });
 });
