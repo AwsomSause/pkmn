@@ -1,0 +1,15 @@
+{
+ "note": "Wardrobe (plan Part 5): card frames for the trainer card in the Hub. Cosmetic only. Each opens with a requirement (core/progress.ts requirementProgress); null = open from the start.",
+ "frames": [
+  { "id": "classic", "name": "Classic", "color": "#8a7f96", "shimmer": false, "unlock": null, "unlockText": "Open from the start" },
+  { "id": "bronze", "name": "Bronze Dex", "color": "#d08a4a", "shimmer": false, "unlock": { "kind": "distinct", "set": "speciesCaught", "atLeast": 30 }, "unlockText": "Catch 30 different species" },
+  { "id": "silver", "name": "Silver Dex", "color": "#c8d4e0", "shimmer": true, "unlock": { "kind": "distinct", "set": "speciesCaught", "atLeast": 100 }, "unlockText": "Catch 100 different species" },
+  { "id": "gold", "name": "Gold Dex", "color": "#f0c040", "shimmer": true, "unlock": { "kind": "distinct", "set": "speciesCaught", "atLeast": 250 }, "unlockText": "Catch 250 different species" },
+  { "id": "champion", "name": "Champion", "color": "#3890f8", "shimmer": true, "unlock": { "kind": "total", "counter": "championsDefeated", "atLeast": 1 }, "unlockText": "Defeat a champion" },
+  { "id": "legend", "name": "Legend", "color": "#ff7ad9", "shimmer": true, "unlock": { "kind": "total", "counter": "regionsCleared", "atLeast": 5 }, "unlockText": "Clear 5 regions" },
+  { "id": "spooky", "name": "Spooky", "color": "#ff7a1a", "shimmer": true, "unlock": { "kind": "claim", "key": "event:spooky-season:reward" }, "unlockText": "Finish Spooky Season" },
+  { "id": "winter", "name": "Winter Star", "color": "#80c8ff", "shimmer": true, "unlock": { "kind": "claim", "key": "event:winter-festival:reward" }, "unlockText": "Finish the Winter Festival" },
+  { "id": "spring", "name": "Spring Bloom", "color": "#90e070", "shimmer": true, "unlock": { "kind": "claim", "key": "event:spring-bloom:reward" }, "unlockText": "Finish Spring Bloom" },
+  { "id": "summer", "name": "Summer Splash", "color": "#30b0f0", "shimmer": true, "unlock": { "kind": "claim", "key": "event:summer-splash:reward" }, "unlockText": "Finish Summer Splash" }
+ ]
+}

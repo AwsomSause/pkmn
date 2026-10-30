@@ -3,7 +3,7 @@
 // Build Summary, save or load a loadout preset, then roll the starters.
 
 import Phaser from 'phaser';
-import type { TypeName } from '../core/contentSchema';
+import { TYPE_NAMES, type TypeName } from '../core/contentSchema';
 import {
   buildSummary,
   defaultPrep,
@@ -39,8 +39,8 @@ export interface RunPrepData {
   modCursor?: number;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
 export class RunPrepScene extends Phaser.Scene {
   private menu!: Menu;
@@ -93,6 +93,7 @@ export class RunPrepScene extends Phaser.Scene {
       draft: `Draft: ${rule.name}`,
       type: `Focus type: ${this.prep.typeFocus ? capitalise(this.prep.typeFocus) : '—'}`,
       token: `Preparation: ${token?.name ?? 'none'}`,
+      directive: `Research Directive: ${this.prep.directive ? capitalise(this.prep.directive) : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
       modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
@@ -105,7 +106,7 @@ export class RunPrepScene extends Phaser.Scene {
       x: 40,
       y: 72,
       options: ROWS.map((r) => ({ label: labels[r], disabled: r === 'type' && rule.kind !== 'typeFocus' })),
-      itemHeight: 27,
+      itemHeight: 26,
       fontSize: 18,
       onFocus: (i) => (this.focusIndex = i),
       onSelect: (i) => this.select(ROWS[i]!),
@@ -186,6 +187,9 @@ export class RunPrepScene extends Phaser.Scene {
         if (ids.length < 2) return this.refresh({}, { notice: 'Earn achievements or buy licenses to unlock preparation choices.' });
         return this.refresh({ tokenId: next(ids, this.prep.tokenId) });
       }
+      case 'directive':
+        // None, then every type: study it this run for bonus Research Points.
+        return this.refresh({ directive: next<TypeName | null>([null, ...TYPE_NAMES], this.prep.directive) });
       case 'mode': {
         const ids = RUN_RULES.modes.filter((m) => m.status === 'supported').map((m) => m.id);
         return this.refresh({}, { rules: { ...this.rules, modeId: next(ids, this.rules.modeId) } });

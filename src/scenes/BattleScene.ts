@@ -11,6 +11,7 @@ import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import type { RunEvent, TurnResult } from '../core/run';
+import { noBattleItems } from '../core/rules';
 import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
@@ -788,7 +789,7 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run) };
+    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
   }
 
   private openBag(): void {
