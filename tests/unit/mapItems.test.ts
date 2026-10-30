@@ -24,7 +24,10 @@ import type { RunState } from '../../src/core/state';
 import { content } from './helpers';
 
 function newRun(seed = 'map-items'): RunState {
-  return chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0);
+  // Past the gentle opening, whose weaker wild Pokémon would hide what these items change.
+  const run = chooseStarter(content, createRun(content, { runId: 'r', seed, archetypeId: 'red' }), 0);
+  run.encountersCompleted = 2;
+  return run;
 }
 
 /** Takes a catalog item the way the reward screen does. */

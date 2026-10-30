@@ -1857,6 +1857,8 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
+  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */

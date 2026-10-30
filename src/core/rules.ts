@@ -4,10 +4,10 @@
 import { z } from 'zod';
 import rulesJson from '../data/runRules.json';
 import type { Content, TypeName } from './contentSchema';
-import { getSpecies } from './pokemon';
+import { getSpecies, usableLearnset } from './pokemon';
 import { hashSeed, Rng } from './rng';
 import { poolTypes } from './runPrep';
-import type { RunRules, RunState } from './state';
+import type { PokemonInstance, RunRules, RunState } from './state';
 import { specialFamily } from './specialForms';
 import { wildEligibleSpecies } from './themes';
 
@@ -269,4 +269,46 @@ export function spookyWild(content: Content, run: Pick<RunState, 'rules' | 'seed
   if (!rng.chance(chance)) return speciesId;
   const forms = [...content.species.values()].filter((s) => specialFamily(s) === 'spooky');
   return forms.length > 0 ? forms[rng.int(0, forms.length - 1)]!.id : speciesId;
+}
+
+// ---------- the gentle opening ----------
+
+/** The first fights of a run are against weaker wild Pokémon, so a lone starter is not coin-flipped out of the run. Seeded by the run and the node. */
+export function openingWild(content: Content, run: Pick<RunState, 'seed' | 'encountersCompleted' | 'rules'>, speciesId: string, level: number, key: string): { speciesId: string; level: number } {
+  const o = content.balance.opening;
+  if (run.encountersCompleted >= o.encounters) return { speciesId, level };
+  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
+  let id = speciesId;
+  if (bst(id) > o.maxBaseStats) {
+    const gen = run.rules.lockGeneration;
+    const inGen = (s: { generation: number }) => !gen || s.generation === gen;
+    const pool = wildEligibleSpecies(content).filter((s) => inGen(s) && bst(s.id) <= o.maxBaseStats && s.types.some((t) => getSpecies(content, speciesId).types.includes(t)));
+    const any = pool.length > 0 ? pool : wildEligibleSpecies(content).filter((s) => inGen(s) && bst(s.id) <= o.maxBaseStats);
+    id = any[new Rng(hashSeed(`${run.seed}::opening::${key}`)).int(0, any.length - 1)]!.id;
+  }
+  return { speciesId: id, level: Math.max(o.minLevel, level - o.levelOffset) };
+}
+
+/**
+ * Low-level enemies do not carry fixed-damage or one-hit-KO moves (Dragon Rage's 40 damage knocks out any level 5 Pokémon in one hit).
+ * Such a move is swapped for the species' best damaging level-up move it does not already know, or just dropped. Mutates `mon`.
+ */
+export function softenOpeningMoves(content: Content, mon: PokemonInstance): void {
+  const o = content.balance.opening;
+  if (mon.level > o.softMovesUntilLevel) return;
+  const harsh = (id: string) => {
+    const e = content.moves.get(id)?.effects as { fixedDamage?: unknown; ohko?: unknown } | undefined;
+    return typeof e?.fixedDamage === 'number' || e?.ohko !== undefined;
+  };
+  if (!mon.moves.some((m) => harsh(m.id))) return;
+  const species = getSpecies(content, mon.speciesId);
+  const spare = usableLearnset(content, species)
+    .filter((e) => e.level <= mon.level && !harsh(e.move) && !mon.moves.some((m) => m.id === e.move) && (content.moves.get(e.move)?.power ?? 0) > 0)
+    .map((e) => e.move);
+  mon.moves = mon.moves.flatMap((m) => {
+    if (!harsh(m.id)) return [m];
+    const next = spare.pop();
+    return next ? [{ id: next, pp: content.moves.get(next)!.pp }] : [];
+  });
+  if (mon.moves.length === 0) mon.moves = [{ id: 'tackle', pp: content.moves.get('tackle')?.pp ?? 35 }];
 }

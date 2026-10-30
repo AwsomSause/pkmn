@@ -101,7 +101,14 @@ export function movesAtLevel(content: Content, species: Species, level: number):
   const learned = usable.filter((entry) => entry.level <= level).map((entry) => entry.move);
   const unique = [...new Set(learned)];
   if (unique.length === 0 && usable[0]) return [usable[0].move];
-  return unique.slice(-4);
+  const four = unique.slice(-4);
+  // A Pokémon that can attack always knows an attacking move: the oldest move makes room for the latest one it has learned.
+  const attacks = (id: string) => (content.moves.get(id)?.power ?? 0) > 0;
+  if (!four.some(attacks)) {
+    const latest = [...unique].reverse().find(attacks);
+    if (latest) return [...four.slice(1), latest];
+  }
+  return four;
 }
 
 /**
