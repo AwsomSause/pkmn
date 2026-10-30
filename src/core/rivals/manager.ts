@@ -6,6 +6,7 @@ import type { DomainEvent, Where } from '../story/schema';
 import type { Rival, Traits } from '../story/schema';
 import { TRAIT_KEYS } from '../story/schema';
 import { applyLegacy } from './legacy';
+import { factionFor, type PathContext } from './standing';
 import { RIVAL_ARCS, RIVAL_CONFIG, RIVAL_PATHS, RIVAL_PROFILES } from './schema';
 
 export interface SparkInput {
@@ -21,6 +22,8 @@ export interface SparkInput {
   flawless: boolean;
   /** A trainer who vowed to return and lost again. */
   returning?: boolean;
+  /** World facts for the path choice (standing.ts `pathContext`); without it only the battle and the character count. */
+  ctx?: PathContext;
 }
 
 /** How much the player's win raised this trainer's rival potential. */
@@ -57,7 +60,9 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
     (w.personalities === undefined || w.personalities.includes(personalityId)) &&
     (w.minPride === undefined || traits.pride >= w.minPride) &&
     (w.minAmbition === undefined || traits.ambition >= w.minAmbition) &&
-    (w.minRegion === undefined || input.where.region >= w.minRegion))!;
+    (w.minRegion === undefined || input.where.region >= w.minRegion) &&
+    (w.minBosses === undefined || (input.ctx?.bosses ?? 0) >= w.minBosses) &&
+    (['sponsored', 'openDebt', 'leaguePatron', 'hostileFaction', 'hasAlly', 'hasRival', 'mentorRival', 'legacy', 'crisis', 'sharedSpecies', 'copiesYou', 'devotedBond'] as const).every((k) => w[k] === undefined || w[k] === Boolean(input.ctx?.[k])))!;
   for (const [k, n] of Object.entries(path.traitNudge)) traits[k as keyof Traits] = Math.max(0, Math.min(100, traits[k as keyof Traits] + n));
   const rival: Rival = {
     id,
@@ -70,6 +75,7 @@ export function maybeSpark(run: RunState, input: SparkInput): Rival | null {
     state: 'recognized',
     arc: null,
     away: 0,
+    faction: factionFor(personalityId),
     cooldown: 0,
     progress: 0,
     encounters: 0,
