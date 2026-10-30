@@ -57,6 +57,8 @@ export const PokemonInstanceSchema = z.object({
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
   teraType: TypeNameSchema.optional(),
+  /** Moves that awakened this run (Signature Move Awakening): they hit harder; gone with the run. */
+  awakened: z.array(z.string()).optional(),
   /** In battle only: Dynamaxed, so its HP is doubled (core/battle/transform.ts). */
   dynamaxed: z.literal(true).optional(),
 });
