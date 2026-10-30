@@ -39,10 +39,25 @@ export interface HyperBattleState {
   lowHp: { uid: string; turns: number } | null;
   /** Super-effective hits each of your Pokémon has survived this battle. */
   superEffective: Record<string, number>;
+  /** "The Enemy Is Getting Riled Up": each opposing Pokémon's build-up (by uid). */
+  rage: Record<string, EnemyRage>;
+}
+
+/**
+ * An opposing Pokémon's rage: it builds while it takes hits ("calm"), is shown a turn ahead
+ * ("warned"), and is either unleashed before its next move or calmed by a counter ("spent").
+ */
+export interface EnemyRage {
+  hits: number;
+  state: 'calm' | 'warned' | 'spent';
+  /** "Its Rage Is Uncontrollable": it also lowers its own Defense. */
+  uncontrollable: boolean;
+  /** Your Pokémon survived its finishing blow this turn. */
+  denied: boolean;
 }
 
 export function freshHyperBattle(): HyperBattleState {
-  return { lowHp: null, superEffective: {} };
+  return { lowHp: null, superEffective: {}, rage: {} };
 }
 
 /** Rolls an eligible moment (no roll when it is certain). */

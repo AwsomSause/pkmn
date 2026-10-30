@@ -205,6 +205,7 @@ describe('story foundation: the event queue', () => {
   const trigger = (defId: string, priority: StoryTrigger['priority'], combat: boolean, at: number, order: number, major = true): StoryTrigger => ({
     defId,
     uid: 'p1',
+    side: 'player',
     title: defId,
     message: `${defId}!`,
     priority,

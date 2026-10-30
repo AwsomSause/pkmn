@@ -297,7 +297,7 @@ describe('Hyper moments in a run', () => {
     if (loaded.status !== 'ok') throw new Error(loaded.status);
     expect(loaded.migratedFrom).toBe(9);
     expect(loaded.data.battle!.storyEffects).toEqual(['toughened-it-out@p9']);
-    expect(loaded.data.battle!.hyper).toEqual({ lowHp: null, superEffective: {} });
+    expect(loaded.data.battle!.hyper).toEqual({ lowHp: null, superEffective: {}, rage: {} });
     for (const h of Object.values(loaded.data.story.histories)) expect(h.hyper).toEqual({});
   });
 });

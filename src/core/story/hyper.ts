@@ -16,6 +16,7 @@ export const HYPER_EFFECTS: Record<StoryTriggerKind, StoryEffectSpec['kind']> = 
   feltABond: 'endureOrCure',
   pushedBackUp: 'revive',
   hungInThere: 'boost',
+  enemyRiledUp: 'rage',
 };
 
 /** Memories a trigger can ask for besides other Hyper moments (see PokemonHistory). */

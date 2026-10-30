@@ -195,6 +195,15 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
    * Battle scope: raises stat stages and heals a share of max HP (the engine does it).
    * `healShare` is the most it heals: all of it with no `healAttribute`, otherwise scaled by that attribute (0 to its maximum).
    */
+  /**
+   * Battle scope, enemy side: stat stages it gains when its rage is unleashed, and the extra
+   * ones when the rage is uncontrollable (the engine does it).
+   */
+  z.object({
+    kind: z.literal('rage'),
+    stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
+    uncontrollable: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
+  }),
   z.object({
     kind: z.literal('boost'),
     stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
@@ -212,7 +221,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -234,6 +243,8 @@ export const TriggerConditionsSchema = z.object({
   superEffectiveHits: z.number().int().positive().optional(),
   /** Friendship needed. */
   minFriendship: z.number().int().min(0).max(255).optional(),
+  /** Hits (moves that damaged it) an opposing Pokémon must take. */
+  hits: z.number().int().positive().optional(),
   /** The Pokémon's history must hold at least one of these (closeCall, survivedFatal, bossBeaten, or another definition's id). */
   needsMemory: z.array(z.string()).optional(),
 });
@@ -286,7 +297,17 @@ export const StoryEventDefinitionSchema = z.object({
   /** Restrictions (species, form, trainer, region, mechanic...). Checked once those systems exist. */
   eligibilityTags: z.array(z.string()),
   /** Named variants ("again", "wouldntStayDown"): a different title and lines for the same event. */
-  variants: z.record(z.string(), z.object({ displayName: z.string(), messagePool: z.array(z.string()).min(1) })).default({}),
+  variants: z
+    .record(
+      z.string(),
+      z.object({
+        displayName: z.string(),
+        messagePool: z.array(z.string()).min(1),
+        /** Overrides the definition's visualCue.major (a quieter follow-up line, for example). */
+        major: z.boolean().optional(),
+      }),
+    )
+    .default({}),
 });
 export type StoryEventDefinition = z.infer<typeof StoryEventDefinitionSchema>;
 

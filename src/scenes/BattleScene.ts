@@ -51,6 +51,7 @@ interface InfoBox {
   statusBadge?: Phaser.GameObjects.Container;
   /** "TERA WATER" while the Pokémon is Terastallized. */
   teraBadge?: Phaser.GameObjects.Container;
+  rageBadge?: Phaser.GameObjects.Container;
 }
 
 const sleep = (scene: Phaser.Scene, ms: number) => new Promise<void>((resolve) => scene.time.delayedCall(ms, resolve));
@@ -79,6 +80,8 @@ export class BattleScene extends Phaser.Scene {
   private transformChoice: TransformRequest | null = null;
   /** What the screen currently shows for each side (may lag the real state during playback). */
   private shown!: { player: PokemonInstance; enemy: PokemonInstance };
+  /** The opposing Pokémon shown as riled up (warned, not yet unleashed or calmed). Presentation only. */
+  private riledUid: string | null = null;
 
   constructor() {
     super('Battle');
@@ -112,6 +115,7 @@ export class BattleScene extends Phaser.Scene {
     this.picker = null;
     this.advance = null;
     this.busy = true;
+    this.riledUid = Object.entries(battle.hyper?.rage ?? {}).find(([, r]) => r.state === 'warned')?.[0] ?? null;
     this.playerSprite = null;
     this.enemySprite = null;
 
@@ -310,6 +314,13 @@ export class BattleScene extends Phaser.Scene {
     } else if (mon.dynamaxed) {
       box.teraBadge = badge(this, box.statusAt.x + (box.statusBadge ? 76 : 0), box.statusAt.y, 'Dynamax', 0xff3060, 16);
       box.container.add(box.teraBadge);
+    }
+    box.rageBadge?.destroy();
+    box.rageBadge = undefined;
+    if (box === this.enemyBox && mon.uid === this.riledUid) {
+      // The warning stays on screen until the rage is unleashed or calmed.
+      box.rageBadge = badge(this, box.statusAt.x + (box.statusBadge ? 76 : 0) + (box.teraBadge ? 120 : 0), box.statusAt.y, 'Riled up!', 0xff5a3c, 16);
+      box.container.add(box.rageBadge);
     }
     if (box.xpBar) {
       const species = getSpecies(content, mon.speciesId);
@@ -754,7 +765,8 @@ export class BattleScene extends Phaser.Scene {
           await this.refreshInfoBox(box, mon!, true);
           break;
         case 'hyper':
-          // A Hyper moment: hung on, got back up, shook off its status or dug in.
+          // A Hyper moment: hung on, got back up, shook off its status or dug in (or the foe's rage).
+          if (e.side === 'enemy') this.riledUid = e.variant === null || e.variant === 'uncontrollable' ? e.uid : null;
           mon!.hp = e.hpAfter;
           if (e.cured) mon!.status = null;
           if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
@@ -891,7 +903,8 @@ export class BattleScene extends Phaser.Scene {
       const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
       this.tweens.add({ targets: [band, title], alpha: 1, duration: 180, hold: 1300, yoyo: true, onComplete: () => { band.destroy(); title.destroy(); } });
       if (motion) {
-        const aura = this.add.circle(PLAYER_POS.x, PLAYER_POS.y - 40, 90, color, 0.35).setDepth(1).setScale(0.6);
+        const at = cue.side === 'enemy' ? ENEMY_POS : PLAYER_POS;
+        const aura = this.add.circle(at.x, at.y - 40, 90, color, 0.35).setDepth(1).setScale(0.6);
         this.tweens.add({ targets: aura, scale: 1.3, alpha: 0, duration: 900, onComplete: () => aura.destroy() });
       }
     } catch (err) {

@@ -60,7 +60,7 @@ import {
   WEATHER_SPEED,
 } from './abilities';
 import * as Held from './held';
-import { freshHyperBattle, rollHyper, type HyperContext, type HyperEligibility } from './hyper';
+import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
 export type Side = 'player' | 'enemy';
@@ -170,6 +170,8 @@ export interface BattleContext {
   hyper?: HyperContext;
   /** Set during a turn once a Hyper moment has changed the battle (one per turn). */
   hyperUsed?: boolean;
+  /** The same for the opposing side (its rage). */
+  enemyHyperUsed?: boolean;
   /** Transformations switched off for this run (a challenge). */
   disabledMechanics?: readonly TransformKind[];
   /**
@@ -360,6 +362,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
   ctx.doubleKoLoser = undefined;
   ctx.hyperUsed = false;
+  ctx.enemyHyperUsed = false;
   battle.hyper ??= freshHyperBattle();
   // Entry abilities still waiting from the start of the battle (the battle screen normally plays them first, see startBattle).
   resolveEntries(ctx, events);
@@ -412,10 +415,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     actions.forEach((a, index) => {
       if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
       if (a.user.side === 'enemy' && loseFreeTurn(battle, events)) return;
-      executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events);
+      actWithRage(ctx, a.user, enemy, events, () => executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events));
     });
   } else if (!loseFreeTurn(battle, events)) {
-    executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events);
+    actWithRage(ctx, enemy, enemy, events, () => executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events));
   }
   recordFaints(ctx, playerC, enemy, events);
 
@@ -448,7 +451,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   }
 
   // Hyper moments that come from how the turn went (Hung In There, a bond that shakes off a status).
-  if (!battle.outcome && enemy.mon.hp > 0) hyperEndOfTurn(ctx, player(), events);
+  if (!battle.outcome && enemy.mon.hp > 0) {
+    hyperEndOfTurn(ctx, player(), events);
+    rageEndOfTurn(ctx, enemy, events);
+  }
 
   // A Pokémon that switched in this turn still gets its "first turn" next turn (Fake Out).
   if (action.kind !== 'switch') playerC.vol.turnsOut += 1;
@@ -458,7 +464,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   tickDynamax(content, battle, ctx.party, events as TransformStepEvent[]);
 
   // 4. Decide the outcome or replace fainted Pokémon.
+  const enemyBefore = battle.enemyIndex;
   settleFaints(ctx, events);
+  // A trainer's next Pokémon saw its ally fall.
+  if (!battle.outcome && battle.enemyIndex !== enemyBefore) warnRage(ctx, currentEnemy(battle), events);
   battle.turn += 1;
   return events;
 }
@@ -934,6 +943,89 @@ function hyperKnockout(ctx: BattleContext, c: Combatant, hit: number): { hpAfter
   const back = tryHyper(ctx, 'pushedBackUp', c.mon);
   if (back && back.def.effect?.kind === 'revive') return make(back, Math.max(1, Math.floor(max * back.def.effect.hpShare)), true);
   return null;
+}
+
+// ---------- The Enemy Is Getting Riled Up ----------
+
+function rageOf(ctx: BattleContext, uid: string): EnemyRage {
+  const all = (ctx.battle.hyper.rage ??= {});
+  return (all[uid] ??= { hits: 0, state: 'calm', uncontrollable: false, denied: false });
+}
+
+/**
+ * Runs one side's move between the rage checks: a warned enemy unleashes its rage just before
+ * it acts; afterwards your move may have built it up or calmed it, and the enemy's move may
+ * have been denied its finishing blow.
+ */
+function actWithRage(ctx: BattleContext, user: Combatant, enemy: Combatant, events: BattleEvent[], act: () => void): void {
+  if (user.side === 'enemy') unleashRage(ctx, user, events);
+  const start = events.length;
+  act();
+  const done = events.slice(start);
+  if (!ctx.hyper) return;
+  const rage = rageOf(ctx, enemy.mon.uid);
+  if (user.side === 'enemy') {
+    if (done.some((e) => (e.type === 'hyper' && e.side === 'player' && !e.cured) || (e.type === 'lastStand' && e.side === 'player') || (e.type === 'held' && e.side === 'player' && e.what === 'survive'))) {
+      rage.denied = true;
+    }
+    return;
+  }
+  if (rage.state === 'warned') {
+    // The counters: a status, a super-effective hit, or a move that lowers its Attack or Sp. Atk.
+    const countered = done.some(
+      (e) =>
+        (e.type === 'status' && e.side === 'enemy') ||
+        (e.type === 'damage' && e.side === 'enemy' && e.effectiveness > 1) ||
+        (e.type === 'stat' && e.side === 'enemy' && e.change < 0 && (e.stat === 'atk' || e.stat === 'spa')),
+    );
+    if (countered && enemy.mon.hp > 0) {
+      rage.state = 'spent';
+      const def = ctx.hyper.eligibility('enemyRiledUp', enemy.mon)?.def;
+      if (def) events.push({ type: 'hyper', side: 'enemy', uid: enemy.mon.uid, defId: def.id, variant: 'calmed', hpAfter: enemy.mon.hp, cured: false });
+    }
+  } else if (rage.state === 'calm' && done.some((e) => e.type === 'damage' && e.side === 'enemy' && e.amount > 0)) {
+    rage.hits += 1;
+  }
+}
+
+/** End of turn: enough hits taken, or a finishing blow denied, and the enemy gets riled up (shown a turn ahead). */
+function rageEndOfTurn(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]): void {
+  if (!ctx.hyper) return;
+  const rage = rageOf(ctx, enemy.mon.uid);
+  const need = ctx.hyper.eligibility('enemyRiledUp', enemy.mon)?.def.triggerConditions.hits ?? Infinity;
+  if (rage.state === 'calm' && (rage.hits >= need || rage.denied)) warnRage(ctx, enemy.mon, events);
+  rage.denied = false;
+}
+
+/** The warning: the enemy will be stronger on its next move. A statused enemy can't build up. */
+function warnRage(ctx: BattleContext, mon: PokemonInstance, events: BattleEvent[]): void {
+  if (!ctx.hyper || ctx.enemyHyperUsed || mon.hp <= 0 || mon.status) return;
+  const rage = rageOf(ctx, mon.uid);
+  if (rage.state !== 'calm') return;
+  const e = ctx.hyper.eligibility('enemyRiledUp', mon);
+  if (!e) return;
+  const key = cooldownKey(e.def, mon.uid);
+  if (hasBattleEffect(ctx.battle, key) || !rollHyper(ctx.hyper, e)) return;
+  markBattleEffect(ctx.battle, key);
+  ctx.enemyHyperUsed = true;
+  // Evil makes its rage uncontrollable more often (rolled only when Evil is above 0).
+  const evil = e.def.variants.uncontrollable ? ctx.hyper.attributeShare('evil') : 0;
+  rage.uncontrollable = evil > 0 && ctx.hyper.rng.chance(evil);
+  rage.state = 'warned';
+  events.push({ type: 'hyper', side: 'enemy', uid: mon.uid, defId: e.def.id, variant: rage.uncontrollable ? 'uncontrollable' : null, hpAfter: mon.hp, cured: false });
+}
+
+/** Just before a warned enemy acts, its rage is unleashed: it raises its attacks (and lowers its Defense if uncontrollable). */
+function unleashRage(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]): void {
+  if (!ctx.hyper) return;
+  const rage = ctx.battle.hyper.rage?.[enemy.mon.uid];
+  if (!rage || rage.state !== 'warned') return;
+  rage.state = 'spent';
+  const def = ctx.hyper.eligibility('enemyRiledUp', enemy.mon)?.def;
+  if (!def || def.effect?.kind !== 'rage') return;
+  events.push({ type: 'hyper', side: 'enemy', uid: enemy.mon.uid, defId: def.id, variant: rage.uncontrollable ? 'unleashedUncontrollable' : 'unleashed', hpAfter: enemy.mon.hp, cured: false });
+  for (const [stat, stages] of Object.entries(def.effect.stats) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
+  if (rage.uncontrollable) for (const [stat, stages] of Object.entries(def.effect.uncontrollable) as [BoostStat, number][]) applyStageChange(ctx, enemy, stat, stages, events);
 }
 
 /** End of turn: a bond may shake off a status; a long low-HP stand (or two super-effective hits survived) digs in. */
