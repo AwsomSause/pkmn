@@ -40,6 +40,7 @@ import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
+import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, discover } from './progress';
@@ -184,14 +185,14 @@ function assertPhase(run: RunState, ...phases: RunState['phase'][]): void {
   if (!phases.includes(run.phase)) throw new Error(`Action needs phase "${phases.join('" or "')}" but run is in "${run.phase}"`);
 }
 
-function nextUid(run: RunState, prefix: string): string {
+export function nextUid(run: RunState, prefix: string): string {
   const uid = `${prefix}${run.nextUid}`;
   run.nextUid += 1;
   return uid;
 }
 
 /** A new Pokémon for this run; its ability comes from the run seed and its uid. */
-function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
+export function newMon(content: Content, run: RunState, speciesId: string, level: number, prefix: 'p' | 'e'): PokemonInstance {
   const uid = nextUid(run, prefix);
   return createPokemon(content, speciesId, level, uid, `${run.seed}:${uid}`);
 }
@@ -261,8 +262,9 @@ function enterStage(content: Content, run: RunState, index: number): void {
   run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
   startStageEffects(run);
   simulateRivalWorld(content, run);
-  // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map.
+  // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
+  addEventStops(content, run);
   placeRaidDens(content, run);
   placeTotem(content, run);
   run.battle = null;
@@ -520,7 +522,7 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
   }
   const gym = stage.map.nodes.find((n) => n.kind === 'gym');
   const teamItem = perks('gymTeam') ?? perks('gymAce');
-  const teamFrom = teamItem ? source('gymTeam', teamItem) : source('gymTeam', null);
+  const teamFrom = teamItem ? source('gymTeam', teamItem) : (source('gymTeam', null) ?? (eventGymPreview(run) ? { itemId: null, source: 'Your scouting' } : null));
   if (gym && teamFrom) {
     const campaign = getCampaign(content, run.campaignId);
     const species = bossTeamSpecies(content, 'gym', stage.leaderId, run.regionIndex * campaign.stagesPerRegion + stage.index);
@@ -910,6 +912,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal' && side.used) throw new Error('This healing stop has already been used');
   if (side.kind === 'fish') throw new Error('Choose a Pokémon to fish for (fishingOffer, then fish)');
   if (side.kind === 'raid') throw new Error('Review the raid first (raidPreview), then enterRaid');
+  if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
@@ -937,7 +940,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   return { run, message: 'Welcome to the shop!' };
 }
 
-function healParty(content: Content, run: RunState): void {
+export function healParty(content: Content, run: RunState): void {
   for (const mon of run.party) {
     mon.hp = maxHp(content, mon);
     mon.status = null;
@@ -1029,6 +1032,8 @@ export interface BattleEndResult {
   badge: string | null;
   /** The region's id when this win beat its champion. */
   regionCleared: string | null;
+  /** What an event battle you won paid out, in words. */
+  eventRewards: string[];
   /** True when this win beat the last champion and so won the run. */
   victory: boolean;
 }
@@ -1251,8 +1256,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   } else if (classId === CHAMPION_CLASS) {
     base = money.championPerLevel * topLevel;
   } else if (battle.kind === 'trainer' && battle.trainer) {
-    const trainerClass = content.trainers.get(battle.trainer.classId)!;
-    base = trainerClass.moneyPerLevel * topLevel;
+    // An event's trainer (no trainer class) pays the events' rate.
+    base = (content.trainers.get(battle.trainer.classId)?.moneyPerLevel ?? content.balance.events.trainerMoneyPerLevel) * topLevel;
   } else {
     base = content.balance.money.wildPerEnemyLevel * currentEnemy(battle).level;
   }
@@ -1388,10 +1393,12 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   graduateMentorships(content, run);
   const mentorOffer = !run.victory ? planMentorship(content, run) : null;
   if (mentorOffer) run.pending.push({ kind: 'mentorship', ...mentorOffer });
-  // A fished Pokémon is an extra catch: no reward draft after it.
-  run.afterDecisions = battle.fishing ? 'map' : 'reward';
+  // An event battle you won pays its own rewards.
+  const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
+  // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
+  run.afterDecisions = battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, evolutions, badge, regionCleared, victory: run.victory, eventRewards };
 }
 
 /**
@@ -1412,7 +1419,7 @@ function prunePending(run: RunState): void {
 }
 
 /** Moves on once no decisions are pending: to the reward draft, or to the next battle. */
-function continueAfterDecisions(content: Content, run: RunState): void {
+export function continueAfterDecisions(content: Content, run: RunState): void {
   prunePending(run);
   if (run.pending.length > 0) {
     run.phase = 'decision';
