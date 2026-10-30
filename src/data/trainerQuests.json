@@ -4975,6 +4975,432 @@
    ]
   },
   {
+   "trainerId": "evolved-red",
+   "name": "Champion Red's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Champion Red",
+     "story": "Champion Red has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Champion Red's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Champion Red",
+     "story": "Champion Red checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Champion Red",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Champion Red",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Champion Red",
+     "story": "Champion Red's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Red, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "evolved-blue",
+   "name": "Champion Blue's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Champion Blue",
+     "story": "Champion Blue has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Champion Blue's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Champion Blue",
+     "story": "Champion Blue checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Champion Blue",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Champion Blue",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Champion Blue",
+     "story": "Champion Blue's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Blue, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "evolved-cynthia",
+   "name": "Champion Cynthia's Dragon Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Dragon-types as Champion Cynthia",
+     "story": "Champion Cynthia feels the Dragon-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Champion Cynthia's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Champion Cynthia",
+     "story": "Champion Cynthia checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Dragon-type leading",
+     "story": "The Dragon-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.dragon",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Dragon-types in one run",
+     "story": "A whole run of Dragon-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Dragon Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Champion Cynthia",
+     "story": "Champion Cynthia's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Cynthia, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "evolved-giovanni",
+   "name": "Rocket Boss Giovanni's Ground Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Ground-types as Rocket Boss Giovanni",
+     "story": "Rocket Boss Giovanni feels the Ground-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Rocket Boss Giovanni's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Rocket Boss Giovanni",
+     "story": "Rocket Boss Giovanni checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ground-type leading",
+     "story": "The Ground-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ground",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Ground-types in one run",
+     "story": "A whole run of Ground-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Ground Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Rocket Boss Giovanni",
+     "story": "Rocket Boss Giovanni's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Rocket Boss Giovanni, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "evolved-n",
+   "name": "King N's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as King N",
+     "story": "King N has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "King N's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as King N",
+     "story": "King N checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as King N",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as King N",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as King N",
+     "story": "King N's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "King N, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "evolved-oak",
+   "name": "Champion Oak's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Champion Oak",
+     "story": "Champion Oak has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Champion Oak's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Champion Oak",
+     "story": "Champion Oak checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Champion Oak",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Champion Oak",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Champion Oak",
+     "story": "Champion Oak's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Champion Oak, Master"
+     }
+    }
+   ]
+  },
+  {
    "trainerId": "drake-gen-3",
    "name": "Drake (Gen 3)'s Journey",
    "steps": [

@@ -3347,6 +3347,265 @@
     "signatureMechanic": null
   },
   {
+    "id": "evolved-red",
+    "name": "Champion Red",
+    "title": "The Silent Champion",
+    "description": "Red after Mt. Silver: the strongest trainer there is, and every foe knows it.",
+    "pros": [
+      "Last Stand: once per battle, your last Pokémon standing survives a knockout hit with 1 HP"
+    ],
+    "cons": [
+      "Enemy Pokémon are 2 levels higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Red's quest line",
+    "spriteAssetId": "boss.red-masters",
+    "modifiers": [
+      {
+        "kind": "championLastStand"
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 2
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "charizard",
+      "venusaur",
+      "blastoise"
+    ],
+    "signaturePool": "trainer-red",
+    "eventTags": [
+      "silent"
+    ],
+    "evolvedFrom": "red"
+  },
+  {
+    "id": "evolved-blue",
+    "name": "Champion Blue",
+    "title": "The First Champion",
+    "description": "Blue as the Champion who got there first: always one step ahead.",
+    "pros": [
+      "Smell Ya Later: on the first turn of every trainer battle your Pokémon moves first (unless the foe uses a priority move)",
+      "Pokémon gain 25% more experience"
+    ],
+    "cons": [
+      "Enemy Pokémon are 3 levels higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Blue's quest line",
+    "spriteAssetId": "boss.blue-gen3champion",
+    "modifiers": [
+      {
+        "kind": "firstStrike"
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 1.25
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 3
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhydon",
+      "exeggutor"
+    ],
+    "signaturePool": "trainer-blue",
+    "eventTags": [
+      "rival",
+      "bold"
+    ],
+    "evolvedFrom": "blue"
+  },
+  {
+    "id": "evolved-cynthia",
+    "name": "Champion Cynthia",
+    "title": "Sinnoh’s Champion",
+    "description": "Cynthia in full Champion form: calm, studied and impossible to rattle.",
+    "pros": [
+      "Champion's Aura: at the start of every boss battle your lead's best stat rises",
+      "The map shows each gym leader's whole team"
+    ],
+    "cons": [
+      "Pokémon gain 10% less experience"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Cynthia's quest line",
+    "spriteAssetId": "boss.cynthia-masters",
+    "modifiers": [
+      {
+        "kind": "championsAura",
+        "stages": 1
+      },
+      {
+        "kind": "preview",
+        "what": "gymTeam"
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "gible",
+      "riolu",
+      "spiritomb"
+    ],
+    "signaturePool": "trainer-cynthia",
+    "eventTags": [
+      "scholar"
+    ],
+    "evolvedFrom": "cynthia"
+  },
+  {
+    "id": "evolved-giovanni",
+    "name": "Rocket Boss Giovanni",
+    "title": "Team Rocket’s Boss",
+    "description": "Giovanni running Team Rocket: anything can be bought, for a price.",
+    "pros": [
+      "Black Market: every shop also sells stock your badges have not opened yet"
+    ],
+    "cons": [
+      "Black Market goods cost 50% more",
+      "Healing items cost 25% more"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Giovanni's quest line",
+    "spriteAssetId": "boss.giovanni-rocketboss",
+    "modifiers": [
+      {
+        "kind": "blackMarket",
+        "markup": 1.5
+      },
+      {
+        "kind": "priceMultiplier",
+        "items": [
+          "potion",
+          "super-potion",
+          "hyper-potion",
+          "full-restore",
+          "full-heal",
+          "revive"
+        ],
+        "value": 1.25
+      }
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "rhyhorn",
+      "nidoran-m",
+      "persian"
+    ],
+    "signaturePool": "trainer-giovanni",
+    "eventTags": [
+      "villain",
+      "merchant"
+    ],
+    "evolvedFrom": "giovanni"
+  },
+  {
+    "id": "evolved-n",
+    "name": "King N",
+    "title": "King of Team Plasma",
+    "description": "N on the throne of Team Plasma, still hearing every Pokémon’s voice.",
+    "pros": [
+      "Voice of Pokémon: a wild Pokémon you defeat may ask to join you (1 in 4), no ball needed",
+      "Your Pokémon gain 50% more friendship from battles"
+    ],
+    "cons": [
+      "Poké Balls work 15% worse",
+      "Some aggressive event choices are unavailable"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish N's quest line",
+    "spriteAssetId": "boss.n",
+    "modifiers": [
+      {
+        "kind": "voiceOfPokemon",
+        "chance": 0.25
+      },
+      {
+        "kind": "friendshipMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "zorua",
+      "purrloin",
+      "darumaka"
+    ],
+    "signaturePool": "trainer-n",
+    "eventTags": [
+      "pacifist",
+      "friend"
+    ],
+    "evolvedFrom": "n"
+  },
+  {
+    "id": "evolved-oak",
+    "name": "Champion Oak",
+    "title": "The Former Champion",
+    "description": "Professor Oak as the Champion he was in his youth, still collecting data.",
+    "pros": [
+      "Field Research: each species you catch for the first time in a run pays ₽300",
+      "50% more Research Points from new species, catches and shinies",
+      "The map shows which wild Pokémon wait at each stop"
+    ],
+    "cons": [
+      "Enemy Pokémon are 1 level higher"
+    ],
+    "unlockedByDefault": false,
+    "unlockText": "Finish Professor Oak's quest line",
+    "spriteAssetId": "boss.oak",
+    "modifiers": [
+      {
+        "kind": "fieldResearch",
+        "money": 300
+      },
+      {
+        "kind": "researchMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "preview",
+        "what": "wild"
+      },
+      {
+        "kind": "enemyLevelOffset",
+        "value": 1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "bulbasaur",
+      "charmander",
+      "squirtle",
+      "eevee"
+    ],
+    "signaturePool": "trainer-oak",
+    "eventTags": [
+      "scholar"
+    ],
+    "evolvedFrom": "oak"
+  },
+  {
     "id": "drake-gen-3",
     "name": "Drake (Gen 3)",
     "title": "The Specialist",
