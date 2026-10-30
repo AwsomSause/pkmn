@@ -6,6 +6,7 @@ One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone
 Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run 24, settings 7, meta 1. Next free versions: run 25, profile 13, settings 8 (check `origin/main` first; another thread may have taken them).
 
 ## Done
+- Zip coverage Z5: battle exit wipes use 12 UIE rule masks (stairs, hex, swirl, stripes, ripple...), picked per battle by a hash (`ruleWipe.ts`, `pickWipe`); a quarter of battles keep the glass shutters.
 - Zip coverage Z4: `public/assets/manifest.json` was stale (raid songs and weather art never loaded); regenerated with `npm run assets:manifest`, and `weatherFx.test.ts` now fails when a fixed catalog asset is missing from it. Run `npm run assets:manifest` after adding art or music.
 - Zip coverage Z3: the expedition route screen plays the Raid Battles adventure song for its tier (`expeditionTrack`, lazy). Capture jingles skipped (no raid-capture moment to play them at).
 - Battle UI styles (settings v7, `battleUi`; Settings > Battle UI cycles it): Aero Glass (default), Essentials Kit and Essentials Kit (long foe). The kit styles draw the Deluxe Battle Kit databox frames and its green/yellow/red HP strips and EXP strip (`ui/battleUiStyles.ts`, art in `public/assets/images/packs/dbk/databoxes/`, source: Deluxe Battle Kit.zip). Limited: the kit art has no name/level plates, so text sits on the battlefield; the long style only changes the foe box. Presentation only.

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T21:40:25.397Z",
+  "generatedAt": "2026-10-30T21:42:12.888Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -890,6 +890,90 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/raid_adventure_tera.mp3",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.fade_down",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/fade_down.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.fade_up",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/fade_up.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stripes",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stripes.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stairs",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stairs.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.stairs2",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/stairs2.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.tiles",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/tiles.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.ripple",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/ripple.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.spread",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/spread.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.swirl",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/swirl.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.hex",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/hex.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.computer",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/computer.png",
+      "lazy": true
+    },
+    {
+      "id": "fx.wipe.computer_close",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/transitions/computer_close.png",
       "lazy": true
     },
     {

@@ -27,7 +27,7 @@ Opening the .rar: no unrar/7z in the container, so `node-unrar-js` (npm, WASM) l
 |---|---|---|
 | Raid "capture" jingles (4 tracks) | SKIP | no raid-capture moment to play them at (a raid win gives the boss as a reward card) |
 | `Graphics/Custom UI` (pause bars, trainer card, load/options backgrounds) | TODO | needs a layout pass per screen; Aero glass style is the current look |
-| `Graphics/Transitions` masks (hexa, computer, battle1-4) | TODO | VS/wild wipes already use EBDX art; masks would add variety |
+| `Graphics/Transitions` masks | BUILT (Z5) | 12 grayscale masks drive a rule wipe when a battle ends (`ui/battleFx/ruleWipe.ts`); one in 4 battles keeps the glass shutters; reduced motion = fade, off = none. Browser screenshots checked. `__pkr.wipe(mask)` plays one for tests |
 | `Graphics/Windowskins` | SKIP | RPG-Maker dialogue frames; the Aero message bar replaces them |
 | SOS Battles (wild calls for help) | TODO | needs a wild-fight ally rule: catching/XP/flee while an ally is out, plus a run-save change; Totem ally calls are the model (`totemCallAlly`). `CallRateSOS` per species is in the pack's `pokemon.txt` |
 | Advanced AI System (47 scripts) | TODO | gameplay AI; belongs with the smarter-trainers work |
