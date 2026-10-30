@@ -5495,5 +5495,916 @@
     "signaturePool": "trainer-zinnia",
     "eventTags": [],
     "signatureMechanic": null
+  },
+  {
+    "id": "sabrina-lgpe",
+    "name": "Sabrina (LGPE)",
+    "title": "The Psychic Specialist",
+    "description": "Psychic-types deal 25% more damage — Dark moves deal 20% more damage against your team.",
+    "pros": [
+      "Psychic-types deal 25% more damage",
+      "status effects are 15% more effective"
+    ],
+    "cons": [
+      "Dark moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1810
+    },
+    "unlockText": "Defeat 1810 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sabrina-lgpe",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "psychic",
+        "value": 1.25
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "dark",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "alakazam",
+      "espeon",
+      "mr-mime",
+      "slowbro"
+    ],
+    "signaturePool": "trainer-sabrina-lgpe",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "selene",
+    "name": "Selene",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% EXP — Pokémon have 5% less HP.",
+    "pros": [
+      "Pokémon gain 15% EXP",
+      "Z-Moves deal 15% more damage"
+    ],
+    "cons": [
+      "Pokémon have 5% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1820
+    },
+    "unlockText": "Defeat 1820 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.selene",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "zMoveDamageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "primarina",
+      "decidueye",
+      "incineroar",
+      "toucannon"
+    ],
+    "signaturePool": "trainer-selene",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "serena",
+    "name": "Serena",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% EXP — Pokémon deal 5% less damage.",
+    "pros": [
+      "Pokémon gain 15% EXP",
+      "Friendship bonuses are 10% stronger"
+    ],
+    "cons": [
+      "Pokémon deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1830
+    },
+    "unlockText": "Defeat 1830 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.serena",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "friendshipMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "delphox",
+      "sylveon",
+      "pancham",
+      "pangoro"
+    ],
+    "signaturePool": "trainer-serena",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "shauna",
+    "name": "Shauna",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% EXP — Shop prices increase by 10%.",
+    "pros": [
+      "Pokémon gain 15% EXP",
+      "capture chance increases by 10%"
+    ],
+    "cons": [
+      "Shop prices increase by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1840
+    },
+    "unlockText": "Defeat 1840 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.shauna",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "chesnaught",
+      "delcatty",
+      "goodra",
+      "florges"
+    ],
+    "signaturePool": "trainer-shauna",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "shelly",
+    "name": "Shelly",
+    "title": "The Water Specialist",
+    "description": "Water-types deal 20% more damage and gain 10% HP — Grass moves deal 20% more damage against your team.",
+    "pros": [
+      "Water-types deal 20% more damage and gain 10% HP"
+    ],
+    "cons": [
+      "Grass moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1850
+    },
+    "unlockText": "Defeat 1850 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.shelly",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "grass",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "sharpedo",
+      "mightyena",
+      "carvanha",
+      "crawdaunt"
+    ],
+    "signaturePool": "trainer-shelly",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "sidney",
+    "name": "Sidney",
+    "title": "The Dark Specialist",
+    "description": "Dark-types deal 20% more damage — Fairy moves deal 20% more damage against your team.",
+    "pros": [
+      "Dark-types deal 20% more damage",
+      "critical hits are 10% more likely"
+    ],
+    "cons": [
+      "Fairy moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1860
+    },
+    "unlockText": "Defeat 1860 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sidney",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dark",
+        "value": 1.2
+      },
+      {
+        "kind": "critChanceBonus",
+        "value": 0.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fairy",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "dark"
+    ],
+    "signatureSpecies": [
+      "absol",
+      "mightyena",
+      "shiftry",
+      "cacturne"
+    ],
+    "signaturePool": "trainer-sidney",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "silver",
+    "name": "Silver",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against higher-level enemies — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Pokémon deal 20% more damage against higher-level enemies"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1870
+    },
+    "unlockText": "Defeat 1870 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.silver",
+    "modifiers": [
+      {
+        "kind": "levelGapDamageMultiplier",
+        "foe": "higher",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "feraligatr",
+      "weavile",
+      "crobat",
+      "magnezone"
+    ],
+    "signaturePool": "trainer-silver",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "skyla",
+    "name": "Skyla",
+    "title": "The Flying Specialist",
+    "description": "Flying-types gain 20% Speed and deal 15% more damage — Rock moves deal 20% more damage against your team.",
+    "pros": [
+      "Flying-types gain 20% Speed and deal 15% more damage"
+    ],
+    "cons": [
+      "Rock moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1880
+    },
+    "unlockText": "Defeat 1880 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.skyla",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.2,
+        "type": "flying"
+      },
+      {
+        "kind": "damageMultiplier",
+        "type": "flying",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "rock",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "flying"
+    ],
+    "signatureSpecies": [
+      "swanna",
+      "unfezant",
+      "skarmory",
+      "braviary"
+    ],
+    "signaturePool": "trainer-skyla",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "sonia",
+    "name": "Sonia",
+    "title": "The Specialist",
+    "description": "Healing items restore 20% more HP — Pokémon deal 10% less damage.",
+    "pros": [
+      "Healing items restore 20% more HP",
+      "rare encounters are 10% more common"
+    ],
+    "cons": [
+      "Pokémon deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1890
+    },
+    "unlockText": "Defeat 1890 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sonia",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "rare",
+        "value": 1.1
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "yamper",
+      "boltund",
+      "corviknight",
+      "eldegoss"
+    ],
+    "signaturePool": "trainer-sonia",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "sophocles",
+    "name": "Sophocles",
+    "title": "The Electric Specialist",
+    "description": "Electric-types deal 20% more damage — Ground moves deal 20% more damage against your team.",
+    "pros": [
+      "Electric-types deal 20% more damage",
+      "held items are 15% stronger"
+    ],
+    "cons": [
+      "Ground moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1900
+    },
+    "unlockText": "Defeat 1900 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sophocles",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "electric",
+        "value": 1.2
+      },
+      {
+        "kind": "heldEffectMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "ground",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "vikavolt",
+      "togedemaru",
+      "magnezone",
+      "golisopod"
+    ],
+    "signaturePool": "trainer-sophocles",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "sordward-shielbert",
+    "name": "Sordward & Shielbert",
+    "title": "The Specialist",
+    "description": "Steel-types gain 20% Defense — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Steel-types gain 20% Defense",
+      "boss rewards increase by 15%"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1910
+    },
+    "unlockText": "Defeat 1910 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sordward-shielbert",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.2,
+        "type": "steel"
+      },
+      {
+        "kind": "bossMoneyMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "sirfetchd",
+      "bronzong",
+      "golisopod",
+      "doublade"
+    ],
+    "signaturePool": "trainer-sordward-shielbert",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-hgss-ethan",
+    "name": "Spr_HGSS_Ethan",
+    "title": "The Specialist",
+    "description": "Starter Pokémon gain 15% EXP — Pokémon take 5% more damage.",
+    "pros": [
+      "Starter Pokémon gain 15% EXP",
+      "physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Pokémon take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1920
+    },
+    "unlockText": "Defeat 1920 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "starter": true,
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-hgss-ethan",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-hgss-silver",
+    "name": "Spr_HGSS_Silver",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against higher-level enemies — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Pokémon deal 20% more damage against higher-level enemies"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1930
+    },
+    "unlockText": "Defeat 1930 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "levelGapDamageMultiplier",
+        "foe": "higher",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-hgss-silver",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-pt-barry",
+    "name": "Spr_Pt_Barry",
+    "title": "The Specialist",
+    "description": "Pokémon gain 20% Speed and EXP — Shop prices increase by 20%.",
+    "pros": [
+      "Pokémon gain 20% Speed and EXP"
+    ],
+    "cons": [
+      "Shop prices increase by 20%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1940
+    },
+    "unlockText": "Defeat 1940 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-pt-barry",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-pt-dawn",
+    "name": "Spr_Pt_Dawn",
+    "title": "The Specialist",
+    "description": "Starter Pokémon gain 20% EXP — Non-starters gain 10% less EXP.",
+    "pros": [
+      "Starter Pokémon gain 20% EXP",
+      "healing items restore 10% more HP"
+    ],
+    "cons": [
+      "Non-starters gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1950
+    },
+    "unlockText": "Defeat 1950 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "starter": true,
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "starter": false,
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-pt-dawn",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-pt-looker",
+    "name": "Spr_Pt_Looker",
+    "title": "The Specialist",
+    "description": "Hidden items and bonus rewards appear 20% more often — Pokémon deal 10% less damage.",
+    "pros": [
+      "Hidden items and bonus rewards appear 20% more often"
+    ],
+    "cons": [
+      "Pokémon deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1960
+    },
+    "unlockText": "Defeat 1960 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "rareItemWeight",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-pt-looker",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "spr-pt-lucas",
+    "name": "Spr_Pt_Lucas",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% EXP — Shop prices increase by 10%.",
+    "pros": [
+      "Pokémon gain 15% EXP"
+    ],
+    "cons": [
+      "Shop prices increase by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1970
+    },
+    "unlockText": "Defeat 1970 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "trainer.red",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [],
+    "signaturePool": "trainer-spr-pt-lucas",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "steven-gen-6",
+    "name": "Steven (Gen 6)",
+    "title": "The Specialist",
+    "description": "Steel-types gain 20% Defense — Pokémon level up 20% slower.",
+    "pros": [
+      "Steel-types gain 20% Defense",
+      "all Pokémon deal 15% more damage against bosses"
+    ],
+    "cons": [
+      "Pokémon level up 20% slower"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1980
+    },
+    "unlockText": "Defeat 1980 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.steven-gen6",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.2,
+        "type": "steel"
+      },
+      {
+        "kind": "bossDamageMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "metagross",
+      "skarmory",
+      "aggron",
+      "claydol"
+    ],
+    "signaturePool": "trainer-steven-gen-6",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "sycamore",
+    "name": "Sycamore",
+    "title": "The Specialist",
+    "description": "Mega Evolution is 20% stronger — Mega Evolution takes one extra turn to activate.",
+    "pros": [
+      "Mega Evolution is 20% stronger",
+      "Pokémon gain 10% more EXP"
+    ],
+    "cons": [
+      "Mega Evolution takes one extra turn to activate"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1990
+    },
+    "unlockText": "Defeat 1990 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.sycamore",
+    "modifiers": [
+      {
+        "kind": "megaDamageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "megaDelay",
+        "turns": 1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "venusaur",
+      "charizard",
+      "blastoise",
+      "chesnaught"
+    ],
+    "signaturePool": "trainer-sycamore",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "tabitha",
+    "name": "Tabitha",
+    "title": "The Fire Specialist",
+    "description": "Fire-types deal 20% more damage — Rain-boosted enemy attacks deal 20% more damage.",
+    "pros": [
+      "Fire-types deal 20% more damage",
+      "sunlight lasts one extra turn"
+    ],
+    "cons": [
+      "Rain-boosted enemy attacks deal 20% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 2000
+    },
+    "unlockText": "Defeat 2000 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.tabitha",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fire",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherTurnsBonus",
+        "turns": 1
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "rain",
+        "side": "enemy",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "camerupt",
+      "mightyena",
+      "golbat",
+      "weezing"
+    ],
+    "signaturePool": "trainer-tabitha",
+    "eventTags": [],
+    "signatureMechanic": null
   }
 ]

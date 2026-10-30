@@ -180,3 +180,49 @@ describe('Emotional Overdrives', () => {
     expect(lead.hp).toBeGreaterThan(1);
   });
 });
+
+describe('last §3 events', () => {
+  const enemyMove = (moveId: string): RunEvent => ({ type: 'move', side: 'enemy', moveId } as unknown as RunEvent);
+  const bossRun = (seed: string) => {
+    const s = setup(seed);
+    s.run.battle!.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
+    return s;
+  };
+
+  it('a boss that sets up twice is charging; a status breaks it; otherwise its next attack is unleashed', () => {
+    const { run } = bossRun('gather-a');
+    const t1 = recordBattleTurn(content, structuredClone(run), run, [enemyMove('growl'), enemyMove('growl')]);
+    expect(titles(t1)).toContain('It Is Gathering Everything It Has!');
+    const t2 = recordBattleTurn(content, structuredClone(run), run, [enemyMove('tackle')]);
+    expect(titles(t2)).toContain('It Has Unleashed Everything!');
+    expect(run.battle!.enemyStages.atk).toBe(2);
+
+    const b = bossRun('gather-b');
+    recordBattleTurn(content, structuredClone(b.run), b.run, [enemyMove('growl'), enemyMove('growl')]);
+    const broken = recordBattleTurn(content, structuredClone(b.run), b.run, [{ type: 'status', side: 'enemy', status: 'par' } as RunEvent, enemyMove('tackle')]);
+    expect(titles(broken)).toContain('It Has Lost Its Composure!');
+    expect(titles(broken)).not.toContain('It Has Unleashed Everything!');
+    expect(b.run.battle!.enemyStages.def).toBe(-1);
+  });
+
+  it('a boss that survives a half-health hit fights beyond its limits', () => {
+    const { run } = bossRun('beyond');
+    const foe = run.battle!.enemyTeam[run.battle!.enemyIndex]!;
+    const max = maxHp(content, foe);
+    const hitEnemy: RunEvent = { type: 'damage', side: 'enemy', amount: Math.ceil(max * 0.6), hpAfter: Math.floor(max * 0.4), effectiveness: 1, crit: false } as RunEvent;
+    foe.hp = Math.floor(max * 0.4);
+    expect(titles(recordBattleTurn(content, structuredClone(run), run, [hitEnemy])).join(' · ')).toContain('It Is Fighting Beyond Its Limits!');
+  });
+
+  it('a benched Pokémon with no fights feels left out once the run is under way', async () => {
+    const { run } = setup('leftout');
+    run.encountersCompleted = 7;
+    run.battle!.turn = 1;
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const bench = createPokemon(content, 'rattata', 10, 'bench');
+    run.party.push(bench);
+    run.story.histories.bench = { ...run.story.histories[run.party[0]!.uid]!, uid: 'bench', battles: 0 };
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(titles(cues)).toContain('It Feels Left Out…');
+  });
+});

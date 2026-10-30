@@ -408,3 +408,57 @@ describe('trainer perks, batch Z to T (Tate & Liza to Zinnia)', () => {
   }, 240_000);
 });
 
+
+describe('trainer perks, batch Z2 (Sabrina LGPE to Tabitha)', () => {
+  const Z2 = ['sabrina-lgpe', 'selene', 'serena', 'shauna', 'shelly', 'sidney', 'silver', 'spr-hgss-silver', 'skyla', 'sonia', 'sophocles', 'sordward-shielbert', 'spr-hgss-ethan', 'spr-pt-barry', 'spr-pt-dawn', 'spr-pt-looker', 'spr-pt-lucas', 'steven-gen-6', 'sycamore', 'tabitha'];
+  const info = { ...hit, userTypes: ['normal'] as const };
+  const taken = (id: string, moveType: 'dark' | 'grass' | 'fairy' | 'rock' | 'ground') => damageTakenPerk(perks(id), { targetTypes: ['normal'], moveType, attackerIsLegendary: false, attackerIsBoss: false, weather: null });
+
+  it('all 20 are playable trainers', () => {
+    for (const id of Z2) expect(content.archetypes.has(id), id).toBe(true);
+  });
+
+  it('type trainers deal more damage of their type and take more from the named type', () => {
+    expect(damageDealtPerk(perks('sabrina-lgpe'), { ...info, userTypes: ['psychic'] })).toBeCloseTo(1.25);
+    expect(taken('sabrina-lgpe', 'dark')).toBeCloseTo(1.2);
+    expect(damageDealtPerk(perks('shelly'), { ...info, userTypes: ['water'] })).toBeCloseTo(1.2);
+    expect(taken('shelly', 'grass')).toBeCloseTo(1.2);
+    expect(statPerk(perks('shelly'), 'hp', ['normal'])).toBeCloseTo(1.1);
+    expect(taken('sidney', 'fairy')).toBeCloseTo(1.2);
+    expect(taken('skyla', 'rock')).toBeCloseTo(1.2);
+    expect(taken('sophocles', 'ground')).toBeCloseTo(1.2);
+    expect(statPerk(perks('skyla'), 'spe', ['flying'])).toBeCloseTo(1.2);
+    expect(statPerk(perks('steven-gen-6'), 'def', ['steel'])).toBeCloseTo(1.2);
+  });
+
+  it('Sidney: crit chance +10 points', () => {
+    expect(critChanceBonusPerk(perks('sidney'))).toBeCloseTo(0.1);
+  });
+
+  it('Silver (both versions): more damage against higher-level foes, less experience', () => {
+    for (const id of ['silver', 'spr-hgss-silver']) {
+      expect(damageDealtPerk(perks(id), { ...info, targetLevel: 30 })).toBeCloseTo(1.2);
+      expect(damageDealtPerk(perks(id), info)).toBe(1);
+      expect(perks(id).find((m) => m.kind === 'xpMultiplier')).toMatchObject({ value: 0.85 });
+    }
+  });
+
+  it('Dawn and Ethan: starter experience differs from the rest of the team', () => {
+    expect(xpPerk(perks('spr-pt-dawn'), { types: ['normal'], baseSpeed: 70, isStarter: true, isBossBattle: false })).toBeCloseTo(1.2);
+    expect(xpPerk(perks('spr-pt-dawn'), { types: ['normal'], baseSpeed: 70, isStarter: false, isBossBattle: false })).toBeCloseTo(0.9);
+    expect(xpPerk(perks('spr-hgss-ethan'), { types: ['normal'], baseSpeed: 70, isStarter: true, isBossBattle: false })).toBeCloseTo(1.15);
+  });
+
+  it('Sycamore: Mega delay and Mega damage', () => {
+    expect(megaDelayTurns(perks('sycamore'))).toBe(1);
+    expect(megaDelayTurns(perks('tabitha'))).toBe(0);
+  });
+
+  it('every trainer of the batch plays battles without errors, and the same seed plays the same way', () => {
+    for (const id of Z2) {
+      const play = () => autoplay({ seed: `perkZ2-${id}`, archetypeId: id, steps: 200, healOnMap: true, starterLevel: 25 });
+      const a = play();
+      expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+    }
+  }, 240_000);
+});
