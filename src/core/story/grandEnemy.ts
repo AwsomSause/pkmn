@@ -121,6 +121,9 @@ export function grandNotes(content: Content, run: RunState, speciesId: string): 
   if (adapt) out.push(adapt.text);
   const weak = grandWeaknesses(content, run, speciesId);
   if (weak.length > 0) out.push(`Research from your last fight: it is weak to ${weak.join(', ')}.`);
+  const target = grudgeTarget(run);
+  const targetMon = target ? run.party.find((m) => m.uid === target) : undefined;
+  if (targetMon) out.push(`It remembers ${content.species.get(targetMon.speciesId)?.name ?? 'one of your Pokémon'} and has prepared to act first against it (+1 Speed).`);
   if (grandMet(run) === 0) out.push('You have never fought it. Learn how it fights.');
   return out;
 }
@@ -129,6 +132,8 @@ export function grandNotes(content: Content, run: RunState, speciesId: string): 
 export function startGrandBattle(content: Content, run: RunState): void {
   const adapt = grandAdaptation(content, run);
   if (adapt && run.battle) run.battle.enemyStages[adapt.stat] = Math.min(6, (run.battle.enemyStages[adapt.stat] ?? 0) + 1);
+  // The Grudge: it prepares against the Pokémon that has stood against it most.
+  if (run.battle && grudgeTarget(run)) run.battle.enemyStages.spe = Math.min(6, (run.battle.enemyStages.spe ?? 0) + 1);
 }
 
 /** When the fight ends, won or lost (mutates `run`): remember it, and how the party fought. */
@@ -143,4 +148,30 @@ export function endGrandBattle(content: Content, run: RunState, won: boolean, le
     importance: won ? 85 : 70,
     text: won ? `${content.story.grandEnemy.name} was driven back` : `${content.story.grandEnemy.name} was too strong, but you learned how it fights`,
   });
+}
+
+// ---------- influence and the Grudge's target ----------
+
+const INFLUENCE = 'ge:influence';
+
+/**
+ * Influence: once the campaign reaches Escalation the Grand-Enemy stirs the wild, so rare Pokémon turn up more
+ * often for the rest of the run. Applies once (a flag), and only to encounter odds, never to a battle's rules.
+ */
+export function applyGrandInfluence(content: Content, run: RunState): void {
+  const phase = grandPhase(content, run);
+  if (run.story.flags[INFLUENCE] || (phase !== 'escalation' && phase !== 'reckoning')) return;
+  run.story.flags[INFLUENCE] = true;
+  run.perkEffects = [...(run.perkEffects ?? []), { kind: 'encounterWeightMultiplier', group: 'rare', value: content.story.grandEnemy.influenceRare }];
+  emit(content, run, 'storyMoment', { actors: [], data: { def: 'grand-influence', suppressed: false }, importance: 60, text: `${content.story.grandEnemy.name}'s influence stirs the wild: rare Pokémon are drawn out` });
+}
+
+/** The party member it holds its Grudge against: the one that has stood against it most (null: none yet). */
+export function grudgeTarget(run: RunState): string | null {
+  let best: { uid: string; n: number } | null = null;
+  for (const m of run.party) {
+    const n = stoodAgainst(run, m.uid);
+    if (n > 0 && (!best || n > best.n)) best = { uid: m.uid, n };
+  }
+  return best?.uid ?? null;
 }
