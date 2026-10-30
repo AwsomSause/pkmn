@@ -143,6 +143,9 @@ test('slice 2: the trainer VS intro can be skipped and the battle carries on', a
 const showsText = (page: Page, text: string) =>
   page.evaluate((t) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.text === t || o.list?.some((c: any) => c.text === t)), text);
 
+const hasNamed = (page: Page, name: string) =>
+  page.evaluate((n) => (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.name === n), name);
+
 test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp', async ({ page }) => {
   test.setTimeout(150_000); // the fights play out in real time and a move can miss
   const errors: string[] = [];
@@ -233,5 +236,62 @@ test('the map has drifting ambience, and the Bond screen shows each Pokémon’s
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   expect(await scene(page)).toBe('Map');
+  expect(errors).toEqual([]);
+});
+
+test('slice 7: a Totem fight shows a NEW PHASE banner with its rule', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=totem-e2e');
+  await waitForScene(page, 'MainMenu');
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Hub');
+  for (const next of ['TrainerSelect', 'RunPrep', 'StarterSelect', 'Briefing', 'Map']) {
+    await page.keyboard.press('Enter');
+    await waitForScene(page, next);
+  }
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    const run = session.run;
+    const node = run.stage.map.nodes.find((n: any) => n.column === 1);
+    node.sides.push({ id: 'totem-m10', kind: 'totem', totemId: 'totem-lurantis', used: false });
+    run.stage.current = node.id;
+    (window as any).__pkr.game.scene.getScene('Map').scene.restart({ focus: 0 });
+  });
+  await waitForScene(page, 'Map');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').openTotem('totem-m10'));
+  await page.waitForTimeout(300);
+  await page.keyboard.press('Enter');
+  await waitForScene(page, 'Battle');
+  let seen = false;
+  for (let i = 0; i < 120 && !seen; i++) {
+    seen = await hasNamed(page, 'phase-banner');
+    if (seen) break;
+    if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle').menu))) await page.keyboard.press('Enter');
+    await page.waitForTimeout(150);
+  }
+  expect(seen).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-phase-banner.png' });
+  expect(errors).toEqual([]);
+});
+
+test('slice 7: a trainer line shows in a speech bubble that goes away with the line', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/?seed=m10-speech');
+  await waitForScene(page, 'MainMenu');
+  await startBattle(page);
+  await waitForMenu(page);
+  await page.evaluate(() => {
+    const battle = (window as any).__pkr.game.scene.getScene('Battle');
+    void battle.sayTrainer({ at: 0, speaker: 'Youngster Joey', text: 'My Rattata is in the top percentage!', category: 'taunt', tier: 'common', voice: 'cocky', eventId: 'm10' });
+  });
+  await expect.poll(() => hasNamed(page, 'speech-bubble'), { timeout: 3000, intervals: [100] }).toBe(true);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: 'test-results/m10-speech.png' });
+  await page.keyboard.press('Enter');
+  await expect.poll(() => hasNamed(page, 'speech-bubble'), { timeout: 3000, intervals: [100] }).toBe(false);
   expect(errors).toEqual([]);
 });

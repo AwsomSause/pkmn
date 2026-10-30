@@ -36,6 +36,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 11, run
 - M10 visual slice 5: Aero look off the battle screen. Reward cards are glass with a rarity rim, deal in, lift on focus and fly off when picked; shop, bag, party, decision, briefing and run-end panels are glass; those screens get a moving Aero sky. The run-end screen ignores mashed keys for 0.45 s.
 - Bond screen (map **Bonds** button): each party Pokémon's trait, mood (Wary/Steady/Devoted) and its seven bond values as animated bars, with a hint on what the mood means.
 - M10 visual slice 6: Aero map. Glass header/footer and pill buttons, the stage's type ambience over slowly drifting scenery, glowing open paths with travelling lights, breathing halos on nodes you can reach, ✓ on visited nodes, a glowing boss column, "Risk: high / boss" in the info line, and a token that hops to the node you pick.
+- M10 visual slice 7: trainer lines also show in a glass speech bubble by the foe; raid and Totem phase changes show a NEW PHASE banner with the phase's rule.
 
 - Blueprint slice 1 Raids: dens on stage maps (45% per stage), 8 raids tier 1–6 (`raids.json`, `core/raid/`), shield, phases, charged attack, bonus attacks, timer, rewards, losing never ends the run. Next: Totems, Expeditions, Minigames (tracker: `docs/plans/coverage-tracker.md`).
 
