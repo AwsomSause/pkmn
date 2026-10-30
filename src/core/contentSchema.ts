@@ -1909,7 +1909,7 @@ export const BalanceSchema = z.object({
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
-  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0) }),
+  opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0), maxLevel: z.number().int().min(1) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
   legendaryWildChance: z.number().min(0).max(1),
   /** The first region index (0 = first) where such encounters can appear. */
