@@ -207,6 +207,15 @@
  },
  "runHistorySize": 20,
  "presetSlots": 3,
+ "reunion": {
+  "archiveSize": 30,
+  "chance": 0.4,
+  "afterEncounters": [4, 12],
+  "friendship": 120,
+  "hallOfFameFriendship": 200,
+  "hallOfFameWeight": 2,
+  "keepsakeCandyMultiplier": 2
+ },
  "attributeEffects": {
   "strengthPhysicalDamage": 1.0,
   "intelligenceSpecialDamage": 1.0,
