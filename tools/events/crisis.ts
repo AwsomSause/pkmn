@@ -2,7 +2,7 @@
 // Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
 // The bracket: an entry stop, then one round per stage (always placed until played), then the final.
 
-import { $, any, ch, ev, fight, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+import { $, any, ch, ev, fight, fr, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
 
 const D = 'Regional Crisis';
 const T = 'Rival Tournament';
@@ -79,5 +79,16 @@ export const CHAMPION_EVENTS: Json[] = [
     'A banner bears the name of a champion team you built in another life. Today the Hall has rebuilt that team and put it on the field. It is not a replay of how you won, just the same Pokémon at the same strength, fighting as hard as they know how.', [
       ch('Defend your name', fight('The old champions walk out.', trainer('Hall of Fame Team', { size: 6, ghost: true, win: [$(3000), any(...TREASURE), rp(100), good(2)] }))),
       ch('Salute and walk on', out('You tip your cap to the old team and leave them to their stage.', rp(10))),
+    ]),
+];
+
+const feud = (choice: string): Json => ({ kind: 'feud', choice });
+export const FEUD_EVENTS: Json[] = [
+  ev('rival-feud', 'Two Rivals, One Argument', 'Rival Feud', { rarity: 'uncommon', minStage: 3, requires: [{ kind: 'feud' }], cast: ['trainer.psychic_m'], effect: 'glint', tint: '#2a1d1d' },
+    'Two trainers you have both met are in the middle of the road, shouting. Each sees you and demands you take a side. A crowd is already gathering.', [
+      ch('Back the stronger rival', out('You stand beside them. The crowd goes quiet.', feud('first'), fr(3, 'party'))),
+      ch('Back the underdog', out('You stand beside them. The crowd goes quiet.', feud('second'), fr(3, 'party'))),
+      ch('Stay out of it', out('You walk through the crowd without a word.', feud('stay-out'), rp(10))),
+      ch('Work the crowd (risky)', out('While everyone is watching them, you collect a fair amount from the distracted crowd.', feud('exploit'), $(800)), { chance: 0.7, fail: out('Someone spots you. You leave in a hurry with nothing, and both rivals saw it.', feud('exploit')) }),
     ]),
 ];

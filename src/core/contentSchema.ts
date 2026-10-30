@@ -2040,6 +2040,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   /** Rival gauntlet: whether a chain of rival fights is running. */
   z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
   /** Grand-Enemy hunt: clues found so far (at least / at most). */
+  /** Rival feud: two rivals who are enemies of each other have an unsettled feud. */
+  z.object({ kind: z.literal('feud') }),
   /** Champion defense: you have a Hall of Fame team on record. */
   z.object({ kind: z.literal('championGhost') }),
   z.object({ kind: z.literal('hunt'), atLeast: z.number().int().min(0).default(0), atMost: z.number().int().min(0).default(99) }),
@@ -2099,6 +2101,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
   /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
+  /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
+  z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);

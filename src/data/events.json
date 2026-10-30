@@ -21046,6 +21046,104 @@
    ]
   },
   {
+   "id": "rival-feud",
+   "name": "Two Rivals, One Argument",
+   "group": "Rival Feud",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "feud"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a1d1d",
+    "effect": "glint"
+   },
+   "intro": "Two trainers you have both met are in the middle of the road, shouting. Each sees you and demands you take a side. A crowd is already gathering.",
+   "choices": [
+    {
+     "label": "Back the stronger rival",
+     "success": {
+      "text": "You stand beside them. The crowd goes quiet.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "first"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Back the underdog",
+     "success": {
+      "text": "You stand beside them. The crowd goes quiet.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "second"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay out of it",
+     "success": {
+      "text": "You walk through the crowd without a word.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "stay-out"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Work the crowd (risky)",
+     "chance": 0.7,
+     "success": {
+      "text": "While everyone is watching them, you collect a fair amount from the distracted crowd.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "exploit"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       }
+      ]
+     },
+     "failure": {
+      "text": "Someone spots you. You leave in a hurry with nothing, and both rivals saw it.",
+      "effects": [
+       {
+        "kind": "feud",
+        "choice": "exploit"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "champion-defense",
    "name": "The Champion Who Came Before",
    "group": "Hall of Fame",
