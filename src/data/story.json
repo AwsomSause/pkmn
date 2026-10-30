@@ -1561,6 +1561,153 @@
         "patience"
       ],
       "variants": {}
+    },
+    {
+      "id": "learned-something",
+      "displayName": "It Learned Something Today.",
+      "messagePool": [
+        "{name} used {move} just as {other} taught it!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "studentLearned"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Used {move} the way {other} showed it"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#9fd0ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "student-surpassed",
+      "displayName": "The Student Has Surpassed the Teacher!",
+      "messagePool": [
+        "{name} beat {enemy}, the foe that once beat {other}!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "studentSurpassed"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 90,
+        "text": "Beat {enemy}, which once beat its mentor {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd95a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery",
+        "justice"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "last-lesson",
+      "displayName": "The Teacher Has One Last Lesson.",
+      "messagePool": [
+        "{name} is hanging on to give {other} one last lesson!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "lastLesson"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Held on to teach {other} one last lesson"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb6d9",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "different-ways",
+      "displayName": "They Have Different Ways of Fighting.",
+      "messagePool": [
+        "{name} has found its own way of fighting, different from {other}'s."
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "differentWays"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Found its own way of fighting, unlike {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#8fd9ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "bondRivalry",
+      "eligibilityTags": [],
+      "emotions": [
+        "integrity"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -1661,5 +1808,10 @@
       "importance": 85,
       "emotions": []
     }
-  ]
+  ],
+  "mentorship": {
+    "mentorBattles": 6,
+    "levelGap": 8,
+    "graduateGap": 1
+  }
 }

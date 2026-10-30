@@ -31,10 +31,10 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 |---|---|
 | Untitled document phases A, B | DONE (except new NPC classes); C–G TODO (C overlaps the planning thread) |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
-| Overdrive Hyper Techno Supreme Z | PART: §1 Phase 1 events + §2 emotions tags + §4 Hyper evolutions (4 transform moments + Determination Evolution memory) DONE; §4 Signature Move Awakening DONE (also §3 "It Mastered the Power Within"); §3 other 29 events, §5 (6 unusual events), §6 chains, §7 generator TODO |
+| Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | PART: see table below |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | TODO |
+| Trainers.md perks | PART: batch 1 of 11 (20 of 220 trainers, A–B); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -96,3 +96,43 @@ Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.tes
 | P8 Pacing director: tiers, gaps, budgets, dialogue-frequency setting (settings v4) | DONE (limited: animation-speed/reduced-motion already exist) |
 | P9 Tests: 14 unit tests; 3 scripted scenarios, evolution/Hyper tests | PART |
 | §9 Emergent battle memories | PART: Chronicle entries + rival callbacks; style changes / recurring-rival promotion TODO |
+
+## Overdrive Hyper Techno Supreme Z (thread "Finish Overdrive and Hyper evolutions")
+Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-overdrive-techno.md`). Statuses checked against the repo 2026-10-30.
+
+| Section | Items | Status |
+|---|---|---|
+| §1 Original Hyper moments (Toughened It Out, Hung In There, Felt a Bond, Pushed Back Up, Heated Rivalry, This Trainer Will Return, Riled Up, A Past Pokémon Wants to Join) | 8 | DONE |
+| §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
+| §2 Seven Emotions (tags, current emotion dot, Story screen) | 7 | PART (tags only; their Overdrives, emotional clash and dual emotion TODO) |
+| §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
+| §3 Bond/friendship/party: Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 6 of 10 | DONE; TODO: Understand Each Other, Won't Let Friend Fight Alone, Wants to Prove Itself, Feels Left Out (need pair combos / a choice screen) |
+| §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |
+| §3 Enemy Overdrive: Unshaken, Pure Instinct, Learned From Your Attacks, Protecting Its Trainer, Partner's Fall, Will Not Let Trainer Down, Riled Up | 7 of 10 | DONE; TODO: Gathering Everything, Fighting Beyond Limits, Lost Its Composure (need telegraphed ultimates + counterplay) |
+| §4 Hyper evolutions: Determination Evolution (memory), Mega Overdrive, All of Its Heart, A Giant Resolve, True Colors (7 emotion lines), Signature Move Awakening | 6 | DONE |
+| §5 Unusual events | 6 | DONE: 3 first-turn banners (Something Different, Waiting for This Battle, Something Watching) + 3 map "?" events (Doesn't Want to Fight, It Saw What You Did, This Place Remembers; `tools/events/overdrive.ts`). Limited: This Place Remembers fires anywhere; It Saw What You Did reads the Good/Evil meter |
+| §6 Overdrive chains: engine (`core/story/chains.ts`) + 7 chains | 7 | DONE (limited: rival chain has 3 of 5 steps; Legacy Record gives a title, not a Hall of Fame entry) |
+| §7 Event generator (the 14-field definition, priority queue, scopes) | 1 | DONE (story.json definitions + queue); no separate generator UI |
+| §8 Fairness rules (per-battle budget, cooldowns, no stacked buffs) | 1 | DONE (major-cue budget, one combat effect per queue) |
+| §9 Phase 1 core / Phase 2 advanced | 2 | Phase 1 DONE; Phase 2 PART (this table) |
+| Techno §1 Rivalry, §2 Nemesis | — | owned by the rivals threads |
+| Techno §3 Raids | — | owned by the Raids/Blueprint thread |
+| Techno §4 Protégé: accept/decline screen, 6 paths, mentorship ends on evolution/catching up; Looks Up, Learned Something Today, Student Surpassed Teacher, Teacher's Last Lesson, Different Ways, Student Becomes Teacher (`core/story/mentorship.ts`) | 6 paths + 8 stories | PART: DONE except Carried Its Mentor's Legacy (Hall of Fame), mastery sharing, mentor-taught move variants (limited: paths shape story text, not stats) |
+| Techno §5 Grand-Enemy, §6 Additional systems (Lucario example, Rival Who Wouldn't Give Up), §7 high-hype moments, §8 Memory-driven chaining | — | TODO |
+
+## Implementation Plan Electric
+Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-plan.md`).
+
+| Section | Status |
+|---|---|
+| §1 Core Game Event Bus (domain events, effect ledger) | DONE (M8.9-0) |
+| §2A Rivalry / §2B Nemesis | rivals threads |
+| §2C Dynamic Event Director | PART: 173 map events exist (events thread); curated eligibility, risks and memory of choices TODO |
+| §2D Bond & Protégé | Protégé PART (above); Bond via rival bonds/Overdrive bond moments |
+| §2E Raid & World Crisis | Raids thread |
+| §3 Spectacle layers 1–2, animation fallback | DONE (M9) |
+| §3 Layer 3 transformations | PART (Hyper evolutions add banners; cinematics M9.5) |
+| §3 Layer 4 boss spectacle, dynamic music, battle commentary (Drama thread), arena modifiers, victory moments | TODO / Drama thread |
+| §4 Campaign dramatic arcs, route consequence engine | TODO |
+| §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
+| §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |

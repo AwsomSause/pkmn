@@ -22,12 +22,16 @@ const CELL_W = 140;
 const CELL_H = 156;
 const GAP = 8;
 const LEFT_W = 324;
+const PAGE = COLS * ROWS;
 
 type Slot = { archetype: Archetype; status: TrainerStatus } | null;
 
 export class TrainerSelectScene extends Phaser.Scene {
   private index = 0;
+  /** Every trainer; the grid shows one page of them at a time. */
   private slots: Slot[] = [];
+  private page = 0;
+  private pageText!: Phaser.GameObjects.Text;
   private frames: Phaser.GameObjects.Graphics[] = [];
   private cells: Phaser.GameObjects.Container[] = [];
   private profileLayer!: Phaser.GameObjects.Container;
@@ -46,15 +50,18 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.cells = [];
     // Every trainer, in data order (Red first), then empty slots for trainers still to come.
     this.slots = [...session.content.archetypes.values()].map((a) => ({ archetype: a, status: trainerStatus(p, a) }));
-    while (this.slots.length < COLS * ROWS) this.slots.push(null);
+    while (this.slots.length < PAGE) this.slots.push(null);
 
     new ArenaBackdrop(this, { dim: 0.55 });
 
-    this.slots.forEach((slot, i) => this.buildCell(slot, i));
+    this.page = 0;
+    this.buildPage();
     this.profileLayer = this.add.container(0, 0);
     this.tooltip = this.add.container(0, 0).setDepth(40).setVisible(false);
     this.notice = this.add.text(16 + LEFT_W / 2, GAME_HEIGHT - 50, '', textStyle(16, COLORS.bad, { align: 'center', wordWrap: { width: LEFT_W - 24 } })).setOrigin(0.5, 1).setDepth(5);
     this.add.text(GRID_X, GAME_HEIGHT - 14, 'Arrows choose  ·  Enter confirm  ·  Esc back', textStyle(14, COLORS.textMuted)).setOrigin(0, 1);
+    this.pageText = this.add.text(GAME_WIDTH - 16, GAME_HEIGHT - 14, '', textStyle(14, COLORS.textMuted)).setOrigin(1, 1);
+    this.updatePageText();
     this.focus(0, false);
 
     onInputAction(this, (action) => {
@@ -68,11 +75,29 @@ export class TrainerSelectScene extends Phaser.Scene {
     });
   }
 
+  /** Grid position of a cell on the current page (`i` counts from the page's first cell). */
   private cellPos(i: number): { x: number; y: number } {
     return { x: GRID_X + (i % COLS) * (CELL_W + GAP), y: GRID_Y + Math.floor(i / COLS) * (CELL_H + GAP) };
   }
 
-  private buildCell(slot: Slot, i: number): void {
+  private pageCount(): number {
+    return Math.max(1, Math.ceil(this.slots.length / PAGE));
+  }
+
+  private updatePageText(): void {
+    this.pageText.setText(this.pageCount() > 1 ? `Page ${this.page + 1} / ${this.pageCount()}  ·  ${this.slots.length} trainers` : '');
+  }
+
+  /** Builds the cells of the current page (replacing the previous page's). */
+  private buildPage(): void {
+    this.cells.forEach((c) => c.destroy());
+    this.cells = [];
+    this.frames = [];
+    const first = this.page * PAGE;
+    for (let n = 0; n < PAGE; n++) this.buildCell(this.slots[first + n] ?? null, n, first + n);
+  }
+
+  private buildCell(slot: Slot, i: number, globalIndex: number): void {
     const { x, y } = this.cellPos(i);
     const cell = this.add.container(x, y);
     const open = slot?.status === 'unlocked';
@@ -96,12 +121,12 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.frames.push(frame);
     const zone = this.add.zone(0, 0, CELL_W, CELL_H).setOrigin(0).setInteractive({ useHandCursor: true });
     zone.on('pointerover', () => {
-      this.focus(i);
-      this.showTooltip(i);
+      this.focus(globalIndex);
+      this.showTooltip(globalIndex);
     });
     zone.on('pointerout', () => this.tooltip.setVisible(false));
     zone.on('pointerdown', () => {
-      this.focus(i, false);
+      this.focus(globalIndex, false);
       this.choose();
     });
     cell.add([frame, zone]);
@@ -117,13 +142,19 @@ export class TrainerSelectScene extends Phaser.Scene {
   private focus(i: number, sound = true): void {
     if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
     this.index = i;
-    this.frames.forEach((f, n) => f.setVisible(n === i));
+    if (Math.floor(i / PAGE) !== this.page) {
+      this.page = Math.floor(i / PAGE);
+      this.buildPage();
+      this.updatePageText();
+    }
+    const local = i - this.page * PAGE;
+    this.frames.forEach((f, n) => f.setVisible(n === local));
     this.cells.forEach((c, n) => {
       const { y } = this.cellPos(n);
       this.tweens.killTweensOf(c);
-      this.tweens.add({ targets: c, y: n === i ? y - 4 : y, duration: 140, ease: 'Cubic.easeOut' });
+      this.tweens.add({ targets: c, y: n === local ? y - 4 : y, duration: 140, ease: 'Cubic.easeOut' });
     });
-    const focused = this.cells[i];
+    const focused = this.cells[local];
     if (focused) this.children.bringToTop(focused);
     this.notice.setText('');
     this.drawProfile(this.slots[i] ?? null);
@@ -207,7 +238,7 @@ export class TrainerSelectScene extends Phaser.Scene {
     const text = this.add.text(12, 10, lines.join('\n'), textStyle(16, COLORS.textLight, { wordWrap: { width: 236 }, lineSpacing: 2 }));
     const w = 260;
     const h = text.height + 20;
-    const { x, y } = this.cellPos(i);
+    const { x, y } = this.cellPos(i - this.page * PAGE);
     const tx = Phaser.Math.Clamp(x + CELL_W / 2 - w / 2, GRID_X, GAME_WIDTH - w - 8);
     const ty = y + CELL_H + 4 + h > GAME_HEIGHT ? y - h - 4 : y + CELL_H + 4;
     this.tooltip.add(paintWindow(this.add.graphics(), 0, 0, w, h, { thin: true, fill: 0x18141d, border: COLORS.accent }));
@@ -237,6 +268,7 @@ function typeEffects(a: Archetype): { strong: string[]; weak: string[] } {
   const weak: string[] = [];
   for (const m of a.modifiers) {
     if (m.kind === 'typeDamageMultiplier') (m.value >= 1 ? strong : weak).push(m.type);
+    if (m.kind === 'damageMultiplier') for (const t of m.types ?? (m.type ? [m.type] : [])) (m.value >= 1 ? strong : weak).push(t);
     if (m.kind === 'weaknessDamageTakenMultiplier') (m.value > 1 ? weak : strong).push(m.type);
   }
   return { strong, weak };

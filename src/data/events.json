@@ -19841,6 +19841,320 @@
      }
     }
    ]
+  },
+  {
+   "id": "doesnt-want-to-fight",
+   "name": "It Doesn't Want to Fight…",
+   "group": "Overdrive unusual events",
+   "stop": "wild",
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a3a",
+    "effect": "hearts"
+   },
+   "intro": "A wild Pokémon trembles in the grass. It is frightened, or guarding something. It does not want to fight.",
+   "choices": [
+    {
+     "label": "Battle it anyway",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It fights back with everything it has!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 5
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Back away slowly",
+     "success": {
+      "text": "You retreat. It watches you go, calmer.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -5
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer a berry",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "It eats the berry and relaxes. It leaves you a small gift.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Investigate quietly",
+     "check": "intelligence",
+     "success": {
+      "text": "You find its hidden nest and learn something about its kind.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It startles and bolts into the grass.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "it-saw-what-you-did",
+   "name": "It Saw What You Did…",
+   "group": "Overdrive unusual events",
+   "scene": {
+    "cast": [],
+    "tint": "#2a2038",
+    "effect": "glint"
+   },
+   "intro": "A Pokémon at the edge of the path has been watching you for a long time. It saw how you treated others on this road.",
+   "choices": [
+    {
+     "label": "Meet its gaze, kindly",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "positive",
+       "atLeast": 10
+      }
+     ],
+     "success": {
+      "text": "It remembers your kindness and shows you a hidden cache.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Meet its gaze, coldly",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "negative",
+       "atLeast": 10
+      }
+     ],
+     "success": {
+      "text": "It remembers your cruelty. It is not alone!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Avenger",
+       "size": 2,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask what it saw",
+     "success": {
+      "text": "It cannot say, but it follows you for a while and warms to you.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "this-place-remembers",
+   "name": "This Place Remembers…",
+   "group": "Overdrive unusual events",
+   "scene": {
+    "cast": [],
+    "tint": "#1a2a2a",
+    "effect": "fog"
+   },
+   "intro": "You have been somewhere like this before. The ground, the air and the old stones seem to remember the battles fought here.",
+   "choices": [
+    {
+     "label": "Search the ground",
+     "chance": 0.5,
+     "success": {
+      "text": "Something was left behind from an earlier battle.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Only dust and the echo of old footsteps.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Follow the old tracks",
+     "success": {
+      "text": "The tracks lead you to a quieter path.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Listen to the stillness",
+     "success": {
+      "text": "Your team feels the history of this place and grows closer.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }

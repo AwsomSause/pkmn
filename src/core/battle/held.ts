@@ -14,7 +14,9 @@
 // it is in battle.
 
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
+import type { Perks } from '../archetypes';
 import { calcStats, getSpecies } from '../pokemon';
+import { statPerk, survivalChance, weatherTurnsBonus } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { freshHeldState } from '../state';
 import type { BattleState, HeldState, PokemonInstance, Stages, Volatile } from '../state';
@@ -37,6 +39,8 @@ export interface HeldContext {
   rng: Rng;
   /** The player's team items (run.passives): Plates count for every team member. */
   teamItems?: Record<string, number>;
+  /** The trainer's perks (Trainers.md): stat multipliers for the player's side. */
+  perks?: Perks;
 }
 
 /** What happened, for the battle text. */
@@ -196,8 +200,8 @@ function heal(content: Content, mon: PokemonInstance, amount: number): number {
 // ---------- stats, speed, critical hits, accuracy ----------
 
 /** Multiplier on a stat from held items (Choice items, Eviolite, Light Ball, Iron Ball, Everstone...). */
-export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side, stat: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
-  let m = 1;
+export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems' | 'perks'>, mon: PokemonInstance, side: Side, stat: 'atk' | 'def' | 'spa' | 'spd' | 'spe'): number {
+  let m = side === 'player' ? statPerk(ctx.perks, stat, getSpecies(ctx.content, mon.speciesId).types) : 1;
   for (const { hook } of hooks(hooksOf(ctx, mon, side), 'stat')) {
     if (hook.stat !== stat && hook.stat !== 'all') continue;
     if (hook.canEvolve && getSpecies(ctx.content, mon.speciesId).evolutions.length === 0) continue;
@@ -368,6 +372,15 @@ export function survive(ctx: HeldContext, target: Holder, damage: number, events
     events.push({ type: 'held', side: target.side, itemId, what: 'survive' });
     return target.mon.hp - 1;
   }
+  // A trainer perk (Acerola): a chance to hang on at 1 HP, once per Pokémon per battle.
+  if (target.side === 'player' && timesUsed(ctx, target.mon.uid, 'perk-survive') === 0) {
+    const chance = survivalChance(ctx.perks, getSpecies(ctx.content, target.mon.speciesId).types);
+    if (chance > 0 && ctx.rng.chance(chance)) {
+      markUsed(ctx, target.mon.uid, 'perk-survive');
+      events.push({ type: 'held', side: target.side, itemId: 'perk-survive', what: 'survive' });
+      return target.mon.hp - 1;
+    }
+  }
   return damage;
 }
 
@@ -391,7 +404,8 @@ export function healingMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems'
 
 /** How long weather the holder starts lasts (Heat Rock and friends), or `base`. */
 export function weatherTurns(ctx: HeldContext, holder: Holder, weather: Weather, base: number): number {
-  return hooks(hooksOf(ctx, holder.mon, holder.side), 'weatherTurns').reduce((t, h) => (h.hook.weathers.includes(weather) ? Math.max(t, h.hook.turns) : t), base);
+  const turns = hooks(hooksOf(ctx, holder.mon, holder.side), 'weatherTurns').reduce((t, h) => (h.hook.weathers.includes(weather) ? Math.max(t, h.hook.turns) : t), base);
+  return holder.side === 'player' ? turns + weatherTurnsBonus(ctx.perks) : turns;
 }
 
 /** A two-turn move fires at once (Power Herb, once per battle). */
