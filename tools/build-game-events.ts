@@ -1,10 +1,10 @@
-// Writes src/data/gameEvents.json: the weekly game events (Untitled doc §17.2, plan Part 4b).
+// Writes src/data/gameEvents.json: the weekly, holiday and themed game events (Untitled doc §17.2, plan Part 4b).
 // Run with: npm run data:game-events
 //
 // Weekly events rotate by ISO week (core/gameEvents.ts). Each has a themed ruleset (trainer
 // modifiers added to every run started that week), 3–5 milestone objectives counted over the
 // week's runs, a permanent reward the first time every objective is done, and a fallback reward
-// after that. Holiday and themed events are added to the same file.
+// after that. Holiday and themed events come back every year between two dates.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 type Json = Record<string, unknown>;
@@ -17,16 +17,25 @@ const rp = (researchPoints: number): Json => ({ researchPoints });
 const FALLBACK = { researchPoints: 150, candies: 10 };
 
 function weekly(id: string, name: string, description: string, ruleText: string, modifiers: Json[], featured: string[], objectives: Json[], reward: Json, color: string, icon: string, tags: string[]): Json {
+  return timed(id, 'weekly', null, name, description, ruleText, modifiers, featured, objectives, reward, color, icon, tags);
+}
+
+/** A holiday or themed event, on every year between two "MM-DD" dates (UTC, inclusive; may wrap the new year). */
+function yearly(id: string, kind: 'holiday' | 'themed', window: [string, string], name: string, description: string, ruleText: string, modifiers: Json[], featured: string[], objectives: Json[], reward: Json, color: string, icon: string, tags: string[]): Json {
+  return timed(id, kind, window, name, description, ruleText, modifiers, featured, objectives, reward, color, icon, tags);
+}
+
+function timed(id: string, kind: string, window: [string, string] | null, name: string, description: string, ruleText: string, modifiers: Json[], featured: string[], objectives: Json[], reward: Json, color: string, icon: string, tags: string[]): Json {
   for (const e of featured) if (!mapEvents.has(e)) throw new Error(`${id}: unknown map event "${e}"`);
   if (reward.pool && !pools.has(reward.pool as string)) throw new Error(`${id}: unknown pool "${reward.pool}"`);
   return {
     id,
     version: 1,
     name,
-    kind: 'weekly',
+    kind,
     description,
-    schedule: { kind: 'weeklyRotation' },
-    seedRule: 'isoWeek',
+    schedule: window ? { kind: 'yearly', start: window[0], end: window[1] } : { kind: 'weeklyRotation' },
+    seedRule: window ? 'year' : 'isoWeek',
     progressionEligibility: true,
     eligibility: { minRunsFinished: 0 },
     mode: 'any',
@@ -136,6 +145,136 @@ const WEEKLY: Json[] = [
     { researchPoints: 400, title: 'Gauntlet Victor', pool: 'league-johto' }, '#3890f8', 'item.leaders_crest', ['league']),
 ];
 
-const events = [...WEEKLY];
+// Holiday and themed events (Untitled doc §16.4 and §17.2). Each owns map stops (tools/events/holidays.ts,
+// `gameEvent`) whose clues, bosses and finales count toward its objectives. When an event is not in its
+// window it still comes back from the Event Archive for a week now and then (core/gameEvents.ts).
+const HOLIDAY_FALLBACK = { researchPoints: 200, candies: 15 };
+const YEARLY: Json[] = [
+  yearly('spooky-season', 'holiday', ['10-01', '11-07'], 'Spooky Season', 'The Spooky pack: haunted stops, Spooky forms in the wild, the Pumpkin King and the Midnight Parade.',
+    'About 1 in 7 wild Pokémon turn into Spooky forms and Ghost-types appear twice as often; Spooky stops appear on the map.',
+    [{ kind: 'spookyEncounters', chance: 0.15 }, { kind: 'typeEncounterWeight', type: 'ghost', value: 2 }],
+    ['spooky-haunted-mansion', 'spooky-pumpkin-patch', 'spooky-candle-vigil', 'spooky-lost-spirit', 'spooky-trick-or-treat', 'spooky-graveyard-dig', 'spooky-pumpkin-king', 'spooky-midnight-finale', 'spooky-festival', 'ghost-train', 'haunted-house', 'graveyard-vigil'],
+    [
+      goal('stages', 'Clear 3 stages (beat 3 gym leaders)', 'gymLeadersDefeated', 3, rp(60)),
+      goal('clues', 'Collect 8 clues at Spooky stops', 'eventClues', 8, { researchPoints: 60, candies: 10 }),
+      goal('pumpkin-king', 'Beat a special boss (the Pumpkin King)', 'eventBossesWon', 1, rp(100)),
+      goal('ghosts', 'Defeat or catch 15 Ghost-types', 'defeatedOrCaught.ghost', 15, rp(60)),
+      goal('finale', 'Win the final encounter (the Midnight Parade)', 'eventFinalesWon', 1, rp(150)),
+    ],
+    { researchPoints: 400, title: 'Spooky Champion', pool: 'spooky', trainer: 'hex-maniac' }, '#ff7a1a', 'item.reaper_cloth', ['spooky', 'holiday', 'ghost']),
+  yearly('harvest-festival', 'themed', ['11-14', '11-30'], 'Harvest Festival', 'Farmers bring in the harvest: berries, fairs and well-fed Pokémon.',
+    'Healing items restore 20% more HP and Grass-types appear 50% more often.',
+    [{ kind: 'healingMultiplier', value: 1.2 }, { kind: 'typeEncounterWeight', type: 'grass', value: 1.5 }],
+    ['harvest-berry-fair', 'berry-patch', 'berry-tree', 'berries-abound', 'berry-merchant'],
+    [
+      goal('fairs', 'Find 4 clues at the Berry Fair and harvest stops', 'eventClues', 4, rp(50)),
+      goal('grass', 'Defeat or catch 15 Grass-types', 'defeatedOrCaught.grass', 15, rp(60)),
+      goal('events', 'Finish 8 map events', 'eventsCompleted', 8, rp(80)),
+    ],
+    { researchPoints: 300, candies: 20, title: 'Harvest Hero', pool: 'type-grass' }, '#d09030', 'item.sweet_apple', ['holiday', 'berries']),
+  yearly('winter-festival', 'holiday', ['12-15', '01-05'], 'Winter Festival', 'Snow, lights and gifts for everyone. The Frost King waits on the road.',
+    'Ice moves deal 15% more damage, Ice-types appear twice as often and prize money is 10% higher.',
+    [{ kind: 'typeDamageMultiplier', type: 'ice', value: 1.15 }, { kind: 'typeEncounterWeight', type: 'ice', value: 2 }, { kind: 'moneyMultiplier', value: 1.1 }],
+    ['winter-gift-exchange', 'winter-frost-king', 'frozen-lake', 'blizzard-pass', 'candice-snowball', 'ice-training'],
+    [
+      goal('gifts', 'Swap 4 gifts (clues at the Gift Exchange)', 'eventClues', 4, { researchPoints: 50, candies: 10 }),
+      goal('frost-king', 'Beat the Frost King', 'eventBossesWon', 1, rp(100)),
+      goal('ice', 'Defeat or catch 12 Ice-types', 'defeatedOrCaught.ice', 12, rp(60)),
+      goal('badges', 'Win 4 gym badges', 'gymLeadersDefeated', 4, rp(80)),
+    ],
+    { researchPoints: 350, title: 'Winter Star', pool: 'type-ice' }, '#80c8ff', 'item.ice_stone', ['holiday', 'ice', 'gifts']),
+  yearly('new-year-countdown', 'holiday', ['12-29', '01-07'], 'New Year Countdown', 'Ring in the new year with fireworks, wishes and one last big battle.',
+    'Prize money is 25% higher; your Pokémon gain 10% more experience.',
+    [{ kind: 'moneyMultiplier', value: 1.25 }, { kind: 'xpMultiplier', value: 1.1 }],
+    ['new-year-countdown', 'lottery-booth', 'wishing-well', 'prize-wheel'],
+    [
+      goal('countdown', 'Win the Countdown battle', 'eventFinalesWon', 1, rp(100)),
+      goal('earn', 'Earn ₽20,000', 'moneyEarned', 20000, rp(60)),
+      goal('travel', 'Finish 30 encounters', 'encountersCompleted', 30, rp(60)),
+    ],
+    { researchPoints: 300, bankCredits: 2026, title: 'Fresh Start' }, '#f0d050', 'item.pair_of_tickets', ['holiday', 'money']),
+  yearly('lunar-new-year', 'holiday', ['01-25', '02-12'], 'Lantern Festival', 'Red lanterns, dragon dances and lucky envelopes for the Lunar New Year.',
+    'Fire and Dragon moves deal 10% more damage; prize money is 15% higher.',
+    [{ kind: 'typeDamageMultiplier', type: 'fire', value: 1.1 }, { kind: 'typeDamageMultiplier', type: 'dragon', value: 1.1 }, { kind: 'moneyMultiplier', value: 1.15 }],
+    ['lunar-lantern-walk', 'dragon-shrine', 'firebreather-show', 'dragons-den'],
+    [
+      goal('lanterns', 'Light 3 lanterns (clues on the Lantern Walk)', 'eventClues', 3, rp(50)),
+      goal('dragons', 'Defeat or catch 8 Dragon-types', 'defeatedOrCaught.dragon', 8, rp(80)),
+      goal('fire', 'Defeat or catch 12 Fire-types', 'defeatedOrCaught.fire', 12, rp(60)),
+    ],
+    { researchPoints: 300, title: 'Lucky Lantern', pool: 'type-fire' }, '#e03030', 'item.fire_stone', ['holiday', 'dragon', 'fire']),
+  yearly('friendship-festival', 'holiday', ['02-07', '02-21'], 'Friendship Festival', 'A festival of hearts: picnics, sweets and teams that stick together.',
+    'Your Pokémon gain 50% more friendship; Fairy-types appear 50% more often.',
+    [{ kind: 'friendshipMultiplier', value: 1.5 }, { kind: 'typeEncounterWeight', type: 'fairy', value: 1.5 }],
+    ['friendship-picnic', 'fairy-tea', 'bond-ceremony', 'wild-tea-party'],
+    [
+      goal('picnics', 'Share 3 picnics (clues)', 'eventClues', 3, rp(50)),
+      goal('keep', 'Keep 6 caught Pokémon in your party', 'caughtKept', 6, rp(60)),
+      goal('evolve', 'Evolve 4 Pokémon', 'evolutions', 4, rp(80)),
+    ],
+    { researchPoints: 300, candies: 20, title: 'Best Friends', pool: 'type-fairy' }, '#ff80b0', 'item.soothe_bell', ['holiday', 'friendship']),
+  yearly('pokemon-day', 'themed', ['02-24', '03-03'], 'Anniversary Week', 'Celebrate where it all began: starters, parades and old friends.',
+    'Your Pokémon gain 15% more experience and your starter deals 10% more damage.',
+    [{ kind: 'xpMultiplier', value: 1.15 }, { kind: 'starterDamageMultiplier', starter: true, value: 1.1 }],
+    ['pokemon-day-parade', 'professors-lab', 'gift-from-mom', 'ash-training'],
+    [
+      goal('parade', 'March in 2 parades (clues)', 'eventClues', 2, rp(50)),
+      goal('starter', 'Clear a region with your starter still in the party', 'regionsClearedWithStarter', 1, rp(120)),
+      goal('battles', 'Win 30 battles', 'battlesWon', 30, rp(60)),
+    ],
+    { researchPoints: 350, title: 'Day One Fan', pool: 'classic' }, '#f0c020', 'item.master_ribbon', ['themed', 'starters']),
+  yearly('spring-bloom', 'holiday', ['03-20', '04-12'], 'Spring Bloom', 'Flowers open, eggs hide in the meadows and the Bloom Guardian wakes.',
+    'Grass and Fairy-types appear 50% more often; Poké Balls work 10% better.',
+    [{ kind: 'typeEncounterWeight', type: 'grass', value: 1.5 }, { kind: 'typeEncounterWeight', type: 'fairy', value: 1.5 }, { kind: 'captureMultiplier', value: 1.1 }],
+    ['spring-egg-hunt', 'spring-bloom-guardian', 'cherry-blossom', 'flower-garden', 'egg-nest', 'lucky-egg-hunt'],
+    [
+      goal('eggs', 'Find 5 eggs (clues at the Egg Hunt)', 'eventClues', 5, { researchPoints: 50, candies: 10 }),
+      goal('guardian', 'Beat the Bloom Guardian', 'eventBossesWon', 1, rp(100)),
+      goal('catch', 'Catch 12 Pokémon', 'pokemonCaught', 12, rp(60)),
+    ],
+    { researchPoints: 300, title: 'Spring Sprout', pool: 'late-bloomers' }, '#90e070', 'item.mystery_egg', ['holiday', 'eggs', 'catching']),
+  yearly('earth-week', 'themed', ['04-18', '04-28'], 'Earth Week', 'Clean up the routes and meet the Pokémon of rock, earth and forest.',
+    'Ground, Rock and Grass-types appear 50% more often; research pays 20% more.',
+    [{ kind: 'typeEncounterWeight', type: 'ground', value: 1.5 }, { kind: 'typeEncounterWeight', type: 'rock', value: 1.5 }, { kind: 'typeEncounterWeight', type: 'grass', value: 1.5 }, { kind: 'researchMultiplier', value: 1.2 }],
+    ['earth-week-cleanup', 'volunteer-cleanup', 'fossil-dig', 'ancient-forest', 'trash-to-treasure'],
+    [
+      goal('cleanup', 'Help 3 cleanups (clues)', 'eventClues', 3, rp(50)),
+      goal('ground', 'Defeat or catch 10 Ground-types', 'defeatedOrCaught.ground', 10, rp(60)),
+      goal('rock', 'Defeat or catch 10 Rock-types', 'defeatedOrCaught.rock', 10, rp(60)),
+    ],
+    { researchPoints: 300, title: 'Earth Keeper', pool: 'type-ground' }, '#a08050', 'item.leaf_stone', ['themed', 'nature']),
+  yearly('summer-splash', 'holiday', ['06-21', '07-20'], 'Summer Splash', 'Beaches, tide pools and the biggest beach tournament of the year.',
+    'Water moves deal 15% more damage and Water-types appear twice as often.',
+    [{ kind: 'typeDamageMultiplier', type: 'water', value: 1.15 }, { kind: 'typeEncounterWeight', type: 'water', value: 2 }],
+    ['summer-beach-tournament', 'tide-pools', 'surf-rescue', 'misty-swim', 'fishing-derby', 'hot-spring'],
+    [
+      goal('tournament', 'Win the Beach Tournament', 'eventBossesWon', 1, rp(100)),
+      goal('water', 'Defeat or catch 20 Water-types', 'defeatedOrCaught.water', 20, rp(60)),
+      goal('events', 'Finish 6 map events', 'eventsCompleted', 6, rp(60)),
+    ],
+    { researchPoints: 300, title: 'Summer Splasher', pool: 'type-water' }, '#30b0f0', 'item.water_stone', ['holiday', 'water']),
+  yearly('stargazing-nights', 'themed', ['08-08', '08-20'], 'Stargazing Nights', 'Meteor showers light the sky. Rare Pokémon come out to watch.',
+    'Rare Pokémon turn up 50% more often and your Hyper moments come twice as often.',
+    [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 1.5 }, { kind: 'hyperChanceMultiplier', value: 2 }],
+    ['stargazing-meteor-watch', 'meteor-shower', 'starry-camp', 'meteorite-crash', 'moonlit-path'],
+    [
+      goal('meteors', 'Chase 3 meteors (clues)', 'eventClues', 3, rp(50)),
+      goal('psychic', 'Defeat or catch 10 Psychic-types', 'defeatedOrCaught.psychic', 10, rp(60)),
+      goal('catch', 'Catch 10 Pokémon', 'pokemonCaught', 10, rp(60)),
+    ],
+    { researchPoints: 300, title: 'Stargazer', pool: 'type-psychic' }, '#6060e0', 'item.moon_stone', ['themed', 'rare']),
+  yearly('trainer-academy', 'themed', ['09-01', '09-14'], 'Trainer Academy', 'Back to school! Exams on the road, study halls and tougher trainers.',
+    'Research pays 25% more; trainers are 1 level higher.',
+    [{ kind: 'researchMultiplier', value: 1.25 }, { kind: 'enemyLevelOffset', value: 1 }],
+    ['academy-exam', 'study-hall', 'library', 'quiz-master', 'trainers-test'],
+    [
+      goal('exams', 'Pass 3 exams (clues)', 'eventClues', 3, rp(50)),
+      goal('examiner', 'Beat an Academy Examiner', 'eventBossesWon', 1, rp(80)),
+      goal('trainers', 'Beat 20 trainers', 'trainersDefeated', 20, rp(60)),
+    ],
+    { researchPoints: 350, title: 'Honor Student', pool: 'research' }, '#5080c0', 'item.wise_glasses', ['themed', 'research']),
+];
+
+const events = [...WEEKLY, ...YEARLY.map((e) => ({ ...e, fallbackReward: HOLIDAY_FALLBACK }))];
 writeFileSync(new URL('../src/data/gameEvents.json', import.meta.url), JSON.stringify({ events }, null, 1) + '\n');
-console.log(`gameEvents.json: ${events.length} game events (${WEEKLY.length} weekly)`);
+console.log(`gameEvents.json: ${events.length} game events (${WEEKLY.length} weekly, ${YEARLY.length} holiday/themed)`);

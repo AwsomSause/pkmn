@@ -30,7 +30,8 @@ describe('starter sets', () => {
       for (const id of ids) {
         const s = content.species.get(id)!;
         expect(s.evolutionStage, `${p.id}: ${id}`).toBe(1);
-        expect(isWildEligible(content, s), `${p.id}: ${id}`).toBe(true);
+        // An earned special-form set (Spooky Set) offers forms the wild never does.
+        if (!p.specialForms) expect(isWildEligible(content, s), `${p.id}: ${id}`).toBe(true);
       }
     }
   });

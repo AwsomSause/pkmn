@@ -12599,6 +12599,78 @@
      }
     }
    ]
+  },
+  {
+   "trainerId": "hex-maniac",
+   "name": "The Hex Diaries",
+   "steps": [
+    {
+     "goal": "Defeat or catch 20 Ghost-types as Hex Maniac",
+     "story": "\"They whisper my name. Fu fu fu.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Hex Apprentice"
+     }
+    },
+    {
+     "goal": "Find 6 clues at Spooky stops as Hex Maniac",
+     "story": "\"Every clue is a little curse undone.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "eventClues",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 75,
+      "candies": 10
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Ghost-type leading",
+     "story": "\"My ghosts never miss a show.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.ghost",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Beat 2 event bosses as Hex Maniac",
+     "story": "\"Even the Pumpkin King bows to me.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "eventBossesWon",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Curse Collector"
+     }
+    },
+    {
+     "goal": "Clear a region as Hex Maniac",
+     "story": "\"The whole region is haunted now. Lovely.\"",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Queen of Hexes"
+     }
+    }
+   ]
   }
  ],
  "runQuests": [

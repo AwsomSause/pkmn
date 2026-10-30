@@ -8313,5 +8313,58 @@
     "signaturePool": "trainer-ingo",
     "eventTags": [],
     "signatureMechanic": null
+  },
+  {
+    "id": "hex-maniac",
+    "name": "Hex Maniac",
+    "title": "The Spooky Trainer",
+    "description": "The Spooky pack's trainer: Spooky Pokémon and Spooky Season's stops follow her all year.",
+    "pros": [
+      "About 1 in 5 wild Pokémon turn into Spooky forms",
+      "Spooky Season's stops appear in her runs all year",
+      "Ghost moves deal 10% more damage"
+    ],
+    "cons": [
+      "Healing items restore 15% less HP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "claim",
+      "key": "event:spooky-season:reward"
+    },
+    "unlockText": "Finish every Spooky Season objective (October, or when it returns from the Event Archive)",
+    "spriteAssetId": "trainer.hex_maniac",
+    "modifiers": [
+      {
+        "kind": "spookyEncounters",
+        "chance": 0.2
+      },
+      {
+        "kind": "eventStops",
+        "gameEvent": "spooky-season"
+      },
+      {
+        "kind": "typeDamageMultiplier",
+        "type": "ghost",
+        "value": 1.1
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "gastly",
+      "misdreavus",
+      "shuppet"
+    ],
+    "signaturePool": "spooky",
+    "eventTags": [
+      "spooky",
+      "mystic"
+    ]
   }
 ]
