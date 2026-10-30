@@ -2,7 +2,7 @@
 // Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
 // The bracket: an entry stop, then one round per stage (always placed until played), then the final.
 
-import { $, any, ch, ev, fight, fr, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+import { $, any, ch, cure, ev, eggMove, fight, fr, gym, good, heal, peace, reveal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
 
 const D = 'Regional Crisis';
 const T = 'Rival Tournament';
@@ -90,5 +90,16 @@ export const FEUD_EVENTS: Json[] = [
       ch('Back the underdog', out('You stand beside them. The crowd goes quiet.', feud('second'), fr(3, 'party'))),
       ch('Stay out of it', out('You walk through the crowd without a word.', feud('stay-out'), rp(10))),
       ch('Work the crowd (risky)', out('While everyone is watching them, you collect a fair amount from the distracted crowd.', feud('exploit'), $(800)), { chance: 0.7, fail: out('Someone spots you. You leave in a hurry with nothing, and both rivals saw it.', feud('exploit')) }),
+    ]),
+];
+
+// Between-stage interactions (catalog 38): a camp rest spot where the team picks one thing to do.
+export const CAMP_EVENTS: Json[] = [
+  ev('camp-council', 'Camp Council', 'Camp', { stop: 'rest', rarity: 'uncommon', minStage: 2, effect: 'hearts', tint: '#20281f' },
+    'A quiet camp between two roads. You have an hour. Your team is looking at you to decide how to spend it.', [
+      ch('Study a move together', out('Your lead works on a technique it has been curious about.', eggMove(), fr(3, 'lead')), { fail: out('Nothing clicks today, but the effort counts.', fr(3, 'lead')), chance: 0.6 }),
+      ch('Settle a disagreement', out('You listen to both sides. The air clears, and the team is closer for it.', fr(8, 'party'), peace(2))),
+      ch('Scout ahead', out('You climb a ridge and see the road ahead.', reveal(), gym())),
+      ch('Care for the injured', out('You tend every scrape and bruise.', heal(0.5), cure())),
     ]),
 ];
