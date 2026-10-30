@@ -122,6 +122,18 @@ export const HIT_BOOST: Record<string, { types?: TypeName[]; physical?: true; ch
   'weak-armor': { physical: true, changes: [{ stat: 'def', stages: -1 }, { stat: 'spe', stages: 2 }] },
 };
 
+/** Moves of this type are 1.5× as strong. */
+export const TYPE_BOOST: Record<string, TypeName> = { 'dragons-maw': 'dragon', 'rocky-payload': 'rock', steelworker: 'steel', transistor: 'electric', 'fire-mane': 'fire' };
+
+/** Moves of this type are 4/3 as strong for everyone on the field (Aura Break flips it to 3/4). */
+export const AURAS: Record<string, TypeName> = { 'dark-aura': 'dark', 'fairy-aura': 'fairy' };
+
+/** Raise a stat when it comes in. */
+export const ENTRY_BOOST: Record<string, BoostStat> = { 'intrepid-sword': 'atk', 'dauntless-shield': 'def' };
+
+/** The foe's priority moves fail against these. */
+export const PRIORITY_GUARD = new Set(['queenly-majesty', 'dazzling', 'armor-tail']);
+
 /** Abilities the battle engine runs. */
 const SUPPORTED = new Set<string>([
   ...Object.keys(PINCH),
@@ -141,6 +153,12 @@ const SUPPORTED = new Set<string>([
   ...MOLD_BREAKERS,
   ...Object.keys(KO_BOOST),
   ...Object.keys(HIT_BOOST),
+  ...Object.keys(TYPE_BOOST),
+  ...Object.keys(AURAS),
+  ...Object.keys(ENTRY_BOOST),
+  ...PRIORITY_GUARD,
+  'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
+  'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',
   'thick-fat', 'heatproof', 'fluffy', 'ice-scales', 'filter', 'solid-rock', 'prism-armor', 'multiscale', 'shadow-shield',
   'marvel-scale', 'fur-coat', 'unaware', 'sturdy',

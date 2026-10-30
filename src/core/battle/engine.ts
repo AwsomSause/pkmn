@@ -43,6 +43,10 @@ import {
 } from './damage';
 import {
   ABSORB,
+  AURAS,
+  ENTRY_BOOST,
+  PRIORITY_GUARD,
+  TYPE_BOOST,
   CONTACT_HURT,
   CONTACT_STATUS,
   DROP_GUARD,
@@ -662,6 +666,25 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
     events.push({ type: 'terrain', terrain });
     return;
   }
+  const entryStat = ENTRY_BOOST[ability];
+  if (entryStat) {
+    announce(c, ability, events);
+    applyStageChange(ctx, c, entryStat, 1, events);
+    return;
+  }
+  if (ability === 'hadron-engine' || ability === 'orichalcum-pulse') {
+    const sets = ability === 'hadron-engine' ? { terrain: 'electric' as const } : { weather: 'sun' as const };
+    if (sets.terrain && ctx.battle.terrain?.id !== 'electric') {
+      announce(c, ability, events);
+      ctx.battle.terrain = { id: 'electric', turns: 5 };
+      events.push({ type: 'terrain', terrain: 'electric' });
+    } else if (sets.weather && ctx.battle.weather?.id !== 'sun') {
+      announce(c, ability, events);
+      ctx.battle.weather = { id: 'sun', turns: 5 };
+      events.push({ type: 'weather', weather: 'sun' });
+    }
+    return;
+  }
   if (ability === 'intimidate' && other.mon.hp > 0) {
     announce(c, ability, events);
     const guard = abilityIn(ctx, other);
@@ -726,6 +749,7 @@ function abilityBlocksMove(ctx: BattleContext, user: Combatant, target: Combatan
   if (damaging && ability === 'levitate' && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
   if (damaging && ability === 'wonder-guard' && effectiveness <= 1 && !move.flags.includes('typeless')) blocked = true;
   if (ability === 'soundproof' && move.flags.includes('sound')) blocked = true;
+  if (ability === 'good-as-gold' && !damaging) blocked = true;
   if (!blocked) return false;
   announce(target, ability, events);
   events.push({ type: 'noEffect', side: target.side });
@@ -748,6 +772,7 @@ function speedOf(ctx: BattleContext, c: Combatant): number {
   let speed = effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par' && !quickFeet);
   if (ability && weather && WEATHER_SPEED[ability]?.includes(weather)) speed *= 2;
   if (quickFeet) speed = Math.floor(speed * 1.5);
+  if (ability === 'surge-surfer' && ctx.battle.terrain?.id === 'electric') speed *= 2;
   if (ability === 'slow-start' && c.vol.turnsOut < 5) speed = Math.floor(speed / 2);
   return speed * (c.side === 'player' ? (ctx.attributes?.speed ?? 1) : 1);
 }
@@ -1230,6 +1255,16 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
     return;
   }
 
+  // Queenly Majesty, Dazzling, Armor Tail: the foe's priority moves fail.
+  if (move.target === 'enemy' && priorityOf(ctx, user, move) > 0) {
+    const guard = targetAbility(ctx, user, target);
+    if (guard && PRIORITY_GUARD.has(guard)) {
+      announce(target, guard, events);
+      events.push({ type: 'fail', side: user.side });
+      return;
+    }
+  }
+
   if (fx.firstTurnOnly && user.vol.turnsOut > 0) {
     events.push({ type: 'fail', side: user.side });
     return;
@@ -1325,6 +1360,8 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (userAbility === 'victory-star') accuracy *= 1.1;
       if (userAbility === 'hustle' && move.category === 'physical') accuracy *= 0.8;
       if (foeAbility && weather && WEATHER_EVASION[foeAbility]?.includes(weather)) accuracy *= 0.8;
+      if (foeAbility === 'tangled-feet' && target.vol.confusion > 0) accuracy *= 0.5;
+      if (foeAbility === 'wonder-skin' && move.category === 'status') accuracy = Math.min(accuracy, 0.5);
     }
     accuracy = Math.min(1, accuracy);
   }
@@ -1391,12 +1428,19 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (fx.weatherBall && weather) power *= 2;
       if (fx.charge?.sunSkips && weather && weather !== 'sun') power = Math.floor(power / 2);
       // Abilities that change the move's power.
+      let attackBoost = 1;
       let powerMult = 1;
       if (changedType) powerMult *= 1.2;
       if (userAbility === 'technician' && power <= 60) powerMult *= 1.5;
       const flagBoost = userAbility ? FLAG_BOOST[userAbility] : undefined;
       if (flagBoost && move.flags.includes(flagBoost.flag)) powerMult *= flagBoost.multiplier;
       if (userAbility === 'reckless' && fx.recoil) powerMult *= 1.2;
+      if (userAbility && TYPE_BOOST[userAbility] === moveType) powerMult *= 1.5;
+      for (const a of [userAbility, abilityIn(ctx, target)]) {
+        if (a && AURAS[a] === moveType) powerMult *= userAbility === 'aura-break' || abilityIn(ctx, target) === 'aura-break' ? 0.75 : 4 / 3;
+      }
+      if (userAbility === 'orichalcum-pulse' && physical && weather === 'sun') attackBoost *= 4 / 3;
+      if (userAbility === 'hadron-engine' && !physical && ctx.battle.terrain?.id === 'electric') attackBoost *= 4 / 3;
       if (sheerForce) powerMult *= 1.3;
       if (userAbility === 'analytic' && !movedFirst) powerMult *= 1.3;
       if (foeAbility === 'heatproof' && moveType === 'fire') powerMult *= 0.5;
@@ -1404,7 +1448,7 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (powerMult !== 1) power = Math.max(1, pokeRound(power, powerMult));
       // Abilities that change the attacking stat.
       let attack = Math.floor((physical ? userStats.atk : userStats.spa) * Held.heldStatMultiplier(ctx, user.mon, user.side, physical ? 'atk' : 'spa'));
-      let attackMult = 1;
+      let attackMult = attackBoost;
       if (physical && (userAbility === 'huge-power' || userAbility === 'pure-power')) attackMult *= 2;
       if (physical && userAbility === 'hustle') attackMult *= 1.5;
       if (physical && userAbility === 'guts' && userStatus) attackMult *= 1.5;
@@ -1424,11 +1468,13 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
       if (weather === 'snow' && hitsDefense && targetTypes.includes('ice')) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'marvel-scale' && target.mon.status) defense = Math.floor(defense * 1.5);
       if (hitsDefense && foeAbility === 'fur-coat') defense *= 2;
+      if (hitsDefense && foeAbility === 'grass-pelt' && ctx.battle.terrain?.id === 'grassy') defense = Math.floor(defense * 1.5);
       // Abilities that change the final damage.
       let final = 1;
       if (effectiveness > 1 && (foeAbility === 'filter' || foeAbility === 'solid-rock' || foeAbility === 'prism-armor')) final *= 0.75;
       if ((foeAbility === 'multiscale' || foeAbility === 'shadow-shield') && target.mon.hp >= targetStats.hp) final *= 0.5;
       if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
+      if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (foeAbility === 'fluffy' && contact) final *= 0.5;
       if (foeAbility === 'fluffy' && moveType === 'fire') final *= 2;
       if (foeAbility === 'ice-scales' && !physical) final *= 0.5;
@@ -1608,6 +1654,24 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
     announce(user, userAbility, events);
     tryInflictStatus(ctx, user, target, 'psn', undefined, events, false);
   }
+  if (target.mon.hp > 0 && holder === 'spicy-spray' && user.mon.hp > 0 && canGetStatus(ctx, target, user, 'brn')) {
+    announce(target, holder, events);
+    tryInflictStatus(ctx, target, user, 'brn', undefined, events, false);
+  }
+  if (target.mon.hp > 0 && holder === 'sand-spit' && ctx.battle.weather?.id !== 'sand') {
+    announce(target, holder, events);
+    ctx.battle.weather = { id: 'sand', turns: 5 };
+    events.push({ type: 'weather', weather: 'sand' });
+  }
+  if (target.mon.hp > 0 && holder === 'seed-sower' && ctx.battle.terrain?.id !== 'grassy') {
+    announce(target, holder, events);
+    ctx.battle.terrain = { id: 'grassy', turns: 5 };
+    events.push({ type: 'terrain', terrain: 'grassy' });
+  }
+  if (userAbility === 'toxic-chain' && target.mon.hp > 0 && rng.chance(0.3) && canGetStatus(ctx, user, target, 'psn')) {
+    announce(user, userAbility, events);
+    tryInflictStatus(ctx, user, target, 'psn', undefined, events, false);
+  }
   if (target.mon.hp > 0 && holder) {
     const boost = HIT_BOOST[holder];
     if (boost && (!boost.types || boost.types.includes(moveType)) && (!boost.physical || move.category === 'physical')) {
@@ -1687,7 +1751,8 @@ function tryConfuse(ctx: BattleContext, source: Combatant, target: Combatant, ev
 /** Whether `target` can get this status from `source` (types, abilities such as Limber, Leaf Guard in sun). */
 function canGetStatus(ctx: BattleContext, source: Combatant, target: Combatant, status: StatusId, move?: Move): boolean {
   if (target.mon.status || target.mon.hp <= 0) return false;
-  if (isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
+  const corrosive = status === 'psn' && abilityIn(ctx, source) === 'corrosion' && source !== target;
+  if (!corrosive && isStatusImmune(status, getSpecies(ctx.content, target.mon.speciesId).types, move)) return false;
   if (Held.statusBlocked({ content: ctx.content }, target, status)) return false;
   if (terrainBlocksStatus(ctx, target, status)) return false;
   return statusAbilityBlock(ctx, source, target, status) === null;
@@ -1718,7 +1783,8 @@ function tryInflictStatus(
   const { content, rng } = ctx;
   const types = getSpecies(content, target.mon.speciesId).types;
   const blocker = target.mon.status ? null : statusAbilityBlock(ctx, source, target, status);
-  if (target.mon.status || isStatusImmune(status, types, move) || blocker || Held.statusBlocked({ content }, target, status) || terrainBlocksStatus(ctx, target, status)) {
+  const corrosive = status === 'psn' && abilityIn(ctx, source) === 'corrosion' && source !== target;
+  if (target.mon.status || (!corrosive && isStatusImmune(status, types, move)) || blocker || Held.statusBlocked({ content }, target, status) || terrainBlocksStatus(ctx, target, status)) {
     if (announceFailure && blocker) announce(target, blocker, events);
     if (announceFailure) events.push({ type: 'fail', side: target.side });
     return false;
@@ -1904,6 +1970,10 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     announce(c, ability, events);
     c.mon.hp += amount;
     events.push({ type: 'heal', side: c.side, amount, hpAfter: c.mon.hp });
+  }
+  if (other.mon.status?.id === 'slp' && other.mon.hp > 0 && ability === 'bad-dreams') {
+    announce(c, ability, events);
+    abilityHurt(ctx, other, Math.max(1, Math.floor(calcStats(content, other.mon).hp / 8)), events);
   }
   if (ability === 'magic-guard') {
     if (c.vol.bound > 0 && --c.vol.bound === 0) events.push({ type: 'bindEnd', side: c.side });
