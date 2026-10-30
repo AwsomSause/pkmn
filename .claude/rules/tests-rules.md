@@ -23,3 +23,6 @@ These hashes say "the rules decided the same thing for these seeds". A red one m
 - GitHub CI runs the full e2e suite on every PR. Wait for it to be green before merging; a red spec you didn't touch is either a real regression from your change or red on main (check main's last run before blaming yourself).
 - If your change is wide (core rules, save format, shared UI like Menu or Reward), also run the specs for the screens it affects.
 - A full local sweep is for the e2e-health owner after batches of PRs land.
+
+## Never merge until the PR's CI is green
+Wait for the PR's own CI run on its current head to finish green before merging. Don't merge while it is running or red, even for "docs only" or "not my test" changes; a red spec you didn't touch is first checked against main's last run (see above), then fixed or reported, not merged over.
