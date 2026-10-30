@@ -162,6 +162,7 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 
 - Untitled Phase D1: special forms event-only (specialForms.json, special-form-leaks gate). Done. D2 services, acquisition routes, Daily/Endless/Spooky modes: still to build.
 
+- Untitled Phase E2: Daily Run, Endless, Spooky modes done (rules.ts dailySeed/extendEndless/spookyWild). No modifier or mode is left as planned.
 ### Bond Engine for your Pokémon (`src/core/bond/`, built for the Drama follow-up)
 The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do too, in the same `Bond` record, saved in the Pokémon's story history (`bond`, optional, created on first use).
 | Item | Status |
