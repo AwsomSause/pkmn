@@ -1402,7 +1402,7 @@
    "name": "The Pokémon Transfer",
    "group": "",
    "text": "A rival may trade, release, or rehome a Pokémon for a story-grounded reason, depending on the game's rules. Such decisions should have real consequences.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "return-encounter",
@@ -1458,7 +1458,7 @@
    "name": "The Unscheduled Challenge",
    "group": "",
    "text": "A rival may interrupt an appropriate exploration or event with a challenge when the story and gameplay state support it.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "challenge-refusal",

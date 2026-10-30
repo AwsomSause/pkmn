@@ -12,6 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
+import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
 import { chooseSignatureOption, signatureDecisions } from './signature';
 import { boxCapacity, catchLevelOffset, encounterWeightPerk, partyLimit, postBattleHealShare, hasStarterSignature, releaseLimit, signatureMoveFor, evolutionLevelOffset, isBossClass, regionLevelOffset, startingAttributes, startingLevelOffset, syncHpPerks, xpPerk, bossMoneyPerk, championMoneyPerk, ordinaryMoneyPerk, catchMoneyPerk, shopEarlyStockPerk, isUltraBeast } from './trainerPerks';
@@ -1151,6 +1152,27 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
+}
+
+/**
+ * Unscheduled challenge: a due rival cuts in on a stop before you use it. Returns the run with the battle begun,
+ * or null when nobody does (nothing changes). Once per stage; the stop stays available afterwards.
+ */
+export function rivalChallenge(content: Content, current: RunState, sideId: string): RunState | null {
+  if (current.phase !== 'map' || !current.stage || current.stage.current === null) return null;
+  const node = findNode(current.stage.map, current.stage.current);
+  const side = node.sides.find((s) => s.id === sideId);
+  if (!side || waitingTrainer(current)) return null;
+  const rival = interruptingRival(content, current, side);
+  if (!rival) return null;
+  const run = structuredClone(current);
+  run.story.flags[interruptFlag(run)] = rival.id;
+  startEncounter(content, run, { ...findNode(run.stage!.map, node.id), kind: 'trainer' });
+  if (run.battle?.rivalId !== rival.id) return null;
+  const where = side.kind === 'heal' ? 'a healing stop' : side.kind === 'event' ? 'an event' : 'a service stop';
+  run.battle.rivalNote = `${run.story.rivals.find((r) => r.id === rival.id)!.name} cut in on you at ${where}! ${run.battle.rivalNote ?? ''}`.trim();
+  recordBattleStart(content, run);
+  return run;
 }
 
 /** Uses a healing stop or enters a shop beside the current node. */
