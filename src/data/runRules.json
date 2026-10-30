@@ -197,6 +197,15 @@
       "group": "boss-remix"
     },
     {
+      "id": "speed-clear",
+      "name": "Speed Clear",
+      "status": "supported",
+      "bonus": 0.1,
+      "blurb": "Opt-in. Win a trainer battle in 6 turns or fewer for an extra ₽150. There is no timer and no penalty for taking longer.",
+      "quickWin": { "turns": 6, "money": 150 },
+      "group": "speed-clear"
+    },
+    {
       "id": "solo-run",
       "name": "Solo Run",
       "status": "supported",

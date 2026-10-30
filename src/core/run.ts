@@ -129,7 +129,7 @@ import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBo
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
-import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
+import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
@@ -1738,6 +1738,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
+  if (battle.kind === 'trainer') moneyGained += quickWinBonus(run.rules, battle.turn - 1);
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
   // Powder Jar and Gooey Mulch: every Berry your side ate this battle.

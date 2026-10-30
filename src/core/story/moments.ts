@@ -7,6 +7,7 @@
 import { chemistryOf } from './chemistry';
 import { lossesTo, noteLoss, promiseDoneFlag, promiseOf } from './promises';
 import { openingFor, rivalFeeling } from '../rivals/feelings';
+import { elitePhilosophy } from './elite';
 import { championOpener, crisisMoments } from './crisis';
 import { grandMoment } from './grandEnemy';
 import type { Side } from '../battle/engine';
@@ -61,6 +62,10 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   crisisAid: 'statStage',
   championRespect: 'enemyStage',
   championRecall: 'enemyStage',
+  eliteForce: 'enemyStage',
+  eliteWall: 'enemyStage',
+  eliteMind: 'enemyStage',
+  eliteTempo: 'enemyStage',
   studentLearned: 'statStage',
   studentSurpassed: 'flair',
   lastLesson: 'flair',
@@ -295,6 +300,8 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (boss) {
       const g = grandMoment(content, run, lead.uid);
       if (g) fire(g, g === 'grandShadow' ? 'enemy' : 'player', g === 'grandShadow' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+      const eliteStyle = battle.trainer?.classId === ELITE_FOUR_CLASS ? elitePhilosophy(content, foe.speciesId) : null;
+      if (eliteStyle) fire(eliteStyle.trigger, 'enemy', foe.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
       const champ = championOpener(run, battle.trainer?.classId);
       if (champ) fire(champ, 'enemy', foe.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
       for (const c of crisisMoments(run)) fire(c, c === 'crisisLoom' ? 'enemy' : 'player', c === 'crisisLoom' ? foe.uid : lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });

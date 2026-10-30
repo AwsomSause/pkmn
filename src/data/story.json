@@ -3005,6 +3005,150 @@
       "eligibilityTags": [],
       "emotions": [],
       "variants": {}
+    },
+    {
+      "id": "elite-force",
+      "displayName": "Overwhelming Force",
+      "messagePool": [
+        "{enemy} leads with raw power: its first strike will be heavy. Take the hit or end it quickly."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "eliteForce"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 68,
+        "text": "Faced an Elite Four member who fought with Overwhelming Force"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ff6a4a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "elite-wall",
+      "displayName": "Iron Wall",
+      "messagePool": [
+        "{enemy} is built to outlast you. Burn through it with status or special attacks."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "eliteWall"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 68,
+        "text": "Faced an Elite Four member who fought with Iron Wall"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#9fb4c8",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "elite-mind",
+      "displayName": "Cold Mind",
+      "messagePool": [
+        "{enemy} plays the long game with sharp special attacks. Keep your special defense up."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "eliteMind"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spa",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 68,
+        "text": "Faced an Elite Four member who fought with Cold Mind"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#b070ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "elite-tempo",
+      "displayName": "First Mover",
+      "messagePool": [
+        "{enemy} wants to move first every turn. Slow it down or hit it before it settles."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "eliteTempo"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 68,
+        "text": "Faced an Elite Four member who fought with First Mover"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#ffd54f",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -3235,5 +3379,65 @@
   },
   "gauntlet": {
     "money": 2500
-  }
+  },
+  "elitePhilosophies": [
+    {
+      "id": "force",
+      "name": "Overwhelming Force",
+      "types": [
+        "fire",
+        "fighting",
+        "dragon"
+      ],
+      "trigger": "eliteForce",
+      "stat": "atk",
+      "statName": "Attack",
+      "line": "{enemy} leads with raw power: its first strike will be heavy. Take the hit or end it quickly."
+    },
+    {
+      "id": "wall",
+      "name": "Iron Wall",
+      "types": [
+        "steel",
+        "ground",
+        "rock",
+        "water"
+      ],
+      "trigger": "eliteWall",
+      "stat": "def",
+      "statName": "Defense",
+      "line": "{enemy} is built to outlast you. Burn through it with status or special attacks."
+    },
+    {
+      "id": "mind",
+      "name": "Cold Mind",
+      "types": [
+        "psychic",
+        "ghost",
+        "dark",
+        "fairy",
+        "poison"
+      ],
+      "trigger": "eliteMind",
+      "stat": "spa",
+      "statName": "Sp. Atk",
+      "line": "{enemy} plays the long game with sharp special attacks. Keep your special defense up."
+    },
+    {
+      "id": "tempo",
+      "name": "First Mover",
+      "types": [
+        "electric",
+        "flying",
+        "ice",
+        "bug",
+        "grass",
+        "normal"
+      ],
+      "trigger": "eliteTempo",
+      "stat": "spe",
+      "statName": "Speed",
+      "line": "{enemy} wants to move first every turn. Slow it down or hit it before it settles."
+    }
+  ]
 }
