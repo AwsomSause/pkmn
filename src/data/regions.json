@@ -249,9 +249,31 @@
  {
   "id": "grand",
   "name": "Grand Region",
-  "gymLeaders": [],
-  "eliteFour": [],
-  "champions": [],
+  "gymLeaders": [
+   "giovanni",
+   "blue",
+   "red",
+   "steven",
+   "cynthia",
+   "lance",
+   "diantha",
+   "leon"
+  ],
+  "eliteFour": [
+   "wallace",
+   "alder",
+   "iris",
+   "kukui",
+   "hau",
+   "nemona"
+  ],
+  "champions": [
+   "geeta",
+   "kieran",
+   "leon",
+   "cynthia",
+   "diantha"
+  ],
   "grand": true,
   "generations": []
  }

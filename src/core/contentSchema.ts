@@ -1769,6 +1769,8 @@ export const BalanceSchema = z.object({
     aceBonus: z.number().int().min(0),
     eliteFourBonus: z.number().int().min(0),
     championBonus: z.number().int().min(0),
+    /** Extra levels on top of the champion bonus for the Grand Region's champion, the final boss. */
+    finalBossBonus: z.number().int().min(0),
     /** Extra levels on a "harder" route node: [min, max]. */
     harderBonus: z.tuple([z.number().int().min(0), z.number().int().min(0)]),
   }),

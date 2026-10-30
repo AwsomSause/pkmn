@@ -3,6 +3,7 @@
 
 import type { Content } from './contentSchema';
 import type { RunState } from './state';
+import { buildEpilogue } from './ending';
 import { buildRecap } from './recap';
 
 export interface CreditsLine {
@@ -17,6 +18,7 @@ export function buildCredits(content: Content, run: RunState): CreditsLine[] {
   const lines: CreditsLine[] = [
     { kind: 'title', text: 'Pocket Raiders' },
     { kind: 'text', text: `${trainer} conquered ${run.regionsCleared.length} regions` },
+    ...buildEpilogue(content, run).map((text): CreditsLine => ({ kind: 'text', text })),
     { kind: 'gap', text: '' },
     { kind: 'heading', text: 'The Team' },
     ...run.party.map((m): CreditsLine => ({ kind: 'text', text: `${m.shiny ? '✦ ' : ''}${content.species.get(m.speciesId)?.name ?? m.speciesId}  Lv${m.level}` })),
