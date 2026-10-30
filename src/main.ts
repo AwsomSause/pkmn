@@ -1,5 +1,7 @@
 // Entry point: validates game data, opens the save system and starts Phaser.
 
+import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
+import { loadAssets } from './ui/lazyAssets';
 import { installTouchControls } from './ui/touchControls';
 import Phaser from 'phaser';
 import { regionIdentity } from './core/presentation/regionIdentity';
@@ -107,6 +109,11 @@ function start(): void {
     session,
     game,
     activeScene: () => game.scene.getScenes(true).map((s) => s.scene.key)[0] ?? null,
+    /** Plays one rule-mask wipe over the active scene (browser tests and the debug panel). */
+    wipe: (mask: WipeMask, ms = 520) => {
+      const s = game.scene.getScenes(true)[0];
+      return s ? loadAssets(s, [wipeAssetId(mask)]).then(() => ruleWipe(s, mask, ms)) : Promise.resolve();
+    },
   };
 
   const params = new URLSearchParams(window.location.search);

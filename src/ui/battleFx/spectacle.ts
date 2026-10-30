@@ -9,6 +9,7 @@
 // (skip), shortens to a quick fade with reduced motion and is skipped
 // entirely when battle animations are off. It never touches battle state.
 
+import { ruleWipe, wipeAssetId, type WipeMask } from './ruleWipe';
 import type Phaser from 'phaser';
 import { paintGlass, type MotionLevel } from '../aero';
 import { textStyle } from '../theme';
@@ -306,9 +307,10 @@ export function bossVictoryCard(
   return beat(scene, objs, 2800);
 }
 
-/** Two glass shutters close over the screen when the battle ends. */
-export function exitWipe(scene: Phaser.Scene, motion: MotionLevel): Promise<void> {
+/** The battle ends with a rule-mask wipe (UIE art) when one is given, else two glass shutters closing over the screen. */
+export function exitWipe(scene: Phaser.Scene, motion: MotionLevel, wipe: WipeMask | null = null): Promise<void> {
   if (motion === 'off') return Promise.resolve();
+  if (motion === 'full' && wipe && scene.textures.exists(wipeAssetId(wipe))) return ruleWipe(scene, wipe);
   const W = scene.scale.width;
   const H = scene.scale.height;
   if (motion === 'reduced') {

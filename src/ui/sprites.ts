@@ -11,7 +11,7 @@ import { loadAssets } from './lazyAssets';
 import { COLORS, PIXEL_SCALE, TYPE_COLORS, textStyle } from './theme';
 
 /** Builds a looping animation from every frame of a loaded atlas (once per atlas). */
-export function ensureAtlasAnimation(scene: Phaser.Scene, key: string): string | null {
+export function ensureAtlasAnimation(scene: Phaser.Scene, key: string, frameRate = 12): string | null {
   const animKey = `${key}.anim`;
   if (scene.anims.exists(animKey)) return animKey;
   if (!scene.textures.exists(key)) return null;
@@ -21,7 +21,7 @@ export function ensureAtlasAnimation(scene: Phaser.Scene, key: string): string |
     .sort()
     .map((frame) => ({ key, frame }));
   if (frames.length === 0) return null;
-  scene.anims.create({ key: animKey, frames, frameRate: 12, repeat: -1 });
+  scene.anims.create({ key: animKey, frames, frameRate, repeat: -1 });
   return animKey;
 }
 
@@ -96,7 +96,15 @@ export function itemVisual(scene: Phaser.Scene, assetId: string, x: number, y: n
 /** The small menu icon for a Pokémon (centred on x, y), or a coloured dot until (or if) the icon is loaded. */
 export function pokemonIcon(scene: Phaser.Scene, species: Species, x: number, y: number, scale = 1): Phaser.GameObjects.GameObject {
   const key = pokemonAssetIds(species.assets).icon;
-  if (services().assets.has(key) && scene.textures.exists(key)) return scene.add.image(x, y, key).setScale(scale);
+  const make = (px: number, py: number): Phaser.GameObjects.Sprite => {
+    const frames = scene.textures.get(key).getFrameNames().sort();
+    const sprite = scene.add.sprite(px, py, key, frames[0]).setScale(scale);
+    // Two frames = the pack's bobbing icon; one frame stays still.
+    const anim = frames.length > 1 ? ensureAtlasAnimation(scene, key, 3) : null;
+    if (anim) sprite.play(anim);
+    return sprite;
+  };
+  if (services().assets.has(key) && scene.textures.exists(key) && scene.textures.get(key).frameTotal > 0) return make(x, y);
   const g = scene.add.graphics();
   g.fillStyle(TYPE_COLORS[species.types[0] ?? 'normal'] ?? 0x888888, 1);
   g.fillCircle(0, 0, 14 * scale);
@@ -105,7 +113,7 @@ export function pokemonIcon(scene: Phaser.Scene, species: Species, x: number, y:
     void loadAssets(scene, [key]).then(() => {
       if (!holder.active || !scene.textures.exists(key)) return;
       holder.removeAll(true);
-      holder.add(scene.add.image(0, 0, key).setScale(scale));
+      holder.add(make(0, 0));
     });
   }
   return holder;

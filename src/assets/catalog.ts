@@ -32,7 +32,7 @@ export interface AssetEntry {
 export interface PokemonArt {
   /** "25" → images/pokemon/25.png (+ back/, shiny/, back/shiny/). Regional forms use PokeRogue's numbers (Alolan Rattata is 2019). */
   sprite: string;
-  /** "<generation folder>/<name>" → images/pokemon/icons/7/2019.png. */
+  /** "<generation folder>/<name>" → images/pokemon/icons/7/2019.png (a 1 or 2 frame atlas, json beside it). */
   icon: string;
   /** "25" → audio/cry/25.m4a. */
   cry: string;
@@ -142,6 +142,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
     ([id, file]): AssetEntry => ({ id: `fx.weather.${id}`, kind: 'image', category: 'ui', path: `images/packs/uie/weather/${file}.png`, lazy: true }),
   ),
   ...['basic', 'ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.adventure.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_adventure_${n}.mp3`, lazy: true })),
+  // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
+  ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
+    (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
+  ),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
   { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },
@@ -222,7 +226,7 @@ export function pokemonEntries(art: PokemonArt): AssetEntry[] {
     atlas(ids.back, 'pokemon', `images/pokemon/back/${art.sprite}`),
     atlas(ids.shinyFront, 'pokemon', `images/pokemon/shiny/${art.sprite}`),
     atlas(ids.shinyBack, 'pokemon', `images/pokemon/back/shiny/${art.sprite}`),
-    { id: ids.icon, kind: 'image', category: 'pokemon', path: `images/pokemon/icons/${art.icon}.png` },
+    atlas(ids.icon, 'pokemon', `images/pokemon/icons/${art.icon}`),
     { id: ids.cry, kind: 'audio', category: 'sound', path: `audio/cry/${art.cry}.m4a` },
   ];
   return entries.map(lazy);
