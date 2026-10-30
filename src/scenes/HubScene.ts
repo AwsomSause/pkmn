@@ -27,6 +27,7 @@ import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showca
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
+import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
 type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'events' | 'fame' | 'save' | 'back';
 
@@ -173,6 +174,14 @@ export class HubScene extends Phaser.Scene {
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
+    this.archiveOpen = false;
+    this.input.keyboard?.on('keydown-TAB', (e: KeyboardEvent) => {
+      e.preventDefault();
+      if (this.archiveOpen) this.resortArchive(e.shiftKey ? -1 : 1, false);
+    });
+    this.input.keyboard?.on('keydown-R', () => {
+      if (this.archiveOpen) this.resortArchive(0, true);
+    });
     const { session } = services();
     session.closeRun();
     this.picker = null;
@@ -548,6 +557,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   private closePicker(): void {
+    this.archiveOpen = false;
     this.picker?.close();
     this.picker = null;
     if (this.submenu) this.submenu.menu.enabled = true;
@@ -991,10 +1001,24 @@ export class HubScene extends Phaser.Scene {
     });
   }
 
+  /** True while the Trainer Archive list is open (Tab / R change its sort). */
+  private archiveOpen = false;
+
+  private resortArchive(step: number, flip: boolean): void {
+    const { session } = services();
+    const s = session.settings;
+    const n = TRAINER_SORT_KEYS.length;
+    const key = TRAINER_SORT_KEYS[(TRAINER_SORT_KEYS.indexOf(s.trainerSort) + n + step) % n]!;
+    session.saveSettings({ ...s, trainerSort: key, trainerSortReverse: flip ? !s.trainerSortReverse : s.trainerSortReverse });
+    playSfx(this, 'ui.select', 0.5);
+    this.closePicker();
+    this.openArchive();
+  }
+
   private openArchive(): void {
     const { session } = services();
     const p = session.profile;
-    const trainers = [...session.content.archetypes.values()];
+    const trainers = sortTrainers([...session.content.archetypes.values()], session.settings.trainerSort, p, session.settings.trainerSortReverse);
     const rows: PickerRow[] = trainers.map((a) => {
       const status = trainerStatus(p, a);
       const problem = status === 'claimable' ? claimProblem(p, a) : null;
@@ -1025,7 +1049,7 @@ export class HubScene extends Phaser.Scene {
       };
     });
     this.openPicker({
-      title: 'Trainer Archive',
+      title: `Trainer Archive  ·  Sort: ${TRAINER_SORT_LABELS[session.settings.trainerSort]} ${session.settings.trainerSortReverse ? '▼' : '▲'}  (Tab, R flips)`,
       rows,
       columns: 2,
       rowHeight: 62,
@@ -1041,6 +1065,7 @@ export class HubScene extends Phaser.Scene {
       },
       onBack: () => this.closePicker(),
     });
+    this.archiveOpen = true;
   }
 
   private openLicenses(): void {

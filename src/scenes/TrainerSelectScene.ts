@@ -6,6 +6,7 @@
 import Phaser from 'phaser';
 import type { Archetype } from '../core/contentSchema';
 import { trainerStatus, type TrainerStatus } from '../core/progress';
+import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS, trainerGame, trainerRegion, type TrainerSortKey } from '../core/trainerSort';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
@@ -37,6 +38,9 @@ export class TrainerSelectScene extends Phaser.Scene {
   private profileLayer!: Phaser.GameObjects.Container;
   private tooltip!: Phaser.GameObjects.Container;
   private notice!: Phaser.GameObjects.Text;
+  private sortText!: Phaser.GameObjects.Text;
+  private sortKey: TrainerSortKey = 'default';
+  private sortReverse = false;
 
   constructor() {
     super('TrainerSelect');
@@ -50,10 +54,9 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.cells = [];
     // Every trainer, in data order (Red first), then empty slots for trainers still to come.
     // Each Trainer Evolution sits right after its base trainer.
-    const all = [...session.content.archetypes.values()];
-    const ordered = all.filter((a) => !a.evolvedFrom).flatMap((a) => [a, ...all.filter((e) => e.evolvedFrom === a.id)]);
-    this.slots = ordered.map((a) => ({ archetype: a, status: trainerStatus(p, a) }));
-    while (this.slots.length < PAGE) this.slots.push(null);
+    this.sortKey = session.settings.trainerSort;
+    this.sortReverse = session.settings.trainerSortReverse;
+    this.applySort();
 
     new ArenaBackdrop(this, { dim: 0.55 });
 
@@ -62,9 +65,17 @@ export class TrainerSelectScene extends Phaser.Scene {
     this.profileLayer = this.add.container(0, 0);
     this.tooltip = this.add.container(0, 0).setDepth(40).setVisible(false);
     this.notice = this.add.text(16 + LEFT_W / 2, GAME_HEIGHT - 50, '', textStyle(16, COLORS.bad, { align: 'center', wordWrap: { width: LEFT_W - 24 } })).setOrigin(0.5, 1).setDepth(5);
-    this.add.text(GRID_X, GAME_HEIGHT - 14, 'Arrows choose  ·  Enter confirm  ·  Esc back', textStyle(14, COLORS.textMuted)).setOrigin(0, 1);
+    this.add.text(GRID_X, GAME_HEIGHT - 14, 'Arrows choose  ·  Enter confirm  ·  Tab sort  ·  R flip  ·  Esc back', textStyle(14, COLORS.textMuted)).setOrigin(0, 1);
     this.pageText = this.add.text(GAME_WIDTH - 16, GAME_HEIGHT - 14, '', textStyle(14, COLORS.textMuted)).setOrigin(1, 1);
+    this.sortText = this.add.text(GAME_WIDTH - 16, GAME_HEIGHT - 14, '', textStyle(14, COLORS.gold)).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+    this.sortText.on('pointerdown', () => this.cycleSort(1));
+    this.input.keyboard?.on('keydown-TAB', (e: KeyboardEvent) => {
+      e.preventDefault();
+      this.cycleSort(e.shiftKey ? -1 : 1);
+    });
+    this.input.keyboard?.on('keydown-R', () => this.toggleReverse());
     this.updatePageText();
+    this.updateSortText();
     this.focus(0, false);
 
     onInputAction(this, (action) => {
@@ -78,6 +89,44 @@ export class TrainerSelectScene extends Phaser.Scene {
     });
   }
 
+  /** Orders `slots` by the chosen sort (Trainer Evolutions follow their base trainer in the default order). */
+  private applySort(): void {
+    const { session } = services();
+    const p = session.profile;
+    const all = [...session.content.archetypes.values()];
+    const data = all.filter((a) => !a.evolvedFrom).flatMap((a) => [a, ...all.filter((e) => e.evolvedFrom === a.id)]);
+    const ordered = sortTrainers(data, this.sortKey, p, this.sortReverse);
+    this.slots = ordered.map((a) => ({ archetype: a, status: trainerStatus(p, a) }));
+    while (this.slots.length < PAGE) this.slots.push(null);
+  }
+
+  private updateSortText(): void {
+    this.sortText.setText(`Sort: ${TRAINER_SORT_LABELS[this.sortKey]} ${this.sortReverse ? '▼' : '▲'}`);
+    this.sortText.setX(this.pageText.x - this.pageText.width - 12);
+  }
+
+  private resort(): void {
+    const { session } = services();
+    const keep = this.slots[this.index]?.archetype.id;
+    session.saveSettings({ ...session.settings, trainerSort: this.sortKey, trainerSortReverse: this.sortReverse });
+    this.applySort();
+    this.updateSortText();
+    playSfx(this, 'ui.select', 0.5);
+    this.page = -1;
+    this.focus(Math.max(0, this.slots.findIndex((s) => s?.archetype.id === keep)), false);
+  }
+
+  private cycleSort(step: number): void {
+    const n = TRAINER_SORT_KEYS.length;
+    this.sortKey = TRAINER_SORT_KEYS[(TRAINER_SORT_KEYS.indexOf(this.sortKey) + n + step) % n]!;
+    this.resort();
+  }
+
+  private toggleReverse(): void {
+    this.sortReverse = !this.sortReverse;
+    this.resort();
+  }
+
   /** Grid position of a cell on the current page (`i` counts from the page's first cell). */
   private cellPos(i: number): { x: number; y: number } {
     return { x: GRID_X + (i % COLS) * (CELL_W + GAP), y: GRID_Y + Math.floor(i / COLS) * (CELL_H + GAP) };
@@ -88,7 +137,8 @@ export class TrainerSelectScene extends Phaser.Scene {
   }
 
   private updatePageText(): void {
-    this.pageText.setText(this.pageCount() > 1 ? `Page ${this.page + 1} / ${this.pageCount()}  ·  ${this.slots.length} trainers` : '');
+    this.pageText.setText(this.pageCount() > 1 ? `Page ${this.page + 1}/${this.pageCount()}` : '');
+    this.sortText.setX(this.pageText.x - this.pageText.width - 12);
   }
 
   /** Builds the cells of the current page (replacing the previous page's). */
@@ -188,6 +238,10 @@ export class TrainerSelectScene extends Phaser.Scene {
     const open = slot.status === 'unlocked';
     add(this.add.text(36, 30, open ? a.name : '???', textStyle(40)));
     add(this.add.text(38, 76, open ? a.title : statusLine(slot.status), textStyle(16, COLORS.gold)));
+    if (open) {
+      const byId = (id: string) => services().session.content.archetypes.get(id);
+      add(this.add.text(38, 96, `${trainerGame(a, byId)}  ·  ${trainerRegion(a, byId)}`, textStyle(13, COLORS.textMuted)));
+    }
 
     // The trainer on a spotlight.
     const glow = add(this.add.graphics());
