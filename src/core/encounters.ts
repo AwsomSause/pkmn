@@ -162,7 +162,9 @@ export function planTrainer(content: Content, archetype: Archetype, theme: Theme
   const name = rng.pick(trainerClass.names);
   const size = teamSize(content.balance.trainerTeam, stageNumber, rng);
   const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types, regionId), rng);
-  return { classId: trainerClass.id, name, leaderId: null, ai: 0, ...team };
+  const { base, perStage, max } = content.balance.trainerAi;
+  const ai = Math.min(max, base + perStage * Math.max(0, stageNumber - 1));
+  return { classId: trainerClass.id, name, leaderId: null, ai, ...team };
 }
 
 /** The class ids used for boss battles (they aren't trainer classes in trainers.json). */

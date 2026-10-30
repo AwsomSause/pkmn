@@ -216,6 +216,11 @@
   "hallOfFameWeight": 2,
   "keepsakeCandyMultiplier": 2
  },
+ "trainerAi": {
+  "base": 0.1,
+  "perStage": 0.03,
+  "max": 0.4
+ },
  "attributeEffects": {
   "strengthPhysicalDamage": 1.0,
   "intelligenceSpecialDamage": 1.0,

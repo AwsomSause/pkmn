@@ -1250,6 +1250,11 @@ export const BalanceSchema = z.object({
     hallOfFameWeight: z.number().min(0),
     keepsakeCandyMultiplier: z.number().int().min(1),
   }),
+  /**
+   * Smarter ordinary trainers (not bosses): each turn they pick their best move instead of a random one with this chance,
+   * `base` at stage 1 plus `perStage` for each later stage, up to `max`. Bosses use their own team's value.
+   */
+  trainerAi: z.object({ base: z.number().min(0).max(1), perStage: z.number().min(0).max(1), max: z.number().min(0).max(1) }),
 });
 export type Balance = z.infer<typeof BalanceSchema>;
 
