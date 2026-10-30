@@ -9,6 +9,7 @@ import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, requireStage } from '../run';
 import { maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
+import { applyCatalog, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
 import { isHostile } from '../rivals/outcome';
 import { changeFriendship } from '../friendship';
@@ -207,6 +208,9 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
     case 'lodge':
       for (const m of run.party) add(`rest:${m.uid}`, `Rest with ${monName(content, m)}`, `Friendship +${C.lodgeFriendship} (now ${m.friendship}).`, 0, side.used ? 'You already rested here.' : m.hp <= 0 ? 'It has fainted.' : null);
       break;
+    case 'nursery':
+      add('egg', 'Buy a Mystery Egg', 'Hatches after 3 stages into a first-stage Pokémon (shiny chance x4). It is not a party member until it hatches.', price(run, C.eggPrice), side.used ? 'The nursery has no more eggs for you.' : null);
+      break;
     case 'relic':
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
       break;
@@ -311,6 +315,11 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'rest': {
       changeFriendship(content, mon!, C.lodgeFriendship);
       message = `${monName(content, mon!)} had a lovely rest and trusts you more.`;
+      break;
+    }
+    case 'egg': {
+      applyCatalog(content, run, getCatalogEntry(content, 'mystery-egg'), undefined, { moneyMultiplier: 1, rng: new Rng(hashSeed(`${run.seed}::nursery::${sideId}`)) });
+      message = 'You take the egg home. It hatches in 3 stages.';
       break;
     }
     case 'relic': {
