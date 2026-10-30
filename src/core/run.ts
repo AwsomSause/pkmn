@@ -506,6 +506,11 @@ export function partyCapacity(content: Content, run: Pick<RunState, 'archetypeId
   return Math.min(partyLimit(content.balance.partyMax, runPerks(content, run)), partyCap(content, run.rules));
 }
 
+/** Whether the champion of the region the run is in is the final boss: the last region of a campaign that has a Grand Region. */
+export function isFinalBoss(content: Content, run: Pick<RunState, 'regionOrder' | 'regionIndex'>): boolean {
+  return !!content.regions.get(run.regionOrder[run.regionIndex] ?? '')?.grand && run.regionIndex === run.regionOrder.length - 1;
+}
+
 /** Starts the next region at its first stage, or ends the run in victory after the last one (mutates `run`). */
 function enterNextRegion(content: Content, run: RunState): void {
   recapRegion(content, run);
@@ -1163,7 +1168,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planEliteFour(content, archetype, memberId, run.regionIndex, scale, r, bossRemix(run.rules));
         }
         case 'champion':
-          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules));
+          return planChampion(content, archetype, stage.leaderId, run.regionIndex, scale, r, bossRemix(run.rules), isFinalBoss(content, run));
         default:
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }

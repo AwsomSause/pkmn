@@ -125,6 +125,7 @@
   "aceBonus": 1,
   "eliteFourBonus": 1,
   "championBonus": 2,
+  "finalBossBonus": 3,
   "harderBonus": [
    1,
    2

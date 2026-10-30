@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { buildEpilogue } from '../core/ending';
 import { genderSign } from '../core/gender';
 import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
@@ -1290,7 +1291,8 @@ export class BattleScene extends Phaser.Scene {
       playSfx(this, 'se.level_up');
       const region = content.regions.get(end.regionCleared)?.name ?? end.regionCleared;
       await this.playBeat(stamp(this, 'CHAMPION!', region, ROLE_RIMS.champion, this.motion));
-      await this.say(`You are the ${region} Champion!`);
+      await this.say(end.regionCleared === 'grand' ? `You beat the final boss and are the ${region} Champion!` : `You are the ${region} Champion!`);
+      if (end.victory) for (const line of buildEpilogue(content, result.run)) await this.say(line);
       await this.say(end.victory ? 'You have conquered every region!' : 'A new region awaits…');
     }
     this.updateHeader();

@@ -285,9 +285,10 @@ export function planEliteFour(content: Content, archetype: Archetype, memberId: 
   return planBoss(content, archetype, 'elite', memberId, regionIndex, scale, content.balance.difficulty.eliteFourBonus + eliteLevelOffset(archetype.modifiers), ELITE_FOUR_CLASS, rng, remix);
 }
 
-/** The champion's team for region `regionIndex` (0-based): the hardest battle of the region. */
-export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, scale: LevelScale, rng: Rng, remix = false): TrainerPlan {
-  return planBoss(content, archetype, 'champion', championId, regionIndex, scale, content.balance.difficulty.championBonus, CHAMPION_CLASS, rng, remix);
+/** The champion's team for region `regionIndex` (0-based): the hardest battle of the region. The Grand Region's champion is the final boss (`finalBoss`) and gets `finalBossBonus` more levels. */
+export function planChampion(content: Content, archetype: Archetype, championId: string, regionIndex: number, scale: LevelScale, rng: Rng, remix = false, finalBoss = false): TrainerPlan {
+  const { championBonus, finalBossBonus } = content.balance.difficulty;
+  return planBoss(content, archetype, 'champion', championId, regionIndex, scale, championBonus + (finalBoss ? finalBossBonus : 0), CHAMPION_CLASS, rng, remix);
 }
 
 /** Rolls whether a wild Pokémon is shiny (D8: 1/2000, raised by Luck through `multiplier`). */
