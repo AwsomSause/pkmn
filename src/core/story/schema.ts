@@ -492,6 +492,8 @@ export const StoryChainSchema = z.object({
   text: z.string(),
   importance: z.number().int().min(0).max(100),
   emotions: z.array(EmotionSchema).default([]),
+  /** Finishing it gives the Pokémon a permanent Legacy Record in the Hall of Fame (§6 "Legacy Record"). */
+  hallOfFame: z.boolean().default(false),
 });
 export type StoryChain = z.infer<typeof StoryChainSchema>;
 

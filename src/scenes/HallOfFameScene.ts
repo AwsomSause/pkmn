@@ -89,6 +89,17 @@ export class HallOfFameScene extends Phaser.Scene {
         },
       });
     }
+    for (const { run, card, record } of hof.legacyRecords) {
+      rows.push({
+        problem: null,
+        hint: `Legacy Record: ${name(card.speciesId)} finished “${record}” on ${trainer(run)}'s ${run.victory ? 'champion run' : 'run'} of ${date(run)}. This entry is permanent.`,
+        draw: (_scene, box, w) => {
+          heading(box, `✶ Legacy Record · ${record}`, GOLD);
+          icon(box, card.speciesId, 40, 64, 1.8, card.shiny, 0);
+          box.add(this.add.text(80, 46, `${name(card.speciesId)}  Lv${card.level}  ·  ${trainer(run)}  ·  ${date(run)}`, textStyle(16, '#ffffff', { wordWrap: { width: w - 100 } })));
+        },
+      });
+    }
     for (const { run, card } of hof.legends) {
       rows.push({
         problem: null,
@@ -96,7 +107,7 @@ export class HallOfFameScene extends Phaser.Scene {
         draw: (_scene, box, w) => {
           icon(box, card.speciesId, 36, 52, 1.8, card.shiny, 0);
           box.add(this.add.text(70, 10, `${name(card.speciesId)}  Lv${card.level}`, textStyle(20)));
-          const badges = [...card.titles.map((t) => `“${t}”`), ...card.tags].join('  ·  ');
+          const badges = [...card.titles.map((t) => `“${t}”`), ...card.tags, ...(card.mentor ? [`Carried ${name(card.mentor)}'s legacy`] : [])].join('  ·  ');
           box.add(this.add.text(70, 38, badges, textStyle(15, GOLD, { wordWrap: { width: w - 90 } })));
           if (card.signature) box.add(this.add.text(70, 64, card.signature, textStyle(14, '#cfefff', { wordWrap: { width: w - 90 } })));
         },

@@ -404,6 +404,9 @@ describe('trainer perks, batch Z to T (Tate & Liza to Zinnia)', () => {
   it('Tierno boosts dance and sound moves only', () => {
     expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'dragon-dance', flags: [] }) })).toBeCloseTo(1.2);
     expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'hyper-voice', flags: ['sound'] }) })).toBeCloseTo(1.2);
+    // Dances come from Essentials' Dance flag, plus the Gen 9 ones; a move merely named "…dance" by mistake isn't one.
+    for (const id of ['clangorous-soul', 'aqua-step', 'victory-dance', 'swords-dance']) expect(moveFlagsOf({ id, flags: [] })).toContain('dance');
+    expect(moveFlagsOf({ id: 'tackle', flags: [] })).not.toContain('dance');
     expect(damageDealtPerk(perks('tierno'), { ...info, moveFlags: moveFlagsOf({ id: 'tackle', flags: ['contact'] }) })).toBe(1);
   });
 

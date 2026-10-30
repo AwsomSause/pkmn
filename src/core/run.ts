@@ -22,7 +22,7 @@ import { createBattle, resolveTurn, startBattle, type BattleContext, type Battle
 import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTurn, startDoubles } from './battle/doubles';
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
-import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
+import { RARITIES, TYPE_NAMES, type ArchetypeModifier, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
   bossTeamSpecies,
   candiesForRelease,
@@ -104,6 +104,7 @@ import {
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
+import { pickStones } from './expedition/flow';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
@@ -469,7 +470,8 @@ function enterLeague(content: Content, run: RunState): void {
 export function tickTempEffects(run: RunState, battle: BattleState, boss: boolean): void {
   const kept: RunState['tempEffects'] = [];
   for (const temp of run.tempEffects) {
-    const counts = temp.until === 'battle' || (temp.until === 'boss' && boss) || (temp.until === 'wild' && battle.kind === 'wild' && !battle.trainer);
+    // Raids and Totems are not wild encounters, so they never use up a "next wild encounter" effect.
+    const counts = temp.until === 'battle' || (temp.until === 'boss' && boss) || (temp.until === 'wild' && battle.kind === 'wild' && !battle.trainer && !battle.raid && !battle.totem);
     if (counts && temp.battles <= 1) {
       for (const effect of temp.effects) {
         const at = run.perkEffects.findIndex((m) => JSON.stringify(m) === JSON.stringify(effect));
@@ -1052,6 +1054,9 @@ function failRaid(content: Content, run: RunState): void {
   run.phase = 'map';
 }
 
+/** A rare-encounter token: rare Pokémon x3 and Legendaries x2 in the encounter table (same as Omen of Rarity). */
+const RARE_TOKEN_EFFECTS: ArchetypeModifier[] = [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 }, { kind: 'encounterWeightMultiplier', group: 'legendary', value: 2 }];
+
 /** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
   const def = getRaid(content, battle.raid!.id);
@@ -1070,6 +1075,16 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     count(run, 'pokemonCaught');
     discover(run, joined.speciesId, true);
     run.pending.unshift({ kind: 'caught', mon: joined });
+  }
+  // Mega resources and rare-encounter tokens roll from their own generator, so no other roll changes.
+  if (def.rewards.megaStones > 0) {
+    const stones = pickStones(content, run, def.rewards.megaStones, new Rng(hashSeed(`${run.seed}::raid-stones::${def.id}:${run.encountersCompleted}`)));
+    if (stones.length > 0 && itemCount(run.inventory, 'mega-ring') === 0) items.push('mega-ring');
+    items.push(...stones.map((stone) => stone.id));
+  }
+  if (def.rewards.rareEncounters > 0) {
+    run.perkEffects.push(...RARE_TOKEN_EFFECTS);
+    run.tempEffects.push({ effects: RARE_TOKEN_EFFECTS, battles: def.rewards.rareEncounters, until: 'wild' });
   }
   run.raids.won += 1;
   count(run, 'raidsWon');

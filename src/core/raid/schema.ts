@@ -31,6 +31,10 @@ export const RaidRewardSchema = z.object({
   draftExtra: z.number().int().min(0).max(3).default(0),
   /** The beaten boss offers to join the team (a normal catch decision). */
   joinChance: z.number().min(0).max(1).default(0),
+  /** Mega resources: Mega Stones for good (one per party Pokémon that can use one, up to this many), plus a Mega Ring if you have none. */
+  megaStones: z.number().int().min(0).max(3).default(0),
+  /** Rare-encounter tokens: the next this-many wild encounters are far likelier to be rare or Legendary. */
+  rareEncounters: z.number().int().min(0).max(3).default(0),
 });
 
 export const RaidDefSchema = z.object({

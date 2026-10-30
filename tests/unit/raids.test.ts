@@ -208,6 +208,24 @@ describe('raid runs', () => {
     expect(res.run.battle).toBeNull();
   });
 
+  it('a high-tier raid also gives Mega resources (a stone for the team, plus a Mega Ring) and rare-encounter tokens', () => {
+    const start = mapRun('rd-mega');
+    start.stage!.map.nodes.find((n) => n.id === start.stage!.current)!.sides.find((s) => s.id === 'raid-test')!.raidId = 'steel-mind';
+    start.party[0] = createPokemon(content, 'lucario', 70, start.party[0]!.uid);
+    start.money = 5000;
+    expect(raidPreview(content, start, 'raid-test').rewards.join(' ')).toContain('Mega Stone');
+    const won = enterRaid(content, start, 'raid-test');
+    won.battle!.enemyTeam[0]!.hp = 1;
+    won.battle!.raid!.pendingShields = [];
+    won.party[0]!.moves = [{ id: 'aura-sphere', pp: 20 }];
+    const res = takeTurn(content, won, { kind: 'move', index: 0 });
+    expect(res.end?.outcome).toBe('win');
+    expect(res.run.inventory['lucarionite']).toBe(1);
+    expect(res.run.inventory['mega-ring']).toBe(1);
+    expect(res.run.tempEffects).toContainEqual({ effects: [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 }, { kind: 'encounterWeightMultiplier', group: 'legendary', value: 2 }], battles: 1, until: 'wild' });
+    expect(res.run.perkEffects).toContainEqual({ kind: 'encounterWeightMultiplier', group: 'rare', value: 3 });
+  });
+
   it('survives a save and reload mid-raid', () => {
     const run = enterRaid(content, mapRun('rd-4'), 'raid-test');
     run.battle!.raid!.shieldHp = 7;

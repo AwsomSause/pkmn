@@ -40,6 +40,8 @@ for (const block of readFileSync(path, 'utf8').split('#-------------------------
   if (aimed && !flags.has('CanProtect')) out.noProtect!.push(id);
   if (aimed && !flags.has('CanMirrorMove')) out.noMirror!.push(id);
 }
+// Gen 9 dances that Essentials 21 doesn't have yet (the Dancer ability copies them in the main games).
+for (const id of ['aqua-step', 'victory-dance']) if (!out.dance!.includes(id)) out.dance!.push(id);
 for (const list of Object.values(out)) list.sort();
 writeFileSync(join(root, 'src', 'data', 'moveFlags.json'), JSON.stringify(out, null, 1) + '\n');
 console.log(`moveFlags.json: ${Object.entries(out).map(([k, v]) => `${k} ${v.length}`).join(', ')}`);

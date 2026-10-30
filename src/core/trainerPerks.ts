@@ -7,6 +7,7 @@ import type { Perks } from './archetypes';
 import type { Content, TypeName } from './contentSchema';
 import { abilityOf, calcStats, getSpecies, isUsableMove } from './pokemon';
 import type { PokemonInstance } from './state';
+import moveFlagsJson from '../data/moveFlags.json';
 
 type Kind<K extends string> = Extract<Perks[number], { kind: K }>;
 
@@ -476,8 +477,8 @@ export function catchMoneyPerk(perks: Perks | undefined): number {
   return product(perks, 'catchMoneyMultiplier');
 }
 
-/** Move flags a perk can name: the data's flags plus "dance" (the dance moves, by name). */
-const DANCE_MOVES = new Set(['swords-dance', 'dragon-dance', 'quiver-dance', 'feather-dance', 'petal-dance', 'fiery-dance', 'lunar-dance', 'teeter-dance', 'revelation-dance', 'victory-dance', 'clangorous-soul-dance', 'aqua-step', 'raging-fury-dance']);
+/** Move flags a perk can name: the data's flags plus "dance" (Essentials' Dance flag, `npm run data:move-flags`). */
+const DANCE_MOVES = new Set(moveFlagsJson.dance);
 export function moveFlagsOf(move: { id: string; flags: readonly string[] }): readonly string[] {
   return DANCE_MOVES.has(move.id) ? [...move.flags, 'dance'] : move.flags;
 }

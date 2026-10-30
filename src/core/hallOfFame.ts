@@ -1,6 +1,7 @@
 // The Hall of Fame (Electric plan §5): champion teams, unusual wins, rare
 // forms and records, read from the profile's Run History. Each run keeps its
-// epitaph and Legacy Cards (core/story/legacy.ts). Read-only.
+// epitaph and Legacy Cards (core/story/legacy.ts). Runs holding a Legacy Record
+// are never trimmed from the history, so those entries are permanent. Read-only.
 
 import type { Profile, RunRecord } from './state';
 
@@ -14,6 +15,8 @@ export interface HallOfFame {
   rareForms: { speciesId: string; level: number; run: RunRecord }[];
   /** Pokémon whose Legacy Card earned a title or tag, newest run first. */
   legends: { run: RunRecord; card: RunRecord['legacy'][number] }[];
+  /** Permanent Legacy Records (Hall of Fame chains such as The Long Gauntlet), newest run first. */
+  legacyRecords: { run: RunRecord; card: RunRecord['legacy'][number]; record: string }[];
 }
 
 /** How small a winning team counts as unusual. */
@@ -44,6 +47,8 @@ export function hallOfFame(profile: Profile): HallOfFame {
     champions: wins,
     unusual,
     rareForms: runs.flatMap((run) => run.party.filter((m) => m.shiny).map((m) => ({ speciesId: m.speciesId, level: m.level, run }))),
-    legends: runs.flatMap((run) => run.legacy.filter((c) => c.titles.length > 0 || c.tags.length > 0).map((card) => ({ run, card }))),
+    legends: runs.flatMap((run) => run.legacy.filter((c) => c.titles.length > 0 || c.tags.length > 0 || c.mentor != null).map((card) => ({ run, card }))),
+    // Cards from before mentors and records may lack both (saves fill them in; raw data may not).
+    legacyRecords: runs.flatMap((run) => run.legacy.flatMap((card) => (card.records ?? []).map((record) => ({ run, card, record })))),
   };
 }

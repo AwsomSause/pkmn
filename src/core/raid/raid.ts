@@ -187,6 +187,8 @@ export function describeRewards(def: RaidDef): string[] {
   for (const i of def.rewards.items) out.push(`${i.item.replace(/-/g, ' ')}${i.chance < 1 ? ` (${Math.round(i.chance * 100)}%)` : ''}`);
   if (def.rewards.draftExtra > 0) out.push(`+${def.rewards.draftExtra} draft choice${def.rewards.draftExtra > 1 ? 's' : ''}`);
   if (def.rewards.joinChance > 0) out.push(`${Math.round(def.rewards.joinChance * 100)}% the boss joins you`);
+  if (def.rewards.megaStones > 0) out.push(`up to ${def.rewards.megaStones} Mega Stone${def.rewards.megaStones > 1 ? 's' : ''} for your team`);
+  if (def.rewards.rareEncounters > 0) out.push(`${def.rewards.rareEncounters} rare-encounter token${def.rewards.rareEncounters > 1 ? 's' : ''}`);
   return out;
 }
 
