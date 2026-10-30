@@ -14,6 +14,7 @@ import { chooseEvent, type EventResult } from '../core/events';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
+import * as Exp from '../core/expedition/flow';
 import * as Run from '../core/run';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -149,6 +150,34 @@ export class GameSession {
     this.run = Run.enterTotem(this.content, this.requireRun(), sideId);
     this.persistRun();
     return this.run;
+  }
+
+  /** Opens an expedition from its gate on the map. */
+  beginExpedition(sideId: string): RunState {
+    return this.setRun(Exp.beginExpedition(this.content, this.requireRun(), sideId));
+  }
+
+  chooseExpeditionNode(nodeId: string): RunState {
+    return this.setRun(Exp.chooseExpeditionNode(this.content, this.requireRun(), nodeId));
+  }
+
+  resolveExpeditionChoice(index: number): RunState {
+    return this.setRun(Exp.resolveExpeditionChoice(this.content, this.requireRun(), index));
+  }
+
+  /** Reads the result of the last expedition fight (win: next stop or finish; loss: the expedition fails). */
+  settleExpedition(): RunState {
+    return this.setRun(Exp.settleExpedition(this.content, this.requireRun()));
+  }
+
+  extractExpedition(): RunState {
+    return this.setRun(Exp.extractExpedition(this.content, this.requireRun()));
+  }
+
+  private setRun(run: RunState): RunState {
+    this.run = run;
+    this.persistRun();
+    return run;
   }
 
   /** Uses a map item from the map's Items menu (Escape Rope, a bike, VS Seeker). */

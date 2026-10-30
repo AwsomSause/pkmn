@@ -31,6 +31,8 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Trainers.md perks, batch 1 (Aaron to Bianca, 20 of 220): shared perk system `core/trainerPerks.ts` + 30 new modifier kinds (type/category/speed damage, damage taken, stat and HP, group EXP, status chance/length, survival, weather, boss/level-gap damage, Mega rules, legendary wild encounters (new, region 2+), release limit, starter signature move, level offsets). Trainers unlock by total trainers defeated (10 + 10 per trainer); Trainer Select pages 12 at a time. Importer: `npm run data:trainer-perks`; list: `docs/plans/trainers-coverage.md`. Save: `PokemonInstance.perkHp` (optional, no version bump).
 - Blueprint slice 2 Totems: 8 Totems (`totems.json`, `core/totem/`) on stage maps, aura, ally calls (ally takes the field in the Totem's place), phases, home-field weather/terrain/hazards, rare-Pokémon rewards, unlocks. Next: Expeditions, Minigames.
 
+- Blueprint slice 3 Mega-Expeditions: 5 expeditions (`expeditions.json`, `core/expedition/`, `ExpeditionScene`), 12 stop kinds, 5 party modes, loot kept on extraction, Mega Energy to temporary Mega Stones, Mega guardian finale. Next: Minigames.
+
 ## In progress / next
 - Trainers.md perks: batches 2–11 (one PR per 20 trainers, then signature mechanics).
 - Starter sets / quests / mastery / events plan (signed off 2026-10-30): next "?" event stops + event items (slice 4b), trainer quests, species mastery, trainer evolutions, weekly then holiday events.
