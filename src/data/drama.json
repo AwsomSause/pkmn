@@ -1,10 +1,18 @@
 {
-  "note": "Battle Drama Engine, slice 1: trainer dialogue. Lines are picked deterministically (no gameplay RNG). Placeholders: {name} the trainer's Pokémon, {foe} yours, {move} the move, {trainer} the trainer.",
+  "note": "Battle Drama Engine, slice 1: trainer dialogue. Lines are picked deterministically (no gameplay RNG). Placeholders: {name} the trainer's Pokémon, {foe} yours, {move} the move, {trainer} the trainer. Frequency: 'off' and 'low' only hide lines (low keeps major and climactic ones); decisions and records never depend on the setting.",
   "config": {
-    "budget": { "ordinary": 2, "gym": 4, "rival": 6, "boss": 5 },
+    "budget": {
+      "ordinary": 2,
+      "gym": 4,
+      "rival": 6,
+      "boss": 5
+    },
     "minGapTurns": 2,
     "recentLines": 8,
-    "frequency": { "off": 0, "low": 0.5, "normal": 1, "high": 1.5 },
+    "frequency": {
+      "normal": 1,
+      "high": 1.5
+    },
     "declarationMoveBpMin": 100,
     "desperationHpShare": 0.25
   },
@@ -17,102 +25,312 @@
   },
   "lines": {
     "opening": {
-      "brash": ["Nobody beats me. Get ready!", "Hope you brought your best, because I did!"],
-      "gentle": ["Let's do our best together, {name}.", "I hope we can have a good battle."],
-      "calm": ["I have been watching how you play.", "Let's see if you are as good as you look."],
-      "grim": ["You will not leave here the same.", "I have waited for this."],
-      "cheerful": ["Oh, a battle! Let's make it fun!", "Here we go, {name}!"]
+      "brash": [
+        "Nobody beats me. Get ready!",
+        "Hope you brought your best, because I did!"
+      ],
+      "gentle": [
+        "Let's do our best together, {name}.",
+        "I hope we can have a good battle."
+      ],
+      "calm": [
+        "I have been watching how you play.",
+        "Let's see if you are as good as you look."
+      ],
+      "grim": [
+        "You will not leave here the same.",
+        "I have waited for this."
+      ],
+      "cheerful": [
+        "Oh, a battle! Let's make it fun!",
+        "Here we go, {name}!"
+      ]
     },
     "command": {
-      "brash": ["Crush them, {name}!", "Show them what we've got!"],
-      "gentle": ["You can do it, {name}!", "Stay with me, {name}."],
-      "calm": ["Steady, {name}. Wait for the opening.", "Read the pattern, {name}."],
-      "grim": ["Finish it, {name}.", "No mercy, {name}."],
-      "cheerful": ["Go go go, {name}!", "Do your thing, {name}!"]
+      "brash": [
+        "Crush them, {name}!",
+        "Show them what we've got!"
+      ],
+      "gentle": [
+        "You can do it, {name}!",
+        "Stay with me, {name}."
+      ],
+      "calm": [
+        "Steady, {name}. Wait for the opening.",
+        "Read the pattern, {name}."
+      ],
+      "grim": [
+        "Finish it, {name}.",
+        "No mercy, {name}."
+      ],
+      "cheerful": [
+        "Go go go, {name}!",
+        "Do your thing, {name}!"
+      ]
     },
     "declaration": {
-      "brash": ["{move}! Put everything into it!", "This is it, {move}!"],
-      "gentle": ["Please, {name}, use {move}!", "{move}, with all your heart!"],
-      "calm": ["Now. {move}.", "The moment is right. {move}."],
-      "grim": ["{move}. End this.", "Burn it down with {move}!"],
-      "cheerful": ["Big one! {move}!", "Time for {move}!"]
+      "brash": [
+        "{move}! Put everything into it!",
+        "This is it, {move}!"
+      ],
+      "gentle": [
+        "Please, {name}, use {move}!",
+        "{move}, with all your heart!"
+      ],
+      "calm": [
+        "Now. {move}.",
+        "The moment is right. {move}."
+      ],
+      "grim": [
+        "{move}. End this.",
+        "Burn it down with {move}!"
+      ],
+      "cheerful": [
+        "Big one! {move}!",
+        "Time for {move}!"
+      ]
     },
     "reactionCrit": {
-      "brash": ["Ha! That is how it is done!", "Did you see that?!"],
-      "gentle": ["Oh! That hit just right!", "Wonderful, {name}!"],
-      "calm": ["A lucky break. I will take it.", "Noted."],
-      "grim": ["Good. Again.", "That is what I wanted."],
-      "cheerful": ["Whoa, lucky hit!", "Boom! Critical!"]
+      "brash": [
+        "Ha! That is how it is done!",
+        "Did you see that?!"
+      ],
+      "gentle": [
+        "Oh! That hit just right!",
+        "Wonderful, {name}!"
+      ],
+      "calm": [
+        "A lucky break. I will take it.",
+        "Noted."
+      ],
+      "grim": [
+        "Good. Again.",
+        "That is what I wanted."
+      ],
+      "cheerful": [
+        "Whoa, lucky hit!",
+        "Boom! Critical!"
+      ]
     },
     "reactionHurt": {
-      "brash": ["That tickled!", "Is that all you've got?"],
-      "gentle": ["Are you all right, {name}?", "Hang on, {name}!"],
-      "calm": ["Strong. I need to adjust.", "That changes things."],
-      "grim": ["You will pay for that.", "Hm. Impressive. Not enough."],
-      "cheerful": ["Ouch! Nice one!", "Okay, okay, that was good!"]
+      "brash": [
+        "That tickled!",
+        "Is that all you've got?"
+      ],
+      "gentle": [
+        "Are you all right, {name}?",
+        "Hang on, {name}!"
+      ],
+      "calm": [
+        "Strong. I need to adjust.",
+        "That changes things."
+      ],
+      "grim": [
+        "You will pay for that.",
+        "Hm. Impressive. Not enough."
+      ],
+      "cheerful": [
+        "Ouch! Nice one!",
+        "Okay, okay, that was good!"
+      ]
     },
     "ownKo": {
-      "brash": ["Impossible! {name}, no!", "You got lucky!"],
-      "gentle": ["You did so well, {name}. Rest now.", "Thank you, {name}."],
-      "calm": ["I misjudged it. Return, {name}.", "One piece of the puzzle."],
-      "grim": ["Useless... no. Rest, {name}.", "You will regret this."],
-      "cheerful": ["Aw, good effort, {name}!", "That's okay, {name}, take a break!"]
+      "brash": [
+        "Impossible! {name}, no!",
+        "You got lucky!"
+      ],
+      "gentle": [
+        "You did so well, {name}. Rest now.",
+        "Thank you, {name}."
+      ],
+      "calm": [
+        "I misjudged it. Return, {name}.",
+        "One piece of the puzzle."
+      ],
+      "grim": [
+        "Useless... no. Rest, {name}.",
+        "You will regret this."
+      ],
+      "cheerful": [
+        "Aw, good effort, {name}!",
+        "That's okay, {name}, take a break!"
+      ]
     },
     "foeKo": {
-      "brash": ["One down! Who's next?", "Told you!"],
-      "gentle": ["I'm sorry about that. It was a good fight.", "Well fought, {foe}."],
-      "calm": ["As expected.", "Progress."],
-      "grim": ["Another one gone.", "Too slow."],
-      "cheerful": ["Yes! Got one!", "High five, {name}!"]
+      "brash": [
+        "One down! Who's next?",
+        "Told you!"
+      ],
+      "gentle": [
+        "I'm sorry about that. It was a good fight.",
+        "Well fought, {foe}."
+      ],
+      "calm": [
+        "As expected.",
+        "Progress."
+      ],
+      "grim": [
+        "Another one gone.",
+        "Too slow."
+      ],
+      "cheerful": [
+        "Yes! Got one!",
+        "High five, {name}!"
+      ]
     },
     "switch": {
-      "brash": ["Time to bring out the real star!", "Enough warming up!"],
-      "gentle": ["Come back, and thank you. Your turn!", "Take a breather, I'm counting on you."],
-      "calm": ["Rotate. This matchup suits us.", "A better answer."],
-      "grim": ["Step up.", "I will not lose to this."],
-      "cheerful": ["Tag in, buddy!", "Switcheroo!"]
+      "brash": [
+        "Time to bring out the real star!",
+        "Enough warming up!"
+      ],
+      "gentle": [
+        "Come back, and thank you. Your turn!",
+        "Take a breather, I'm counting on you."
+      ],
+      "calm": [
+        "Rotate. This matchup suits us.",
+        "A better answer."
+      ],
+      "grim": [
+        "Step up.",
+        "I will not lose to this."
+      ],
+      "cheerful": [
+        "Tag in, buddy!",
+        "Switcheroo!"
+      ]
     },
     "desperation": {
-      "brash": ["I will not lose here!", "No way, no way, not like this!"],
-      "gentle": ["Please, {name}, just a little longer!", "We can still do this, together!"],
-      "calm": ["I am running out of options.", "Think. Think."],
-      "grim": ["Not yet. Not while I can still stand.", "Hold on. Hold on!"],
-      "cheerful": ["Uh oh! Okay, okay, deep breath!", "Now it's getting exciting!"]
+      "brash": [
+        "I will not lose here!",
+        "No way, no way, not like this!"
+      ],
+      "gentle": [
+        "Please, {name}, just a little longer!",
+        "We can still do this, together!"
+      ],
+      "calm": [
+        "I am running out of options.",
+        "Think. Think."
+      ],
+      "grim": [
+        "Not yet. Not while I can still stand.",
+        "Hold on. Hold on!"
+      ],
+      "cheerful": [
+        "Uh oh! Okay, okay, deep breath!",
+        "Now it's getting exciting!"
+      ]
     },
     "taunt": {
-      "brash": ["Is that your plan?", "My {name} has seen tougher."],
-      "gentle": ["You are good. Really good.", "I can see how much you trust {foe}."],
-      "calm": ["You rely on that a lot, don't you?", "You are predictable."],
-      "grim": ["Is that all?", "Your Pokémon look tired."],
-      "cheerful": ["Ooh, spicy!", "You are fun to fight!"]
+      "brash": [
+        "Is that your plan?",
+        "My {name} has seen tougher."
+      ],
+      "gentle": [
+        "You are good. Really good.",
+        "I can see how much you trust {foe}."
+      ],
+      "calm": [
+        "You rely on that a lot, don't you?",
+        "You are predictable."
+      ],
+      "grim": [
+        "Is that all?",
+        "Your Pokémon look tired."
+      ],
+      "cheerful": [
+        "Ooh, spicy!",
+        "You are fun to fight!"
+      ]
     },
     "defeat": {
-      "brash": ["I... lost? Next time it will be different!", "Fine. You win. This time."],
-      "gentle": ["That was a wonderful battle. Thank you.", "You and your team are special."],
-      "calm": ["Interesting. I will remember this.", "Your approach works. I will study it."],
-      "grim": ["Enjoy it. It will not last.", "This is not over."],
-      "cheerful": ["That was awesome! Rematch sometime!", "You win! Good game!"]
+      "brash": [
+        "I... lost? Next time it will be different!",
+        "Fine. You win. This time."
+      ],
+      "gentle": [
+        "That was a wonderful battle. Thank you.",
+        "You and your team are special."
+      ],
+      "calm": [
+        "Interesting. I will remember this.",
+        "Your approach works. I will study it."
+      ],
+      "grim": [
+        "Enjoy it. It will not last.",
+        "This is not over."
+      ],
+      "cheerful": [
+        "That was awesome! Rematch sometime!",
+        "You win! Good game!"
+      ]
     },
     "victory": {
-      "brash": ["Of course I won!", "Better luck next time!"],
-      "gentle": ["Don't be discouraged. You'll get stronger.", "Thank you for battling us."],
-      "calm": ["As calculated.", "You have things to learn."],
-      "grim": ["Remember this feeling.", "Weak."],
-      "cheerful": ["I won! I won!", "Great battle! Let's do it again!"]
+      "brash": [
+        "Of course I won!",
+        "Better luck next time!"
+      ],
+      "gentle": [
+        "Don't be discouraged. You'll get stronger.",
+        "Thank you for battling us."
+      ],
+      "calm": [
+        "As calculated.",
+        "You have things to learn."
+      ],
+      "grim": [
+        "Remember this feeling.",
+        "Weak."
+      ],
+      "cheerful": [
+        "I won! I won!",
+        "Great battle! Let's do it again!"
+      ]
     },
     "callbackWon": {
-      "brash": ["Last time you beat me. I have been training ever since!", "You humiliated me once. Not twice."],
-      "gentle": ["We lost to you before. We have grown, you know.", "I remember our last battle. It made us better."],
-      "calm": ["Last time you beat me. I studied every turn.", "I replayed our last battle a hundred times."],
-      "grim": ["You beat me once. I have not forgotten.", "Every day I thought of how you won."],
-      "cheerful": ["Hey, it's you! You beat us last time! Round two!", "Rematch! Last time was close, wasn't it?"]
+      "brash": [
+        "Last time you beat me. I have been training ever since!",
+        "You humiliated me once. Not twice."
+      ],
+      "gentle": [
+        "We lost to you before. We have grown, you know.",
+        "I remember our last battle. It made us better."
+      ],
+      "calm": [
+        "Last time you beat me. I studied every turn.",
+        "I replayed our last battle a hundred times."
+      ],
+      "grim": [
+        "You beat me once. I have not forgotten.",
+        "Every day I thought of how you won."
+      ],
+      "cheerful": [
+        "Hey, it's you! You beat us last time! Round two!",
+        "Rematch! Last time was close, wasn't it?"
+      ]
     },
     "callbackLost": {
-      "brash": ["I beat you before and I will do it again!", "Remember who won last time?"],
-      "gentle": ["I hope you are doing well since we last met.", "Last time was tough on you. Let's both do our best."],
-      "calm": ["I won before. I will not assume it repeats.", "Your last defeat taught you something. Show me."],
-      "grim": ["You lost to me once. You will again.", "Last time was not even my best."],
-      "cheerful": ["Hey, I beat you last time! No hard feelings, right?", "Round two! I remember you!"]
+      "brash": [
+        "I beat you before and I will do it again!",
+        "Remember who won last time?"
+      ],
+      "gentle": [
+        "I hope you are doing well since we last met.",
+        "Last time was tough on you. Let's both do our best."
+      ],
+      "calm": [
+        "I won before. I will not assume it repeats.",
+        "Your last defeat taught you something. Show me."
+      ],
+      "grim": [
+        "You lost to me once. You will again.",
+        "Last time was not even my best."
+      ],
+      "cheerful": [
+        "Hey, I beat you last time! No hard feelings, right?",
+        "Round two! I remember you!"
+      ]
     }
   }
 }

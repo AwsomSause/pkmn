@@ -475,7 +475,8 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       name: trainer.name,
       team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId),
       ended,
-      hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0,
+      // A gripping comeback (the Battle Drama Engine's Last-Second Resolve or Comeback Call) counts as a close fight.
+      hpLeftShare: Math.min(totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0, battle.drama.seen.some((id) => id === 'ev:comebackCall' || id === 'ev:lastSecondResolve') ? 0.1 : 1),
       turns: battle.turn - 1,
       flawless: run.party.every((m) => m.hp > 0),
       returning: Boolean(battle.returning),
