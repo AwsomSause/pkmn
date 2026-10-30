@@ -68,8 +68,8 @@
       "note": "Raid and Totem rewards that offer a catch."
     },
     "secretRoute": {
-      "status": "planned",
-      "note": "Map detours (Phase D2)."
+      "status": "limited",
+      "note": "A hidden path event that opens after the Form Research battle and offers rarer regional forms (events.json, tools/events/world.ts). It is a map event, not a separate map node."
     },
     "starterSet": {
       "status": "limited",
