@@ -7,6 +7,7 @@
 import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
+import { pinnedObjective } from '../core/objectives';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
 import { boxCapacity } from '../core/trainerPerks';
@@ -167,6 +168,9 @@ export class MapScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+
+    const pinned = pinnedObjective(content, run);
+    if (pinned) this.add.text(GAME_WIDTH - 24, 66, `★ ${pinned.text} (${pinned.current}/${pinned.target})`, textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 
     // ---------- the map (scrolls sideways) ----------
     // A bike chosen from the Items menu changes where the player can go.
