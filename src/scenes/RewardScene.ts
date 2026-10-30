@@ -123,7 +123,11 @@ export class RewardScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, 528, '←/→ ↑/↓ move  ·  Enter choose', textStyle(14, '#a69cb4')).setOrigin(0.5);
     this.focus(data.focus ?? 0, false);
 
+    // A key pressed through the battle's last message must not pick a card the moment the screen opens.
+    let ready = false;
+    this.time.delayedCall(220, () => (ready = true));
     onInputAction(this, (action) => {
+      if (!ready && action === 'confirm') return;
       if (this.picker) {
         this.picker.handle(action);
         return;
