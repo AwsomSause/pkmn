@@ -26,5 +26,8 @@
  "rei": "Agile and Strong styles are approximated: fast Pokémon (base Speed 90+) count as Agile, slow ones (60 or less) as Strong.",
  "plumeria": "Poison lasting one extra turn has no effect: poison never wears off in this game.",
  "phoebe-gen-6": "Ghost-types gaining 10% evasion is not built (no evasion perk yet).",
- "raihan": "Only rain and sun are covered: weather-boosted moves in sandstorm and hail are not boosted."
+ "raihan": "Only rain and sun are covered: weather-boosted moves in sandstorm and hail are not boosted.",
+ "kurt": "Shop inventories refresh 20% less frequently has no effect: the shop stock does not refresh in this game.",
+ "juan": "Water-types gain 10% evasion: enemy accuracy against your Water-types is divided by 1.1.",
+ "karen": "Status-affected enemies take 15% more damage: any status condition on the target counts."
 }

@@ -764,6 +764,12 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('superEffectiveDamageMultiplier'), value: z.number().positive() }),
   /** Damage your Pokémon take from super-effective hits. */
   z.object({ kind: z.literal('superEffectiveTakenMultiplier'), value: z.number().positive() }),
+  /** Poison damage on foes you poison. */
+  z.object({ kind: z.literal('poisonDamageMultiplier'), value: z.number().positive() }),
+  /** Your Pokémon (of `type`) are harder to hit: enemy accuracy against them is divided by this. */
+  z.object({ kind: z.literal('evasionMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Damage dealt to foes with a status condition (burn, poison, sleep...). */
+  z.object({ kind: z.literal('statusedFoeDamageMultiplier'), value: z.number().positive() }),
   /** Elite Four members are this many levels higher (negative: lower). */
   z.object({ kind: z.literal('eliteLevelOffset'), value: z.number().int() }),
   /** Foes can't heal with moves, drains or healing effects. */

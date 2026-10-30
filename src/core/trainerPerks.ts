@@ -66,6 +66,8 @@ export interface DamageDealtInfo {
   effectiveness?: number;
   /** Full turns the attacker has been out. */
   turnsOut?: number;
+  /** The target has a status condition. */
+  targetStatused?: boolean;
   moveIsZ?: boolean;
   moveIsSpread?: boolean;
   /** Place in the party (0 = first) and the party's size. */
@@ -95,6 +97,7 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   for (const m of of(perks, 'firstAttackDamage')) v *= i.firstAttack ? m.first : m.later;
   if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveDamageMultiplier');
   if ((i.turnsOut ?? 0) >= 1) v *= product(perks, 'stayingDamageMultiplier');
+  if (i.targetStatused) v *= product(perks, 'statusedFoeDamageMultiplier');
   if (i.moveIsZ) v *= product(perks, 'zMoveDamageMultiplier');
   v *= product(perks, 'spreadMoveDamageMultiplier', (m) => m.spread === Boolean(i.moveIsSpread));
   v *= product(perks, 'partyPositionDamage', (m) => (m.position === 'first' ? i.partyIndex === 0 : i.partyIndex !== undefined && i.partySize !== undefined && i.partyIndex === i.partySize - 1));
@@ -464,4 +467,13 @@ export function unusualKind(content: Content, mon: PokemonInstance): 'unusual' |
   if (abilityCount >= COMMON_ABILITY_MIN) return 'common';
   if ((ability && abilityCount <= UNUSUAL_ABILITY_MAX) || comboCount <= UNUSUAL_COMBO_MAX) return 'unusual';
   return null;
+}
+
+export function poisonDamagePerk(perks: Perks | undefined): number {
+  return product(perks, 'poisonDamageMultiplier');
+}
+
+/** Enemy accuracy against one of your Pokémon is divided by this. */
+export function evasionPerk(perks: Perks | undefined, types: readonly TypeName[]): number {
+  return product(perks, 'evasionMultiplier', (m) => !m.type || types.includes(m.type));
 }
