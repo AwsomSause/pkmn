@@ -2,6 +2,7 @@
 // it is earned (a claim in the ledger, so a reload or a second run never pays it twice) and a smaller useful repeat reward after.
 // Adventure and any run that earns no account rewards get nothing.
 
+import { grantUnlocks } from './unlocks';
 import { claim } from './quests';
 import { RUN_RULES } from './rules';
 import type { Profile, RunState } from './state';
@@ -23,9 +24,7 @@ export function awardModeRewards(profile: Profile, run: RunState, now: string): 
     if (r.needs.loops !== undefined && run.rules.loops < r.needs.loops) continue;
     if (claim(profile, r.claim, now)) {
       const o = r.once;
-      if (o.pool && !profile.unlockedPools.includes(o.pool)) profile.unlockedPools.push(o.pool);
-      if (o.trainer && !profile.unlockedArchetypes.includes(o.trainer)) profile.unlockedArchetypes.push(o.trainer);
-      if (o.title && !profile.titles.includes(o.title)) profile.titles.push(o.title);
+      grantUnlocks(profile, { pool: o.pool, trainer: o.trainer, title: o.title });
       profile.bankCredits += o.bankCredits ?? 0;
       profile.lifetimeBankCredits += o.bankCredits ?? 0;
       out.push({ id: r.id, first: true, text: o.text });

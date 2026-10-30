@@ -53,6 +53,8 @@ export const RunRulesDataSchema = z.object({
       bossRemix: z.boolean().optional(),
     }),
   ),
+  /** What an unlock that is already owned (a set, a trainer, a title) pays instead (Untitled doc §8.3). */
+  duplicateCompensation: z.object({ researchPoints: z.number().int().min(0) }),
   modeRewards: z.array(z.object({
     modeId: z.string(),
     id: z.string(),
