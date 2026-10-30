@@ -36,7 +36,7 @@ const check = (c: Content, id: string, over: Partial<ReportInputs> = {}) => buil
 
 describe('support status', () => {
   it('an unsupported move is disabled, a move with a known limit is limited, others are supported', () => {
-    expect(moveStatus(content, content.moves.get('acrobatics')!).status).toBe('disabled');
+    expect(moveStatus(content, content.moves.get('sky-drop')!).status).toBe('disabled');
     expect(moveStatus(content, content.moves.get('surf')!)).toMatchObject({ status: 'limited' });
     expect(moveStatus(content, content.moves.get('tackle')!)).toEqual({ kind: 'move', id: 'tackle', status: 'supported', notes: [] });
   });
@@ -76,7 +76,7 @@ describe('content report checks', () => {
   it('finds a meetable species that lost all its usable moves', () => {
     expect(check(content, 'meetable-species-no-usable-moves').count).toBe(0);
     const c = structuredClone(content);
-    c.species.get('bulbasaur')!.learnset = [{ level: 1, move: 'acrobatics' }];
+    c.species.get('bulbasaur')!.learnset = [{ level: 1, move: 'sky-drop' }];
     expect(check(c, 'meetable-species-no-usable-moves').offenders).toContain('bulbasaur');
   });
 

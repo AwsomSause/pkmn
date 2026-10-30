@@ -456,8 +456,9 @@ function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, t
 export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
   const tera = battle.transform.teraTypes[mon.uid];
   if (tera) return [tera];
-  const shift = (battle.enemyTeam.includes(mon) ? battle.enemyVolatile : battle.playerVolatile)?.typeShift;
-  return shift ? [shift] : getSpecies(content, mon.speciesId).types;
+  const vol = battle.enemyTeam.includes(mon) ? battle.enemyVolatile : battle.playerVolatile;
+  const base: readonly TypeName[] = vol?.typeList ? (vol.typeList as TypeName[]) : vol?.typeShift ? [vol.typeShift] : getSpecies(content, mon.speciesId).types;
+  return vol?.roost ? base.filter((t) => t !== 'flying') : base;
 }
 
 /** The STAB multiplier for a move of this type (1 = none), counting Terastallization. */

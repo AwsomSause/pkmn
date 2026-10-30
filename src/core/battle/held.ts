@@ -16,6 +16,7 @@
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
 import { calcStats, getSpecies } from '../pokemon';
 import type { Rng } from '../rng';
+import { freshHeldState } from '../state';
 import type { BattleState, HeldState, PokemonInstance, Stages, Volatile } from '../state';
 import { clampStage } from './damage';
 
@@ -86,12 +87,58 @@ export interface ActiveHook {
 }
 
 function stateOf(battle: BattleState): HeldState {
-  battle.held ??= { used: {}, choice: {}, streak: {}, popped: [], sure: [], first: [], crit: {} };
+  battle.held ??= freshHeldState();
   return battle.held;
 }
 
 /** Every hook on this Pokémon: its own held items, plus the team items for the player's side. */
-export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: PokemonInstance, side: Side): ActiveHook[] {
+/** What the Pokémon holds right now: its items, less any lost this battle, plus any it took; nothing under Embargo or Magic Room. */
+export function effectiveHeld(ctx: { battle?: BattleState }, mon: PokemonInstance): Record<string, number> {
+  const h = ctx.battle?.held;
+  if (!h) return mon.held ?? {};
+  if ((h.embargo[mon.uid] ?? 0) > 0 || h.magicRoom > 0) return {};
+  const out: Record<string, number> = { ...(mon.held ?? {}) };
+  for (const id of h.lost[mon.uid] ?? []) delete out[id];
+  for (const [id, n] of Object.entries(h.gained[mon.uid] ?? {})) if (n > 0) out[id] = (out[id] ?? 0) + n;
+  return out;
+}
+
+/** Every item the Pokémon carries, ignoring Embargo (for moves that take or swap items). */
+export function carriedItems(ctx: { battle?: BattleState }, mon: PokemonInstance): Record<string, number> {
+  const h = ctx.battle?.held;
+  const out: Record<string, number> = { ...(mon.held ?? {}) };
+  if (!h) return out;
+  for (const id of h.lost[mon.uid] ?? []) delete out[id];
+  for (const [id, n] of Object.entries(h.gained[mon.uid] ?? {})) if (n > 0) out[id] = (out[id] ?? 0) + n;
+  return out;
+}
+
+/** Takes an item away for the rest of the battle; returns it to a taker if given. */
+export function takeItem(ctx: { battle: BattleState }, from: PokemonInstance, itemId: string, to?: PokemonInstance): void {
+  const h = stateOf(ctx.battle);
+  const gained = h.gained[from.uid];
+  if (gained?.[itemId]) {
+    gained[itemId]! -= 1;
+  } else {
+    h.lost[from.uid] = [...(h.lost[from.uid] ?? []), itemId];
+  }
+  if (to) h.gained[to.uid] = { ...h.gained[to.uid], [itemId]: (h.gained[to.uid]?.[itemId] ?? 0) + 1 };
+}
+
+export function setEmbargo(battle: BattleState, uid: string, turns: number): void {
+  stateOf(battle).embargo[uid] = turns;
+}
+export function setMagicRoom(battle: BattleState, turns: number): void {
+  stateOf(battle).magicRoom = turns;
+}
+/** End of turn: Embargo and Magic Room tick down. */
+export function tickItemRooms(battle: BattleState): void {
+  const h = stateOf(battle);
+  for (const k of Object.keys(h.embargo)) if (h.embargo[k]! > 0) h.embargo[k]! -= 1;
+  if (h.magicRoom > 0) h.magicRoom -= 1;
+}
+
+export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'> & { battle?: BattleState }, mon: PokemonInstance, side: Side): ActiveHook[] {
   const out: ActiveHook[] = [];
   const add = (items: Record<string, number> | undefined, teamOnly: boolean) => {
     for (const [itemId, copies] of Object.entries(items ?? {})) {
@@ -104,7 +151,7 @@ export function hooksOf(ctx: Pick<HeldContext, 'content' | 'teamItems'>, mon: Po
       }
     }
   };
-  add(mon.held, false);
+  add(effectiveHeld(ctx, mon), false);
   if (side === 'player') add(ctx.teamItems, true);
   return out;
 }

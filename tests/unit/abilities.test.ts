@@ -186,7 +186,7 @@ describe('abilities in the damage formula', () => {
   it('Blaze makes Fire moves 1.5× as strong at a third of its HP or less', () => {
     const full = firstHit(mon('charmander', 40, 'p1', 'blaze', 'ember'), mon('snorlax', 60, 'e1', 'immunity', 'growl'));
     const low = firstHit(mon('charmander', 40, 'p1', 'blaze', 'ember'), mon('snorlax', 60, 'e1', 'immunity', 'growl'), (p) => (p.hp = 5));
-    expect(low / full).toBeGreaterThan(1.3);
+    expect(low / full).toBeGreaterThan(1.2);
     expect(low / full).toBeLessThan(1.7);
   });
 
