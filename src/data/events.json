@@ -21046,6 +21046,188 @@
    ]
   },
   {
+   "id": "camp-council",
+   "name": "Camp Council",
+   "group": "Camp",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#20281f",
+    "effect": "hearts"
+   },
+   "intro": "A quiet camp between two roads. You have an hour. Your team is looking at you to decide how to spend it.",
+   "choices": [
+    {
+     "label": "Study a move together",
+     "chance": 0.6,
+     "success": {
+      "text": "Your lead works on a technique it has been curious about.",
+      "effects": [
+       {
+        "kind": "eggMove"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nothing clicks today, but the effort counts.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Settle a disagreement",
+     "success": {
+      "text": "You listen to both sides. The air clears, and the team is closer for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Scout ahead",
+     "success": {
+      "text": "You climb a ridge and see the road ahead.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "gymPreview"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Care for the injured",
+     "success": {
+      "text": "You tend every scrape and bruise.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "relic-shrine",
+   "name": "The Relic Shrine",
+   "group": "Relics",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2410",
+    "effect": "glint"
+   },
+   "intro": "Three relics rest on a stone table. A plaque reads: \"Each gift has its price. You may take only one.\"",
+   "choices": [
+    {
+     "label": "The Glass Crown (more Hyper, tougher rivals)",
+     "success": {
+      "text": "The crown hums on your head. Rivals will feel it too.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "glass-crown",
+        "name": "Glass Crown",
+        "effects": [
+         {
+          "kind": "hyperChanceMultiplier",
+          "value": 1.5
+         },
+         {
+          "kind": "rivalLevelOffset",
+          "value": 3
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Wanderer's Compass (more rare finds, weaker catches)",
+     "success": {
+      "text": "The needle spins toward strange places.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "wanderer-compass",
+        "name": "Wanderer's Compass",
+        "effects": [
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.6
+         },
+         {
+          "kind": "catchLevelOffset",
+          "value": -2
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The Heavy Heart (an extra held item, slower evolution)",
+     "success": {
+      "text": "Your Pokémon feel steadier, and slower to change.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "heavy-heart",
+        "name": "Heavy Heart",
+        "effects": [
+         {
+          "kind": "itemSlotOffset",
+          "value": 1
+         },
+         {
+          "kind": "evolutionLevelOffset",
+          "value": 4
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "rival-feud",
    "name": "Two Rivals, One Argument",
    "group": "Rival Feud",

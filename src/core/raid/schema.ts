@@ -49,8 +49,8 @@ export const RaidDefSchema = z.object({
   /** Shields: each threshold raises a shield worth `points` of the boss's max HP; the boss can't drop below the threshold until it breaks. */
   shield: z.object({ at: z.array(Fraction).min(1).max(3), points: z.number().min(0.05).max(0.5) }).nullable().default(null),
   phases: z.array(RaidPhaseSchema).max(3).default([]),
-  /** Every `everyTurns` turns the boss charges: its next hit is `boost` times stronger unless the player breaks a shield first. */
-  telegraph: z.object({ everyTurns: z.number().int().min(2).max(6), boost: z.number().min(1.1).max(2), text: z.string() }).nullable().default(null),
+  /** Every `everyTurns` turns the boss charges: its next hit is `boost` times stronger unless the player breaks a shield first, or puts the boss under one of the `interruptedBy` statuses (counterplay, catalog 24). */
+  telegraph: z.object({ everyTurns: z.number().int().min(2).max(6), boost: z.number().min(1.1).max(2), text: z.string(), interruptedBy: z.array(z.enum(['slp', 'par', 'frz'])).default(['slp', 'par', 'frz']) }).nullable().default(null),
   /** An extra attack after the normal actions, once the boss is under `belowHp`; at most `max` times per battle. */
   extraActions: z.object({ belowHp: Fraction, max: z.number().int().min(1).max(3) }).nullable().default(null),
   /** The raid ends when the timer runs out. */

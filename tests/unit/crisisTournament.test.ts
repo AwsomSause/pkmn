@@ -155,3 +155,19 @@ describe('Rival feud', () => {
     expect(eligibleEvents(content, run).map((e) => e.id)).not.toContain('rival-feud');
   });
 });
+
+describe('Relics and the Camp Council', () => {
+  it('a relic adds its upside and downside once, and the camp is a rest spot', async () => {
+    const { chooseEvent } = await import('../../src/core/events');
+    const run = fresh('relic');
+    const node = run.stage!.map.nodes[0]!;
+    node.sides.push({ id: 'event-r', kind: 'event', used: false, eventId: 'relic-shrine' });
+    run.stage!.current = node.id;
+    const before = run.perkEffects?.length ?? 0;
+    const r = chooseEvent(content, run, 'event-r', 0);
+    expect(r.run.perkEffects!.length).toBe(before + 2);
+    expect(r.run.perkEffects!.map((e) => e.kind)).toEqual(expect.arrayContaining(['hyperChanceMultiplier', 'rivalLevelOffset']));
+    expect(content.events.get('camp-council')!.stop).toBe('rest');
+    expect(content.events.get('camp-council')!.choices).toHaveLength(4);
+  });
+});
