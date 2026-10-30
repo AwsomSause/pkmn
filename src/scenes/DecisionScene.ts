@@ -33,7 +33,8 @@ import { partyRows, Picker } from '../ui/partyPanel';
 import { fitHeight } from '../ui/showcase';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
@@ -353,6 +354,7 @@ export class DecisionScene extends Phaser.Scene {
     const run = session.run!;
     const newName = getSpecies(content, caught.speciesId).name;
     this.picker = new Picker(this, {
+      glass: true,
       title: `Which Pokémon leaves to make room for ${newName}?`,
       columns: 2,
       rowHeight: 78,

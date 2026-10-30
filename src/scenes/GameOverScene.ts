@@ -11,7 +11,8 @@ import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 
 export class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -97,6 +98,12 @@ export class GameOverScene extends Phaser.Scene {
       color: COLORS.textLight,
       onSelect: () => this.scene.start('Hub'),
     });
-    onInputAction(this, (a) => menu.handle(a));
+    // Ignore keys mashed through the battle's last message so the summary
+    // isn't skipped the moment it appears.
+    let ready = false;
+    this.time.delayedCall(450, () => (ready = true));
+    onInputAction(this, (a) => {
+      if (ready) menu.handle(a);
+    });
   }
 }

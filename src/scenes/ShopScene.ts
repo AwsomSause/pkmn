@@ -57,6 +57,7 @@ export class ShopScene extends Phaser.Scene {
     });
 
     this.picker = new Picker(this, {
+      glass: true,
       title: data.notice ? `Shop  ·  ₽${run.money}  ·  ${data.notice}` : `Shop  ·  ₽${run.money}`,
       columns: 2,
       rowHeight: 52,

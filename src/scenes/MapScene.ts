@@ -19,6 +19,7 @@ import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
+import { openBondMenu } from '../ui/bondMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
@@ -65,6 +66,7 @@ type Option =
   | { kind: 'bag' }
   | { kind: 'items' }
   | { kind: 'story' }
+  | { kind: 'bond' }
   | { kind: 'box' };
 
 export class MapScene extends Phaser.Scene {
@@ -274,7 +276,7 @@ export class MapScene extends Phaser.Scene {
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
-    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
+    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
       const bxPos = x;
@@ -382,6 +384,8 @@ export class MapScene extends Phaser.Scene {
         return 'Use medicine or evolution items on your Pokémon.';
       case 'items':
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
+      case 'bond':
+        return 'See how each Pokémon feels about you: trust, affection, sync and more.';
       case 'story':
         return 'Read the story of your run so far, with the feelings each moment left.';
       case 'box':
@@ -466,6 +470,9 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'items':
         this.openItems();
+        break;
+      case 'bond':
+        openBondMenu(this.fieldHost());
         break;
       case 'story':
         openStoryMenu(this.fieldHost());
@@ -582,6 +589,7 @@ export class MapScene extends Phaser.Scene {
     const { session } = services();
     const pv = expeditionPreview(session.content, session.run!, sideId);
     const picker: Picker = new Picker(this, {
+      glass: true,
       title: `Expedition - Tier ${pv.tier}: ${pv.name}`,
       columns: 1,
       rowHeight: 190,
@@ -622,6 +630,7 @@ export class MapScene extends Phaser.Scene {
     const pv = totemPreview(content, session.run!, sideId);
     const species = content.species.get(pv.speciesId)!;
     const picker: Picker = new Picker(this, {
+      glass: true,
       title: `Totem - ${pv.name}`,
       columns: 1,
       rowHeight: 170,
@@ -663,6 +672,7 @@ export class MapScene extends Phaser.Scene {
     const species = content.species.get(pv.speciesId)!;
     const poor = session.run!.money < pv.entryCost;
     const picker: Picker = new Picker(this, {
+      glass: true,
       title: `Raid - Tier ${pv.tier}: ${pv.name}`,
       columns: 1,
       rowHeight: 150,
@@ -701,6 +711,7 @@ export class MapScene extends Phaser.Scene {
     const content = session.content;
     const offer = fishingOffer(content, session.run!, sideId);
     const picker: Picker = new Picker(this, {
+      glass: true,
       title: 'Something is biting! Which one?',
       columns: 1,
       rowHeight: 64,
@@ -738,6 +749,7 @@ export class MapScene extends Phaser.Scene {
     const content = session.content;
     const rows = this.itemRows();
     const picker: Picker = new Picker(this, {
+      glass: true,
       title: 'Map items',
       columns: 1,
       rowHeight: 78,
