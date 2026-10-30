@@ -1,0 +1,36 @@
+{
+  "note": "Crafting: materials drop from battles and raids, the Workshop service stop turns them into items. Run-only (not kept after the run). Balance numbers live here.",
+  "materials": [
+    { "id": "scrap", "name": "Scrap Metal", "blurb": "Steel, Electric, Ground, Rock and Normal foes." },
+    { "id": "fiber", "name": "Herb Fiber", "blurb": "Grass, Bug, Poison and Fairy foes." },
+    { "id": "ember", "name": "Ember Dust", "blurb": "Fire, Dragon and Fighting foes." },
+    { "id": "tide", "name": "Tide Pearl", "blurb": "Water, Ice and Flying foes." },
+    { "id": "aether", "name": "Aether Shard", "blurb": "Psychic, Ghost and Dark foes." },
+    { "id": "star-core", "name": "Star Core", "blurb": "Rare: gym leaders and tier 4+ raids." }
+  ],
+  "typeMaterial": {
+    "steel": "scrap", "electric": "scrap", "ground": "scrap", "rock": "scrap", "normal": "scrap",
+    "grass": "fiber", "bug": "fiber", "poison": "fiber", "fairy": "fiber",
+    "fire": "ember", "dragon": "ember", "fighting": "ember",
+    "water": "tide", "ice": "tide", "flying": "tide",
+    "psychic": "aether", "ghost": "aether", "dark": "aether"
+  },
+  "drops": {
+    "wild": { "chance": 0.6, "amount": 1 },
+    "trainer": { "chance": 1, "amount": 2 },
+    "boss": { "chance": 1, "amount": 4, "starCores": 1 },
+    "raidPerTier": 1,
+    "raidCoreMinTier": 4,
+    "raidCores": 1
+  },
+  "recipes": [
+    { "id": "potion", "name": "Brew a Potion", "cost": { "fiber": 2 }, "money": 0, "minBadges": 0, "gives": { "kind": "item", "item": "potion", "amount": 1 } },
+    { "id": "super-potion", "name": "Brew a Super Potion", "cost": { "fiber": 4 }, "money": 0, "minBadges": 0, "gives": { "kind": "item", "item": "super-potion", "amount": 1 } },
+    { "id": "hyper-potion", "name": "Brew a Hyper Potion", "cost": { "fiber": 6, "tide": 2 }, "money": 0, "minBadges": 1, "gives": { "kind": "item", "item": "hyper-potion", "amount": 1 } },
+    { "id": "revive", "name": "Craft a Revive", "cost": { "fiber": 2, "aether": 3 }, "money": 0, "minBadges": 0, "gives": { "kind": "item", "item": "revive", "amount": 1 } },
+    { "id": "great-ball", "name": "Forge Great Balls", "cost": { "scrap": 3 }, "money": 0, "minBadges": 0, "gives": { "kind": "item", "item": "great-ball", "amount": 3 } },
+    { "id": "ultra-ball", "name": "Forge Ultra Balls", "cost": { "scrap": 5, "ember": 2 }, "money": 0, "minBadges": 1, "gives": { "kind": "item", "item": "ultra-ball", "amount": 3 } },
+    { "id": "rare-token", "name": "Cut a Rare-Encounter Token", "cost": { "aether": 4, "star-core": 1 }, "money": 0, "minBadges": 1, "gives": { "kind": "rareToken", "battles": 2 } },
+    { "id": "mega-stone", "name": "Cut a Mega Stone", "cost": { "star-core": 3, "aether": 4, "ember": 2 }, "money": 500, "minBadges": 2, "gives": { "kind": "megaStone" } }
+  ]
+}
