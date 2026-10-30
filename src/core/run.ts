@@ -102,6 +102,7 @@ import {
 } from './story/hooks';
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
+import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
 import { simulateRivalWorld } from './rivals/world';
 import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
@@ -951,6 +952,8 @@ export interface TurnResult {
   cues: PresentationCue[];
   /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
   raidFailed?: boolean;
+  /** What the trainer says during the turn (presentation only). */
+  drama: DramaLine[];
 }
 
 /** The battle engine's view of the run's battle (the engine changes `run` in place). */
@@ -978,6 +981,14 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
  * Battle start: plays both first Pokémon's entry abilities (Intimidate,
  * Drizzle). Does nothing if they already happened. Uses no random numbers.
  */
+/** The trainer's opening line (shown once per battle; the saved state stops a repeat after a reload). */
+export function battleOpening(content: Content, current: RunState, dialogue: DialogueFrequency = 'normal'): { run: RunState; drama: DramaLine[] } {
+  assertPhase(current, 'battle');
+  const run = structuredClone(current);
+  const drama = openingDrama(content, run, dialogue);
+  return { run, drama };
+}
+
 export function beginBattle(content: Content, current: RunState): { run: RunState; events: RunEvent[] } {
   assertPhase(current, 'battle');
   if ((current.battle!.pendingEntry ?? []).length === 0) return { run: current, events: [] };
@@ -989,7 +1000,7 @@ export function beginBattle(content: Content, current: RunState): { run: RunStat
   return { run, events };
 }
 
-export function takeTurn(content: Content, current: RunState, action: PlayerAction): TurnResult {
+export function takeTurn(content: Content, current: RunState, action: PlayerAction, dialogue: DialogueFrequency = 'normal'): TurnResult {
   assertPhase(current, 'battle');
   const run = structuredClone(current);
   const battle = run.battle!;
@@ -1014,6 +1025,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
 
   const events = awardExperience(content, run, engineEvents);
   const cues = recordBattleTurn(content, current, run, events);
+  // Trainer dialogue for what just happened (presentation only: it never changes the battle).
+  const drama = planDrama(content, run, current.battle!, engineEvents, dialogue);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
     revertTransformations(content, battle, run.party);
@@ -1025,7 +1038,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     const caught = run.pending.find((d) => d.kind === 'caught');
     if (end.outcome === 'caught' && caught?.kind === 'caught') recordCaught(content, run, caught.mon);
     recordChanges(content, current, run, 'battle');
-    return { run, events, end, defeated: false, cues };
+    return { run, events, end, defeated: false, cues, drama };
   }
   if (battle.outcome === 'lose' && battle.raid) {
     failRaid(content, run);
@@ -1037,10 +1050,10 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     run.log.defeatedBy = { speciesId: enemy.speciesId, level: enemy.level, trainer: battle.trainer?.name ?? null };
     run.phase = 'over';
     recordChanges(content, current, run, 'battle');
-    return { run, events, end: null, defeated: true, cues };
+    return { run, events, end: null, defeated: true, cues, drama };
   }
   recordChanges(content, current, run, 'battle');
-  return { run, events, end: null, defeated: false, cues };
+  return { run, events, end: null, defeated: false, cues, drama };
 }
 
 /**

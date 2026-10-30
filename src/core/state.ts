@@ -2,6 +2,7 @@
 // and the permanent profile. These schemas double as save-file validators,
 // so the game refuses to load a save that doesn't match.
 
+import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
@@ -351,6 +352,8 @@ export const BattleStateSchema = z.object({
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
   raid: RaidBattleSchema.optional(),
+  /** Battle Drama Engine: what the trainer has already said (see core/drama). */
+  drama: DramaBattleSchema.default(freshDrama),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -651,6 +654,8 @@ export const SettingsSchema = z.object({
   effectIntensity: z.number().min(0).max(1),
   /** How fast battles play: normal, fast (2×) or quick (3×). Outcomes never depend on it. */
   battleSpeed: z.enum(['normal', 'fast', 'quick']),
+  /** How much trainers talk in battle: off, low, normal or high. */
+  dialogueFrequency: z.enum(['off', 'low', 'normal', 'high']),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

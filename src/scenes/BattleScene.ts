@@ -24,6 +24,7 @@ import { Bar, badge, drawPanel, Menu } from '../ui/widgets';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { planCues } from '../core/presentation/cues';
+import type { DramaLine } from '../core/drama';
 import { presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
@@ -480,6 +481,7 @@ export class BattleScene extends Phaser.Scene {
     }
     // Entry abilities (Intimidate, Drizzle) of the first two Pokémon.
     const { session } = services();
+    for (const line of session.battleOpening()) await this.sayTrainer(line);
     if ((battle.pendingEntry ?? []).length > 0 && !battle.needsSwitch) {
       const before = structuredClone(session.run!);
       const events = session.beginBattle();
@@ -724,7 +726,7 @@ export class BattleScene extends Phaser.Scene {
       this.nextPrompt();
       return;
     }
-    await this.playEvents(result.events, before, trainer, result.cues);
+    await this.playEvents(result.events, before, trainer, result.cues, result.drama);
 
     if (result.end) {
       await this.finish(result, trainer);
@@ -789,7 +791,12 @@ export class BattleScene extends Phaser.Scene {
     return before.party.find((m) => m.uid === uid) ?? before.battle?.enemyTeam.find((m) => m.uid === uid);
   }
 
-  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, storyCues: PresentationCue[] = []): Promise<void> {
+  /** A line of trainer dialogue: "Joey: \"Crush them!\"". */
+  private async sayTrainer(line: DramaLine): Promise<void> {
+    await this.say(`${line.speaker}: “${line.text}”`);
+  }
+
+  private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, storyCues: PresentationCue[] = [], drama: DramaLine[] = []): Promise<void> {
     const { session } = services();
     const content = session.content;
     const { battleAnimations, effectIntensity } = session.settings;
@@ -942,10 +949,12 @@ export class BattleScene extends Phaser.Scene {
       if (cue) {
         this.showMoment(cue, battleAnimations === 'full' && effectIntensity > 0);
         for (const line of cue.messages) await this.say(line);
-        continue;
+      } else {
+        const text = eventText(content, this.names(trainer), e);
+        if (text) await this.say(text);
       }
-      const text = eventText(content, this.names(trainer), e);
-      if (text) await this.say(text);
+      // What the trainer says about it (spoken lines, after the event's own text).
+      for (const line of drama.filter((d) => d.at === index)) await this.sayTrainer(line);
     }
     // Make sure the boxes match the real state at the end of the turn.
     const run = this.run;
