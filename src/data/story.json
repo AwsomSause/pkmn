@@ -3060,7 +3060,8 @@
     "title": "Stood Against the Storm",
     "contactFrom": 0.25,
     "escalationFrom": 0.4,
-    "grudgeAfter": 1
+    "grudgeAfter": 1,
+    "influenceRare": 1.25
   },
   "rarity": {
     "momentChance": 0.3,
