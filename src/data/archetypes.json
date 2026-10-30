@@ -11387,5 +11387,2513 @@
     "signaturePool": "trainer-lusamine-nihilego",
     "eventTags": [],
     "signatureMechanic": "beautiful-parasite"
+  },
+  {
+    "id": "npc-youngster-joey",
+    "name": "Youngster Joey",
+    "title": "The Youngster",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 3
+    },
+    "unlockText": "Win 3 battles",
+    "unlockCost": 25,
+    "spriteAssetId": "boss.npc_youngster",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "rattata",
+      "spearow",
+      "ekans",
+      "nidoran-m",
+      "meowth"
+    ],
+    "signaturePool": "trainer-npc-youngster-joey",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"My Rattata is in the top percentage of Rattata!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-lass-janice",
+    "name": "Lass Janice",
+    "title": "The Lass",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 8
+    },
+    "unlockText": "Defeat 8 wild Pokémon",
+    "unlockCost": 25,
+    "spriteAssetId": "boss.npc_lass",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "pidgey",
+      "clefairy",
+      "jigglypuff",
+      "oddish",
+      "eevee"
+    ],
+    "signaturePool": "trainer-npc-lass-janice",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Be gentle, okay? They are my friends.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-bug-catcher-wade",
+    "name": "Bug Catcher Wade",
+    "title": "The Bug Catcher",
+    "description": "Bug-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Bug-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 2
+    },
+    "unlockText": "Catch 2 Pokémon",
+    "unlockCost": 25,
+    "spriteAssetId": "boss.npc_bugcatcher",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "bug",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "bug"
+    ],
+    "signatureSpecies": [
+      "caterpie",
+      "weedle",
+      "paras",
+      "venonat",
+      "scyther"
+    ],
+    "signaturePool": "trainer-npc-bug-catcher-wade",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Bugs are way tougher than they look!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-camper-liam",
+    "name": "Camper Liam",
+    "title": "The Camper",
+    "description": "Ground-types gain 10% Defense — Speed is reduced by 5%.",
+    "pros": [
+      "Ground-types gain 10% Defense"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "runsFinished",
+      "atLeast": 1
+    },
+    "unlockText": "Finish a run",
+    "unlockCost": 25,
+    "spriteAssetId": "boss.npc_camper",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "ground",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "sandshrew",
+      "geodude",
+      "diglett",
+      "cubone",
+      "rhyhorn"
+    ],
+    "signaturePool": "trainer-npc-camper-liam",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Nothing beats a night under the stars.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-picnicker-gina",
+    "name": "Picnicker Gina",
+    "title": "The Picnicker",
+    "description": "Grass-types gain 15% more EXP — Grass-types take 5% more damage.",
+    "pros": [
+      "Grass-types gain 15% more EXP"
+    ],
+    "cons": [
+      "Grass-types take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "healStopsUsed",
+      "atLeast": 2
+    },
+    "unlockText": "Use 2 healing stops",
+    "unlockCost": 50,
+    "spriteAssetId": "boss.npc_picnicker",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "grass",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "grass",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "bulbasaur",
+      "oddish",
+      "bellsprout",
+      "exeggcute",
+      "tangela"
+    ],
+    "signaturePool": "trainer-npc-picnicker-gina",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"We packed sandwiches for the whole team!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-hiker-anthony",
+    "name": "Hiker Anthony",
+    "title": "The Hiker",
+    "description": "Rock-types gain 10% Defense — Speed is reduced by 5%.",
+    "pros": [
+      "Rock-types gain 10% Defense"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 8
+    },
+    "unlockText": "Win 8 battles",
+    "unlockCost": 50,
+    "spriteAssetId": "boss.npc_hiker",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "rock",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "rock"
+    ],
+    "signatureSpecies": [
+      "geodude",
+      "onix",
+      "machop",
+      "rhyhorn",
+      "sandshrew"
+    ],
+    "signaturePool": "trainer-npc-hiker-anthony",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Mountains make for stubborn Pokémon.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-fisherman-elliot",
+    "name": "Fisherman Elliot",
+    "title": "The Fisherman",
+    "description": "Catch rates are 15% better — Earn 5% less money.",
+    "pros": [
+      "Catch rates are 15% better"
+    ],
+    "cons": [
+      "Earn 5% less money"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 1
+    },
+    "unlockText": "Evolve a Pokémon",
+    "unlockCost": 50,
+    "spriteAssetId": "boss.npc_fisherman",
+    "modifiers": [
+      {
+        "kind": "captureMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "magikarp",
+      "poliwag",
+      "krabby",
+      "horsea",
+      "goldeen"
+    ],
+    "signaturePool": "trainer-npc-fisherman-elliot",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Patience is the whole trick.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-bird-keeper-perry",
+    "name": "Bird Keeper Perry",
+    "title": "The Bird Keeper",
+    "description": "Flying-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Flying-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 2
+    },
+    "unlockText": "Complete 2 map events",
+    "unlockCost": 50,
+    "spriteAssetId": "boss.npc_birdkeeper",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "flying",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "flying"
+    ],
+    "signatureSpecies": [
+      "pidgey",
+      "spearow",
+      "doduo",
+      "farfetchd",
+      "hoothoot"
+    ],
+    "signaturePool": "trainer-npc-bird-keeper-perry",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Watch them ride the wind!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-black-belt-kenji",
+    "name": "Black Belt Kenji",
+    "title": "The Black Belt",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+    },
+    "unlockText": "Catch 6 Pokémon",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_blackbelt",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "mankey",
+      "machop",
+      "tyrogue",
+      "hitmonlee",
+      "hitmonchan"
+    ],
+    "signaturePool": "trainer-npc-black-belt-kenji",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Hup! Train the body, train the Pokémon.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-biker-ryder",
+    "name": "Biker Ryder",
+    "title": "The Biker",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 1500
+    },
+    "unlockText": "Earn ₽1500",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_biker",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "poison"
+    ],
+    "signatureSpecies": [
+      "koffing",
+      "grimer",
+      "ekans",
+      "zubat",
+      "houndour"
+    ],
+    "signaturePool": "trainer-npc-biker-ryder",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Out of my way, rookie!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-burglar-quinn",
+    "name": "Burglar Quinn",
+    "title": "The Burglar",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 25
+    },
+    "unlockText": "Defeat 25 wild Pokémon",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_burglar",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "fire"
+    ],
+    "signatureSpecies": [
+      "growlithe",
+      "vulpix",
+      "ponyta",
+      "magmar",
+      "charmander"
+    ],
+    "signaturePool": "trainer-npc-burglar-quinn",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Finders keepers, right?\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-channeler-hester",
+    "name": "Channeler Hester",
+    "title": "The Channeler",
+    "description": "Special moves deal 10% more damage — Defense is reduced by 5%.",
+    "pros": [
+      "Special moves deal 10% more damage"
+    ],
+    "cons": [
+      "Defense is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 15
+    },
+    "unlockText": "Win 15 battles",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_channeler",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "ghost"
+    ],
+    "signatureSpecies": [
+      "gastly",
+      "misdreavus",
+      "shuppet",
+      "duskull",
+      "drifloon"
+    ],
+    "signaturePool": "trainer-npc-channeler-hester",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"I feel something behind you...\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-cooltrainer-marcus",
+    "name": "Cooltrainer Marcus",
+    "title": "The Cooltrainer",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 5
+    },
+    "unlockText": "Earn 5 candies",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_cooltrainer_m",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "dratini",
+      "bagon",
+      "gible",
+      "larvitar",
+      "charmander"
+    ],
+    "signaturePool": "trainer-npc-cooltrainer-marcus",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Only the best trainers get my respect.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-cooltrainer-selene",
+    "name": "Cooltrainer Selene",
+    "title": "The Cooltrainer",
+    "description": "Special moves deal 10% more damage — Defense is reduced by 5%.",
+    "pros": [
+      "Special moves deal 10% more damage"
+    ],
+    "cons": [
+      "Defense is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 3
+    },
+    "unlockText": "Evolve 3 Pokémon",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_cooltrainer_f",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "abra",
+      "ralts",
+      "slowpoke",
+      "natu",
+      "espeon"
+    ],
+    "signaturePool": "trainer-npc-cooltrainer-selene",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"My strategy is flawless.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-crush-girl-tamsin",
+    "name": "Crush Girl Tamsin",
+    "title": "The Crush Girl",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 6
+    },
+    "unlockText": "Complete 6 map events",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_crushgirl",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "makuhita",
+      "meditite",
+      "machop",
+      "riolu",
+      "mankey"
+    ],
+    "signaturePool": "trainer-npc-crush-girl-tamsin",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Throw a punch, then another!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-crush-kin-ivan-and-mira",
+    "name": "Crush Kin Ivan and Mira",
+    "title": "The Crush Kin",
+    "description": "Fighting-types gain 10% more EXP — HP is reduced by 5%.",
+    "pros": [
+      "Fighting-types gain 10% more EXP"
+    ],
+    "cons": [
+      "HP is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 25
+    },
+    "unlockText": "Win 25 battles",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_crushkin",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "fighting",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "tyrogue",
+      "timburr",
+      "mankey",
+      "makuhita",
+      "machop"
+    ],
+    "signaturePool": "trainer-npc-crush-kin-ivan-and-mira",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Two trainers, double the pressure!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-cue-ball-dutch",
+    "name": "Cue Ball Dutch",
+    "title": "The Cue Ball",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "runsFinished",
+      "atLeast": 3
+    },
+    "unlockText": "Finish 3 runs",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_cueball",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "fighting"
+    ],
+    "signatureSpecies": [
+      "machop",
+      "mankey",
+      "makuhita",
+      "meditite",
+      "riolu"
+    ],
+    "signaturePool": "trainer-npc-cue-ball-dutch",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Show me what you have got!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-engineer-baxter",
+    "name": "Engineer Baxter",
+    "title": "The Engineer",
+    "description": "Electric-types gain 15% more EXP — Electric-types take 5% more damage.",
+    "pros": [
+      "Electric-types gain 15% more EXP"
+    ],
+    "cons": [
+      "Electric-types take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 15
+    },
+    "unlockText": "Catch 15 Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_engineer",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "electric",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "electric",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "magnemite",
+      "voltorb",
+      "electabuzz",
+      "elekid",
+      "pikachu"
+    ],
+    "signaturePool": "trainer-npc-engineer-baxter",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Everything runs on current, even teams.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-gambler-lucky",
+    "name": "Gambler Lucky",
+    "title": "The Gambler",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 60
+    },
+    "unlockText": "Defeat 60 wild Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_gambler",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "meowth",
+      "snubbull",
+      "eevee",
+      "lickitung",
+      "chansey"
+    ],
+    "signaturePool": "trainer-npc-gambler-lucky",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Double or nothing on this battle!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-gentleman-alfred",
+    "name": "Gentleman Alfred",
+    "title": "The Gentleman",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+    },
+    "unlockText": "Clear a region",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_gentleman",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "growlithe",
+      "meowth",
+      "snubbull",
+      "eevee",
+      "houndour"
+    ],
+    "signaturePool": "trainer-npc-gentleman-alfred",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Proper form, proper manners.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-juggler-pierre",
+    "name": "Juggler Pierre",
+    "title": "The Juggler",
+    "description": "Psychic-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Psychic-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 6
+    },
+    "unlockText": "Win 6 battles",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_juggler",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "psychic",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "drowzee",
+      "abra",
+      "voltorb",
+      "mr-mime",
+      "natu"
+    ],
+    "signaturePool": "trainer-npc-juggler-pierre",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Keep your eyes on the ball. And the Pokémon.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-lady-cordelia",
+    "name": "Lady Cordelia",
+    "title": "The Lady",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 16
+    },
+    "unlockText": "Defeat 16 wild Pokémon",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_lady",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "clefairy",
+      "togepi",
+      "snubbull",
+      "jigglypuff",
+      "cleffa"
+    ],
+    "signaturePool": "trainer-npc-lady-cordelia",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"My Pokémon are only the finest.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-painter-vera",
+    "name": "Painter Vera",
+    "title": "The Painter",
+    "description": "Grass-types gain 15% more EXP — Grass-types take 5% more damage.",
+    "pros": [
+      "Grass-types gain 15% more EXP"
+    ],
+    "cons": [
+      "Grass-types take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 4
+    },
+    "unlockText": "Catch 4 Pokémon",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_painter",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "grass",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "grass",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "smoochum",
+      "bellsprout",
+      "oddish",
+      "ditto",
+      "mime-jr"
+    ],
+    "signaturePool": "trainer-npc-painter-vera",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Every battle is a canvas.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-pok-maniac-rex",
+    "name": "Poké Maniac Rex",
+    "title": "The Poké Maniac",
+    "description": "Catch rates are 15% better — Earn 5% less money.",
+    "pros": [
+      "Catch rates are 15% better"
+    ],
+    "cons": [
+      "Earn 5% less money"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "runsFinished",
+      "atLeast": 2
+    },
+    "unlockText": "Finish a run",
+    "unlockCost": 75,
+    "spriteAssetId": "boss.npc_pokemaniac",
+    "modifiers": [
+      {
+        "kind": "captureMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "rock"
+    ],
+    "signatureSpecies": [
+      "cubone",
+      "omanyte",
+      "kabuto",
+      "aerodactyl",
+      "lileep"
+    ],
+    "signaturePool": "trainer-npc-pok-maniac-rex",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"I collect them all, and I mean all!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-pok-mon-breeder-delia",
+    "name": "Pokémon Breeder Delia",
+    "title": "The Pokémon Breeder",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "healStopsUsed",
+      "atLeast": 4
+    },
+    "unlockText": "Use 4 healing stops",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_pokemonbreeder",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "togepi",
+      "pichu",
+      "cleffa",
+      "igglybuff",
+      "azurill"
+    ],
+    "signaturePool": "trainer-npc-pok-mon-breeder-delia",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Raised with love since the egg.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-pok-mon-ranger-hal",
+    "name": "Pokémon Ranger Hal",
+    "title": "The Pokémon Ranger",
+    "description": "Catch rates are 15% better — Earn 5% less money.",
+    "pros": [
+      "Catch rates are 15% better"
+    ],
+    "cons": [
+      "Earn 5% less money"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 16
+    },
+    "unlockText": "Win 16 battles",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_pokemonranger_m",
+    "modifiers": [
+      {
+        "kind": "captureMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "bulbasaur",
+      "bellsprout",
+      "oddish",
+      "pikachu",
+      "growlithe"
+    ],
+    "signaturePool": "trainer-npc-pok-mon-ranger-hal",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Keep the wild safe, and the wild keeps us safe.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-pok-mon-ranger-willa",
+    "name": "Pokémon Ranger Willa",
+    "title": "The Pokémon Ranger",
+    "description": "Catch rates are 15% better — Earn 5% less money.",
+    "pros": [
+      "Catch rates are 15% better"
+    ],
+    "cons": [
+      "Earn 5% less money"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 2
+    },
+    "unlockText": "Evolve a Pokémon",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_pokemonranger_f",
+    "modifiers": [
+      {
+        "kind": "captureMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "flying"
+    ],
+    "signatureSpecies": [
+      "pidgey",
+      "taillow",
+      "starly",
+      "hoothoot",
+      "spearow"
+    ],
+    "signaturePool": "trainer-npc-pok-mon-ranger-willa",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Capture on, ranger style!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-psychic-edmund",
+    "name": "Psychic Edmund",
+    "title": "The Psychic",
+    "description": "Special moves deal 10% more damage — Defense is reduced by 5%.",
+    "pros": [
+      "Special moves deal 10% more damage"
+    ],
+    "cons": [
+      "Defense is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 4
+    },
+    "unlockText": "Complete 4 map events",
+    "unlockCost": 100,
+    "spriteAssetId": "boss.npc_psychic_m",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "abra",
+      "drowzee",
+      "slowpoke",
+      "natu",
+      "ralts"
+    ],
+    "signaturePool": "trainer-npc-psychic-edmund",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"I knew you were coming.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-psychic-lorna",
+    "name": "Psychic Lorna",
+    "title": "The Psychic",
+    "description": "Special moves deal 10% more damage — Defense is reduced by 5%.",
+    "pros": [
+      "Special moves deal 10% more damage"
+    ],
+    "cons": [
+      "Defense is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 12
+    },
+    "unlockText": "Catch 12 Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_psychic_f",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "special",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "psychic"
+    ],
+    "signatureSpecies": [
+      "ralts",
+      "abra",
+      "mime-jr",
+      "wynaut",
+      "espeon"
+    ],
+    "signaturePool": "trainer-npc-psychic-lorna",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Your next move is already in my head.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-rocker-axel",
+    "name": "Rocker Axel",
+    "title": "The Rocker",
+    "description": "Electric-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Electric-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 3000
+    },
+    "unlockText": "Earn ₽3000",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_rocker",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "electric",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "voltorb",
+      "magnemite",
+      "elekid",
+      "pikachu",
+      "shinx"
+    ],
+    "signaturePool": "trainer-npc-rocker-axel",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Turn it up to eleven!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-ruin-maniac-hadrian",
+    "name": "Ruin Maniac Hadrian",
+    "title": "The Ruin Maniac",
+    "description": "Ground-types gain 10% Defense — Speed is reduced by 5%.",
+    "pros": [
+      "Ground-types gain 10% Defense"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 50
+    },
+    "unlockText": "Defeat 50 wild Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_ruinmaniac",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "ground",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "sandshrew",
+      "geodude",
+      "cubone",
+      "baltoy",
+      "trapinch"
+    ],
+    "signaturePool": "trainer-npc-ruin-maniac-hadrian",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"These ruins hold such secrets.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-sailor-murphy",
+    "name": "Sailor Murphy",
+    "title": "The Sailor",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 30
+    },
+    "unlockText": "Win 30 battles",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_sailor",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "tentacool",
+      "krabby",
+      "shellder",
+      "wingull",
+      "horsea"
+    ],
+    "signaturePool": "trainer-npc-sailor-murphy",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Hoist the sails, matey!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-scientist-dr-orson",
+    "name": "Scientist Dr. Orson",
+    "title": "The Scientist",
+    "description": "Electric-types gain 15% more EXP — Electric-types take 5% more damage.",
+    "pros": [
+      "Electric-types gain 15% more EXP"
+    ],
+    "cons": [
+      "Electric-types take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 10
+    },
+    "unlockText": "Earn 10 candies",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_scientist",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "electric",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "electric",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "magnemite",
+      "porygon",
+      "grimer",
+      "voltorb",
+      "ditto"
+    ],
+    "signaturePool": "trainer-npc-scientist-dr-orson",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"A fascinating battle sample.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-sis-and-bro-amy-and-tim",
+    "name": "Sis and Bro Amy and Tim",
+    "title": "The Sis and Bro",
+    "description": "Water-types gain 10% more EXP — HP is reduced by 5%.",
+    "pros": [
+      "Water-types gain 10% more EXP"
+    ],
+    "cons": [
+      "HP is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 6
+    },
+    "unlockText": "Evolve 6 Pokémon",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_sisandbro",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "water",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "poliwag",
+      "horsea",
+      "tentacool",
+      "staryu",
+      "psyduck"
+    ],
+    "signaturePool": "trainer-npc-sis-and-bro-amy-and-tim",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"We always fight together!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-super-nerd-miles",
+    "name": "Super Nerd Miles",
+    "title": "The Super Nerd",
+    "description": "Poison-types gain 15% more EXP — Poison-types take 5% more damage.",
+    "pros": [
+      "Poison-types gain 15% more EXP"
+    ],
+    "cons": [
+      "Poison-types take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 12
+    },
+    "unlockText": "Complete 12 map events",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_supernerd",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "poison",
+        "value": 1.15
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "type": "poison",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "poison"
+    ],
+    "signatureSpecies": [
+      "grimer",
+      "koffing",
+      "magnemite",
+      "voltorb",
+      "porygon"
+    ],
+    "signaturePool": "trainer-npc-super-nerd-miles",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"I did the math on your odds.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-swimmer-kai",
+    "name": "Swimmer Kai",
+    "title": "The Swimmer",
+    "description": "Water-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Water-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 50
+    },
+    "unlockText": "Win 50 battles",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_swimmer_m",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "tentacool",
+      "staryu",
+      "horsea",
+      "goldeen",
+      "psyduck"
+    ],
+    "signaturePool": "trainer-npc-swimmer-kai",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"The water is perfect today!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-swimmer-marina",
+    "name": "Swimmer Marina",
+    "title": "The Swimmer",
+    "description": "Water-types deal 10% more damage — Speed is reduced by 5%.",
+    "pros": [
+      "Water-types deal 10% more damage"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "runsFinished",
+      "atLeast": 6
+    },
+    "unlockText": "Finish 6 runs",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_swimmer_f",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "staryu",
+      "shellder",
+      "goldeen",
+      "wooper",
+      "azurill"
+    ],
+    "signaturePool": "trainer-npc-swimmer-marina",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Dive in with me!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-swimmer-finn",
+    "name": "Swimmer Finn",
+    "title": "The Swimmer",
+    "description": "Water-types gain 10% Defense — Speed is reduced by 5%.",
+    "pros": [
+      "Water-types gain 10% Defense"
+    ],
+    "cons": [
+      "Speed is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 30
+    },
+    "unlockText": "Catch 30 Pokémon",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_swimmer2_m",
+    "modifiers": [
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "type": "water",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "krabby",
+      "poliwag",
+      "slowpoke",
+      "totodile",
+      "mudkip"
+    ],
+    "signaturePool": "trainer-npc-swimmer-finn",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Cannonball into battle!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-swimmer-coral",
+    "name": "Swimmer Coral",
+    "title": "The Swimmer",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 120
+    },
+    "unlockText": "Defeat 120 wild Pokémon",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_swimmer2_f",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "seel",
+      "lapras",
+      "horsea",
+      "lotad",
+      "marill"
+    ],
+    "signaturePool": "trainer-npc-swimmer-coral",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Swim and splash!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-tamer-garrett",
+    "name": "Tamer Garrett",
+    "title": "The Tamer",
+    "description": "Physical moves deal 10% more damage — Take 5% more damage.",
+    "pros": [
+      "Physical moves deal 10% more damage"
+    ],
+    "cons": [
+      "Take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+    },
+    "unlockText": "Clear a region",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_tamer",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "category": "physical",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "growlithe",
+      "sandshrew",
+      "rhyhorn",
+      "mankey",
+      "houndour"
+    ],
+    "signaturePool": "trainer-npc-tamer-garrett",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Wild or not, they listen to me.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-team-rocket-grunt-boris",
+    "name": "Team Rocket Grunt Boris",
+    "title": "The Team Rocket Grunt",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 9
+    },
+    "unlockText": "Win 9 battles",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_teamrocket_m",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "dark"
+    ],
+    "signatureSpecies": [
+      "rattata",
+      "zubat",
+      "koffing",
+      "ekans",
+      "houndour"
+    ],
+    "signaturePool": "trainer-npc-team-rocket-grunt-boris",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Hand over your Pokémon!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-team-rocket-grunt-jessa",
+    "name": "Team Rocket Grunt Jessa",
+    "title": "The Team Rocket Grunt",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 24
+    },
+    "unlockText": "Defeat 24 wild Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_teamrocket_f",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "poison"
+    ],
+    "signatureSpecies": [
+      "ekans",
+      "grimer",
+      "zubat",
+      "meowth",
+      "koffing"
+    ],
+    "signaturePool": "trainer-npc-team-rocket-grunt-jessa",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Prepare for trouble, rookie!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-tuber-pip",
+    "name": "Tuber Pip",
+    "title": "The Tuber",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+    },
+    "unlockText": "Catch 6 Pokémon",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_tuber_m",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "psyduck",
+      "poliwag",
+      "goldeen",
+      "marill",
+      "wooper"
+    ],
+    "signaturePool": "trainer-npc-tuber-pip",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Float on, battle later.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-tuber-dot",
+    "name": "Tuber Dot",
+    "title": "The Tuber",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "runsFinished",
+      "atLeast": 3
+    },
+    "unlockText": "Finish a run",
+    "unlockCost": 125,
+    "spriteAssetId": "boss.npc_tuber_f",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "marill",
+      "psyduck",
+      "azurill",
+      "lotad",
+      "goldeen"
+    ],
+    "signaturePool": "trainer-npc-tuber-dot",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Splash fight!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-tuber-rudy",
+    "name": "Tuber Rudy",
+    "title": "The Tuber",
+    "description": "Catch rates are 15% better — Earn 5% less money.",
+    "pros": [
+      "Catch rates are 15% better"
+    ],
+    "cons": [
+      "Earn 5% less money"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "healStopsUsed",
+      "atLeast": 6
+    },
+    "unlockText": "Use 6 healing stops",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_tuber2_m",
+    "modifiers": [
+      {
+        "kind": "captureMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "wooper",
+      "poliwag",
+      "tentacool",
+      "krabby",
+      "magikarp"
+    ],
+    "signaturePool": "trainer-npc-tuber-rudy",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Tube life is the best life.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-tuber-sunny",
+    "name": "Tuber Sunny",
+    "title": "The Tuber",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 24
+    },
+    "unlockText": "Win 24 battles",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_tuber2_f",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "staryu",
+      "lotad",
+      "marill",
+      "horsea",
+      "wingull"
+    ],
+    "signaturePool": "trainer-npc-tuber-sunny",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Come join the waves!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-twins-nia-and-mia",
+    "name": "Twins Nia and Mia",
+    "title": "The Twins",
+    "description": "Fairy-types gain 10% more EXP — HP is reduced by 5%.",
+    "pros": [
+      "Fairy-types gain 10% more EXP"
+    ],
+    "cons": [
+      "HP is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 3
+    },
+    "unlockText": "Evolve a Pokémon",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_twins",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "fairy",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "clefairy",
+      "cleffa",
+      "togepi",
+      "jigglypuff",
+      "pichu"
+    ],
+    "signaturePool": "trainer-npc-twins-nia-and-mia",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Two for the price of one!\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-young-couple-dan-and-eri",
+    "name": "Young Couple Dan and Eri",
+    "title": "The Young Couple",
+    "description": "Normal-types gain 10% more EXP — HP is reduced by 5%.",
+    "pros": [
+      "Normal-types gain 10% more EXP"
+    ],
+    "cons": [
+      "HP is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 6
+    },
+    "unlockText": "Complete 6 map events",
+    "unlockCost": 150,
+    "spriteAssetId": "boss.npc_youngcouple",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "normal",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "eevee",
+      "vulpix",
+      "growlithe",
+      "pichu",
+      "meowth"
+    ],
+    "signaturePool": "trainer-npc-young-couple-dan-and-eri",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Together we cannot lose.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-beauty-bianca",
+    "name": "Beauty Bianca",
+    "title": "The Beauty",
+    "description": "Earn 10% more money — Earn 5% less EXP.",
+    "pros": [
+      "Earn 10% more money"
+    ],
+    "cons": [
+      "Earn 5% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "pokemonCaught",
+      "atLeast": 18
+    },
+    "unlockText": "Catch 18 Pokémon",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_beauty",
+    "modifiers": [
+      {
+        "kind": "moneyMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "staryu",
+      "goldeen",
+      "seel",
+      "horsea",
+      "marill"
+    ],
+    "signaturePool": "trainer-npc-beauty-bianca",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"My Pokémon sparkle, and so do I.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-aroma-lady-rosalind",
+    "name": "Aroma Lady Rosalind",
+    "title": "The Aroma Lady",
+    "description": "Healing items work 15% better — Moves deal 5% less damage.",
+    "pros": [
+      "Healing items work 15% better"
+    ],
+    "cons": [
+      "Moves deal 5% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 4500
+    },
+    "unlockText": "Earn ₽4500",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_aromalady",
+    "modifiers": [
+      {
+        "kind": "healingMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "oddish",
+      "bellsprout",
+      "hoppip",
+      "budew",
+      "bulbasaur"
+    ],
+    "signaturePool": "trainer-npc-aroma-lady-rosalind",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Smell the flowers, then fall to them.\"",
+    "unlockStatus": "supported"
+  },
+  {
+    "id": "npc-cool-couple-leon-and-sky",
+    "name": "Cool Couple Leon and Sky",
+    "title": "The Cool Couple",
+    "description": "Normal-types gain 10% more EXP — HP is reduced by 5%.",
+    "pros": [
+      "Normal-types gain 10% more EXP"
+    ],
+    "cons": [
+      "HP is reduced by 5%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "wildDefeated",
+      "atLeast": 75
+    },
+    "unlockText": "Defeat 75 wild Pokémon",
+    "unlockCost": 175,
+    "spriteAssetId": "boss.npc_coolcouple",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "type": "normal",
+        "value": 1.1
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 0.95
+      }
+    ],
+    "signatureTypes": [
+      "normal"
+    ],
+    "signatureSpecies": [
+      "eevee",
+      "ponyta",
+      "vulpix",
+      "growlithe",
+      "pikachu"
+    ],
+    "signaturePool": "trainer-npc-cool-couple-leon-and-sky",
+    "eventTags": [
+      "npc"
+    ],
+    "signatureMechanic": null,
+    "unlockFlavor": "\"Stylish and strong, that is us.\"",
+    "unlockStatus": "supported"
   }
 ]

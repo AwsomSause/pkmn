@@ -54,15 +54,18 @@ const ORIGINS: Record<string, string> = {
   alain: 'an x', 'ash-kalos': 'an x', ash: 'an k', 'todd-snap': 'an k', trace: 'an k', trevor: 'an k',
 };
 
+/** Ordinary NPC trainers (ids `npc-...`) are the classic Kanto classes. */
+const originOf = (id: string): string | undefined => ORIGINS[id] ?? (id.startsWith('npc-') ? 'rby k' : undefined);
+
 export function trainerGame(a: Archetype, byId: (id: string) => Archetype | undefined = () => undefined): Game {
   const base = a.evolvedFrom ? byId(a.evolvedFrom) : undefined;
-  const code = ORIGINS[(base ?? a).id];
+  const code = originOf((base ?? a).id);
   return code ? (G[code.split(' ')[0]!] ?? 'Other') : 'Other';
 }
 
 export function trainerRegion(a: Archetype, byId: (id: string) => Archetype | undefined = () => undefined): Region {
   const base = a.evolvedFrom ? byId(a.evolvedFrom) : undefined;
-  const code = ORIGINS[(base ?? a).id];
+  const code = originOf((base ?? a).id);
   return code ? (R[code.split(' ')[1]!] ?? 'Other') : 'Other';
 }
 
