@@ -31,8 +31,8 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 |---|---|
 | Untitled document phases A, B | DONE (except new NPC classes); C–G TODO (C overlaps the planning thread) |
 | Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
-| The Battle Drama Engine (9 phases) | TODO |
 | Overdrive Hyper Techno Supreme Z | PART: §1 Phase 1 events + §2 emotions tags + §4 Hyper evolutions (4 transform moments + Determination Evolution memory) DONE; §4 Signature Move Awakening DONE (also §3 "It Mastered the Power Within"); §3 other 29 events, §5 (6 unusual events), §6 chains, §7 generator TODO |
+| The Battle Drama Engine (9 phases) | PART: see table below |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
 | Trainers.md perks | TODO |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
@@ -71,3 +71,17 @@ Framework (id, name, category, unlockRequirements, difficultyTiers, durationLimi
 
 ### Blueprint acceptance and milestones
 M1 audit DONE (this slice); M2 shared infrastructure PART (reward claim, entry cost and save guards done for raids); M3 Raid MVP DONE; M4–M8 TODO.
+## Battle Drama Engine (guide: "The Battle Drama Engine (text).md")
+Code: `src/core/drama/`, data `src/data/drama.json`, tests `tests/unit/drama.test.ts`.
+| Item | Status |
+|---|---|
+| P1 Repository audit + plan (events already exist as `BattleEvent`; hooked after `takeTurn`/battle start; lines are presentation only) | DONE (this file) |
+| P2 Event system: stable ids, dedupe, battle start, move, crit, faint, switch, low HP, end | DONE (limited: no sent-out/status/missed/survived/evolution/Hyper/Overdrive/turning-point events yet) |
+| P3 Dialogue: voices, rival voice from traits, rival callbacks from real history, no repeats, budgets, observed player habit | DONE (limited: archetype/arc/bond-based picks and encouragement/post-battle callbacks TODO) |
+| P4 Signature attack presentations | TODO (declarations by move power only) |
+| P5 Mid-battle evolution | TODO |
+| P6 Dramatic event library (13 events) | TODO |
+| P7 Relationship/rival/bond integration; memories | TODO (rival callback only) |
+| P8 Pacing director: tiers, gaps, budgets, dialogue-frequency setting (settings v4) | DONE (limited: animation-speed/reduced-motion already exist) |
+| P9 Tests: 14 unit tests; 3 scripted scenarios, evolution/Hyper tests | PART |
+| §9 Emergent battle memories | TODO |

@@ -72,7 +72,7 @@ describe('save manager', () => {
     MIGRATIONS.settings[original] = (data) => ({ ...(data as object), muted: true });
     try {
       storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 1, savedAt: '', data: { musicVolume: 0.1, sfxVolume: 0.2, muted: false } }));
-      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal' });
+      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' });
     } finally {
       CURRENT_VERSIONS.settings = original;
       delete MIGRATIONS.settings[original];
@@ -181,6 +181,6 @@ describe('battle speed setting', () => {
   it('settings saved before v3 load with normal speed', () => {
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 2, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'reduced', effectIntensity: 0.5 } }));
-    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ battleAnimations: 'reduced', battleSpeed: 'normal' });
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ battleAnimations: 'reduced', battleSpeed: 'normal', dialogueFrequency: 'normal' });
   });
 });

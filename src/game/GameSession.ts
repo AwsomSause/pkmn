@@ -12,6 +12,7 @@ import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progre
 import { makeRandomSeed } from '../core/rng';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
+import type { DramaLine } from '../core/drama';
 import * as Run from '../core/run';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -170,8 +171,17 @@ export class GameSession {
     return result.events;
   }
 
+  /** The trainer's opening line, once per battle. */
+  battleOpening(): DramaLine[] {
+    const result = Run.battleOpening(this.content, this.requireRun(), this.settings.dialogueFrequency);
+    if (result.drama.length === 0) return [];
+    this.run = result.run;
+    this.persistRun();
+    return result.drama;
+  }
+
   takeTurn(action: PlayerAction): Run.TurnResult {
-    const result = Run.takeTurn(this.content, this.requireRun(), action);
+    const result = Run.takeTurn(this.content, this.requireRun(), action, this.settings.dialogueFrequency);
     this.run = result.run;
     this.persistRun();
     if (result.run.phase === 'over') this.finishRun();

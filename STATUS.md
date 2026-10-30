@@ -3,7 +3,7 @@
 One-page snapshot. Read this instead of CHECKLIST.md unless you need a milestone's full list or known limits (then grep its heading there). **Update the matching line here in the same PR that finishes a slice.** Last updated 2026-10-30.
 
 ## Saves
-Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 13, settings 3, meta 1. Next free run version: 14 (check `origin/main` first; another thread may have taken it).
+Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 13, settings 4, meta 1. Next free run version: 14 (check `origin/main` first; another thread may have taken it).
 
 ## Done
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
@@ -17,6 +17,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 7, run 
 - Untitled doc Phase B (part): catch screen shows all six stats, base stats + BST, ability, evolution, comparison with lead (`core/catchSummary.ts`). Not yet: settings toggles, trainer bands, new NPC classes.
 - Untitled doc Phase B (settings): battle speed (normal/fast/quick) in settings v3. Reduced motion already existed (battleAnimations). Still open: trainer bands, new NPC classes.
 - Untitled doc Phase B (trainer bands): `trainerTeam.earlyCaps` = stage 1 has 1 Pokémon, stages 2–6 cap 2–4. NPC classes audit: 17 classes use existing sprites; no new classes yet.
+- Battle Drama Engine slice 1: trainers speak in battle (`core/drama`, `data/drama.json`): opening, commands, declarations, reactions, switches, endings, rival callbacks; budgets by trainer class; settings v4 "Trainer talk". Tracker: `docs/plans/coverage-tracker.md`.
 - M9 battle animations + settings; boss teams (229 bosses).
 - Starter Sets slice 1 (plan `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md`): Starter Laboratory has 70 sets in 10 categories (all regions, 18 types, roles, player trainers, 10 villainous teams, 9 Leagues, 7 spin-off games). Pools can list evolved species, bosses or a type/region filter (`core/runPrep.ts eligibleSpecies`).
 - Trainer identity (plan Part 2a): signature types/species/set on `archetypes.json`; a signature Pokémon may take the last starter slot (50%, own seed, never forced); Cynthia (sees gym teams), Oak (+50% Research Points, sees wild Pokémon, −15% money) and N (+50% friendship) are playable.

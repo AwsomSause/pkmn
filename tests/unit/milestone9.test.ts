@@ -183,13 +183,13 @@ describe('animation settings', () => {
   it('older settings get the new animation options when loaded', () => {
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 1, savedAt: '', data: { musicVolume: 0.3, sfxVolume: 0.4, muted: false } }));
-    expect(new SaveManager(storage, content).loadSettings()).toEqual({ musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal' });
+    expect(new SaveManager(storage, content).loadSettings()).toEqual({ musicVolume: 0.3, sfxVolume: 0.4, muted: false, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' });
   });
 
   it('saves and reloads them', () => {
     const storage = new MemoryStorageProvider();
     const saves = new SaveManager(storage, content);
-    saves.saveSettings({ musicVolume: 0.5, sfxVolume: 0.5, muted: true, battleAnimations: 'reduced', effectIntensity: 0.25, battleSpeed: 'fast' });
+    saves.saveSettings({ musicVolume: 0.5, sfxVolume: 0.5, muted: true, battleAnimations: 'reduced', effectIntensity: 0.25, battleSpeed: 'fast', dialogueFrequency: 'normal' });
     expect(saves.loadSettings()).toMatchObject({ battleAnimations: 'reduced', effectIntensity: 0.25 });
   });
 });
