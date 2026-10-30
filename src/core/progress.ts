@@ -19,6 +19,7 @@ import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockRewa
 import type { Payout, Profile, RunState } from './state';
 import { topMoments } from './story/record';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
+import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
@@ -130,6 +131,8 @@ export interface RunEndSummary {
   masteryUps: MasteryRankUp[];
   /** Game event objectives and rewards finished by this run. */
   gameEvents: GameEventPayout[];
+  /** Daily Run, Spooky and Endless rewards earned by this run. */
+  modeRewards: ModeRewardPaid[];
   /** The Research Directive and how far it got (null: none, or the run doesn't count). */
   directive: DirectiveProgress | null;
 }
@@ -189,6 +192,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   }
   const questSteps = counts ? awardQuestSteps(content, profile, questTrainer(content, run.archetypeId), now) : [];
   const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
+  const modeRewards = counts ? awardModeRewards(profile, run, now) : [];
   const gameEvents = counts ? awardGameEvents(content, profile, run, { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0 }, now) : [];
 
   const raw = runPayout(content, run);
@@ -227,7 +231,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, directive };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, modeRewards, directive };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';
