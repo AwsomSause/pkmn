@@ -81,8 +81,8 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
     itemCatalog: catalog.filter((e) => !eventItem(e)),
-    // The Camp Council (one more rest spot) and the Relic Shrine (one more rare event) would shift what an old seed meets, so they are left out too.
-    events: { events: (RAW_CONTENT.events as { events: { id: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
+    // The Camp Council (one more rest spot) the Relic Shrine and the world events (milestones, rare sites, callbacks, legendary route) would shift what an old seed meets, so they are left out too.
+    events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
     // Wild pairs and Tate & Liza's double battle came later too.
     balance: { ...structuredClone(RAW_CONTENT.balance as object), doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
   });

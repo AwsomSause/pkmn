@@ -20,6 +20,7 @@ import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type PokemonInstance, type RunState } from '../core/state';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
+import { moveBlockReason } from '../core/battle/moveBlock';
 import { playCry, playMusic, playSfx } from '../ui/audio';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
@@ -1013,7 +1014,10 @@ export class BattleScene extends Phaser.Scene {
       return z ? (z.category === 'status' ? `Z-${name}` : z.name) : name;
     };
     const options = anyPp
-      ? mon.moves.map((slot, i) => ({ label: zLabel(i, content.moves.get(slot.id)!.name) + (wouldRefuse(content, this.run, mon, slot.id) ? ' (may refuse)' : ''), disabled: slot.pp <= 0 || (zMoves !== null && !zMoves[i]) }))
+      ? mon.moves.map((slot, i) => {
+          const why = moveBlockReason(content, this.run.battle!, mon, i);
+          return { label: zLabel(i, content.moves.get(slot.id)!.name) + (wouldRefuse(content, this.run, mon, slot.id) ? ' (may refuse)' : '') + (why ? ` (${why})` : ''), disabled: slot.pp <= 0 || (zMoves !== null && !zMoves[i]) };
+        })
       : [{ label: 'Struggle' }];
     // Moves fill the message bar; the command window shows the focused move's details.
     this.message.setVisible(false);

@@ -171,3 +171,50 @@ describe('Relics and the Camp Council', () => {
     expect(content.events.get('camp-council')!.choices).toHaveLength(4);
   });
 });
+
+describe('World events', () => {
+  it('a milestone is placed at the middle stage of a region, callbacks wait for what you did, and the old foe is the species that beat you most', async () => {
+    const { oldFoe, noteLoss } = await import('../../src/core/story/promises');
+    const run = fresh('world');
+    run.stage!.index = 1;
+    addEventStops(content, run);
+    expect(stops(run).some((id) => id.startsWith('milestone-'))).toBe(false);
+    run.stage!.index = 2;
+    run.stage!.map.nodes.forEach((n) => (n.sides = []));
+    addEventStops(content, run);
+    expect(stops(run).some((id) => id.startsWith('milestone-'))).toBe(true);
+
+    const ids = () => eligibleEvents(content, run).map((e) => e.id);
+    expect(ids()).not.toContain('merchant-remembers');
+    run.story.flags['ev:ignored-crisis'] = 1;
+    expect(ids()).toContain('merchant-remembers');
+
+    expect(oldFoe(run)).toBeNull();
+    expect(ids()).not.toContain('old-foe-returns');
+    noteLoss(run, 'a', 'rattata');
+    noteLoss(run, 'b', 'pidgey');
+    noteLoss(run, 'b', 'pidgey');
+    expect(oldFoe(run)).toBe('pidgey');
+    expect(ids()).toContain('old-foe-returns');
+
+    run.regionIndex = Math.min(3, run.regionOrder.length - 1);
+    expect(ids()).toContain('legend-clue-tracks');
+    expect(ids()).not.toContain('legend-encounter');
+    run.story.flags['ev:legend-clue'] = 3;
+    expect(ids()).not.toContain('legend-clue-tracks');
+    expect(ids()).toContain('legend-encounter');
+  });
+});
+
+describe('Champion personality', () => {
+  it('a champion opens according to the journey, and only champions do', async () => {
+    const { championOpener } = await import('../../src/core/story/crisis');
+    const run = fresh('champ-open');
+    expect(championOpener(run, 'champion')).toBeNull();
+    run.story.flags['ge:met'] = 1;
+    expect(championOpener(run, 'champion')).toBe('championRecall');
+    expect(championOpener(run, 'gym-leader')).toBeNull();
+    run.story.rivals.push({ encounters: 3 } as never);
+    expect(championOpener(run, 'champion')).toBe('championRespect');
+  });
+});

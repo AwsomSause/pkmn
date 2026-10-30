@@ -68,11 +68,13 @@ export const egg = (o: { species?: string[]; types?: string[]; lv?: number; shin
 export const eggMove = (): Json => ({ kind: 'eggMove' });
 export const better = (extra = 0): Json => ({ kind: 'betterDraft', extra });
 export const gym = (): Json => ({ kind: 'gymPreview' });
+export const flag = (key: string, amount = 1): Json => ({ kind: 'flag', key, amount });
 export const reveal = (): Json => ({ kind: 'revealStops' });
 
 // ---------- battles ----------
-export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[] } = {}): Json => ({
+export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean } = {}): Json => ({
   kind: 'wild',
+  ...(o.recall ? { recall: true } : {}),
   species: o.species ?? [],
   types: o.types ?? [],
   levelBonus: o.lv ?? 0,

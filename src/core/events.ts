@@ -20,6 +20,7 @@ import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { championTeam } from './story/championDefense';
+import { oldFoe } from './story/promises';
 import { openFeud, settleFeud } from './story/feud';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
@@ -78,6 +79,10 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return crisisAid(run) >= c.atLeast;
     case 'tournament':
       return tournamentRound(run) === c.round;
+    case 'flag':
+      return Number(run.story.flags[`ev:${c.key}`] ?? 0) >= c.atLeast && Number(run.story.flags[`ev:${c.key}`] ?? 0) <= c.atMost;
+    case 'oldFoe':
+      return oldFoe(run) !== null;
     case 'feud':
       return openFeud(run) !== null;
     case 'championGhost':
@@ -134,6 +139,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs allies gathered in this region';
     case 'tournament':
       return 'Needs the tournament bracket to be at this round';
+    case 'flag':
+      return 'Needs something you did earlier';
+    case 'oldFoe':
+      return 'Needs a wild Pokémon that once beat you';
     case 'feud':
       return 'Needs two rivals who are feuding';
     case 'championGhost':
@@ -205,7 +214,9 @@ export function addEventStops(content: Content, run: RunState): void {
   };
   // A running tournament round and a serious crisis always get their stop (until played), so neither can be missed by luck.
   const open = new Set(eligibleEvents(content, run).map((e) => e.id));
-  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id))].filter((id): id is string => !!id && open.has(id));
+  // A run milestone (catalog 99) is offered at the middle stage of every region.
+  const milestone = (run.stage?.index ?? 0) === 2 ? ['milestone-dawn', 'milestone-crossroads', 'milestone-summit', 'milestone-embers'].find((id) => open.has(id)) : undefined;
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone].filter((id): id is string => !!id && open.has(id));
   for (const id of forced) {
     taken.add(id);
     place(id, false);
@@ -428,6 +439,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.amount < 0 ? 'the crisis eases' : 'the crisis grows';
     case 'aid':
       return 'allies gathered';
+    case 'flag':
+      return '';
     case 'relic':
       return `the ${e.name}`;
     case 'feud':
@@ -600,6 +613,9 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return effectWords(content, e);
     case 'tournament':
       return setTournament(content, run, e.round);
+    case 'flag':
+      run.story.flags[`ev:${e.key}`] = Number(run.story.flags[`ev:${e.key}`] ?? 0) + e.amount;
+      return '';
     case 'relic': {
       if (run.story.flags[`relic:${e.id}`]) return '';
       run.story.flags[`relic:${e.id}`] = true;
@@ -681,7 +697,7 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
   const base = eventLevel(content, run, node, rng) + b.levelBonus;
   const cap = 100;
   if (b.kind === 'wild') {
-    const speciesId = pickSpecies(content, run, b.species, b.types, rng);
+    const speciesId = (b.recall ? oldFoe(run) : null) ?? pickSpecies(content, run, b.species, b.types, rng);
     const level = Math.min(cap, Math.max(1, base));
     const enemy = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     enemy.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * b.shinyMultiplier);

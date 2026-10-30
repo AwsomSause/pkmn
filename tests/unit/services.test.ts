@@ -269,6 +269,16 @@ describe('Lodge, Relic Shrine, Auction House, Event Hall and Raid Observatory', 
     expect(out.run.party.find((m) => m.uid === lead.uid)!.abilitySlot).toBe(slot);
     expect(() => useService(content, out.run, 'svc-test', opt.id)).toThrow();
   });
+  it('the nursery sells a Regional Egg that hatches a regional form', () => {
+    const run = stopRun('nursery');
+    run.money = 9000;
+    const out = useService(content, run, 'svc-test', 'regional');
+    expect(out.run.eggs).toHaveLength(run.eggs.length + 1);
+    const egg = out.run.eggs[out.run.eggs.length - 1]!;
+    expect(egg.source).toBe('Regional Egg');
+    expect(specialFamily(content.species.get(egg.speciesId)!)).toBe('regional');
+    expect(() => useService(content, out.run, 'svc-test', 'egg')).toThrow();
+  });
   it('the nursery sells one Mystery Egg per stop', () => {
     const run = stopRun('nursery');
     run.money = 5000;

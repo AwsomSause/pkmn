@@ -2044,6 +2044,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   /** Rival gauntlet: whether a chain of rival fights is running. */
   z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
   /** Grand-Enemy hunt: clues found so far (at least / at most). */
+  /** World-state callback: a story flag (set by a `flag` effect) is at least this. */
+  z.object({ kind: z.literal('flag'), key: z.string(), atLeast: z.number().int().min(0).default(1), atMost: z.number().int().min(0).default(99) }),
+  /** Recognized wild foe: a wild species beat one of your Pokémon earlier this run. */
+  z.object({ kind: z.literal('oldFoe') }),
   /** Rival feud: two rivals who are enemies of each other have an unsettled feud. */
   z.object({ kind: z.literal('feud') }),
   /** Champion defense: you have a Hall of Fame team on record. */
@@ -2104,11 +2108,13 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
-  /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
+  /** World-state callback (catalog 75): adds to a named story flag that later events can read. */
+  z.object({ kind: z.literal('flag'), key: z.string().regex(/^[a-z][a-z0-9-]*$/), amount: z.number().int().default(1) }),
   /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */
-  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(2).max(3) }),
+  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(1).max(3) }),
   /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
   z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
+  /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
@@ -2122,6 +2128,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     types: z.array(TypeNameSchema).default([]),
     levelBonus: z.number().int().default(0),
     shinyMultiplier: z.number().min(1).default(1),
+    /** The wild Pokémon is one that beat a party member earlier this run (catalog 28). */
+    recall: z.boolean().default(false),
     win: z.array(EventEffectSchema).default([]),
   }),
   z.object({

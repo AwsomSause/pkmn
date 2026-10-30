@@ -220,3 +220,5 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase D2 (§19), slice 8: Berry Garden done (one seeded held berry per stop, paid, given to one Pokémon). Left: Ability Researcher, Safari.
 - Untitled Phase D2 (§19), slice 9: Safari Preserve and Ability Researcher done. Every §19 building is now built.
 - Untitled Phase F, event registry and scheduling boundaries: done (registry checks in data/index.ts, boundary tests in gameEvents.test.ts). Species mastery slice was built by the starter-sets thread (core/mastery.ts); special-form acquisition routes remain in Phase D.
+- Untitled Phase D leftovers: duplicate compensation done (unlocks.ts, all three reward paths). Special-form routes: npcTrade now limited (regional forms). Left: egg-born special forms, researchQuest clue chains, secretRoute detours, Delta/Z sets.
+- Untitled Phase D, egg route: done as limited (Regional Egg at the Nursery). Left: researchQuest clue chains, secretRoute detours, Delta/Z sets.

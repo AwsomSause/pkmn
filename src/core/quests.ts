@@ -9,6 +9,7 @@
 // Each run also offers one Run Quest (a goal for this run), picked from the
 // run seed on its own stream, so no other roll changes.
 
+import { grantUnlocks } from './unlocks';
 import { getArchetype } from './archetypes';
 import type { Content, QuestLine, QuestReward, QuestStep, Requirement, RunQuest } from './contentSchema';
 import { requirementProgress, type RequirementProgress } from './progress';
@@ -71,9 +72,7 @@ function payReward(profile: Profile, trainerId: string, reward: QuestReward, now
   profile.lifetimeBankCredits += reward.bankCredits;
   profile.researchPoints += reward.researchPoints;
   profile.candies += reward.candies;
-  if (reward.title && !profile.titles.includes(reward.title)) profile.titles.push(reward.title);
-  if (reward.pool && !profile.unlockedPools.includes(reward.pool)) profile.unlockedPools.push(reward.pool);
-  if (reward.trainer && !profile.unlockedArchetypes.includes(reward.trainer)) profile.unlockedArchetypes.push(reward.trainer);
+  grantUnlocks(profile, { pool: reward.pool, trainer: reward.trainer, title: reward.title });
   if (reward.evolution) claim(profile, evolutionKey(trainerId), now);
 }
 
