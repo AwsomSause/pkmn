@@ -24,7 +24,7 @@ import { createPokemon } from '../../src/core/pokemon';
 import { bossInfo, pickLeague } from '../../src/core/regions';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { freshStages } from '../../src/core/state';
-import { pickGymLeader } from '../../src/core/themes';
+import { pickGymLeader, typeRarityWeight } from '../../src/core/themes';
 import { content, scaleAt } from './helpers';
 
 const RED = getArchetype(content, 'red');
@@ -182,5 +182,28 @@ describe('Elite Four and champion battles', () => {
     const champ = planChampion(content, RED, 'brock', 1, scale, new Rng(hashSeed("1")));
     expect(champ.classId).toBe('champion');
     expect(champ.members.map((m) => m.speciesId)).toEqual(content.bosses.get('brock')!.teams.champion[1]!.members.map((m) => m.speciesId));
+  });
+});
+
+describe('wild type rarity and boss slot audit', () => {
+  it('rarer types and combos get lower wild weights', () => {
+    
+    expect(typeRarityWeight(content, ['dragon', 'steel'])).toBeLessThan(typeRarityWeight(content, ['dragon']));
+    expect(typeRarityWeight(content, ['dragon'])).toBeLessThan(typeRarityWeight(content, ['normal']));
+    expect(typeRarityWeight(content, ['water', 'grass'])).toBeGreaterThan(typeRarityWeight(content, ['ghost', 'steel']));
+  });
+
+  it('every boss has a full team with usable moves for every gym, Elite Four and champion slot', () => {
+    for (const b of bosses) {
+      for (const role of ['gym', 'elite', 'champion'] as const) {
+        b.teams[role].forEach((t, i) => {
+          for (const m of t.members) {
+            expect(content.species.has(m.speciesId), `${b.id} ${role}${i} ${m.speciesId}`).toBe(true);
+            const usable = m.moves.filter((id) => content.moves.get(id)?.supported === true);
+            expect(usable.length, `${b.id} ${role}${i} ${m.speciesId} moves`).toBeGreaterThan(0);
+          }
+        });
+      }
+    }
   });
 });

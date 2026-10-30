@@ -1791,6 +1791,10 @@ export const BalanceSchema = z.object({
   minThemePool: z.number().int().min(1),
   /** Weight multiplier for species that have both of the theme's types. */
   dualTypeWeight: z.number().min(1),
+  /** Wild odds multiplier per type (missing = 1): a species uses the average of its types. Lower = rarer. */
+  typeRarity: z.record(z.string(), z.number().min(0.05).max(2)).default({}),
+  /** Extra odds multiplier for a dual-type combo, keyed "a/b" in alphabetical order (missing = 1). */
+  comboRarity: z.record(z.string(), z.number().min(0.05).max(2)).default({}),
   harderRarityWeights: z.record(RaritySchema, z.number().min(0)),
   bossRarityWeights: z.record(RaritySchema, z.number().min(0)),
   money: z.object({

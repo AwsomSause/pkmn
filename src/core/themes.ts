@@ -64,6 +64,14 @@ export interface PoolEntry {
  * so are species native to the region (nativeWeight). If the pool is very
  * small it is topped up from balance.wildPool.
  */
+/** Odds multiplier from balance.typeRarity (average over the species' types) and comboRarity (its exact dual-type pair). */
+export function typeRarityWeight(content: Content, types: readonly TypeName[]): number {
+  const { typeRarity, comboRarity } = content.balance;
+  const avg = types.reduce((sum, t) => sum + (typeRarity[t] ?? 1), 0) / Math.max(1, types.length);
+  const combo = types.length > 1 ? comboRarity[[...types].sort().join('/')] ?? 1 : 1;
+  return avg * combo;
+}
+
 export function themePool(content: Content, theme: Theme, regionId?: string): PoolEntry[] {
   return typesPool(content, theme.types, regionId);
 }
@@ -75,7 +83,7 @@ export function typesPool(content: Content, types: readonly TypeName[], regionId
     .filter((s) => sharesType(s.types, types))
     .map((s) => ({
       speciesId: s.id,
-      weight: (types.length > 1 && types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1) * (isNative(content, s, regionId) ? nativeWeight : 1),
+      weight: typeRarityWeight(content, s.types) * (types.length > 1 && types.every((t) => s.types.includes(t)) ? dualTypeWeight : 1) * (isNative(content, s, regionId) ? nativeWeight : 1),
     }));
   if (pool.length < minThemePool) {
     for (const id of wildPool) if (!pool.some((p) => p.speciesId === id)) pool.push({ speciesId: id, weight: 1 });
