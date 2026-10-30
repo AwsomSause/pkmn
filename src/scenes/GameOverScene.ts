@@ -74,6 +74,7 @@ export class GameOverScene extends Phaser.Scene {
       if (summary.achievements.length > 5) lines.push(`  …and ${summary.achievements.length - 5} more`);
       if (summary.trainersReady.length) lines.push('', `Ready to claim in the Trainer Archive: ${summary.trainersReady.map((a) => a.name).join(', ')}`);
       if (run && !session.content.campaigns.get(run.campaignId)?.countsForProgress) lines.push('', 'Test campaign: achievements and unlocks were not counted.');
+      if (run && !run.rules.progressionEligible) lines.push('', 'Adventure run: no Bank Credits, Research Points, candies, unlocks or achievements were earned.');
     } else {
       lines.push('This run was already added to your profile.');
     }

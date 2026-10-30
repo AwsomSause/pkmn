@@ -1,0 +1,183 @@
+{
+ "note": "Untitled doc \u00a713\u201316 (Phase E). Difficulty presets, optional modifiers, Death-Block and game modes. A modifier or mode with status \"planned\" is listed but cannot be picked.",
+ "ruleVersion": 1,
+ "multiplierCap": 2.0,
+ "difficulties": [
+  {
+   "id": "story",
+   "name": "Story",
+   "blurb": "Gentler enemies. For enjoying the campaign.",
+   "multiplier": 0.8,
+   "enemyLevelBonus": -2
+  },
+  {
+   "id": "standard",
+   "name": "Standard",
+   "blurb": "The intended game.",
+   "multiplier": 1.0,
+   "enemyLevelBonus": 0
+  },
+  {
+   "id": "veteran",
+   "name": "Veteran",
+   "blurb": "Enemies hit a little higher.",
+   "multiplier": 1.2,
+   "enemyLevelBonus": 2
+  },
+  {
+   "id": "champion",
+   "name": "Champion",
+   "blurb": "Tougher teams, fewer safety nets.",
+   "multiplier": 1.4,
+   "enemyLevelBonus": 4
+  },
+  {
+   "id": "nightmare",
+   "name": "Nightmare",
+   "blurb": "For the end of the road.",
+   "multiplier": 1.7,
+   "enemyLevelBonus": 7
+  }
+ ],
+ "deathBlock": {
+  "battles": 5,
+  "multiplier": 0.9,
+  "rule": "If your whole party faints in your first 5 battles, you go back to the start of the stage with your party healed. Works once per run."
+ },
+ "modifiers": [
+  {
+   "id": "no-transformations",
+   "name": "No Transformations",
+   "status": "supported",
+   "bonus": 0.15,
+   "blurb": "Mega, Tera, Z-Moves and Dynamax are off for both sides.",
+   "disables": [
+    "mega",
+    "tera",
+    "zmove",
+    "dynamax"
+   ]
+  },
+  {
+   "id": "scarce-supplies",
+   "name": "Scarce Supplies",
+   "status": "supported",
+   "bonus": 0.15,
+   "blurb": "You start with half the money and half the items.",
+   "startScale": 0.5
+  },
+  {
+   "id": "monotype",
+   "name": "Monotype",
+   "status": "planned",
+   "bonus": 0.2,
+   "blurb": "Your party follows one type."
+  },
+  {
+   "id": "single-region-dex",
+   "name": "Single Region Dex",
+   "status": "planned",
+   "bonus": 0.1,
+   "blurb": "Only species from one region."
+  },
+  {
+   "id": "rich-route",
+   "name": "Rich Route",
+   "status": "planned",
+   "bonus": 0.05,
+   "blurb": "More money, stronger trainers."
+  },
+  {
+   "id": "blind-research",
+   "name": "Blind Research",
+   "status": "planned",
+   "bonus": 0.1,
+   "blurb": "Encounters hidden until reached."
+  },
+  {
+   "id": "no-revives",
+   "name": "No Revives",
+   "status": "planned",
+   "bonus": 0.1,
+   "blurb": "Revive items never appear."
+  },
+  {
+   "id": "random-draft",
+   "name": "Random Draft",
+   "status": "planned",
+   "bonus": 0.05,
+   "blurb": "Draft rules are random."
+  },
+  {
+   "id": "boss-rush",
+   "name": "Boss Rush",
+   "status": "planned",
+   "bonus": 0.25,
+   "blurb": "Shorter campaign, more bosses."
+  },
+  {
+   "id": "variant-hunt",
+   "name": "Variant Hunt",
+   "status": "planned",
+   "bonus": 0.1,
+   "blurb": "Special-form events are likelier."
+  },
+  {
+   "id": "limited-party",
+   "name": "Limited Party",
+   "status": "planned",
+   "bonus": 0.2,
+   "blurb": "Party size is capped."
+  },
+  {
+   "id": "no-duplicate-species",
+   "name": "No Duplicate Species",
+   "status": "planned",
+   "bonus": 0.1,
+   "blurb": "One of each species line."
+  }
+ ],
+ "modes": [
+  {
+   "id": "standard",
+   "name": "Standard",
+   "status": "supported",
+   "progressionEligible": true,
+   "checkpoints": false,
+   "blurb": "The roguelike. A wipe ends the run."
+  },
+  {
+   "id": "adventure",
+   "name": "Adventure",
+   "status": "supported",
+   "progressionEligible": false,
+   "checkpoints": true,
+   "wipeMoneyLoss": 0.1,
+   "blurb": "No restart on a wipe: you go back to the start of the stage. No Bank Credits, Research Points, candies, unlocks or achievements."
+  },
+  {
+   "id": "daily",
+   "name": "Daily Run",
+   "status": "planned",
+   "progressionEligible": true,
+   "checkpoints": false,
+   "blurb": "A fixed seed each day."
+  },
+  {
+   "id": "endless",
+   "name": "Endless",
+   "status": "planned",
+   "progressionEligible": true,
+   "checkpoints": false,
+   "blurb": "Keeps going while you can."
+  },
+  {
+   "id": "spooky",
+   "name": "Spooky",
+   "status": "planned",
+   "progressionEligible": true,
+   "checkpoints": false,
+   "blurb": "A themed event campaign."
+  }
+ ]
+}

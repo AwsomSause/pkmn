@@ -99,7 +99,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await page.screenshot({ path: 'test-results/m55-prep.png' });
 
   // Save it in preset slot 1.
-  await prepRow(page, 8);
+  await prepRow(page, 12);
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
   await page.keyboard.press('Enter');
