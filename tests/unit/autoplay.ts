@@ -96,8 +96,14 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       if (d.kind === 'signature') return { run: resolveDecision(content, run, { kind: 'signature', optionIndex: 0 }).run, turn: null };
       if (d.kind === 'mentorship') return { run: resolveDecision(content, run, { kind: 'mentor', accept: false }).run, turn: null };
       if (d.kind !== 'caught') return { run: resolveDecision(content, run, { kind: 'skipMove' }).run, turn: null };
-      const choice = run.party.length < partyCapacity(content, run) ? { kind: 'addToParty' as const } : { kind: 'release' as const };
-      return { run: resolveDecision(content, run, choice).run, turn: null };
+      if (run.party.length < partyCapacity(content, run)) {
+        try {
+          return { run: resolveDecision(content, run, { kind: 'addToParty' }).run, turn: null };
+        } catch {
+          // A modifier (Monotype, No Duplicate Species) refuses this Pokémon: let it go.
+        }
+      }
+      return { run: resolveDecision(content, run, { kind: 'release' }).run, turn: null };
     }
     case 'reward':
       for (let i = 0; i < (run.draft?.length ?? 0); i++) {
