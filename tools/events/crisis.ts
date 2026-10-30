@@ -2,7 +2,7 @@
 // Crisis events show once the region's meter is 2 or more and move the meter (crisis) and the Aid gathered for its boss.
 // The bracket: an entry stop, then one round per stage (always placed until played), then the final.
 
-import { $, any, ch, ev, fight, fr, good, heal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
+import { $, any, ch, cure, ev, eggMove, fight, fr, gym, good, heal, peace, reveal, leave, lv, money, out, rp, trainer, TREASURE, VITAMINS, type Json } from './dsl.ts';
 
 const D = 'Regional Crisis';
 const T = 'Rival Tournament';
@@ -90,5 +90,28 @@ export const FEUD_EVENTS: Json[] = [
       ch('Back the underdog', out('You stand beside them. The crowd goes quiet.', feud('second'), fr(3, 'party'))),
       ch('Stay out of it', out('You walk through the crowd without a word.', feud('stay-out'), rp(10))),
       ch('Work the crowd (risky)', out('While everyone is watching them, you collect a fair amount from the distracted crowd.', feud('exploit'), $(800)), { chance: 0.7, fail: out('Someone spots you. You leave in a hurry with nothing, and both rivals saw it.', feud('exploit')) }),
+    ]),
+];
+
+// Between-stage interactions (catalog 38): a camp rest spot where the team picks one thing to do.
+export const CAMP_EVENTS: Json[] = [
+  ev('camp-council', 'Camp Council', 'Camp', { stop: 'rest', rarity: 'uncommon', minStage: 2, effect: 'hearts', tint: '#20281f' },
+    'A quiet camp between two roads. You have an hour. Your team is looking at you to decide how to spend it.', [
+      ch('Study a move together', out('Your lead works on a technique it has been curious about.', eggMove(), fr(3, 'lead')), { fail: out('Nothing clicks today, but the effort counts.', fr(3, 'lead')), chance: 0.6 }),
+      ch('Settle a disagreement', out('You listen to both sides. The air clears, and the team is closer for it.', fr(8, 'party'), peace(2))),
+      ch('Scout ahead', out('You climb a ridge and see the road ahead.', reveal(), gym())),
+      ch('Care for the injured', out('You tend every scrape and bruise.', heal(0.5), cure())),
+    ]),
+];
+
+// Run-defining relics (catalog 96): three unusual relics, each with an upside and a clear downside.
+const relic = (id: string, name: string, effects: Json[]): Json => ({ kind: 'relic', id, name, effects });
+export const RELIC_EVENTS: Json[] = [
+  ev('relic-shrine', 'The Relic Shrine', 'Relics', { rarity: 'rare', minStage: 4, cast: [], effect: 'glint', tint: '#2a2410' },
+    'Three relics rest on a stone table. A plaque reads: "Each gift has its price. You may take only one."', [
+      ch('The Glass Crown (more Hyper, tougher rivals)', out('The crown hums on your head. Rivals will feel it too.', relic('glass-crown', 'Glass Crown', [{ kind: 'hyperChanceMultiplier', value: 1.5 }, { kind: 'rivalLevelOffset', value: 3 }]))),
+      ch("The Wanderer's Compass (more rare finds, weaker catches)", out('The needle spins toward strange places.', relic('wanderer-compass', "Wanderer's Compass", [{ kind: 'encounterWeightMultiplier', group: 'rare', value: 1.6 }, { kind: 'catchLevelOffset', value: -2 }]))),
+      ch('The Heavy Heart (an extra held item, slower evolution)', out('Your Pokémon feel steadier, and slower to change.', relic('heavy-heart', 'Heavy Heart', [{ kind: 'itemSlotOffset', value: 1 }, { kind: 'evolutionLevelOffset', value: 4 }]))),
+      ch('Leave them', leave()),
     ]),
 ];

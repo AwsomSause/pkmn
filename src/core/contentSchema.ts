@@ -2101,6 +2101,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
   /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
+  /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */
+  z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(2).max(3) }),
   /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
   z.object({ kind: z.literal('feud'), choice: z.enum(['first', 'second', 'stay-out', 'exploit']) }),
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
