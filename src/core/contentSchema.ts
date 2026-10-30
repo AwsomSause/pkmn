@@ -80,6 +80,8 @@ export const SpeciesSchema = z.object({
   types: z.array(TypeNameSchema).min(1).max(2),
   baseStats: StatBlockSchema,
   catchRate: z.number().int().min(1).max(255),
+  /** Weight in kg for Low Kick, Grass Knot, Heavy Slam and Heat Crash (50 when missing). */
+  weight: z.number().positive().optional(),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
   /**
@@ -123,6 +125,8 @@ export const PowerRuleSchema = z.enum([
   'electricTerrainDouble', 'electricTerrainBoost', 'mistyTerrainBoost', 'psychicTerrainBoost', 'needsTerrain',
   'statsRaised', 'targetStatsRaised', 'fallenAllies', 'friendship', 'frustration',
   'perHit', 'magnitude', 'sunBoost', 'doubleTargetHurt', 'doubleRandom', 'stockpile',
+  'rageFist', 'stompingTantrum', 'lashOut', 'retaliate', 'echoedVoice', 'rollout', 'fusionFire', 'fusionElectric', 'present', 'trumpCard', 'hardPress',
+  'acrobatics', 'doubleDynamax', 'knockOff', 'terrainPulse', 'flingItem', 'targetWeight', 'weightRatio',
 ]);
 export type PowerRule = z.infer<typeof PowerRuleSchema>;
 
@@ -160,7 +164,7 @@ export const MoveSchema = z.object({
    * contact/punch/bite/pulse/sound come from PokeAPI (abilities such as Static and Iron Fist use them).
    * `zmove`, `max`: a Z-Move or Max Move made in battle (battle/transform.ts); they hit through Protect for a quarter of their damage.
    */
-  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max', 'contact', 'punch', 'bite', 'pulse', 'sound'])).default([]),
+  flags: z.array(z.enum(['powder', 'typeless', 'zmove', 'max', 'contact', 'punch', 'bite', 'pulse', 'sound', 'bullet', 'slicing', 'wind'])).default([]),
   /**
    * False for moves whose effects the battle engine can't run yet. They stay
    * in the data (and in learnsets) so they can be switched on later, but no
@@ -217,7 +221,7 @@ export const MoveSchema = z.object({
       /** If the move knocks the target out, the user's stat rises (Fell Stinger). */
       koBoost: z.object({ stat: BoostStatSchema, stages: z.number().int() }).optional(),
       /** Takes hold of the target's last move or its moves (Disable, Encore, Torment, Taunt, Heal Block, Spite). */
-      disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite']).optional(),
+      disrupt: z.enum(['disable', 'encore', 'torment', 'taunt', 'healBlock', 'spite', 'throatChop']).optional(),
       /** Uses another move: a random one (Metronome), the target's last (Mirror Move), or the last one used by anyone (Copycat). */
       callMove: z.enum(['metronome', 'mirrorMove', 'copycat']).optional(),
       /** Which stat the attack uses: the target's Attack (Foul Play), the user's Defense (Body Press), or the higher of Atk and Sp. Atk (Photon Geyser). */
@@ -268,6 +272,113 @@ export const MoveSchema = z.object({
       randomStatus: z.object({ chance: z.number().min(1).max(100), ids: z.array(StatusIdSchema).min(2) }).optional(),
       /** Priority bonus while this terrain is up (Grassy Glide). */
       terrainPriority: z.object({ terrain: TerrainSchema, bonus: z.number().int() }).optional(),
+      /** Pays this share of max HP, then changes stats (Belly Drum, Clangorous Soul, Fillet Away, No Retreat). */
+      hpCost: z.object({ fraction: z.number().min(0).max(1), stats: z.array(z.object({ stat: BoostStatSchema, stages: z.number().int() })).min(1), trapSelf: z.literal(true).optional() }).optional(),
+      /** Raises one random stat that isn't maxed (Acupressure). */
+      randomStat: z.number().int().positive().optional(),
+      /** Heals the target by this share of max HP (Heal Pulse, Floral Healing). */
+      healTarget: z.number().positive().max(1).optional(),
+      /** Raises stats of Pokémon of these types (Flower Shield, Rototiller) or with these abilities (Gear Up, Magnetic Flux). */
+      fieldBoost: z.object({ types: z.array(TypeNameSchema).optional(), abilities: z.array(z.string()).optional(), stats: z.array(z.object({ stat: BoostStatSchema, stages: z.number().int() })).min(1) }).optional(),
+      /** Swaps or averages stats: Power Trick / Power Shift, Speed Swap, Guard Split, Power Split. */
+      statOverride: z.enum(['swapAtkDef', 'swapSpe', 'splitDef', 'splitAtk']).optional(),
+      /** Charge: Sp. Def +1 and the next Electric move is twice as strong. */
+      electricCharge: z.literal(true).optional(),
+      /** The user faints: Memento lowers the foe, Healing Wish and Lunar Dance heal the next Pokémon, Final Gambit deals its HP. */
+      userFaint: z.enum(['memento', 'healingWish', 'lunarDance', 'finalGambit']).optional(),
+      /** Revival Blessing: a fainted party member comes back at half HP. */
+      revivalBlessing: z.literal(true).optional(),
+      /** Shed Tail: pays half HP for a Substitute and switches out, passing it on. */
+      shedTail: z.literal(true).optional(),
+      /** Changes the user's type: copy the target's (Reflect Type), add Grass or Ghost to the target, resist its last move (Conversion 2), or lose a type after the hit. */
+      typeEdit: z.object({ mode: z.enum(['reflect', 'add', 'resist', 'lose']), type: TypeNameSchema.optional() }).optional(),
+      /** The move also counts as this type for effectiveness (Flying Press). */
+      secondType: TypeNameSchema.optional(),
+      /** Treats this type as weak to the move (Freeze-Dry vs Water). */
+      superAgainst: TypeNameSchema.optional(),
+      /** Only hits targets that share a type with the user. */
+      synchronoise: z.literal(true).optional(),
+      /** Foresight and Odor Sleuth ('ghost') / Miracle Eye ('dark'): the target's immunities and evasion are ignored. */
+      identify: z.enum(['ghost', 'dark']).optional(),
+      /** Tar Shot: Speed -1 and the target becomes weak to Fire. */
+      tarShot: z.literal(true).optional(),
+      /** Ion Deluge and Plasma Fists make Normal moves Electric this turn; Electrify does it for the target's next move. */
+      electrify: z.enum(['field', 'target']).optional(),
+      /** Terrain Pulse: type and power follow the terrain. */
+      terrainPulse: z.literal(true).optional(),
+      /** Tera Blast: the user's Tera type, and the better attacking stat. */
+      teraBlast: z.literal(true).optional(),
+      /** The type depends on the user's form (Raging Bull, Revelation Dance, Ivy Cudgel, Aura Wheel). */
+      formType: z.enum(['tauros', 'oricorio', 'ogerpon', 'morpeko']).optional(),
+      /** Secret Power: the extra effect follows the terrain. */
+      terrainSecondary: z.literal(true).optional(),
+      /** Physical or special, whichever the user is better at (Shell Side Arm). */
+      autoCategory: z.literal(true).optional(),
+      /** Needs the user to be asleep (Snore, Sleep Talk) and may be used while asleep. */
+      asleepOnly: z.literal(true).optional(),
+      /** Sleep Talk: uses one of the user's other moves. */
+      sleepTalk: z.literal(true).optional(),
+      /** Me First: copies the target's chosen attack at 1.5× power. */
+      meFirst: z.literal(true).optional(),
+      /** Upper Hand: only works on a priority attack. */
+      upperHand: z.literal(true).optional(),
+      /** Fails unless the user has used all its other moves (Last Resort); or unless it has eaten a berry (Belch); or the target holds an item (Poltergeist). */
+      precondition: z.enum(['allOthers', 'ateBerry', 'targetHasItem', 'lowestHp']).optional(),
+      /** Nightmare, Curse, Rage: new states. */
+      nightmare: z.literal(true).optional(),
+      curse: z.literal(true).optional(),
+      rage: z.literal(true).optional(),
+      imprison: z.literal(true).optional(),
+      fairyLock: z.literal(true).optional(),
+      snatch: z.literal(true).optional(),
+      magicCoat: z.literal(true).optional(),
+      shield: z.enum(['status', 'priority', 'damage']).optional(),
+      powder: z.literal(true).optional(),
+      confuseBoth: z.literal(true).optional(),
+      telekinesis: z.literal(true).optional(),
+      octolock: z.literal(true).optional(),
+      syrupBomb: z.literal(true).optional(),
+      saltCure: z.literal(true).optional(),
+      uproar: z.literal(true).optional(),
+      bide: z.literal(true).optional(),
+      beakBlast: z.literal(true).optional(),
+      glaiveRush: z.literal(true).optional(),
+      mimic: z.literal(true).optional(),
+      /** Transform: become a copy of the target. */
+      transform: z.literal(true).optional(),
+      /** Hits two turns later for the damage this move would do then (Future Sight, Doom Desire). */
+      delayed: z.literal(true).optional(),
+      /** Cures this status on the target after the hit (Sparkling Aria cures burns). */
+      cureTarget: StatusIdSchema.optional(),
+      /** The stat changes of a damaging move all happen together on one roll (Silver Wind). */
+      together: z.literal(true).optional(),
+      /** Only does anything to a target with this status (Venom Drench). */
+      needsStatus: StatusIdSchema.optional(),
+      /** Hidden Power: the type comes from the user (a fixed roll per Pokémon, since there are no IVs). */
+      hiddenPower: z.boolean().optional(),
+      /** Springtide Storm: 30% to raise the user's Attack (Incarnate) or lower the foe's (Therian). */
+      formStorm: z.boolean().optional(),
+      /** Beat Up: one hit for each healthy party member, powered by that member's Attack. */
+      beatUp: z.boolean().optional(),
+      /** Moves that touch held items. */
+      itemMove: z.enum(['steal', 'swap', 'knock', 'bestow', 'embargo', 'magicRoom', 'remove', 'burnBerry', 'pluckBerry', 'fling', 'recycle', 'stuffCheeks', 'teatime', 'naturalGift', 'itemType']).optional(),
+      /** Spectral Thief: takes the target's stat boosts first. */
+      stealBoosts: z.literal(true).optional(),
+      /** Copies the target's ability onto the user (Doodle, singles). */
+      copyAbility: z.literal(true).optional(),
+      /** Grudge: the move that knocks the user out loses all its PP. */
+      grudge: z.literal(true).optional(),
+      /** Uproar and others: the user can't be put to sleep by anyone while it lasts. */
+      /** Toxic: badly poisons (the damage grows each turn). */
+      toxic: z.literal(true).optional(),
+      /** Roost: heals half and loses the Flying type until the turn ends. */
+      roost: z.literal(true).optional(),
+      /** Wonder Room: Defense and Sp. Def are swapped for five turns. */
+      wonderRoom: z.literal(true).optional(),
+      /** Inflicts this status on the target if it has any raised stats (Burning Jealousy). */
+      statusIfBoosted: StatusIdSchema.optional(),
+      /** Suppresses the target's ability if it has already moved this turn (Core Enforcer). */
+      suppressIfMoved: z.literal(true).optional(),
       /** Ignores the target's ability (Sunsteel Strike). */
       ignoreAbility: z.literal(true).optional(),
       /** Counter and Mirror Coat (and Metal Burst for both): returns the damage the user took this turn, times this. */
@@ -309,7 +420,7 @@ export const MoveSchema = z.object({
        * raises its stats); the second attacks. `sunSkips`: no charging in sun,
        * half power in other weather (Solar Beam).
        */
-      charge: z.object({ semi: SemiSchema.optional(), sunSkips: z.literal(true).optional(), boosts: z.array(StatChangeSchema).optional() }).optional(),
+      charge: z.object({ semi: SemiSchema.optional(), sunSkips: z.literal(true).optional(), grab: z.literal(true).optional(), boosts: z.array(StatChangeSchema).optional() }).optional(),
       /** Can hit a target hiding this way (Earthquake on Dig), doubling its power if `double`. */
       hitsSemi: z.object({ semi: SemiSchema, double: z.boolean() }).optional(),
       /** Attacks for 2–3 turns in a row, then the user becomes confused (Thrash). */
