@@ -10,7 +10,7 @@ Source: `POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG.md` (item numbers below). Ki
 | 36-47 | D Bond and personality | PART: 36-37, 44-46 via Bond screen/engine; 40 mentorship DONE; 38-39, 41-43, 47 TODO |
 | 48-61 | E Rivals and nemesis | PART/DONE [rivals thread]; 60 Rival Ghost, 61 Chronicle page TODO |
 | 62-75 | F World, routes, events | PART: 64-66, 71 events/services exist; 62, 63, 67-70, 72-75 TODO |
-| 76-84 | G Shadow, Delta, forms | PART: 78-84 partial (specialForms.ts); 76-77 Shadow arc TODO |
+| 76-84 | G Shadow, Delta, forms | PART: 78-84 partial (specialForms.ts); 76-77 Shadow arc DONE as a 4-event chain (sighting, sanctuary, stabilize, purified; tools/events/wild.ts); no separate Shadow species or in-battle Shadow meter (limited) |
 | 85-93 | H Bosses and raids | PART: 85-89 raids/totems exist; 90-93 TODO |
 | 94-104 | I Rewards and pacing | PART: **95 synergy line on draft cards DONE (slice 2; vitamins, level-ups, healing, attributes only)**; 98 contracts, 102 run rules DONE; **103 recap and 104 seed code DONE (slice 1)**; 94, 96, 97, 99, 101 TODO; **100 pacing: Quick Route modifier (3 stages per region, practice: no progress counted), Epic = the default full campaign (slice 5)** |
 | 105-114 | J Persistent progression | PART: **105 Research Room (met/caught/evolved totals), 112 collection sets (9 generations, Delta/Z/Spooky/Regional/Mega) with Research Point milestones DONE (slice 3; no shiny count: not tracked)**; 106 mastery, 108 trainer mastery, 113 legacy DONE; 107, 110, 111 TODO; **109 Hall of Fame exhibits already built by the Hall of Fame thread (Events > Hall of Fame)**; 114 recap DONE (slice 1) |
