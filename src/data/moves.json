@@ -8899,11 +8899,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Halves damage from Physical and Special attacks for five turns."
+  "effects": {
+   "sideMove": "auroraVeil"
+  }
  },
  {
   "id": "autotomize",
@@ -9471,9 +9471,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sets up Spikes."
+  "effects": {
+   "sideMove": "spikes"
+  }
  },
  {
   "id": "celebrate",
@@ -9927,9 +9927,17 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Evasiveness and clears fog."
+  "effects": {
+   "clearHazards": "both",
+   "statChanges": [
+    {
+     "stat": "eva",
+     "stages": -1,
+     "target": "enemy",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "destiny-bond",
@@ -12580,11 +12588,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Halves damage from Special attacks for 5 turns."
+  "effects": {
+   "sideMove": "lightScreen"
+  }
  },
  {
   "id": "light-that-burns-the-sky",
@@ -12646,11 +12654,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Opponent cannot land critical hits for 5 turns."
+  "effects": {
+   "sideMove": "luckyChant"
+  }
  },
  {
   "id": "lumina-crash",
@@ -13462,11 +13470,11 @@
   "pp": 30,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "User's stats cannot be changed for a period of time."
+  "effects": {
+   "sideMove": "mist"
+  }
  },
  {
   "id": "misty-explosion",
@@ -13527,10 +13535,16 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes entry hazards and trap move effects, and poisons opposing Pokémon."
+  "flags": [
+   "contact"
+  ],
+  "effects": {
+   "clearHazards": "self",
+   "status": {
+    "id": "psn",
+    "chance": 100
+   }
+  }
  },
  {
   "id": "mud-sport",
@@ -14439,9 +14453,17 @@
   "flags": [
    "contact"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Raises user's Speed and removes entry hazards and trap move effects."
+  "effects": {
+   "clearHazards": "self",
+   "statChanges": [
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "recycle",
@@ -14469,11 +14491,11 @@
   "pp": 20,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Halves damage from Physical attacks for 5 turns."
+  "effects": {
+   "sideMove": "reflect"
+  }
  },
  {
   "id": "reflect-type",
@@ -14774,11 +14796,11 @@
   "pp": 25,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "The user's party is protected from status conditions."
+  "effects": {
+   "sideMove": "safeguard"
+  }
  },
  {
   "id": "salt-cure",
@@ -15505,9 +15527,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damages opponents switching into battle."
+  "effects": {
+   "sideMove": "spikes"
+  }
  },
  {
   "id": "spiky-shield",
@@ -15674,9 +15696,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Damages opponents switching into battle."
+  "effects": {
+   "sideMove": "stealthRock"
+  }
  },
  {
   "id": "steel-beam",
@@ -15724,9 +15746,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lowers opponent's Speed when switching into battle."
+  "effects": {
+   "sideMove": "stickyWeb"
+  }
  },
  {
   "id": "stockpile",
@@ -15790,9 +15812,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Sets up Stealth Rock."
+  "effects": {
+   "sideMove": "stealthRock"
+  }
  },
  {
   "id": "stored-power",
@@ -16082,11 +16104,11 @@
   "pp": 15,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Doubles Speed for 4 turns."
+  "effects": {
+   "sideMove": "tailwind"
+  }
  },
  {
   "id": "take-heart",
@@ -16403,11 +16425,25 @@
   "pp": 10,
   "priority": 0,
   "critStage": 0,
-  "target": "enemy",
+  "target": "self",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Removes the effects of entry hazards and Substitute, and boosts user’s Attack and Speed."
+  "effects": {
+   "clearHazards": "both",
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  }
  },
  {
   "id": "topsy-turvy",
@@ -16469,9 +16505,9 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Poisons opponents switching into battle."
+  "effects": {
+   "sideMove": "toxicSpikes"
+  }
  },
  {
   "id": "toxic-thread",

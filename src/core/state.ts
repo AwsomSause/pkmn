@@ -164,6 +164,23 @@ export type BattleTransform = z.infer<typeof BattleTransformSchema>;
 
 export const freshTransform = (): BattleTransform => ({ used: { player: [], enemy: [] }, forms: {}, enemyMechanics: [], teraTypes: {}, dynamax: {}, mechanics: {} });
 
+/** What is set up on one side of the field: screens and other turn counters, and entry hazards. */
+export const SideEffectsSchema = z.object({
+  reflect: z.number().int().min(0).default(0),
+  lightScreen: z.number().int().min(0).default(0),
+  auroraVeil: z.number().int().min(0).default(0),
+  tailwind: z.number().int().min(0).default(0),
+  safeguard: z.number().int().min(0).default(0),
+  mist: z.number().int().min(0).default(0),
+  luckyChant: z.number().int().min(0).default(0),
+  spikes: z.number().int().min(0).max(3).default(0),
+  toxicSpikes: z.number().int().min(0).max(2).default(0),
+  stealthRock: z.boolean().default(false),
+  stickyWeb: z.boolean().default(false),
+});
+export type SideEffects = z.infer<typeof SideEffectsSchema>;
+export const freshSideEffects = (): SideEffects => SideEffectsSchema.parse({});
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -183,6 +200,8 @@ export const BattleStateSchema = z.object({
   weather: z.object({ id: WeatherSchema, turns: z.number().int().min(0) }).nullable().default(null),
   /** The terrain and how many turns it has left. */
   terrain: z.object({ id: TerrainSchema, turns: z.number().int().min(0) }).nullable().default(null),
+  /** Screens, Tailwind and entry hazards on each side. */
+  sideEffects: z.object({ player: SideEffectsSchema.default(freshSideEffects), enemy: SideEffectsSchema.default(freshSideEffects) }).default(() => ({ player: freshSideEffects(), enemy: freshSideEffects() })),
   /** Sides whose Pokémon just came in and whose entry ability (Intimidate, Drizzle) hasn't happened yet. */
   pendingEntry: z.array(z.enum(['player', 'enemy'])).default([]),
   /** uids of party Pokémon that fought the current enemy (they share its experience). */

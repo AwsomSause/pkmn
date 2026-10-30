@@ -123,6 +123,9 @@ export const PowerRuleSchema = z.enum([
 ]);
 export type PowerRule = z.infer<typeof PowerRuleSchema>;
 
+export const SideMoveSchema = z.enum(['reflect', 'lightScreen', 'auroraVeil', 'tailwind', 'safeguard', 'mist', 'luckyChant', 'spikes', 'toxicSpikes', 'stealthRock', 'stickyWeb']);
+export type SideMove = z.infer<typeof SideMoveSchema>;
+
 export const TerrainSchema = z.enum(TERRAINS);
 export type Terrain = z.infer<typeof TerrainSchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
@@ -182,6 +185,10 @@ export const MoveSchema = z.object({
       endeavor: z.literal(true).optional(),
       /** How the move's power is worked out from the battle (see powerFromRule in the engine). */
       powerRule: PowerRuleSchema.optional(),
+      /** Sets up something on a side of the field: screens, Tailwind, Safeguard on the user's side; hazards on the foe's. */
+      sideMove: SideMoveSchema.optional(),
+      /** Clears entry hazards: from the user's side (Rapid Spin) or both sides (Defog, Tidy Up). */
+      clearHazards: z.enum(['self', 'both']).optional(),
       /** Confuses the target (chance in percent). */
       confuse: z.object({ chance: z.number().min(1).max(100) }).optional(),
       /** Hits this many times: [2, 5] rolls 2–5 hits (35/35/15/15%), [2, 2] always twice. */

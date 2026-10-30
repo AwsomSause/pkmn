@@ -183,6 +183,16 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} is hurt by the bind!`;
     case 'bindEnd':
       return `${who(e.side)} was freed!`;
+    case 'sideEffect':
+      return sideEffectText(e.side, e.effect, e.on, who);
+    case 'hazard':
+      return e.hazard === 'stealthRock'
+        ? `Pointed stones dug into ${who(e.side)}!`
+        : e.hazard === 'spikes'
+          ? `${who(e.side)} was hurt by the spikes!`
+          : e.hazard === 'stickyWeb'
+            ? `${who(e.side)} was caught in a sticky web!`
+            : `${who(e.side)} was affected by the poison spikes!`;
     case 'seeded':
       return `${who(e.side)} was seeded!`;
     case 'seedDamage':
@@ -248,4 +258,32 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
 /** What the Power column shows for a move with fixed damage: Lv, a number, or ? (Psywave). */
 export function fixedDamageLabel(fixed: 'level' | 'psywave' | number | undefined): string {
   return fixed === undefined ? '—' : fixed === 'level' ? 'Lv' : fixed === 'psywave' ? '?' : String(fixed);
+}
+
+const SIDE_ON: Record<string, string> = {
+  reflect: 'A wall of light cuts physical damage!',
+  lightScreen: 'A wall of light cuts special damage!',
+  auroraVeil: 'An aurora veil protects the team!',
+  tailwind: 'A tailwind blew in behind the team!',
+  safeguard: 'A veil protects the team from status!',
+  mist: 'A mist shrouded the team!',
+  luckyChant: 'The Lucky Chant shields the team from critical hits!',
+  spikes: 'Spikes were scattered around the foe!',
+  toxicSpikes: 'Poison spikes were scattered around the foe!',
+  stealthRock: 'Pointed stones float around the foe!',
+  stickyWeb: 'A sticky web spreads around the foe!',
+};
+const SIDE_OFF: Record<string, string> = {
+  reflect: "Reflect wore off.",
+  lightScreen: "Light Screen wore off.",
+  auroraVeil: "Aurora Veil wore off.",
+  tailwind: "The tailwind petered out.",
+  safeguard: "Safeguard wore off.",
+  mist: "The mist faded.",
+  luckyChant: "Lucky Chant wore off.",
+  toxicSpikes: "The poison spikes were absorbed.",
+  hazards: "The hazards were swept away!",
+};
+function sideEffectText(_side: string, effect: string, on: boolean, _who: (s: 'player' | 'enemy') => string): string {
+  return (on ? SIDE_ON : SIDE_OFF)[effect] ?? 'The field changed.';
 }
