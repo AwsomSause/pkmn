@@ -3,7 +3,8 @@
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
 import Phaser from 'phaser';
-import { forcedMoveIndex, itemProblem, switchProblem, type PlayerAction } from '../core/battle/engine';
+import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
+import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
@@ -45,12 +46,33 @@ const MESSAGE_Y = 396;
 /** A Dynamaxed Pokémon is drawn this much larger (a stand-in until the M9.5 effect). */
 const DYNAMAX_SCALE = 1.35;
 const COMMAND_X = 588;
+/** Double battles: where each spot stands (left, right) and the databox spots. */
+const DUO_POS = {
+  player: [
+    { x: 176, y: 414 },
+    { x: 392, y: 404 },
+  ],
+  enemy: [
+    { x: 500, y: 212 },
+    { x: 668, y: 228 },
+  ],
+} as const;
+const DUO_SCALE = { player: 0.72, enemy: 0.85 } as const;
+const DUO_BOX = { scale: 0.6, enemy: [{ x: 4, y: 6 }, { x: 4, y: 72 }], player: [{ x: GAME_WIDTH - 236, y: 236 }, { x: GAME_WIDTH - 236, y: 316 }] } as const;
+
+/** The spot the screen isn't focused on in a double battle (see battle/doubles.ts: focus). */
+interface DuoOther {
+  sprite: Visual | null;
+  box: InfoBox;
+  mon: PokemonInstance | null;
+}
 
 /** Databox and title-card rim colour for each kind of opponent. */
 const ROLE_RIMS = { wild: 0xff4fd8, trainer: 0xff8a3c, rival: 0xff3048, gym: 0xffc840, elite: 0xb070ff, champion: 0xfff4a0 } as const;
 
 interface InfoBox {
   container: Phaser.GameObjects.Container;
+  isPlayer: boolean;
   name: Phaser.GameObjects.Text;
   level: Phaser.GameObjects.Text;
   /** Where a status badge goes inside the box. */
@@ -103,6 +125,14 @@ export class BattleScene extends Phaser.Scene {
   private shown!: { player: PokemonInstance; enemy: PokemonInstance };
   /** The opposing Pokémon shown as riled up (warned, not yet unleashed or calmed). Presentation only. */
   private riledUid: string | null = null;
+  /**
+   * Double battles: which spot each side's focused Pokémon stands in (the one in playerSprite /
+   * playerBox / shown.player), and the other spot's sprite, box and Pokémon. Null in singles.
+   */
+  private duo: { focus: Record<Side, Spot>; other: Record<Side, DuoOther> } | null = null;
+  /** Double battles: the spot being given a command, and the commands so far this turn. */
+  private cmdSpot: Spot = 0;
+  private commands: (SlotCommand | null)[] = [];
 
   constructor() {
     super('Battle');
@@ -171,9 +201,36 @@ export class BattleScene extends Phaser.Scene {
       sprite: (side) => (side === 'player' ? this.playerSprite : this.enemySprite),
     });
 
-    this.shown = { player: structuredClone(this.activeMon()), enemy: structuredClone(currentEnemy(battle)) };
-    this.enemyBox = this.makeInfoBox(0, 30, false);
-    this.playerBox = this.makeInfoBox(GAME_WIDTH - 390, MESSAGE_Y - 132, true);
+    this.shown = { player: structuredClone(run.party[battle.activeIndex]!), enemy: structuredClone(currentEnemy(battle)) };
+    this.duo = null;
+    this.cmdSpot = 0;
+    this.commands = [];
+    if (battle.doubles) {
+      // Two databoxes a side, smaller; the focused spot's box is enemyBox / playerBox.
+      const d = battle.doubles;
+      const box = (side: Side, spot: Spot) => {
+        const b = this.makeInfoBox(DUO_BOX[side][spot].x, DUO_BOX[side][spot].y, side === 'player');
+        b.container.setScale(DUO_BOX.scale);
+        return b;
+      };
+      const focus = { player: primarySpot(d, 'player'), enemy: primarySpot(d, 'enemy') };
+      this.playerBox = box('player', focus.player);
+      this.enemyBox = box('enemy', focus.enemy);
+      const otherMon = (side: Side) => {
+        const m = monAt({ battle, party: run.party }, side, focus[side] === 0 ? 1 : 0);
+        return m ? structuredClone(m) : null;
+      };
+      this.duo = {
+        focus,
+        other: {
+          player: { sprite: null, box: box('player', focus.player === 0 ? 1 : 0), mon: otherMon('player') },
+          enemy: { sprite: null, box: box('enemy', focus.enemy === 0 ? 1 : 0), mon: otherMon('enemy') },
+        },
+      };
+    } else {
+      this.enemyBox = this.makeInfoBox(0, 30, false);
+      this.playerBox = this.makeInfoBox(GAME_WIDTH - 390, MESSAGE_Y - 132, true);
+    }
     this.header = this.add.text(GAME_WIDTH - 16, 10, '', textStyle(20, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
     // Raid and Totem status sits under the enemy's box, away from the boss sprite.
     this.status = this.add.text(12, 186, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 470 } }));
@@ -204,7 +261,118 @@ export class BattleScene extends Phaser.Scene {
 
   private activeMon(): PokemonInstance {
     const run = this.run;
+    if (run.battle?.doubles) return monAt({ battle: run.battle, party: run.party }, 'player', this.cmdSpot) ?? run.party[run.battle.activeIndex]!;
     return run.party[run.battle!.activeIndex]!;
+  }
+
+  // ---------- double battles ----------
+
+  /** Where a side's focused Pokémon stands. */
+  private spotXY(side: Side): { x: number; y: number } {
+    if (!this.duo) return side === 'player' ? PLAYER_POS : ENEMY_POS;
+    return DUO_POS[side][this.duo.focus[side]];
+  }
+
+  /** Follows the engine's focus: the events after this are about `uid` (battle/doubles.ts). */
+  private focusOn(side: Side, uid: string): void {
+    const duo = this.duo;
+    if (!duo || this.shown[side].uid === uid) return;
+    const o = duo.other[side];
+    if (o.mon?.uid !== uid) {
+      // Someone new in the other spot (sent in while the screen looked elsewhere): adopt it.
+      const real = this.findLive(side, uid);
+      if (!real) return;
+      o.mon = structuredClone(real);
+    }
+    if (side === 'player') {
+      [this.playerSprite, o.sprite] = [o.sprite, this.playerSprite];
+      [this.playerBox, o.box] = [o.box, this.playerBox];
+    } else {
+      [this.enemySprite, o.sprite] = [o.sprite, this.enemySprite];
+      [this.enemyBox, o.box] = [o.box, this.enemyBox];
+    }
+    const mon = o.mon!;
+    o.mon = this.shown[side];
+    this.shown[side] = mon;
+    duo.focus[side] = duo.focus[side] === 0 ? 1 : 0;
+  }
+
+  /** Ally Switch: the two Pokémon on a side trade spots, with a little hop. */
+  private async allySwitch(side: Side): Promise<void> {
+    const duo = this.duo;
+    if (!duo) return;
+    const o = duo.other[side];
+    const mine = side === 'player' ? this.playerSprite : this.enemySprite;
+    const myBox = side === 'player' ? this.playerBox : this.enemyBox;
+    duo.focus[side] = duo.focus[side] === 0 ? 1 : 0;
+    const to = DUO_POS[side][duo.focus[side]];
+    const back = DUO_POS[side][duo.focus[side] === 0 ? 1 : 0];
+    const moves: Promise<void>[] = [];
+    const glide = (v: Visual | null, p: { x: number; y: number }) => {
+      if (!v) return;
+      this.tweens.killTweensOf(v);
+      if (this.motion === 'off') v.setPosition(p.x, p.y);
+      else moves.push(tween(this, { targets: v, x: p.x, y: p.y, duration: 380, ease: 'Back.easeInOut' }));
+    };
+    glide(mine, to);
+    glide(o.sprite, back);
+    const a = { x: myBox.container.x, y: myBox.container.y };
+    myBox.container.setPosition(o.box.container.x, o.box.container.y);
+    o.box.container.setPosition(a.x, a.y);
+    await Promise.all(moves);
+    for (const v of [mine, o.sprite]) if (v) breathe(this, v, this.motion, 0);
+  }
+
+  /** Brings both spots' boxes and sprites in line with the battle after a turn. */
+  private async syncDuo(): Promise<void> {
+    const duo = this.duo;
+    const battle = this.run.battle;
+    if (!duo || !battle?.doubles) return;
+    const view = { battle, party: this.run.party };
+    for (const side of ['player', 'enemy'] as const) {
+      const focused = primarySpot(battle.doubles, side);
+      const want = monAt(view, side, focused);
+      if (want) this.focusOn(side, want.uid);
+      const otherSpot: Spot = duo.focus[side] === 0 ? 1 : 0;
+      const real = monAt(view, side, otherSpot);
+      const o = duo.other[side];
+      if (!real) {
+        o.box.container.setVisible(false);
+        this.dropSprite(o.sprite);
+        o.sprite = null;
+        o.mon = null;
+      } else {
+        o.mon = structuredClone(real);
+        this.disguise(side, o.mon);
+        if (o.mon.hp > 0) await this.refreshInfoBox(o.box, o.mon, false);
+      }
+      const cur = monAt(view, side, duo.focus[side]);
+      if (cur) {
+        this.shown[side] = structuredClone(cur);
+        this.disguise(side, this.shown[side]);
+        await this.refreshInfoBox(side === 'player' ? this.playerBox : this.enemyBox, this.shown[side], false);
+      }
+    }
+  }
+
+  /** Shows both spots of a side (the battle's start or a reload). */
+  private async showDuoSide(side: Side, cry: boolean): Promise<void> {
+    const duo = this.duo!;
+    const o = duo.other[side];
+    if (o.mon) {
+      // Draw the other spot first: swap focus in, draw, swap back.
+      const uid = this.shown[side].uid;
+      this.focusOn(side, o.mon.uid);
+      if (this.shown[side].hp > 0) {
+        this.showSprite(side, this.shown[side], cry);
+        await this.refreshInfoBox(side === 'player' ? this.playerBox : this.enemyBox, this.shown[side], false);
+      }
+      this.focusOn(side, uid);
+    }
+    if (this.shown[side].hp > 0) {
+      this.showSprite(side, this.shown[side], cry);
+      await this.refreshInfoBox(side === 'player' ? this.playerBox : this.enemyBox, this.shown[side], false);
+    }
   }
 
   /** Illusion: the shown copy keeps looking like the species it copies until the disguise breaks. */
@@ -270,14 +438,16 @@ export class BattleScene extends Phaser.Scene {
     const grow = mon.dynamaxed && species.form?.kind !== 'gigantamax' ? DYNAMAX_SCALE : 1;
     if (side === 'player') {
       this.dropSprite(this.playerSprite);
-      this.playerSprite = pokemonVisual(this, species, 'back', PLAYER_POS.x, PLAYER_POS.y, (PIXEL_SCALE + 1) * grow, mon.shiny);
+      const at = this.spotXY('player');
+      this.playerSprite = pokemonVisual(this, species, 'back', at.x, at.y, (PIXEL_SCALE + 1) * grow * (this.duo ? DUO_SCALE.player : 1), mon.shiny);
       this.field.add(this.playerSprite);
       this.prefetchMoves(mon);
       this.liven(this.playerSprite, cry);
       return this.playerSprite;
     }
     this.dropSprite(this.enemySprite);
-    this.enemySprite = pokemonVisual(this, species, 'front', ENEMY_POS.x, ENEMY_POS.y, PIXEL_SCALE * grow, mon.shiny);
+    const at = this.spotXY('enemy');
+    this.enemySprite = pokemonVisual(this, species, 'front', at.x, at.y, PIXEL_SCALE * grow * (this.duo ? DUO_SCALE.enemy : 1), mon.shiny);
     // The foe stands behind the player's Pokémon.
     this.field.addAt(this.enemySprite, this.fieldBase);
     this.prefetchMoves(mon);
@@ -336,7 +506,7 @@ export class BattleScene extends Phaser.Scene {
     container.add(this.add.text(hpX - 8, 63, 'HP', textStyle(15, '#f8a030', { shadow: undefined })).setOrigin(1, 0.5));
     const hpBar = new Bar(this, hpX, 63, 144, 6, 'hp');
     hpBar.addTo(container);
-    const box: InfoBox = { container, name, level, hpBar, statusAt: { x: left, y: isPlayer ? 80 : 80 } };
+    const box: InfoBox = { container, isPlayer, name, level, hpBar, statusAt: { x: left, y: isPlayer ? 80 : 80 } };
     if (isPlayer) {
       box.hpText = this.add.text(right, 76, '', textStyle(24)).setOrigin(1, 0);
       container.add(box.hpText);
@@ -353,7 +523,7 @@ export class BattleScene extends Phaser.Scene {
   private refreshInfoBox(box: InfoBox, mon: PokemonInstance, animate: boolean): Promise<void> {
     const content = services().session.content;
     const max = calcStats(content, mon).hp;
-    if (!box.container.visible) slideIn(this, box.container, box === this.playerBox ? 420 : -420, 0, this.motion);
+    if (!box.container.visible) slideIn(this, box.container, box.isPlayer ? 420 : -420, 0, this.motion);
     box.container.setVisible(true);
     box.name.setText(`${this.speciesName(mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
@@ -388,7 +558,7 @@ export class BattleScene extends Phaser.Scene {
     }
     box.rageBadge?.destroy();
     box.rageBadge = undefined;
-    if (box === this.enemyBox && mon.uid === this.riledUid) {
+    if (!box.isPlayer && mon.uid === this.riledUid) {
       // The warning stays on screen until the rage is unleashed or calmed.
       box.rageBadge = badge(this, box.statusAt.x + (box.statusBadge ? 76 : 0) + (box.teraBadge ? 120 : 0), box.statusAt.y, 'Riled up!', 0xff5a3c, 16);
       box.container.add(box.rageBadge);
@@ -417,7 +587,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (box.danger) return;
-    const isPlayer = box === this.playerBox;
+    const isPlayer = box.isPlayer;
     const g = this.add.graphics();
     g.fillStyle(0xff3048, 0.35);
     g.fillRoundedRect(isPlayer ? 8 : -2, -6, isPlayer ? 382 : 376, isPlayer ? 144 : 116, 26);
@@ -540,19 +710,36 @@ export class BattleScene extends Phaser.Scene {
         await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
-        this.showSprite('enemy', this.shown.enemy);
-        await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
-        if (battle.rivalNote) await this.say(battle.rivalNote);
-        await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
+        if (this.duo) {
+          await this.playBeat(stamp(this, 'DOUBLE BATTLE!', title, this.foeRim(), this.motion));
+          await this.showDuoSide('enemy', true);
+          const second = this.duo.other.enemy.mon;
+          await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}${second ? ` and ${this.speciesName(second)}` : ''}!`);
+        } else {
+          this.showSprite('enemy', this.shown.enemy);
+          await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
+          if (battle.rivalNote) await this.say(battle.rivalNote);
+          await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
+        }
       } else {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
         await this.say(`A wild ${this.speciesName(this.shown.enemy)} appeared!`);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
-      this.showSprite('player', this.shown.player);
-      await this.refreshInfoBox(this.playerBox, this.shown.player, false);
-      await this.say(`Go! ${this.speciesName(this.shown.player)}!`);
+      if (this.duo) {
+        await this.showDuoSide('player', true);
+        const second = this.duo.other.player.mon;
+        await this.say(`Go! ${this.speciesName(this.shown.player)}${second ? ` and ${this.speciesName(second)}` : ''}!`);
+      } else {
+        this.showSprite('player', this.shown.player);
+        await this.refreshInfoBox(this.playerBox, this.shown.player, false);
+        await this.say(`Go! ${this.speciesName(this.shown.player)}!`);
+      }
+    } else if (this.duo) {
+      await this.showDuoSide('enemy', false);
+      await this.showDuoSide('player', false);
+      await this.say(`The double battle continues! (turn ${battle.turn})`);
     } else {
       this.showSprite('enemy', this.shown.enemy, false);
       await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
@@ -624,6 +811,14 @@ export class BattleScene extends Phaser.Scene {
 
   /** Shows the right prompt for the current state: forced switch or the action menu. */
   private nextPrompt(): void {
+    if (this.duo) {
+      if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
+      else {
+        this.commands = [];
+        this.promptSpot(0);
+      }
+      return;
+    }
     if (this.run.battle?.needsSwitch) {
       this.openPartyPicker(true);
       return;
@@ -634,6 +829,74 @@ export class BattleScene extends Phaser.Scene {
     else this.showRootMenu();
   }
 
+  /** Double battles: asks for the command of the Pokémon in `spot` (or fills it in), then the next. */
+  private promptSpot(spot: number): void {
+    const battle = this.run.battle!;
+    if (spot > 1) {
+      void this.act({ kind: 'double', commands: this.commands });
+      return;
+    }
+    const at = spot as Spot;
+    const view = { battle, party: this.run.party };
+    const mon = monAt(view, 'player', at);
+    const forced = forcedMoveId(volAt(view, 'player', at) ?? undefined);
+    const forcedIndex = forced && mon ? mon.moves.findIndex((m) => m.id === forced) : -1;
+    if (!mon || mon.hp <= 0 || battle.doubles?.commanding.includes(mon.uid)) {
+      this.commands[at] = null;
+      this.promptSpot(spot + 1);
+    } else if (forcedIndex >= 0) {
+      this.commands[at] = { action: { kind: 'move', index: forcedIndex } };
+      this.promptSpot(spot + 1);
+    } else {
+      this.cmdSpot = at;
+      this.showRootMenu();
+    }
+  }
+
+  /** A command is ready: in singles the turn starts; in doubles it is stored and the next spot is asked. */
+  private submit(action: Exclude<PlayerAction, { kind: 'double' }>, target?: SlotCommand['target']): void {
+    if (!this.duo) {
+      void this.act(action);
+      return;
+    }
+    this.commands[this.cmdSpot] = { action, ...(target ? { target } : {}) };
+    this.promptSpot(this.cmdSpot + 1);
+  }
+
+  /** Double battles: which Pokémon the move is aimed at (foes, and the partner for moves meant for it). */
+  private openTargetPicker(action: Exclude<PlayerAction, { kind: 'double' }>, move: Move): void {
+    const battle = this.run.battle!;
+    const view = { battle, party: this.run.party };
+    const choices: { label: string; target: NonNullable<SlotCommand['target']>; tint: number }[] = [];
+    for (const spot of [0, 1] as const) {
+      const foe = monAt(view, 'enemy', spot);
+      if (foe && foe.hp > 0 && !battle.doubles!.commanding.includes(foe.uid)) choices.push({ label: this.speciesName(foe), target: { side: 'enemy', spot }, tint: ROLE_RIMS.trainer });
+    }
+    const partnerSpot: Spot = this.cmdSpot === 0 ? 1 : 0;
+    const partner = monAt(view, 'player', partnerSpot);
+    if (partner && partner.hp > 0 && ALLY_AIMED.has(move.id)) choices.push({ label: `${this.speciesName(partner)} (ally)`, target: { side: 'player', spot: partnerSpot }, tint: AERO.sky });
+    if (choices.length <= 1) {
+      this.submit(action, choices[0]?.target);
+      return;
+    }
+    this.clearMenus();
+    this.message.setText(`Use ${move.name} on which Pokémon?`);
+    this.commandWindow.setVisible(true);
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 26,
+      options: choices.map((c) => ({ label: c.label })),
+      columns: 1,
+      itemWidth: 340,
+      itemHeight: 46,
+      fontSize: 26,
+      color: COLORS.textLight,
+      glass: { tints: choices.map((c) => mixColor(c.tint, 0x000000, 0.3)), motion: this.motion },
+      onSelect: (i) => this.submit(action, choices[i]!.target),
+      onBack: () => this.showMoveMenu(),
+    });
+  }
+
   // ---------- menus ----------
 
   private showRootMenu(): void {
@@ -641,12 +904,14 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     // Transformations: a fourth option that cycles off -> Tera -> Z-Move -> Dynamax -> off. (Mega and Gigantamax happen by themselves.)
     const ctx = this.battleCtx();
-    const tera = teraOption(ctx);
-    const zMove = zMoveOptions(ctx).some((z) => z !== null);
+    // In a double battle only the Pokémon in the engine's main spot can transform (one per turn).
+    const mainSpot = !this.run.battle?.doubles || this.cmdSpot === primarySpot(this.run.battle.doubles, 'player');
+    const tera = mainSpot ? teraOption(ctx) : null;
+    const zMove = mainSpot && zMoveOptions(ctx).some((z) => z !== null);
     const choices: TransformRequest[] = [
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
-      ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
+      ...(mainSpot && canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind;
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
@@ -687,6 +952,8 @@ export class BattleScene extends Phaser.Scene {
           this.showRootMenu();
         }
       },
+      // Double battles: back from the second Pokémon's menu goes back to the first's.
+      onBack: this.duo && this.cmdSpot === 1 && this.commands[0] ? () => this.promptSpot(0) : undefined,
     });
   }
 
@@ -755,7 +1022,11 @@ export class BattleScene extends Phaser.Scene {
       onSelect: (i) => {
         const transform = this.transformChoice;
         this.transformChoice = null;
-        void this.act({ kind: 'move', index: anyPp ? i : -1, ...(transform ? { transform } : {}) });
+        const action = { kind: 'move' as const, index: anyPp ? i : -1, ...(transform ? { transform } : {}) };
+        const slot = anyPp ? mon.moves[i] : undefined;
+        const move = slot ? (zMoves?.[i] ?? content.moves.get(slot.id)) : undefined;
+        if (this.duo && move && needsTarget(move)) this.openTargetPicker(action, move);
+        else this.submit(action);
       },
       onBack: () => this.showRootMenu(),
     });
@@ -815,7 +1086,7 @@ export class BattleScene extends Phaser.Scene {
         const id = ids[i]!;
         const item = content.items.get(id)!;
         if (item.target === 'party' || item.target === 'fainted') this.openItemTarget(id);
-        else void this.act({ kind: 'item', itemId: id });
+        else this.submit({ kind: 'item', itemId: id });
       },
       onBack: () => this.showRootMenu(),
     });
@@ -832,7 +1103,7 @@ export class BattleScene extends Phaser.Scene {
       columns: 2,
       rowHeight: 78,
       rows: partyRows(content, run.party, (i) => itemProblem(this.battleCtx(), itemId, i), (i) => (i === run.battle!.activeIndex ? 'IN BATTLE' : undefined)),
-      onSelect: (i) => void this.act({ kind: 'item', itemId, targetIndex: i }),
+      onSelect: (i) => this.submit({ kind: 'item', itemId, targetIndex: i }),
       onBack: () => this.openBag(),
     });
   }
@@ -843,6 +1114,21 @@ export class BattleScene extends Phaser.Scene {
     const run = this.run;
     this.clearMenus();
     this.message.setText(forced ? 'Choose a Pokémon to send out.' : '');
+    if (this.duo) {
+      // Double battles: neither Pokémon in battle, nor one the other spot is already sending out.
+      const view = { battle: run.battle!, party: run.party };
+      const onField = [0, 1].map((s) => indexAt(view, 'player', s as Spot));
+      const taken = this.commands.flatMap((c) => (c?.action.kind === 'switch' ? [c.action.partyIndex] : []));
+      this.picker = new Picker(this, {
+        title: forced ? 'Send out which Pokémon?' : `Switch ${this.speciesName(this.activeMon())} for which Pokémon?`,
+        columns: 2,
+        rowHeight: 78,
+        rows: partyRows(content, run.party, (i) => doublesSwitchProblem(view, i, taken), (i) => (onField.includes(i) ? 'IN BATTLE' : undefined)),
+        onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.submit({ kind: 'switch', partyIndex: i })),
+        onBack: forced ? undefined : () => this.showRootMenu(),
+      });
+      return;
+    }
     this.picker = new Picker(this, {
       glass: true,
       title: forced ? 'Send out which Pokémon?' : 'Switch to which Pokémon?',
@@ -982,6 +1268,12 @@ export class BattleScene extends Phaser.Scene {
       const mon = side ? this.shown[side] : null;
       let preText: string | null = null;
       switch (e.type) {
+        case 'focus':
+          this.focusOn(e.side, e.uid);
+          break;
+        case 'allySwitch':
+          await this.allySwitch(e.side);
+          break;
         case 'damage':
         case 'residual':
         case 'recoil':
@@ -1088,7 +1380,7 @@ export class BattleScene extends Phaser.Scene {
           // A radiant burst on the Pokémon (Deluxe Battle Kit art), in the Z-Move's or Tera Type's colour.
           const teraType = e.kind === 'tera' ? this.run.battle?.transform.teraTypes[mon!.uid] : undefined;
           const glowColor = zType ? (TYPE_COLORS[zType] ?? 0xffffff) : teraType ? (TYPE_COLORS[teraType] ?? 0xffffff) : e.kind.startsWith('dynamax') || e.kind === 'gigantamax' ? 0xff3060 : 0x9fe8ff;
-          const at = e.side === 'player' ? PLAYER_POS : ENEMY_POS;
+          const at = this.spotXY(e.side);
           if (e.kind !== 'illusion') await burstReveal(this, at.x, at.y - 80, glowColor, this.motion).done;
           if (e.kind === 'tera' || e.kind === 'zmove') playSfx(this, 'se.level_up');
           else {
@@ -1149,7 +1441,8 @@ export class BattleScene extends Phaser.Scene {
     }
     // Make sure the boxes match the real state at the end of the turn.
     const run = this.run;
-    if (run.battle) {
+    if (run.battle?.doubles && this.duo) await this.syncDuo();
+    else if (run.battle) {
       const active = run.party[run.battle.activeIndex];
       if (active && active.uid === this.shown.player.uid) {
         this.shown.player = structuredClone(active);

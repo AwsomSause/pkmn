@@ -48,6 +48,8 @@ export interface HeldContext {
 
 /** What happened, for the battle text. */
 export type HeldWhat =
+  /** Symbiosis: its partner passed it this item (double battles). */
+  | 'received'
   | 'heal'
   | 'hurt'
   | 'cure'

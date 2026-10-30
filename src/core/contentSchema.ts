@@ -752,6 +752,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('partyPositionDamage'), position: z.enum(['first', 'last']), value: z.number().positive() }),
   /** Prize money from gym leaders, Elite Four members and champions. */
   z.object({ kind: z.literal('bossMoneyMultiplier'), value: z.number().positive() }),
+  /** Prize money from double battles. */
+  z.object({ kind: z.literal('doubleBattleRewardMultiplier'), value: z.number().positive() }),
   /** Accuracy of your status moves. */
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
@@ -1602,6 +1604,8 @@ export type EventRarity = (typeof EVENT_RARITIES)[number];
 
 export const BalanceSchema = z.object({
   trainerAi: TrainerAiSchema,
+  /** Double battles: the chance an ordinary trainer fights two at a time, from this stage number (0 = the first stage). */
+  doubles: z.object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0) }).default({ chance: 0.3, fromStage: 1 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

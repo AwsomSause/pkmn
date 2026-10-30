@@ -1,6 +1,7 @@
 // A simple deterministic player for tests: it always makes the same choice in
 // the same situation, so the same seed always plays the same run.
 
+import { doublesSwitchProblem } from '../../src/core/battle/doubles';
 import type { Content } from '../../src/core/contentSchema';
 import { forcedMoveIndex } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
@@ -40,7 +41,10 @@ export function step(content: Content, run: RunState): { run: RunState; turn: Tu
     case 'battle': {
       const battle = run.battle!;
       if (battle.needsSwitch) {
-        const turn = takeTurn(content, run, { kind: 'switch', partyIndex: run.party.findIndex((p) => p.hp > 0) });
+        // Any healthy Pokémon not already in battle (a double battle has two out).
+        const view = { battle: run.battle!, party: run.party };
+        const pick = run.battle!.doubles ? run.party.findIndex((_, i) => doublesSwitchProblem(view, i) === null) : run.party.findIndex((p) => p.hp > 0);
+        const turn = takeTurn(content, run, { kind: 'switch', partyIndex: pick });
         return { run: turn.run, turn };
       }
       const enemy = currentEnemy(battle);
