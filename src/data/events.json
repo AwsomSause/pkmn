@@ -22398,6 +22398,398 @@
      }
     }
    ]
+  },
+  {
+   "id": "trapped-pokemon",
+   "name": "Trapped in the Vines",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#183018",
+    "effect": "shake"
+   },
+   "intro": "A Pokémon is tangled in thick vines and cries out weakly.",
+   "choices": [
+    {
+     "label": "Cut it free",
+     "check": "intelligence",
+     "success": {
+      "text": "It nuzzles your hand and follows you for a while.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -2,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The vines are too tight. You free it, but it flees at once.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Call for help",
+     "success": {
+      "text": "A passing ranger frees it and thanks you.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You decide not to stop. Nothing happens.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "injured-wild-pokemon",
+   "name": "An Injured Pokémon",
+   "group": "Wild Pokémon scenes",
+   "rarity": "common",
+   "scene": {
+    "cast": [],
+    "tint": "#201820",
+    "effect": "float"
+   },
+   "intro": "A hurt wild Pokémon lies beside the path, breathing hard.",
+   "choices": [
+    {
+     "label": "Treat its wounds",
+     "success": {
+      "text": "It recovers, leaves a berry at your feet and vanishes into the grass.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Study it from a distance",
+     "success": {
+      "text": "You take careful notes.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 8
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it to rest",
+     "success": {
+      "text": "It watches you go. You feel fine about it.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "territorial-warning",
+   "name": "Claw Marks and Broken Branches",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#281810",
+    "effect": "fog"
+   },
+   "intro": "Deep claw marks score the trees and the grass is flattened. Something big claims this ground.",
+   "choices": [
+    {
+     "label": "Take the long way around",
+     "success": {
+      "text": "The detour costs you time but nothing else.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Scout the area",
+     "success": {
+      "text": "You learn its habits and avoid it, and note the signs.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 12
+       }
+      ]
+     }
+    },
+    {
+     "label": "Face it",
+     "success": {
+      "text": "A territorial Pokémon charges out of the brush!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "disturbed-habitat",
+   "name": "A Disturbed Habitat",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#201810",
+    "effect": "fog"
+   },
+   "intro": "Nests lie overturned and wild Pokémon keep their distance. Someone has been here.",
+   "choices": [
+    {
+     "label": "Look for tracks",
+     "success": {
+      "text": "Fresh boot prints lead off through the trees. You note them down.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 8
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You walk on. The forest stays quiet.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "poacher-hideout",
+   "name": "The Poacher Camp",
+   "group": "Wild Pokémon scenes",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "eventSeen",
+     "id": "disturbed-habitat"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#181010",
+    "effect": "flicker"
+   },
+   "intro": "The tracks end at a hidden camp. Cages of frightened Pokémon sit beside a smouldering fire.",
+   "choices": [
+    {
+     "label": "Free the Pokémon quietly",
+     "check": "speed",
+     "success": {
+      "text": "The cages open. One of the Pokémon stays by your side.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A guard spots you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Challenge the poachers",
+     "success": {
+      "text": "The poachers send out a savage Pokémon.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 400
+        },
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Report it and leave",
+     "success": {
+      "text": "A ranger team arrives later and thanks you.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "habitat-restored",
+   "name": "The Habitat Recovers",
+   "group": "Wild Pokémon scenes",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "eventSeen",
+     "id": "poacher-hideout"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#183020",
+    "effect": "hearts"
+   },
+   "intro": "The grove you helped is alive again. The Pokémon here remember you.",
+   "choices": [
+    {
+     "label": "Walk through",
+     "success": {
+      "text": "A rare Pokémon steps out of the grove, calm and curious.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 3,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Rest by the water",
+     "success": {
+      "text": "The Pokémon bring you berries and keep you company.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }
