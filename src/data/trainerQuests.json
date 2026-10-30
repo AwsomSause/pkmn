@@ -8279,6 +8279,1446 @@
      }
     }
    ]
+  },
+  {
+   "trainerId": "sabrina-lgpe",
+   "name": "Sabrina (LGPE)'s Psychic Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Psychic-types as Sabrina (LGPE)",
+     "story": "Sabrina (LGPE) feels the Psychic-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sabrina (LGPE)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sabrina (LGPE)",
+     "story": "Sabrina (LGPE) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sabrina-lgpe"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Psychic-type leading",
+     "story": "The Psychic-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.psychic",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Psychic-types in one run",
+     "story": "A whole run of Psychic-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Psychic Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Sabrina (LGPE)",
+     "story": "Sabrina (LGPE)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sabrina (LGPE), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "selene",
+   "name": "Selene's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Selene",
+     "story": "Selene has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Selene's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Selene",
+     "story": "Selene checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-selene"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Selene",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Selene",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Selene",
+     "story": "Selene's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Selene, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "serena",
+   "name": "Serena's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Serena",
+     "story": "Serena has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Serena's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Serena",
+     "story": "Serena checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-serena"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Serena",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Serena",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Serena",
+     "story": "Serena's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Serena, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "shauna",
+   "name": "Shauna's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Shauna",
+     "story": "Shauna has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Shauna's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Shauna",
+     "story": "Shauna checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-shauna"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Shauna",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Shauna",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Shauna",
+     "story": "Shauna's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Shauna, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "shelly",
+   "name": "Shelly's Water Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Water-types as Shelly",
+     "story": "Shelly feels the Water-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Shelly's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Shelly",
+     "story": "Shelly checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-shelly"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Water-type leading",
+     "story": "The Water-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.water",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Water-types in one run",
+     "story": "A whole run of Water-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Water Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Shelly",
+     "story": "Shelly's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Shelly, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "sidney",
+   "name": "Sidney's Dark Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Dark-types as Sidney",
+     "story": "Sidney feels the Dark-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sidney's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sidney",
+     "story": "Sidney checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sidney"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Dark-type leading",
+     "story": "The Dark-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.dark",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Dark-types in one run",
+     "story": "A whole run of Dark-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Dark Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Sidney",
+     "story": "Sidney's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sidney, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "silver",
+   "name": "Silver's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Silver",
+     "story": "Silver has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Silver's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Silver",
+     "story": "Silver checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-silver"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Silver",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Silver",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Silver",
+     "story": "Silver's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Silver, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "skyla",
+   "name": "Skyla's Flying Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Flying-types as Skyla",
+     "story": "Skyla feels the Flying-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Skyla's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Skyla",
+     "story": "Skyla checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-skyla"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Flying-type leading",
+     "story": "The Flying-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.flying",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Flying-types in one run",
+     "story": "A whole run of Flying-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Flying Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Skyla",
+     "story": "Skyla's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Skyla, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "sonia",
+   "name": "Sonia's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Sonia",
+     "story": "Sonia has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sonia's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sonia",
+     "story": "Sonia checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sonia"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Sonia",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Sonia",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Sonia",
+     "story": "Sonia's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sonia, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "sophocles",
+   "name": "Sophocles's Electric Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Electric-types as Sophocles",
+     "story": "Sophocles feels the Electric-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sophocles's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sophocles",
+     "story": "Sophocles checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sophocles"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Electric-type leading",
+     "story": "The Electric-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.electric",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Electric-types in one run",
+     "story": "A whole run of Electric-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Electric Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Sophocles",
+     "story": "Sophocles's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sophocles, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "sordward-shielbert",
+   "name": "Sordward & Shielbert's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Sordward & Shielbert",
+     "story": "Sordward & Shielbert has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sordward & Shielbert's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sordward & Shielbert",
+     "story": "Sordward & Shielbert checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sordward-shielbert"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Sordward & Shielbert",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Sordward & Shielbert",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Sordward & Shielbert",
+     "story": "Sordward & Shielbert's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sordward & Shielbert, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-hgss-ethan",
+   "name": "Spr_HGSS_Ethan's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_HGSS_Ethan",
+     "story": "Spr_HGSS_Ethan has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_HGSS_Ethan's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_HGSS_Ethan",
+     "story": "Spr_HGSS_Ethan checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-hgss-ethan"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_HGSS_Ethan",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_HGSS_Ethan",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_HGSS_Ethan",
+     "story": "Spr_HGSS_Ethan's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_HGSS_Ethan, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-hgss-silver",
+   "name": "Spr_HGSS_Silver's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_HGSS_Silver",
+     "story": "Spr_HGSS_Silver has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_HGSS_Silver's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_HGSS_Silver",
+     "story": "Spr_HGSS_Silver checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-hgss-silver"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_HGSS_Silver",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_HGSS_Silver",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_HGSS_Silver",
+     "story": "Spr_HGSS_Silver's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_HGSS_Silver, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-pt-barry",
+   "name": "Spr_Pt_Barry's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_Pt_Barry",
+     "story": "Spr_Pt_Barry has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_Pt_Barry's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_Pt_Barry",
+     "story": "Spr_Pt_Barry checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-pt-barry"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_Pt_Barry",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_Pt_Barry",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_Pt_Barry",
+     "story": "Spr_Pt_Barry's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_Pt_Barry, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-pt-dawn",
+   "name": "Spr_Pt_Dawn's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_Pt_Dawn",
+     "story": "Spr_Pt_Dawn has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_Pt_Dawn's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_Pt_Dawn",
+     "story": "Spr_Pt_Dawn checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-pt-dawn"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_Pt_Dawn",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_Pt_Dawn",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_Pt_Dawn",
+     "story": "Spr_Pt_Dawn's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_Pt_Dawn, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-pt-looker",
+   "name": "Spr_Pt_Looker's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_Pt_Looker",
+     "story": "Spr_Pt_Looker has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_Pt_Looker's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_Pt_Looker",
+     "story": "Spr_Pt_Looker checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-pt-looker"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_Pt_Looker",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_Pt_Looker",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_Pt_Looker",
+     "story": "Spr_Pt_Looker's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_Pt_Looker, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "spr-pt-lucas",
+   "name": "Spr_Pt_Lucas's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Spr_Pt_Lucas",
+     "story": "Spr_Pt_Lucas has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Spr_Pt_Lucas's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Spr_Pt_Lucas",
+     "story": "Spr_Pt_Lucas checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-spr-pt-lucas"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Spr_Pt_Lucas",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Spr_Pt_Lucas",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Spr_Pt_Lucas",
+     "story": "Spr_Pt_Lucas's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Spr_Pt_Lucas, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "steven-gen-6",
+   "name": "Steven (Gen 6)'s Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Steven (Gen 6)",
+     "story": "Steven (Gen 6) has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Steven (Gen 6)'s Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Steven (Gen 6)",
+     "story": "Steven (Gen 6) checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-steven-gen-6"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Steven (Gen 6)",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Steven (Gen 6)",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Steven (Gen 6)",
+     "story": "Steven (Gen 6)'s journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Steven (Gen 6), Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "sycamore",
+   "name": "Sycamore's Journey",
+   "steps": [
+    {
+     "goal": "Defeat 15 trainers as Sycamore",
+     "story": "Sycamore has made a name on the road.",
+     "requirement": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 15
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Sycamore's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Sycamore",
+     "story": "Sycamore checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-sycamore"
+     }
+    },
+    {
+     "goal": "Defeat 5 gym leaders as Sycamore",
+     "story": "The badge case fills up.",
+     "requirement": {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 5
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Catch 6 Pokémon in one run as Sycamore",
+     "story": "A big team, ready for anything.",
+     "requirement": {
+      "kind": "best",
+      "counter": "pokemonCaught",
+      "atLeast": 6
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Seasoned Trainer"
+     }
+    },
+    {
+     "goal": "Clear a region as Sycamore",
+     "story": "Sycamore's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Sycamore, Master"
+     }
+    }
+   ]
+  },
+  {
+   "trainerId": "tabitha",
+   "name": "Tabitha's Fire Path",
+   "steps": [
+    {
+     "goal": "Defeat or catch 25 Fire-types as Tabitha",
+     "story": "Tabitha feels the Fire-type spirit grow.",
+     "requirement": {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 25
+     },
+     "reward": {
+      "researchPoints": 50,
+      "title": "Tabitha's Apprentice"
+     }
+    },
+    {
+     "goal": "Finish 2 Run Quests as Tabitha",
+     "story": "Tabitha checks off another goal.",
+     "requirement": {
+      "kind": "total",
+      "counter": "runQuestsDone",
+      "atLeast": 2
+     },
+     "reward": {
+      "researchPoints": 75,
+      "pool": "trainer-tabitha"
+     }
+    },
+    {
+     "goal": "Win 3 boss battles with a Fire-type leading",
+     "story": "The Fire-types roar in victory.",
+     "requirement": {
+      "kind": "total",
+      "counter": "bossWinsLead.fire",
+      "atLeast": 3
+     },
+     "reward": {
+      "candies": 10,
+      "bankCredits": 300
+     }
+    },
+    {
+     "goal": "Defeat or catch 20 Fire-types in one run",
+     "story": "A whole run of Fire-types. Impressive.",
+     "requirement": {
+      "kind": "best",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 20
+     },
+     "reward": {
+      "researchPoints": 150,
+      "title": "Fire Expert"
+     }
+    },
+    {
+     "goal": "Clear a region as Tabitha",
+     "story": "Tabitha's journey reaches its peak.",
+     "requirement": {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 1
+     },
+     "reward": {
+      "researchPoints": 300,
+      "bankCredits": 500,
+      "title": "Tabitha, Master"
+     }
+    }
+   ]
   }
  ],
  "runQuests": [
