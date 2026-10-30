@@ -25,7 +25,7 @@ import type { BoostStat, Content, ItemEffect, Move, PowerRule, Semi, SideMove, S
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, hypeMeterOf, isUltraBeast, moveStyleOf, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, statusLengthPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, hypeMeterOf, isUltraBeast, moveStyleOf, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -4359,6 +4359,9 @@ function tryInflictStatus(
     target.mon.status.turns = rng.int(content.ruleset.sleepTurnsMin, content.ruleset.sleepTurnsMax);
     if (source.side === 'player' && target.side === 'enemy') target.mon.status.turns = statusTurnsPerk(ctx.perks, target.mon.status.turns);
   }
+  // Burn and poison wear off after a set number of turns (0 = never); a perk holder's lasts longer.
+  const length = status === 'brn' ? content.ruleset.burnTurns : status === 'psn' ? content.ruleset.poisonTurns : 0;
+  if (length > 0) target.mon.status.left = length + (source.side === 'player' && target.side === 'enemy' && (status === 'brn' || status === 'psn') ? statusLengthPerk(ctx.perks, status) : 0);
   events.push({ type: 'status', side: target.side, status });
   if (status === 'psn' && source !== target && abilityIn(ctx, source) === 'poison-puppeteer') tryConfuse(ctx, source, target, events, false);
   if (source !== target && abilityIn(ctx, target) === 'synchronize' && (status === 'brn' || status === 'psn' || status === 'par') && canGetStatus(ctx, target, source, status)) {
@@ -4611,6 +4614,10 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     const { lost, lastStand } = hurt(fraction);
     events.push({ type: 'residual', side: c.side, status, amount: lost, hpAfter: c.mon.hp });
     if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+  }
+  if (c.mon.hp > 0 && c.mon.status?.left !== undefined && (status === 'brn' || status === 'psn') && --c.mon.status.left <= 0) {
+    c.mon.status = null;
+    events.push({ type: 'cured', side: c.side });
   }
   if (c.mon.hp > 0 && c.vol.bound > 0) {
     c.vol.bound -= 1;

@@ -417,6 +417,10 @@
   "chance": 0.3,
   "fromStage": 1
  },
+ "shopSale": {
+  "everyStages": 3,
+  "discount": 0.2
+ },
  "trainerAi": {
   "healBelow": 0.3,
   "healFraction": 0.5,
