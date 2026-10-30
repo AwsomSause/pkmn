@@ -45,7 +45,7 @@
   "routes": {
     "runEvent": {
       "status": "supported",
-      "note": "A rare event stop inside a run (events.json)."
+      "note": "A rare event stop inside a run (events.json). Delta, Z and Spooky forms each have their own clue chain and battle, which need no game event in season: Delta Research, Z-Form Trial, Haunted Detour."
     },
     "gameEvent": {
       "status": "limited",
@@ -61,7 +61,7 @@
     },
     "researchQuest": {
       "status": "limited",
-      "note": "Form Research: three clue stops, then a research battle with a regional form (events.json, tools/events/world.ts). Delta and Z forms have no clue chain yet."
+      "note": "Form Research (regional forms), plus Delta Research (three clues, then the Delta Study) and the Z-Form Trial (two sigils, then a Z-form battle) in events.json (tools/events/world.ts)."
     },
     "bossReward": {
       "status": "limited",
