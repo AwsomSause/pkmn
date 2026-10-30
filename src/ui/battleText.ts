@@ -268,6 +268,7 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       if (e.kind === 'dynamax') return `${before} Dynamaxed!`;
       if (e.kind === 'gigantamax') return `${before} Gigantamaxed into ${species(e.to)}!`;
       if (e.kind === 'dynamaxEnd') return `${before} returned to its normal size!`;
+      if (e.kind === 'illusion') return e.broken ? `${before}'s Illusion wore off!` : '';
       if (e.kind === 'ability') return `${before} changed form into ${species(e.to)}!`;
       return `${before} has Mega Evolved into ${species(e.to)}!`;
     }

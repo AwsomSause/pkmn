@@ -229,6 +229,10 @@ export const VolatileSchema = z.object({
   grudge: z.boolean().default(false),
   /** Morpeko's Hunger Switch: currently in the Hangry mode. */
   hangry: z.boolean().default(false),
+  /** Sky Drop: true while the user of Sky Drop holds this Pokémon in the air. */
+  skyHeld: z.boolean().default(false),
+  /** Illusion: the species this Pokémon looks like until a damaging move hits it. */
+  illusion: z.string().nullable().default(null),
   /** Roost: Flying type lost until the turn ends. */
   roost: z.boolean().default(false),
   /** Throat Chop: sound moves blocked for this many turns. */
@@ -306,6 +310,8 @@ export const freshVolatile = (): Volatile => ({
   plannedMove: null,
   grudge: false,
   hangry: false,
+  skyHeld: false,
+  illusion: null,
   roost: false,
   throat: 0,
   lostTypes: [],
@@ -356,6 +362,7 @@ export const freshExtra = () => ({
   ionDeluge: false,
   wonderRoom: 0,
   brokenFace: [] as string[],
+  delta: false,
   mimic: {} as Record<string, { kind: 'mimic' | 'transform'; slot: number; moves: { id: string; pp: number }[] }>,
   fairyLock: -9,
   passSub: { player: 0, enemy: 0 },
@@ -444,6 +451,7 @@ export const BattleStateSchema = z.object({
     wonderRoom: z.number().int().default(0),
     /** Pokémon whose Disguise / Ice Face is already used up. */
     brokenFace: z.array(z.string()).default([]),
+    delta: z.boolean().default(false),
     mimic: z.record(z.string(), z.object({ kind: z.enum(['mimic', 'transform']), slot: z.number().int(), moves: z.array(z.object({ id: z.string(), pp: z.number().int() })) })).default({}),
     fairyLock: z.number().int().default(-9),
     passSub: z.object({ player: z.number().int().default(0), enemy: z.number().int().default(0) }).default({ player: 0, enemy: 0 }),

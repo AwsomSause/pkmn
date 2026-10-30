@@ -45,6 +45,7 @@ import type { BoostStat, Content, MaxEffect, Move, TransformKind, TypeName } fro
 import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
 import { abilityOf, calcStats, getSpecies } from '../pokemon';
+import { effectiveHeld } from './held';
 import type { BattleState, PokemonInstance } from '../state';
 
 type Side = 'player' | 'enemy';
@@ -60,7 +61,7 @@ export interface TransformEvent {
   side: Side;
   uid: string;
   /** `dynamaxEnd`: a Dynamax (or Gigantamax) ran out or ended early. */
-  kind: FormChangeKind | 'zmove' | 'dynamax' | 'gigantamax' | 'dynamaxEnd';
+  kind: FormChangeKind | 'zmove' | 'dynamax' | 'gigantamax' | 'dynamaxEnd' | 'illusion';
   from: string;
   to: string;
   /** The item that made it happen (Mega Stone or orb); null for bosses and Tera. */
@@ -70,6 +71,8 @@ export interface TransformEvent {
   /** Z-Move: the move it powered up and what it became (the same id for a status move). */
   moveId?: string;
   zMoveId?: string;
+  /** Illusion: true when the disguise wore off. */
+  broken?: true;
 }
 
 /** Events the transformation step can add (stat and HP changes use the engine's own event shapes). */
@@ -453,6 +456,12 @@ function terastallize(ctx: TransformContext, side: Side, mon: PokemonInstance, t
 }
 
 /** A Pokémon's types in this battle: its Tera Type once Terastallized, otherwise its species' types. */
+const PLATE_TYPE: Record<string, TypeName> = {
+  'fist-plate': 'fighting', 'sky-plate': 'flying', 'toxic-plate': 'poison', 'earth-plate': 'ground', 'stone-plate': 'rock', 'insect-plate': 'bug', 'spooky-plate': 'ghost',
+  'iron-plate': 'steel', 'flame-plate': 'fire', 'splash-plate': 'water', 'meadow-plate': 'grass', 'zap-plate': 'electric', 'mind-plate': 'psychic', 'icicle-plate': 'ice',
+  'draco-plate': 'dragon', 'dread-plate': 'dark', 'pixie-plate': 'fairy',
+};
+
 export function battleTypes(content: Content, battle: BattleState, mon: PokemonInstance): readonly TypeName[] {
   const tera = battle.transform.teraTypes[mon.uid];
   if (tera) return [tera];
@@ -460,6 +469,9 @@ export function battleTypes(content: Content, battle: BattleState, mon: PokemonI
   const base: readonly TypeName[] = vol?.typeList ? (vol.typeList as TypeName[]) : vol?.typeShift ? [vol.typeShift] : getSpecies(content, mon.speciesId).types;
   const mimic = battle.terrain && abilityOf(content, mon) === 'mimicry' ? ({ electric: 'electric', grassy: 'grass', misty: 'fairy', psychic: 'psychic' } as Record<string, TypeName>)[battle.terrain.id] : undefined;
   if (mimic && !vol?.typeList) return [mimic];
+  if (abilityOf(content, mon) === 'multitype' && !vol?.typeList) {
+    for (const id of Object.keys(effectiveHeld({ battle }, mon))) if (PLATE_TYPE[id]) return [PLATE_TYPE[id]];
+  }
   return vol?.roost ? base.filter((t) => t !== 'flying') : base;
 }
 

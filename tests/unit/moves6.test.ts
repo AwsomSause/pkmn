@@ -115,3 +115,22 @@ describe('Sky Drop and Springtide Storm', () => {
     expect(content.moves.get('springtide-storm')!.supported).not.toBe(false);
   });
 });
+
+describe('limits removed', () => {
+  it('Sky Drop keeps a slower target from acting while it is held', () => {
+    const d = duel('pikachu', 'machop', ['sky-drop'], ['tackle']);
+    const first = d.go();
+    const hits = (es: typeof first) => es.filter((e) => e.type === 'damage' && e.side === 'player').length;
+    expect(hits(first)).toBe(0);
+    expect(d.battle.enemyVolatile.skyHeld).toBe(true);
+    expect(hits(d.go())).toBe(0);
+    expect(d.battle.enemyVolatile.skyHeld).toBe(false);
+  });
+  it('Mycelium Might lets a status move through Good as Gold', () => {
+    const d = duel('machop', 'snorlax', ['growl']);
+    d.battle.playerVolatile.abilityOverride = 'mycelium-might';
+    d.battle.enemyVolatile.abilityOverride = 'good-as-gold';
+    d.go();
+    expect(d.battle.enemyStages.atk).toBe(-1);
+  });
+});
