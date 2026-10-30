@@ -58,10 +58,10 @@ describe('story foundation: random streams', () => {
   // holding items) M8.75 part C3 (every Pokémon has an ability) and the C2c move batch, which change
   // play on purpose. Re-pinned again when special forms (Delta, Z, Spooky, regional) left the ordinary pools (Untitled doc §8), and for the gentle opening (weaker first wild fights, no fixed-damage enemy moves at low level, an attacking move always known), and for the item audit (10 new catalog items, wider heal and berry event pools, uncommon and higher drafts 15% rarer, Terrain Seeds, Canari Plushes, Exp. Candies, special balls, Hyper Berries, the rarity order fix), and for wild type and type-combo rarity (balance.json typeRarity, comboRarity).
   const BEFORE_STORY: Record<string, string> = {
-    'STORY1/0': '7194f3e8f086b344',
-    'STORY2/0': 'fae13761bf7717e4',
+    'STORY1/0': 'dc2f633d8a219776',
+    'STORY2/0': 'cdfb5542e9d8527e',
     'STORY4/0': 'c685f89d623505af',
-    'STORY5/0': '171694ffbdb20a54',
+    'STORY5/0': '6a85ea01a36017c5',
     'STORY6/0': 'ac1b660e8ff2ac8f',
     'STORY7/0': '349ab492b7f5a7e1',
     'STORY8/0': '446665af1ea23450',

@@ -92,7 +92,8 @@ describe('boss teams', () => {
     for (let k = 0; k < GYM_TEAM_COUNT; k++) {
       const region = Math.floor(k / FULL.stagesPerRegion);
       const plan = planGymLeader(flat, RED, 'misty', k, scaleAt(k % FULL.stagesPerRegion, FULL.columns, region, flat), new Rng(hashSeed("1")));
-      expect(Math.max(...plan.members.map((m) => m.level))).toBe(content.bosses.get('misty')!.teams.gym[k]!.level);
+      // The stored teams were built with a gym bonus of 1 (npm run data:bosses); the bonus is applied on top at run time.
+      expect(Math.max(...plan.members.map((m) => m.level))).toBe(content.bosses.get('misty')!.teams.gym[k]!.level - 1 + d.gymBonus);
     }
     for (let r = 0; r < LEAGUE_TEAM_COUNT; r++) {
       const champ = planChampion(flat, RED, 'lance', r, leagueScale(flat, r), new Rng(hashSeed("1")));
