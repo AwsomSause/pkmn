@@ -11,6 +11,7 @@
 // is a free re-roll of the draft (director, answer 5).
 // Battle, map and event items are "pending" and never offered until built.
 
+import { natureEffectText, natureName } from './natures';
 import { runPerks } from './archetypes';
 import { itemSlotLimit } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
@@ -82,6 +83,8 @@ export function catalogTargetProblem(content: Content, run: RunState, entry: Cat
       const copies = Math.round((mon.statBoosts?.[effect.stat] ?? 0) / effect.percent);
       return entry.max !== null && copies >= entry.max ? 'That Pokémon has already had the maximum.' : null;
     }
+    case 'nature':
+      return mon.nature === effect.nature ? `That Pokémon is already ${natureName(effect.nature)}.` : null;
     case 'ppUp':
       return mon.moves.some((m) => (m.ppUps ?? 0) < MAX_PP_UPS) ? null : "That Pokémon's moves already have the most PP they can.";
     case 'care':
@@ -232,6 +235,15 @@ export function applyCatalog(
       applyChanges(effect.changes);
       const blocks = passivePercent(content, run, 'feedCharisma');
       if (blocks > 0 && entry.family.startsWith('Berries')) applyChanges({ charisma: blocks });
+      break;
+    }
+    case 'nature': {
+      const mon = target!;
+      const before = maxHp(content, mon);
+      mon.nature = effect.nature;
+      messages.push(`${name(mon)} became ${natureName(effect.nature)} (${natureEffectText(effect.nature)}).`);
+      mon.hp = Math.min(mon.hp, maxHp(content, mon));
+      void before;
       break;
     }
     case 'ppUp':

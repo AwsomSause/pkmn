@@ -5,6 +5,7 @@ import { content } from './helpers';
 describe('Pokémon stats and experience', () => {
   it('computes stats with the no-IV/EV formula', () => {
     const mon = createPokemon(content, 'bulbasaur', 5, 'p1');
+    mon.nature = 'serious';
     // HP = floor(2*45*5/100) + 5 + 10 = 4 + 15 = 19; Atk = floor(2*49*5/100)+5 = 4+5 = 9
     expect(calcStats(content, mon)).toEqual({ hp: 19, atk: 9, def: 9, spa: 11, spd: 11, spe: 9 });
     expect(mon.hp).toBe(19);

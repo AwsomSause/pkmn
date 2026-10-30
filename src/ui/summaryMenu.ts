@@ -45,7 +45,7 @@ function infoPage(content: Content, run: RunState | null, mon: PokemonInstance, 
         else box.add(scene.add.text(96 + i * 112, 60, t.toUpperCase(), textStyle(16)).setOrigin(0, 0.5));
       });
       header(scene, box, 14, 90, 'Ability');
-      box.add(scene.add.text(90, 88, info.ability?.name ?? '—', textStyle(18)));
+      box.add(scene.add.text(90, 88, `${info.ability?.name ?? '—'}${info.nature ? `  ·  ${info.nature}` : ''}`, textStyle(18)));
       header(scene, box, 14, 116, 'Holding');
       if (info.held.length === 0) box.add(scene.add.text(90, 114, 'Nothing', textStyle(18, '#9fb4c8')));
       let hx = 90;
