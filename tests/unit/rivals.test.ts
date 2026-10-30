@@ -5,7 +5,10 @@ import { createBattle } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { RIVAL_CONFIG } from '../../src/core/rivals/schema';
 import { sparkGain } from '../../src/core/rivals/manager';
-import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
+import { nextChoices } from '../../src/core/map';
+import type { TrainerPlan } from '../../src/core/encounters';
+import { mostUsedType, rivalReturn, rivalReturnFlag, waitingRival } from '../../src/core/rivals/adapt';
+import { chooseNode, chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
 import { RivalSchema } from '../../src/core/story/schema';
 import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
@@ -84,5 +87,45 @@ describe('rivals in saves', () => {
     saves.saveRun(run);
     const loaded = saves.loadRun();
     expect(loaded.status === 'ok' && loaded.data.story.rivals).toEqual(run.story.rivals);
+  });
+});
+
+describe('rival return and adaptation', () => {
+  function sparked(seed: string): RunState {
+    return win(trainerBattle(seed));
+  }
+
+  it('a rival from an earlier stage replaces the next ordinary trainer, once per region, with its team and one counter-pick', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'rb', seed: 'rb', archetypeId: 'red' }), 0));
+    run.story.rivals = structuredClone(sparked('rb').story.rivals);
+    run.story.rivals[0]!.origin.where.stage = 5;
+    // The party uses Electric moves.
+    run.party[0]!.moves = [{ id: 'thunderbolt', pp: 15 }];
+    expect(waitingRival(run)?.id).toBe(run.story.rivals[0]!.id);
+
+    const node = nextChoices(run.stage!)[0]!;
+    node.kind = 'trainer';
+    const after = chooseNode(content, run, node.id);
+    const battle = after.battle!;
+    expect(battle.rivalId).toBe(run.story.rivals[0]!.id);
+    expect(battle.trainer).toMatchObject({ classId: 'youngster', name: 'Joey' });
+    expect(battle.enemyTeam.length).toBeGreaterThanOrEqual(1);
+    expect(after.story.flags[rivalReturnFlag(battle.rivalId!)]).toBe(0);
+    expect(waitingRival(after)).toBeNull();
+    // Telegraphed: if the team changed, the player is told, and the record keeps it.
+    if (battle.rivalNote) expect(after.story.rivals[0]!.adaptations).toEqual([battle.rivalNote]);
+  });
+
+  it('counter-pick resists the party\'s most-used type and swaps only one member', () => {
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'ad', seed: 'ad', archetypeId: 'red' }), 0));
+    run.party[0]!.moves = [{ id: 'thunderbolt', pp: 15 }];
+    expect(mostUsedType(content, run)).toBe('electric');
+    const rival = sparked('ad').story.rivals[0]!;
+    const plan: TrainerPlan = { classId: 'youngster', name: 'x', leaderId: null, ai: 0, members: [{ speciesId: 'geodude', level: 20 }, { speciesId: 'pidgey', level: 20 }], levelInfo: [{ level: 20 } as never, { level: 20 } as never] };
+    const ret = rivalReturn(content, run, rival, plan, { kind: 'rematch', levelBonus: 1, extraMembers: 1, perStage: 1, perRegion: 4 });
+    expect(ret.note).toContain('studied your electric moves');
+    expect(ret.plan.members.map((m) => m.speciesId)).toContain('geodude');
+    expect(ret.plan.members).toHaveLength(2);
+    expect(rivalReturn(content, run, rival, plan, { kind: 'rematch', levelBonus: 1, extraMembers: 1, perStage: 1, perRegion: 4 })).toEqual(ret);
   });
 });

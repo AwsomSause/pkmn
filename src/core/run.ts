@@ -101,6 +101,7 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { createStoryState } from './story/record';
+import { rivalReturn, rivalReturnFlag, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { planReunion, reunionPokemon } from './story/reunion';
 
@@ -659,8 +660,18 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
       plan = revisedTeam(content, run, back, plan, rule.effect);
       run.story.flags[returnFlag(back.id)] = 'returned';
     }
+    // A rival that sparked earlier takes the first ordinary trainer slot once per region.
+    const rivalBack = rule && !back ? waitingRival(run) : null;
+    let rivalNote: string | null = null;
+    if (rule && rivalBack) {
+      const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
+      plan = ret.plan;
+      rivalNote = ret.note;
+      if (ret.note) rivalBack.adaptations.push(ret.note);
+      run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
+    }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -678,6 +689,10 @@ function startEncounter(content: Content, run: RunState, node: MapNode, rematch?
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
+    if (rivalBack) {
+      run.battle.rivalId = rivalBack.id;
+      if (rivalNote) run.battle.rivalNote = rivalNote;
+    }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
     if (role) giveBossItems(content, team, role, run.regionIndex, new Rng(hashSeed(`${run.seed}::boss-items::${run.regionIndex}::${stage.index}::${node.id}`)));

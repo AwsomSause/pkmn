@@ -224,6 +224,9 @@ export const BattleStateSchema = z.object({
   returning: z.string().optional(),
   /** An RSVP Mail rival: beating it gives a better reward draft. */
   rival: z.boolean().optional(),
+  /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
+  rivalId: z.string().optional(),
+  rivalNote: z.string().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
 });
