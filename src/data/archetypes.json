@@ -9627,5 +9627,595 @@
       "spooky",
       "mystic"
     ]
+  },
+  {
+    "id": "lana",
+    "name": "Lana",
+    "title": "The Water Specialist",
+    "description": "Water-types deal 20% more special damage — Electric moves deal 20% more damage against your team.",
+    "pros": [
+      "Water-types deal 20% more special damage",
+      "fishing encounters have better rare Pokémon odds"
+    ],
+    "cons": [
+      "Electric moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1210
+    },
+    "unlockText": "Defeat 1210 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lana",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "water",
+        "value": 1.2,
+        "category": "special"
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "electric",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "araquanid",
+      "lanturn",
+      "wishiwashi",
+      "primarina"
+    ],
+    "signaturePool": "trainer-lana",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lance",
+    "name": "Lance",
+    "title": "The Dragon Specialist",
+    "description": "Dragon-types deal 25% more damage and gain 10% HP — Dragon-types gain 20% less EXP.",
+    "pros": [
+      "Dragon-types deal 25% more damage and gain 10% HP"
+    ],
+    "cons": [
+      "Dragon-types gain 20% less EXP",
+      "Ice moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1220
+    },
+    "unlockText": "Defeat 1220 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lance",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dragon",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "hp",
+        "value": 1.1,
+        "type": "dragon"
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "type": "dragon",
+        "value": 0.8
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "ice",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "dragonite",
+      "gyarados",
+      "aerodactyl",
+      "charizard"
+    ],
+    "signaturePool": "trainer-lance",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "leaf-gen-3",
+    "name": "Leaf (Gen 3)",
+    "title": "The Grass Specialist",
+    "description": "Grass-types deal 15% more damage — Fire moves deal 15% more damage against your team.",
+    "pros": [
+      "Grass-types deal 15% more damage",
+      "healing items restore 10% more HP"
+    ],
+    "cons": [
+      "Fire moves deal 15% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1230
+    },
+    "unlockText": "Defeat 1230 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.leaf-gen3",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "grass",
+        "value": 1.15
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fire",
+        "value": 1.15
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "venusaur",
+      "clefable",
+      "ninetales",
+      "vaporeon"
+    ],
+    "signaturePool": "trainer-leaf-gen-3",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "leon-masters",
+    "name": "Leon (Masters)",
+    "title": "The Specialist",
+    "description": "Pokémon deal 20% more damage against bosses and gain 10% Speed — Pokémon gain 15% less EXP.",
+    "pros": [
+      "Pokémon deal 20% more damage against bosses and gain 10% Speed"
+    ],
+    "cons": [
+      "Pokémon gain 15% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1240
+    },
+    "unlockText": "Defeat 1240 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.leon-masters",
+    "modifiers": [
+      {
+        "kind": "bossDamageMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "charizard",
+      "aegislash",
+      "dragapult",
+      "haxorus"
+    ],
+    "signaturePool": "trainer-leon-masters",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lillie-z",
+    "name": "Lillie (Z)",
+    "title": "The Fairy Specialist",
+    "description": "Fairy-types deal 15% more special damage — Pokémon deal 10% less damage.",
+    "pros": [
+      "Fairy-types deal 15% more special damage",
+      "healing effects are 20% stronger"
+    ],
+    "cons": [
+      "Pokémon deal 10% less damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1250
+    },
+    "unlockText": "Defeat 1250 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lillie-z",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fairy",
+        "value": 1.15,
+        "category": "special"
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "damageMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "clefable",
+      "ribombee",
+      "lilligant",
+      "vulpix"
+    ],
+    "signaturePool": "trainer-lillie-z",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lisia",
+    "name": "Lisia",
+    "title": "The Fairy Specialist",
+    "description": "Fairy-types deal 20% more damage — Pokémon gain 10% less EXP.",
+    "pros": [
+      "Fairy-types deal 20% more damage",
+      "rare encounters are 10% more common"
+    ],
+    "cons": [
+      "Pokémon gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1260
+    },
+    "unlockText": "Defeat 1260 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lisia",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "fairy",
+        "value": 1.2
+      },
+      {
+        "kind": "encounterWeightMultiplier",
+        "group": "rare",
+        "value": 1.1
+      },
+      {
+        "kind": "xpMultiplier",
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [
+      "fairy"
+    ],
+    "signatureSpecies": [
+      "altaria",
+      "azumarill",
+      "sylveon",
+      "wigglytuff"
+    ],
+    "signaturePool": "trainer-lisia",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lorelei-lgpe",
+    "name": "Lorelei (LGPE)",
+    "title": "The Ice Specialist",
+    "description": "Ice-types deal 20% more damage and gain 10% Defense — Fire moves deal 20% more damage against your team.",
+    "pros": [
+      "Ice-types deal 20% more damage and gain 10% Defense"
+    ],
+    "cons": [
+      "Fire moves deal 20% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1270
+    },
+    "unlockText": "Defeat 1270 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lorelei-lgpe",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "ice",
+        "value": 1.2
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "def",
+        "value": 1.1,
+        "type": "ice"
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "fire",
+        "value": 1.2
+      }
+    ],
+    "signatureTypes": [
+      "ice"
+    ],
+    "signatureSpecies": [
+      "lapras",
+      "cloyster",
+      "dewgong",
+      "jynx"
+    ],
+    "signaturePool": "trainer-lorelei-lgpe",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lt-surge",
+    "name": "Lt. Surge",
+    "title": "The Electric Specialist",
+    "description": "Electric-types deal 25% more damage and gain 15% Speed — Ground moves deal 25% more damage against your team.",
+    "pros": [
+      "Electric-types deal 25% more damage and gain 15% Speed"
+    ],
+    "cons": [
+      "Ground moves deal 25% more damage against your team"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1280
+    },
+    "unlockText": "Defeat 1280 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.ltsurge",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "electric",
+        "value": 1.25
+      },
+      {
+        "kind": "statMultiplier",
+        "stat": "spe",
+        "value": 1.15,
+        "type": "electric"
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "moveType": "ground",
+        "value": 1.25
+      }
+    ],
+    "signatureTypes": [
+      "electric"
+    ],
+    "signatureSpecies": [
+      "raichu",
+      "electrode",
+      "magnezone",
+      "electivire"
+    ],
+    "signaturePool": "trainer-lt-surge",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lucas-gen-4-platinum",
+    "name": "Lucas (Gen 4 Platinum)",
+    "title": "The Specialist",
+    "description": "Starter Pokémon gain 20% EXP and deal 10% more damage — Non-starters gain 10% less EXP.",
+    "pros": [
+      "Starter Pokémon gain 20% EXP and deal 10% more damage"
+    ],
+    "cons": [
+      "Non-starters gain 10% less EXP"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1290
+    },
+    "unlockText": "Defeat 1290 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lucas",
+    "modifiers": [
+      {
+        "kind": "groupXpMultiplier",
+        "starter": true,
+        "value": 1.2
+      },
+      {
+        "kind": "starterDamageMultiplier",
+        "starter": true,
+        "value": 1.1
+      },
+      {
+        "kind": "groupXpMultiplier",
+        "starter": false,
+        "value": 0.9
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "torterra",
+      "infernape",
+      "staraptor",
+      "luxray"
+    ],
+    "signaturePool": "trainer-lucas-gen-4-platinum",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lucas",
+    "name": "Lucas",
+    "title": "The Specialist",
+    "description": "Pokémon gain 15% more EXP — Shop prices increase by 10%.",
+    "pros": [
+      "Pokémon gain 15% more EXP"
+    ],
+    "cons": [
+      "Shop prices increase by 10%"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1300
+    },
+    "unlockText": "Defeat 1300 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lucas",
+    "modifiers": [
+      {
+        "kind": "xpMultiplier",
+        "value": 1.15
+      },
+      {
+        "kind": "priceMultiplier",
+        "group": "all",
+        "value": 1.1
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "torterra",
+      "infernape",
+      "staraptor",
+      "luxray"
+    ],
+    "signaturePool": "trainer-lucas",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lyra",
+    "name": "Lyra",
+    "title": "The Grass Specialist",
+    "description": "Grass-types deal 15% more damage — Pokémon take 5% more damage.",
+    "pros": [
+      "Grass-types deal 15% more damage",
+      "capture chance increases by 10%"
+    ],
+    "cons": [
+      "Pokémon take 5% more damage"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1330
+    },
+    "unlockText": "Defeat 1330 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lyra",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "grass",
+        "value": 1.15
+      },
+      {
+        "kind": "captureMultiplier",
+        "value": 1.1
+      },
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 1.05
+      }
+    ],
+    "signatureTypes": [
+      "grass"
+    ],
+    "signatureSpecies": [
+      "meganium",
+      "marill",
+      "azumarill",
+      "togekiss"
+    ],
+    "signaturePool": "trainer-lyra",
+    "eventTags": [],
+    "signatureMechanic": null
+  },
+  {
+    "id": "lysandre",
+    "name": "Lysandre",
+    "title": "The Dark Specialist",
+    "description": "Dark-types deal 20% more damage — Healing effects are 20% weaker.",
+    "pros": [
+      "Dark-types deal 20% more damage",
+      "boss rewards increase by 20%"
+    ],
+    "cons": [
+      "Healing effects are 20% weaker"
+    ],
+    "unlockedByDefault": false,
+    "unlock": {
+      "kind": "total",
+      "counter": "trainersDefeated",
+      "atLeast": 1340
+    },
+    "unlockText": "Defeat 1340 trainers in total across your runs",
+    "unlockCost": 300,
+    "spriteAssetId": "boss.lysandre",
+    "modifiers": [
+      {
+        "kind": "damageMultiplier",
+        "type": "dark",
+        "value": 1.2
+      },
+      {
+        "kind": "bossMoneyMultiplier",
+        "value": 1.2
+      },
+      {
+        "kind": "healingMultiplier",
+        "value": 0.8
+      }
+    ],
+    "signatureTypes": [
+      "dark"
+    ],
+    "signatureSpecies": [
+      "pyroar",
+      "mienshao",
+      "honchkrow",
+      "gyarados"
+    ],
+    "signaturePool": "trainer-lysandre",
+    "eventTags": [],
+    "signatureMechanic": null
   }
 ]
