@@ -90,7 +90,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Reward draft: equal cards, rarity label, exact effect, eligibility, hover raise, collect motion | BUILT | glass cards with rarity rim, deal-in, focus lift, chosen card flies off with a burst (slice 5) |
 | Shop: money/price labels, category icons, SOLD state, focus details | PART | glass shop/bag/party lists and Aero backdrop (slice 5); category icons + SOLD stamp: slice 8 |
 | Party/detail: tabs, moves with type/category, memories | BUILT | slice 9: map → Summary (`ui/summaryMenu.ts`): Info & stats page, Moves & story page per Pokémon |
-| Event choice: illustration, 2–4 options with costs, consequence ack | PART | Aero backdrop + glass pickers on event/decision screens (slice 5); illustration frame: slice 9 |
+| Event choice: illustration, 2–4 options with costs, consequence ack | BUILT | slice 11: glass illustration frame with data-driven motif (rarity rim, group pill, emblem bubble when no cast), cards with the kind of risk and sure costs (`choiceRisk`), sparkle/shudder chips and a money pill that rolls to the new total |
 | League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); league escalation: slice 10 |
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
 | Level-up / reward reveal / milestone transitions | TODO | slice 8 |

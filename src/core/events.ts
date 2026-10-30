@@ -266,6 +266,10 @@ export interface ChoiceView {
   attribute: string | null;
   /** With an Inquiry Mail: what happens, in words. */
   preview: string | null;
+  /** What it costs for sure (paid money, an item used, HP lost), or null. Never spoils a hidden reward. */
+  cost: string | null;
+  /** What kind of uncertainty it carries, in words ("Depends on your Luck · a setback if it fails"). */
+  risk: string;
 }
 
 export interface EventView {
@@ -297,6 +301,28 @@ function outcomeWords(content: Content, o: EventOutcome): string {
   return parts.filter(Boolean).join(', ') || 'nothing';
 }
 
+const HARMFUL = new Set(['damage', 'status', 'loseItem']);
+function harmful(e: EventEffect): boolean {
+  return HARMFUL.has(e.kind) || (e.kind === 'money' && e.amount < 0) || (e.kind === 'crisis' && e.amount > 0);
+}
+
+/**
+ * The cost and the kind of risk of a choice, for its card (Visual Bible: "reveal the cost/risk where
+ * known; if uncertain, explain what kind of uncertainty"). Costs are only the harmful effects every
+ * outcome shares, so a reward an Inquiry Mail would reveal stays hidden.
+ */
+export function choiceRisk(content: Content, choice: EventChoice): { cost: string | null; risk: string } {
+  const same = (a: EventEffect, b: EventEffect) => JSON.stringify(a) === JSON.stringify(b);
+  const sure = choice.success.effects.filter((e) => harmful(e) && (!choice.failure || choice.failure.effects.some((f) => same(f, e))));
+  const cost = sure.length ? sure.map((e) => effectWords(content, e)).join(', ') : null;
+  const uncertain = choice.check !== undefined || choice.chance !== undefined;
+  if (!uncertain) return { cost, risk: choice.success.battle ? 'Certain · leads to a battle' : 'Certain outcome' };
+  const why = choice.check ? `Depends on your ${ATTRIBUTE_LABELS[choice.check]}` : 'Luck of the draw';
+  const fail = choice.failure!;
+  const ifFails = fail.battle ? 'a fight if it fails' : fail.effects.some((e) => harmful(e) && !sure.some((c) => same(c, e))) ? 'a setback if it fails' : 'nothing lost if it fails';
+  return { cost, risk: `${why} · ${ifFails}` };
+}
+
 export function eventView(content: Content, run: RunState, sideId: string): EventView {
   const { side } = findSide(run, sideId);
   const event = content.events.get(side.eventId!)!;
@@ -305,7 +331,7 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
     const missing = c.requires.find((r) => !conditionMet(content, run, r));
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing ? conditionText(content, missing) : null, chance, attribute: c.check ?? null, preview };
+    return { label: c.label, locked: missing ? conditionText(content, missing) : null, chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }

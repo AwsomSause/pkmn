@@ -52,6 +52,18 @@ test('an event stop plays its scene, applies a choice once and returns to the ma
 
   await openEvent(page, 'pokemon-center', 'e2e-center');
   await page.screenshot({ path: 'test-results/events-scene.png' });
+  // The glass illustration frame, a risk line on every open card and the money pill.
+  const look = await page.evaluate(() => {
+    const scene = (window as any).__pkr.game.scene.getScene('Event');
+    const all: any[] = [];
+    const walk = (list: any[]) => list.forEach((o) => (all.push(o), o.list && walk(o.list)));
+    walk(scene.children.list);
+    return { frame: all.some((o) => o.name === 'event-frame'), risks: all.filter((o) => o.name === 'event-risk').map((o) => o.text), money: all.find((o) => o.name === 'event-money')?.text };
+  });
+  expect(look.frame).toBe(true);
+  expect(look.risks.length).toBeGreaterThan(0);
+  expect(look.risks.every((t: string) => /Certain|Depends on|Luck of the draw/.test(t))).toBe(true);
+  expect(look.money).toMatch(/^₽\d+$/);
   for (const [w, h] of [[800, 450], [480, 800]] as const) {
     await page.setViewportSize({ width: w, height: h });
     await page.waitForTimeout(300);
