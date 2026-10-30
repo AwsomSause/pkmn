@@ -878,7 +878,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (result.wiped) {
-      await this.say(result.run.rules.modeId === 'adventure' ? 'Your party fainted... you return to the start of the stage, healed.' : 'Death-Block! You return to the start of the stage with your party healed.');
+      await this.say(result.run.phase === 'battle' ? 'The VS Recorder rewinds the tape... the battle starts again!' : result.run.rules.modeId === 'adventure' ? 'Your party fainted... you return to the start of the stage, healed.' : 'Death-Block! You return to the start of the stage with your party healed.');
       this.scene.start(sceneForRun(result.run));
       return;
     }

@@ -8160,10 +8160,18 @@
   "max": 1,
   "how": "passive",
   "icon": "seal-bag",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "fullSell"
+    }
+   ]
+  }
  },
  {
   "id": "member-card",
@@ -8246,10 +8254,12 @@
   "max": 1,
   "how": "passive",
   "icon": "apricorn-box",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "apricornBox",
+   "percent": 1
+  }
  },
  {
   "id": "red-apricorn",
@@ -8457,10 +8467,12 @@
   "max": 1,
   "how": "passive",
   "icon": "powder-jar",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryMoney",
+   "percent": 10
+  }
  },
  {
   "id": "berry-pouch",
@@ -8472,10 +8484,12 @@
   "max": 1,
   "how": "passive",
   "icon": "berry-pouch",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berrySave",
+   "percent": 30
+  }
  },
  {
   "id": "berry-pots",
@@ -8487,10 +8501,12 @@
   "max": 1,
   "how": "passive",
   "icon": "berry-pots",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryPots",
+   "percent": 1
+  }
  },
  {
   "id": "damp-mulch",
@@ -8502,10 +8518,12 @@
   "max": 1,
   "how": "passive",
   "icon": "damp-mulch",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryHeal",
+   "percent": 25
+  }
  },
  {
   "id": "growth-mulch",
@@ -8517,10 +8535,12 @@
   "max": 1,
   "how": "passive",
   "icon": "growth-mulch",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryPotsExtra",
+   "percent": 1
+  }
  },
  {
   "id": "stable-mulch",
@@ -8532,10 +8552,12 @@
   "max": 1,
   "how": "passive",
   "icon": "stable-mulch",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryPinch",
+   "percent": 25
+  }
  },
  {
   "id": "gooey-mulch",
@@ -8547,10 +8569,12 @@
   "max": 1,
   "how": "passive",
   "icon": "gooey-mulch",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "berryPeace",
+   "percent": 1
+  }
  },
  {
   "id": "wailmer-pail",
@@ -8562,10 +8586,19 @@
   "max": 1,
   "how": "passive",
   "icon": "wailmer-pail",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "pail",
+     "friendship": 5
+    }
+   ]
+  }
  },
  {
   "id": "sprayduck",
@@ -8577,10 +8610,19 @@
   "max": 1,
   "how": "passive",
   "icon": "sprayduck",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "sprayduck",
+     "peace": 1
+    }
+   ]
+  }
  },
  {
   "id": "squirtbottle",
@@ -8592,10 +8634,19 @@
   "max": 1,
   "how": "passive",
   "icon": "squirtbottle",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "squirt",
+     "percent": 5
+    }
+   ]
+  }
  },
  {
   "id": "pokeblock-case",
@@ -8607,10 +8658,12 @@
   "max": 1,
   "how": "passive",
   "icon": "pokeblock-case",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "feedCharisma",
+   "percent": 1
+  }
  },
  {
   "id": "poffin-case",
@@ -8622,10 +8675,12 @@
   "max": 1,
   "how": "passive",
   "icon": "poffin-case",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "passive",
+   "passive": "feedFriendship",
+   "percent": 100
+  }
  },
  {
   "id": "lock-capsule",
@@ -8685,10 +8740,12 @@
   "max": null,
   "how": "use",
   "icon": "mystery-egg",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "egg",
+   "stages": 3,
+   "shiny": 4
+  }
  },
  {
   "id": "tm-normal",
@@ -12420,10 +12477,19 @@
   "max": 1,
   "how": "passive",
   "icon": "xtransceiver",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "transceiver",
+     "heal": 0.25
+    }
+   ]
+  }
  },
  {
   "id": "pal-pad",
@@ -12459,10 +12525,18 @@
   "max": 1,
   "how": "passive",
   "icon": "vs-recorder",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "vsRecorder"
+    }
+   ]
+  }
  },
  {
   "id": "gb-sounds",
@@ -12474,10 +12548,13 @@
   "max": 1,
   "how": "passive",
   "icon": "gb-sounds",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "attributes",
+   "changes": {
+    "charisma": 1
+   }
+  }
  },
  {
   "id": "teachy-tv",
@@ -12523,10 +12600,18 @@
   "max": 1,
   "how": "passive",
   "icon": "journal",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "journal"
+    }
+   ]
+  }
  },
  {
   "id": "fashion-case",
@@ -12578,10 +12663,19 @@
   "max": 1,
   "how": "passive",
   "icon": "seal-case",
-  "status": "pending",
-  "needs": [
-   "map"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "run"
+   },
+   "perks": [
+    {
+     "perk": "sealCase",
+     "luck": 1
+    }
+   ]
+  }
  },
  {
   "id": "ability-urge",
@@ -12589,14 +12683,16 @@
   "family": "Battle trick items",
   "description": "Triggers an ally's ability right now",
   "rarity": "uncommon",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "ability-urge",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "bagItem",
+   "item": "ability-urge",
+   "count": 1
+  }
  },
  {
   "id": "item-urge",
@@ -12604,14 +12700,16 @@
   "family": "Battle trick items",
   "description": "Makes an ally use its held item (berry, herb) right now",
   "rarity": "uncommon",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "item-urge",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "bagItem",
+   "item": "item-urge",
+   "count": 1
+  }
  },
  {
   "id": "item-drop",
@@ -12623,10 +12721,12 @@
   "max": 3,
   "how": "use",
   "icon": "item-drop",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "bagItem",
+   "item": "item-drop",
+   "count": 1
+  }
  },
  {
   "id": "reset-urge",
@@ -12634,14 +12734,16 @@
   "family": "Battle trick items",
   "description": "Resets all of an ally's stat changes to zero",
   "rarity": "common",
-  "stacksOn": "pokemon",
+  "stacksOn": "player",
   "max": 3,
   "how": "use",
   "icon": "reset-urge",
-  "status": "pending",
-  "needs": [
-   "battle"
-  ]
+  "status": "supported",
+  "effect": {
+   "kind": "bagItem",
+   "item": "reset-urge",
+   "count": 1
+  }
  },
  {
   "id": "absorb-bulb",

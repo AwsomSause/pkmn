@@ -189,6 +189,24 @@ export function firstUse(ctx: HeldContext, uid: string, itemId: string): boolean
 }
 
 /** Eats one copy of a berry (or other eaten item) for good. */
+/** Team berry items (Berry Pouch, mulches): their summed percent for the player's side. */
+function teamBerryPercent(ctx: Pick<HeldContext, 'content' | 'teamItems'>, side: Side, kind: string): number {
+  if (side !== 'player') return 0;
+  let total = 0;
+  for (const [id, copies] of Object.entries(ctx.teamItems ?? {})) {
+    const effect = ctx.content.catalog.get(id)?.effect;
+    if (effect?.kind === 'passive' && effect.passive === kind) total += effect.percent * copies;
+  }
+  return total;
+}
+
+/** A Berry is eaten: counts for Powder Jar and Gooey Mulch, and a Berry Pouch may keep it. */
+function eatBerry(ctx: HeldContext, holder: Pick<Holder, 'mon' | 'side'>, itemId: string): void {
+  if (holder.side === 'player') stateOf(ctx.battle).berries += 1;
+  if (ctx.content.catalog.get(itemId)?.family.startsWith('Berries') && ctx.rng.chance(Math.min(1, teamBerryPercent(ctx, holder.side, 'berrySave') / 100))) return;
+  eat(holder.mon, itemId);
+}
+
 function eat(mon: PokemonInstance, itemId: string): void {
   const left = (mon.held?.[itemId] ?? 0) - 1;
   const held = { ...mon.held };
@@ -341,7 +359,7 @@ export function defenseMultiplier(ctx: HeldContext, target: Holder, moveType: Ty
   }
   for (const { itemId, hook } of hooks(all, 'berryResist')) {
     if (hook.type !== moveType || (!hook.any && effectiveness <= 1)) continue;
-    eat(target.mon, itemId);
+    eatBerry(ctx, target, itemId);
     events.push({ type: 'held', side: target.side, itemId, what: 'resist' });
     m *= 0.5;
     break;
@@ -491,21 +509,21 @@ export function afterHit(
     }
     const barb = hooks(targetHooks, 'stickyBarb')[0];
     if (barb && user.mon.hp > 0 && !(user.mon.held?.[barb.itemId] ?? 0)) {
-      eat(target.mon, barb.itemId);
+      eatBerry(ctx, target, barb.itemId);
       user.mon.held = { ...user.mon.held, [barb.itemId]: 1 };
       events.push({ type: 'held', side: user.side, itemId: barb.itemId, what: 'barb' });
     }
   }
   for (const { itemId, hook } of hooks(targetHooks, 'berryRetaliate')) {
     if (hook.category !== move.category || user.mon.hp <= 0) continue;
-    eat(target.mon, itemId);
+    eatBerry(ctx, target, itemId);
     hurt(user, hook.fraction, itemId, 'hurt');
     break;
   }
   if (target.mon.hp > 0) {
     for (const { itemId, hook } of hooks(targetHooks, 'berrySuper')) {
       if (effectiveness <= 1) continue;
-      eat(target.mon, itemId);
+      eatBerry(ctx, target, itemId);
       heal(content, target.mon, maxHpOf(content, target.mon) * hook.fraction * healingMultiplier(ctx, target.mon, target.side));
       events.push({ type: 'held', side: target.side, itemId, what: 'heal', hpAfter: target.mon.hp });
       break;
@@ -520,7 +538,7 @@ export function afterHit(
     const theirs = Object.keys(target.mon.held ?? {});
     if (theirs.length === 0 || !rng.chance(Math.min(1, (hook.percent * copies) / 100))) continue;
     const stolen = theirs[rng.int(0, theirs.length - 1)]!;
-    eat(target.mon, stolen);
+    eatBerry(ctx, target, stolen);
     user.mon.held = { ...user.mon.held, [stolen]: (user.mon.held?.[stolen] ?? 0) + 1 };
     events.push({ type: 'held', side: user.side, itemId, what: 'steal', stolen });
     break;
@@ -589,12 +607,14 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
   const all = hooksOf(ctx, mon, holder.side);
   const max = maxHpOf(content, mon);
   const below = (share: number) => mon.hp <= Math.floor(max * share);
+  // Stable Mulch: stat Berries trigger sooner.
+  const belowStat = (share: number) => below(Math.min(1, share + teamBerryPercent(ctx, holder.side, 'berryPinch') / 100));
   const state = stateOf(ctx.battle);
 
   for (const { itemId, hook } of hooks(all, 'berryHeal')) {
     if (!below(hook.below) || mon.hp >= max) continue;
-    eat(mon, itemId);
-    const amount = (hook.flat ?? max * (hook.fraction ?? 0)) * healingMultiplier(ctx, mon, holder.side);
+    eatBerry(ctx, holder, itemId);
+    const amount = (hook.flat ?? max * (hook.fraction ?? 0)) * healingMultiplier(ctx, mon, holder.side) * (1 + teamBerryPercent(ctx, holder.side, 'berryHeal') / 100);
     heal(content, mon, amount);
     events.push({ type: 'held', side: holder.side, itemId, what: 'heal', hpAfter: mon.hp });
     if (holder.side === 'player') {
@@ -603,8 +623,8 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
     break;
   }
   for (const { itemId, hook } of hooks(all, 'berryStat')) {
-    if (!below(hook.below)) continue;
-    eat(mon, itemId);
+    if (!belowStat(hook.below)) continue;
+    eatBerry(ctx, holder, itemId);
     if (hook.stat === 'crit') {
       state.crit[mon.uid] = (state.crit[mon.uid] ?? 0) + hook.stages;
       events.push({ type: 'held', side: holder.side, itemId, what: 'stat', stat: 'crit', change: hook.stages });
@@ -615,13 +635,13 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
   }
   for (const { itemId, hook } of hooks(all, 'berrySure')) {
     if (!below(hook.below) || state.sure.includes(mon.uid)) continue;
-    eat(mon, itemId);
+    eatBerry(ctx, holder, itemId);
     state.sure.push(mon.uid);
     events.push({ type: 'held', side: holder.side, itemId, what: 'sure' });
   }
   for (const { itemId, hook } of hooks(all, 'berryFirst')) {
     if (!below(hook.below) || state.first.includes(mon.uid)) continue;
-    eat(mon, itemId);
+    eatBerry(ctx, holder, itemId);
     state.first.push(mon.uid);
     events.push({ type: 'held', side: holder.side, itemId, what: 'first' });
   }
@@ -629,7 +649,7 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
     const status = mon.status?.id;
     const cures = (status !== undefined && hook.statuses.includes(status)) || (hook.confusion === true && holder.vol.confusion > 0);
     if (!cures) continue;
-    eat(mon, itemId);
+    eatBerry(ctx, holder, itemId);
     if (status !== undefined && hook.statuses.includes(status)) mon.status = null;
     if (hook.confusion) holder.vol.confusion = 0;
     events.push({ type: 'held', side: holder.side, itemId, what: 'cure' });
@@ -638,7 +658,7 @@ export function checkBerries(ctx: HeldContext, holder: Holder, events: HeldEvent
   for (const { itemId, hook } of hooks(all, 'berryPp')) {
     const slot = mon.moves.find((m) => m.pp === 0);
     if (!slot) continue;
-    eat(mon, itemId);
+    eatBerry(ctx, holder, itemId);
     slot.pp = hook.amount;
     events.push({ type: 'held', side: holder.side, itemId, what: 'pp' });
     break;
@@ -651,7 +671,7 @@ export function forceEatBerry(ctx: HeldContext, holder: Holder, events: HeldEven
   const mon = holder.mon;
   for (const { itemId, hook } of hooksOf(ctx, mon, holder.side)) {
     if (content.catalog.get(itemId)?.family.startsWith('Berries') !== true) continue;
-    eat(mon, itemId);
+    eatBerry(ctx, holder, itemId);
     if (hook.hook === 'berryHeal') {
       heal(content, mon, (hook.flat ?? maxHpOf(content, mon) * (hook.fraction ?? 0)) * healingMultiplier(ctx, mon, holder.side));
       events.push({ type: 'held', side: holder.side, itemId, what: 'heal', hpAfter: mon.hp });
