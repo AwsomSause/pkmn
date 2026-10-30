@@ -10,8 +10,9 @@ import { getSpecies } from '../pokemon';
 import type { RunState } from '../state';
 import { revisedTeam, type RematchEffect } from '../story/returns';
 import type { EnemyProfile, Rival } from '../story/schema';
-
-export const MAX_ADAPTATIONS = 5;
+import { bondNote, bondShift } from './bonds';
+import { isHostile } from './outcome';
+import { rivalMods } from './profile';
 
 /** The story flag holding the region a rival last came back in. */
 export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
@@ -20,6 +21,7 @@ export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
 export function waitingRival(run: RunState): Rival | null {
   return (
     run.story.rivals.find((r) => {
+      if (!isHostile(r) || r.cooldown > 0) return false;
       const last = run.story.flags[rivalReturnFlag(r.id)];
       if (typeof last === 'number' && last >= run.regionIndex) return false;
       const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
@@ -59,14 +61,19 @@ export function rivalReturn(content: Content, run: RunState, rival: Rival, plan:
     battles: [],
     adaptations: rival.adaptations,
   };
-  const revised = revisedTeam(content, run, profile, plan, effect);
+  const mods = rivalMods(rival);
+  // Personality: vindictive rivals return stronger. Style: how sharp its move choice is.
+  const revised = { ...revisedTeam(content, run, profile, plan, { ...effect, levelBonus: effect.levelBonus + mods.levelBonus + bondShift(rival) }), ai: Math.max(plan.ai, mods.ai) };
   const type = mostUsedType(content, run);
-  if (!type || rival.adaptations.length >= MAX_ADAPTATIONS) return { plan: revised, note: null };
+  const seen = bondNote(rival);
+  if (!type || !mods.canAdapt || rival.adaptations.length >= mods.adaptCap) return { plan: revised, note: seen };
   const resist = (speciesId: string) => typeEffectiveness(content.typeChart, type, getSpecies(content, speciesId).types);
+  const bias = (speciesId: string) => mods.statBias.reduce((sum, stat) => sum + (getSpecies(content, speciesId).baseStats[stat as 'hp'] ?? 0), 0);
   const last = revised.members.length - 1;
   const current = resist(revised.members[last]!.speciesId);
-  const counter = plan.members.map((m) => m.speciesId).filter((id) => !revised.members.some((m) => m.speciesId === id)).sort((a, b) => resist(a) - resist(b) || a.localeCompare(b))[0];
-  if (!counter || resist(counter) >= current) return { plan: revised, note: null };
+  const counter = plan.members.map((m) => m.speciesId).filter((id) => !revised.members.some((m) => m.speciesId === id))
+    .sort((a, b) => resist(a) - resist(b) || bias(b) - bias(a) || a.localeCompare(b))[0];
+  if (!counter || resist(counter) >= current) return { plan: revised, note: seen };
   const members = revised.members.map((m, i) => (i === last ? { ...m, speciesId: counter } : m));
-  return { plan: { ...revised, members }, note: `${rival.name} studied your ${type} moves and brought ${getSpecies(content, counter).name}.` };
+  return { plan: { ...revised, members }, note: `${rival.name} studied your ${type} moves and brought ${getSpecies(content, counter).name}.${seen ? ` ${seen}` : ''}` };
 }

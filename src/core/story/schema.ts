@@ -123,6 +123,8 @@ export const PokemonHistorySchema = z.object({
   hyper: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Battles it has fought each opposing species in this run (Heated Rivalry). */
   foes: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Times it used each damaging move in trainer fights this run (Signature Move Awakening). */
+  moves: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Times it and each teammate (by uid) took turns landing finishing blows (Friendly Competition). */
   finishTrades: z.record(z.string(), z.number().int().min(0)).default({}),
 });
@@ -175,6 +177,23 @@ export const TRAIT_KEYS = ['ambition', 'pride', 'empathy', 'adaptability', 'vind
 export const TraitsSchema = z.object({ ambition: z.number().int().min(0).max(100), pride: z.number().int().min(0).max(100), empathy: z.number().int().min(0).max(100), adaptability: z.number().int().min(0).max(100), vindictiveness: z.number().int().min(0).max(100), resilience: z.number().int().min(0).max(100) });
 export type Traits = z.infer<typeof TraitsSchema>;
 
+const Dim = z.number().min(0).max(100);
+/** Examples §4.1: separate bond dimensions (0–100), a Pokémon trait, habits and recent events. */
+export const BondSchema = z.object({
+  trust: Dim, affection: Dim, respect: Dim, synchronization: Dim, confidence: Dim, autonomy: Dim, strain: Dim, sharedHistory: z.number().min(0),
+  hyperReadiness: Dim,
+  trait: z.string(),
+  habits: z.record(z.string(), z.string()).default({}),
+  recent: z.array(z.string()).default([]),
+});
+export type Bond = z.infer<typeof BondSchema>;
+/** An off-screen event and what caused it (Examples §11 RivalEvent). */
+export const OffscreenEventSchema = z.object({
+  id: z.string(), eventType: z.string(), pokemon: z.string(), at: z.string(), cause: z.string().nullable(),
+  visibility: z.enum(['private', 'rumor', 'observed']), text: z.string(), shown: z.boolean().default(false),
+});
+export type OffscreenEvent = z.infer<typeof OffscreenEventSchema>;
+
 export const RivalSchema = z.object({
   id: z.string(),
   /** The trainer's class id and name when the rivalry began. */
@@ -185,7 +204,21 @@ export const RivalSchema = z.object({
   traits: TraitsSchema,
   /** The hidden score: how much this trainer wants to beat you. */
   rivalPotential: z.number().min(0),
-  origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.literal('spark') }),
+  origin: z.object({ eventId: z.string(), where: WhereSchema, path: z.string() }),
+  /** Where it is on the ladder from a name you remember to a contender; ally and retired are endings of its rivalry with you. */
+  state: z.enum(['recognized', 'recurring', 'active', 'nemesis', 'contender', 'ally', 'retired']).default('recognized'),
+  /** Battles with you since the Spark, and times a loss shook it. */
+  encounters: z.number().int().min(0).default(0),
+  setbacks: z.number().int().min(0).default(0),
+  /** Its character arc: which one, how far it has turned, stages lived through, and how it ended. */
+  arc: z.object({ id: z.string(), stage: z.number().int().min(0).max(2), ticks: z.number().int().min(0), resolution: z.enum(['good', 'bad']).nullable() }).nullable().default(null),
+  /** The off-screen world: stages since you last met, stages it sits out, and the level it gained while away. */
+  away: z.number().int().min(0).default(0),
+  cooldown: z.number().int().min(0).default(0),
+  progress: z.number().int().min(0).default(0),
+  /** Bonds with its Pokémon, by species id, and what happened off-screen (newest last). */
+  bonds: z.record(z.string(), BondSchema).default({}),
+  offscreen: z.array(OffscreenEventSchema).default([]),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */
@@ -212,6 +245,8 @@ export const StoryStateSchema = z.object({
   enemyProfiles: z.array(EnemyProfileSchema),
   /** Rivals born this run (src/core/rivals). */
   rivals: z.array(RivalSchema),
+  /** How rivals feel about each other: enemies, friends or training partners. */
+  rivalGraph: z.array(z.object({ a: z.string(), b: z.string(), kind: z.enum(['enemies', 'friends', 'partners']) })).default([]),
   chronicle: z.array(ChronicleEntrySchema),
   /** Ids of run-scope effects already applied: applying one again does nothing. */
   appliedEffects: z.array(z.string()),
@@ -235,6 +270,8 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statStage'), stat: BoostStatSchema, stages: z.number().int().min(-6).max(6) }),
   /** Battle scope: the Pokémon hangs on at 1 HP (the engine does it; the effect records that it was used). */
   z.object({ kind: z.literal('endure') }),
+  /** Presentation and a memory only: the moment changes nothing in the battle (Hyper evolutions). */
+  z.object({ kind: z.literal('flair') }),
   /** Battle scope: a knocked-out Pokémon gets back up with this share of its max HP (the engine does it). */
   z.object({ kind: z.literal('revive'), hpShare: z.number().gt(0).max(1) }),
   /** Battle scope: hangs on at 1 HP against a fatal hit, or shakes off a status at the end of a turn (the engine does it). */
@@ -291,7 +328,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns'] as const;
+export const STORY_TRIGGERS = ['toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -311,6 +348,8 @@ export const TriggerConditionsSchema = z.object({
   turns: z.number().int().positive().optional(),
   /** Super-effective hits survived this battle (a variant's condition). */
   superEffectiveHits: z.number().int().positive().optional(),
+  /** Only at a decisive moment: a boss or Champion fight, or the Pokémon at or below half HP (Hyper evolutions). */
+  decisive: z.boolean().optional(),
   /** Friendship needed. */
   minFriendship: z.number().int().min(0).max(255).optional(),
   /** Hits (moves that damaged it) an opposing Pokémon must take. */
@@ -402,6 +441,8 @@ export const StoryConfigSchema = z.object({
   }),
   /** Major (cinematic) moments per battle; smaller ones are still recorded. */
   majorCuesPerBattle: z.number().int().min(0),
+  /** Signature Move Awakening: damaging-move uses in trainer fights before it awakens, and the damage multiplier it then gets (this run only). */
+  awakening: z.object({ uses: z.number().int().positive(), boost: z.number().min(1).max(2), perPokemon: z.number().int().positive() }),
   /** A hit that leaves your Pokémon at this share of its max HP or less is a close call. */
   closeCallHpShare: z.number().min(0).max(1),
   /** At or below this share of max HP a turn counts toward a low-HP stand. */

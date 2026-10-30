@@ -7,7 +7,7 @@
 import Phaser from 'phaser';
 import { currentColumn, findNode } from '../core/map';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
-import { fishingOffer, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
+import { fishingOffer, raidPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
@@ -41,8 +41,9 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   heal: { color: 0xe06890, glyph: '+' },
   shop: { color: 0x4878d0, glyph: '$' },
   fish: { color: 0x30a0b8, glyph: '~' },
+  raid: { color: 0xd04040, glyph: 'R' },
 };
-const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish' };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid' };
 
 /** Something the cursor can land on. */
 type Option =
@@ -346,11 +347,12 @@ export class MapScene extends Phaser.Scene {
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
-        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : 'shop'));
+        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : 'shop'));
         const seen = this.previewText(n);
         return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
+        if (option.side.kind === 'raid') return option.side.used ? 'Raid den: already fought.' : 'Raid den: a boss with shields and phases. See its tier and rewards before you commit.';
         if (option.side.kind === 'fish') return 'Fishing spot: pick a Water Pokémon to battle and catch (once, no reward draft).';
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';
       case 'party':
@@ -398,6 +400,10 @@ export class MapScene extends Phaser.Scene {
       case 'side': {
         if (option.side.kind === 'fish') {
           this.openFishing(option.side.id);
+          break;
+        }
+        if (option.side.kind === 'raid') {
+          if (!option.side.used) this.openRaid(option.side.id);
           break;
         }
         const message = session.visitSide(option.side.id);
@@ -459,7 +465,7 @@ export class MapScene extends Phaser.Scene {
     const preview = this.previews[n.id];
     if (!preview) return '';
     const content = services().session.content;
-    const item = content.catalog.get(preview.itemId)!.name;
+    const item = preview.source;
     const names = preview.team.map((m) => `${content.species.get(m.speciesId)?.name ?? m.speciesId}${m.level ? ` Lv${m.level}` : ''}`).join(', ');
     if (n.kind === 'gym') return `${item}: ${preview.team.length === 1 ? 'the ace is' : 'the team is'} ${names}`;
     return `${item}: ${preview.trainerName ? `${preview.trainerName} with ` : ''}${names}`;
@@ -485,11 +491,51 @@ export class MapScene extends Phaser.Scene {
     const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
     const gymText = gym ? this.previewText(gym) : '';
     if (gym && gymText) {
-      const itemId = this.previews[gym.id]!.itemId;
+      const { itemId, source } = this.previews[gym.id]!;
       const text = `Gym leader ${bossInfo(content, 'gym', run.stage!.leaderId).name}: ${gymText.slice(gymText.indexOf(':') + 2)}`;
-      rows.push({ action: null, itemId, title: content.catalog.get(itemId)!.name, text, problem: text });
+      rows.push({ action: null, itemId: itemId ?? '', title: source, text, problem: text });
     }
     return rows;
+  }
+
+  /** A raid den: shows the boss, its tier, mechanics and rewards, then asks to commit. */
+  private openRaid(sideId: string): void {
+    const { session } = services();
+    const content = session.content;
+    const pv = raidPreview(content, session.run!, sideId);
+    const species = content.species.get(pv.speciesId)!;
+    const poor = session.run!.money < pv.entryCost;
+    const picker: Picker = new Picker(this, {
+      title: `Raid — Tier ${pv.tier}: ${pv.name}`,
+      columns: 1,
+      rowHeight: 150,
+      rows: [
+        {
+          ...speciesRow(species),
+          problem: poor ? `You need ₽${pv.entryCost} to enter.` : null,
+          hint: `${pv.blurb}  Mechanics: ${pv.mechanics.join(', ')}.  Rewards: ${pv.rewards.join(', ')}.  Entry: ₽${pv.entryCost}. Losing never ends your run.`,
+          draw: (scene, box, w) => {
+            box.add(scene.add.text(16, 8, `${species.name}  Lv${pv.level}   ·   Tier ${pv.tier}   ·   Entry ₽${pv.entryCost}`, textStyle(22)));
+            box.add(scene.add.text(16, 42, `Mechanics: ${pv.mechanics.join(' · ')}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, 88, `Rewards: ${pv.rewards.join(' · ')}`, textStyle(16, '#c0f0c0', { wordWrap: { width: w - 32 } })));
+          },
+        },
+      ],
+      onSelect: () => {
+        picker.close();
+        this.picker = null;
+        this.busy = true;
+        playSfx(this, 'ui.select');
+        const run = session.enterRaid(sideId);
+        this.cameras.main.fadeOut(250);
+        this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   /** A fishing spot: pick one of the Pokémon on the line, then battle it. */

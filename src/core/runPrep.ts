@@ -5,16 +5,64 @@
 
 import { getArchetype } from './archetypes';
 import { attributesLine, readAttributes } from './attributes';
-import type { Archetype, Content, DraftRule, License, PrepToken, StarterPool, TypeName } from './contentSchema';
+import type { Archetype, Content, DraftRule, License, PrepToken, Species, StarterPool, TypeName } from './contentSchema';
 import { requirementProgress } from './progress';
 import type { Rng } from './rng';
+import { baseStatTotal, isNative, isWildEligible, wildEligibleSpecies } from './themes';
 import type { LoadoutPreset, Profile, RunPrep } from './state';
 
 // ---------- starter pools ----------
 
-/** The pool's species that are in the game and first-stage, without repeats, in data order. */
+/** The first stage of a species' line (Charizard → Charmander); babies don't count, as in evolutionStage. */
+export function firstStage(content: Content, id: string): Species | undefined {
+  let s = content.species.get(id);
+  while (s && s.evolutionStage > 1 && s.evolvesFrom) s = content.species.get(s.evolvesFrom);
+  return s;
+}
+
+/**
+ * A listed species can be a starter if it could be met in the wild, not
+ * counting moves: one with no usable move stays in so the content report
+ * flags it instead of the pool hiding it.
+ */
+function isStarterEligible(content: Content, s: Species): boolean {
+  if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
+  if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
+  return baseStatTotal(s) <= content.balance.wildMaxBaseStats;
+}
+
+const eligibleCache = new WeakMap<StarterPool, string[]>();
+
+/**
+ * The pool's starters, without repeats, in data order: its listed species and
+ * its bosses' signature Pokémon (each as its first stage), then every species
+ * its filter matches. A pool never offers a legendary, a Mega or a Pokémon too
+ * strong for the wild.
+ */
 export function eligibleSpecies(content: Content, pool: StarterPool): string[] {
-  return [...new Set(pool.species)].filter((id) => content.species.get(id)?.evolutionStage === 1);
+  const cached = eligibleCache.get(pool);
+  if (cached) return cached;
+  const ids = new Set<string>();
+  for (const id of pool.species) {
+    const s = firstStage(content, id);
+    if (s && isStarterEligible(content, s)) ids.add(s.id);
+  }
+  // Bosses' Pokémon are picked for their final forms, so a first stage with no usable move (Abra) is skipped.
+  for (const id of pool.bosses.flatMap((b) => content.bosses.get(b)?.signature ?? [])) {
+    const s = firstStage(content, id);
+    if (s && isWildEligible(content, s)) ids.add(s.id);
+  }
+  const filter = pool.filter;
+  if (filter) {
+    for (const s of wildEligibleSpecies(content)) {
+      if (filter.types && !s.types.some((t) => filter.types!.includes(t))) continue;
+      if (filter.region && !isNative(content, s, filter.region)) continue;
+      ids.add(s.id);
+    }
+  }
+  const result = [...ids];
+  eligibleCache.set(pool, result);
+  return result;
 }
 
 /**
@@ -228,6 +276,26 @@ export function draftStarters(content: Content, rng: Rng, prep: RunPrep): Starte
   return { choices: shuffled.slice(0, n), note: null };
 }
 
+/**
+ * Signature Pokémon (Untitled doc §11): when none of the trainer's signature
+ * species was drawn but the pool (and a Type Focus) allows one, it takes the
+ * last slot with balance.signatureStarterChance. It runs on its own RNG
+ * stream, so the draft itself rolls exactly as for any other trainer.
+ */
+export function withSignatureStarter(content: Content, rng: Rng, archetype: Archetype, prep: RunPrep, choices: string[]): string[] {
+  const pool = content.starterPools.get(prep.poolId);
+  if (!pool || archetype.signatureSpecies.length === 0) return choices;
+  const eligible = new Set(eligibleSpecies(content, pool));
+  const rule = content.draftRules.get(prep.draftRuleId);
+  const focus = rule?.kind === 'typeFocus' ? prep.typeFocus : null;
+  const candidates = [...new Set(archetype.signatureSpecies.map((id) => firstStage(content, id)?.id))].filter(
+    (id): id is string => !!id && eligible.has(id) && (!focus || content.species.get(id)!.types.includes(focus)),
+  );
+  if (candidates.length === 0 || choices.some((id) => candidates.includes(id))) return choices;
+  if (!rng.chance(content.balance.signatureStarterChance)) return choices;
+  return [...choices.slice(0, -1), rng.pick(candidates)];
+}
+
 // ---------- starting resources and the build summary ----------
 
 export interface StartingResources {
@@ -266,6 +334,7 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
     `Trainer: ${archetype.name}${archetype.title ? ` (${archetype.title})` : ''}`,
     ...archetype.pros.map((p) => `  + ${p}`),
     ...archetype.cons.map((c) => `  − ${c}`),
+    ...signatureLines(content, archetype),
     `Campaign: ${campaign?.name ?? prep.campaignId}`,
     `Starters: ${pool.name} pool (${eligibleSpecies(content, pool).length} species), ${rule.name}${rule.kind === 'typeFocus' && prep.typeFocus ? `: ${typeName(prep.typeFocus)}` : ''}`,
     `Preparation: ${token ? `${token.name}, ${token.description.charAt(0).toLowerCase()}${token.description.slice(1)}` : 'none'}`,
@@ -273,6 +342,15 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
   ];
   if (attributes) lines.push(`Attributes: ${attributesLine(readAttributes(content, attributes))}`);
   return lines;
+}
+
+/** The trainer's identity in words: signature types and Pokémon. Empty for trainers without one (Red). */
+export function signatureLines(content: Content, archetype: Archetype): string[] {
+  const parts: string[] = [];
+  if (archetype.signatureTypes.length > 0) parts.push(archetype.signatureTypes.map(typeName).join('/'));
+  const names = archetype.signatureSpecies.map((id) => content.species.get(id)?.name ?? id);
+  if (names.length > 0) parts.push(names.join(', '));
+  return parts.length > 0 ? [`Signature: ${parts.join(' · ')}`] : [];
 }
 
 /** "fire" → "Fire". */

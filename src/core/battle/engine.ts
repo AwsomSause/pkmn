@@ -70,6 +70,7 @@ import {
   WEATHER_SPEED,
 } from './abilities';
 import * as Held from './held';
+import { absorbHit, advanceRaid, chargedDamage, takeExtraAction } from '../raid/raid';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
@@ -116,6 +117,8 @@ export type BattleEvent =
   /** Thrash and Outrage ended and the user became confused from fatigue. */
   | { type: 'fatigue'; side: Side }
   | { type: 'weather'; weather: Weather }
+  /** A raid message: shield up/broken, a new phase, a charged attack, the timer. */
+  | { type: 'raid'; tone: 'shield' | 'phase' | 'warn' | 'info'; text: string }
   /** A Substitute took a hit (and `broke`). */
   | { type: 'substituteHit'; side: Side; broke: boolean }
   /** Perish Song countdown. */
@@ -540,6 +543,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   primalCheck(ctx, playerC, enemy, events);
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
+  const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
 
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -570,7 +574,47 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // A trainer's next Pokémon saw its ally fall.
   if (!battle.outcome && battle.enemyIndex !== enemyBefore) warnRage(ctx, currentEnemy(battle), events);
   battle.turn += 1;
+  if (raidTimeout && !battle.outcome) battle.outcome = 'lose';
   return events;
+}
+
+/**
+ * Raid end of turn: shield and telegraph messages, new phases (stat boosts, weather, cleansing),
+ * a bonus attack under the HP line, and the timer. Returns true when the timer ran out.
+ */
+function raidEndOfTurn(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): boolean {
+  const { battle, content } = ctx;
+  let timeout = false;
+  for (const a of advanceRaid(content, battle, enemy.mon)) {
+    if (a.kind === 'note') events.push({ type: 'raid', tone: a.tone, text: a.text });
+    else if (a.kind === 'timeout') {
+      timeout = true;
+      events.push({ type: 'raid', tone: 'warn', text: 'Time is up! The raid boss slips away...' });
+    } else {
+      const p = a.phase;
+      events.push({ type: 'raid', tone: 'phase', text: p.text });
+      for (const [stat, n] of Object.entries(p.boost ?? {})) applyStageChange(ctx, enemy, stat as BoostStat, n, events);
+      if (p.weather) {
+        battle.weather = { id: p.weather, turns: 5 };
+        events.push({ type: 'weather', weather: p.weather });
+      }
+      if (p.clearPlayerStages) for (const k of Object.keys(battle.playerStages)) battle.playerStages[k as BoostStat] = 0;
+      if (p.cleanse) {
+        enemy.mon.status = null;
+        for (const k of Object.keys(battle.enemyStages)) if (battle.enemyStages[k as BoostStat] < 0) battle.enemyStages[k as BoostStat] = 0;
+      }
+    }
+  }
+  // A bonus attack (strictly limited by the raid's `max`).
+  if (!timeout && !battle.outcome && player.mon.hp > 0 && enemy.mon.hp > 0 && takeExtraAction(content, battle, enemy.mon)) {
+    const idx = chooseEnemyMove(enemy.mon, ctx.rng, { content, ai: Math.max(battle.ai, 0.7), target: player.mon, stages: battle.enemyStages });
+    if (idx >= 0) {
+      events.push({ type: 'raid', tone: 'warn', text: 'The boss attacks again!' });
+      executeMove(ctx, enemy, player, resolveMove(content, enemy.mon, idx), idx, false, events);
+      recordFaints(ctx, player, enemy, events);
+    }
+  }
+  return timeout;
 }
 
 /** Clears a stuck two-turn or lock-in move (its move slot is gone), keeping the other conditions. */
@@ -614,6 +658,7 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   if (!item.usableInBattle) return `${item.name} can't be used in battle.`;
   if (item.effect.kind === 'catch') {
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
+    if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
     return null;
   }
   const target = targetIndex === undefined ? undefined : ctx.party[targetIndex];
@@ -1217,6 +1262,11 @@ function takeHp(
   amount: number,
   hit: number | null = null,
 ): { lost: number; lastStand: string | null; hyper: HyperEvent | null; knockedDown: boolean } {
+  // Raids: shields soak the boss's damage; a charged attack hits the player harder.
+  if (ctx.battle.raid) {
+    if (c.side === 'enemy') amount = absorbHit(ctx.content, ctx.battle, c.mon, amount);
+    else if (hit !== null) amount = chargedDamage(ctx.content, ctx.battle, amount);
+  }
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
   if (c.vol.bide && lost > 0) c.vol.bide.damage += lost;
@@ -2170,6 +2220,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'tinted-lens' && effectiveness < 1) final *= 2;
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
+      if (user.mon.awakened?.includes(move.id)) final *= content.story.awakening.boost;
       if (foeAbility === 'fluffy' && contact) final *= 0.5;
       if (parental && hit === 1) final *= 0.25;
       if (userAbility === 'stakeout' && target.vol.turnsOut === 0) final *= 2;

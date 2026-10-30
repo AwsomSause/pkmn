@@ -517,6 +517,241 @@
         "perseverance"
       ],
       "variants": {}
+    },
+    {
+      "id": "mega-overdrive",
+      "displayName": "Mega Overdrive!",
+      "messagePool": [
+        "{name} Mega Evolved at the decisive moment!",
+        "The moment called for everything: {name} Mega Evolved!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "megaOverdrive",
+        "decisive": true
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Mega Evolved at a decisive moment"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb347",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "all-of-its-heart",
+      "displayName": "All of Its Heart!",
+      "messagePool": [
+        "{name} put all of its heart into the Z-Move!",
+        "{name} and you move as one: all of its heart!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "zHeart",
+        "minFriendship": 200
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Poured all of its heart into a Z-Move"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff7fb0",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "giant-resolve",
+      "displayName": "A Giant Resolve!",
+      "messagePool": [
+        "{name} Dynamaxed with a giant resolve!",
+        "{name} towers over the field, resolved to win!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "dynamaxResolve",
+        "decisive": true
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Grew a giant resolve and Dynamaxed"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff4f6a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "true-colors",
+      "displayName": "Its True Colors Shine Through!",
+      "messagePool": [
+        "{name} Terastallized, and its true colors shine through!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "teraTrueColors"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Its true colors shone through when it Terastallized"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#7fd8ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {
+        "determination": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its determination glows through!"
+          ]
+        },
+        "bravery": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its courage blazes through!"
+          ]
+        },
+        "justice": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its sense of justice rings out!"
+          ]
+        },
+        "kindness": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its kindness warms the whole field!"
+          ]
+        },
+        "patience": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its quiet patience crystallises!"
+          ]
+        },
+        "integrity": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and its honest heart shines through!"
+          ]
+        },
+        "perseverance": {
+          "displayName": "Its True Colors Shine Through!",
+          "messagePool": [
+            "{name} Terastallized, and everything it has endured shows in its glow!"
+          ]
+        }
+      }
+    },
+    {
+      "id": "signature-awakening",
+      "displayName": "It Mastered the Power Within!",
+      "messagePool": [
+        "{name} mastered the power within {move}!",
+        "{move} has awakened in {name}!"
+      ],
+      "category": "evolution",
+      "triggerConditions": {
+        "trigger": "signatureAwakening"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "none",
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Mastered {move}: it awakened for this run"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd95a",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
     }
-  ]
+  ],
+  "awakening": {
+    "uses": 8,
+    "boost": 1.2,
+    "perPokemon": 2
+  }
 }

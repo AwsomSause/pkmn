@@ -4,6 +4,7 @@
 
 import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
+import type { RaidFile } from './raid/schema';
 
 export const TYPE_NAMES = [
   'normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
@@ -559,6 +560,12 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('typeDamageMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
   /** Super-effective damage taken by your Pokémon of this type. */
   z.object({ kind: z.literal('weaknessDamageTakenMultiplier'), type: TypeNameSchema, value: z.number().positive() }),
+  /** Friendship your Pokémon gain from battles. */
+  z.object({ kind: z.literal('friendshipMultiplier'), value: z.number().positive() }),
+  /** Research Points from new species, catches and shinies at the end of a run. */
+  z.object({ kind: z.literal('researchMultiplier'), value: z.number().positive() }),
+  /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
+  z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -584,6 +591,15 @@ export const ArchetypeSchema = z.object({
   modifiers: z.array(ArchetypeModifierSchema),
   /** Items added to the Bag at the start of a run (a signature preparation). */
   startingItems: z.record(z.string(), z.number().int().positive()).default({}),
+  // ---------- identity (Untitled doc §11) ----------
+  /** The trainer's types, shown on the Trainer Archive and the Run Build Summary. */
+  signatureTypes: z.array(TypeNameSchema).max(2).default([]),
+  /** Species (any stage) more likely among the three starters, never forced. */
+  signatureSpecies: z.array(z.string()).default([]),
+  /** The trainer's own starter set in the Starter Laboratory. */
+  signaturePool: z.string().nullable().default(null),
+  /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
+  eventTags: z.array(z.string()).default([]),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 
@@ -594,11 +610,21 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare'] as const;
+export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
+
 export const StarterPoolSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   description: z.string(),
-  species: z.array(z.string()).min(1),
+  /** The Starter Laboratory groups pools by category. */
+  category: z.enum(STARTER_POOL_CATEGORIES).default('classic'),
+  /** Listed species; an evolved one stands for its first stage (Charizard means Charmander). */
+  species: z.array(z.string()).default([]),
+  /** Adds the signature Pokémon of these bosses (as first stages). */
+  bosses: z.array(z.string()).default([]),
+  /** Adds every starter-eligible species of these types, or native to this region. */
+  filter: z.object({ types: z.array(TypeNameSchema).optional(), region: z.string().optional() }).optional(),
   unlockedByDefault: z.boolean().default(false),
   /** What must happen before the pool can be bought (null: nothing). */
   unlock: RequirementSchema.nullable().default(null),
@@ -607,7 +633,7 @@ export const StarterPoolSchema = z.object({
   license: z.string().nullable().default(null),
   /** Research Points to unlock the pool. */
   researchCost: z.number().int().min(0).default(0),
-});
+}).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined, { message: 'a starter pool needs species, bosses or a filter' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
@@ -1271,6 +1297,8 @@ export const BalanceSchema = z.object({
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
+  /** The chance a trainer's signature species takes the last starter slot when none was drawn (own RNG stream). */
+  signatureStarterChance: z.number().min(0).max(1),
   wildPool: z.array(z.string()).min(1),
   draftSize: z.number().int().positive(),
   rarityWeights: z.record(RaritySchema, z.number().min(0)),
@@ -1578,6 +1606,8 @@ export interface Content {
   balance: Balance;
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
+  /** Raid bosses and den placement (raids.json, core/raid). */
+  raids: RaidFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
 }

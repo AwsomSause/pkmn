@@ -59,6 +59,8 @@ export const PokemonInstanceSchema = z.object({
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
   teraType: TypeNameSchema.optional(),
+  /** Moves that awakened this run (Signature Move Awakening): they hit harder; gone with the run. */
+  awakened: z.array(z.string()).optional(),
   /** In battle only: Dynamaxed, so its HP is doubled (core/battle/transform.ts). */
   dynamaxed: z.literal(true).optional(),
 });
@@ -376,6 +378,27 @@ export const SideEffectsSchema = z.object({
 export type SideEffects = z.infer<typeof SideEffectsSchema>;
 export const freshSideEffects = (): SideEffects => SideEffectsSchema.parse({});
 
+/** The changing state of a raid fight (rules in core/raid/raid.ts). */
+export const RaidBattleSchema = z.object({
+  id: z.string(),
+  /** Shield thresholds (shares of max HP) that haven't fired yet. */
+  pendingShields: z.array(z.number()),
+  /** Shield points left (absorbs damage before HP); 0 = no shield up. */
+  shieldHp: z.number().int().min(0),
+  shieldMax: z.number().int().min(0),
+  /** Indexes of phases (in the raid's list) already started. */
+  phasesDone: z.array(z.number().int().min(0)),
+  /** Turns until the next charged attack (null = no telegraph); `charging` = the boss's next hit is boosted. */
+  nextCharge: z.number().int().nullable(),
+  charging: z.boolean(),
+  extraUsed: z.number().int().min(0),
+  /** Turns left on the timer (null = no timer). */
+  timerLeft: z.number().int().nullable(),
+  /** Messages for the player; the engine turns them into events at the end of the turn. */
+  notes: z.array(z.object({ tone: z.enum(['shield', 'phase', 'warn', 'info']), text: z.string() })),
+});
+export type RaidBattle = z.infer<typeof RaidBattleSchema>;
+
 export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   turn: z.number().int().min(1),
@@ -465,6 +488,8 @@ export const BattleStateSchema = z.object({
   rivalNote: z.string().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
+  /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
+  raid: RaidBattleSchema.optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
@@ -472,7 +497,9 @@ export type BattleState = z.infer<typeof BattleStateSchema>;
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid']),
+  /** A raid den: which raid (raids.json) waits here. */
+  raidId: z.string().optional(),
   /** A healing stop and a fishing spot work once; a shop can be visited again. */
   used: z.boolean(),
 });
@@ -663,6 +690,8 @@ export const RunStateSchema = z.object({
   }),
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
+  /** Raid record this run (dens entered, won, lost) and the dens already finished. */
+  raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [] })),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),
 });

@@ -1,0 +1,931 @@
+{
+ "note": "Personality traits and battle-style numbers for rivals. Status 'limited': traits drive the return level bonus and whether it adapts; styles set the AI sharpness, which stats its picks favour and how many adaptations it can make. Style-specific tricks (e.g. berserker rage, trapping, mid-battle copying) wait for battle hooks.",
+ "personalities": {
+  "perfectionist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 70,
+    "pride": 60,
+    "empathy": 40,
+    "adaptability": 35,
+    "vindictiveness": 40,
+    "resilience": 60
+   },
+   "styles": [
+    "resource-manager",
+    "fortress"
+   ]
+  },
+  "prodigy": {
+   "status": "limited",
+   "traits": {
+    "ambition": 85,
+    "pride": 80,
+    "empathy": 40,
+    "adaptability": 60,
+    "vindictiveness": 40,
+    "resilience": 40
+   },
+   "styles": [
+    "blitz",
+    "snowball"
+   ]
+  },
+  "underdog": {
+   "status": "limited",
+   "traits": {
+    "ambition": 75,
+    "pride": 30,
+    "empathy": 65,
+    "adaptability": 70,
+    "vindictiveness": 30,
+    "resilience": 85
+   },
+   "styles": [
+    "counterpuncher",
+    "improviser"
+   ]
+  },
+  "tactician": {
+   "status": "limited",
+   "traits": {
+    "ambition": 65,
+    "pride": 55,
+    "empathy": 45,
+    "adaptability": 90,
+    "vindictiveness": 40,
+    "resilience": 60
+   },
+   "styles": [
+    "counter-builder",
+    "scout"
+   ]
+  },
+  "gambler": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 60,
+    "empathy": 35,
+    "adaptability": 50,
+    "vindictiveness": 40,
+    "resilience": 35
+   },
+   "styles": [
+    "gambit",
+    "glass-cannon"
+   ]
+  },
+  "showboat": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 90,
+    "empathy": 35,
+    "adaptability": 45,
+    "vindictiveness": 50,
+    "resilience": 50
+   },
+   "styles": [
+    "combo-artist",
+    "snowball"
+   ]
+  },
+  "veteran": {
+   "status": "limited",
+   "traits": {
+    "ambition": 55,
+    "pride": 55,
+    "empathy": 55,
+    "adaptability": 60,
+    "vindictiveness": 30,
+    "resilience": 80
+   },
+   "styles": [
+    "resource-manager",
+    "attrition"
+   ]
+  },
+  "speedrunner": {
+   "status": "limited",
+   "traits": {
+    "ambition": 75,
+    "pride": 55,
+    "empathy": 30,
+    "adaptability": 45,
+    "vindictiveness": 35,
+    "resilience": 55
+   },
+   "styles": [
+    "blitz",
+    "executioner"
+   ]
+  },
+  "golden-retriever": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 25,
+    "empathy": 90,
+    "adaptability": 55,
+    "vindictiveness": 5,
+    "resilience": 75
+   },
+   "styles": [
+    "conductor",
+    "trust-fighter"
+   ]
+  },
+  "gentle-giant": {
+   "status": "limited",
+   "traits": {
+    "ambition": 40,
+    "pride": 30,
+    "empathy": 85,
+    "adaptability": 45,
+    "vindictiveness": 10,
+    "resilience": 85
+   },
+   "styles": [
+    "fortress",
+    "guardian"
+   ]
+  },
+  "tease": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 70,
+    "empathy": 45,
+    "adaptability": 65,
+    "vindictiveness": 40,
+    "resilience": 50
+   },
+   "styles": [
+    "disruptor",
+    "bond-breaker"
+   ]
+  },
+  "ice-queen-king": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 75,
+    "empathy": 25,
+    "adaptability": 55,
+    "vindictiveness": 45,
+    "resilience": 70
+   },
+   "styles": [
+    "counterpuncher",
+    "trapper"
+   ]
+  },
+  "social-climber": {
+   "status": "limited",
+   "traits": {
+    "ambition": 85,
+    "pride": 65,
+    "empathy": 40,
+    "adaptability": 60,
+    "vindictiveness": 45,
+    "resilience": 50
+   },
+   "styles": [
+    "anti-meta",
+    "ace-centric"
+   ]
+  },
+  "loner": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 60,
+    "empathy": 20,
+    "adaptability": 50,
+    "vindictiveness": 35,
+    "resilience": 70
+   },
+   "styles": [
+    "specialist",
+    "ace-centric"
+   ]
+  },
+  "mediator": {
+   "status": "limited",
+   "traits": {
+    "ambition": 35,
+    "pride": 30,
+    "empathy": 80,
+    "adaptability": 70,
+    "vindictiveness": 10,
+    "resilience": 70
+   },
+   "styles": [
+    "rotating-ensemble",
+    "guardian"
+   ]
+  },
+  "people-pleaser": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 40,
+    "empathy": 85,
+    "adaptability": 45,
+    "vindictiveness": 10,
+    "resilience": 40
+   },
+   "styles": [
+    "protector",
+    "rotating-ensemble"
+   ]
+  },
+  "idealist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 45,
+    "empathy": 80,
+    "adaptability": 55,
+    "vindictiveness": 15,
+    "resilience": 70
+   },
+   "styles": [
+    "trust-fighter",
+    "protector"
+   ]
+  },
+  "pragmatist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 65,
+    "pride": 55,
+    "empathy": 25,
+    "adaptability": 75,
+    "vindictiveness": 40,
+    "resilience": 65
+   },
+   "styles": [
+    "resource-manager",
+    "anti-meta"
+   ]
+  },
+  "traditionalist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 45,
+    "pride": 60,
+    "empathy": 50,
+    "adaptability": 30,
+    "vindictiveness": 35,
+    "resilience": 75
+   },
+   "styles": [
+    "fortress",
+    "specialist"
+   ]
+  },
+  "innovator": {
+   "status": "limited",
+   "traits": {
+    "ambition": 70,
+    "pride": 50,
+    "empathy": 50,
+    "adaptability": 85,
+    "vindictiveness": 25,
+    "resilience": 50
+   },
+   "styles": [
+    "combo-artist",
+    "improviser"
+   ]
+  },
+  "naturalist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 45,
+    "pride": 35,
+    "empathy": 70,
+    "adaptability": 70,
+    "vindictiveness": 10,
+    "resilience": 65
+   },
+   "styles": [
+    "specialist",
+    "instinctive-duo"
+   ]
+  },
+  "scholar": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 40,
+    "empathy": 55,
+    "adaptability": 90,
+    "vindictiveness": 30,
+    "resilience": 60
+   },
+   "styles": [
+    "scout",
+    "overdrive-specialist"
+   ]
+  },
+  "spiritualist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 45,
+    "pride": 35,
+    "empathy": 85,
+    "adaptability": 55,
+    "vindictiveness": 10,
+    "resilience": 75
+   },
+   "styles": [
+    "trust-fighter",
+    "instinctive-duo"
+   ]
+  },
+  "nihilist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 30,
+    "pride": 45,
+    "empathy": 10,
+    "adaptability": 50,
+    "vindictiveness": 50,
+    "resilience": 45
+   },
+   "styles": [
+    "executioner",
+    "attrition"
+   ]
+  },
+  "perpetual-runner-up": {
+   "status": "limited",
+   "traits": {
+    "ambition": 70,
+    "pride": 50,
+    "empathy": 50,
+    "adaptability": 60,
+    "vindictiveness": 50,
+    "resilience": 35
+   },
+   "styles": [
+    "last-stand",
+    "counter-builder"
+   ]
+  },
+  "burnout": {
+   "status": "limited",
+   "traits": {
+    "ambition": 20,
+    "pride": 35,
+    "empathy": 45,
+    "adaptability": 35,
+    "vindictiveness": 25,
+    "resilience": 30
+   },
+   "styles": [
+    "improviser",
+    "fortress"
+   ]
+  },
+  "obsessive": {
+   "status": "limited",
+   "traits": {
+    "ambition": 90,
+    "pride": 60,
+    "empathy": 20,
+    "adaptability": 75,
+    "vindictiveness": 75,
+    "resilience": 60
+   },
+   "styles": [
+    "counter-builder",
+    "mirror-match"
+   ]
+  },
+  "avenger": {
+   "status": "limited",
+   "traits": {
+    "ambition": 75,
+    "pride": 65,
+    "empathy": 25,
+    "adaptability": 55,
+    "vindictiveness": 95,
+    "resilience": 75
+   },
+   "styles": [
+    "revenge-striker",
+    "berserker"
+   ]
+  },
+  "control-freak": {
+   "status": "limited",
+   "traits": {
+    "ambition": 65,
+    "pride": 70,
+    "empathy": 25,
+    "adaptability": 20,
+    "vindictiveness": 55,
+    "resilience": 60
+   },
+   "styles": [
+    "trapper",
+    "resource-manager"
+   ]
+  },
+  "escapist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 40,
+    "pride": 40,
+    "empathy": 45,
+    "adaptability": 50,
+    "vindictiveness": 15,
+    "resilience": 40
+   },
+   "styles": [
+    "improviser",
+    "gambit"
+   ]
+  },
+  "self-saboteur": {
+   "status": "limited",
+   "traits": {
+    "ambition": 65,
+    "pride": 55,
+    "empathy": 40,
+    "adaptability": 40,
+    "vindictiveness": 45,
+    "resilience": 25
+   },
+   "styles": [
+    "gambit",
+    "glass-cannon"
+   ]
+  },
+  "fallen-idealist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 55,
+    "pride": 55,
+    "empathy": 35,
+    "adaptability": 65,
+    "vindictiveness": 55,
+    "resilience": 55
+   },
+   "styles": [
+    "anti-meta",
+    "stallbreaker"
+   ]
+  },
+  "collector": {
+   "status": "limited",
+   "traits": {
+    "ambition": 45,
+    "pride": 40,
+    "empathy": 60,
+    "adaptability": 75,
+    "vindictiveness": 15,
+    "resilience": 45
+   },
+   "styles": [
+    "rotating-ensemble",
+    "specialist"
+   ]
+  },
+  "natural-talent": {
+   "status": "limited",
+   "traits": {
+    "ambition": 55,
+    "pride": 65,
+    "empathy": 45,
+    "adaptability": 70,
+    "vindictiveness": 20,
+    "resilience": 55
+   },
+   "styles": [
+    "improviser",
+    "snowball"
+   ]
+  },
+  "caretaker": {
+   "status": "limited",
+   "traits": {
+    "ambition": 35,
+    "pride": 30,
+    "empathy": 90,
+    "adaptability": 50,
+    "vindictiveness": 5,
+    "resilience": 60
+   },
+   "styles": [
+    "protector",
+    "guardian"
+   ]
+  },
+  "chaos-agent": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 70,
+    "empathy": 35,
+    "adaptability": 80,
+    "vindictiveness": 45,
+    "resilience": 50
+   },
+   "styles": [
+    "disruptor",
+    "improviser"
+   ]
+  },
+  "secret-softie": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 70,
+    "empathy": 80,
+    "adaptability": 45,
+    "vindictiveness": 10,
+    "resilience": 55
+   },
+   "styles": [
+    "protector",
+    "counterpuncher"
+   ]
+  },
+  "reluctant-battler": {
+   "status": "limited",
+   "traits": {
+    "ambition": 20,
+    "pride": 25,
+    "empathy": 70,
+    "adaptability": 60,
+    "vindictiveness": 10,
+    "resilience": 60
+   },
+   "styles": [
+    "fortress",
+    "counterpuncher"
+   ]
+  },
+  "former-antagonist": {
+   "status": "limited",
+   "traits": {
+    "ambition": 60,
+    "pride": 60,
+    "empathy": 45,
+    "adaptability": 65,
+    "vindictiveness": 60,
+    "resilience": 60
+   },
+   "styles": [
+    "disruptor",
+    "mirror-match"
+   ]
+  },
+  "quiet-observer": {
+   "status": "limited",
+   "traits": {
+    "ambition": 50,
+    "pride": 40,
+    "empathy": 55,
+    "adaptability": 90,
+    "vindictiveness": 35,
+    "resilience": 65
+   },
+   "styles": [
+    "scout",
+    "counter-builder"
+   ]
+  }
+ },
+ "styles": {
+  "blitz": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "spe",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "snowball": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "spe",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "glass-cannon": {
+   "status": "limited",
+   "ai": 0.2,
+   "statBias": [
+    "atk",
+    "spa"
+   ],
+   "extraAdaptations": 0
+  },
+  "executioner": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "atk",
+    "spa"
+   ],
+   "extraAdaptations": 0
+  },
+  "combo-artist": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "spa",
+    "spe"
+   ],
+   "extraAdaptations": 0
+  },
+  "berserker": {
+   "status": "limited",
+   "ai": 0.2,
+   "statBias": [
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "revenge-striker": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "atk",
+    "spa"
+   ],
+   "extraAdaptations": 0
+  },
+  "overdrive-specialist": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "spa",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "fortress": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "def",
+    "spd",
+    "hp"
+   ],
+   "extraAdaptations": 0
+  },
+  "attrition": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "hp",
+    "def"
+   ],
+   "extraAdaptations": 0
+  },
+  "trapper": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "def",
+    "spd"
+   ],
+   "extraAdaptations": 0
+  },
+  "counterpuncher": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "hp",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "stallbreaker": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "atk",
+    "spa"
+   ],
+   "extraAdaptations": 0
+  },
+  "guardian": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "hp",
+    "def"
+   ],
+   "extraAdaptations": 0
+  },
+  "disruptor": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "spe",
+    "spd"
+   ],
+   "extraAdaptations": 0
+  },
+  "sacrificial-strategist": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "atk",
+    "spe"
+   ],
+   "extraAdaptations": 0
+  },
+  "scout": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "spe",
+    "spd"
+   ],
+   "extraAdaptations": 1
+  },
+  "counter-builder": {
+   "status": "limited",
+   "ai": 0.6,
+   "statBias": [],
+   "extraAdaptations": 3
+  },
+  "gambit": {
+   "status": "limited",
+   "ai": 0.2,
+   "statBias": [
+    "spa",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "improviser": {
+   "status": "limited",
+   "ai": 0.1,
+   "statBias": [
+    "spe"
+   ],
+   "extraAdaptations": 0
+  },
+  "mirror-match": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [],
+   "extraAdaptations": 1
+  },
+  "anti-meta": {
+   "status": "limited",
+   "ai": 0.6,
+   "statBias": [],
+   "extraAdaptations": 2
+  },
+  "resource-manager": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "hp",
+    "def"
+   ],
+   "extraAdaptations": 0
+  },
+  "specialist": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [],
+   "extraAdaptations": 0
+  },
+  "conductor": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "spe",
+    "hp"
+   ],
+   "extraAdaptations": 0
+  },
+  "protector": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "hp",
+    "def",
+    "spd"
+   ],
+   "extraAdaptations": 0
+  },
+  "trust-fighter": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "atk",
+    "hp"
+   ],
+   "extraAdaptations": 0
+  },
+  "instinctive-duo": {
+   "status": "limited",
+   "ai": 0.2,
+   "statBias": [
+    "spe",
+    "atk"
+   ],
+   "extraAdaptations": 0
+  },
+  "ace-centric": {
+   "status": "limited",
+   "ai": 0.4,
+   "statBias": [
+    "atk",
+    "spa"
+   ],
+   "extraAdaptations": 0
+  },
+  "rotating-ensemble": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [],
+   "extraAdaptations": 0
+  },
+  "bond-breaker": {
+   "status": "limited",
+   "ai": 0.5,
+   "statBias": [
+    "spe",
+    "spd"
+   ],
+   "extraAdaptations": 0
+  },
+  "last-stand": {
+   "status": "limited",
+   "ai": 0.3,
+   "statBias": [
+    "hp",
+    "spd"
+   ],
+   "extraAdaptations": 0
+  }
+ },
+ "thresholds": {
+  "minAdaptability": 40,
+  "vindictiveBonusAt": 70,
+  "forgivingPenaltyAt": 15
+ },
+ "mechanics": {
+  "independent-rivalry": {
+   "status": "limited",
+   "note": "Rivals form enemies/friends/partners edges off-screen (rivalGraph); the edge only shows in rumours so far."
+  },
+  "unseen-defeat": {
+   "status": "limited",
+   "note": "Off-screen losses: tough rivals retrain (+progress), fragile ones sit out a stage."
+  },
+  "unseen-victory": {
+   "status": "limited",
+   "note": "Off-screen wins: +progress and potential, may climb the ladder. No sponsors or rankings yet."
+  },
+  "rivalry-cooldown": {
+   "status": "limited",
+   "note": "A shaken rival sits out a stage."
+  },
+  "rival-s-private-goal": {
+   "status": "limited",
+   "note": "Ambitious rivals sometimes skip a stage for their own goal; goals are not yet named or storyline-driven."
+  },
+  "challenge-refusal": {
+   "status": "limited",
+   "note": "Covered by sitting out for a private goal or recovery; injury and disagreement reasons are not modelled."
+  },
+  "missed-encounter": {
+   "status": "limited",
+   "note": "Rivals count stages away and gain progress meanwhile."
+  },
+  "return-encounter": {
+   "status": "limited",
+   "note": "A returning rival comes back with independent progress as extra levels."
+  },
+  "rivalry-rumor-mill": {
+   "status": "limited",
+   "note": "One rumour per stage in the chronicle; a quarter are marked incomplete. No rumour screen or investigation yet."
+  },
+  "rivalry-handoff": {
+   "status": "limited",
+   "note": "The Ultimate Rival moves on when a rival becomes an ally or retires, or another clearly outscores it."
+  },
+  "shared-rival": {
+   "status": "limited",
+   "note": "Up to 3 rivals can target the player; each does not yet have its own interpretation of a win."
+  }
+ }
+}

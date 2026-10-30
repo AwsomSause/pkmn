@@ -12,7 +12,18 @@
     "unlockedByDefault": true,
     "spriteAssetId": "trainer.red",
     "modifiers": [],
-    "title": "The Balanced Trainer"
+    "title": "The Balanced Trainer",
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pikachu",
+      "charizard",
+      "venusaur",
+      "blastoise"
+    ],
+    "eventTags": [
+      "silent"
+    ],
+    "signaturePool": "trainer-red"
   },
   {
     "id": "blue",
@@ -36,7 +47,19 @@
         "value": 2
       }
     ],
-    "title": "The Prodigy"
+    "title": "The Prodigy",
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "pidgeot",
+      "alakazam",
+      "rhydon",
+      "exeggutor"
+    ],
+    "eventTags": [
+      "rival",
+      "bold"
+    ],
+    "signaturePool": "trainer-blue"
   },
   {
     "id": "green",
@@ -65,7 +88,17 @@
         "value": 0.85
       }
     ],
-    "title": "The Opportunist"
+    "title": "The Opportunist",
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "clefable",
+      "victreebel",
+      "ninetales"
+    ],
+    "eventTags": [
+      "merchant"
+    ],
+    "signaturePool": "trainer-green"
   },
   {
     "id": "brock",
@@ -105,7 +138,18 @@
     ],
     "startingItems": {
       "potion": 3
-    }
+    },
+    "signatureTypes": [
+      "rock"
+    ],
+    "signatureSpecies": [
+      "onix",
+      "geodude"
+    ],
+    "eventTags": [
+      "caretaker"
+    ],
+    "signaturePool": "trainer-brock"
   },
   {
     "id": "misty",
@@ -138,7 +182,19 @@
         "type": "water",
         "value": 1.25
       }
-    ]
+    ],
+    "signatureTypes": [
+      "water"
+    ],
+    "signatureSpecies": [
+      "staryu",
+      "psyduck",
+      "horsea"
+    ],
+    "eventTags": [
+      "water"
+    ],
+    "signaturePool": "trainer-misty"
   },
   {
     "id": "giovanni",
@@ -177,7 +233,20 @@
         ],
         "value": 1.25
       }
-    ]
+    ],
+    "signatureTypes": [
+      "ground"
+    ],
+    "signatureSpecies": [
+      "rhyhorn",
+      "nidoran-m",
+      "persian"
+    ],
+    "eventTags": [
+      "villain",
+      "merchant"
+    ],
+    "signaturePool": "trainer-giovanni"
   },
   {
     "id": "cynthia",
@@ -185,7 +254,7 @@
     "title": "The Champion",
     "description": "Learns more about boss teams before battle.",
     "pros": [
-      "More information about boss teams before battle"
+      "The map shows each gym leader’s whole team"
     ],
     "cons": [
       "No economy or experience bonus"
@@ -198,9 +267,25 @@
     },
     "unlockText": "Defeat champions in 3 regions",
     "unlockCost": 500,
-    "available": false,
     "spriteAssetId": "boss.cynthia-gen7",
-    "modifiers": []
+    "modifiers": [
+      {
+        "kind": "preview",
+        "what": "gymTeam"
+      }
+    ],
+    "signatureTypes": [
+      "dragon"
+    ],
+    "signatureSpecies": [
+      "gible",
+      "riolu",
+      "spiritomb"
+    ],
+    "eventTags": [
+      "scholar"
+    ],
+    "signaturePool": "trainer-cynthia"
   },
   {
     "id": "oak",
@@ -208,11 +293,11 @@
     "title": "The Researcher",
     "description": "Earns more research from new Pokémon, but less money from ordinary battles.",
     "pros": [
-      "More Research Points from new species and forms",
-      "Once per stage, preview an unknown encounter"
+      "50% more Research Points from new species, catches and shinies",
+      "The map shows which wild Pokémon wait at each stop"
     ],
     "cons": [
-      "Less money from ordinary battles"
+      "Earn 15% less money"
     ],
     "unlockedByDefault": false,
     "unlock": {
@@ -222,9 +307,32 @@
     },
     "unlockText": "Discover 100 species",
     "unlockCost": 500,
-    "available": false,
     "spriteAssetId": "boss.oak",
-    "modifiers": []
+    "modifiers": [
+      {
+        "kind": "researchMultiplier",
+        "value": 1.5
+      },
+      {
+        "kind": "preview",
+        "what": "wild"
+      },
+      {
+        "kind": "moneyMultiplier",
+        "value": 0.85
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "bulbasaur",
+      "charmander",
+      "squirtle",
+      "eevee"
+    ],
+    "eventTags": [
+      "scholar"
+    ],
+    "signaturePool": "trainer-oak"
   },
   {
     "id": "n",
@@ -232,8 +340,7 @@
     "title": "The Friend",
     "description": "Gets stronger friendship effects and gentler event outcomes.",
     "pros": [
-      "Stronger friendship effects",
-      "Friendship opens alternate event outcomes"
+      "Your Pokémon gain 50% more friendship from battles"
     ],
     "cons": [
       "Some aggressive event choices are unavailable"
@@ -246,8 +353,23 @@
     },
     "unlockText": "Keep 50 Pokémon you catch (a stand-in until the friendship challenge exists)",
     "unlockCost": 500,
-    "available": false,
     "spriteAssetId": "boss.n",
-    "modifiers": []
+    "modifiers": [
+      {
+        "kind": "friendshipMultiplier",
+        "value": 1.5
+      }
+    ],
+    "signatureTypes": [],
+    "signatureSpecies": [
+      "zorua",
+      "purrloin",
+      "darumaka"
+    ],
+    "eventTags": [
+      "pacifist",
+      "friend"
+    ],
+    "signaturePool": "trainer-n"
   }
 ]

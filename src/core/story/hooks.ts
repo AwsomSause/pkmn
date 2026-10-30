@@ -14,10 +14,16 @@ import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey } from './ledger';
 import { resolveQueue, type PresentationCue, type StoryTrigger } from './queue';
+import { RIVAL_PATHS } from '../rivals/schema';
 import { maybeSpark, sparkGain } from '../rivals/manager';
+import { advanceArc } from '../rivals/arcs';
+import { afterBattleBehavior } from '../rivals/bonds';
+import { applyDefeat } from '../rivals/outcome';
+import { evaluateUltimate } from '../rivals/ultimate';
 import { battleIndex, createEnemyProfile, emit, noteFought, noteLowHpTurn, openHistory, openRelationship, recordEnemyBattle, whereNow } from './record';
 import { rematchRule, returnFlag, vowedTrainers } from './returns';
-import type { StoryEventDefinition, Where } from './schema';
+import { emotionOf } from './emotions';
+import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
 
@@ -109,6 +115,10 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
       case 'move':
         lastMove[e.side] = e.moveId;
         emit(content, run, 'moveUsed', { where, actors: active[e.side] ? [active[e.side]!] : [], data: { side: e.side, moveId: e.moveId } });
+        if (e.side === 'player' && active.player) {
+          const t = signatureMove(content, run, active.player, e.moveId, i, triggers.length, battle.kind === 'trainer');
+          if (t) triggers.push(t);
+        }
         break;
       case 'switchIn':
         active[e.side] = e.uid;
@@ -212,6 +222,10 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           // Only your own Pokémon's transformations become memories.
           text: e.side === 'player' ? `${e.kind === 'primal' ? 'Underwent Primal Reversion into' : 'Mega Evolved into'} ${name(content, e.to)}` : undefined,
         });
+        if (e.side === 'player') {
+          const t = transformMoment(content, run, e, i, triggers.length, battle.trainer?.classId ?? null);
+          if (t) triggers.push(t);
+        }
         break;
       default:
         break;
@@ -226,6 +240,59 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   const cues = resolveTriggers(content, run, triggers, where);
   if (battle.outcome) recordBattleEnd(content, run, where);
   return cues;
+}
+
+/** Which Hyper evolution a battle transformation can be (Overdrive blueprint §4). Primal Reversion has none. */
+const TRANSFORM_TRIGGER: Record<string, StoryTriggerKind> = {
+  mega: 'megaOverdrive',
+  zmove: 'zHeart',
+  dynamax: 'dynamaxResolve',
+  gigantamax: 'dynamaxResolve',
+  tera: 'teraTrueColors',
+};
+
+/**
+ * A Mega Overdrive, "All of Its Heart", "A Giant Resolve" or "Its True Colors Shine Through!": the
+ * normal transformation rules decide everything; this only adds the banner, the line and a memory,
+ * and only when the moment is decisive (a boss fight or the Pokémon at half HP) or, for the Z-Move,
+ * the bond is strong. It draws no random numbers and never grants a second use.
+ */
+function transformMoment(content: Content, run: RunState, e: Extract<RunEvent, { type: 'transform' }>, at: number, order: number, classId: string | null): StoryTrigger | null {
+  const trigger = TRANSFORM_TRIGGER[e.kind];
+  const def = trigger && content.story.definitions.find((d) => d.triggerConditions.trigger === trigger);
+  const mon = run.party.find((m) => m.uid === e.uid);
+  if (!def || !mon) return null;
+  const cond = def.triggerConditions;
+  if (cond.minFriendship !== undefined && mon.friendship < cond.minFriendship) return null;
+  const boss = classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
+  if (cond.decisive && !boss && mon.hp > maxHp(content, mon) / 2) return null;
+  const history = run.story.histories[e.uid];
+  if (history) history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
+  const emotion = trigger === 'teraTrueColors' ? emotionOf(content, run, e.uid)?.id : undefined;
+  const variant = emotion && def.variants[emotion] ? emotion : null;
+  return { ...makeTrigger(run, def, at, order, { name: name(content, mon.speciesId), type: e.teraType ?? '' }, variant, e.uid), combat: false };
+}
+
+/**
+ * Signature Move Awakening ("It Mastered the Power Within!"): a damaging move used again and again in
+ * trainer fights awakens for the rest of the run and hits harder. Counting is deterministic, uses no
+ * random numbers and keeps the move's rules (type, accuracy, PP) as they were.
+ */
+function signatureMove(content: Content, run: RunState, uid: string, moveId: string, at: number, order: number, trainerFight: boolean): StoryTrigger | null {
+  const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'signatureAwakening');
+  const move = content.moves.get(moveId);
+  const mon = run.party.find((m) => m.uid === uid);
+  const history = run.story.histories[uid];
+  const cfg = content.story.awakening;
+  if (!def || !move || !mon || !history || !trainerFight || !move.power || mon.awakened?.includes(moveId)) return null;
+  history.moves[moveId] = (history.moves[moveId] ?? 0) + 1;
+  if (history.moves[moveId]! < cfg.uses || (mon.awakened?.length ?? 0) >= cfg.perPokemon || !mon.moves.some((m) => m.id === moveId)) return null;
+  mon.awakened = [...(mon.awakened ?? []), moveId];
+  history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
+  const names = { name: name(content, mon.speciesId), move: move.name };
+  const t = makeTrigger(run, def, at, order, names, null, uid);
+  const memory = def.memoryRecord ? { ...t, names } : t;
+  return { ...memory, combat: false };
 }
 
 function makeTrigger(
@@ -343,10 +410,23 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
     rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId) };
-    rivalBack.rivalPotential += sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) });
+    if (result === 'win') {
+      const before = rivalBack.state;
+      const outcome = applyDefeat(rivalBack, sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) }));
+      const title = `${content.trainers.get(rivalBack.classId)?.name ?? 'Trainer'} ${rivalBack.name}`;
+      const say = (text: string) => emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rivalBack.id, outcome }, text });
+      if (outcome === 'ally') say(`${title} accepted your lead and became an ally`);
+      else if (outcome === 'retired') say(`${title}, worn down by defeats, stepped away from competition`);
+      else if (outcome === 'shaken') say(`${title} was shaken by the loss and questioned their ambition`);
+      else if (rivalBack.state !== before && (rivalBack.state === 'nemesis' || rivalBack.state === 'contender')) say(`${title} is now a ${rivalBack.state === 'nemesis' ? 'nemesis' : 'regional contender'}`);
+      advanceArc(content, run, rivalBack);
+      afterBattleBehavior(content, run, rivalBack, false);
+      const chosen = evaluateUltimate(run);
+      if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
+    }
   }
   // Rival Spark: a memorable win over an ordinary trainer can make them your rival.
-  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.returning && !battle.rivalId) {
+  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.rivalId) {
     const rival = maybeSpark(run, {
       where,
       classId: trainer.classId,
@@ -356,10 +436,11 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0,
       turns: battle.turn - 1,
       flawless: run.party.every((m) => m.hp > 0),
+      returning: Boolean(battle.returning),
     });
     if (rival) {
       const title = `${content.trainers.get(trainer.classId)?.name ?? 'Trainer'} ${trainer.name}`;
-      emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rival.id, archetype: rival.archetype }, text: `${title} won't forget the loss and became your rival` });
+      emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rival.id, archetype: rival.archetype }, text: `${(RIVAL_PATHS.paths.find((p) => p.id === rival.origin.path)?.line ?? '{who} became your rival').replace('{who}', title)}` });
     }
   }
   const role = trainer?.leaderId ? BOSS_ROLES[trainer.classId] : undefined;
@@ -371,6 +452,9 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       data: { leaderId: trainer.leaderId, role: trainer.classId, name: trainer.name },
       text: `Defeated ${role} ${trainer.name}`,
     });
+    // A milestone: the story may now follow a different rival.
+    const chosen = evaluateUltimate(run);
+    if (chosen) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: chosen.id, outcome: 'ultimate' }, text: `${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey` });
   } else if (result === 'lose') {
     emit(content, run, 'lostToBoss', {
       where,
@@ -426,6 +510,19 @@ export function recordChanges(content: Content, before: RunState, run: RunState,
         data: { from: prev.speciesId, to: mon.speciesId, trigger: evolutionTrigger },
         text: `Evolved from ${name(content, prev.speciesId)} into ${name(content, mon.speciesId)}`,
       });
+      // Determination Evolution: the evolution rules are unchanged; an exceptional story (a boss beaten
+      // after surviving a fatal hit) only earns it a named memory and its own record.
+      const h = run.story.histories[mon.uid];
+      if (h && h.bossesBeaten > 0 && h.survivedFatal > 0) {
+        h.hyper['determination-evolution'] = (h.hyper['determination-evolution'] ?? 0) + 1;
+        emit(content, run, 'storyMoment', {
+          actors: [mon.uid],
+          data: { def: 'determination-evolution', suppressed: false },
+          importance: 85,
+          text: `Determination Evolution: became ${name(content, mon.speciesId)} after everything it endured`,
+          emotions: ['determination'],
+        });
+      }
     }
     for (const mark of content.story.friendshipMilestones) {
       if (prev.friendship < mark && mon.friendship >= mark) {

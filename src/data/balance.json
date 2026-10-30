@@ -2,6 +2,7 @@
  "partyMax": 6,
  "starterLevel": 5,
  "starterChoices": 3,
+ "signatureStarterChance": 0.5,
  "wildPool": [
   "caterpie",
   "pidgey",

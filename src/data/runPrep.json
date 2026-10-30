@@ -4,6 +4,7 @@
    "id": "classic",
    "name": "Classic",
    "description": "The original line-up: Kanto's starters and friends.",
+   "category": "classic",
    "species": [
     "bulbasaur",
     "charmander",
@@ -24,6 +25,7 @@
    "id": "johto",
    "name": "Johto",
    "description": "Starters and first-stage Pokémon from Johto.",
+   "category": "region",
    "species": [
     "chikorita",
     "cyndaquil",
@@ -44,6 +46,7 @@
    "id": "hoenn",
    "name": "Hoenn",
    "description": "Starters and first-stage Pokémon from Hoenn.",
+   "category": "region",
    "species": [
     "treecko",
     "torchic",
@@ -69,6 +72,7 @@
    "id": "research",
    "name": "Research",
    "description": "Unusual first-stage Pokémon you wouldn't normally start with.",
+   "category": "research",
    "species": [
     "drowzee",
     "seel",
@@ -90,6 +94,7 @@
    "id": "rare",
    "name": "Rare",
    "description": "Rare first-stage Pokémon that grow into powerhouses.",
+   "category": "rare",
    "species": [
     "dratini",
     "larvitar",
@@ -107,6 +112,7 @@
    "id": "grand",
    "name": "Grand",
    "description": "The rarest specimens, for those who conquered the Grand Region.",
+   "category": "rare",
    "species": [
     "beldum",
     "gible",
@@ -121,6 +127,1259 @@
    },
    "unlockText": "Win a full campaign",
    "researchCost": 800
+  },
+  {
+   "id": "sinnoh",
+   "name": "Sinnoh",
+   "description": "Every first-stage Pokémon native to Sinnoh, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "sinnoh"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-badge"
+   },
+   "unlockText": "Earn your first badge",
+   "researchCost": 200
+  },
+  {
+   "id": "unova",
+   "name": "Unova",
+   "description": "Every first-stage Pokémon native to Unova, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "unova"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-badge"
+   },
+   "unlockText": "Earn your first badge",
+   "researchCost": 200
+  },
+  {
+   "id": "kalos",
+   "name": "Kalos",
+   "description": "Every first-stage Pokémon native to Kalos, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "kalos"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "alola",
+   "name": "Alola",
+   "description": "Every first-stage Pokémon native to Alola, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "alola"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "galar",
+   "name": "Galar",
+   "description": "Every first-stage Pokémon native to Galar, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "galar"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "three-regions"
+   },
+   "unlockText": "Clear three regions in one run",
+   "researchCost": 300
+  },
+  {
+   "id": "paldea",
+   "name": "Paldea",
+   "description": "Every first-stage Pokémon native to Paldea, its regional forms included.",
+   "category": "region",
+   "filter": {
+    "region": "paldea"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "three-regions"
+   },
+   "unlockText": "Clear three regions in one run",
+   "researchCost": 300
+  },
+  {
+   "id": "kanto-all",
+   "name": "All of Kanto",
+   "description": "Every first-stage Pokémon native to Kanto, not just the classics.",
+   "category": "region",
+   "filter": {
+    "region": "kanto"
+   },
+   "researchCost": 100
+  },
+  {
+   "id": "type-normal",
+   "name": "Normal Specialists",
+   "description": "Every first-stage Normal-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "normal"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.normal",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Normal-type leading"
+  },
+  {
+   "id": "type-fire",
+   "name": "Fire Specialists",
+   "description": "Every first-stage Fire-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "fire"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.fire",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Fire-type leading"
+  },
+  {
+   "id": "type-water",
+   "name": "Water Specialists",
+   "description": "Every first-stage Water-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "water"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.water",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Water-type leading"
+  },
+  {
+   "id": "type-grass",
+   "name": "Grass Specialists",
+   "description": "Every first-stage Grass-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "grass"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.grass",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Grass-type leading"
+  },
+  {
+   "id": "type-electric",
+   "name": "Electric Specialists",
+   "description": "Every first-stage Electric-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "electric"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.electric",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Electric-type leading"
+  },
+  {
+   "id": "type-ice",
+   "name": "Ice Specialists",
+   "description": "Every first-stage Ice-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "ice"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.ice",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Ice-type leading"
+  },
+  {
+   "id": "type-fighting",
+   "name": "Fighting Specialists",
+   "description": "Every first-stage Fighting-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "fighting"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.fighting",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Fighting-type leading"
+  },
+  {
+   "id": "type-poison",
+   "name": "Poison Specialists",
+   "description": "Every first-stage Poison-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "poison"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.poison",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Poison-type leading"
+  },
+  {
+   "id": "type-ground",
+   "name": "Ground Specialists",
+   "description": "Every first-stage Ground-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "ground"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.ground",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Ground-type leading"
+  },
+  {
+   "id": "type-flying",
+   "name": "Flying Specialists",
+   "description": "Every first-stage Flying-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "flying"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.flying",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Flying-type leading"
+  },
+  {
+   "id": "type-psychic",
+   "name": "Psychic Specialists",
+   "description": "Every first-stage Psychic-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "psychic"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.psychic",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Psychic-type leading"
+  },
+  {
+   "id": "type-bug",
+   "name": "Bug Specialists",
+   "description": "Every first-stage Bug-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "bug"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.bug",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Bug-type leading"
+  },
+  {
+   "id": "type-rock",
+   "name": "Rock Specialists",
+   "description": "Every first-stage Rock-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "rock"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.rock",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Rock-type leading"
+  },
+  {
+   "id": "type-ghost",
+   "name": "Ghost Specialists",
+   "description": "Every first-stage Ghost-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "ghost"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.ghost",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Ghost-type leading"
+  },
+  {
+   "id": "type-dragon",
+   "name": "Dragon Specialists",
+   "description": "Every first-stage Dragon-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "dragon"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.dragon",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Dragon-type leading"
+  },
+  {
+   "id": "type-dark",
+   "name": "Dark Specialists",
+   "description": "Every first-stage Dark-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "dark"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.dark",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Dark-type leading"
+  },
+  {
+   "id": "type-steel",
+   "name": "Steel Specialists",
+   "description": "Every first-stage Steel-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "steel"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.steel",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Steel-type leading"
+  },
+  {
+   "id": "type-fairy",
+   "name": "Fairy Specialists",
+   "description": "Every first-stage Fairy-type Pokémon.",
+   "category": "type",
+   "filter": {
+    "types": [
+     "fairy"
+    ]
+   },
+   "unlock": {
+    "kind": "total",
+    "counter": "bossWinsLead.fairy",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 boss battles with a Fairy-type leading"
+  },
+  {
+   "id": "glass-cannons",
+   "name": "Glass Cannons",
+   "description": "Fast, hard-hitting Pokémon that can’t take many hits.",
+   "category": "role",
+   "species": [
+    "pawniard",
+    "gastly",
+    "sneasel",
+    "treecko",
+    "chimchar",
+    "froakie",
+    "joltik",
+    "fletchling",
+    "scorbunny",
+    "elekid",
+    "magby",
+    "zorua"
+   ],
+   "researchCost": 150
+  },
+  {
+   "id": "bulwarks",
+   "name": "Bulwarks",
+   "description": "Sturdy Pokémon that win by outlasting.",
+   "category": "role",
+   "species": [
+    "geodude",
+    "onix",
+    "aron",
+    "shieldon",
+    "bronzor",
+    "ferroseed",
+    "turtwig",
+    "sandshrew",
+    "shellder",
+    "bergmite",
+    "wooper",
+    "tirtouga"
+   ],
+   "researchCost": 150
+  },
+  {
+   "id": "tricksters",
+   "name": "Tricksters",
+   "description": "Status, tricks and utility moves.",
+   "category": "role",
+   "species": [
+    "oddish",
+    "venonat",
+    "spinarak",
+    "sableye",
+    "cottonee",
+    "foongus",
+    "misdreavus",
+    "murkrow",
+    "hoppip",
+    "smoochum",
+    "natu",
+    "spiritomb"
+   ],
+   "researchCost": 150
+  },
+  {
+   "id": "late-bloomers",
+   "name": "Late Bloomers",
+   "description": "Weak at first, strong once fully evolved.",
+   "category": "role",
+   "species": [
+    "magikarp",
+    "feebas",
+    "caterpie",
+    "weedle",
+    "wurmple",
+    "kricketot",
+    "nincada",
+    "tynamo",
+    "larvesta",
+    "wimpod",
+    "blipbug",
+    "nymble"
+   ],
+   "researchCost": 150
+  },
+  {
+   "id": "trainer-red",
+   "name": "Red’s Team",
+   "description": "Pokémon from Red’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "red"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run"
+  },
+  {
+   "id": "trainer-blue",
+   "name": "Blue’s Team",
+   "description": "Pokémon from Blue’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "blue"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "battles-100"
+   },
+   "unlockText": "Win 100 battles"
+  },
+  {
+   "id": "trainer-green",
+   "name": "Green’s Team",
+   "description": "Pokémon from Green’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "green"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "money-10k"
+   },
+   "unlockText": "Earn ₽10,000"
+  },
+  {
+   "id": "trainer-brock",
+   "name": "Brock’s Rocks",
+   "description": "Pokémon from Brock’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "brock"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "no-safety-net"
+   },
+   "unlockText": "Clear a region without the Safety Charm"
+  },
+  {
+   "id": "trainer-misty",
+   "name": "Misty’s Tide",
+   "description": "Pokémon from Misty’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "misty"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "water-works"
+   },
+   "unlockText": "Win boss battles with a Water-type leading"
+  },
+  {
+   "id": "trainer-giovanni",
+   "name": "Giovanni’s Earth",
+   "description": "Pokémon from Giovanni’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "giovanni"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "money-100k"
+   },
+   "unlockText": "Earn ₽100,000"
+  },
+  {
+   "id": "trainer-cynthia",
+   "name": "Cynthia’s Elite",
+   "description": "Pokémon from Cynthia’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "cynthia"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "championsDefeated",
+    "atLeast": 3
+   },
+   "unlockText": "Defeat 3 champions"
+  },
+  {
+   "id": "trainer-n",
+   "name": "N’s Friends",
+   "description": "Pokémon from N’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "n"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "caughtKept",
+    "atLeast": 50
+   },
+   "unlockText": "Keep 50 caught Pokémon"
+  },
+  {
+   "id": "trainer-oak",
+   "name": "Oak’s Lab",
+   "description": "Professor Oak’s research favourites.",
+   "category": "trainer",
+   "species": [
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "pikachu",
+    "eevee",
+    "growlithe",
+    "exeggcute",
+    "tauros",
+    "rhyhorn",
+    "magikarp",
+    "nidoran-m",
+    "nidoran-f"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "seen-25"
+   },
+   "unlockText": "See 25 species"
+  },
+  {
+   "id": "team-rocket",
+   "name": "Team Rocket",
+   "description": "Grunts’ and leaders’ Pokémon from Team Rocket.",
+   "category": "evilTeam",
+   "species": [
+    "ekans",
+    "koffing",
+    "rattata",
+    "zubat",
+    "meowth",
+    "grimer",
+    "drowzee",
+    "houndour",
+    "murkrow",
+    "sandshrew"
+   ],
+   "bosses": [],
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-badge"
+   },
+   "unlockText": "Earn your first badge",
+   "researchCost": 200
+  },
+  {
+   "id": "team-magma",
+   "name": "Team Magma",
+   "description": "Grunts’ and leaders’ Pokémon from Team Magma.",
+   "category": "evilTeam",
+   "species": [
+    "poochyena",
+    "numel",
+    "slugma",
+    "baltoy",
+    "zubat",
+    "koffing"
+   ],
+   "bosses": [
+    "maxie",
+    "tabitha"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-aqua",
+   "name": "Team Aqua",
+   "description": "Grunts’ and leaders’ Pokémon from Team Aqua.",
+   "category": "evilTeam",
+   "species": [
+    "poochyena",
+    "carvanha",
+    "wailmer",
+    "zubat",
+    "tentacool",
+    "corphish"
+   ],
+   "bosses": [
+    "archie",
+    "shelly",
+    "matt"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-galactic",
+   "name": "Team Galactic",
+   "description": "Grunts’ and leaders’ Pokémon from Team Galactic.",
+   "category": "evilTeam",
+   "species": [
+    "glameow",
+    "stunky",
+    "zubat",
+    "croagunk",
+    "bronzor",
+    "murkrow"
+   ],
+   "bosses": [
+    "cyrus"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-plasma",
+   "name": "Team Plasma",
+   "description": "Grunts’ and leaders’ Pokémon from Team Plasma.",
+   "category": "evilTeam",
+   "species": [
+    "patrat",
+    "purrloin",
+    "trubbish",
+    "watchog",
+    "sandile",
+    "klink",
+    "pawniard"
+   ],
+   "bosses": [
+    "ghetsis",
+    "colress"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-flare",
+   "name": "Team Flare",
+   "description": "Grunts’ and leaders’ Pokémon from Team Flare.",
+   "category": "evilTeam",
+   "species": [
+    "houndour",
+    "litleo",
+    "croagunk",
+    "scraggy",
+    "golbat",
+    "swirlix"
+   ],
+   "bosses": [
+    "lysandre"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-skull",
+   "name": "Team Skull",
+   "description": "Grunts’ and leaders’ Pokémon from Team Skull.",
+   "category": "evilTeam",
+   "species": [
+    "zubat",
+    "grimer-alola",
+    "salandit",
+    "mareanie",
+    "wimpod",
+    "drowzee"
+   ],
+   "bosses": [
+    "guzma",
+    "plumeria"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-aether",
+   "name": "Aether Foundation",
+   "description": "Grunts’ and leaders’ Pokémon from Aether Foundation.",
+   "category": "evilTeam",
+   "species": [
+    "cosmog",
+    "type-null",
+    "poipole",
+    "mareanie",
+    "bewear",
+    "milotic"
+   ],
+   "bosses": [
+    "lusamine"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-yell",
+   "name": "Team Yell",
+   "description": "Grunts’ and leaders’ Pokémon from Team Yell.",
+   "category": "evilTeam",
+   "species": [
+    "zigzagoon-galar",
+    "impidimp",
+    "morpeko",
+    "nickit",
+    "scraggy",
+    "croagunk"
+   ],
+   "bosses": [
+    "piers"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "team-star",
+   "name": "Team Star",
+   "description": "Grunts’ and leaders’ Pokémon from Team Star.",
+   "category": "evilTeam",
+   "species": [
+    "shroodle",
+    "varoom",
+    "murkrow",
+    "fidough",
+    "sinistea",
+    "meditite"
+   ],
+   "bosses": [
+    "penny",
+    "giacomo",
+    "ortega"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "researchCost": 250
+  },
+  {
+   "id": "league-kanto",
+   "name": "Kanto League",
+   "description": "The Kanto Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "lorelei",
+    "bruno",
+    "agatha",
+    "lance"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "elite-challenger"
+   },
+   "unlockText": "Defeat an Elite Four member",
+   "researchCost": 300
+  },
+  {
+   "id": "league-johto",
+   "name": "Johto League",
+   "description": "The Johto Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "will",
+    "koga",
+    "karen",
+    "lance"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-hoenn",
+   "name": "Hoenn League",
+   "description": "The Hoenn Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "sidney",
+    "phoebe",
+    "glacia",
+    "drake",
+    "steven",
+    "wallace"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-sinnoh",
+   "name": "Sinnoh League",
+   "description": "The Sinnoh Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "aaron",
+    "bertha",
+    "flint",
+    "lucian",
+    "cynthia"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-unova",
+   "name": "Unova League",
+   "description": "The Unova Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "shauntal",
+    "grimsley",
+    "caitlin",
+    "marshal",
+    "alder",
+    "iris"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-kalos",
+   "name": "Kalos League",
+   "description": "The Kalos Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "malva",
+    "siebold",
+    "wikstrom",
+    "drasna",
+    "diantha"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-alola",
+   "name": "Alola League",
+   "description": "The Alola Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "hala",
+    "olivia",
+    "acerola",
+    "kahili",
+    "molayne",
+    "kukui",
+    "hau"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-galar",
+   "name": "Galar League",
+   "description": "The Galar Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "marnie",
+    "bede",
+    "mustard",
+    "leon"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "league-paldea",
+   "name": "Paldea League",
+   "description": "The Paldea Elite Four’s and champions’ Pokémon, as first stages.",
+   "category": "league",
+   "bosses": [
+    "rika",
+    "poppy",
+    "larry",
+    "hassel",
+    "crispin",
+    "amarys",
+    "lacey",
+    "drayton",
+    "geeta",
+    "nemona",
+    "kieran"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "spin-orre",
+   "name": "Orre Shadows",
+   "description": "Colosseum and XD: Pokémon snagged from the shadows.",
+   "category": "spinOff",
+   "species": [
+    "eevee",
+    "makuhita",
+    "teddiursa",
+    "ledyba",
+    "spinarak",
+    "natu",
+    "remoraid",
+    "mareep",
+    "swinub",
+    "houndour",
+    "seedot",
+    "baltoy",
+    "carvanha",
+    "spheal",
+    "duskull",
+    "shroomish"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run",
+   "researchCost": 200
+  },
+  {
+   "id": "spin-mystery-dungeon",
+   "name": "Rescue Team",
+   "description": "Mystery Dungeon heroes and partners.",
+   "category": "spinOff",
+   "species": [
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "pikachu",
+    "meowth",
+    "psyduck",
+    "cubone",
+    "eevee",
+    "chikorita",
+    "cyndaquil",
+    "totodile",
+    "treecko",
+    "torchic",
+    "mudkip",
+    "skitty",
+    "munchlax",
+    "riolu",
+    "axew",
+    "fennekin",
+    "froakie"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run",
+   "researchCost": 200
+  },
+  {
+   "id": "spin-ranger",
+   "name": "Ranger Partners",
+   "description": "Pokémon Ranger partner Pokémon.",
+   "category": "spinOff",
+   "species": [
+    "plusle",
+    "minun",
+    "pachirisu",
+    "munchlax",
+    "starly",
+    "buneary",
+    "budew",
+    "shinx",
+    "pichu",
+    "riolu"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run",
+   "researchCost": 200
+  },
+  {
+   "id": "spin-hisui",
+   "name": "Survey Corps",
+   "description": "Legends: Arceus: Hisui’s first partners and its wilds.",
+   "category": "spinOff",
+   "species": [
+    "rowlet",
+    "cyndaquil",
+    "oshawott",
+    "growlithe-hisui",
+    "voltorb-hisui",
+    "qwilfish-hisui",
+    "sneasel-hisui",
+    "zorua-hisui",
+    "bidoof",
+    "starly",
+    "shinx",
+    "buizel",
+    "kricketot",
+    "ponyta",
+    "petilil",
+    "goomy"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run",
+   "researchCost": 200
+  },
+  {
+   "id": "spin-go",
+   "name": "Field Research",
+   "description": "Pokémon Go’s everyday spawns.",
+   "category": "spinOff",
+   "species": [
+    "pidgey",
+    "rattata",
+    "weedle",
+    "caterpie",
+    "zubat",
+    "magikarp",
+    "eevee",
+    "geodude",
+    "gastly",
+    "machop",
+    "psyduck",
+    "spheal",
+    "dratini",
+    "larvitar"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "species-50"
+   },
+   "unlockText": "Catch 50 species",
+   "researchCost": 0
+  },
+  {
+   "id": "spin-snap",
+   "name": "Photo Op",
+   "description": "Pokémon Snap’s camera-ready subjects.",
+   "category": "spinOff",
+   "species": [
+    "pikachu",
+    "magikarp",
+    "slowpoke",
+    "lapras",
+    "doduo",
+    "snorlax",
+    "bulbasaur",
+    "charmander",
+    "squirtle",
+    "porygon",
+    "chansey",
+    "jigglypuff"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "seen-25"
+   },
+   "unlockText": "See 25 species",
+   "researchCost": 150
+  },
+  {
+   "id": "spin-unite",
+   "name": "Unite Squad",
+   "description": "Pokémon Unite’s battle roster.",
+   "category": "spinOff",
+   "species": [
+    "pikachu",
+    "cinderace",
+    "lucario",
+    "snorlax",
+    "greninja",
+    "gengar",
+    "machamp",
+    "garchomp",
+    "absol",
+    "talonflame",
+    "eldegoss",
+    "crustle",
+    "slowbro",
+    "wigglytuff",
+    "decidueye",
+    "dragonite",
+    "sylveon",
+    "gardevoir",
+    "tsareena",
+    "trevenant"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "runs-1"
+   },
+   "unlockText": "Finish a run",
+   "researchCost": 200
   }
  ],
  "draftRules": [

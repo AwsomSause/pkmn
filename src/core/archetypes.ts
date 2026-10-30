@@ -17,7 +17,7 @@ export function modifierValue(archetype: Archetype, kind: ArchetypeModifierKind)
   const isOffset = kind.endsWith('Offset');
   let value = isOffset ? 0 : 1;
   for (const mod of archetype.modifiers) {
-    if (mod.kind !== kind) continue;
+    if (mod.kind !== kind || !('value' in mod)) continue;
     value = isOffset ? value + mod.value : value * mod.value;
   }
   return value;
@@ -25,6 +25,19 @@ export function modifierValue(archetype: Archetype, kind: ArchetypeModifierKind)
 
 export function xpMultiplier(archetype: Archetype): number {
   return modifierValue(archetype, 'xpMultiplier');
+}
+
+export function friendshipMultiplier(archetype: Archetype): number {
+  return modifierValue(archetype, 'friendshipMultiplier');
+}
+
+export function researchMultiplier(archetype: Archetype): number {
+  return modifierValue(archetype, 'researchMultiplier');
+}
+
+/** Whether the trainer shows this kind of map preview (Cynthia: gym teams; Oak: wild Pokémon). */
+export function trainerPreviews(archetype: Archetype, what: 'wild' | 'trainers' | 'gymTeam'): boolean {
+  return archetype.modifiers.some((m) => m.kind === 'preview' && m.what === what);
 }
 
 export function moneyMultiplier(archetype: Archetype): number {

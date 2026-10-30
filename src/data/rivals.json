@@ -1,18 +1,56 @@
 {
- "maxRivals": 1,
+ "maxRivals": 3,
  "spark": {
   "ordinaryGain": 5,
   "closeGain": 12,
   "closeHpShare": 0.3,
   "flawlessGain": 15,
-  "threshold": 12
+  "threshold": 12,
+  "dominantHpShare": 0.9,
+  "dominantMaxTurns": 4
  },
- "archetypes": [
-  { "id": "prodigy", "name": "The Prodigy", "style": "aggressive", "traits": { "ambition": 80, "pride": 70, "empathy": 40, "adaptability": 60, "vindictiveness": 40, "resilience": 55 } },
-  { "id": "showboat", "name": "The Showboat", "style": "flashy", "traits": { "ambition": 60, "pride": 90, "empathy": 35, "adaptability": 45, "vindictiveness": 50, "resilience": 50 } },
-  { "id": "scholar", "name": "The Scholar", "style": "analytical", "traits": { "ambition": 55, "pride": 40, "empathy": 55, "adaptability": 90, "vindictiveness": 30, "resilience": 60 } },
-  { "id": "grudge-holder", "name": "The Grudge-Holder", "style": "relentless", "traits": { "ambition": 65, "pride": 75, "empathy": 20, "adaptability": 50, "vindictiveness": 90, "resilience": 70 } },
-  { "id": "friendly-rival", "name": "The Friendly Rival", "style": "balanced", "traits": { "ambition": 60, "pride": 35, "empathy": 85, "adaptability": 60, "vindictiveness": 10, "resilience": 65 } }
- ],
- "traitSpread": 10
+ "traitSpread": 10,
+ "states": {
+  "recurringAt": 25,
+  "activeAt": 40,
+  "nemesisAt": 60,
+  "nemesisMinVindictiveness": 50,
+  "contenderAt": 80,
+  "contenderMinAmbition": 60
+ },
+ "outcomes": {
+  "allyAt": 30,
+  "allyMinEncounters": 2,
+  "allyMinEmpathy": 75,
+  "allyMaxPride": 40,
+  "discourageMaxResilience": 35,
+  "discourageLoss": 10,
+  "retireAtSetbacks": 3
+ },
+ "ultimate": {
+  "weights": {
+   "intensity": 25,
+   "history": 20,
+   "threat": 15,
+   "stakes": 15,
+   "relevance": 10,
+   "progression": 10,
+   "unresolved": 5
+  },
+  "minEncounters": 1,
+  "switchMargin": 10
+ },
+ "world": {
+  "unseenWinBase": 0.5,
+  "progressCap": 3,
+  "unseenWinPotential": 3,
+  "privateGoalChance": 0.15,
+  "privateGoalMinAmbition": 60,
+  "fragileResilience": 40,
+  "toughResilience": 60,
+  "edgeChance": 0.35,
+  "distortedRumorChance": 0.25,
+  "friendMinEmpathy": 55,
+  "rivalMinAmbition": 60
+ }
 }

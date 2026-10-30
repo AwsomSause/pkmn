@@ -1,0 +1,13 @@
+# Asset provenance
+
+Every file imported from the director's packs, where it came from and why. A file without a row here doesn't ship (packs guide, step 4). The repo stays private (D4); these packs are Pokémon Essentials community resources built on Nintendo/Game Freak material, credited below. Importing was approved by the director on 2026-10-30.
+
+Older assets (species sprites, arenas, PokeRogue UI, audio) come from the PokeRogue packs (AGPL-3.0 code, Nintendo material) imported in M0–M9; see `tools/import-assets.ts`.
+
+| Repo path (`public/assets/…`) | Source pack | Original path in the pack | Credits | Used by | Added |
+|---|---|---|---|---|---|
+| `images/packs/ebdx/ui/types2.png` | Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip | `Graphics/EBDX/Pictures/UI/types2.png` | Elite Battle: DX (Luka S.J. and EBDX contributors) | Move picker type label | 2026-10-30 |
+| `images/packs/ebdx/ui/category.png` | same | `Graphics/EBDX/Pictures/UI/category.png` | same | Move picker category icon | 2026-10-30 |
+| `images/packs/ebdx/ui/status.png` | same | `Graphics/EBDX/Pictures/UI/status.png` | same | Databox status icon | 2026-10-30 |
+| `images/packs/ebdx/elements/{cloud1,cloud2,bubble,snow,star,sun,lightA,lightB,fog}.png` | same | `Graphics/EBDX/Battlebacks/elements/<name>.png` | same | Arena ambience (`src/ui/battleFx/ambience.ts`) | 2026-10-30 |
+| `images/packs/dbk/{burst,shine,particle,pulse}.png` | Deluxe Battle Kit.zip (v1.3.1) | `Graphics/Plugins/Deluxe Battle Kit/<name>.png` | Lucidious89 | Ember/sparkle particles; burst/shine/pulse reserved for the next slice (intros, transformations) | 2026-10-30 |

@@ -201,12 +201,12 @@ describe('loadout presets and the build summary', () => {
 });
 
 describe('content checks and save upgrades', () => {
-  it('rejects a pool listing an evolved species, an unknown license, or a token with an unknown item', () => {
+  it('rejects a pool listing an unknown species, an unknown license, or a token with an unknown item', () => {
     const raw = structuredClone(RAW_CONTENT) as any;
-    raw.runPrep.starterPools[1].species.push('ivysaur');
+    raw.runPrep.starterPools[1].species.push('not-a-species');
     raw.runPrep.draftRules[0].license = 'nope';
     raw.runPrep.tokens[0].items = { 'not-an-item': 1 };
-    expect(() => buildContent(raw)).toThrow(/ivysaur[\s\S]*nope|nope[\s\S]*ivysaur/);
+    expect(() => buildContent(raw)).toThrow(/not-a-species[\s\S]*nope|nope[\s\S]*not-a-species/);
     expect(() => buildContent(raw)).toThrow(/not-an-item/);
   });
 

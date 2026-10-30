@@ -56,6 +56,8 @@ import themesJson from './themes.json';
 import trainersJson from './trainers.json';
 import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
+import raidsJson from './raids.json';
+import { RaidFileSchema } from '../core/raid/schema';
 
 export class ContentError extends Error {
   constructor(public readonly problems: string[]) {
@@ -85,6 +87,7 @@ export interface RawContent {
   ruleset: unknown;
   balance: unknown;
   story: unknown;
+  raids: unknown;
   zMoves: unknown;
   maxMoves: unknown;
 }
@@ -128,6 +131,7 @@ export const RAW_CONTENT: RawContent = {
   ruleset: rulesetJson,
   balance: balanceJson,
   story: storyJson,
+  raids: raidsJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
@@ -174,9 +178,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
+  const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!story || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!story || !raids || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
     throw new ContentError(problems);
   }
 
@@ -205,6 +210,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     ruleset,
     balance,
     story,
+    raids,
     zMoves,
     maxMoves,
   };
@@ -244,6 +250,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const usable = (id: string) => content.moves.get(id)?.supported === true;
   for (const r of content.rewards.values()) {
     if (r.effect.kind === 'addItem' && !content.items.has(r.effect.item)) problems.push(`reward "${r.id}" gives unknown item "${r.effect.item}"`);
+  }
+  // Raids: every boss species, reward item and phase must exist (the boss must be able to fight).
+  for (const raid of raids.raids) {
+    for (const id of raid.species) if (!content.species.has(id)) problems.push(`raids.json "${raid.id}" has unknown species "${id}"`);
+    for (const r of raid.rewards.items) if (!content.items.has(r.item)) problems.push(`raids.json "${raid.id}" gives unknown item "${r.item}"`);
+    if (raid.shield && raid.shield.at.length * raid.shield.points >= 0.9) problems.push(`raids.json "${raid.id}" shields are too big`);
+    if (raid.phases.some((p, i) => i > 0 && p.atHp >= raid.phases[i - 1]!.atHp)) problems.push(`raids.json "${raid.id}" phases must go down in HP`);
   }
   const storyIds = toMap(story.definitions, 'story.json definitions', problems);
   for (const def of story.definitions) {
@@ -363,6 +376,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const m of a.modifiers) {
       if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
+    for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
+    if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
   // Run-Prep: starter pools, draft rules, preparation tokens and licenses.
@@ -372,11 +387,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const pool of content.starterPools.values()) {
     checkRequirement(pool.unlock, `starter pool "${pool.id}"`);
     checkLicense(pool.license, `starter pool "${pool.id}"`);
-    // Species that aren't in the game yet are allowed (they arrive with the full Pokédex); known ones must be first-stage.
-    for (const id of pool.species) {
-      const s = content.species.get(id);
-      if (s && s.evolutionStage !== 1) problems.push(`starter pool "${pool.id}" lists "${id}", which is not a first-stage species`);
-    }
+    // Listed species may be evolved (they stand for their first stage) but must exist; so must bosses and the filter's region.
+    for (const id of pool.species) if (!content.species.has(id)) problems.push(`starter pool "${pool.id}" lists unknown species "${id}"`);
+    for (const id of pool.bosses) if (!content.bosses.has(id)) problems.push(`starter pool "${pool.id}" lists unknown boss "${id}"`);
+    if (pool.filter?.region && !content.regions.has(pool.filter.region)) problems.push(`starter pool "${pool.id}" filters on unknown region "${pool.filter.region}"`);
   }
   const startingPools = [...content.starterPools.values()].filter((pool) => pool.unlockedByDefault);
   if (startingPools.length === 0) problems.push('runPrep.json has no starter pool unlocked from the start');

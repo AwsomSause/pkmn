@@ -232,6 +232,8 @@ export function eventText(content: Content, names: Names, e: RunEvent): string |
       return `${who(e.side)} avoided the attack!`;
     case 'fatigue':
       return `${who(e.side)} became confused due to fatigue!`;
+    case 'raid':
+      return e.text;
     case 'weather':
       return WEATHER_START[e.weather];
     case 'weatherEnd':
