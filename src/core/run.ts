@@ -1043,7 +1043,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   if (battle.outcome === 'lose' && battle.raid) {
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
-    return { run, events, end: null, defeated: false, cues, raidFailed: true };
+    return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
