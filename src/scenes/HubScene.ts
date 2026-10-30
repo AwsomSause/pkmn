@@ -9,6 +9,7 @@ import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, g
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { topMoves } from '../core/moveMastery';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { CARD_FRAMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
@@ -444,6 +445,7 @@ export class HubScene extends Phaser.Scene {
         const t = researchTotals(session.content, p);
         y = this.line(y, `Met ${t.met} · Caught ${t.caught} of ${t.total}`, 16);
         y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
+        for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
         break;
       }
       case 'wardrobe': {
