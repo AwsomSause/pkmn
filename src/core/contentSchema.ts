@@ -555,8 +555,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('captureMultiplier'), value: z.number().positive() }),
   /** HP restored by healing items (Potion, Super Potion...). */
   z.object({ kind: z.literal('healingMultiplier'), value: z.number().positive() }),
-  /** Shop price of the listed items. */
-  z.object({ kind: z.literal('priceMultiplier'), items: z.array(z.string()).min(1), value: z.number().positive() }),
+  /** Shop price of the listed items, or of a whole group (Poké Balls, everything else, everything). */
+  z.object({ kind: z.literal('priceMultiplier'), items: z.array(z.string()).min(1).optional(), group: z.enum(['balls', 'otherItems', 'all']).optional(), value: z.number().positive() }),
   /** Shop stock unlocks this many badges sooner (positive) or later (negative). */
   z.object({ kind: z.literal('shopUnlockOffset'), value: z.number().int() }),
   /** Damage dealt by your Pokémon of this type. */
@@ -569,6 +569,62 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('researchMultiplier'), value: z.number().positive() }),
   /** The map shows what waits at nodes, like the preview items: wild Pokémon, trainers' teams, or the gym leader's team. */
   z.object({ kind: z.literal('preview'), what: z.enum(['wild', 'trainers', 'gymTeam']) }),
+  /** Damage dealt by your Pokémon, filtered by their type and/or the move's category (Trainers.md perks). */
+  z.object({ kind: z.literal('damageMultiplier'), type: TypeNameSchema.optional(), types: z.array(TypeNameSchema).min(1).optional(), category: z.enum(['physical', 'special']).optional(), speed: z.enum(['fast', 'slow']).optional(), value: z.number().positive() }),
+  /** Damage taken by your Pokémon: those of `type`, from moves of `moveType`, or from Legendary/Mythical/Ultra Beast attackers. */
+  z.object({ kind: z.literal('damageTakenMultiplier'), type: TypeNameSchema.optional(), moveType: TypeNameSchema.optional(), fromLegendary: z.boolean().optional(), value: z.number().positive() }),
+  /** A battle stat (or max HP) of your Pokémon, optionally only those of one type. */
+  z.object({ kind: z.literal('statMultiplier'), stat: z.enum(['hp', 'atk', 'def', 'spa', 'spd', 'spe']), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Experience for a group of Pokémon: of a type, not of a type, fast (base Speed 90+) or slow (base Speed 60-), or the starter. */
+  z.object({ kind: z.literal('groupXpMultiplier'), type: TypeNameSchema.optional(), notType: TypeNameSchema.optional(), speed: z.enum(['fast', 'slow']).optional(), starter: z.boolean().optional(), value: z.number().positive() }),
+  /** Experience from ordinary (non-boss) battles only. */
+  z.object({ kind: z.literal('ordinaryXpMultiplier'), value: z.number().positive() }),
+  /** A Mega Evolved Pokémon with at least this much friendship stays Mega after the battle (Alain). */
+  z.object({ kind: z.literal('permanentMega'), minFriendship: z.number().int().min(0) }),
+  /** At most this many Pokémon in the party can be in a permanent Mega form. */
+  z.object({ kind: z.literal('megaPartyLimit'), max: z.number().int().min(0) }),
+  /** Damage multiplier for non-Mega Pokémon while a Mega Pokémon is in the party. */
+  z.object({ kind: z.literal('nonMegaDamageMultiplier'), value: z.number().positive() }),
+  /** Your starter knows its species' strongest same-type move from the start (Ash). */
+  z.object({ kind: z.literal('starterSignatureMove') }),
+  /** Friendship-based bonuses (Return, friendship Hyper moments) are switched off. */
+  z.object({ kind: z.literal('friendshipBonusesDisabled') }),
+  /** Your Pokémon below this share of their HP (0-1) deal more damage. */
+  z.object({ kind: z.literal('lowHpDamageMultiplier'), below: z.number().positive().max(1), value: z.number().positive() }),
+  /** Damage dealt to gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossDamageMultiplier'), value: z.number().positive() }),
+  /** Damage taken from gym leaders, Elite Four members and champions. */
+  z.object({ kind: z.literal('bossDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Damage dealt to foes of a higher or lower level than your attacker. */
+  z.object({ kind: z.literal('levelGapDamageMultiplier'), foe: z.enum(['higher', 'lower']), value: z.number().positive() }),
+  /** Chance (0-1) that a fatal hit leaves your Pokémon (of `type`) at 1 HP, once per Pokémon per battle. */
+  z.object({ kind: z.literal('survivalChance'), type: TypeNameSchema.optional(), chance: z.number().positive().max(1) }),
+  /** How long statuses your Pokémon inflict last (sleep, confusion). */
+  z.object({ kind: z.literal('statusDurationMultiplier'), value: z.number().positive() }),
+  /** Extra turns of sleep or confusion on foes you inflict it on. */
+  z.object({ kind: z.literal('statusDurationBonus'), turns: z.number().int().positive() }),
+  /** Chance of your Pokémon's (of `type`) moves inflicting a status. */
+  z.object({ kind: z.literal('statusChanceMultiplier'), type: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Extra turns of weather your side sets up. */
+  z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
+  /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
+  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: z.enum(['rain', 'sun']), side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
+  /** Multiplier on how often a group of wild Pokémon is offered. */
+  z.object({ kind: z.literal('encounterWeightMultiplier'), group: z.enum(['legendary', 'rare']), value: z.number().positive() }),
+  /** Chance of your Hyper moments. */
+  z.object({ kind: z.literal('hyperChanceMultiplier'), value: z.number().positive() }),
+  /** Pokémon evolve this many levels later (positive) or sooner. */
+  z.object({ kind: z.literal('evolutionLevelOffset'), value: z.number().int() }),
+  /** Your starting Pokémon begin the run this many levels higher (negative: lower). */
+  z.object({ kind: z.literal('startingLevelOffset'), value: z.number().int() }),
+  /** At the start of each region after the first, every party Pokémon changes by this many levels. */
+  z.object({ kind: z.literal('regionLevelOffset'), value: z.number().int() }),
+  /** Rivals are this many levels above you. */
+  z.object({ kind: z.literal('rivalLevelOffset'), value: z.number().int() }),
+  /** Start the run with this much of a run attribute (e.g. Luck). */
+  z.object({ kind: z.literal('startingAttribute'), key: z.string(), value: z.number().int() }),
+  /** At most this many Pokémon can be released per run. */
+  z.object({ kind: z.literal('releaseLimit'), value: z.number().int().min(0) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -1520,6 +1576,10 @@ export const BalanceSchema = z.object({
   nativeWeight: z.number().min(1),
   /** Wild Pokémon have a base stat total no higher than this (keeps Ultra Beasts and Paradox Pokémon out). */
   wildMaxBaseStats: z.number().int().positive(),
+  /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */
+  legendaryWildChance: z.number().min(0).max(1),
+  /** The first region index (0 = first) where such encounters can appear. */
+  legendaryMinRegion: z.number().int().min(0),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */

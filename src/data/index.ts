@@ -6,6 +6,7 @@ import { z } from 'zod';
 import {
   AbilitySchema,
   AchievementSchema,
+  ATTRIBUTE_KEYS,
   EventsFileSchema,
   RunPrepFileSchema,
   ArchetypeSchema,
@@ -397,7 +398,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (!a.unlockedByDefault && !a.unlock) problems.push(`trainer "${a.id}" is locked but has no unlock requirement`);
     for (const id of Object.keys(a.startingItems)) if (!content.items.has(id)) problems.push(`trainer "${a.id}" starts with unknown item "${id}"`);
     for (const m of a.modifiers) {
-      if (m.kind === 'priceMultiplier') for (const id of m.items) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
+      if (m.kind === 'startingAttribute' && !(ATTRIBUTE_KEYS as readonly string[]).includes(m.key)) problems.push(`trainer "${a.id}" starts with unknown attribute "${m.key}"`);
+      if (m.kind === 'priceMultiplier' && !m.items && !m.group) problems.push(`trainer "${a.id}" has a price perk with no items or group`);
+      if (m.kind === 'priceMultiplier') for (const id of m.items ?? []) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
     for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
     if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
