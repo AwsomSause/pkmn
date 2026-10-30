@@ -1,0 +1,5080 @@
+{
+ "unlocks": [
+  {
+   "trainerId": "aaron",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Bug party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.bug",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "acerola",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ghost party; Catch Palossand",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "palossand"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "adaman",
+   "tier": 3,
+   "text": "Catch Leafeon; Raids won: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "leafeon"
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "agatha-lgpe",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Ghost party; Champions beaten: 4; Gym leaders beaten: 35",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 35
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "alain",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fire party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "alder",
+   "tier": 5,
+   "text": "Champions beaten: 8; Elite Four members beaten: 60; Win 7 boss battles with a one-Pokémon party; Runs won: 7",
+   "flavor": "\"A Champion answers to no one but the next challenger.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 60
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 7
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "allister",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ghost party; Gym leaders beaten: 17",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 17
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "anabel-gen-7",
+   "tier": 3,
+   "text": "Catch Kadabra; Evolutions: 18",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "kadabra"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 18
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "archie-gen-6",
+   "tier": 4,
+   "text": "Money earned: 70,000; Win 4 boss battles with a one-Pokémon party; Trades made: 8",
+   "flavor": "\"Gold, nerve and a little ruthlessness.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 70000
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "archie-usum",
+   "tier": 4,
+   "text": "Money earned: 62,000; Money spent: 47,000; Trades made: 8",
+   "flavor": "\"Prove you can win without caring about the odds.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 62000
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 47000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "arezu",
+   "tier": 3,
+   "text": "Catch Lilligant; Totems beaten: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "lilligant"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ash-kalos",
+   "tier": 5,
+   "text": "Catch Froakie; Evolutions: 65; Win 5 boss battles with a one-Pokémon party; Champions beaten: 8",
+   "flavor": "\"Bond Phenomenon! Greninja and I are one!\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "froakie"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 65
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ash",
+   "tier": 4,
+   "text": "Catch Pikachu; Regions cleared: 8; Rival battles won: 10",
+   "flavor": "\"Pikachu, I choose you!\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "pikachu"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 10
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "az",
+   "tier": 3,
+   "text": "Catch Torkoal; Evolutions: 15",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "torkoal"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 15
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ball-guy",
+   "tier": 1,
+   "text": "Pokémon caught: 10",
+   "flavor": "\"Poké Balls! Get your Poké Balls here!\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 10
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "barry",
+   "tier": 2,
+   "text": "Rival battles won: 4; Win 1 boss battle with a one-Pokémon party",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bea",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Fighting party; Defeat or catch 55 Fighting-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bede",
+   "tier": 3,
+   "text": "Rival battles won: 7; Catch Hattrem",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "caught",
+      "species": "hattrem"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "benga",
+   "tier": 3,
+   "text": "Catch Volcarona; Totems beaten: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "volcarona"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bianca-pwt",
+   "tier": 1,
+   "text": "Catch Pignite",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "caught",
+    "species": "pignite"
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bill",
+   "tier": 1,
+   "text": "Catch 10 different species",
+   "flavor": "\"Mind if I use your PC? I have data to sort.\"",
+   "requirement": {
+    "kind": "distinct",
+    "set": "speciesCaught",
+    "atLeast": 10
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "blaine-lgpe",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Fire party; Champions beaten: 2",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "blaine",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fire party; Gym leaders beaten: 15",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 15
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "blue-gen-3-champion",
+   "tier": 5,
+   "text": "Champions beaten: 7; Runs won: 7; Elite Four members beaten: 70; Win 5 boss battles with a one-Pokémon party",
+   "flavor": "\"Only someone who has stood at the top may stand with me.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 70
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 5
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "blue-gen-7",
+   "tier": 4,
+   "text": "Rival battles won: 8; Catch Pidgeotto; Battles won: 310",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "caught",
+      "species": "pidgeotto"
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 310
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "blue-classic",
+   "tier": 4,
+   "text": "Rival battles won: 9; Win 4 boss battles with a one-Pokémon party; Catch Pidgeotto",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     },
+     {
+      "kind": "caught",
+      "species": "pidgeotto"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brassius",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Grass party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brawly-gen-6",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Fighting party; Defeat or catch 20 Fighting-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 20
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brendan-emerald",
+   "tier": 2,
+   "text": "Catch Grovyle; Evolutions: 7",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "grovyle"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 7
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brendan-ruby-sapphire",
+   "tier": 2,
+   "text": "Catch Grovyle; Runs won: 1",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "grovyle"
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brigette",
+   "tier": 1,
+   "text": "Pokémon caught: 9",
+   "flavor": "\"A little hard work goes a long way.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 9
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brock-masters",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Rock party; Catch Onix",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.rock",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "onix"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "brock-classic",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Rock party; Defeat or catch 25 Rock-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.rock",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.rock",
+      "atLeast": 25
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bruno-gen-3",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Fighting party; Gym leaders beaten: 40; Catch Machoke",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 40
+     },
+     {
+      "kind": "caught",
+      "species": "machoke"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bruno",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Fighting party; Champions beaten: 4; Gym leaders beaten: 30",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 30
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "bugsy",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Bug party; Champions beaten: 1",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.bug",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "byron",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Steel party; Champions beaten: 2",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "caitlin",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Psychic party; Defeat or catch 110 Psychic-type Pokémon; Catch Gothorita",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.psychic",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.psychic",
+      "atLeast": 110
+     },
+     {
+      "kind": "caught",
+      "species": "gothorita"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "calem",
+   "tier": 2,
+   "text": "Rival battles won: 2; Win 1 boss battle with a one-Pokémon party",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "canari",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Electric party; Gym leaders beaten: 19",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 19
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "carmine",
+   "tier": 3,
+   "text": "Catch Sinistcha; Evolutions: 14",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "sinistcha"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 14
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cheren",
+   "tier": 3,
+   "text": "Rival battles won: 6; Win 2 boss battles with a one-Pokémon party",
+   "flavor": "\"I will join you when you have earned my respect.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cheryl",
+   "tier": 1,
+   "text": "Rest stops used: 3",
+   "flavor": "\"I will heal anyone who keeps moving forward.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 3
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "chili",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Fire party; Champions beaten: 1",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "chuck",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fighting party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cilan",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Grass party; Champions beaten: 1",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "clair",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Dragon party; Champions beaten: 3; Gym leaders beaten: 25",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 25
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "clay",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ground party; Defeat or catch 55 Ground-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ground",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "clemont",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Electric party; Defeat or catch 60 Electric-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 60
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cogita",
+   "tier": 3,
+   "text": "See 120 different species; Events completed: 17",
+   "flavor": "\"Fieldwork first. Come back with data.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 120
+     },
+     {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 17
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "colress",
+   "tier": 4,
+   "text": "See 180 different species; Catch 100 different species; Evolutions: 25",
+   "flavor": "\"A good researcher never stops cataloguing.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 180
+     },
+     {
+      "kind": "distinct",
+      "set": "speciesCaught",
+      "atLeast": 100
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 25
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "crasher-wake",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Water party; Champions beaten: 2",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cress",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Water party; Champions beaten: 1",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cynthia-gen-7",
+   "tier": 5,
+   "text": "Champions beaten: 9; Runs won: 8; Elite Four members beaten: 50; Win 6 boss battles with a one-Pokémon party",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 50
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cynthia-masters",
+   "tier": 5,
+   "text": "Champions beaten: 9; Runs won: 7; Win 7 boss battles with a one-Pokémon party; Elite Four members beaten: 60",
+   "flavor": "\"A Champion answers to no one but the next challenger.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 60
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cynthia-masters-4",
+   "tier": 5,
+   "text": "Champions beaten: 9; Runs won: 8; Elite Four members beaten: 70; Win 7 boss battles with a one-Pokémon party",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 70
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "cyrus",
+   "tier": 4,
+   "text": "Money earned: 62,500; Money spent: 48,000; Trades made: 7",
+   "flavor": "\"Gold, nerve and a little ruthlessness.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 62500
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 48000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 7
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "dawn-gen-4-platinum",
+   "tier": 2,
+   "text": "Catch Piplup; Regions cleared: 2",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "piplup"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "dawn",
+   "tier": 2,
+   "text": "Catch Piplup; Evolutions: 9",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "piplup"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 9
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "diantha",
+   "tier": 5,
+   "text": "Champions beaten: 9; Runs won: 6; Win 7 boss battles with a one-Pokémon party; Elite Four members beaten: 65",
+   "flavor": "\"Only someone who has stood at the top may stand with me.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 65
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "drake-gen-3",
+   "tier": 5,
+   "text": "Champions beaten: 8; Elite Four members beaten: 60; Win 6 boss battles with a one-Pokémon party; Runs won: 8",
+   "flavor": "\"A Champion answers to no one but the next challenger.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 60
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "drasna",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Dragon party; Gym leaders beaten: 25; Champions beaten: 4",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 25
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "drayden",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Dragon party; Champions beaten: 4; Defeat or catch 120 Dragon-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 120
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "elesa-gen-5-bw2",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Electric party; Catch Zebstrika",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "zebstrika"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "elio-usum",
+   "tier": 2,
+   "text": "Catch Torracat; Regions cleared: 2",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "torracat"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "elm",
+   "tier": 3,
+   "text": "See 100 different species; Catch 45 different species",
+   "flavor": "\"Knowledge opens every door. Collect some.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 100
+     },
+     {
+      "kind": "distinct",
+      "set": "speciesCaught",
+      "atLeast": 45
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "emmet",
+   "tier": 4,
+   "text": "Catch Archeops; Totems beaten: 5; Raids won: 7",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "archeops"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 7
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "erika-gen-3",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Grass party; Gym leaders beaten: 10",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 10
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "erika",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Grass party; Catch Gloom",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "gloom"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ethan",
+   "tier": 2,
+   "text": "Catch Quilava; Runs won: 1",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "quilava"
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "eusine",
+   "tier": 3,
+   "text": "Catch Hypno; Totems beaten: 3",
+   "flavor": "\"Suicune is out there. Chase it with me.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "hypno"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "falkner",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Flying party; Catch Pidgeotto",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.flying",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "pidgeotto"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "fantina",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ghost party; Catch Mismagius",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "mismagius"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "flannery",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Fire party; Gym leaders beaten: 9",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 9
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "flint",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fire party; Catch Monferno",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "monferno"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "gardenia",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Grass party; Gym leaders beaten: 9",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 9
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "geeta",
+   "tier": 5,
+   "text": "Money earned: 126,000; Money spent: 140,500; Trades made: 10; Win 6 boss battles with a one-Pokémon party",
+   "flavor": "\"Gold, nerve and a little ruthlessness.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 126000
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 140500
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 10
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ghetsis",
+   "tier": 4,
+   "text": "Money earned: 64,000; Win 4 boss battles with a one-Pokémon party; Trades made: 6",
+   "flavor": "\"Prove you can win without caring about the odds.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 64000
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "giacomo",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Dark party; Defeat or catch 50 Dark-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ginter",
+   "tier": 3,
+   "text": "Catch Gyarados; Candies earned: 140",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "gyarados"
+     },
+     {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 140
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "tate-liza-gen-6",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Psychic party; Gym leaders beaten: 17",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.psychic",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 17
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "team-rocket",
+   "tier": 3,
+   "text": "Catch Meowth; Money earned: 28,500",
+   "flavor": "\"Prepare for trouble. And make it double.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "meowth"
+     },
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 28500
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "the-royal",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Fighting party; Defeat or catch 110 Fighting-type Pokémon; Catch Hawlucha",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 110
+     },
+     {
+      "kind": "caught",
+      "species": "hawlucha"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "thorton",
+   "tier": 3,
+   "text": "Catch Bronzong; Raids won: 5",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "bronzong"
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 5
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "tierno",
+   "tier": 1,
+   "text": "Pokémon caught: 12",
+   "flavor": "\"Stay busy and look after your team.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 12
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "todd-snap",
+   "tier": 1,
+   "text": "See 30 different species",
+   "flavor": "\"Smile! I need great photos of rare ones.\"",
+   "requirement": {
+    "kind": "distinct",
+    "set": "speciesSeen",
+    "atLeast": 30
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "trace",
+   "tier": 1,
+   "text": "Rival battles won: 1",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "rivalBattlesWon",
+    "atLeast": 1
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "trevor",
+   "tier": 1,
+   "text": "Money spent: 2,000",
+   "flavor": "\"A little hard work goes a long way.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "moneySpent",
+    "atLeast": 2000
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "valerie",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fairy party; Defeat or catch 55 Fairy-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "volkner",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Electric party; Defeat or catch 55 Electric-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "volo",
+   "tier": 4,
+   "text": "Money earned: 65,000; Win 3 boss battles with a one-Pokémon party; Trades made: 8",
+   "flavor": "\"I only back those who can handle the stakes.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 65000
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "wallace-gen-6",
+   "tier": 5,
+   "text": "Champions beaten: 8; Win 5 boss battles with a one-Pokémon party; Runs won: 8; Elite Four members beaten: 75",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 75
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "wally",
+   "tier": 1,
+   "text": "Pokémon caught: 11",
+   "flavor": "\"Stay busy and look after your team.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "pokemonCaught",
+    "atLeast": 11
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "wattson",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Electric party; Defeat or catch 25 Electric-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 25
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "whitney",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Normal party; Defeat or catch 20 Normal-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.normal",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.normal",
+      "atLeast": 20
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "wicke",
+   "tier": 1,
+   "text": "Rest stops used: 4",
+   "flavor": "\"Hospitality starts with caring for every Pokémon.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 4
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "winona-gen-6",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Flying party; Defeat or catch 55 Flying-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.flying",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.flying",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "wulfric",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Ice party; Defeat or catch 90 Ice-type Pokémon; Catch Avalugg",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ice",
+      "atLeast": 90
+     },
+     {
+      "kind": "caught",
+      "species": "avalugg"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "yellow",
+   "tier": 3,
+   "text": "Catch Pikachu; Evolutions: 16",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "pikachu"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 16
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "zinnia",
+   "tier": 5,
+   "text": "Defeat or catch 240 Dragon-type Pokémon; Win 8 boss battles with an all-Dragon party; Champions beaten: 7; Raids won: 14",
+   "flavor": "\"The Draconic Legend lives on. Prove you can fly with it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 240
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 14
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sabrina-lgpe",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Psychic party; Catch Kadabra; Gym leaders beaten: 30",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.psychic",
+      "atLeast": 5
+     },
+     {
+      "kind": "caught",
+      "species": "kadabra"
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 30
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "selene",
+   "tier": 2,
+   "text": "Catch Brionne; Regions cleared: 2",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "brionne"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "serena",
+   "tier": 2,
+   "text": "Catch Braixen; Regions cleared: 2",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "braixen"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "shauna",
+   "tier": 1,
+   "text": "Catch Quilladin",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "caught",
+    "species": "quilladin"
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "shelly",
+   "tier": 3,
+   "text": "Money earned: 21,000; Win 2 boss battles with a one-Pokémon party",
+   "flavor": "\"I only back those who can handle the stakes.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 21000
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sidney",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Dark party; Defeat or catch 110 Dark-type Pokémon; Catch Absol",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 110
+     },
+     {
+      "kind": "caught",
+      "species": "absol"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "silver",
+   "tier": 4,
+   "text": "Rival battles won: 9; Catch Croconaw; Battles won: 360",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 9
+     },
+     {
+      "kind": "caught",
+      "species": "croconaw"
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 360
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "skyla",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Flying party; Catch Swanna",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.flying",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "swanna"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sonia",
+   "tier": 1,
+   "text": "See 35 different species",
+   "flavor": "\"A good researcher never stops cataloguing.\"",
+   "requirement": {
+    "kind": "distinct",
+    "set": "speciesSeen",
+    "atLeast": 35
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sophocles",
+   "tier": 1,
+   "text": "Win 1 boss battle with an all-Electric party",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "bossWinsMono.electric",
+    "atLeast": 1
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sordward-shielbert",
+   "tier": 3,
+   "text": "Rival battles won: 7; Catch Sirfetchd",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "caught",
+      "species": "sirfetchd"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-hgss-ethan",
+   "tier": 1,
+   "text": "Regions cleared: 1",
+   "flavor": "\"Every great journey starts with a first step. Take plenty.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "regionsCleared",
+    "atLeast": 1
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-hgss-silver",
+   "tier": 4,
+   "text": "Rival battles won: 8; Battles won: 360; Win 5 boss battles with a one-Pokémon party",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 360
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 5
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-pt-barry",
+   "tier": 1,
+   "text": "Evolutions: 4",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 4
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-pt-dawn",
+   "tier": 1,
+   "text": "Evolutions: 3",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "evolutions",
+    "atLeast": 3
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-pt-looker",
+   "tier": 1,
+   "text": "Catch 11 different species",
+   "flavor": "\"Knowledge opens every door. Collect some.\"",
+   "requirement": {
+    "kind": "distinct",
+    "set": "speciesCaught",
+    "atLeast": 11
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "spr-pt-lucas",
+   "tier": 1,
+   "text": "Runs won: 1",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "runsWon",
+    "atLeast": 1
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "steven-gen-6",
+   "tier": 5,
+   "text": "Win 7 boss battles with an all-Steel party; Champions beaten: 9; See 410 different species; Win 5 boss battles with a one-Pokémon party",
+   "flavor": "\"Stones and steel. Bring me both.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 410
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 5
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "sycamore",
+   "tier": 3,
+   "text": "See 120 different species; Evolutions: 12",
+   "flavor": "\"Fieldwork first. Come back with data.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 120
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 12
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "tabitha",
+   "tier": 3,
+   "text": "Money earned: 21,500; Money spent: 22,500",
+   "flavor": "\"I only back those who can handle the stakes.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 21500
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 22500
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "olympia",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Psychic party; Gym leaders beaten: 35; Champions beaten: 3",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.psychic",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 35
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "opal",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fairy party; Defeat or catch 50 Fairy-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fairy",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ortega",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Fairy party; Catch Wigglytuff",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 4
+     },
+     {
+      "kind": "caught",
+      "species": "wigglytuff"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "palmer",
+   "tier": 3,
+   "text": "Catch Rhydon; Candies earned: 110",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "rhydon"
+     },
+     {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 110
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "peonia",
+   "tier": 3,
+   "text": "Catch Copperajah; Candies earned: 130",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "copperajah"
+     },
+     {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 130
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "peony",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Steel party; Catch Copperajah",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "copperajah"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "phoebe-gen-6",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Ghost party; Defeat or catch 100 Ghost-type Pokémon; Catch Dusclops",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 5
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ghost",
+      "atLeast": 100
+     },
+     {
+      "kind": "caught",
+      "species": "dusclops"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "piers",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Dark party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "plumeria",
+   "tier": 4,
+   "text": "Money earned: 71,500; Money spent: 42,000; Trades made: 6",
+   "flavor": "\"Gold, nerve and a little ruthlessness.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 71500
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 42000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "pryce",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ice party; Defeat or catch 50 Ice-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ice",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "raihan",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Dragon party; Defeat or catch 100 Dragon-type Pokémon; Catch Duraludon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 100
+     },
+     {
+      "kind": "caught",
+      "species": "duraludon"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "red-masters",
+   "tier": 5,
+   "text": "Champions beaten: 9; Win 7 boss battles with a one-Pokémon party; Runs won: 7; Elite Four members beaten: 70",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 70
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "red-classic",
+   "tier": 5,
+   "text": "Champions beaten: 9; Elite Four members beaten: 65; Win 6 boss battles with a one-Pokémon party; Runs won: 6",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 65
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "rei",
+   "tier": 4,
+   "text": "Catch Sneasler; Evolutions: 30; Shiny Pokémon found: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "sneasler"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 30
+     },
+     {
+      "kind": "total",
+      "counter": "shiniesFound",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "riley",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fighting party; Defeat or catch 45 Fighting-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 45
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "rosa",
+   "tier": 2,
+   "text": "Catch Servine; Regions cleared: 2",
+   "flavor": "\"Every great journey starts with a first step. Take plenty.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "servine"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "rowan",
+   "tier": 3,
+   "text": "See 90 different species; Catch 40 different species",
+   "flavor": "\"Fieldwork first. Come back with data.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 90
+     },
+     {
+      "kind": "distinct",
+      "set": "speciesCaught",
+      "atLeast": 40
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "roxanne-gen-6",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Rock party; Catch Probopass",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.rock",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "probopass"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "roxie-masters",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Poison party; Gym leaders beaten: 14",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.poison",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 14
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ryuki",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Dragon party; Defeat or catch 80 Dragon-type Pokémon; Champions beaten: 4",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dragon",
+      "atLeast": 80
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "magnus",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Steel party; Catch Rhydon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "rhydon"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "mallow",
+   "tier": 2,
+   "text": "Catch Steenee; Candies earned: 60",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "steenee"
+     },
+     {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 60
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "marley",
+   "tier": 3,
+   "text": "Catch Arcanine; Candies earned: 130",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "arcanine"
+     },
+     {
+      "kind": "total",
+      "counter": "candiesEarned",
+      "atLeast": 130
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "marlon",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Water party; Catch Jellicent",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 4
+     },
+     {
+      "kind": "caught",
+      "species": "jellicent"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "marnie-masters-4",
+   "tier": 4,
+   "text": "Rival battles won: 9; Catch Morgrem; Battles won: 270",
+   "flavor": "\"I will join you when you have earned my respect.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 9
+     },
+     {
+      "kind": "caught",
+      "species": "morgrem"
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 270
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "matt",
+   "tier": 3,
+   "text": "Money earned: 22,500; Win 2 boss battles with a one-Pokémon party",
+   "flavor": "\"Prove you can win without caring about the odds.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 22500
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "maxie-gen-6",
+   "tier": 4,
+   "text": "Money earned: 63,000; Money spent: 46,000; Trades made: 6",
+   "flavor": "\"I only back those who can handle the stakes.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 63000
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 46000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "may-emerald",
+   "tier": 2,
+   "text": "Catch Combusken; Runs won: 1",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "combusken"
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "may-ruby-sapphire",
+   "tier": 2,
+   "text": "Catch Combusken; Evolutions: 8",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "combusken"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "maylene",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fighting party; Defeat or catch 50 Fighting-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "melony",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ice party; Catch Lapras",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "lapras"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "milo",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Grass party; Defeat or catch 25 Grass-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.grass",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.grass",
+      "atLeast": 25
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "mina",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fairy party; Catch Ribombee",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "ribombee"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "misty-classic",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Water party; Defeat or catch 30 Water-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 30
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "molayne",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Steel party; Defeat or catch 50 Steel-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.steel",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "morty",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Ghost party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ghost",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "mr-fuji-gen-3",
+   "tier": 1,
+   "text": "Candies earned: 20",
+   "flavor": "\"Lost Pokémon need loving homes.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "candiesEarned",
+    "atLeast": 20
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "n-classic",
+   "tier": 4,
+   "text": "Catch Carracosta; Evolutions: 35; Shiny Pokémon found: 3",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "carracosta"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 35
+     },
+     {
+      "kind": "total",
+      "counter": "shiniesFound",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "nanu",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Dark party; Defeat or catch 100 Dark-type Pokémon; Catch Krokorok",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.dark",
+      "atLeast": 100
+     },
+     {
+      "kind": "caught",
+      "species": "krokorok"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "nate",
+   "tier": 2,
+   "text": "Rival battles won: 3; Catch Pignite",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "pignite"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "nemona-v",
+   "tier": 4,
+   "text": "Rival battles won: 12; Battles won: 260; Catch Lycanroc",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 12
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 260
+     },
+     {
+      "kind": "caught",
+      "species": "lycanroc"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "nessa",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Water party; Catch Drednaw",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "drednaw"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "noland",
+   "tier": 1,
+   "text": "Money spent: 2,500",
+   "flavor": "\"Stay busy and look after your team.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "moneySpent",
+    "atLeast": 2500
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "norman",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Normal party; Regions cleared with the starter: 2",
+   "flavor": "\"Show me a family that fights as one.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.normal",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "regionsClearedWithStarter",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "oak-classic",
+   "tier": 4,
+   "text": "See 200 different species; Events completed: 35; Evolutions: 30",
+   "flavor": "\"Knowledge opens every door. Collect some.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "distinct",
+      "set": "speciesSeen",
+      "atLeast": 200
+     },
+     {
+      "kind": "total",
+      "counter": "eventsCompleted",
+      "atLeast": 35
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 30
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "olivia",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Rock party; Catch Lycanroc",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.rock",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "lycanroc"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "glacia",
+   "tier": 4,
+   "text": "Win 6 boss battles with an all-Ice party; Catch Sealeo; Gym leaders beaten: 35",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 6
+     },
+     {
+      "kind": "caught",
+      "species": "sealeo"
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 35
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "gladion-masters-2",
+   "tier": 4,
+   "text": "Rival battles won: 10; Win 4 boss battles with a one-Pokémon party; Battles won: 320",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 10
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 320
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "gladion-stance",
+   "tier": 4,
+   "text": "Rival battles won: 9; Win 3 boss battles with a one-Pokémon party; Battles won: 290",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 9
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "battlesWon",
+      "atLeast": 290
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "gloria-league",
+   "tier": 4,
+   "text": "Rival battles won: 8; Catch Raboot; Win 4 boss battles with a one-Pokémon party",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 8
+     },
+     {
+      "kind": "caught",
+      "species": "raboot"
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "grace",
+   "tier": 3,
+   "text": "Catch Rapidash; Totems beaten: 2",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "rapidash"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "grant",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Rock party; Champions beaten: 2",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.rock",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "green-classic",
+   "tier": 4,
+   "text": "Rival battles won: 12; Catch Clefable; Win 4 boss battles with a one-Pokémon party",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 12
+     },
+     {
+      "kind": "caught",
+      "species": "clefable"
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "grimsley-gen-7",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Dark party; Champions beaten: 2",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "grusha",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Ice party; Catch Altaria; Gym leaders beaten: 35",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 5
+     },
+     {
+      "kind": "caught",
+      "species": "altaria"
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 35
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "guzma",
+   "tier": 4,
+   "text": "Money earned: 67,000; Money spent: 52,000; Trades made: 8",
+   "flavor": "\"Gold, nerve and a little ruthlessness.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 67000
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 52000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hala",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fighting party; Defeat or catch 55 Fighting-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fighting",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hapu",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Ground party; Defeat or catch 45 Ground-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ground",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ground",
+      "atLeast": 45
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "harmony",
+   "tier": 1,
+   "text": "Rest stops used: 2",
+   "flavor": "\"A little hard work goes a long way.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "healStopsUsed",
+    "atLeast": 2
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hau-stance",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Electric party; Gym leaders beaten: 8",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hilbert",
+   "tier": 2,
+   "text": "Rival battles won: 4; Catch Dewott",
+   "flavor": "\"Rivals make each other stronger. Start proving it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 4
+     },
+     {
+      "kind": "caught",
+      "species": "dewott"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hilda",
+   "tier": 2,
+   "text": "Catch Servine; Runs won: 1",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "servine"
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hop",
+   "tier": 2,
+   "text": "Rival battles won: 3; Catch Drizzile",
+   "flavor": "\"I will join you when you have earned my respect.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "drizzile"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "hugh",
+   "tier": 2,
+   "text": "Rival battles won: 3; Catch Dewott",
+   "flavor": "\"Beat me, then beat my friends. Then we will talk.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "rivalBattlesWon",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "dewott"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ilima",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Normal party; Champions beaten: 1",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.normal",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "ingo",
+   "tier": 3,
+   "text": "Catch Lampent; Evolutions: 15",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "lampent"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 15
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lana",
+   "tier": 2,
+   "text": "Win 2 boss battles with an all-Water party; Catch Araquanid",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 2
+     },
+     {
+      "kind": "caught",
+      "species": "araquanid"
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lance",
+   "tier": 5,
+   "text": "Champions beaten: 8; Elite Four members beaten: 55; Win 6 boss battles with a one-Pokémon party; Runs won: 6",
+   "flavor": "\"The title is earned again and again. Prove it.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 55
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 6
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "leaf-gen-3",
+   "tier": 3,
+   "text": "Catch Ivysaur; Regions cleared: 3",
+   "flavor": "\"Come see the world and I will see it with you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "ivysaur"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "leon-masters",
+   "tier": 5,
+   "text": "Champions beaten: 8; Runs won: 7; Win 7 boss battles with a one-Pokémon party; Elite Four members beaten: 65",
+   "flavor": "\"Only someone who has stood at the top may stand with me.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 8
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 7
+     },
+     {
+      "kind": "total",
+      "counter": "eliteFourDefeated",
+      "atLeast": 65
+     }
+    ]
+   },
+   "cost": 1500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lillie-z",
+   "tier": 1,
+   "text": "Win 1 boss battle with an all-Fairy party",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "total",
+    "counter": "bossWinsMono.fairy",
+    "atLeast": 1
+   },
+   "cost": 100,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lisia",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fairy party; Champions beaten: 2",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lorelei-lgpe",
+   "tier": 4,
+   "text": "Win 4 boss battles with an all-Ice party; Defeat or catch 120 Ice-type Pokémon; Catch Lapras",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.ice",
+      "atLeast": 120
+     },
+     {
+      "kind": "caught",
+      "species": "lapras"
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lt-surge",
+   "tier": 4,
+   "text": "Win 5 boss battles with an all-Electric party; Catch Pikachu; Win 4 boss battles with a one-Pokémon party",
+   "flavor": "\"Show me some real grit, kid. Electric grit.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 5
+     },
+     {
+      "kind": "caught",
+      "species": "pikachu"
+     },
+     {
+      "kind": "total",
+      "counter": "bossWinsSolo",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lucas-gen-4-platinum",
+   "tier": 2,
+   "text": "Catch Grotle; Runs won: 1",
+   "flavor": "\"Adventure rewards the ones who keep going.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "grotle"
+     },
+     {
+      "kind": "total",
+      "counter": "runsWon",
+      "atLeast": 1
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lucas",
+   "tier": 2,
+   "text": "Catch Grotle; Evolutions: 8",
+   "flavor": "\"Every great journey starts with a first step. Take plenty.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "grotle"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 8
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lyra",
+   "tier": 2,
+   "text": "Catch Bayleef; Regions cleared: 2",
+   "flavor": "\"Every great journey starts with a first step. Take plenty.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "bayleef"
+     },
+     {
+      "kind": "total",
+      "counter": "regionsCleared",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 250,
+   "status": "supported"
+  },
+  {
+   "trainerId": "lysandre",
+   "tier": 4,
+   "text": "Money earned: 50,500; Money spent: 45,000; Trades made: 6",
+   "flavor": "\"I only back those who can handle the stakes.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "moneyEarned",
+      "atLeast": 50500
+     },
+     {
+      "kind": "total",
+      "counter": "moneySpent",
+      "atLeast": 45000
+     },
+     {
+      "kind": "total",
+      "counter": "tradesMade",
+      "atLeast": 6
+     }
+    ]
+   },
+   "cost": 900,
+   "status": "supported"
+  },
+  {
+   "trainerId": "iono",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Electric party; Defeat or catch 50 Electric-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.electric",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.electric",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "irida",
+   "tier": 3,
+   "text": "Win 4 boss battles with an all-Ice party; Champions beaten: 2",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.ice",
+      "atLeast": 4
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "iris-gen-5-bw2",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Dragon party; Champions beaten: 2",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dragon",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "jacinthe",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fairy party; Gym leaders beaten: 18",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fairy",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 18
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "janine",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Poison party; Catch Golbat",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.poison",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "golbat"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "jasmine",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Steel party; Gym leaders beaten: 13",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.steel",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "gymLeadersDefeated",
+      "atLeast": 13
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "juan",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Water party; Defeat or catch 55 Water-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 55
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "juniper",
+   "tier": 3,
+   "text": "Catch Servine; Raids won: 4",
+   "flavor": "\"Show me you love these Pokémon as much as I do.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "servine"
+     },
+     {
+      "kind": "total",
+      "counter": "raidsWon",
+      "atLeast": 4
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kabu",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fire party; Defeat or catch 50 Fire-type Pokémon",
+   "flavor": "\"Show me you understand my type, not just its power.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.fire",
+      "atLeast": 50
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kahili",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Flying party; Catch Trumbeak",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.flying",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "trumbeak"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "karen",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Dark party; Catch Houndoom",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.dark",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "houndoom"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "katy",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Bug party; Defeat or catch 45 Bug-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.bug",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.bug",
+      "atLeast": 45
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kiawe",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fire party; Catch Marowak",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fire",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "marowak"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "klara",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Poison party; Champions beaten: 2",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.poison",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "championsDefeated",
+      "atLeast": 2
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "koga-lgpe",
+   "tier": 3,
+   "text": "Catch Weezing; Evolutions: 12",
+   "flavor": "\"Bring my favourites into your team and I will follow.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "weezing"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 12
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "koga",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Poison party; Defeat or catch 60 Poison-type Pokémon",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.poison",
+      "atLeast": 3
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.poison",
+      "atLeast": 60
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "korrina",
+   "tier": 3,
+   "text": "Win 3 boss battles with an all-Fighting party; Catch Lucario",
+   "flavor": "\"Fight beside only my kind, and I will fight beside you.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.fighting",
+      "atLeast": 3
+     },
+     {
+      "kind": "caught",
+      "species": "lucario"
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kris",
+   "tier": 3,
+   "text": "Win 2 boss battles with an all-Water party; Defeat or catch 45 Water-type Pokémon",
+   "flavor": "\"A true specialist is proven in the boss room.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "total",
+      "counter": "bossWinsMono.water",
+      "atLeast": 2
+     },
+     {
+      "kind": "total",
+      "counter": "defeatedOrCaught.water",
+      "atLeast": 45
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kukui",
+   "tier": 3,
+   "text": "Catch Lycanroc; Totems beaten: 3",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "lycanroc"
+     },
+     {
+      "kind": "total",
+      "counter": "totemsWon",
+      "atLeast": 3
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  },
+  {
+   "trainerId": "kurt",
+   "tier": 3,
+   "text": "Catch Heracross; Evolutions: 14",
+   "flavor": "\"Put the time in with them and I am yours.\"",
+   "requirement": {
+    "kind": "all",
+    "parts": [
+     {
+      "kind": "caught",
+      "species": "heracross"
+     },
+     {
+      "kind": "total",
+      "counter": "evolutions",
+      "atLeast": 14
+     }
+    ]
+   },
+   "cost": 500,
+   "status": "supported"
+  }
+ ]
+}

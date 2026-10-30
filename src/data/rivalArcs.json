@@ -1,5 +1,5 @@
 {
- "note": "Character arcs for rivals (Examples \u00a77 A-D). An arc is assigned at birth from personality, style or path, turns after the first fight (or 3 stages), and resolves after 3 fights (or 8 stages): well if the rival is empathetic and resilient, badly otherwise. The arcs about Pok\u00e9mon bonds and Overdrive wait for those systems.",
+ "note": "Character arcs for rivals (Examples §7 A-D). An arc is assigned at birth from personality, style or path, turns after the first fight (or 3 stages), and resolves after 3 fights (or 8 stages): well if the rival is empathetic and resilient, badly otherwise. Arcs with a `trigger` (9 bond arcs, 10 Overdrive arcs) are assigned later, from the rival's Pokémon bonds, when the world moves (arcs.ts `triggeredArc`).",
  "turnEncounters": 1,
  "turnTicks": 3,
  "resolveEncounters": 3,
@@ -75,7 +75,7 @@
    "styles": [],
    "paths": [],
    "beginning": "Battles out of obligation.",
-   "resolution": "Finds a new reason to compete\u2014or chooses a different life."
+   "resolution": "Finds a new reason to compete—or chooses a different life."
   },
   {
    "id": "reluctant-champion",
@@ -115,7 +115,7 @@
    "styles": [],
    "paths": [],
    "beginning": "Defines success around beating one opponent.",
-   "resolution": "Learns to pursue personal goals\u2014or becomes consumed by obsession."
+   "resolution": "Learns to pursue personal goals—or becomes consumed by obsession."
   },
   {
    "id": "fall-from-grace",
@@ -184,8 +184,8 @@
    ],
    "styles": [],
    "paths": [],
-   "beginning": "Treats Pok\u00e9mon as interchangeable tools.",
-   "resolution": "Learns to respect individual needs\u2014or embraces an increasingly ruthless approach."
+   "beginning": "Treats Pokémon as interchangeable tools.",
+   "resolution": "Learns to respect individual needs—or embraces an increasingly ruthless approach."
   },
   {
    "id": "fallen-idealist",
@@ -286,6 +286,433 @@
    "paths": [],
    "beginning": "A major conflict is never properly resolved.",
    "resolution": "Reopens later, possibly in another region or during a world event."
+  },
+  {
+   "id": "neglected-ace",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "A powerful Pokémon receives little care outside battle.",
+   "resolution": "The trainer changes their behavior, the Pokémon withdraws, or the relationship is restructured.",
+   "trigger": {
+    "bond": {
+     "affection": [
+      0,
+      38
+     ],
+     "respect": [
+      55,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "pok-mon-who-outgrows-its-trainer",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "A partner becomes more capable and independent.",
+   "resolution": "The trainer adapts, resents the change, or learns to become a better partner.",
+   "trigger": {
+    "bond": {
+     "autonomy": [
+      60,
+      100
+     ],
+     "confidence": [
+      60,
+      100
+     ]
+    },
+    "minProgress": 1
+   }
+  },
+  {
+   "id": "team-divided",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "Two Pokémon compete for attention or status.",
+   "resolution": "The trainer restores balance or allows the conflict to deepen.",
+   "trigger": {
+    "gap": {
+     "dim": "affection",
+     "min": 25
+    }
+   }
+  },
+  {
+   "id": "fearful-partner",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "A Pokémon struggles with a particular battle situation.",
+   "resolution": "Gradual confidence, continued accommodation, or a difficult separation from that role.",
+   "trigger": {
+    "bond": {
+     "confidence": [
+      0,
+      40
+     ],
+     "strain": [
+      30,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "overprotective-trainer",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "Refuses to let Pokémon take reasonable risks.",
+   "resolution": "Learns to trust their judgment—or remains unable to accept uncertainty.",
+   "trigger": {
+    "bond": {
+     "autonomy": [
+      0,
+      45
+     ]
+    },
+    "rival": {
+     "empathy": [
+      55,
+      100
+     ],
+     "resilience": [
+      0,
+      50
+     ]
+    }
+   }
+  },
+  {
+   "id": "unlikely-pair",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "Trainer and Pokémon have contrasting personalities.",
+   "resolution": "They find complementary roles or discover that affection cannot solve every incompatibility.",
+   "trigger": {
+    "bond": {
+     "trust": [
+      50,
+      100
+     ]
+    },
+    "rival": {
+     "pride": [
+      65,
+      100
+     ]
+    },
+    "traits": [
+     "playful",
+     "empathetic",
+     "patient",
+     "curious"
+    ]
+   }
+  },
+  {
+   "id": "partner-who-stayed",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "A Pokémon remains loyal through repeated hardship.",
+   "resolution": "The trainer finally recognizes the sacrifices that loyalty involved.",
+   "trigger": {
+    "bond": {
+     "trust": [
+      60,
+      100
+     ],
+     "strain": [
+      30,
+      100
+     ],
+     "sharedHistory": [
+      4,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "independent-ace",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "A Pokémon increasingly acts on its own instincts.",
+   "resolution": "The pair develops mutual trust or becomes unable to work together.",
+   "trigger": {
+    "bond": {
+     "autonomy": [
+      65,
+      100
+     ],
+     "synchronization": [
+      0,
+      55
+     ]
+    }
+   }
+  },
+  {
+   "id": "shared-recovery",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "Trainer and Pokémon both struggle after a crisis.",
+   "resolution": "They rebuild together, potentially unlocking a distinctive controlled Hyper/Overdrive expression.",
+   "trigger": {
+    "bond": {
+     "strain": [
+      40,
+      100
+     ],
+     "trust": [
+      40,
+      100
+     ]
+    },
+    "minSetbacks": 1
+   }
+  },
+  {
+   "id": "uncontrolled-prodigy",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "has enormous potential and too little control",
+   "resolution": "learned discipline and honest feedback",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      35,
+      100
+     ],
+     "synchronization": [
+      0,
+      50
+     ]
+    },
+    "rival": {
+     "pride": [
+      60,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "trainer-who-feared-overdrive",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "avoids Overdrive after a frightening incident",
+   "resolution": "carefully brought it back, or refused it on principle",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      0,
+      10
+     ],
+     "strain": [
+      45,
+      100
+     ]
+    },
+    "rival": {
+     "resilience": [
+      0,
+      50
+     ]
+    }
+   }
+  },
+  {
+   "id": "pok-mon-who-refuses",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "is being refused by a Pokémon they tried to force into a breakthrough",
+   "resolution": "stopped forcing it and tended the relationship",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      30,
+      100
+     ],
+     "trust": [
+      0,
+      45
+     ]
+    },
+    "rival": {
+     "ambition": [
+      60,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "perfect-synchronization",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "has a pair with exceptional trust and precise control",
+   "resolution": "learned to cope when one partner's condition changed",
+   "trigger": {
+    "bond": {
+     "synchronization": [
+      70,
+      100
+     ],
+     "trust": [
+      70,
+      100
+     ],
+     "hyperReadiness": [
+      25,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "artificial-shortcut",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "chases an outside shortcut to power",
+   "resolution": "rejected the shortcut and its unstable results",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      25,
+      100
+     ],
+     "trust": [
+      0,
+      55
+     ]
+    },
+    "rival": {
+     "ambition": [
+      70,
+      100
+     ],
+     "empathy": [
+      0,
+      45
+     ]
+    }
+   }
+  },
+  {
+   "id": "overdrive-addict",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "is obsessed with spectacular surges and neglects the fundamentals",
+   "resolution": "remembered the team behind the surge",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      55,
+      100
+     ],
+     "strain": [
+      35,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "late-awakening",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "has an ordinary Pokémon with years of experience behind it",
+   "resolution": "saw it find an unusual expression",
+   "trigger": {
+    "bond": {
+     "sharedHistory": [
+      8,
+      100
+     ],
+     "hyperReadiness": [
+      25,
+      100
+     ]
+    }
+   }
+  },
+  {
+   "id": "pok-mon-who-saves-the-trainer",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "learned in a crisis that a Pokémon fights to protect them",
+   "resolution": "understood what that Pokémon was fighting for",
+   "trigger": {
+    "bond": {
+     "affection": [
+      65,
+      100
+     ]
+    },
+    "minSetbacks": 1
+   }
+  },
+  {
+   "id": "broken-synchronization",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "lost a once-reliable pairing to a betrayal",
+   "resolution": "rebuilt trust, or accepted the old style is gone",
+   "trigger": {
+    "bond": {
+     "synchronization": [
+      0,
+      35
+     ],
+     "sharedHistory": [
+      5,
+      100
+     ],
+     "trust": [
+      0,
+      45
+     ]
+    }
+   }
+  },
+  {
+   "id": "power-without-a-bond",
+   "personalities": [],
+   "styles": [],
+   "paths": [],
+   "beginning": "reaches an impressive state without a bond to back it",
+   "resolution": "faced the cost of power that does not last",
+   "trigger": {
+    "bond": {
+     "hyperReadiness": [
+      45,
+      100
+     ],
+     "affection": [
+      0,
+      40
+     ]
+    }
+   }
   }
  ]
 }
