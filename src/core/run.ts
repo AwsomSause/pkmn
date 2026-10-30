@@ -337,7 +337,7 @@ export function prepareLoadedRun(content: Content, run: RunState): RunState {
 }
 
 /** Journal: writes down the stops of the stage that just ended (mutates `run`). */
-function noteJournal(content: Content, run: RunState): void {
+export function noteJournal(content: Content, run: RunState): void {
   if (!run.stage || !hasPerk(content, run, 'journal')) return;
   const stops = run.stage.visited.map((id) => findNode(run.stage!.map, id).kind).join(' > ');
   run.journal = [...(run.journal ?? []), `Region ${run.regionIndex + 1}, ${run.stage.kind} ${run.stage.index + 1}: ${stops || 'no stops'}`];
@@ -1351,6 +1351,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     inventory: run.inventory,
     rng,
     captureRng,
+    speciesCaught: run.log.speciesCaught,
     catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
@@ -1625,6 +1626,11 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const caught = structuredClone(currentEnemy(battle));
     caught.uid = nextUid(run, 'p');
     shiftLevel(content, run, caught, catchLevelOffset(runPerks(content, run)) + palPadLevels(content, run));
+    // Friend, Luxury and Heal Ball.
+    const ball = battle.ball ? content.items.get(battle.ball)?.effect : undefined;
+    if (ball?.kind === 'catch' && ball.after === 'friend') caught.friendship = Math.max(caught.friendship, 200);
+    if (ball?.kind === 'catch' && ball.after === 'luxury') caught.friendship = Math.min(255, caught.friendship + 40);
+    if (ball?.kind === 'catch' && ball.after === 'heal') caught.hp = maxHp(content, caught);
     caughtSpeciesId = caught.speciesId;
     count(run, 'pokemonCaught');
     // Photo Album: a species caught for the first time this run gives Love.

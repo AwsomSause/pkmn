@@ -21,7 +21,7 @@ import { freshDrama } from '../drama/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
 import { TYPE_NAMES } from '../contentSchema';
-import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
+import type { BoostStat, Content, ItemEffect, Move, PowerRule, Semi, SideMove, Species, StatusId, Terrain, TransformKind, TypeName, Weather } from '../contentSchema';
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
@@ -206,6 +206,8 @@ export interface BattleContext {
   captureRng: Rng;
   /** Multiplier on the final catch probability (e.g. Green's 0.85). */
   catchMultiplier: number;
+  /** Species this run has caught (Repeat Ball). */
+  speciesCaught?: string[];
   /** Multiplier on HP restored by healing items used in battle (a trainer passive). */
   healMultiplier?: number;
   /** The trainer's type-based damage multipliers for the player's side. */
@@ -798,13 +800,16 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
       maxHp: calcStats(content, enemy).hp,
       hp: enemy.hp,
       catchRate: species.catchRate,
-      ballMultiplier: item.effect.multiplier,
+      ballMultiplier: ballBonus(ctx, item.effect, enemy, species),
       statusMultiplier: enemy.status ? content.ruleset.catchStatusMultipliers[enemy.status.id] ?? 1 : 1,
       finalMultiplier: ctx.catchMultiplier,
     });
     const roll = resolveCatchRoll(probability, ctx.captureRng.float());
     events.push({ type: 'ball', itemId, shakes: roll.shakes, caught: roll.caught });
-    if (roll.caught) battle.outcome = 'caught';
+    if (roll.caught) {
+      battle.outcome = 'caught';
+      battle.ball = itemId;
+    }
     return;
   }
   if (item.effect.kind === 'itemDrop') {
@@ -839,6 +844,35 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
   }
   const message = applyItemToPokemon(content, item, target, { healMultiplier: ctx.healMultiplier ?? 1 });
   events.push({ type: 'item', itemId, targetUid: target.uid, message, hpAfter: target.hp });
+}
+
+/** The ball's catch multiplier once its condition (Level, Lure, Quick Ball ...) is counted. */
+function ballBonus(ctx: BattleContext, effect: Extract<ItemEffect, { kind: 'catch' }>, enemy: PokemonInstance, species: Species): number {
+  const base = effect.multiplier;
+  const mine = ctx.party[ctx.battle.activeIndex];
+  const water = species.types.includes('water');
+  switch (effect.rule) {
+    case 'level': {
+      const ratio = mine ? mine.level / Math.max(1, enemy.level) : 1;
+      return ratio >= 4 ? 8 : ratio >= 2 ? 4 : ratio > 1 ? 2 : 1;
+    }
+    case 'lure': return water ? base : 1;
+    case 'dive': return water ? base : 1;
+    case 'net': return water || species.types.includes('bug') ? base : 1;
+    case 'moon': return species.evolutions.some((e) => e.item === 'moon-stone') ? base : 1;
+    case 'love': return mine && mine.speciesId === enemy.speciesId ? base : 1;
+    case 'heavy': {
+      const kg = species.weight ?? 50;
+      return kg < 100 ? 0.5 : kg < 200 ? 1 : kg < 300 ? 2 : 4;
+    }
+    case 'fast': return species.baseStats.spe >= 100 ? base : 1;
+    case 'nest': return Math.max(1, (41 - enemy.level) / 10);
+    case 'repeat': return ctx.speciesCaught?.includes(enemy.speciesId) ? base : 1;
+    case 'timer': return Math.min(base, 1 + (ctx.battle.turn - 1) * (1229 / 4096));
+    case 'quick': return ctx.battle.turn === 1 ? base : 1;
+    case 'dusk': return species.types.includes('dark') || species.types.includes('ghost') ? base : 1;
+    default: return base;
+  }
 }
 
 function switchIn(ctx: BattleContext, partyIndex: number, events: BattleEvent[]): void {

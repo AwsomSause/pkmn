@@ -12,6 +12,7 @@ import { getArchetype, researchMultiplier } from './archetypes';
 import { eventResearch } from './events';
 import { permanentAttributes, readAttributes, type Attributes } from './attributes';
 import { getCampaign } from './regions';
+import { noteJournal } from './run';
 import { researchScale, scaleReward } from './rules';
 import type { Achievement, Archetype, Content, Requirement, RunQuest, UnlockReward } from './contentSchema';
 import type { Payout, Profile, RunState } from './state';
@@ -135,6 +136,14 @@ export interface RunEndSummary {
  * discoveries and Research Points (only for campaigns that count for
  * progress), the Bank payout, achievements and the Run History entry.
  */
+/** The Journal's lines, with the stage the run ended on written down too. */
+function finalJournal(content: Content, run: RunState): string[] {
+  const copy = structuredClone(run);
+  copy.journal ??= [];
+  noteJournal(content, copy);
+  return copy.journal;
+}
+
 export function applyRunToProfile(content: Content, profile: Profile, run: RunState, now: string): RunEndSummary {
   // Adventure earns nothing for the account; test campaigns count nothing either.
   const counts = getCampaign(content, run.campaignId).countsForProgress && run.rules.progressionEligible;
@@ -205,7 +214,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
       moments: topMoments(run.story).map((m) => m.text),
-      journal: run.journal ?? [],
+      journal: finalJournal(content, run),
     },
     ...profile.runHistory,
   ].slice(0, content.balance.runHistorySize);

@@ -12810,5 +12810,22 @@
     }
    ]
   }
+ },
+ {
+  "id": "master-ball",
+  "name": "Master Ball",
+  "family": "Battle trick items",
+  "description": "A Master Ball goes into your Bag: it never fails to catch a wild Pokémon",
+  "rarity": "epic",
+  "stacksOn": "player",
+  "max": 1,
+  "how": "use",
+  "icon": null,
+  "status": "supported",
+  "effect": {
+   "kind": "bagItem",
+   "item": "master-ball",
+   "count": 1
+  }
  }
 ]
