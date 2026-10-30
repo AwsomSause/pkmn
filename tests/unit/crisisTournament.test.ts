@@ -120,3 +120,17 @@ describe('Rival Gauntlet', () => {
     expect(g.gauntletWon(content, run, 'b')).toBeNull();
   });
 });
+
+describe('Champion defense', () => {
+  it('remembers the newest won run team and offers the defense only then', async () => {
+    const { createRun: make } = await import('../../src/core/run');
+    const { championTeam } = await import('../../src/core/story/championDefense');
+    const rec = (victory: boolean, speciesId: string) => ({ victory, party: [{ speciesId, level: 60, shiny: false }] }) as never;
+    const none = make(content, { runId: 'cd-0', seed: 'cd-0', archetypeId: 'red', runHistory: [rec(false, 'pikachu')] });
+    expect(championTeam(none.story)).toEqual([]);
+    expect(eligibleEvents(content, { ...none, regionIndex: 3 }).map((e) => e.id)).not.toContain('champion-defense');
+    const won = make(content, { runId: 'cd-1', seed: 'cd-1', archetypeId: 'red', runHistory: [rec(false, 'rattata'), rec(true, 'pikachu'), rec(true, 'charmander')] });
+    expect(championTeam(won.story)).toEqual([{ speciesId: 'pikachu', level: 60 }]);
+    expect(eligibleEvents(content, { ...won, regionIndex: 3 }).map((e) => e.id)).toContain('champion-defense');
+  });
+});

@@ -515,7 +515,7 @@ export const StoryConfigSchema = z.object({
   mentorship: z.object({ mentorBattles: z.number().int().positive(), levelGap: z.number().int().positive(), graduateGap: z.number().int().min(0) }),
   /** The Grand-Enemy (Techno §5): its name, where its phases begin (share of the campaign), and the title it leaves. */
   gauntlet: z.object({ money: z.number().int().positive() }),
-  grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0), influenceRare: z.number().gt(1).max(2) }),
+  grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0), influenceRare: z.number().gt(1).max(2), huntClues: z.number().int().min(1).max(10), huntTitle: z.string() }),
   /** Legacy titles (Techno §6.1): earned from a Pokémon's own history; recognition only, never a stat. */
   legacyTitles: z
     .array(

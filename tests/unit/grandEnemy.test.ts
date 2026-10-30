@@ -114,3 +114,26 @@ describe('Grand-Enemy influence and Grudge target', () => {
   });
 });
 
+
+describe('Grand-Enemy hunt', () => {
+  it('clues reveal weaknesses before any fight, the lair unlocks at the last clue, and finishing gives the title once', async () => {
+    const g = await import('../../src/core/story/grandEnemy');
+    const { eligibleEvents } = await import('../../src/core/events');
+    const { run, mon } = fresh('ge-hunt');
+    run.regionIndex = Math.min(3, run.regionOrder.length - 1);
+    const need = content.story.grandEnemy.huntClues;
+    const ids = () => eligibleEvents(content, run).map((e) => e.id);
+    expect(ids()).toContain('hunt-clue-scorch');
+    expect(ids()).not.toContain('hunt-lair');
+    expect(g.grandWeaknesses(content, run, 'lugia')).toEqual([]);
+    for (let i = 0; i < need + 2; i++) g.addHuntClue(content, run);
+    expect(g.huntClues(run)).toBe(need);
+    expect(g.grandWeaknesses(content, run, 'lugia').length).toBeGreaterThan(0);
+    expect(ids()).not.toContain('hunt-clue-scorch');
+    expect(ids()).toContain('hunt-lair');
+    expect(g.finishHunt(content, run)).toContain(content.story.grandEnemy.huntTitle);
+    expect(g.finishHunt(content, run)).toBe('');
+    expect(run.story.histories[mon.uid]!.titles.filter((t) => t === content.story.grandEnemy.huntTitle)).toHaveLength(1);
+    expect(ids()).not.toContain('hunt-lair');
+  });
+});

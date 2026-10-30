@@ -109,7 +109,7 @@ export function grandAdaptation(content: Content, run: RunState): { stat: 'def' 
 
 /** Weakness discovery: after a first fight, the types that hurt this species most are revealed. */
 export function grandWeaknesses(content: Content, run: RunState, speciesId: string): string[] {
-  if (grandMet(run) === 0) return [];
+  if (grandMet(run) === 0 && huntClues(run) < content.story.grandEnemy.huntClues) return [];
   const types = content.species.get(speciesId)?.types ?? [];
   return Object.keys(content.typeChart).filter((t) => typeEffectiveness(content.typeChart, t as TypeName, types) > 1);
 }
@@ -174,4 +174,33 @@ export function grudgeTarget(run: RunState): string | null {
     if (n > 0 && (!best || n > best.n)) best = { uid: m.uid, n };
   }
   return best?.uid ?? null;
+}
+
+// ---------- the hunt (catalog 150) ----------
+
+const CLUES = 'ge:clues';
+const HUNTED = 'ge:hunted';
+export const huntClues = (run: RunState): number => Number(run.story.flags[CLUES] ?? 0);
+export const huntDone = (run: RunState): boolean => !!run.story.flags[HUNTED];
+
+/** Finds one clue about the Grand-Enemy. Enough clues reveal its weaknesses before you ever fight it. */
+export function addHuntClue(content: Content, run: RunState): string {
+  const need = content.story.grandEnemy.huntClues;
+  const n = Math.min(need, huntClues(run) + 1);
+  run.story.flags[CLUES] = n;
+  const line = n >= need ? `A clue about ${content.story.grandEnemy.name}: you now know where it is weak, and where it hides` : `A clue about ${content.story.grandEnemy.name} (${n}/${need})`;
+  emit(content, run, 'storyMoment', { actors: [], data: { def: 'hunt-clue', suppressed: false }, importance: 60, text: line });
+  return n >= need ? 'enough clues to track it down' : `clue ${n} of ${need}`;
+}
+
+/** The hunt's end: the herald is beaten. The lead Pokémon carries the Hunter title, the Chronicle remembers. */
+export function finishHunt(content: Content, run: RunState): string {
+  if (huntDone(run)) return '';
+  run.story.flags[HUNTED] = true;
+  const lead = run.party.find((m) => m.hp > 0) ?? run.party[0];
+  const h = lead ? run.story.histories[lead.uid] : undefined;
+  const title = content.story.grandEnemy.huntTitle;
+  if (h && !h.titles.includes(title)) h.titles.push(title);
+  emit(content, run, 'storyMoment', { actors: lead ? [lead.uid] : [], data: { def: 'hunt-done', suppressed: false }, importance: 88, text: `Tracked ${content.story.grandEnemy.name}'s herald to its lair and won` });
+  return `the title "${title}"`;
 }
