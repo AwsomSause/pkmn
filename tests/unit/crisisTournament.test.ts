@@ -93,3 +93,30 @@ describe('Rival Tournament', () => {
     expect(content.events.get('tournament-final')!.choices[0]!.success.battle!.win.some((e) => e.kind === 'tournament' && e.round === 9)).toBe(true);
   });
 });
+
+describe('Rival Gauntlet', () => {
+  it('sends the ranked rivals one a stage, and pays out when the chain is done', async () => {
+    const g = await import('../../src/core/story/gauntlet');
+    const run = fresh('gauntlet');
+    expect(g.startGauntlet(content, run, 3)).toBe(0);
+    const mk = (id: string, potential: number) => ({ id, name: id, classId: 'psychic', state: 'recurring', rivalPotential: potential, progress: 0, encounters: 2, cooldown: 0 }) as never;
+    const classId = [...content.trainers.keys()][0]!;
+    run.story.rivals.push({ ...(mk('a', 50) as object), classId } as never, { ...(mk('b', 40) as object), classId } as never);
+    expect(g.gauntletRival(content, run)).toBeNull();
+    expect(g.startGauntlet(content, run, 3)).toBe(2);
+    const first = g.gauntletRival(content, run)!;
+    expect(first.id).toBe('a');
+    g.markGauntletFight(run, first);
+    expect(g.gauntletRival(content, run)).toBeNull();
+    expect(g.gauntletWon(content, run, 'a')).toContain('1 rival left');
+    run.stage!.index += 1;
+    const second = g.gauntletRival(content, run)!;
+    expect(second.id).toBe('b');
+    g.markGauntletFight(run, second);
+    const before = run.money;
+    expect(g.gauntletWon(content, run, 'b')).toContain('Gauntlet cleared');
+    expect(run.money).toBe(before + content.story.gauntlet.money);
+    expect(g.gauntletLeft(run)).toBe(0);
+    expect(g.gauntletWon(content, run, 'b')).toBeNull();
+  });
+});

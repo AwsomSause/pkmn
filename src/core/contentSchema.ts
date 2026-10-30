@@ -2023,6 +2023,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('aid'), atLeast: z.number().int().min(1) }),
   /** Rival tournament: the bracket's state (0 not entered, 1 to 3 round waiting, 9 over). */
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: whether a chain of rival fights is running. */
+  z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2076,6 +2078,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('aid'), amount: z.number().int().positive() }),
   /** Rival tournament: sets the bracket's state. */
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
+  /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
+  z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
