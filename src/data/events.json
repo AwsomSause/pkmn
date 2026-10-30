@@ -22473,6 +22473,73 @@
    ]
   },
   {
+   "id": "secret-route-path",
+   "name": "A Hidden Path",
+   "group": "Form Research",
+   "rarity": "rare",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "form-met",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1b2a2a",
+    "effect": "fog"
+   },
+   "intro": "Behind the hollow you studied, a gap in the rock opens onto a path no map shows. The grass here grows in odd colours.",
+   "choices": [
+    {
+     "label": "Take the hidden path",
+     "success": {
+      "text": "Something rare watches from the tall grass.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "tauros-paldea-combat-breed",
+        "mr-mime-galar",
+        "stunfisk-galar",
+        "yamask-galar",
+        "darumaka-galar",
+        "qwilfish-hisui"
+       ],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 120
+        },
+        {
+         "kind": "flag",
+         "key": "secret-met",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Mark it on your map",
+     "success": {
+      "text": "You note the way for later. The research is worth something.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "habitat-migration",
    "name": "A Migrating Flock",
    "group": "Habitats",

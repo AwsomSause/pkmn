@@ -6,9 +6,10 @@ import { chooseStarter, createRun } from '../../src/core/run';
 import { specialFamily } from '../../src/core/specialForms';
 import { content } from './helpers';
 
-function runAt(clues: number, stageIndex = 4) {
+function runAt(clues: number, stageIndex = 4, met = 0) {
   const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'form-research', archetypeId: 'red' }), 0);
   run.story.flags['ev:form-clue'] = clues;
+  run.story.flags['ev:form-met'] = met;
   run.stage!.index = stageIndex;
   return run;
 }
@@ -24,6 +25,21 @@ describe('Form Research chain', () => {
     const battle = content.events.get('form-research-battle')!;
     const species = JSON.stringify(battle).match(/"species":\[([^\]]*)\]/)![1]!.replace(/"/g, '').split(',');
     expect(species.length).toBeGreaterThan(3);
+    for (const id of species) expect(specialFamily(content.species.get(id)!), id).toBe('regional');
+  });
+});
+
+describe('Secret route', () => {
+  const hidden = (met: number) => {
+    const run = runAt(3, 6, met);
+    return eligibleEvents(content, run).some((e) => e.id === 'secret-route-path');
+  };
+  it('opens only after the research battle was won', () => {
+    expect(hidden(0)).toBe(false);
+    expect(hidden(1)).toBe(true);
+  });
+  it('leads to regional forms only', () => {
+    const species = JSON.stringify(content.events.get('secret-route-path')).match(/"species":\[([^\]]*)\]/)![1]!.replace(/"/g, '').split(',');
     for (const id of species) expect(specialFamily(content.species.get(id)!), id).toBe('regional');
   });
 });
