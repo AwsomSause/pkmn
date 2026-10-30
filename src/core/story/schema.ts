@@ -430,7 +430,20 @@ export const StoryEventDefinitionSchema = z.object({
 });
 export type StoryEventDefinition = z.infer<typeof StoryEventDefinitionSchema>;
 
+/** An Overdrive chain: steps (event ids or milestone names) that must happen in this order. */
+export const StoryChainSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  steps: z.array(z.string()).min(2),
+  text: z.string(),
+  importance: z.number().int().min(0).max(100),
+  emotions: z.array(EmotionSchema).default([]),
+});
+export type StoryChain = z.infer<typeof StoryChainSchema>;
+
 export const StoryConfigSchema = z.object({
+  /** Overdrive chains (blueprint §6). */
+  chains: z.array(StoryChainSchema).default([]),
   limits: z.object({
     recentEvents: z.number().int().positive(),
     memoriesPerPokemon: z.number().int().positive(),
