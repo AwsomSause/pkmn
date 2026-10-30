@@ -12,7 +12,8 @@ import { getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 import { sceneForRun } from './routing';
 
 export class BriefingScene extends Phaser.Scene {
