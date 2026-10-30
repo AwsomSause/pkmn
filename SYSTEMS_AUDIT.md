@@ -18,9 +18,9 @@ The real status of every system on 2026-10-30, checked against the code, the uni
 - **Content:** 87 of 934 moves can't be run by the engine (was 611); 0 broken evolutions, 0 missing sprites/cries/assets, 0 unreachable map nodes in 603 generated maps, 0 invalid entries, every save upgrade has a test.
 - **Open findings**, in order of importance:
   1. **GitHub Actions has still never run on this repository** (0 workflow runs, checked with the GitHub API; the CI workflow exists and is "active"). So the gates only run when someone runs them by hand. Kice must switch Actions on: repository Settings → Actions → General → "Allow all actions and reusable workflows". Until then this audit and the e2e sweeps are the only gate.
-  2. **6 boss teams are exact copies** of an earlier team and **983 repeat the same Pokémon and moves** (only training differs). Both are baselined, not fixed; later regions can feel like a rematch.
+  2. **Boss teams are now all different**: `npm run data:bosses` retries a team with more variety whenever its lineup (Pokémon and moves) was already used, so the 6 exact copies and 983 repeats are 0 (baseline 0). Teams that needed a retry pick slightly weaker Pokémon than their first choice.
   3. **Browser tests are slow under load** (the full run takes about 12 minutes). Two long-fight tests now have a 180 s budget; keep new long tests on `test.setTimeout`.
-  4. **Balance report is old** (written 2026-10-25, before abilities, Mega/Tera/Z/Dynamax, perks): regenerate it with `npm run report:balance -- --write` before trusting its numbers.
+  4. **The balance report now covers abilities and Mega/Tera/Z/Dynamax** (regenerated 2026-10-30): with every key item, stone and crystal the average one-on-one win rate rises from 47% to 61% and 24 lines win 90% or more (3 without). The kit makes fights much easier than the plain numbers show; watch this when tuning.
   5. **No translations exist** (the game is English only), so the plan's "incomplete translations" report has nothing to check.
   6. **Save versions are shared between threads**: profile 10, run 21, settings 4 on `main`. Take the next free number after fetching `origin/main`.
 

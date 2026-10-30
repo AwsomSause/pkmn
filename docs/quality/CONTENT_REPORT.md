@@ -76,8 +76,8 @@ Totals: species 1027, forms 592, moves 934, items 253, evolutions 675, meetableS
 | Missing cries (`missing-cries`) | 0 | Cry files a species points at that are not in public/assets. |
 | Missing other assets (`missing-other-assets`) | 0 | Trainer, item, background, music, sound and font files the game asks for that are not in public/assets. |
 | Map problems (`unreachable-map-nodes`) | 0 | Unreachable nodes, dead ends or rule breaks found in 603 generated stage and league maps. |
-| Duplicate boss teams (`duplicate-boss-teams`) | 6 | Boss teams identical (same species, moves and training) to an earlier team, for the same boss or a different one. The battle is then the same fight at a different level. |
-| Boss teams that differ only in training (`near-duplicate-boss-teams`) | 983 | Boss teams with the same species and moves as an earlier team; only the extra training stacks differ. |
+| Duplicate boss teams (`duplicate-boss-teams`) | 0 | Boss teams identical (same species, moves and training) to an earlier team, for the same boss or a different one. The battle is then the same fight at a different level. |
+| Boss teams that differ only in training (`near-duplicate-boss-teams`) | 0 | Boss teams with the same species and moves as an earlier team; only the extra training stacks differ. |
 | Boss moves the engine cannot run (`boss-unsupported-moves`) | 0 | Moves on boss teams that are unsupported (a boss would use a move the engine treats as plain damage or nothing). |
 | Broken evolutions (`broken-evolutions`) | 0 | Evolutions a meetable Pokémon cannot complete: unknown target, wrong item, item nobody can get, level above the maximum, target with no moves, or a loop. |
 | Unused balance settings (`unused-balance-settings`) | 0 | Settings in balance.json that no game code reads (changing them does nothing). |
@@ -113,41 +113,3 @@ Totals: species 1027, forms 592, moves 934, items 253, evolutions 675, meetableS
 - g-max-gravitas
 - g-max-hydrosnipe
 - ... and 62 more (`npm run report:content -- --only unsupported-moves`)
-
-### Duplicate boss teams: 6
-
-- lenora gym #16 = lenora gym #15
-- juniper elite #4 = juniper gym #16
-- sophocles elite #4 = sophocles gym #16
-- olivia gym #16 = olivia gym #15
-- ryuki elite #3 = ryuki gym #13
-- poppy elite #4 = poppy gym #16
-
-### Boss teams that differ only in training: 983
-
-- misty champion #7 ~ misty champion #5
-- misty champion #9 ~ misty champion #6
-- lt-surge elite #8 ~ lt-surge gym #14
-- lt-surge elite #9 ~ lt-surge elite #5
-- lt-surge champion #8 ~ lt-surge elite #10
-- lt-surge champion #9 ~ lt-surge elite #7
-- lt-surge champion #10 ~ lt-surge elite #7
-- koga elite #9 ~ koga elite #6
-- koga champion #2 ~ koga elite #8
-- koga champion #5 ~ koga elite #10
-- koga champion #6 ~ koga elite #10
-- koga champion #7 ~ koga elite #10
-- koga champion #8 ~ koga elite #8
-- koga champion #9 ~ koga elite #10
-- koga champion #10 ~ koga elite #10
-- janine elite #10 ~ janine gym #16
-- janine champion #4 ~ janine gym #15
-- janine champion #7 ~ janine gym #15
-- janine champion #8 ~ janine champion #2
-- janine champion #10 ~ janine champion #6
-- sabrina champion #4 ~ sabrina elite #10
-- sabrina champion #6 ~ sabrina champion #3
-- sabrina champion #8 ~ sabrina champion #7
-- sabrina champion #9 ~ sabrina champion #7
-- sabrina champion #10 ~ sabrina champion #7
-- ... and 958 more (`npm run report:content -- --only near-duplicate-boss-teams`)

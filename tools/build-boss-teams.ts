@@ -319,8 +319,14 @@ function typePool(boss: Boss): SpeciesRow[] {
   return fullyEvolved.filter((s) => s.types.some((t) => types.includes(t)));
 }
 
-function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>): BossTeam {
-  const rnd = seeded(`${boss.id}|${spec.role}|${spec.index}`);
+/**
+ * `variety` 0 is the first choice. When that lineup was already used by another team,
+ * the caller tries again with a higher number, which adds noise to the order the
+ * Pokémon are picked in, so the next try picks a different (but still fitting) team.
+ */
+function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>, variety = 0): BossTeam {
+  const rnd = seeded(variety === 0 ? `${boss.id}|${spec.role}|${spec.index}` : `${boss.id}|${spec.role}|${spec.index}|v${variety}`);
+  const noise = () => (variety === 0 ? 0 : variety * 0.05 * rnd());
   const signature = boss.signature.filter((id) => {
     const s = species.get(id);
     if (!s) warnings.add(`${boss.id}: species "${id}" is not in the game data`);
@@ -345,7 +351,7 @@ function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>): BossTeam 
   const maxBst = 720;
   const rest = signature
     .filter((id) => id !== aceId)
-    .map((id) => ({ id, key: (1 - spec.strength) * rnd() + spec.strength * (bst(species.get(id)!) / maxBst) }))
+    .map((id) => ({ id, key: (1 - spec.strength) * rnd() + spec.strength * (bst(species.get(id)!) / maxBst) + noise() }))
     .sort((a, b) => b.key - a.key)
     .map((x) => x.id);
   // Weaker teams sometimes swap in a Pokémon of the boss's types for variety.
@@ -353,7 +359,7 @@ function buildTeam(boss: Boss, spec: TeamSpec, warnings: Set<string>): BossTeam 
   const fromSignature = Math.max(0, spec.size - 1 - extraFromType);
   for (const id of rest) if (members.length < fromSignature) add(id);
   const pool = typePool(boss)
-    .map((s) => ({ s, key: (1 - spec.strength) * rnd() + spec.strength * (bst(s) / maxBst) + 0.0001 * rnd() }))
+    .map((s) => ({ s, key: (1 - spec.strength) * rnd() + spec.strength * (bst(s) / maxBst) + 0.0001 * rnd() + noise() }))
     .sort((a, b) => b.key - a.key);
   for (const { s } of pool) if (members.length < spec.size - 1) add(s.id);
   for (const id of rest) if (members.length < spec.size - 1) add(id);
@@ -399,12 +405,23 @@ function championSpec(r: number): TeamSpec {
 }
 
 const warnings = new Set<string>();
+/** Two teams with the same Pokémon and moves are the same fight at a different level; every team gets its own lineup where the data allows. */
+const lineupKey = (t: BossTeam) => t.members.map((m) => `${m.species}:${m.moves.join(',')}`).join('|');
+const usedLineups = new Set<string>();
+let repeated = 0;
+function distinctTeam(boss: Boss, spec: TeamSpec): BossTeam {
+  let team = buildTeam(boss, spec, warnings);
+  for (let variety = 1; usedLineups.has(lineupKey(team)) && variety <= 30; variety++) team = buildTeam(boss, spec, warnings, variety);
+  if (usedLineups.has(lineupKey(team))) repeated++;
+  usedLineups.add(lineupKey(team));
+  return team;
+}
 const out: Record<string, { gym: BossTeam[]; elite: BossTeam[]; champion: BossTeam[] }> = {};
 for (const boss of bosses) {
   out[boss.id] = {
-    gym: Array.from({ length: GYM_TEAMS }, (_, i) => buildTeam(boss, gymSpec(i + 1), warnings)),
-    elite: Array.from({ length: LEAGUE_TEAMS }, (_, i) => buildTeam(boss, eliteSpec(i + 1), warnings)),
-    champion: Array.from({ length: LEAGUE_TEAMS }, (_, i) => buildTeam(boss, championSpec(i + 1), warnings)),
+    gym: Array.from({ length: GYM_TEAMS }, (_, i) => distinctTeam(boss, gymSpec(i + 1))),
+    elite: Array.from({ length: LEAGUE_TEAMS }, (_, i) => distinctTeam(boss, eliteSpec(i + 1))),
+    champion: Array.from({ length: LEAGUE_TEAMS }, (_, i) => distinctTeam(boss, championSpec(i + 1))),
   };
 }
 
@@ -424,4 +441,5 @@ for (const [id, roles] of Object.entries(out)) {
 writeFileSync(join(dataDir, 'bossTeams.json'), `{\n${lines.join(',\n')}\n}\n`);
 const count = Object.keys(out).length;
 console.log(`Wrote ${count * (GYM_TEAMS + 2 * LEAGUE_TEAMS)} teams for ${count} bosses to src/data/bossTeams.json.`);
+if (repeated > 0) console.warn(`${repeated} teams still repeat an earlier lineup (the boss's type pool is too small).`);
 for (const w of warnings) console.warn(`warning: ${w}`);
