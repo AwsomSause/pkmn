@@ -29,3 +29,14 @@ describe('reward synergy (catalog #95)', () => {
     if (lvl) expect(rewardSynergy(content, run, lvl)).toContain('Lowest');
   });
 });
+
+describe('reward synergy coverage (catalog #95)', () => {
+  it('says something for every reward kind that shows on the draft', async () => {
+    const { rewardSynergy } = await import('../../src/core/rewardSynergy');
+    const { createRun, chooseStarter } = await import('../../src/core/run');
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'syn2', archetypeId: 'red' }), 0);
+    const silent = new Set<string>();
+    for (const r of content.rewards.values()) if (rewardSynergy(content, run, r) === null) silent.add(r.effect.kind);
+    expect([...silent]).toEqual([]);
+  });
+});
