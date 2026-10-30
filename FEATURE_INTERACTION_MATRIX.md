@@ -1,4 +1,4 @@
-# Feature interaction matrix (M8.6)
+# Feature interaction matrix
 
 Bugs in a roguelike usually live where two systems meet: an item used in battle that should also count for an achievement, a reward replayed after a reload, an evolution in the middle of a level-up. This page lists how each pair of built systems touches, and whether a test proves the meeting point works. Checked on `main` on 2026-10-25; see SYSTEMS_AUDIT.md for each system on its own.
 
@@ -107,17 +107,37 @@ Battle (B), Catching (C), Items and Bag (I), Rewards (R), Shop (S), Map and stag
 71. Presets resolve choices that are no longer unlocked. `milestone5_5.test.ts`.
 72. Run end applied to the profile exactly once. `save.test.ts` "finalizing the same run twice only counts it once".
 
-## Planned systems: what they will have to touch
+## Systems built since M8.6: where they meet the older ones
 
-When these arrive, each meeting point below needs a test. The ❌ items are gaps today.
+Each row says what the new system touches, the test that covers the meeting point (✅) or that nothing does (🟡), and what is still missing (❌). Checked against the tests on `main` on 2026-10-30.
 
-| Planned system | Must work with | Risk to watch |
-|---|---|---|
-| ❌ Advanced Mechanics (M8.5: Mega, Tera, Z, Dynamax) | Battle, Items (key items), Rewards, Shop, Evolution (a Mega is not an evolution), Bosses (boss Megas), Saves | A transformation must end with the battle and never be saved as the Pokémon's species. The 210 disabled forms switch on here; the content gate's `supported.form` number should rise. |
-| ❌ Abilities and held items (M8.75 C) | Battle, Catching (abilities that change catch rates), Items, Evolution (trade with held item), Bosses, Saves | 12 moves with documented limits ("ignores abilities", "breaks screens") become real; update `src/quality/knownLimits.json`. |
-| ❌ Unsupported moves (M8.75 C) | Battle, Bosses (the generator picks only supported moves today), Rewards (TMs, if added) | `unsupported-moves` and `unsupported-learnset-entries` should fall; `npm run report:balance` will move a lot. |
-| ❌ Events and new map stops (M8.75 A) | Map, Rewards, Attributes, Friendship, Saves, Profile | An event must never apply twice on reload (effect ids from M8.9-0). |
-| ❌ Levels to 500 (M8.75 G, D14) | Difficulty, Battle (stat formula), Experience, Bosses, Saves (schema maximums of 100) | The balance report's curve will change from region 3 on. |
-| ❌ Story systems (M8.9-0, M8.9) | Battle events, every counter, Saves, RNG (new `story`/`hyper` streams must not shift existing rolls) | Determinism: run `run.test.ts` "the same seed ... reproduce the whole run" against an old seed. |
-| ❌ Presentation cues (M9.5) | Battle events, Evolution, Bosses, Settings | A presentation failure must never change battle state. |
-| ❌ Grand Region and ending (M9) | Regions, Bosses, Profile (victory), Saves | |
+| New system | Meets | Cover | Evidence or gap |
+|---|---|---|---|
+| Mega, Tera, Z-Moves, Dynamax | Saves | ✅ | Each "survives save and load in the middle of a battle" (`milestone8_5.test.ts`) |
+| Mega, Tera, Z-Moves, Dynamax | Determinism | ✅ | "is deterministic: the same run and actions give the same events" (`milestone8_5.test.ts`) |
+| Mega, Tera, Z-Moves, Dynamax | Items, Shop, Rewards | ✅ | Mega Ring, Tera Orb, Z-Ring sold from 3 badges, one-time offers (`milestone8_5.test.ts`) |
+| Mega, Tera, Z-Moves, Dynamax | Bosses | ✅ | Boss ace Mega/Tera only, from gym 5 (`milestone8_5.test.ts`) |
+| Mega, Tera, Z-Moves, Dynamax | Evolution | ✅ | A Mega changes back after the battle and is not an evolution (`milestone8_5.test.ts`) |
+| Battle Drama lines | Saves | ✅ | "drama state survives a save round trip and old battles load without it" (`drama.test.ts`) |
+| Battle Drama lines | Determinism, replays | ✅ | "does not repeat a line when the same turn is processed again" (`drama.test.ts`); lines never use gameplay RNG |
+| Battle Drama lines | Settings (Trainer talk) | ✅ | Frequency only hides lines; records never depend on it (`drama.test.ts`) |
+| Bond Engine | Battle | ✅ | Refusal, initiative, combos, new moves, turning points (`bond.test.ts`) |
+| Bond Engine | Saves | 🟡 | Bonds are optional on the history record, so old saves load; no test reloads a run mid-battle with a refusal pending |
+| Rival bonds, arcs, chronicle | Saves | ✅ | "a save from before bonds loads with empty bonds (migration v12)", "a saved rival survives a reload" (`rivals.test.ts`) |
+| Story effects | Reload | ✅ | No reward or event applies twice (`story.test.ts`) |
+| Raids, Expeditions | Saves | ✅ | "survives a save and reload mid-raid / in the middle of an expedition" |
+| Service stops (Trade Post) | Reload | ✅ | Same swap on reload, only once (`services.test.ts`) |
+| Totems | Reload | ✅ | "previews, starts once, uses the territory up, and survives a reload" (`totems.test.ts`) |
+| Species Mastery | Reload, Bank | ✅ | Pays each rank once, never twice on reload (`mastery.test.ts`) |
+| Trainer quests | Reload | ✅ | "a reloaded profile keeps its claims" (`quests.test.ts`) |
+| Trainer perks | Battle, Shop, Rewards | 🟡 | `trainerPerks.test.ts` covers perks one at a time; no test mixes perks with Mega/Tera in one battle |
+| Hyper evolutions | Rivals, Story | ✅ | `hyper-rivalry.test.ts`, `hyper-rage.test.ts` |
+| Presentation cues | Battle outcomes | ✅ | Outcomes are decided before the screen plays them (`visual.test.ts`) |
+| Map "?" event stops | Rewards, Attributes, Friendship | ✅ | `events.test.ts`, `mapStopItems.test.ts` |
+| Double battles | Battle, Bosses, Drama, Bond, Mega/Tera/Z | ❌ | Not on `main` yet; every row above that names one battle must be rechecked with two |
+| Egg hatching | Evolution, Friendship, Mastery, Saves | ❌ | Not on `main` yet |
+| Overdrive Breakthrough / Misfire | Drama, Hyper, Bond | ❌ | Planned in the Overdrive thread |
+| Levels to 500 (D14) | Difficulty, Battle, Bosses, Saves | ❌ | Schema maximums of 100 must move together |
+| Grand Region and ending | Regions, Bosses, Profile | ❌ | Not built |
+
+When a new system lands, add its row here with the test that covers each meeting point. A 🟡 or ❌ here is a bug waiting to happen: write the test first.

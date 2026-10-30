@@ -3,6 +3,7 @@
 // and the seed (which can be copied to replay or share the run).
 
 import Phaser from 'phaser';
+import { directiveText } from '../core/directive';
 import { getArchetype } from '../core/archetypes';
 import { attributesLine, effectiveAttributes } from '../core/attributes';
 import { getCampaign, levelCap } from '../core/regions';
@@ -56,6 +57,7 @@ export class BriefingScene extends Phaser.Scene {
     line('Starting with', `₽${run.money}; ${itemsText(content, run.inventory) || 'an empty Bag'}`);
     line('Rules', `${pool?.name ?? run.prep.poolId} pool, ${rule?.name ?? run.prep.draftRuleId}${run.prep.typeFocus ? ` (${capitalise(run.prep.typeFocus)})` : ''}; preparation: ${token?.name ?? 'none'}`);
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
+    if (run.prep.directive) line('Directive', directiveText(content, run.prep.directive));
     for (const edition of run.gameEvents) {
       const ge = content.gameEvents.get(eventIdOf(edition));
       if (ge) line(ge.name, ge.ruleText);

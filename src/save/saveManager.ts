@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 10, run: 21, settings: 4, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 11, run: 22, settings: 4, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -78,6 +78,12 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     8: (data) => ({ ...(data as Json), mastery: {} }),
     // v10 (game events): no weekly or holiday event progress yet.
     9: (data) => ({ ...(data as Json), gameEvents: {} }),
+    // v11 (wardrobe, Research Directive): the classic card frame; saved loadouts have no directive.
+    10: (data) => {
+      const d = data as Json & { lastPrep?: Json | null; presets?: (Json | null)[] };
+      const withDirective = (p: Json | null | undefined) => (p ? { ...p, directive: null } : p ?? null);
+      return { ...d, cardFrame: 'classic', lastPrep: withDirective(d.lastPrep), presets: (d.presets ?? []).map(withDirective) };
+    },
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -230,6 +236,11 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     19: (data) => ({ ...(data as Json), mastery: {} }),
     // v21 (game events): runs started before it belong to no game event.
     20: (data) => ({ ...(data as Json), gameEvents: [] }),
+    // v22 (Research Directive): runs started before it study no type.
+    21: (data) => {
+      const d = data as Json & { prep: Json };
+      return { ...d, prep: { ...d.prep, directive: null } };
+    },
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

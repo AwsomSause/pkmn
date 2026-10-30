@@ -4,6 +4,7 @@
 // makes the player's Pokémon stronger.
 
 import { isSpecialForm } from './specialForms';
+import { directiveText } from './directive';
 import { getArchetype } from './archetypes';
 import { attributesLine, readAttributes } from './attributes';
 import type { Archetype, Content, DraftRule, License, PrepToken, Species, StarterPool, TypeName } from './contentSchema';
@@ -180,7 +181,7 @@ export function standardRule(content: Content): DraftRule {
 /** The choices a brand-new player gets: the full campaign, the starting pool, the standard draft, no token. */
 export function defaultPrep(content: Content): RunPrep {
   const pool = [...content.starterPools.values()].find((p) => p.unlockedByDefault)!;
-  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null };
+  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null, directive: null };
 }
 
 export interface ResolvedPrep {
@@ -347,6 +348,7 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
     `Starters: ${pool.name} pool (${eligibleSpecies(content, pool).length} species), ${rule.name}${rule.kind === 'typeFocus' && prep.typeFocus ? `: ${typeName(prep.typeFocus)}` : ''}`,
     `Preparation: ${token ? `${token.name}, ${token.description.charAt(0).toLowerCase()}${token.description.slice(1)}` : 'none'}`,
     `Start with: ₽${res.money}; ${itemsText(content, res.items) || 'an empty Bag'}`,
+    ...(prep.directive ? [directiveText(content, prep.directive)] : []),
   ];
   if (attributes) lines.push(`Attributes: ${attributesLine(readAttributes(content, attributes))}`);
   return lines;

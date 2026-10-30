@@ -16,6 +16,7 @@ import { wildEligibleSpecies } from '../core/themes';
 import { hashSeed, Rng } from '../core/rng';
 import type { StageMap } from '../core/state';
 import { buildCatalog, filesOf, pokemonEntries } from '../assets/catalog';
+import { mechanicStatuses, type Mechanic } from './mechanics';
 import { allStatuses, evolutionId, meetableSpecies, statusSummary, type EntryStatus, type StatusInputs } from './supportStatus';
 
 export interface ReportInputs extends StatusInputs {
@@ -29,6 +30,10 @@ export interface ReportInputs extends StatusInputs {
   migrations: Record<string, number[]>;
   /** The asset catalog's inputs come from the data files; only trainer/item/background ids are needed here. */
   catalogIds: { trainerAssetIds: string[]; itemAssetIds: string[]; backgroundAssetIds: string[] };
+  /** Battle mechanics and systems with their code and tests (quality/mechanics.json). Left out: no mechanic entries. */
+  mechanics?: Mechanic[];
+  /** Whether a file exists, from the project root (to check each mechanic's code and tests). */
+  fileExists?: (path: string) => boolean;
   /** How many seeds to generate stage maps for, per campaign. */
   mapSeeds?: number;
 }
@@ -206,7 +211,7 @@ export function buildContentReport(content: Content, inputs: ReportInputs): Cont
   add('boss-unsupported-moves', 'Boss moves the engine cannot run', 'Moves on boss teams that are unsupported (a boss would use a move the engine treats as plain damage or nothing).', bossBadMoves);
 
   // Evolutions.
-  const statuses = allStatuses(content, inputs);
+  const statuses = [...allStatuses(content, inputs), ...mechanicStatuses(inputs.mechanics ?? [], inputs.fileExists ?? (() => true))];
   const brokenEvolutions = statuses.filter((e) => e.kind === 'evolution' && (e.status === 'invalid' || e.status === 'disabled')).map((e) => `${e.id}: ${e.notes.join('; ')}`);
   const cycles: string[] = [];
   for (const s of species) {
@@ -227,6 +232,8 @@ export function buildContentReport(content: Content, inputs: ReportInputs): Cont
   add('untested-save-migrations', 'Save upgrades with no test', 'Save upgrades (old version to new) that no unit test loads an old save through.', untestedMigrations(inputs.migrations, inputs.testSources));
   add('invalid-entries', 'Invalid content entries', 'Entries whose support status is "invalid" (broken data).', statuses.filter((e) => e.status === 'invalid').map((e) => `${e.kind} ${e.id}: ${e.notes.join('; ')}`));
 
+  add('mechanics-without-proof', 'Mechanics without code or tests', 'Mechanics claimed as built whose code or unit test file is missing, so nothing shows they work.', statuses.filter((e) => e.kind === 'mechanic' && e.status === 'invalid').map((e) => `${e.id}: ${e.notes.join('; ')}`));
+
   const totals = {
     species: species.filter((s) => !s.form).length,
     forms: species.filter((s) => s.form).length,
@@ -235,6 +242,7 @@ export function buildContentReport(content: Content, inputs: ReportInputs): Cont
     evolutions: species.reduce((n, s) => n + s.evolutions.length, 0),
     meetableSpecies: meetable.size,
     bosses: content.bosses.size,
+    mechanics: (inputs.mechanics ?? []).length,
     bossTeams: [...content.bosses.values()].reduce((n, b) => n + b.teams.gym.length + b.teams.elite.length + b.teams.champion.length, 0),
   };
   return { totals, checks, statuses, summary: statusSummary(statuses) };
