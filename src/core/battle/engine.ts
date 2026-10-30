@@ -25,7 +25,7 @@ import type { BoostStat, Content, Move, PowerRule, Semi, SideMove, StatusId, Ter
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -1483,6 +1483,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
       targetTypes: getSpecies(ctx.content, target.mon.speciesId).types,
       userHoldsItem: Object.keys(Held.effectiveHeld(ctx, user.mon)).length > 0,
       effectiveness,
+      targetStatused: target.mon.status !== null && target.mon.status !== undefined,
       turnsOut: user.vol.turnsOut,
       moveIsZ: move.flags.includes('zmove'),
       moveIsSpread: isSpreadMove(move.id),
@@ -2318,6 +2319,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (foeAbility && weather && WEATHER_EVASION[foeAbility]?.includes(weather)) accuracy *= 0.8;
       if (foeAbility === 'tangled-feet' && target.vol.confusion > 0) accuracy *= 0.5;
       if (ctx.battle.field.gravity > 0) accuracy *= 5 / 3;
+      if (target.side === 'player') accuracy /= evasionPerk(ctx.perks, getSpecies(content, target.mon.speciesId).types);
       if (foeAbility === 'wonder-skin' && move.category === 'status') accuracy = Math.min(accuracy, 0.5);
     }
     accuracy = Math.min(1, accuracy);
@@ -4416,6 +4418,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     c.mon.status.turns = Math.min(15, (c.mon.status.turns ?? 0) + 1);
     fraction = c.mon.status.turns / 16;
   }
+  if (status === 'psn' && c.side === 'enemy') fraction *= poisonDamagePerk(ctx.perks);
   if (c.mon.hp > 0 && status && fraction > 0) {
     const { lost, lastStand } = hurt(fraction);
     events.push({ type: 'residual', side: c.side, status, amount: lost, hpAfter: c.mon.hp });

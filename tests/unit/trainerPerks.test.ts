@@ -10,7 +10,7 @@ import {
   damageDealtPerk, damageTakenPerk, evolutionLevelOffset, isLegendaryLike, megaPartyLimit, permanentMegaFriendship,
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
-  startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
+  poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
   isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, unusualKind,
@@ -558,6 +558,33 @@ describe('trainer perks, batch Z3 (Olympia to Ryuki)', () => {
       expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
     }
   }, 240_000);
+
+  describe('batch 6 (Iono to Kurt)', () => {
+    const base = { userTypes: ['normal'] as const, physical: true, hpShare: 1, userLevel: 10, targetLevel: 10, targetIsBoss: false, weather: null, moveType: 'normal' as const, userBaseSpeed: 70, userIsMega: false, partyHasMega: false, firstInBattle: true, isStarter: false, targetTypes: ['normal'] as const };
+
+    it('poison damage, evasion and status-foe damage', () => {
+      expect(poisonDamagePerk(perks('janine'))).toBeCloseTo(1.15);
+      expect(poisonDamagePerk(perks('koga-lgpe'))).toBeCloseTo(1.25);
+      expect(evasionPerk(perks('juan'), ['water'])).toBeCloseTo(1.1);
+      expect(evasionPerk(perks('juan'), ['fire'])).toBe(1);
+      expect(damageDealtPerk(perks('karen'), { ...base, targetStatused: true })).toBeCloseTo(1.15);
+      expect(damageDealtPerk(perks('karen'), { ...base, targetStatused: false })).toBe(1);
+    });
+
+    it('Janine and Klara raise poison status chance, Iono every status chance', () => {
+      expect(statusChancePerk(perks('janine'), ['poison'], 'psn')).toBeCloseTo(1.2);
+      expect(statusChancePerk(perks('janine'), ['normal'], 'psn')).toBe(1);
+      expect(statusChancePerk(perks('iono'), ['normal'], 'par')).toBeCloseTo(1.15);
+    });
+
+    it('every batch-6 trainer plays battles without errors, and the same seed plays the same way', () => {
+      for (const id of ["iono", "irida", "iris-gen-5-bw2", "jacinthe", "janine", "jasmine", "juan", "juniper", "kabu", "kahili", "karen", "katy", "kiawe", "klara", "koga-lgpe", "koga", "korrina", "kris", "kukui", "kurt"]) {
+        const play = () => autoplay({ seed: `perk6-${id}`, archetypeId: id, steps: 220, healOnMap: true, starterLevel: 25 });
+        const a = play();
+        expect(gameplayFingerprint(play()), id).toBe(gameplayFingerprint(a));
+      }
+    }, 180_000);
+  });
 });
 
 describe('trainer perks, batch Z4 (Magnus to Olivia)', () => {

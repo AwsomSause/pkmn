@@ -4541,6 +4541,306 @@
     "atLeast": 1340
    },
    "unlockText": "Defeat 1340 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-iono",
+   "name": "Iono’s Team",
+   "description": "Pokémon from Iono’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "iono"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1010
+   },
+   "unlockText": "Defeat 1010 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-irida",
+   "name": "Irida’s Team",
+   "description": "Pokémon from Irida’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "irida"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1020
+   },
+   "unlockText": "Defeat 1020 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-iris-gen-5-bw2",
+   "name": "Iris (Gen 5 BW2)’s Team",
+   "description": "Pokémon from Iris (Gen 5 BW2)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "iris"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1030
+   },
+   "unlockText": "Defeat 1030 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-jacinthe",
+   "name": "Jacinthe’s Team",
+   "description": "Pokémon from Jacinthe’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "jacinthe"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1040
+   },
+   "unlockText": "Defeat 1040 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-janine",
+   "name": "Janine’s Team",
+   "description": "Pokémon from Janine’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "janine"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1050
+   },
+   "unlockText": "Defeat 1050 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-jasmine",
+   "name": "Jasmine’s Team",
+   "description": "Pokémon from Jasmine’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "jasmine"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1060
+   },
+   "unlockText": "Defeat 1060 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-juan",
+   "name": "Juan’s Team",
+   "description": "Pokémon from Juan’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "juan"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1070
+   },
+   "unlockText": "Defeat 1070 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-juniper",
+   "name": "Juniper’s Team",
+   "description": "Pokémon from Juniper’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "juniper"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1080
+   },
+   "unlockText": "Defeat 1080 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kabu",
+   "name": "Kabu’s Team",
+   "description": "Pokémon from Kabu’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kabu"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1090
+   },
+   "unlockText": "Defeat 1090 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kahili",
+   "name": "Kahili’s Team",
+   "description": "Pokémon from Kahili’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kahili"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1100
+   },
+   "unlockText": "Defeat 1100 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-karen",
+   "name": "Karen’s Team",
+   "description": "Pokémon from Karen’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "karen"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1110
+   },
+   "unlockText": "Defeat 1110 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-katy",
+   "name": "Katy’s Team",
+   "description": "Pokémon from Katy’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "katy"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1120
+   },
+   "unlockText": "Defeat 1120 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kiawe",
+   "name": "Kiawe’s Team",
+   "description": "Pokémon from Kiawe’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kiawe"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1130
+   },
+   "unlockText": "Defeat 1130 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-klara",
+   "name": "Klara’s Team",
+   "description": "Pokémon from Klara’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "klara"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1140
+   },
+   "unlockText": "Defeat 1140 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-koga-lgpe",
+   "name": "Koga (LGPE)’s Team",
+   "description": "Pokémon from Koga (LGPE)’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "koga"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1150
+   },
+   "unlockText": "Defeat 1150 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-koga",
+   "name": "Koga’s Team",
+   "description": "Pokémon from Koga’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "koga"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1160
+   },
+   "unlockText": "Defeat 1160 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-korrina",
+   "name": "Korrina’s Team",
+   "description": "Pokémon from Korrina’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "korrina"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1170
+   },
+   "unlockText": "Defeat 1170 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kris",
+   "name": "Kris’s Team",
+   "description": "Pokémon from Kris’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kris"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1180
+   },
+   "unlockText": "Defeat 1180 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kukui",
+   "name": "Kukui’s Team",
+   "description": "Pokémon from Kukui’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kukui"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1190
+   },
+   "unlockText": "Defeat 1190 trainers in total across your runs"
+  },
+  {
+   "id": "trainer-kurt",
+   "name": "Kurt’s Team",
+   "description": "Pokémon from Kurt’s team, as first stages.",
+   "category": "trainer",
+   "bosses": [
+    "kurt"
+   ],
+   "unlock": {
+    "kind": "total",
+    "counter": "trainersDefeated",
+    "atLeast": 1200
+   },
+   "unlockText": "Defeat 1200 trainers in total across your runs"
   }
  ],
  "draftRules": [
