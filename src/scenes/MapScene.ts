@@ -25,7 +25,9 @@ import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
-import { badge, drawPanel, focusFrame } from '../ui/widgets';
+import { badge, focusFrame } from '../ui/widgets';
+import { AERO, drawGlass, glassPanel as drawPanel, type MotionLevel } from '../ui/aero';
+import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
@@ -79,9 +81,16 @@ export class MapScene extends Phaser.Scene {
   private busy = false;
   /** What map items show about nodes (Devon Scope, Town Map, Rule Book, Orange Mail). */
   private previews: Record<string, NodePreview> = {};
+  /** Where each node is drawn inside the scrolling map layer (for the travel animation). */
+  private nodePos = new Map<string, { x: number; y: number }>();
+  private mapLayer: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super('Map');
+  }
+
+  private get motion(): MotionLevel {
+    return services().session.settings.battleAnimations;
   }
 
   preload(): void {
@@ -118,9 +127,16 @@ export class MapScene extends Phaser.Scene {
     const arena = league ? undefined : arenaFor(content, theme);
     const bg = arena && this.textures.exists(arena) ? arena : this.textures.exists('bg.battle') ? 'bg.battle' : null;
     if (bg) {
-      this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE).setDepth(-60);
-      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0e0b12, 0.62).setOrigin(0).setDepth(-55);
+      const back = this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE).setDepth(-60);
+      // Parallax: the scenery drifts slowly behind the map (presentation only).
+      if (this.motion === 'full' && back.displayWidth > GAME_WIDTH) {
+        this.tweens.add({ targets: back, x: GAME_WIDTH - back.displayWidth, duration: 40_000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      }
+      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x06152a, 0.58).setOrigin(0).setDepth(-55);
     }
+    // The stage's types drift over it (leaves, embers, bubbles...), like the battle arena.
+    const air = this.add.container(0, 0).setDepth(-50);
+    addAmbience(this, air, 0, league || blindMap(run.rules) ? ['dragon'] : theme.types, this.motion);
 
     // ---------- header ----------
     drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.92 });
@@ -151,6 +167,8 @@ export class MapScene extends Phaser.Scene {
     const hidden = hiddenItemNode(content, run);
     const choiceIds = new Set(choices.map((n) => n.id));
     const mapLayer = this.add.container(0, 0);
+    this.mapLayer = mapLayer;
+    this.nodePos = new Map();
     const totalWidth = MAP_LEFT * 2 + (stage.map.columns - 1) * COL_SPACING;
     const focusCol = Math.max(column, 1);
     const scroll = Phaser.Math.Clamp(MAP_LEFT + (focusCol - 1) * COL_SPACING - 300, 0, Math.max(0, totalWidth - GAME_WIDTH));
@@ -166,6 +184,14 @@ export class MapScene extends Phaser.Scene {
 
     const lines = this.add.graphics();
     mapLayer.add(lines);
+    const openPaths: [{ x: number; y: number }, { x: number; y: number }][] = [];
+    // The boss column: a glowing band behind the gym leader (or each League battle).
+    for (const n of stage.map.nodes.filter((m) => BOSS_KINDS.includes(m.kind))) {
+      const bx = pos(n).x;
+      const band = drawGlass(this, bx - 46, 98, 92, 300, { tint: KIND_STYLE[n.kind].color, rim: mixColor(KIND_STYLE[n.kind].color, 0xffffff, 0.4), alpha: 0.28, radius: 24 });
+      mapLayer.addAt(band, 0);
+      if (this.motion === 'full') this.tweens.add({ targets: band, alpha: 0.6, duration: 1600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
     for (const n of stage.map.nodes) {
       const a = pos(n);
       for (const id of n.next) {
@@ -175,8 +201,22 @@ export class MapScene extends Phaser.Scene {
         // A dark edge under each path, like a drawn route on a town map.
         lines.lineStyle(open ? 11 : 9, 0x181818, 0.9);
         lines.lineBetween(a.x, a.y, b.x, b.y);
-        lines.lineStyle(open ? 5 : 3, walked ? 0xf8c030 : open ? 0xf8f8f8 : 0x6b5a73, 1);
+        lines.lineStyle(open ? 5 : 3, walked ? 0xf8c030 : open ? 0xf8f8f8 : 0x5a6f8a, 1);
         lines.lineBetween(a.x, a.y, b.x, b.y);
+        if (open) openPaths.push([a, b]);
+      }
+    }
+    // Open paths glow, and little lights travel along them toward the choices.
+    const glow = this.add.graphics().setBlendMode('ADD');
+    mapLayer.add(glow);
+    for (const [a, b] of openPaths) {
+      glow.lineStyle(12, AERO.rim, 0.18);
+      glow.lineBetween(a.x, a.y, b.x, b.y);
+      if (this.motion !== 'full') continue;
+      for (let k = 0; k < 2; k++) {
+        const spark = this.add.circle(a.x, a.y, 4, AERO.white, 0.95).setBlendMode('ADD');
+        mapLayer.add(spark);
+        this.tweens.add({ targets: spark, x: b.x, y: b.y, alpha: { from: 1, to: 0.2 }, duration: 1300, delay: k * 650, repeat: -1, ease: 'Sine.easeIn' });
       }
     }
 
@@ -188,6 +228,7 @@ export class MapScene extends Phaser.Scene {
 
     for (const n of stage.map.nodes) {
       const { x, y } = pos(n);
+      this.nodePos.set(n.id, { x, y });
       const style = KIND_STYLE[n.kind];
       const visited = stage.visited.includes(n.id);
       const isCurrent = n.id === stage.current;
@@ -211,6 +252,13 @@ export class MapScene extends Phaser.Scene {
         g.strokeCircle(x, y, r + 6);
       }
       mapLayer.add(g);
+      if (reachable) {
+        // A soft halo that breathes under each node you can travel to.
+        const halo = this.add.circle(x, y, r + 8, AERO.sky, 0.35).setBlendMode('ADD');
+        mapLayer.addAt(halo, mapLayer.getIndex(g));
+        if (this.motion === 'full') this.tweens.add({ targets: halo, scale: 1.25, alpha: 0.1, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: n.row * 150 });
+      }
+      if (visited && !isCurrent) mapLayer.add(this.add.text(x + r - 4, y + r - 6, '✓', textStyle(18, '#8cf070', { stroke: '#0b2a4a', strokeThickness: 4 })).setOrigin(0.5));
       if (isCurrent) {
         const ring = this.add.graphics();
         ring.lineStyle(4, 0xffffff, 1);
@@ -280,7 +328,7 @@ export class MapScene extends Phaser.Scene {
     let x = GAME_WIDTH - 24 - buttons.length * 100 + 4;
     for (const b of buttons) {
       const bxPos = x;
-      drawPanel(this, bxPos, 444, 92, 52, { fill: b.color, border: b.color === COLORS.panel ? COLORS.border : mixColor(b.color, 0xffffff, 0.35) });
+      drawGlass(this, bxPos, 444, 92, 52, { tint: b.color === COLORS.panel ? AERO.glass : mixColor(b.color, 0x000000, 0.25), rim: b.color === COLORS.panel ? AERO.rim : mixColor(b.color, 0xffffff, 0.45), radius: 16, alpha: 0.95 });
       this.add.text(bxPos + 46, 470, b.label, textStyle(b.label.length > 7 ? 16 : 22, '#ffffff')).setOrigin(0.5);
       this.addOption(b.option, () => this.boxCursor(bxPos, 444, 92, 52), { x: bxPos, y: 444, w: 92, h: 52 });
       x += 100;
@@ -329,6 +377,40 @@ export class MapScene extends Phaser.Scene {
     return id ? bossInfo(session.content, 'elite', id) : null;
   }
 
+  /**
+   * The travelling highlight: a glowing token hops from where you stand to the chosen node.
+   * Presentation only (the choice is already made). Returns how long to wait before leaving.
+   */
+  private travel(node: MapNode): number {
+    const layer = this.mapLayer;
+    const to = this.nodePos.get(node.id);
+    if (this.motion !== 'full' || !layer || !to) return 0;
+    const stage = services().session.run!.stage!;
+    const from = (stage.current && this.nodePos.get(stage.current)) || { x: to.x - COL_SPACING, y: to.y };
+    const orb = this.add.circle(from.x, from.y, 9, AERO.white, 1).setBlendMode('ADD');
+    const aura = this.add.circle(from.x, from.y, 16, AERO.rim, 0.45).setBlendMode('ADD');
+    layer.add([aura, orb]);
+    const hop = { t: 0 };
+    this.tweens.add({
+      targets: hop,
+      t: 1,
+      duration: 380,
+      ease: 'Sine.easeInOut',
+      onUpdate: () => {
+        const x = from.x + (to.x - from.x) * hop.t;
+        const y = from.y + (to.y - from.y) * hop.t - Math.sin(hop.t * Math.PI) * 34;
+        orb.setPosition(x, y);
+        aura.setPosition(x, y);
+      },
+      onComplete: () => {
+        const ring = this.add.circle(to.x, to.y, NODE_RADIUS, AERO.rim, 0).setStrokeStyle(4, AERO.white, 1);
+        layer.add(ring);
+        this.tweens.add({ targets: ring, scale: 1.8, alpha: 0, duration: 260, ease: 'Quad.easeOut' });
+      },
+    });
+    return 420;
+  }
+
   private addOption(option: Option, makeCursor: () => Phaser.GameObjects.Graphics, hit: { x: number; y: number; w: number; h: number }): void {
     const index = this.options.length;
     this.options.push(option);
@@ -343,10 +425,13 @@ export class MapScene extends Phaser.Scene {
   }
 
   private ringCursor(layer: Phaser.GameObjects.Container, x: number, y: number, r: number): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics();
-    g.lineStyle(5, COLORS.accent, 1);
-    g.strokeCircle(x, y, r);
+    const g = this.add.graphics({ x, y });
+    g.lineStyle(10, AERO.rim, 0.3);
+    g.strokeCircle(0, 0, r + 2);
+    g.lineStyle(4, AERO.white, 1);
+    g.strokeCircle(0, 0, r);
     layer.add(g);
+    if (this.motion === 'full') this.tweens.add({ targets: g, scale: 1.1, duration: 500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     return g;
   }
 
@@ -363,7 +448,7 @@ export class MapScene extends Phaser.Scene {
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
-        const risk = n.harder ? `  ·  Harder: +${lo}–${hi} enemy levels, better rewards` : '';
+        const risk = n.harder ? `  ·  Risk: high (+${lo}–${hi} enemy levels, better rewards)` : boss ? '  ·  Risk: boss' : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : 'shop'));
         const seen = this.previewText(n);
         return `${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
@@ -420,8 +505,9 @@ export class MapScene extends Phaser.Scene {
           this.scene.restart({ notice: 'The Repel kept wild Pokémon away!', focus: 0 });
           break;
         }
-        this.cameras.main.fadeOut(250);
-        this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+        const delay = this.travel(option.node);
+        this.time.delayedCall(delay, () => this.cameras.main.fadeOut(250));
+        this.time.delayedCall(delay + 260, () => this.scene.start(sceneForRun(run)));
         break;
       }
       case 'side': {

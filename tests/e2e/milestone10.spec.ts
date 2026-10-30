@@ -177,7 +177,7 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   expect(errors).toEqual([]);
 });
 
-test('the Bond screen shows each Pokémon’s mood and bond bars', async ({ page }) => {
+test('the map has drifting ambience, and the Bond screen shows each Pokémon’s mood and bond bars', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -196,6 +196,13 @@ test('the Bond screen shows each Pokémon’s mood and bond bars', async ({ page
   await page.keyboard.press('Enter');
   await waitForScene(page, 'Map');
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
+  // Slice 6: the map has the stage's ambience (pack art) drifting behind it.
+  const mapKeys: string[] = await page.evaluate(() => {
+    const all = (o: any): any[] => (o.list ? [o, ...o.list.flatMap(all)] : [o]);
+    return (window as any).__pkr.game.scene.getScene('Map').children.list.flatMap(all).map((o: any) => o.texture?.key ?? '');
+  });
+  expect(mapKeys.some((k) => k.startsWith('pack.'))).toBe(true);
+  await page.screenshot({ path: 'test-results/m10-map.png' });
   await page.evaluate(() => {
     const map = (window as any).__pkr.game.scene.getScene('Map');
     map.activate(map.options.findIndex((o: any) => o.kind === 'bond'));
