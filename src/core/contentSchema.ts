@@ -944,7 +944,13 @@ export const TransformKindSchema = z.enum(TRANSFORM_KINDS);
 export type TransformKind = z.infer<typeof TransformKindSchema>;
 
 export const ItemEffectSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('catch'), multiplier: z.number().positive() }),
+  /** A ball. `rule` adds a condition to `multiplier` (see ballBonus in battle/engine.ts); `after` changes the caught Pokémon. */
+  z.object({
+    kind: z.literal('catch'),
+    multiplier: z.number().positive(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk']).optional(),
+    after: z.enum(['friend', 'luxury', 'heal']).optional(),
+  }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('cureStatus') }),
   z.object({ kind: z.literal('fullRestore') }),

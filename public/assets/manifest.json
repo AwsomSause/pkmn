@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T14:10:31.107Z",
+  "generatedAt": "2026-10-30T14:19:16.364Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -70627,6 +70627,120 @@
       "path": "images/bosses/lysandre.png"
     },
     {
+      "id": "boss.iono",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/iono.png"
+    },
+    {
+      "id": "boss.irida",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/irida.png"
+    },
+    {
+      "id": "boss.iris-gen5bw2",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/iris-gen5bw2.png"
+    },
+    {
+      "id": "boss.jacinthe",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/jacinthe.png"
+    },
+    {
+      "id": "boss.janine",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/janine.png"
+    },
+    {
+      "id": "boss.jasmine",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/jasmine.png"
+    },
+    {
+      "id": "boss.juan",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/juan.png"
+    },
+    {
+      "id": "boss.juniper",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/juniper.png"
+    },
+    {
+      "id": "boss.kabu",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kabu.png"
+    },
+    {
+      "id": "boss.kahili",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kahili.png"
+    },
+    {
+      "id": "boss.karen",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/karen.png"
+    },
+    {
+      "id": "boss.katy",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/katy.png"
+    },
+    {
+      "id": "boss.kiawe",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kiawe.png"
+    },
+    {
+      "id": "boss.klara",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/klara.png"
+    },
+    {
+      "id": "boss.koga",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/koga.png"
+    },
+    {
+      "id": "boss.korrina",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/korrina.png"
+    },
+    {
+      "id": "boss.kris",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kris.png"
+    },
+    {
+      "id": "boss.kukui",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kukui.png"
+    },
+    {
+      "id": "boss.kurt",
+      "kind": "image",
+      "category": "trainer",
+      "path": "images/bosses/kurt.png"
+    },
+    {
       "id": "trainer.youngster_m",
       "kind": "atlas",
       "category": "trainer",
@@ -70751,22 +70865,10 @@
       "path": "images/bosses/erika-gen3.png"
     },
     {
-      "id": "boss.koga",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/koga.png"
-    },
-    {
       "id": "boss.koga-lgpe",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/koga-lgpe.png"
-    },
-    {
-      "id": "boss.janine",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/janine.png"
     },
     {
       "id": "boss.blaine-lgpe",
@@ -70787,23 +70889,11 @@
       "path": "images/bosses/blue-gen7.png"
     },
     {
-      "id": "boss.jasmine",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/jasmine.png"
-    },
-    {
       "id": "trainer.will",
       "kind": "atlas",
       "category": "trainer",
       "path": "images/trainer/will.png",
       "atlasPath": "images/trainer/will.json"
-    },
-    {
-      "id": "boss.karen",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/karen.png"
     },
     {
       "id": "boss.Spr_HGSS_Ethan",
@@ -70812,34 +70902,16 @@
       "path": "images/bosses/Spr_HGSS_Ethan.png"
     },
     {
-      "id": "boss.kris",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kris.png"
-    },
-    {
       "id": "boss.Spr_HGSS_Silver",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/Spr_HGSS_Silver.png"
     },
     {
-      "id": "boss.kurt",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kurt.png"
-    },
-    {
       "id": "boss.tateandliza-gen6",
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/tateandliza-gen6.png"
-    },
-    {
-      "id": "boss.juan",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/juan.png"
     },
     {
       "id": "boss.brendan-e",
@@ -70951,12 +71023,6 @@
       "atlasPath": "images/trainer/brycen.json"
     },
     {
-      "id": "boss.iris-gen5bw2",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/iris-gen5bw2.png"
-    },
-    {
       "id": "trainer.shauntal",
       "kind": "atlas",
       "category": "trainer",
@@ -70971,23 +71037,11 @@
       "atlasPath": "images/trainer/marshal.json"
     },
     {
-      "id": "boss.juniper",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/juniper.png"
-    },
-    {
       "id": "trainer.viola",
       "kind": "atlas",
       "category": "trainer",
       "path": "images/trainer/viola.png",
       "atlasPath": "images/trainer/viola.json"
-    },
-    {
-      "id": "boss.korrina",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/korrina.png"
     },
     {
       "id": "trainer.ramos",
@@ -71024,24 +71078,6 @@
       "path": "images/bosses/ash-kalos.png"
     },
     {
-      "id": "boss.kiawe",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kiawe.png"
-    },
-    {
-      "id": "boss.kahili",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kahili.png"
-    },
-    {
-      "id": "boss.kukui",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kukui.png"
-    },
-    {
       "id": "boss.gladion-masters2",
       "kind": "image",
       "category": "trainer",
@@ -71060,12 +71096,6 @@
       "path": "images/bosses/lusamine-nihilego.png"
     },
     {
-      "id": "boss.kabu",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/kabu.png"
-    },
-    {
       "id": "trainer.gordie",
       "kind": "atlas",
       "category": "trainer",
@@ -71073,29 +71103,11 @@
       "atlasPath": "images/trainer/gordie.json"
     },
     {
-      "id": "boss.klara",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/klara.png"
-    },
-    {
       "id": "trainer.mustard",
       "kind": "atlas",
       "category": "trainer",
       "path": "images/trainer/mustard.png",
       "atlasPath": "images/trainer/mustard.json"
-    },
-    {
-      "id": "boss.katy",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/katy.png"
-    },
-    {
-      "id": "boss.iono",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/iono.png"
     },
     {
       "id": "trainer.kofu",
@@ -71195,12 +71207,6 @@
       "atlasPath": "images/trainer/drayton.json"
     },
     {
-      "id": "boss.irida",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/irida.png"
-    },
-    {
       "id": "trainer.mira",
       "kind": "atlas",
       "category": "trainer",
@@ -71212,12 +71218,6 @@
       "kind": "image",
       "category": "trainer",
       "path": "images/bosses/toddsnap.png"
-    },
-    {
-      "id": "boss.jacinthe",
-      "kind": "image",
-      "category": "trainer",
-      "path": "images/bosses/jacinthe.png"
     },
     {
       "id": "item.potion",
@@ -71968,6 +71968,114 @@
       "kind": "image",
       "category": "item",
       "path": "images/items/gen5/item-drop.png"
+    },
+    {
+      "id": "ball.master",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/master.png"
+    },
+    {
+      "id": "ball.premier",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/premier.png"
+    },
+    {
+      "id": "ball.net",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/net.png"
+    },
+    {
+      "id": "ball.dive",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/dive.png"
+    },
+    {
+      "id": "ball.nest",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/nest.png"
+    },
+    {
+      "id": "ball.repeat",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/repeat.png"
+    },
+    {
+      "id": "ball.timer",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/timer.png"
+    },
+    {
+      "id": "ball.quick",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/quick.png"
+    },
+    {
+      "id": "ball.dusk",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/dusk.png"
+    },
+    {
+      "id": "ball.luxury",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/luxury.png"
+    },
+    {
+      "id": "ball.heal",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/heal.png"
+    },
+    {
+      "id": "ball.level",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/level.png"
+    },
+    {
+      "id": "ball.lure",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/lure.png"
+    },
+    {
+      "id": "ball.moon",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/moon.png"
+    },
+    {
+      "id": "ball.friend",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/friend.png"
+    },
+    {
+      "id": "ball.love",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/love.png"
+    },
+    {
+      "id": "ball.heavy",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/heavy.png"
+    },
+    {
+      "id": "ball.fast",
+      "kind": "image",
+      "category": "item",
+      "path": "images/pokeball/fast.png"
     },
     {
       "id": "item.abomasite",
