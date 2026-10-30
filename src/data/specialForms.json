@@ -56,8 +56,8 @@
       "note": "The Trade Post offers a regional form about 1 trade in 4 (services.json tradeSpecialChance). Delta and Z forms are not traded."
     },
     "egg": {
-      "status": "planned",
-      "note": "Egg Lab (Phase D2)."
+      "status": "limited",
+      "note": "The Nursery sells a Regional Egg that hatches a regional first-stage form (core/eggs.ts layEgg). Delta, Spooky and Z forms do not come from eggs yet."
     },
     "researchQuest": {
       "status": "planned",
