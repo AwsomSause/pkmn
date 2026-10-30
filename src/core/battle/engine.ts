@@ -606,6 +606,18 @@ function switchOutAbility(ctx: BattleContext, mon: PokemonInstance): void {
 
 // ---------- abilities ----------
 
+/** The weather that counts: Cloud Nine and Air Lock on either side switch its effects off (it still runs out). */
+function weatherNow(ctx: BattleContext): Weather | null {
+  const w = ctx.battle.weather?.id ?? null;
+  if (!w) return null;
+  const mons = [ctx.party[ctx.battle.activeIndex], currentEnemy(ctx.battle)];
+  for (const m of mons) {
+    const a = m ? abilityOf(ctx.content, m) : null;
+    if (a === 'cloud-nine' || a === 'air-lock') return null;
+  }
+  return w;
+}
+
 function abilityIn(ctx: BattleContext, c: Combatant): string | null {
   return abilityOf(ctx.content, c.mon);
 }
@@ -711,7 +723,7 @@ function entryAbility(ctx: BattleContext, c: Combatant, other: Combatant, events
 function statusCureAbility(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
   if (c.mon.hp <= 0 || !c.mon.status) return;
   const ability = abilityIn(ctx, c);
-  const cure = (ability === 'shed-skin' && ctx.rng.chance(0.3)) || (ability === 'hydration' && ctx.battle.weather?.id === 'rain');
+  const cure = (ability === 'shed-skin' && ctx.rng.chance(0.3)) || (ability === 'hydration' && weatherNow(ctx) === 'rain');
   if (!cure) return;
   announce(c, ability!, events);
   c.mon.status = null;
@@ -767,7 +779,7 @@ function resolveMove(content: Content, mon: PokemonInstance, index: number): Mov
 function speedOf(ctx: BattleContext, c: Combatant): number {
   const { content } = ctx;
   const ability = abilityIn(ctx, c);
-  const weather = ctx.battle.weather?.id;
+  const weather = weatherNow(ctx) ?? undefined;
   const quickFeet = ability === 'quick-feet' && c.mon.status !== null;
   let speed = effectiveSpeed(content.ruleset, Math.floor(calcStats(content, c.mon).spe * Held.heldStatMultiplier(ctx, c.mon, c.side, 'spe')), c.stages.spe, c.mon.status?.id === 'par' && !quickFeet);
   if (ability && weather && WEATHER_SPEED[ability]?.includes(weather)) speed *= 2;
@@ -1247,7 +1259,7 @@ function executeMove(
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   const { content, rng } = ctx;
   const fx = move.effects;
-  const weather = ctx.battle.weather?.id ?? null;
+  const weather = weatherNow(ctx);
 
   // Psychic Terrain: a grounded Pokémon can't be hit by a move with priority.
   if (ctx.battle.terrain?.id === 'psychic' && user.side !== target.side && priorityOf(ctx, user, move) > 0 && isGrounded(ctx, target)) {
@@ -1704,7 +1716,7 @@ function applyStatusMove(ctx: BattleContext, user: Combatant, target: Combatant,
   let didSomething = false;
   if (fx.heal) {
     const max = calcStats(content, user.mon).hp;
-    const weather = ctx.battle.weather?.id ?? null;
+    const weather = weatherNow(ctx);
     let fraction = fx.heal;
     if (fx.healWeather && weather) fraction = weather === 'sun' ? 2 / 3 : 1 / 4;
     if (fx.healSand && weather === 'sand') fraction = 2 / 3;
@@ -1763,7 +1775,7 @@ function statusAbilityBlock(ctx: BattleContext, source: Combatant, target: Comba
   const ability = targetAbility(ctx, source, target);
   if (!ability) return null;
   if (STATUS_IMMUNE[ability]?.includes(status)) return ability;
-  if (ability === 'leaf-guard' && ctx.battle.weather?.id === 'sun') return ability;
+  if (ability === 'leaf-guard' && weatherNow(ctx) === 'sun') return ability;
   return null;
 }
 
@@ -1920,9 +1932,10 @@ function applyTerrain(ctx: BattleContext, sides: Combatant[], events: BattleEven
 function applyWeather(ctx: BattleContext, sides: Combatant[], events: BattleEvent[]): void {
   const weather = ctx.battle.weather;
   if (!weather) return;
-  const immune = WEATHER_IMMUNE[weather.id];
+  const negated = weatherNow(ctx) === null;
+  const immune = negated ? undefined : WEATHER_IMMUNE[weather.id];
   for (const c of sides) {
-    if (c.mon.hp <= 0) continue;
+    if (c.mon.hp <= 0 || negated) continue;
     const ability = abilityIn(ctx, c);
     const max = calcStats(ctx.content, c.mon).hp;
     const heals = (ability === 'rain-dish' && weather.id === 'rain') || (ability === 'ice-body' && (weather.id === 'snow' || weather.id === 'hail'));

@@ -9,7 +9,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 6, run 
 - M0–M6: vertical slice, full battles, stages, regions + dev campaign, hub progression, Run-Prep, full species data (archive: `docs/archive/checklist-m0-m6.md`).
 - M7 attributes and luck; M8 custom forms (255 Delta, Z-Forms, Spooky); M8.6 audit + content/balance reports + `report:check` gate.
 - M8.5 Mega, Primal, Tera, Z-Moves, Dynamax/G-Max (PokeRogue-style limits).
-- M8.75 parts: friendship (B), move tiers C1–C2, 188 abilities (C3, C3b-1), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
+- M8.75 parts: friendship (B), move tiers C1–C2, 190 abilities (C3, C3b-1, C3b-2), items slices 1–3b-3a (404 of 574 items work), Oak/N sprites, Peace/Charisma pass.
 - M8.9-0 story foundation (domain events, effect ledger, cues, histories, Story Log).
 - M8.9 Hyper Phase 1 slices 1, 2, 3, 4, 6.
 - M9 battle animations + settings; boss teams (229 bosses).
