@@ -46,7 +46,7 @@ import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } fr
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
-import { blackMarketMarkup, fieldResearchMoney, voiceAsksToJoin } from './trainerEvolution';
+import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -963,7 +963,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
     if (legendary) speciesId = legendary;
-    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`);
+    else speciesId = spookyWild(content, run, speciesId, `wild:${node.id}`, spookyEncounterChance(runPerks(content, run)));
     const enemy = newMon(content, run, speciesId, plan.level, 'e');
     enemy.shiny = plan.shiny;
     if (plan.shiny) count(run, 'shiniesFound');

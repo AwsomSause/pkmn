@@ -20943,6 +20943,1461 @@
      }
     }
    ]
+  },
+  {
+   "id": "spooky-haunted-mansion",
+   "name": "The Haunted Mansion",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "types": [
+    "ghost"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#1a0f24",
+    "effect": "fog"
+   },
+   "intro": "One window of the old mansion glows orange. Something giggles behind the door.",
+   "choices": [
+    {
+     "label": "Explore the halls",
+     "check": "intelligence",
+     "success": {
+      "text": "Behind a painting you find a clue, and a Spooky friend.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [
+         "litwick-spooky",
+         "timburr-spooky",
+         "emolga-spooky",
+         "snorunt-spooky",
+         "ponyta-spooky",
+         "sinistea-spooky",
+         "tangela-spooky"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A ghost leaps from the wardrobe!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ghost"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Knock politely",
+     "success": {
+      "text": "A voice whispers a clue and slips you a charm.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "spell-tag",
+        "count": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-pumpkin-patch",
+   "name": "The Pumpkin Patch",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "types": [
+    "ghost",
+    "grass"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1408",
+    "effect": "fire"
+   },
+   "intro": "Rows of carved pumpkins flicker. One of them blinks.",
+   "choices": [
+    {
+     "label": "Pick the blinking pumpkin",
+     "chance": 0.5,
+     "success": {
+      "text": "It was a Spooky Pokémon all along!",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [
+         "ponyta-spooky",
+         "tangela-spooky"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Just a pumpkin… with a clue carved inside.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Carve lanterns together",
+     "success": {
+      "text": "Your team laughs the night away.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-candle-vigil",
+   "name": "The Candle Vigil",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "types": [
+    "ghost",
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "pokemon": "litwick-spooky",
+    "tint": "#180c20",
+    "effect": "flicker"
+   },
+   "intro": "A circle of candles burns in the dark. One of them is watching you.",
+   "choices": [
+    {
+     "label": "Light a candle",
+     "success": {
+      "text": "The watching candle hops into your bag.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [
+         "litwick-spooky"
+        ],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Blow them out",
+     "success": {
+      "text": "The candles flare up and attack!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "litwick-spooky"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-lost-spirit",
+   "name": "The Lost Spirit",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "types": [
+    "ghost"
+   ],
+   "scene": {
+    "cast": [],
+    "pokemon": "sinistea-spooky",
+    "tint": "#101828",
+    "effect": "fog"
+   },
+   "intro": "A little teacup spirit floats in circles, lost.",
+   "choices": [
+    {
+     "label": "Guide it home",
+     "success": {
+      "text": "It thanks you with two clues.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow it into the fog",
+     "success": {
+      "text": "It leads you to its angry friends!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "sinistea-spooky",
+        "snorunt-spooky"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-trick-or-treat",
+   "name": "Trick or Treat!",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#2a1030",
+    "effect": "sparkle"
+   },
+   "intro": "Costumed kids hold out their bags. \"Trick or treat!\"",
+   "choices": [
+    {
+     "label": "Hand out treats",
+     "success": {
+      "text": "They share a clue they found.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Play a trick",
+     "check": "luck",
+     "success": {
+      "text": "Perfect trick! They pay up.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 600
+       }
+      ]
+     },
+     "failure": {
+      "text": "The trick backfires. Boo!",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-graveyard-dig",
+   "name": "The Moonlit Graveyard",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "types": [
+    "ghost",
+    "fighting"
+   ],
+   "scene": {
+    "cast": [],
+    "pokemon": "timburr-spooky",
+    "tint": "#0c1018",
+    "effect": "fog"
+   },
+   "intro": "Someone is digging by the old gate, carrying a ghostly beam.",
+   "choices": [
+    {
+     "label": "Help dig",
+     "success": {
+      "text": "You dig up a clue and a rare treat.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Challenge the digger",
+     "success": {
+      "text": "A Spooky Timburr swings its beam!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "timburr-spooky"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        },
+        {
+         "kind": "item",
+         "id": "spell-tag",
+         "count": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-pumpkin-king",
+   "name": "The Pumpkin King",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ghost",
+    "grass"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#301000",
+    "effect": "fire"
+   },
+   "intro": "A towering figure with a lantern head blocks the road. \"Only the brave pass my patch!\"",
+   "choices": [
+    {
+     "label": "Face the Pumpkin King",
+     "success": {
+      "text": "The Pumpkin King summons his court!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "The Pumpkin King",
+       "classId": "hex-maniac",
+       "size": 3,
+       "types": [
+        "ghost",
+        "grass"
+       ],
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        },
+        {
+         "kind": "join",
+         "species": [
+          "litwick-spooky",
+          "timburr-spooky",
+          "emolga-spooky",
+          "snorunt-spooky",
+          "ponyta-spooky",
+          "sinistea-spooky",
+          "tangela-spooky"
+         ],
+         "types": [],
+         "levelBonus": 2,
+         "shinyMultiplier": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer a treat to pass",
+     "success": {
+      "text": "He takes it and grumbles. A clue falls from his cape.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-midnight-finale",
+   "name": "The Midnight Parade",
+   "group": "Holiday events",
+   "gameEvent": "spooky-season",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [
+    "ghost"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#14001e",
+    "effect": "flicker"
+   },
+   "intro": "At midnight the Hex Coven leads the last parade of Spooky Season.",
+   "choices": [
+    {
+     "label": "Join the final battle",
+     "success": {
+      "text": "The Coven calls every ghost in town!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hex Coven",
+       "classId": "hex-maniac",
+       "size": 4,
+       "types": [
+        "ghost"
+       ],
+       "levelBonus": 6,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventFinalesWon",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "join",
+         "species": [
+          "litwick-spooky",
+          "timburr-spooky",
+          "emolga-spooky",
+          "snorunt-spooky",
+          "ponyta-spooky",
+          "sinistea-spooky",
+          "tangela-spooky"
+         ],
+         "types": [],
+         "levelBonus": 3,
+         "shinyMultiplier": 3
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Watch from the side",
+     "success": {
+      "text": "The parade glows past. You note a clue.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "harvest-berry-fair",
+   "name": "The Berry Fair",
+   "group": "Holiday events",
+   "gameEvent": "harvest-festival",
+   "types": [
+    "grass"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2008",
+    "effect": "sparkle"
+   },
+   "intro": "Farmers show off the biggest berries of the year.",
+   "choices": [
+    {
+     "label": "Enter the berry contest",
+     "check": "charisma",
+     "success": {
+      "text": "First prize, and a farmer's tip.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Second place still gets a berry and a tip.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help with the harvest",
+     "success": {
+      "text": "Hard work pays.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "winter-gift-exchange",
+   "name": "The Gift Exchange",
+   "group": "Holiday events",
+   "gameEvent": "winter-festival",
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#0c1a2c",
+    "effect": "snow"
+   },
+   "intro": "Under a glowing tree, trainers swap wrapped gifts.",
+   "choices": [
+    {
+     "label": "Open a gift",
+     "success": {
+      "text": "A cozy surprise, and a tag with a clue.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give a gift",
+     "success": {
+      "text": "Their smile warms the snow.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "winter-frost-king",
+   "name": "The Frost King",
+   "group": "Holiday events",
+   "gameEvent": "winter-festival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.snow_worker_m"
+    ],
+    "tint": "#081828",
+    "effect": "snow"
+   },
+   "intro": "A snow worker crowned with icicles challenges every passer-by.",
+   "choices": [
+    {
+     "label": "Accept the challenge",
+     "success": {
+      "text": "The Frost King's team storms in!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "The Frost King",
+       "classId": "snow-worker",
+       "size": 3,
+       "types": [
+        "ice"
+       ],
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        },
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Build a snowman instead",
+     "success": {
+      "text": "He laughs and lets you pass.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "new-year-countdown",
+   "name": "The Countdown",
+   "group": "Holiday events",
+   "gameEvent": "new-year-countdown",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#100820",
+    "effect": "sparkle"
+   },
+   "intro": "Fireworks wait for midnight. A trainer wants one last battle of the year.",
+   "choices": [
+    {
+     "label": "Battle at the countdown",
+     "success": {
+      "text": "3… 2… 1… battle!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Countdown Trainer",
+       "size": 3,
+       "types": [],
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventFinalesWon",
+         "amount": 1
+        },
+        {
+         "kind": "money",
+         "amount": 2026
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Watch the fireworks",
+     "success": {
+      "text": "A bright start. You make a wish.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lunar-lantern-walk",
+   "name": "The Lantern Walk",
+   "group": "Holiday events",
+   "gameEvent": "lunar-new-year",
+   "types": [
+    "fire",
+    "dragon"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#300808",
+    "effect": "fire"
+   },
+   "intro": "Red lanterns line the street. A dragon dance winds between them.",
+   "choices": [
+    {
+     "label": "Follow the dragon dance",
+     "success": {
+      "text": "Lucky red envelopes rain down.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 888
+       }
+      ]
+     }
+    },
+    {
+     "label": "Light a lantern",
+     "success": {
+      "text": "Your wish floats up with a clue.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "friendship-picnic",
+   "name": "The Friendship Picnic",
+   "group": "Holiday events",
+   "gameEvent": "friendship-festival",
+   "types": [
+    "fairy",
+    "normal"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#301020",
+    "effect": "hearts"
+   },
+   "intro": "Blankets, sweets and Pokémon everywhere. Someone left you a seat.",
+   "choices": [
+    {
+     "label": "Share sweets with your team",
+     "success": {
+      "text": "Your team has never been closer.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade stories",
+     "success": {
+      "text": "A new friend wants to come along.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [
+         "fairy",
+         "normal"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pokemon-day-parade",
+   "name": "The Anniversary Parade",
+   "group": "Holiday events",
+   "gameEvent": "pokemon-day",
+   "scene": {
+    "cast": [],
+    "tint": "#202008",
+    "effect": "sparkle"
+   },
+   "intro": "A parade of every kind of Pokémon marches through town.",
+   "choices": [
+    {
+     "label": "March with your starter",
+     "success": {
+      "text": "The crowd cheers for your partner.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "lead"
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hand out flyers",
+     "success": {
+      "text": "The organisers pay you and share a clue.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 700
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spring-egg-hunt",
+   "name": "The Egg Hunt",
+   "group": "Holiday events",
+   "gameEvent": "spring-bloom",
+   "types": [
+    "grass",
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#183018",
+    "effect": "sparkle"
+   },
+   "intro": "Painted eggs are hidden all over the meadow.",
+   "choices": [
+    {
+     "label": "Search the meadow",
+     "check": "luck",
+     "success": {
+      "text": "A basket full of eggs and clues!",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 2
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Just one egg, but it counts.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help the little ones find theirs",
+     "success": {
+      "text": "Everyone goes home happy.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spring-bloom-guardian",
+   "name": "The Bloom Guardian",
+   "group": "Holiday events",
+   "gameEvent": "spring-bloom",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "grass",
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#103018",
+    "effect": "sparkle"
+   },
+   "intro": "A huge flower Pokémon guards the first bloom of spring.",
+   "choices": [
+    {
+     "label": "Prove yourself",
+     "success": {
+      "text": "The guardian blooms with power!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "grass",
+        "fairy"
+       ],
+       "levelBonus": 4,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Admire the bloom",
+     "success": {
+      "text": "Its scent heals your team.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "earth-week-cleanup",
+   "name": "The Big Cleanup",
+   "group": "Holiday events",
+   "gameEvent": "earth-week",
+   "types": [
+    "ground",
+    "grass"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#182010",
+    "effect": "none"
+   },
+   "intro": "Volunteers are clearing litter from a riverbank.",
+   "choices": [
+    {
+     "label": "Pitch in",
+     "success": {
+      "text": "The river sparkles again.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Dig for buried junk",
+     "success": {
+      "text": "You find something valuable.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "summer-beach-tournament",
+   "name": "The Beach Tournament",
+   "group": "Holiday events",
+   "gameEvent": "summer-splash",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#082838",
+    "effect": "none"
+   },
+   "intro": "A sandcastle stadium hosts the summer's biggest beach battle.",
+   "choices": [
+    {
+     "label": "Enter the tournament",
+     "success": {
+      "text": "The beach champion dives in!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Beach Champion",
+       "classId": "fisherman",
+       "size": 3,
+       "types": [
+        "water"
+       ],
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "money",
+         "amount": 1200
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Build a sandcastle",
+     "success": {
+      "text": "You win the sandcastle prize.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fresh-water",
+         "soda-pop",
+         "lemonade",
+         "moomoo-milk",
+         "lava-cookie",
+         "old-gateau",
+         "casteliacone",
+         "sweet-heart"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stargazing-meteor-watch",
+   "name": "The Meteor Watch",
+   "group": "Holiday events",
+   "gameEvent": "stargazing-nights",
+   "types": [
+    "psychic",
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#080820",
+    "effect": "sparkle"
+   },
+   "intro": "Stargazers lie in the grass. A meteor streaks overhead.",
+   "choices": [
+    {
+     "label": "Chase the meteor",
+     "check": "speed",
+     "success": {
+      "text": "Where it landed: a shard and a clue.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "stardust",
+         "star-piece",
+         "comet-shard"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Gone, but you mapped where it fell.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Make a wish",
+     "success": {
+      "text": "You feel lucky.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "academy-exam",
+   "name": "The Academy Exam",
+   "group": "Holiday events",
+   "gameEvent": "trainer-academy",
+   "types": [
+    "psychic"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#101830",
+    "effect": "glint"
+   },
+   "intro": "The Trainer Academy holds an open exam on the road.",
+   "choices": [
+    {
+     "label": "Take the written test",
+     "check": "intelligence",
+     "success": {
+      "text": "Top marks!",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "A pass, just about.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the battle test",
+     "success": {
+      "text": "The examiner sends out a team!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Academy Examiner",
+       "classId": "psychic",
+       "size": 3,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
   }
  ]
 }

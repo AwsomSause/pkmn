@@ -99,6 +99,27 @@
    "unlockText": "raise 3 species to Silver mastery"
   },
   {
+   "id": "spooky",
+   "name": "Spooky Set",
+   "description": "The Spooky pack's starters: Spooky Litwick, Timburr, Emolga, Snorunt, Ponyta, Sinistea and Tangela.",
+   "category": "event",
+   "species": [
+    "litwick-spooky",
+    "timburr-spooky",
+    "emolga-spooky",
+    "snorunt-spooky",
+    "ponyta-spooky",
+    "sinistea-spooky",
+    "tangela-spooky"
+   ],
+   "specialForms": true,
+   "unlock": {
+    "kind": "claim",
+    "key": "event:spooky-season:reward"
+   },
+   "unlockText": "Finish every Spooky Season objective (October, or when it returns from the Event Archive)"
+  },
+  {
    "id": "rare",
    "name": "Rare",
    "description": "Rare first-stage Pokémon that grow into powerhouses.",

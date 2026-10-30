@@ -504,6 +504,10 @@ export const BASE_COUNTER_NAMES = [
   'raidsWon',
   'totemsWon',
   'rivalBattlesWon',
+  /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
+  'eventClues',
+  'eventBossesWon',
+  'eventFinalesWon',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -522,12 +526,14 @@ export const CounterNameSchema = z.string().refine((s) => COUNTER_NAMES.includes
  *   best        — a counter's best value in a single run
  *   distinct    — how many different species have been seen or caught
  *   achievement — another achievement has been earned
+ *   claim       — a claim-ledger key exists (e.g. a game event's reward, "event:spooky-season:reward")
  */
 export const RequirementSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('total'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('best'), counter: CounterNameSchema, atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('distinct'), set: z.enum(['speciesSeen', 'speciesCaught']), atLeast: z.number().int().positive() }),
   z.object({ kind: z.literal('achievement'), id: z.string() }),
+  z.object({ kind: z.literal('claim'), key: z.string().min(1) }),
 ]);
 export type Requirement = z.infer<typeof RequirementSchema>;
 
@@ -564,6 +570,8 @@ export const QuestRewardSchema = UnlockRewardSchema.extend({
   pool: z.string().optional(),
   /** The last step of a special trainer's line unlocks their Trainer Evolution. */
   evolution: z.boolean().default(false),
+  /** A trainer unlocked for free (the Spooky pack's Hex Maniac). */
+  trainer: z.string().optional(),
 });
 export type QuestReward = z.infer<typeof QuestRewardSchema>;
 
@@ -767,6 +775,10 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('voiceOfPokemon'), chance: z.number().positive().max(1) }),
   /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
   z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
+  /** Spooky pack (Hex Maniac, Spooky Season): this share of wild Pokémon turn into Spooky forms (added to Spooky mode's share). */
+  z.object({ kind: z.literal('spookyEncounters'), chance: z.number().positive().max(1) }),
+  /** A game event's own map stops (e.g. the Spooky pack's) appear in this trainer's runs all year. */
+  z.object({ kind: z.literal('eventStops'), gameEvent: z.string().min(1) }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -818,7 +830,7 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
-export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare'] as const;
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event'] as const;
 export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
 
 export const StarterPoolSchema = z.object({
@@ -843,6 +855,8 @@ export const StarterPoolSchema = z.object({
   researchCost: z.number().int().min(0).default(0),
   /** The "Mastered" set: its species are the ones you raised to Silver mastery or better (core/mastery.ts). */
   mastered: z.boolean().default(false),
+  /** An earned set that may hold special forms (Spooky forms...), which every other pool leaves out (core/specialForms.ts). */
+  specialForms: z.boolean().default(false),
 }).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
@@ -1910,6 +1924,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('revealStops') }),
   /** A party member changes form for good (Therian Forme, Black Kyurem...); `consume` is another species that leaves the party for it. */
   z.object({ kind: z.literal('formChange'), from: z.string(), to: z.string(), consume: z.string().optional() }),
+  /** Adds to a run counter: a holiday event's clue, boss or finale (game event objectives count these). */
+  z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 
