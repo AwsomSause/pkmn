@@ -1,0 +1,1492 @@
+{
+ "source": "A Living Rivalry Engine - Examples, Possibilities, and Guidence.md",
+ "paths": [
+  {
+   "id": "unexpected-nemesis",
+   "name": "The Unexpected Nemesis",
+   "group": "Paths created by the player's actions",
+   "text": "You defeat a seemingly ordinary trainer. They take the loss personally, study your team, and begin preparing specifically for you.",
+   "status": "planned"
+  },
+  {
+   "id": "accidental-hero",
+   "name": "The Accidental Hero",
+   "group": "Paths created by the player's actions",
+   "text": "You save their Pokémon, help them through an event, or intervene in a crisis. They become inspired by you—or resent needing your help.",
+   "status": "planned"
+  },
+  {
+   "id": "stolen-spotlight",
+   "name": "The Stolen Spotlight",
+   "group": "Paths created by the player's actions",
+   "text": "You receive recognition, a sponsorship, a rare Pokémon, or a tournament invitation they expected to earn.",
+   "status": "planned"
+  },
+  {
+   "id": "merciful-victor",
+   "name": "The Merciful Victor",
+   "group": "Paths created by the player's actions",
+   "text": "You defeat them but spare their pride, offer advice, or help their injured Pokémon. They may become grateful, obsessed with repaying you, or frustrated by your pity.",
+   "status": "planned"
+  },
+  {
+   "id": "public-humiliation",
+   "name": "The Public Humiliation",
+   "group": "Paths created by the player's actions",
+   "text": "A battle goes badly for them in front of spectators. They may seek revenge, reinvent their style, or withdraw from competition.",
+   "status": "planned"
+  },
+  {
+   "id": "shared-disaster",
+   "name": "The Shared Disaster",
+   "group": "Paths created by the player's actions",
+   "text": "You both survive a disastrous route, raid, or powerful encounter. You become connected through a shared experience.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-s-choice",
+   "name": "The Pokémon's Choice",
+   "group": "Paths created by the player's actions",
+   "text": "A Pokémon bonds with you, rejects their training, or repeatedly reacts to your presence. The trainer's response creates the rivalry.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-you-inspired",
+   "name": "The Rival You Inspired",
+   "group": "Paths created by the player's actions",
+   "text": "They begin by copying your team or strategy, then gradually develop a style of their own.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-you-neglected",
+   "name": "The Rival You Neglected",
+   "group": "Paths created by the player's actions",
+   "text": "You repeatedly defeat or encounter them without acknowledging them. They interpret your indifference in a way that drives their next decisions.",
+   "status": "planned"
+  },
+  {
+   "id": "debt",
+   "name": "The Debt",
+   "group": "Paths created by the player's actions",
+   "text": "You owe them a favor, they owe you one, or a past decision leaves an unresolved obligation that resurfaces later.",
+   "status": "planned"
+  },
+  {
+   "id": "self-made-challenger",
+   "name": "The Self-Made Challenger",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They independently decide that you are the best benchmark for their progress.",
+   "status": "planned"
+  },
+  {
+   "id": "chosen-successor",
+   "name": "The Chosen Successor",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "A respected trainer, Gym Leader, or Champion identifies both of you as potential successors, creating an unspoken competition.",
+   "status": "planned"
+  },
+  {
+   "id": "family-legacy",
+   "name": "The Family Legacy",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They come from a famous battling family and see your success as either a threat to their inheritance or a chance to prove themselves.",
+   "status": "planned"
+  },
+  {
+   "id": "fallen-prodigy",
+   "name": "The Fallen Prodigy",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "Once considered exceptional, they are now struggling to recover their former ability.",
+   "status": "planned"
+  },
+  {
+   "id": "late-bloomer",
+   "name": "The Late Bloomer",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They begin with an unimpressive team but develop unusually strong bonds and steadily improve.",
+   "status": "planned"
+  },
+  {
+   "id": "researcher",
+   "name": "The Researcher",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They study Pokémon behavior, battle data, Hyper surges, or Overdrive events. You become their most fascinating case study.",
+   "status": "planned"
+  },
+  {
+   "id": "collector-s-rival",
+   "name": "The Collector's Rival",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They pursue rare Pokémon, unusual forms, or remarkable team combinations. They compete with you for discoveries rather than badges alone.",
+   "status": "planned"
+  },
+  {
+   "id": "regional-idealist",
+   "name": "The Regional Idealist",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They believe the region needs a particular kind of Champion and decide you represent the opposing future.",
+   "status": "planned"
+  },
+  {
+   "id": "disgraced-champion-candidate",
+   "name": "The Disgraced Champion Candidate",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They once stood on the verge of greatness before a public failure, scandal, or devastating loss.",
+   "status": "planned"
+  },
+  {
+   "id": "world-traveler",
+   "name": "The World Traveler",
+   "group": "Paths created by the rival's own ambitions",
+   "text": "They have their own journey across regions and may return with new partners, strategies, and attitudes.",
+   "status": "planned"
+  },
+  {
+   "id": "assigned-opponent",
+   "name": "The Assigned Opponent",
+   "group": "Paths created by circumstances and other characters",
+   "text": "A mentor, tournament, academy, or organization pairs you together. The rivalry becomes genuine—or the arrangement falls apart.",
+   "status": "planned"
+  },
+  {
+   "id": "mutual-enemy",
+   "name": "The Mutual Enemy",
+   "group": "Paths created by circumstances and other characters",
+   "text": "You both oppose the same dangerous trainer or faction but disagree over how to handle it.",
+   "status": "planned"
+  },
+  {
+   "id": "former-friend",
+   "name": "The Former Friend",
+   "group": "Paths created by circumstances and other characters",
+   "text": "A friendship deteriorates because of ambition, conflicting ideals, a betrayal, or a misunderstanding.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-s-rival",
+   "name": "The Rival's Rival",
+   "group": "Paths created by circumstances and other characters",
+   "text": "You defeat someone they have spent years trying to surpass, inheriting that person's attention.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-league-prospect",
+   "name": "The Pokémon League Prospect",
+   "group": "Paths created by circumstances and other characters",
+   "text": "A league organization tracks both of you as promising competitors, turning ordinary encounters into a growing public competition.",
+   "status": "planned"
+  },
+  {
+   "id": "shared-mentor",
+   "name": "The Shared Mentor",
+   "group": "Paths created by circumstances and other characters",
+   "text": "You train under the same expert. Different lessons and interpretations create a philosophical rivalry.",
+   "status": "planned"
+  },
+  {
+   "id": "ideological-opponent",
+   "name": "The Ideological Opponent",
+   "group": "Paths created by circumstances and other characters",
+   "text": "They believe your approach to training, evolution, Hyper, or Overdrive is fundamentally wrong.",
+   "status": "planned"
+  },
+  {
+   "id": "accidental-competitor",
+   "name": "The Accidental Competitor",
+   "group": "Paths created by circumstances and other characters",
+   "text": "You keep meeting at contests, routes, raids, or events. Neither initially cares, until the pattern becomes personal.",
+   "status": "planned"
+  },
+  {
+   "id": "inherited-conflict",
+   "name": "The Inherited Conflict",
+   "group": "Paths created by circumstances and other characters",
+   "text": "A rival believes your actions, family history, team legacy, or previous trainer's reputation wronged them.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-who-remembers",
+   "name": "The Pokémon Who Remembers",
+   "group": "Paths created by circumstances and other characters",
+   "text": "One of their Pokémon recognizes you from an earlier encounter, a rescue, a battle, or a period when it belonged to someone else.",
+   "status": "planned"
+  }
+ ],
+ "personalities": [
+  {
+   "id": "perfectionist",
+   "name": "The Perfectionist",
+   "group": "Competitive personalities",
+   "text": "Repeats training routines and punishes their own mistakes. Strong consistency; risks overtraining and rigidity.",
+   "status": "planned"
+  },
+  {
+   "id": "prodigy",
+   "name": "The Prodigy",
+   "group": "Competitive personalities",
+   "text": "Learns quickly and expects natural excellence. Powerful early, but may struggle after a humiliating loss.",
+   "status": "planned"
+  },
+  {
+   "id": "underdog",
+   "name": "The Underdog",
+   "group": "Competitive personalities",
+   "text": "Believes effort can overcome almost any disadvantage. Adapts well under pressure, but may take unnecessary risks.",
+   "status": "planned"
+  },
+  {
+   "id": "tactician",
+   "name": "The Tactician",
+   "group": "Competitive personalities",
+   "text": "Studies team composition, move interactions, and opponent habits. Strong counterplay; can be slow to improvise.",
+   "status": "planned"
+  },
+  {
+   "id": "gambler",
+   "name": "The Gambler",
+   "group": "Competitive personalities",
+   "text": "Prefers high-risk, high-reward battles. Can create spectacular victories and spectacular collapses.",
+   "status": "planned"
+  },
+  {
+   "id": "showboat",
+   "name": "The Showboat",
+   "group": "Competitive personalities",
+   "text": "Wants an audience and memorable victories. Thrives in public battles but can be distracted by humiliation or applause.",
+   "status": "planned"
+  },
+  {
+   "id": "veteran",
+   "name": "The Veteran",
+   "group": "Competitive personalities",
+   "text": "Values preparation and reliable fundamentals. Excellent resource management; can underestimate unconventional opponents.",
+   "status": "planned"
+  },
+  {
+   "id": "speedrunner",
+   "name": "The Speedrunner",
+   "group": "Competitive personalities",
+   "text": "Wants to progress as efficiently as possible. Builds streamlined teams and dislikes delays, detours, or prolonged battles.",
+   "status": "planned"
+  },
+  {
+   "id": "golden-retriever",
+   "name": "The Golden Retriever",
+   "group": "Social personalities",
+   "text": "Enthusiastic, supportive, and genuinely happy to battle. Bonds quickly and often inspires team confidence.",
+   "status": "planned"
+  },
+  {
+   "id": "gentle-giant",
+   "name": "The Gentle Giant",
+   "group": "Social personalities",
+   "text": "Calm, patient, and protective. Excels at steady trust-building and defensive coordination.",
+   "status": "planned"
+  },
+  {
+   "id": "tease",
+   "name": "The Tease",
+   "group": "Social personalities",
+   "text": "Uses humor and playful provocation. Tests whether opponents lose composure; may hide genuine insecurity.",
+   "status": "planned"
+  },
+  {
+   "id": "ice-queen-king",
+   "name": "The Ice Queen/King",
+   "group": "Social personalities",
+   "text": "Emotionally reserved and difficult to read. Relies on routine and may struggle to express affection directly.",
+   "status": "planned"
+  },
+  {
+   "id": "social-climber",
+   "name": "The Social Climber",
+   "group": "Social personalities",
+   "text": "Pursues status, powerful connections, and public recognition. May abandon a path that no longer improves their reputation.",
+   "status": "planned"
+  },
+  {
+   "id": "loner",
+   "name": "The Loner",
+   "group": "Social personalities",
+   "text": "Trains independently and avoids asking for help. Can develop highly individualistic team chemistry, but trust takes time.",
+   "status": "planned"
+  },
+  {
+   "id": "mediator",
+   "name": "The Mediator",
+   "group": "Social personalities",
+   "text": "Resolves conflict among people and Pokémon. Keeps a balanced team but may avoid difficult confrontations.",
+   "status": "planned"
+  },
+  {
+   "id": "people-pleaser",
+   "name": "The People-Pleaser",
+   "group": "Social personalities",
+   "text": "Wants everyone to be proud of them. Can develop excellent bonds, yet struggles with boundaries and independent decisions.",
+   "status": "planned"
+  },
+  {
+   "id": "idealist",
+   "name": "The Idealist",
+   "group": "Philosophical personalities",
+   "text": "Believes every Pokémon deserves dignity and a chance. Resists exploitative strategies, even at a competitive cost.",
+   "status": "planned"
+  },
+  {
+   "id": "pragmatist",
+   "name": "The Pragmatist",
+   "group": "Philosophical personalities",
+   "text": "Believes good intentions are meaningless without results. Makes efficient choices and questions sentimentality.",
+   "status": "planned"
+  },
+  {
+   "id": "traditionalist",
+   "name": "The Traditionalist",
+   "group": "Philosophical personalities",
+   "text": "Respects established training methods and regional customs. Gains stability from routines but may resist new approaches.",
+   "status": "planned"
+  },
+  {
+   "id": "innovator",
+   "name": "The Innovator",
+   "group": "Philosophical personalities",
+   "text": "Experiments with strange teams, unconventional moves, and unusual bond-building methods. Can discover unique tactics.",
+   "status": "planned"
+  },
+  {
+   "id": "naturalist",
+   "name": "The Naturalist",
+   "group": "Philosophical personalities",
+   "text": "Studies Pokémon in their environments and adapts to their instincts. Develops species-specific synergies.",
+   "status": "planned"
+  },
+  {
+   "id": "scholar",
+   "name": "The Scholar",
+   "group": "Philosophical personalities",
+   "text": "Seeks to understand the mechanics behind power. Excels at observing Hyper and Overdrive behavior.",
+   "status": "planned"
+  },
+  {
+   "id": "spiritualist",
+   "name": "The Spiritualist",
+   "group": "Philosophical personalities",
+   "text": "Treats battling as a relationship between trainer and Pokémon, not merely a competition. Strong emotional alignment, but may interpret setbacks too personally.",
+   "status": "planned"
+  },
+  {
+   "id": "nihilist",
+   "name": "The Nihilist",
+   "group": "Philosophical personalities",
+   "text": "Believes victory is temporary and bonds are fragile. May fight with cold efficiency until an event challenges that worldview.",
+   "status": "planned"
+  },
+  {
+   "id": "perpetual-runner-up",
+   "name": "The Perpetual Runner-Up",
+   "group": "Troubled personalities",
+   "text": "Always comes close to winning, then loses at the critical moment. May learn composure or become consumed by comparison.",
+   "status": "planned"
+  },
+  {
+   "id": "burnout",
+   "name": "The Burnout",
+   "group": "Troubled personalities",
+   "text": "Once loved battling but now struggles to care. Small acts of kindness or a surprising defeat can rekindle their motivation.",
+   "status": "planned"
+  },
+  {
+   "id": "obsessive",
+   "name": "The Obsessive",
+   "group": "Troubled personalities",
+   "text": "Focuses almost entirely on one goal or one opponent. Develops specialized counters but neglects other relationships.",
+   "status": "planned"
+  },
+  {
+   "id": "avenger",
+   "name": "The Avenger",
+   "group": "Troubled personalities",
+   "text": "Connects competition with an unresolved wrong. Strong persistence; may mistake revenge for progress.",
+   "status": "planned"
+  },
+  {
+   "id": "control-freak",
+   "name": "The Control Freak",
+   "group": "Troubled personalities",
+   "text": "Wants every action to be predictable. Trains through rigid commands and struggles when Pokémon act independently.",
+   "status": "planned"
+  },
+  {
+   "id": "escapist",
+   "name": "The Escapist",
+   "group": "Troubled personalities",
+   "text": "Uses travel and battling to avoid a personal problem. Their arc can involve facing the issue rather than winning more battles.",
+   "status": "planned"
+  },
+  {
+   "id": "self-saboteur",
+   "name": "The Self-Saboteur",
+   "group": "Troubled personalities",
+   "text": "Retreats or makes reckless choices when success becomes possible. Their growth depends on accepting that they deserve to succeed.",
+   "status": "planned"
+  },
+  {
+   "id": "fallen-idealist",
+   "name": "The Fallen Idealist",
+   "group": "Troubled personalities",
+   "text": "Once believed deeply in fair play but has become cynical after betrayal or repeated disappointments.",
+   "status": "planned"
+  },
+  {
+   "id": "collector",
+   "name": "The Collector",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Values discovery, unusual species, and variety. Rotates their team often and may struggle to develop deep synergy with every partner.",
+   "status": "planned"
+  },
+  {
+   "id": "natural-talent",
+   "name": "The Natural Talent",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Seems casual and effortless, but has an unseen history of practice. Can frustrate rivals who believe effort should be visible.",
+   "status": "planned"
+  },
+  {
+   "id": "caretaker",
+   "name": "The Caretaker",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Prioritizes Pokémon health and happiness. Avoids unnecessary risks and may withdraw from a battle when a partner is genuinely overwhelmed.",
+   "status": "planned"
+  },
+  {
+   "id": "chaos-agent",
+   "name": "The Chaos Agent",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Enjoys disrupting expectations. Uses unpredictable tactics and constantly changes routines.",
+   "status": "planned"
+  },
+  {
+   "id": "secret-softie",
+   "name": "The Secret Softie",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Acts intimidating or dismissive in public but is deeply affectionate in private. Their Pokémon may reveal the truth before they do.",
+   "status": "planned"
+  },
+  {
+   "id": "reluctant-battler",
+   "name": "The Reluctant Battler",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Battles for practical reasons rather than personal ambition. Their motivation can grow through friendships, discoveries, or protecting someone.",
+   "status": "planned"
+  },
+  {
+   "id": "former-antagonist",
+   "name": "The Former Antagonist",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Starts with questionable methods but has the capacity to change. Their actions, not a single apology, determine whether others trust them.",
+   "status": "planned"
+  },
+  {
+   "id": "quiet-observer",
+   "name": "The Quiet Observer",
+   "group": "Unusual and unpredictable personalities",
+   "text": "Says little but notices everything. Builds accurate opponent profiles and may be one of the most dangerous late-game rivals.",
+   "status": "planned"
+  }
+ ],
+ "styles": [
+  {
+   "id": "blitz",
+   "name": "Blitz",
+   "group": "Offensive styles",
+   "text": "Applies early pressure and attempts to end battles quickly.",
+   "status": "planned"
+  },
+  {
+   "id": "snowball",
+   "name": "Snowball",
+   "group": "Offensive styles",
+   "text": "Builds momentum after each knockout or successful setup.",
+   "status": "planned"
+  },
+  {
+   "id": "glass-cannon",
+   "name": "Glass Cannon",
+   "group": "Offensive styles",
+   "text": "Uses powerful attacks and accepts defensive vulnerability.",
+   "status": "planned"
+  },
+  {
+   "id": "executioner",
+   "name": "Executioner",
+   "group": "Offensive styles",
+   "text": "Preserves resources until an opponent is weakened, then commits decisively.",
+   "status": "planned"
+  },
+  {
+   "id": "combo-artist",
+   "name": "Combo Artist",
+   "group": "Offensive styles",
+   "text": "Chains move effects, status, abilities, and team roles into planned sequences.",
+   "status": "planned"
+  },
+  {
+   "id": "berserker",
+   "name": "Berserker",
+   "group": "Offensive styles",
+   "text": "Becomes more aggressive as the battle deteriorates, especially after a partner falls.",
+   "status": "planned"
+  },
+  {
+   "id": "revenge-striker",
+   "name": "Revenge Striker",
+   "group": "Offensive styles",
+   "text": "Builds plans around punishing the Pokémon that defeated a previous partner.",
+   "status": "planned"
+  },
+  {
+   "id": "overdrive-specialist",
+   "name": "Overdrive Specialist",
+   "group": "Offensive styles",
+   "text": "Constructs the team around creating, exploiting, and surviving Overdrive windows.",
+   "status": "planned"
+  },
+  {
+   "id": "fortress",
+   "name": "Fortress",
+   "group": "Defensive and control styles",
+   "text": "Prioritizes durability, recovery, and safe switching.",
+   "status": "planned"
+  },
+  {
+   "id": "attrition",
+   "name": "Attrition",
+   "group": "Defensive and control styles",
+   "text": "Wins by draining resources and forcing repeated unfavorable decisions.",
+   "status": "planned"
+  },
+  {
+   "id": "trapper",
+   "name": "Trapper",
+   "group": "Defensive and control styles",
+   "text": "Limits switching and punishes predictable patterns.",
+   "status": "planned"
+  },
+  {
+   "id": "counterpuncher",
+   "name": "Counterpuncher",
+   "group": "Defensive and control styles",
+   "text": "Absorbs pressure and retaliates when the opponent overcommits.",
+   "status": "planned"
+  },
+  {
+   "id": "stallbreaker",
+   "name": "Stallbreaker",
+   "group": "Defensive and control styles",
+   "text": "Specializes in dismantling defensive teams and recovery loops.",
+   "status": "planned"
+  },
+  {
+   "id": "guardian",
+   "name": "Guardian",
+   "group": "Defensive and control styles",
+   "text": "Protects key team members and uses defensive support to preserve its ace.",
+   "status": "planned"
+  },
+  {
+   "id": "disruptor",
+   "name": "Disruptor",
+   "group": "Defensive and control styles",
+   "text": "Uses status, stat changes, move denial, and confusion to undermine plans.",
+   "status": "planned"
+  },
+  {
+   "id": "sacrificial-strategist",
+   "name": "Sacrificial Strategist",
+   "group": "Defensive and control styles",
+   "text": "Willingly trades one team member's position to secure a larger advantage—unless that conflicts with their bond philosophy.",
+   "status": "planned"
+  },
+  {
+   "id": "scout",
+   "name": "Scout",
+   "group": "Adaptive and technical styles",
+   "text": "Uses early turns to learn about the opponent before committing.",
+   "status": "planned"
+  },
+  {
+   "id": "counter-builder",
+   "name": "Counter-Builder",
+   "group": "Adaptive and technical styles",
+   "text": "Changes its team or moves between encounters based on remembered battles.",
+   "status": "planned"
+  },
+  {
+   "id": "gambit",
+   "name": "Gambit",
+   "group": "Adaptive and technical styles",
+   "text": "Sets up a specific high-risk tactical payoff.",
+   "status": "planned"
+  },
+  {
+   "id": "improviser",
+   "name": "Improviser",
+   "group": "Adaptive and technical styles",
+   "text": "Abandons planned sequences quickly when circumstances change.",
+   "status": "planned"
+  },
+  {
+   "id": "mirror-match",
+   "name": "Mirror Match",
+   "group": "Adaptive and technical styles",
+   "text": "Copies the opponent's broad strategy to prove superiority or expose weaknesses.",
+   "status": "planned"
+  },
+  {
+   "id": "anti-meta",
+   "name": "Anti-Meta",
+   "group": "Adaptive and technical styles",
+   "text": "Builds specifically to punish the most common strategies in the region.",
+   "status": "planned"
+  },
+  {
+   "id": "resource-manager",
+   "name": "Resource Manager",
+   "group": "Adaptive and technical styles",
+   "text": "Carefully budgets healing, consumables, switches, and once-per-battle mechanics.",
+   "status": "planned"
+  },
+  {
+   "id": "specialist",
+   "name": "Specialist",
+   "group": "Adaptive and technical styles",
+   "text": "Focuses on a type, weather, terrain, or a narrow tactical identity.",
+   "status": "planned"
+  },
+  {
+   "id": "conductor",
+   "name": "Conductor",
+   "group": "Relationship-driven styles",
+   "text": "Coordinates multiple Pokémon around complementary roles and carefully timed switches.",
+   "status": "planned"
+  },
+  {
+   "id": "protector",
+   "name": "Protector",
+   "group": "Relationship-driven styles",
+   "text": "Prioritizes keeping one partner safe, even if it costs a tactical advantage.",
+   "status": "planned"
+  },
+  {
+   "id": "trust-fighter",
+   "name": "Trust Fighter",
+   "group": "Relationship-driven styles",
+   "text": "Uses risky team plays that depend on strong bond-based synergy.",
+   "status": "planned"
+  },
+  {
+   "id": "instinctive-duo",
+   "name": "Instinctive Duo",
+   "group": "Relationship-driven styles",
+   "text": "Favors improvisational combinations that reflect a trainer and Pokémon's shared habits.",
+   "status": "planned"
+  },
+  {
+   "id": "ace-centric",
+   "name": "Ace-Centric",
+   "group": "Relationship-driven styles",
+   "text": "Builds the team to support one signature Pokémon.",
+   "status": "planned"
+  },
+  {
+   "id": "rotating-ensemble",
+   "name": "Rotating Ensemble",
+   "group": "Relationship-driven styles",
+   "text": "Treats the entire team as a cooperative unit, with no single permanent star.",
+   "status": "planned"
+  },
+  {
+   "id": "bond-breaker",
+   "name": "Bond Breaker",
+   "group": "Relationship-driven styles",
+   "text": "Tries to disrupt the opponent's trust, confidence, or team rhythm rather than merely dealing damage.",
+   "status": "planned"
+  },
+  {
+   "id": "last-stand",
+   "name": "Last Stand",
+   "group": "Relationship-driven styles",
+   "text": "Saves resources for a dramatic late-game comeback and a possible Hyper/Overdrive climax.",
+   "status": "planned"
+  }
+ ],
+ "offscreenEvents": [
+  {
+   "id": "shared-meal",
+   "name": "Shared Meal",
+   "group": "Everyday bonding",
+   "text": "The trainer learns a Pokémon's food preferences. Affection rises; future scenes may reference a favorite treat.",
+   "status": "planned"
+  },
+  {
+   "id": "camp-routine",
+   "name": "Camp Routine",
+   "group": "Everyday bonding",
+   "text": "The Pokémon develops a preferred spot or activity during rest. Repeated routines can create a recognizable habit.",
+   "status": "planned"
+  },
+  {
+   "id": "grooming-and-care",
+   "name": "Grooming and Care",
+   "group": "Everyday bonding",
+   "text": "The trainer helps maintain the Pokémon's comfort and appearance. Trust may rise, especially for a nervous Pokémon.",
+   "status": "planned"
+  },
+  {
+   "id": "play-session",
+   "name": "Play Session",
+   "group": "Everyday bonding",
+   "text": "A playful Pokémon becomes more confident; a reserved one may slowly begin initiating interactions.",
+   "status": "planned"
+  },
+  {
+   "id": "quiet-companionship",
+   "name": "Quiet Companionship",
+   "group": "Everyday bonding",
+   "text": "The Pokémon chooses to sit near the trainer without prompting. A small but meaningful signal of growing trust.",
+   "status": "planned"
+  },
+  {
+   "id": "preferred-sleeping-arrangement",
+   "name": "Preferred Sleeping Arrangement",
+   "group": "Everyday bonding",
+   "text": "A Pokémon begins sleeping closer to its trainer or another team member. This can reveal attachment or a need for reassurance.",
+   "status": "planned"
+  },
+  {
+   "id": "greeting-ritual",
+   "name": "Greeting Ritual",
+   "group": "Everyday bonding",
+   "text": "The pair develops a unique greeting, gesture, or routine that may appear in later scenes.",
+   "status": "planned"
+  },
+  {
+   "id": "comfort-after-a-bad-day",
+   "name": "Comfort After a Bad Day",
+   "group": "Everyday bonding",
+   "text": "The Pokémon comforts a distressed trainer, reversing the usual caretaker dynamic and potentially changing the trainer's motivation.",
+   "status": "planned"
+  },
+  {
+   "id": "technique-practice",
+   "name": "Technique Practice",
+   "group": "Training and personal development",
+   "text": "The trainer and Pokémon repeat a specific technique. Success depends on aptitude, condition, instruction quality, and time invested.",
+   "status": "planned"
+  },
+  {
+   "id": "failed-drill",
+   "name": "Failed Drill",
+   "group": "Training and personal development",
+   "text": "Repeated failure can produce frustration, adaptation, or a decision to try another teaching method.",
+   "status": "planned"
+  },
+  {
+   "id": "independent-practice",
+   "name": "Independent Practice",
+   "group": "Training and personal development",
+   "text": "A Pokémon trains on its own initiative. High-autonomy Pokémon may develop faster when allowed to experiment.",
+   "status": "planned"
+  },
+  {
+   "id": "friendly-sparring",
+   "name": "Friendly Sparring",
+   "group": "Training and personal development",
+   "text": "Team members practice against one another, improving coordination but potentially creating a competitive rivalry.",
+   "status": "planned"
+  },
+  {
+   "id": "tactical-review",
+   "name": "Tactical Review",
+   "group": "Training and personal development",
+   "text": "The trainer reviews a previous battle and identifies a mistake. The next encounter may show the correction.",
+   "status": "planned"
+  },
+  {
+   "id": "move-experimentation",
+   "name": "Move Experimentation",
+   "group": "Training and personal development",
+   "text": "The trainer tries a new move combination or tactical role. It may work, fail, or become a signature technique after repeated use.",
+   "status": "planned"
+  },
+  {
+   "id": "adaptive-exercise",
+   "name": "Adaptive Exercise",
+   "group": "Training and personal development",
+   "text": "The trainer changes a drill to accommodate the Pokémon's personality or limitations. This can build trust and improve learning efficiency.",
+   "status": "planned"
+  },
+  {
+   "id": "overtraining-incident",
+   "name": "Overtraining Incident",
+   "group": "Training and personal development",
+   "text": "A trainer pushes too far, producing short-term progress and a longer recovery requirement.",
+   "status": "planned"
+  },
+  {
+   "id": "recovery-day",
+   "name": "Recovery Day",
+   "group": "Training and personal development",
+   "text": "The trainer deliberately rests a Pokémon. Proper recovery can improve readiness and reduce strain.",
+   "status": "planned"
+  },
+  {
+   "id": "hyper-control-practice",
+   "name": "Hyper Control Practice",
+   "group": "Training and personal development",
+   "text": "The Pokémon learns to enter or exit Hyper more reliably, if that is supported by the existing mechanics.",
+   "status": "planned"
+  },
+  {
+   "id": "technique-breakthrough",
+   "name": "Technique Breakthrough",
+   "group": "Training and personal development",
+   "text": "A difficult move, combination, or control method finally clicks after a history of practice.",
+   "status": "planned"
+  },
+  {
+   "id": "fearful-refusal",
+   "name": "Fearful Refusal",
+   "group": "Emotional and relationship events",
+   "text": "A Pokémon hesitates to perform a dangerous action. The trainer can respect the hesitation, encourage it carefully, or react badly.",
+   "status": "planned"
+  },
+  {
+   "id": "unwanted-separation",
+   "name": "Unwanted Separation",
+   "group": "Emotional and relationship events",
+   "text": "A Pokémon becomes separated from the group during exploration. Reuniting them can produce relief, fear, or a new protective habit.",
+   "status": "planned"
+  },
+  {
+   "id": "jealousy",
+   "name": "Jealousy",
+   "group": "Emotional and relationship events",
+   "text": "A Pokémon reacts to a trainer giving another partner more attention. The cause may be insecurity, competitiveness, or a genuine change in routine.",
+   "status": "planned"
+  },
+  {
+   "id": "unexpected-attachment",
+   "name": "Unexpected Attachment",
+   "group": "Emotional and relationship events",
+   "text": "A Pokémon bonds with an unlikely teammate, changing team cohesion or creating tension with another partner.",
+   "status": "planned"
+  },
+  {
+   "id": "conflict-over-tactics",
+   "name": "Conflict Over Tactics",
+   "group": "Emotional and relationship events",
+   "text": "The Pokémon resists a battle plan that conflicts with its instincts or preferences. The trainer must adapt or insist.",
+   "status": "planned"
+  },
+  {
+   "id": "apology",
+   "name": "Apology",
+   "group": "Emotional and relationship events",
+   "text": "The trainer acknowledges a mistake after a difficult encounter. The result depends on whether their later behavior supports the apology.",
+   "status": "planned"
+  },
+  {
+   "id": "earned-independence",
+   "name": "Earned Independence",
+   "group": "Emotional and relationship events",
+   "text": "The trainer lets a Pokémon make a major decision. This may improve autonomy and synchronization.",
+   "status": "planned"
+  },
+  {
+   "id": "a-broken-promise",
+   "name": "A Broken Promise",
+   "group": "Emotional and relationship events",
+   "text": "The trainer fails to follow through on a promise. Trust may decline, especially if the promise was repeated or deeply meaningful.",
+   "status": "planned"
+  },
+  {
+   "id": "protective-intervention",
+   "name": "The Protective Intervention",
+   "group": "Emotional and relationship events",
+   "text": "A Pokémon intervenes to protect a partner despite being told to stay back. The event may reveal loyalty, impulsiveness, or a developing bond.",
+   "status": "planned"
+  },
+  {
+   "id": "unspoken-reconciliation",
+   "name": "The Unspoken Reconciliation",
+   "group": "Emotional and relationship events",
+   "text": "Two partners resume a familiar activity after a period of tension. The relationship improves subtly without an explicit conversation.",
+   "status": "planned"
+  },
+  {
+   "id": "wild-pok-mon-encounter",
+   "name": "Wild Pokémon Encounter",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A Pokémon interacts with wild members of its species. This can affect confidence, curiosity, or the trainer's understanding of its needs.",
+   "status": "planned"
+  },
+  {
+   "id": "rescue-operation",
+   "name": "Rescue Operation",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "The team helps a wild Pokémon or another trainer. The event can shape the rival's values and create future allies.",
+   "status": "planned"
+  },
+  {
+   "id": "team-member-missing",
+   "name": "Team Member Missing",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A Pokémon leaves the immediate group for a believable reason, prompting the trainer to reflect on how it has been treated.",
+   "status": "planned"
+  },
+  {
+   "id": "shared-environmental-challenge",
+   "name": "Shared Environmental Challenge",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "The team crosses a difficult environment together. The event may strengthen teamwork or expose a weakness.",
+   "status": "planned"
+  },
+  {
+   "id": "another-trainer-s-advice",
+   "name": "Another Trainer's Advice",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A mentor, rival, or stranger offers advice. The trainer may accept it, reject it, or misunderstand it.",
+   "status": "planned"
+  },
+  {
+   "id": "public-praise",
+   "name": "Public Praise",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A Pokémon receives recognition for a performance. This can build confidence or create pressure to keep impressing others.",
+   "status": "planned"
+  },
+  {
+   "id": "public-embarrassment",
+   "name": "Public Embarrassment",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A failed performance is witnessed by others. The Pokémon and trainer may respond very differently to the same event.",
+   "status": "planned"
+  },
+  {
+   "id": "raid-cooperation",
+   "name": "Raid Cooperation",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A rival's Pokémon works with unfamiliar Pokémon during a raid, potentially developing a new tactical preference or bond.",
+   "status": "planned"
+  },
+  {
+   "id": "hyper-overdrive-witness-event",
+   "name": "Hyper/Overdrive Witness Event",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A rival witnesses another Pokémon's breakthrough and reconsiders their own training philosophy.",
+   "status": "planned"
+  },
+  {
+   "id": "unexpected-act-of-compassion",
+   "name": "Unexpected Act of Compassion",
+   "group": "Social, environmental, and extraordinary events",
+   "text": "A trainer chooses to help a struggling opponent or Pokémon despite a competing goal. The action can change how their own team sees them.",
+   "status": "planned"
+  }
+ ],
+ "arcs": [
+  {
+   "id": "prodigy-learns-humility",
+   "name": "The Prodigy Learns Humility",
+   "group": "Growth and self-discovery",
+   "text": "Expects to win naturally. | Learns to respect preparation, collaboration, and opponents.",
+   "status": "planned"
+  },
+  {
+   "id": "underdog-finds-their-method",
+   "name": "The Underdog Finds Their Method",
+   "group": "Growth and self-discovery",
+   "text": "Tries to copy stronger trainers. | Develops a style that fits their own strengths.",
+   "status": "planned"
+  },
+  {
+   "id": "perfectionist-accepts-failure",
+   "name": "The Perfectionist Accepts Failure",
+   "group": "Growth and self-discovery",
+   "text": "Treats every mistake as unacceptable. | Learns to adapt rather than endlessly repeat the same routine.",
+   "status": "planned"
+  },
+  {
+   "id": "loner-learns-to-trust",
+   "name": "The Loner Learns to Trust",
+   "group": "Growth and self-discovery",
+   "text": "Avoids help and emotional attachment. | Builds a reliable support network without losing independence.",
+   "status": "planned"
+  },
+  {
+   "id": "showboat-finds-meaning",
+   "name": "The Showboat Finds Meaning",
+   "group": "Growth and self-discovery",
+   "text": "Cares about recognition. | Learns to value the relationship behind the performance.",
+   "status": "planned"
+  },
+  {
+   "id": "burnout-rediscovers-joy",
+   "name": "The Burnout Rediscovers Joy",
+   "group": "Growth and self-discovery",
+   "text": "Battles out of obligation. | Finds a new reason to compete—or chooses a different life.",
+   "status": "planned"
+  },
+  {
+   "id": "reluctant-champion",
+   "name": "The Reluctant Champion",
+   "group": "Growth and self-discovery",
+   "text": "Doesn't want the responsibilities of success. | Decides what kind of Champion they actually want to become.",
+   "status": "planned"
+  },
+  {
+   "id": "late-bloomer-emerges",
+   "name": "The Late Bloomer Emerges",
+   "group": "Growth and self-discovery",
+   "text": "Is dismissed as unremarkable. | Achieves success through patience and self-knowledge.",
+   "status": "planned"
+  },
+  {
+   "id": "copycat-becomes-original",
+   "name": "The Copycat Becomes Original",
+   "group": "Growth and self-discovery",
+   "text": "Copies the player's team and techniques. | Develops an independent identity and may surpass their inspiration.",
+   "status": "planned"
+  },
+  {
+   "id": "obsession-spiral",
+   "name": "The Obsession Spiral",
+   "group": "Conflict and deterioration",
+   "text": "Defines success around beating one opponent. | Learns to pursue personal goals—or becomes consumed by obsession.",
+   "status": "planned"
+  },
+  {
+   "id": "fall-from-grace",
+   "name": "The Fall from Grace",
+   "group": "Conflict and deterioration",
+   "text": "Loses status after a major defeat. | Rebuilds honestly or resorts to desperate shortcuts.",
+   "status": "planned"
+  },
+  {
+   "id": "champion-s-shadow",
+   "name": "The Champion's Shadow",
+   "group": "Conflict and deterioration",
+   "text": "Lives under a famous predecessor's reputation. | Establishes their own legacy or remains trapped in comparison.",
+   "status": "planned"
+  },
+  {
+   "id": "broken-promise",
+   "name": "The Broken Promise",
+   "group": "Conflict and deterioration",
+   "text": "A betrayal damages a central relationship. | Reconciliation, permanent separation, or a new understanding.",
+   "status": "planned"
+  },
+  {
+   "id": "power-at-any-cost",
+   "name": "The Power at Any Cost",
+   "group": "Conflict and deterioration",
+   "text": "Pursues Hyper/Overdrive without sufficient control. | Learns restraint or suffers increasingly serious setbacks.",
+   "status": "planned"
+  },
+  {
+   "id": "fear-of-winning",
+   "name": "The Fear of Winning",
+   "group": "Conflict and deterioration",
+   "text": "Self-sabotages when success becomes possible. | Confronts the insecurity driving the behavior.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-who-cheats",
+   "name": "The Rival Who Cheats",
+   "group": "Conflict and deterioration",
+   "text": "Justifies unfair tactics to keep up. | Takes responsibility, hides the truth, or doubles down.",
+   "status": "planned"
+  },
+  {
+   "id": "cold-strategist",
+   "name": "The Cold Strategist",
+   "group": "Conflict and deterioration",
+   "text": "Treats Pokémon as interchangeable tools. | Learns to respect individual needs—or embraces an increasingly ruthless approach.",
+   "status": "planned"
+  },
+  {
+   "id": "fallen-idealist",
+   "name": "The Fallen Idealist",
+   "group": "Conflict and deterioration",
+   "text": "Loses faith after witnessing unfairness. | Rebuilds their principles or decides that winning matters more than fairness.",
+   "status": "planned"
+  },
+  {
+   "id": "neglected-ace",
+   "name": "The Neglected Ace",
+   "group": "Relationship-centered arcs",
+   "text": "A powerful Pokémon receives little care outside battle. | The trainer changes their behavior, the Pokémon withdraws, or the relationship is restructured.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-who-outgrows-its-trainer",
+   "name": "The Pokémon Who Outgrows Its Trainer",
+   "group": "Relationship-centered arcs",
+   "text": "A partner becomes more capable and independent. | The trainer adapts, resents the change, or learns to become a better partner.",
+   "status": "planned"
+  },
+  {
+   "id": "team-divided",
+   "name": "The Team Divided",
+   "group": "Relationship-centered arcs",
+   "text": "Two Pokémon compete for attention or status. | The trainer restores balance or allows the conflict to deepen.",
+   "status": "planned"
+  },
+  {
+   "id": "fearful-partner",
+   "name": "The Fearful Partner",
+   "group": "Relationship-centered arcs",
+   "text": "A Pokémon struggles with a particular battle situation. | Gradual confidence, continued accommodation, or a difficult separation from that role.",
+   "status": "planned"
+  },
+  {
+   "id": "overprotective-trainer",
+   "name": "The Overprotective Trainer",
+   "group": "Relationship-centered arcs",
+   "text": "Refuses to let Pokémon take reasonable risks. | Learns to trust their judgment—or remains unable to accept uncertainty.",
+   "status": "planned"
+  },
+  {
+   "id": "unlikely-pair",
+   "name": "The Unlikely Pair",
+   "group": "Relationship-centered arcs",
+   "text": "Trainer and Pokémon have contrasting personalities. | They find complementary roles or discover that affection cannot solve every incompatibility.",
+   "status": "planned"
+  },
+  {
+   "id": "partner-who-stayed",
+   "name": "The Partner Who Stayed",
+   "group": "Relationship-centered arcs",
+   "text": "A Pokémon remains loyal through repeated hardship. | The trainer finally recognizes the sacrifices that loyalty involved.",
+   "status": "planned"
+  },
+  {
+   "id": "independent-ace",
+   "name": "The Independent Ace",
+   "group": "Relationship-centered arcs",
+   "text": "A Pokémon increasingly acts on its own instincts. | The pair develops mutual trust or becomes unable to work together.",
+   "status": "planned"
+  },
+  {
+   "id": "shared-recovery",
+   "name": "The Shared Recovery",
+   "group": "Relationship-centered arcs",
+   "text": "Trainer and Pokémon both struggle after a crisis. | They rebuild together, potentially unlocking a distinctive controlled Hyper/Overdrive expression.",
+   "status": "planned"
+  },
+  {
+   "id": "friends-become-rivals",
+   "name": "Friends Become Rivals",
+   "group": "Social and world-changing arcs",
+   "text": "A supportive relationship turns competitive. | Healthy competition, resentment, or reconciliation.",
+   "status": "planned"
+  },
+  {
+   "id": "rivals-become-friends",
+   "name": "Rivals Become Friends",
+   "group": "Social and world-changing arcs",
+   "text": "Mutual hostility gradually softens. | Cooperation, friendship, or an alliance that remains competitive.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-s-rival",
+   "name": "The Rival's Rival",
+   "group": "Social and world-changing arcs",
+   "text": "Another trainer competes for the same person, goal, or title. | A three-way rivalry, alliance, or change in priorities.",
+   "status": "planned"
+  },
+  {
+   "id": "mentor-s-disappointment",
+   "name": "The Mentor's Disappointment",
+   "group": "Social and world-changing arcs",
+   "text": "A respected mentor loses faith in the rival. | Earned reconciliation or independence from the mentor's expectations.",
+   "status": "planned"
+  },
+  {
+   "id": "regional-reformer",
+   "name": "The Regional Reformer",
+   "group": "Social and world-changing arcs",
+   "text": "Wants to change how the League operates. | Wins institutional influence, compromises their ideals, or becomes disillusioned.",
+   "status": "planned"
+  },
+  {
+   "id": "unlikely-protector",
+   "name": "The Unlikely Protector",
+   "group": "Social and world-changing arcs",
+   "text": "Initially prioritizes personal ambition. | Takes responsibility for another trainer, community, or team.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-who-leaves",
+   "name": "The Rival Who Leaves",
+   "group": "Social and world-changing arcs",
+   "text": "Abandons the current competition. | Returns with a different philosophy or never comes back.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-who-surpasses-you",
+   "name": "The Rival Who Surpasses You",
+   "group": "Social and world-changing arcs",
+   "text": "Gradually becomes stronger and more independent. | Forces the player to respond, accepts a new relationship, or moves on.",
+   "status": "planned"
+  },
+  {
+   "id": "unfinished-rivalry",
+   "name": "The Unfinished Rivalry",
+   "group": "Social and world-changing arcs",
+   "text": "A major conflict is never properly resolved. | Reopens later, possibly in another region or during a world event.",
+   "status": "planned"
+  },
+  {
+   "id": "uncontrolled-prodigy",
+   "name": "The Uncontrolled Prodigy",
+   "group": "Overdrive-specific character arcs",
+   "text": "enormous potential, insufficient control. Their progress depends on discipline and honest feedback.",
+   "status": "planned"
+  },
+  {
+   "id": "trainer-who-feared-overdrive",
+   "name": "The Trainer Who Feared Overdrive",
+   "group": "Overdrive-specific character arcs",
+   "text": "avoids the mechanic after witnessing a frightening incident. Their arc may involve careful reintroduction or a principled refusal to use it.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-who-refuses",
+   "name": "The Pokémon Who Refuses",
+   "group": "Overdrive-specific character arcs",
+   "text": "a Pokémon stops cooperating with a trainer's attempts to force a power breakthrough. The trainer must address the relationship, not grind a hidden meter.",
+   "status": "planned"
+  },
+  {
+   "id": "perfect-synchronization",
+   "name": "The Perfect Synchronization",
+   "group": "Overdrive-specific character arcs",
+   "text": "a pair with exceptional trust develops precise control, but must learn how to cope when one partner's condition changes.",
+   "status": "planned"
+  },
+  {
+   "id": "artificial-shortcut",
+   "name": "The Artificial Shortcut",
+   "group": "Overdrive-specific character arcs",
+   "text": "a trainer pursues an external shortcut to power. The story can explore unstable results, ethical compromises, or the eventual rejection of the shortcut.",
+   "status": "planned"
+  },
+  {
+   "id": "overdrive-addict",
+   "name": "The Overdrive Addict",
+   "group": "Overdrive-specific character arcs",
+   "text": "a trainer becomes obsessed with spectacular power surges, ignoring ordinary fundamentals and the welfare of their team.",
+   "status": "planned"
+  },
+  {
+   "id": "late-awakening",
+   "name": "The Late Awakening",
+   "group": "Overdrive-specific character arcs",
+   "text": "a seemingly ordinary Pokémon discovers an unusual expression after years of accumulated experience.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-who-saves-the-trainer",
+   "name": "The Pokémon Who Saves the Trainer",
+   "group": "Overdrive-specific character arcs",
+   "text": "a crisis reveals that the Pokémon's motivation is protecting its trainer rather than winning.",
+   "status": "planned"
+  },
+  {
+   "id": "broken-synchronization",
+   "name": "The Broken Synchronization",
+   "group": "Overdrive-specific character arcs",
+   "text": "a major betrayal damages a previously reliable pairing. The duo must rebuild trust or accept that their old style no longer works.",
+   "status": "planned"
+  },
+  {
+   "id": "power-without-a-bond",
+   "name": "The Power Without a Bond",
+   "group": "Overdrive-specific character arcs",
+   "text": "a rival can trigger an impressive state through exceptional skill or an unusual mechanism, but struggles with its consistency, meaning, or consequences.",
+   "status": "planned"
+  }
+ ],
+ "mechanics": [
+  {
+   "id": "independent-rivalry",
+   "name": "The Independent Rivalry",
+   "group": "",
+   "text": "Rivals develop relationships with one another without involving the player. Two rivals may become bitter enemies, close friends, or training partners.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-to-rival-pok-mon-influence",
+   "name": "Rival-to-Rival Pokémon Influence",
+   "group": "",
+   "text": "A rival's Pokémon can learn from an encounter with another rival's Pokémon. This can affect confidence, battle preferences, and future interactions.",
+   "status": "planned"
+  },
+  {
+   "id": "unseen-defeat",
+   "name": "The Unseen Defeat",
+   "group": "",
+   "text": "A rival loses off-screen to a trainer who isn't the player. Their response affects their confidence, strategy, and ambitions.",
+   "status": "planned"
+  },
+  {
+   "id": "unseen-victory",
+   "name": "The Unseen Victory",
+   "group": "",
+   "text": "A rival wins a major battle and becomes more ambitious. They might rise in regional rankings or attract a sponsor.",
+   "status": "planned"
+  },
+  {
+   "id": "training-exchange",
+   "name": "The Training Exchange",
+   "group": "",
+   "text": "Two rivals exchange training methods, producing new strategies or a shift in their philosophies.",
+   "status": "planned"
+  },
+  {
+   "id": "rivalry-triangle",
+   "name": "The Rivalry Triangle",
+   "group": "",
+   "text": "Three rivals compete for different reasons. Defeating one may help another, but not necessarily improve your relationship with either.",
+   "status": "planned"
+  },
+  {
+   "id": "shared-rival",
+   "name": "The Shared Rival",
+   "group": "",
+   "text": "Multiple characters identify the player as their most important opponent. Each has a different interpretation of what defeating the player would prove.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-alliance",
+   "name": "The Rival Alliance",
+   "group": "",
+   "text": "Rivals temporarily cooperate against a common threat, then resume competing when the threat passes.",
+   "status": "planned"
+  },
+  {
+   "id": "mentor-network",
+   "name": "The Mentor Network",
+   "group": "",
+   "text": "A rival seeks advice from a Gym Leader, Champion, researcher, or another rival. Mentors can influence their style and worldview.",
+   "status": "planned"
+  },
+  {
+   "id": "signature-technique",
+   "name": "The Signature Technique",
+   "group": "",
+   "text": "Repeated use of a particular combination may lead a rival to develop a recognizable tactical signature.",
+   "status": "planned"
+  },
+  {
+   "id": "team-identity-shift",
+   "name": "The Team Identity Shift",
+   "group": "",
+   "text": "A rival changes their roster to reflect a new philosophy, emotional state, or strategic problem.",
+   "status": "planned"
+  },
+  {
+   "id": "pok-mon-transfer",
+   "name": "The Pokémon Transfer",
+   "group": "",
+   "text": "A rival may trade, release, or rehome a Pokémon for a story-grounded reason, depending on the game's rules. Such decisions should have real consequences.",
+   "status": "planned"
+  },
+  {
+   "id": "return-encounter",
+   "name": "The Return Encounter",
+   "group": "",
+   "text": "A rival reappears after a long absence with evidence of independent progress, not simply a level increase.",
+   "status": "planned"
+  },
+  {
+   "id": "public-reputation-system",
+   "name": "The Public Reputation System",
+   "group": "",
+   "text": "Other trainers react to the rival's known victories, losses, sportsmanship, and treatment of Pokémon.",
+   "status": "planned"
+  },
+  {
+   "id": "rivalry-rumor-mill",
+   "name": "The Rivalry Rumor Mill",
+   "group": "",
+   "text": "The player hears partial reports about rivals. Some are accurate; others are incomplete or distorted.",
+   "status": "planned"
+  },
+  {
+   "id": "conflicting-account",
+   "name": "The Conflicting Account",
+   "group": "",
+   "text": "Two characters describe the same incident differently, encouraging the player to investigate before making assumptions.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-s-private-goal",
+   "name": "The Rival's Private Goal",
+   "group": "",
+   "text": "A rival may pursue a goal that has little to do with defeating the player. The goal can take priority over a battle invitation.",
+   "status": "planned"
+  },
+  {
+   "id": "missed-encounter",
+   "name": "The Missed Encounter",
+   "group": "",
+   "text": "If the player fails to meet a rival, the rival still advances their plans. Their next appearance reflects what happened in the meantime.",
+   "status": "planned"
+  },
+  {
+   "id": "rivalry-cooldown",
+   "name": "The Rivalry Cooldown",
+   "group": "",
+   "text": "A rival who has repeatedly lost may stop challenging the player temporarily, choosing to recover, retrain, or pursue another goal.",
+   "status": "planned"
+  },
+  {
+   "id": "unscheduled-challenge",
+   "name": "The Unscheduled Challenge",
+   "group": "",
+   "text": "A rival may interrupt an appropriate exploration or event with a challenge when the story and gameplay state support it.",
+   "status": "planned"
+  },
+  {
+   "id": "challenge-refusal",
+   "name": "The Challenge Refusal",
+   "group": "",
+   "text": "A rival can refuse to battle because of injury, a personal commitment, a disagreement, or a belief that the timing is wrong.",
+   "status": "planned"
+  },
+  {
+   "id": "rival-s-substitute",
+   "name": "The Rival's Substitute",
+   "group": "",
+   "text": "If their ace is unavailable, a rival may use a different Pokémon, revealing how well the rest of their team has developed.",
+   "status": "planned"
+  },
+  {
+   "id": "legacy-encounter",
+   "name": "The Legacy Encounter",
+   "group": "",
+   "text": "A rival remembers a defining earlier battle and deliberately recreates, reverses, or rejects its circumstances.",
+   "status": "planned"
+  },
+  {
+   "id": "rivalry-handoff",
+   "name": "The Rivalry Handoff",
+   "group": "",
+   "text": "An established rival can lose relevance naturally while another character becomes the player's primary competitor.",
+   "status": "planned"
+  }
+ ]
+}
