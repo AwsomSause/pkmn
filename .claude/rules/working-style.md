@@ -21,3 +21,9 @@ Everything loaded early is re-sent on every turn for the rest of the session. Ke
 - Start from fresh `origin/main` (`git fetch origin main` and branch or rebase onto it) before changing code.
 - Rebase onto `origin/main` again right before pushing; resolve conflicts then, while they are small.
 - Save version numbers are shared: if another branch already took the next save version, take the one after.
+
+## Tools (director wish, 2026-10-30)
+- **Context7** (connector): look up library docs (Phaser, Vite, Zod, Vitest, Playwright) before guessing an API.
+- **Serena** (plugin, MCP): prefer its symbol tools (find symbol, references, overview) over reading whole files in `src/`.
+- **Superpowers** and **Ponytail** (plugins): follow them, but this file and CLAUDE.md win where they differ (no subagents for small lookups; smallest change that works).
+- Cloud threads load plugins only from claude.ai **Project settings > Plugins** and MCP servers only from claude.ai connectors; repo `.mcp.json`, `.claude/settings.json` plugins and `.claude/skills/` are ignored there.
