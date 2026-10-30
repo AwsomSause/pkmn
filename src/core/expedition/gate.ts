@@ -1,5 +1,6 @@
 // Where expedition gates appear on stage maps (kept apart from the flow so run.ts can use it).
 
+import { focusDenBonus } from '../campaign/director';
 import { hashSeed, Rng } from '../rng';
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
@@ -9,7 +10,7 @@ export function placeExpeditionGate(content: Content, run: RunState): void {
   const stage = run.stage;
   if (!stage || stage.kind !== 'stage') return;
   const rng = new Rng(hashSeed(`${run.seed}::expedition-gate::${run.regionIndex}:${stage.index}`));
-  if (!rng.chance(content.expeditions.denChance)) return;
+  if (!rng.chance(content.expeditions.denChance + focusDenBonus(run, 'exploration'))) return;
   const tiers = content.expeditions.tierByRegion;
   const tier = tiers[Math.min(run.regionIndex, tiers.length - 1)]!;
   const pool = content.expeditions.expeditions.filter((e) => !run.expeditions.completed.includes(e.id) && (e.tier === tier || run.expeditions.unlocked.includes(e.id)));

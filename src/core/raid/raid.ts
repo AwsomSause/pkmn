@@ -7,6 +7,7 @@ import { Rng, hashSeed } from '../rng';
 import { maxHp } from '../pokemon';
 import type { Content } from '../contentSchema';
 import type { BattleState, PokemonInstance, RaidBattle, RunState } from '../state';
+import { focusDenBonus } from '../campaign/director';
 import { grandRaidFor } from '../story/grandEnemy';
 import type { RaidDef, RaidPhase } from './schema';
 
@@ -189,7 +190,7 @@ export function placeRaidDens(content: Content, run: RunState): void {
   if (!stage || stage.kind !== 'stage') return;
   const rng = new Rng(hashSeed(`${run.seed}::raid-den::${run.regionIndex}:${stage.index}`));
   placeGrandEnemy(content, run, rng);
-  if (!rng.chance(content.raids.denChance)) return;
+  if (!rng.chance(content.raids.denChance + focusDenBonus(run, 'raids'))) return;
   const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
   if (candidates.length === 0) return;
   const node = rng.pick(candidates);

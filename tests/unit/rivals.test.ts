@@ -171,6 +171,7 @@ describe('rival return and adaptation', () => {
     run.party[0]!.moves = [{ id: 'thunderbolt', pp: 15 }];
     expect(mostUsedType(content, run)).toBe('electric');
     const rival = sparked('ad').story.rivals[0]!;
+    rival.traits.adaptability = 90;
     const plan: TrainerPlan = { classId: 'youngster', name: 'x', leaderId: null, ai: 0, members: [{ speciesId: 'geodude', level: 20 }, { speciesId: 'pidgey', level: 20 }], levelInfo: [{ level: 20 } as never, { level: 20 } as never] };
     const ret = rivalReturn(content, run, rival, plan, { kind: 'rematch', levelBonus: 1, extraMembers: 1, perStage: 1, perRegion: 4 });
     expect(ret.note).toContain('studied your electric moves');

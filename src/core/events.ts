@@ -27,6 +27,8 @@ import { hashSeed, Rng } from './rng';
 import { continueAfterDecisions, healParty, newMon } from './run';
 import type { MapNode, RunState, SideStop } from './state';
 import { applyReward, rewardTargetProblem } from './rewards';
+import { regionFocus } from './campaign/director';
+import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { getTheme, typesPool } from './themes';
 
@@ -59,6 +61,16 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return (run.itemCounters?.[`event-seen:${c.id}`] ?? 0) > 0;
     case 'noTrainerTag':
       return !getArchetype(content, run.archetypeId).eventTags.includes(c.tag);
+    case 'friendship':
+      return run.party.some((m) => m.friendship >= c.atLeast);
+    case 'rivalMet':
+      return run.story.rivals.some((r) => r.encounters >= c.atLeast);
+    case 'partyTag':
+      return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
+    case 'bond':
+      return run.story.relationships.some((r) => r.open && r.kind === 'bond');
+    case 'focus':
+      return regionFocus(run, run.regionIndex) === c.focus;
   }
 }
 
@@ -85,6 +97,16 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs an earlier delivery`;
     case 'noTrainerTag':
       return `Your trainer won't do this`;
+    case 'friendship':
+      return `Needs a Pokémon with friendship ${c.atLeast}`;
+    case 'rivalMet':
+      return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
+    case 'partyTag':
+      return `Needs a ${c.tag} Pokémon in your party`;
+    case 'bond':
+      return 'Needs two bonded Pokémon';
+    case 'focus':
+      return `Only in a ${c.focus}-focused region`;
   }
 }
 
@@ -268,6 +290,10 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const chance = choiceChance(content, run, choice);
   const success = chance === null || rng.float() < chance;
   const outcome = success ? choice.success : choice.failure!;
+  // The Event Director remembers important choices (and whether you took a risk).
+  const risky = chance !== null;
+  run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
+  emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');

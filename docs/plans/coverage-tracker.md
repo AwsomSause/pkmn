@@ -167,13 +167,13 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 |---|---|
 | §1 Core Game Event Bus (domain events, effect ledger) | DONE (M8.9-0) |
 | §2A Rivalry / §2B Nemesis | rivals threads |
-| §2C Dynamic Event Director | PART: 173 map events exist (events thread); curated eligibility, risks and memory of choices TODO |
+| §2C Dynamic Event Director | DONE: common/uncommon/rare/epic tiers, eligibility from party, friendship, attributes, items, earlier events, bonds, rivals, species tags and the region's focus (5 new condition kinds), 2-4 options with their odds shown, no repeats, every choice and gamble remembered in the chronicle; 5 new Director events incl. the researcher who recognises a rare form (limited: sacrifice-style events and permanent discoveries beyond Research Points) |
 | §2D Bond & Protégé | Protégé PART (above); Bond via rival bonds/Overdrive bond moments |
 | §2E Raid & World Crisis | Raids thread |
 | §3 Spectacle layers 1–2, animation fallback | DONE (M9) |
 | §3 Layer 3 transformations | PART (Hyper evolutions add banners; cinematics M9.5) |
 | §3 Layer 4 boss spectacle, dynamic music, battle commentary (Drama thread), arena modifiers, victory moments | TODO / Drama thread |
-| §4 Campaign dramatic arcs, route consequence engine | TODO |
+| §4 Campaign dramatic arcs, route consequence engine | DONE: `core/campaign/director.ts`. Five acts per region told in the chronicle, a regional recap before the next region, a seeded region focus (mystery, rivals, raids, exploration) that changes den odds, six route labels on the map (safe, high-risk, mystery, research, nemesis, story), maps validated completable over 60 seeds. Limited: focus changes raid and expedition odds only; mystery and rival focus are told, not mechanical |
 | §5 Living hub (Research Lab, Hall of Fame, Training Center, Contract Board, legacy runs, mastery, rival ghosts, collection goals, chronicle) | PART (Story screen = chronicle; rest per starter-sets plan) |
 | §6–§9 roadmap, directive, scale guidance | followed (CLAUDE.md) |
 

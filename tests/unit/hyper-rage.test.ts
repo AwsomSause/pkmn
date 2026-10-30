@@ -157,6 +157,6 @@ describe('The Enemy Is Getting Riled Up in a run', () => {
       { title: 'The Enemy Is Getting Riled Up!', major: true },
       { title: 'Riled Up!', major: false },
     ]);
-    expect(run.story.events.filter((e) => e.type === 'storyMoment').map((e) => e.data.def)).toEqual(['enemy-riled-up', 'enemy-riled-up']);
+    expect(run.story.events.filter((e) => e.type === 'storyMoment' && e.data.def !== 'campaign-act').map((e) => e.data.def)).toEqual(['enemy-riled-up', 'enemy-riled-up']);
   });
 });

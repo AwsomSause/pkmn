@@ -19846,6 +19846,7 @@
    "id": "doesnt-want-to-fight",
    "name": "It Doesn't Want to Fight…",
    "group": "Overdrive unusual events",
+   "rarity": "rare",
    "stop": "wild",
    "scene": {
     "cast": [],
@@ -19974,6 +19975,7 @@
    "id": "it-saw-what-you-did",
    "name": "It Saw What You Did…",
    "group": "Overdrive unusual events",
+   "rarity": "rare",
    "scene": {
     "cast": [],
     "tint": "#2a2038",
@@ -20078,6 +20080,7 @@
    "id": "this-place-remembers",
    "name": "This Place Remembers…",
    "group": "Overdrive unusual events",
+   "rarity": "rare",
    "scene": {
     "cast": [],
     "tint": "#1a2a2a",
@@ -20150,6 +20153,415 @@
        {
         "kind": "heal",
         "share": 0.2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "researcher-recognizes-legendary",
+   "name": "A Researcher Recognizes Something",
+   "group": "Event Director events",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "partyTag",
+     "tag": "legendary"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1d2a3a",
+    "effect": "glint"
+   },
+   "intro": "A researcher stops dead and stares at your party. One of your Pokémon is a legendary form she has only read about. \"Please,\" she says. \"Let me record it.\"",
+   "choices": [
+    {
+     "label": "Let her study it (safe)",
+     "success": {
+      "text": "She studies it carefully and funds a permanent research unlock.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "\"Then I will have to see it fight!\" She sends out her own team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Researcher",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 25
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Negotiate (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You strike a better deal: research, and a stronger reward draft.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "She sees through the bluff and leaves in a huff.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "researcher-recognizes-mythical",
+   "name": "A Researcher Recognizes Something",
+   "group": "Event Director events",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "partyTag",
+     "tag": "mythical"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1d2a3a",
+    "effect": "glint"
+   },
+   "intro": "A researcher stops dead and stares at your party. One of your Pokémon is a mythical form she has only read about. \"Please,\" she says. \"Let me record it.\"",
+   "choices": [
+    {
+     "label": "Let her study it (safe)",
+     "success": {
+      "text": "She studies it carefully and funds a permanent research unlock.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "\"Then I will have to see it fight!\" She sends out her own team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Researcher",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 25
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Negotiate (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You strike a better deal: research, and a stronger reward draft.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "She sees through the bluff and leaves in a huff.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-rival-old-friend",
+   "name": "An Old Face on the Road",
+   "group": "Event Director events",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2038",
+    "effect": "glint"
+   },
+   "intro": "Someone you have fought more than once is sitting on a fence by the road, waiting. \"Not a battle today. I want to see how far you have come.\"",
+   "choices": [
+    {
+     "label": "Train together (safe)",
+     "success": {
+      "text": "You swap training tips. Your team grows.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Friendly match",
+     "success": {
+      "text": "\"Right then. No holding back!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Old Rival",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "quiet-bond",
+   "name": "Two Who Understand Each Other",
+   "group": "Event Director events",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "bond"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "Two of your Pokémon have drifted away from the group and sit together, watching the sunset without a word.",
+   "choices": [
+    {
+     "label": "Sit with them",
+     "success": {
+      "text": "The whole team feels closer for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 12,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them be",
+     "success": {
+      "text": "Some things are better unobserved. They return refreshed.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mystery-region-signal",
+   "name": "A Signal From the Unknown",
+   "group": "Event Director events",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "focus",
+     "focus": "mystery"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a2a2a",
+    "effect": "fog"
+   },
+   "intro": "A strange signal pulses from somewhere off the road. This region keeps its secrets, and this is one of them.",
+   "choices": [
+    {
+     "label": "Follow it (risky)",
+     "chance": 0.5,
+     "success": {
+      "text": "You find a hidden cache and a record of something very old.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nothing. Only static, and the feeling of being watched.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Record it and move on",
+     "success": {
+      "text": "You note the frequency for later study.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a map for answers",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "town-map"
+      }
+     ],
+     "success": {
+      "text": "A passing scholar explains and rewards your map.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 25
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 0
        }
       ]
      }
