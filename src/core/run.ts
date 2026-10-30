@@ -44,6 +44,7 @@ import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUsePr
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
+import { masteredStarters, runMasteryPerks } from './mastery';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -92,11 +93,11 @@ import {
 import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
-import { placeMinigameStop } from './minigame/gate';
+import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { getTheme, pickGymLeader, pickTheme, typesPool } from './themes';
 import {
   ensureHistories,
@@ -135,6 +136,8 @@ export interface NewRunOptions {
   pastPokemon?: readonly PastPokemon[];
   /** Mode, difficulty, modifiers and Death-Block (default: the standard rules). */
   rules?: RulesChoice;
+  /** The profile's Species Mastery: unlocks for joining Pokémon and the "Mastered" starter set (default: none). */
+  mastery?: Profile['mastery'];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -149,9 +152,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   if (wantsGenerationLock(rules)) rules.lockGeneration = pickGeneration(content, opts.seed);
   if (wantsRandomDraft(rules)) Object.assign(prep, randomDraft(content, opts.seed, prep));
   const rng = createStreams(opts.seed);
-  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep));
+  const mastered = masteredStarters(content, opts);
+  const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep, mastered));
   // Used once here, so its own seed-derived generator needs no saved stream.
-  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices);
+  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices, mastered);
   const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
   const run: RunState = {
     runId: opts.runId,
@@ -184,6 +188,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
+    mastery: runMasteryPerks(content, opts),
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
     attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
     rng,
@@ -195,7 +200,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
     minigame: null,
-    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {} },
+    minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null },
   };
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
@@ -1107,7 +1112,7 @@ export function shopBadgesNeeded(content: Content, run: Pick<RunState, 'archetyp
 /** An entry's price for this run: some trainers pay more for some items, and Charisma lowers every price. */
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
-  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run));
+  return Math.round(entry.price * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run));
 }
 
 /** Buys one of an item at the shop. */

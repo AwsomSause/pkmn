@@ -3,6 +3,7 @@
 
 import { addItem } from '../items';
 import { hashSeed, Rng } from '../rng';
+import { maxHp } from '../pokemon';
 import { requireStage } from '../run';
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
@@ -104,11 +105,11 @@ export function medalFor(def: MinigameDef, score: number, max: number): Medal {
 const RANK: Record<Medal, number> = { none: 0, bronze: 1, silver: 2, gold: 3 };
 
 /** Pays the medal's reward once. Money is capped per stage, repeats of one game pay less, items need a harder tier and are capped. */
-function payout(content: Content, run: RunState, def: MinigameDef, tier: number, score: number, max: number) {
+export function payout(content: Content, run: RunState, def: MinigameDef, tier: number, score: number, max: number) {
   const eco = content.minigames.economy;
   const stage = requireStage(run);
   const log = run.minigames;
-  if (log.stage !== stage.index) Object.assign(log, { stage: stage.index, money: 0, items: 0, plays: {} });
+  if (log.stage !== stage.index) Object.assign(log, { stage: stage.index, money: 0, items: 0, plays: {}, effects: 0 });
   const medal = medalFor(def, score, max);
   const lines = [`Score ${score} / ${max} — ${medal === 'none' ? 'no medal' : `${medal} medal`}.`];
   let money = 0;
@@ -127,6 +128,10 @@ function payout(content: Content, run: RunState, def: MinigameDef, tier: number,
       const roll = new Rng(hashSeed(`${run.seed}::minigame-reward::${stage.index}:${def.id}:${plays}`));
       if (roll.chance(reward.item.chance)) item = reward.item.item;
     }
+    if (reward.effect && tier + 1 >= eco.itemMinTier && log.effects < eco.effectCapPerStage) {
+      const roll = new Rng(hashSeed(`${run.seed}::minigame-effect::${stage.index}:${def.id}:${plays}`));
+      if (roll.chance(reward.effect.chance)) lines.push(applyEffect(content, run, reward.effect.kind, reward.effect.amount));
+    }
     run.money += money;
     log.money += money;
     if (item) {
@@ -137,6 +142,23 @@ function payout(content: Content, run: RunState, def: MinigameDef, tier: number,
   }
   if (RANK[medal] > RANK[log.best[def.id] ?? 'none']) log.best[def.id] = medal;
   return { score, max, medal, money, item, lines };
+}
+
+/** One bonus from a medal; returns the line shown to the player. */
+function applyEffect(content: Content, run: RunState, kind: 'heal' | 'research' | 'discount', amount: number): string {
+  run.minigames.effects += 1;
+  if (kind === 'research') {
+    run.totems.research += amount;
+    return `+${amount} research.`;
+  }
+  if (kind === 'discount') {
+    const stageIndex = requireStage(run).index;
+    const old = run.minigames.discount;
+    run.minigames.discount = { percent: old && old.stage === stageIndex ? Math.max(old.percent, amount) : amount, stage: stageIndex };
+    return `Shops are ${amount}% cheaper for the rest of this stage.`;
+  }
+  for (const m of run.party) if (m.hp > 0) m.hp = Math.min(maxHp(content, m), m.hp + Math.ceil((maxHp(content, m) * amount) / 100));
+  return `The party recovers ${amount}% of its health.`;
 }
 
 /** Back to the map. Leaving before the end forfeits the attempt (it was already counted) and pays nothing. */

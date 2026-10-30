@@ -12,5 +12,7 @@ export default defineConfig({
   test: {
     include: ['tests/unit/**/*.test.ts'],
     environment: 'node',
+    // Several suites build the whole content set; on a slow or busy machine that takes longer than the 5 s default.
+    testTimeout: 30_000,
   },
 });

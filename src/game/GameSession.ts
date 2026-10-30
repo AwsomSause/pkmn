@@ -11,6 +11,7 @@ import { finalizeRun, recordRunStarted } from '../core/profile';
 import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
+import { setMasteryPicks } from '../core/mastery';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
@@ -83,7 +84,7 @@ export class GameSession {
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, mastery: this.profile.mastery });
     this.profile = recordRunStarted(this.profile);
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));
@@ -330,6 +331,13 @@ export class GameSession {
   /** Claims a trainer in the Trainer Archive (its requirement must be met; may cost Bank Credits). */
   claimTrainer(archetypeId: string): void {
     this.profile = claimTrainer(this.content, this.profile, archetypeId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** Chooses a family's Species Mastery egg moves or ability. */
+  setMasteryPicks(family: string, picks: { eggMoves?: string[]; abilitySlot?: number }): void {
+    this.profile = setMasteryPicks(this.content, this.profile, family, picks);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }

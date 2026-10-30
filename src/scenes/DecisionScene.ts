@@ -6,6 +6,7 @@
 import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
 import { catchSummary } from '../core/catchSummary';
+import { masteryPreview } from '../core/mastery';
 import { candiesForRelease } from '../core/encounters';
 import { partyCapacity, releaseLimitReached } from '../core/run';
 import { runPerks } from '../core/archetypes';
@@ -309,7 +310,7 @@ export class DecisionScene extends Phaser.Scene {
     const past = reunion !== undefined;
     const title = !past ? `You caught ${species.name}!` : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
-    const lines = catchSummary(content, caught, run.party[0]);
+    const lines = [...catchSummary(content, caught, run.party[0]), masteryPreview(content, services().session.profile, run, caught)];
     this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${partyMax}).` : `Party: ${run.party.length}/${partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;

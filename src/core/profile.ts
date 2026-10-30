@@ -35,6 +35,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     claims: {},
     trainerCounters: {},
     trainerBest: {},
+    mastery: {},
   };
 }
 

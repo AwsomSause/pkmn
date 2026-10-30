@@ -39,6 +39,12 @@
  "abilities": {
   "hiddenChance": 0.05
  },
+ "mastery": {
+  "bronzeBattles": 5,
+  "silverBattles": 20,
+  "goldBattles": 50,
+  "rankResearch": { "bronze": 25, "silver": 50, "gold": 100, "master": 200 }
+ },
  "transformations": {
   "bossGymFrom": 5,
   "league": true,
