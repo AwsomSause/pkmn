@@ -71,6 +71,7 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Catalog slice 6g: `npm run report:qa` prints the catalog coverage per area (#145).
 - Catalog slice 6h: input buffering across scene changes (`core/inputBuffer.ts`, `ui/input.ts`).
 - Catalog slice 6i: visual snapshot e2e (`tests/e2e/visualSnapshots.spec.ts`), screenshots in test-results/visual/.
+- Catalog slice 6j: start-up load budget (`npm run report:perf`, in `npm run check`).
 - Catalog slice 5b: pinned objective in the map's top-right corner (`core/objectives.ts`), and a finished Research Room set earns a 'Complete: <set>' title.
 - Catalog slice 5c: `npm run report:assets` (in `npm run check`) fails when a pack file has no row in `docs/quality/asset-provenance.md`; `--write` makes `docs/quality/ASSET_AUDIT.md` (oversized and maybe-unused files).
 - Catalog slice 6a: title menu has a Settings page (Esc goes back) with music and effects volume, and sound de-duplication (`core/audioBudget.ts`: one sound per 45 ms, at most 6 per 120 ms).
@@ -127,3 +128,4 @@ Current versions (`src/save/saveManager.ts` `CURRENT_VERSIONS`): profile 12, run
 - Egg-born special forms (Phase D): the Nursery also sells a Regional Egg (pricier) that hatches a seeded regional first-stage form, built on the Egg list from PR #172. Special-form route `egg` is limited. Still planned: researchQuest, secretRoute, Delta/Z sets.
 - Form Research clue chain (Phase D research quest route): three clue stops (`form-clue-*`, flag `ev:form-clue`), then a rare research battle against a regional form. Route `researchQuest` is limited (regional only). Still planned: secretRoute, Delta/Z sets.
 - Secret route (Phase D): the Hidden Path event opens after the Form Research battle (flag `ev:form-met`) and offers rarer regional forms. Route `secretRoute` is limited (an event, not a new map node). Left in Phase D: Delta/Z sets.
+- Delta Set and Z-Form Set (Phase D): two earned special-form starter sets in `runPrep.json`. Finishing Delta Research Week / the Champion's Gauntlet (weekly rotation or Event Archive) opens each for purchase in the Starter Laboratory. Phase D is now complete as far as the data allows (routes egg, researchQuest, secretRoute, npcTrade are limited, not absent).
