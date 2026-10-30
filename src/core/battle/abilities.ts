@@ -134,6 +134,12 @@ export const ENTRY_BOOST: Record<string, BoostStat> = { 'intrepid-sword': 'atk',
 /** The foe's priority moves fail against these. */
 export const PRIORITY_GUARD = new Set(['queenly-majesty', 'dazzling', 'armor-tail']);
 
+/** Trace can't copy these; Mummy and Lingering Aroma don't overwrite them. */
+export const UNTRACEABLE = new Set(['trace', 'multitype', 'stance-change', 'schooling', 'shields-down', 'disguise', 'battle-bond', 'power-construct', 'rks-system', 'zen-mode', 'imposter', 'illusion', 'comatose', 'receiver', 'power-of-alchemy', 'neutralizing-gas', 'gulp-missile', 'hunger-switch', 'ice-face', 'zero-to-hero', 'tera-shift', 'terashell', 'teraform-zero', 'commander', 'as-one-glastrier', 'as-one-spectrier']);
+
+/** A contact move on it gives the attacker this ability. */
+export const SPREADS_ON_CONTACT = new Set(['mummy', 'lingering-aroma']);
+
 /** Abilities the battle engine runs. */
 const SUPPORTED = new Set<string>([
   ...Object.keys(PINCH),
@@ -157,7 +163,8 @@ const SUPPORTED = new Set<string>([
   ...Object.keys(AURAS),
   ...Object.keys(ENTRY_BOOST),
   ...PRIORITY_GUARD,
-  'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
+  ...SPREADS_ON_CONTACT,
+  'trace', 'protean', 'libero', 'neuroforce', 'aura-break', 'good-as-gold', 'corrosion', 'tangled-feet', 'wonder-skin', 'spicy-spray', 'toxic-chain',
   'sand-spit', 'seed-sower', 'bad-dreams', 'grass-pelt', 'surge-surfer', 'hadron-engine', 'orichalcum-pulse',
   'intimidate', 'download', 'pressure', 'levitate', 'wonder-guard', 'soundproof',
   'thick-fat', 'heatproof', 'fluffy', 'ice-scales', 'filter', 'solid-rock', 'prism-armor', 'multiscale', 'shadow-shield',

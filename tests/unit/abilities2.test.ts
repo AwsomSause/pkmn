@@ -76,4 +76,23 @@ describe('second batch of abilities', () => {
     for (let i = 0; i < 6 && !battle.enemyTeam[0]!.status; i++) turn(ctx);
     expect(battle.enemyTeam[0]!.status?.id).toBe('psn');
   });
+
+  it('Trace copies the foe\'s ability on entry, and runs it', () => {
+    const { ctx, battle } = setup(mon('ralts', 'trace', 'tackle'), mon('zacian', 'intrepid-sword', 'tackle'));
+    startBattle(ctx);
+    expect(battle.playerVolatile.abilityOverride).toBe('intrepid-sword');
+    expect(battle.playerStages.atk).toBe(1);
+  });
+
+  it('Protean changes its type to the first move\'s', () => {
+    const { ctx, battle } = setup(mon('froakie', 'protean', 'ember'), plain('rattata', 'tackle'));
+    turn(ctx);
+    expect(battle.playerVolatile.typeShift).toBe('fire');
+  });
+
+  it('Mummy gives the attacker Mummy on contact', () => {
+    const { ctx, battle } = setup(plain('rattata', 'bite'), mon('cofagrigus', 'mummy', 'tackle'));
+    turn(ctx);
+    expect(battle.playerVolatile.abilityOverride).toBe('mummy');
+  });
 });

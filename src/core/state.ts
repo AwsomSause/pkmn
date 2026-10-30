@@ -105,6 +105,10 @@ export const VolatileSchema = z.object({
   flashFire: z.boolean().default(false),
   /** Truant: it loafs around on its next turn. */
   truant: z.boolean().default(false),
+  /** Protean / Libero: the type it has become (until it switches out). */
+  typeShift: TypeNameSchema.nullable().default(null),
+  /** Trace / Mummy: the ability it has now instead of its own (until it switches out). */
+  abilityOverride: z.string().nullable().default(null),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -119,6 +123,8 @@ export const freshVolatile = (): Volatile => ({
   turnsOut: 0,
   flashFire: false,
   truant: false,
+  typeShift: null,
+  abilityOverride: null,
 });
 
 export const StagesSchema = z.record(BoostStatSchema, z.number().int().min(-6).max(6));
