@@ -1,5 +1,6 @@
 {
  "dance": [
+  "aqua-step",
   "clangorous-soul",
   "dragon-dance",
   "feather-dance",
@@ -9,7 +10,8 @@
   "quiver-dance",
   "revelation-dance",
   "swords-dance",
-  "teeter-dance"
+  "teeter-dance",
+  "victory-dance"
  ],
  "noProtect": [
   "after-you",
