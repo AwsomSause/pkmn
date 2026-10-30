@@ -21046,6 +21046,84 @@
    ]
   },
   {
+   "id": "champion-defense",
+   "name": "The Champion Who Came Before",
+   "group": "Hall of Fame",
+   "rarity": "rare",
+   "minStage": 6,
+   "requires": [
+    {
+     "kind": "championGhost"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2410",
+    "effect": "sparkle"
+   },
+   "intro": "A banner bears the name of a champion team you built in another life. Today the Hall has rebuilt that team and put it on the field. It is not a replay of how you won, just the same Pokémon at the same strength, fighting as hard as they know how.",
+   "choices": [
+    {
+     "label": "Defend your name",
+     "success": {
+      "text": "The old champions walk out.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hall of Fame Team",
+       "ghost": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 100
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Salute and walk on",
+     "success": {
+      "text": "You tip your cap to the old team and leave them to their stage.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "rival-gauntlet-entry",
    "name": "The Rival Gauntlet",
    "group": "Rival Tournament",
@@ -21084,6 +21162,210 @@
     },
     {
      "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-scorch",
+   "name": "Scorch Marks in a Perfect Circle",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d18",
+    "effect": "fog"
+   },
+   "intro": "The grass is burned in a ring, as wide as a house. Nothing living would do this. Something very large landed here.",
+   "choices": [
+    {
+     "label": "Study the marks",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-witness",
+   "name": "A Shaken Witness",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "fog"
+   },
+   "intro": "A ranger sits on a stump with a blanket over her shoulders. \"It was in the clouds. It looked at me. It was not afraid of me.\"",
+   "choices": [
+    {
+     "label": "Hear her out",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-clue-feather",
+   "name": "A Feather That Hums",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 0,
+     "atMost": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a2630",
+    "effect": "fog"
+   },
+   "intro": "A single feather lies on the road. It hums faintly, and every Pokémon you own turns to look at it.",
+   "choices": [
+    {
+     "label": "Take the feather",
+     "success": {
+      "text": "You piece it together. It is a little more than a rumour now.",
+      "effects": [
+       {
+        "kind": "hunt"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hunt-lair",
+   "name": "Where the Storm Rests",
+   "group": "Grand-Enemy Hunt",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "hunt",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#14141f",
+    "effect": "glint"
+   },
+   "intro": "Everything you have gathered points to one place. A figure in a storm-grey coat steps out and bows. \"You have been looking for us. Then show us what you know.\"",
+   "choices": [
+    {
+     "label": "Face the herald",
+     "success": {
+      "text": "Lightning splits the sky as the herald sends out its team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Storm Herald",
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "hunt",
+         "finish": true
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not yet",
      "success": {
       "text": "You leave it be and walk on.",
       "effects": []

@@ -56,3 +56,28 @@ export const GAUNTLET_EVENTS: Json[] = [
       ch('Not today', leave()),
     ]),
 ];
+
+const clue = (id: string, name: string, intro: string, tint: string, look: string): Json =>
+  ev(id, name, 'Grand-Enemy Hunt', { rarity: 'uncommon', minStage: 3, requires: [{ kind: 'hunt', atLeast: 0, atMost: 2 }], cast: [], effect: 'fog', tint }, intro, [
+    ch(look, out('You piece it together. It is a little more than a rumour now.', { kind: 'hunt' }, rp(20))),
+    ch('Leave it', leave()),
+  ]);
+
+export const HUNT_EVENTS: Json[] = [
+  clue('hunt-clue-scorch', 'Scorch Marks in a Perfect Circle', 'The grass is burned in a ring, as wide as a house. Nothing living would do this. Something very large landed here.', '#2a1d18', 'Study the marks'),
+  clue('hunt-clue-witness', 'A Shaken Witness', 'A ranger sits on a stump with a blanket over her shoulders. "It was in the clouds. It looked at me. It was not afraid of me."', '#1d2230', 'Hear her out'),
+  clue('hunt-clue-feather', 'A Feather That Hums', 'A single feather lies on the road. It hums faintly, and every Pokémon you own turns to look at it.', '#1a2630', 'Take the feather'),
+  ev('hunt-lair', 'Where the Storm Rests', 'Grand-Enemy Hunt', { rarity: 'rare', minStage: 4, requires: [{ kind: 'hunt', atLeast: 3 }], cast: ['trainer.psychic_m'], effect: 'glint', tint: '#14141f' },
+    'Everything you have gathered points to one place. A figure in a storm-grey coat steps out and bows. "You have been looking for us. Then show us what you know."', [
+      ch('Face the herald', fight('Lightning splits the sky as the herald sends out its team.', trainer('Storm Herald', { size: 4, lv: 3, win: [$(1500), any(...TREASURE), rp(80), { kind: 'hunt', finish: true }] }))),
+      ch('Not yet', leave()),
+    ]),
+];
+
+export const CHAMPION_EVENTS: Json[] = [
+  ev('champion-defense', 'The Champion Who Came Before', 'Hall of Fame', { rarity: 'rare', minStage: 6, requires: [{ kind: 'championGhost' }], cast: ['trainer.psychic_m'], effect: 'sparkle', tint: '#2a2410' },
+    'A banner bears the name of a champion team you built in another life. Today the Hall has rebuilt that team and put it on the field. It is not a replay of how you won, just the same Pokémon at the same strength, fighting as hard as they know how.', [
+      ch('Defend your name', fight('The old champions walk out.', trainer('Hall of Fame Team', { size: 6, ghost: true, win: [$(3000), any(...TREASURE), rp(100), good(2)] }))),
+      ch('Salute and walk on', out('You tip your cap to the old team and leave them to their stage.', rp(10))),
+    ]),
+];

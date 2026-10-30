@@ -2031,6 +2031,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   /** Rival gauntlet: whether a chain of rival fights is running. */
   z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
+  /** Grand-Enemy hunt: clues found so far (at least / at most). */
+  /** Champion defense: you have a Hall of Fame team on record. */
+  z.object({ kind: z.literal('championGhost') }),
+  z.object({ kind: z.literal('hunt'), atLeast: z.number().int().min(0).default(0), atMost: z.number().int().min(0).default(99) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2086,6 +2090,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
+  /** Grand-Enemy hunt: one more clue (`finish` ends the hunt and gives its title). */
+  z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
@@ -2105,6 +2111,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     /** A trainer class from trainers.json, or a boss id (its signature team). */
     classId: z.string().optional(),
     bossId: z.string().optional(),
+    /** Champion defense: the team is your newest Hall of Fame team (core/story/championDefense.ts). */
+    ghost: z.boolean().default(false),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     types: z.array(TypeNameSchema).default([]),
