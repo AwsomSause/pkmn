@@ -79,12 +79,12 @@ describe('Signature Move Awakening', () => {
   it('a move used often in trainer fights awakens once, with a banner and a memory', () => {
     const { run, mon } = trainerRun('awaken-1');
     for (let n = 0; n < uses - 1; n++) {
-      expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')])).toEqual([]);
+      expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]).filter((c) => c.side === 'player')).toEqual([]);
     }
     const cues = recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]);
-    expect(cues.map((c) => c.title)).toEqual(['It Mastered the Power Within!']);
+    expect(cues.filter((c) => c.title === 'It Mastered the Power Within!')).toHaveLength(1);
     expect(mon.awakened).toEqual(['tackle']);
-    expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')])).toEqual([]);
+    expect(recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]).some((c) => c.title === 'It Mastered the Power Within!')).toBe(false);
     expect(mon.awakened).toEqual(['tackle']);
   });
 

@@ -9,13 +9,14 @@ import { clampStage } from '../battle/damage';
 import type { Content } from '../contentSchema';
 import { changeFriendship } from '../friendship';
 import { addItem } from '../items';
+import { maxHp } from '../pokemon';
 import type { RunState } from '../state';
 import { markBattleEffect } from './ledger';
 import type { StoryEffectSpec } from './schema';
 
 /** Effects that only make sense inside a battle (their ids go in the battle's ledger). */
 export function isBattleEffect(spec: StoryEffectSpec): boolean {
-  return spec.kind === 'statStage' || spec.kind === 'endure';
+  return spec.kind === 'statStage' || spec.kind === 'endure' || spec.kind === 'enemyStage';
 }
 
 export type EffectOutcome = 'applied' | 'alreadyApplied' | 'notApplicable';
@@ -35,6 +36,7 @@ export function applyStoryEffect(content: Content, run: RunState, effectId: stri
       if (!targetUid || run.party[battle.activeIndex]?.uid !== targetUid) return 'notApplicable';
       battle.playerStages[spec.stat] = clampStage((battle.playerStages[spec.stat] ?? 0) + spec.stages);
     }
+    if (spec.kind === 'enemyStage') battle.enemyStages[spec.stat] = clampStage((battle.enemyStages[spec.stat] ?? 0) + spec.stages);
     markBattleEffect(battle, effectId);
     return 'applied';
   }
@@ -49,6 +51,12 @@ export function applyStoryEffect(content: Content, run: RunState, effectId: stri
       const mon = run.party.find((m) => m.uid === targetUid);
       if (!mon) return 'notApplicable';
       changeFriendship(content, mon, spec.amount);
+      break;
+    }
+    case 'heal': {
+      const mon = run.party.find((m) => m.uid === targetUid);
+      if (!mon || mon.hp <= 0) return 'notApplicable';
+      mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.max(1, Math.floor(maxHp(content, mon) * spec.hpShare)));
       break;
     }
     case 'attribute':

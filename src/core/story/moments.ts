@@ -1,0 +1,155 @@
+// More Hyper moments (Overdrive blueprint §3): survival, bond and enemy
+// Overdrive events that are detected from what happened in a turn. Like the
+// Hyper evolutions they draw no random numbers; the story layer only tells
+// them and applies a small effect through the effect ledger. Counters live in
+// run.story.flags under "m:" keys and are cleared when the battle ends.
+
+import type { Side } from '../battle/engine';
+import type { Content } from '../contentSchema';
+import { GYM_LEADER_CLASS, ELITE_FOUR_CLASS, CHAMPION_CLASS } from '../encounters';
+import { maxHp } from '../pokemon';
+import type { RunEvent } from '../run';
+import { currentEnemy, type RunState } from '../state';
+import type { StoryEffectSpec, StoryTriggerKind } from './schema';
+
+/** The one effect each moment trigger may carry (checked when content loads). */
+export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['kind']>> = {
+  secondWind: 'heal',
+  notGivenUp: 'statStage',
+  rememberedTraining: 'statStage',
+  brokeLimits: 'statStage',
+  somethingAwakened: 'friendship',
+  instinctsTookOver: 'statStage',
+  refusedWeakness: 'statStage',
+  turnedPainIntoPower: 'statStage',
+  makeYouProud: 'statStage',
+  cameToAid: 'statStage',
+  moreThanTeammates: 'flair',
+  knowsYouBelieve: 'flair',
+  evolvedBeyond: 'flair',
+  enemyUnshaken: 'enemyStage',
+  enemyInstinct: 'enemyStage',
+  enemyLearned: 'enemyStage',
+  protectingTrainer: 'enemyStage',
+  partnerFall: 'enemyStage',
+  willNotLetDown: 'enemyStage',
+};
+
+export interface Moment {
+  trigger: StoryTriggerKind;
+  side: Side;
+  uid: string;
+  /** Index in the turn's events it is told after. */
+  at: number;
+  names: Record<string, string>;
+}
+
+const flagKey = (...parts: (string | number)[]) => `m:${parts.join(':')}`;
+
+/** Removes the per-battle counters (called when a battle ends). */
+export function clearMomentFlags(run: RunState): void {
+  for (const key of Object.keys(run.story.flags)) if (key.startsWith('m:')) delete run.story.flags[key];
+}
+
+const isBossClass = (classId: string | undefined) => classId === GYM_LEADER_CLASS || classId === ELITE_FOUR_CLASS || classId === CHAMPION_CLASS;
+
+/**
+ * Finds the moments that happened in one turn. `before` is the run before the turn, `run` after it
+ * (mutated only for the "m:" counters and the boss-finisher memory).
+ */
+export function detectMoments(content: Content, before: RunState, run: RunState, events: RunEvent[]): Moment[] {
+  const battle = run.battle!;
+  const prior = before.battle!;
+  const flags = run.story.flags;
+  const out: Moment[] = [];
+  const nameOf = (id: string) => content.species.get(id)?.name ?? id;
+  const boss = isBossClass(battle.trainer?.classId);
+  const trainerFight = battle.kind === 'trainer';
+  const once = (trigger: StoryTriggerKind, uid: string): boolean => {
+    const key = flagKey('fired', trigger, uid);
+    if (flags[key]) return false;
+    flags[key] = true;
+    return true;
+  };
+  const fire = (trigger: StoryTriggerKind, side: Side, uid: string, at: number, names: Record<string, string>) => {
+    if (content.story.definitions.some((d) => d.triggerConditions.trigger === trigger) && once(trigger, uid)) out.push({ trigger, side, uid, at, names });
+  };
+  const lead = run.party[battle.activeIndex];
+  const leadBefore = before.party[prior.activeIndex];
+  const foe = currentEnemy(battle);
+  const lastAt = events.length - 1;
+  const leadNames = () => ({ name: nameOf(lead!.speciesId), enemy: nameOf(foe.speciesId) });
+  let leadUid = leadBefore?.uid;
+  let enemyUid = currentEnemy(prior).uid;
+  let lastMoveByLead: string | null = null;
+
+  events.forEach((e, i) => {
+    switch (e.type) {
+      case 'move':
+        if (e.side === 'player') {
+          lastMoveByLead = e.moveId;
+          // It Remembered Its Training: a move that finished a boss before, used again.
+          const memory = leadUid ? flags[`fin:${leadUid}`] : undefined;
+          if (leadUid && memory === e.moveId && trainerFight && lead?.uid === leadUid) {
+            fire('rememberedTraining', 'player', leadUid, i, { name: nameOf(lead.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId });
+          }
+          // It Has Learned From Your Attacks: the same move three turns in a row.
+          const streak = flags[flagKey('streak')] === e.moveId ? Number(flags[flagKey('streakN')] ?? 1) + 1 : 1;
+          flags[flagKey('streak')] = e.moveId;
+          flags[flagKey('streakN')] = streak;
+          if (streak >= 3 && trainerFight) fire('enemyLearned', 'enemy', enemyUid, i, { name: nameOf(foe.speciesId), move: content.moves.get(e.moveId)?.name ?? e.moveId });
+        }
+        break;
+      case 'switchIn':
+        if (e.side === 'player') {
+          leadUid = e.uid;
+          const mon = run.party.find((m) => m.uid === e.uid);
+          if (mon && boss && mon.friendship >= 150) fire('makeYouProud', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
+          if (mon && flags[flagKey('fell')]) fire('cameToAid', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
+        } else {
+          enemyUid = e.uid;
+          const ace = battle.enemyTeam.length > 1 && battle.enemyTeam[battle.enemyTeam.length - 1]!.uid === e.uid;
+          if (boss && ace) fire('willNotLetDown', 'enemy', e.uid, i, { name: nameOf(e.speciesId) });
+          if (trainerFight && flags[flagKey('enemyFell')]) fire('partnerFall', 'enemy', e.uid, i, { name: nameOf(e.speciesId) });
+        }
+        break;
+      case 'damage': {
+        if (e.side !== 'player' || e.hpAfter <= 0 || !lead) break;
+        const hits = Number(flags[flagKey('hits', lead.uid)] ?? 0) + 1;
+        flags[flagKey('hits', lead.uid)] = hits;
+        const max = maxHp(content, lead);
+        if (hits >= 3 && lead.hp <= max * 0.6) fire('notGivenUp', 'player', lead.uid, i, leadNames());
+        if (e.effectiveness > 1) fire('refusedWeakness', 'player', lead.uid, i, leadNames());
+        if (e.amount >= max * 0.5) fire('turnedPainIntoPower', 'player', lead.uid, i, leadNames());
+        if (prior.turn === 1 && battle.kind === 'wild' && e.amount >= max * 0.4) fire('instinctsTookOver', 'player', lead.uid, i, leadNames());
+        break;
+      }
+      case 'faint':
+        if (e.side === 'player') flags[flagKey('fell')] = true;
+        else {
+          flags[flagKey('enemyFell')] = true;
+          const dead = battle.enemyTeam.find((m) => m.uid === e.uid);
+          if (lead && dead && dead.level >= lead.level + 10) fire('brokeLimits', 'player', lead.uid, i, { name: nameOf(lead.speciesId), enemy: nameOf(dead.speciesId) });
+          if (boss && leadUid && lastMoveByLead) flags[`fin:${leadUid}`] = lastMoveByLead;
+        }
+        break;
+      default:
+        break;
+    }
+  });
+
+  // End of the turn: states rather than events.
+  if (lead && lead.hp > 0) {
+    if (prior.turn >= 8 && lead.hp <= maxHp(content, lead) / 2) fire('secondWind', 'player', lead.uid, lastAt, leadNames());
+    const h = run.story.histories[lead.uid];
+    if (h && Object.keys(h.hyper).length >= 3) fire('somethingAwakened', 'player', lead.uid, lastAt, leadNames());
+  }
+  if (trainerFight && foe.hp > 0) {
+    const share = foe.hp / maxHp(content, foe);
+    const last = battle.enemyIndex === battle.enemyTeam.length - 1;
+    if (boss && share <= 0.5) fire('enemyUnshaken', 'enemy', foe.uid, lastAt, { name: nameOf(foe.speciesId) });
+    if (boss && last && share <= 0.25) fire('enemyInstinct', 'enemy', foe.uid, lastAt, { name: nameOf(foe.speciesId) });
+    if (last && battle.enemyTeam.length > 1 && share <= 0.4) fire('protectingTrainer', 'enemy', foe.uid, lastAt, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? 'its trainer' });
+  }
+  return out;
+}
