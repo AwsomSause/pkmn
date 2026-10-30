@@ -3,6 +3,7 @@
 // Build Summary, save or load a loadout preset, then roll the starters.
 
 import Phaser from 'phaser';
+import { decodeSeedCode } from '../core/seedCode';
 import { TYPE_NAMES, type TypeName } from '../core/contentSchema';
 import {
   buildSummary,
@@ -224,6 +225,15 @@ export class RunPrepScene extends Phaser.Scene {
       case 'seed': {
         const value = window.prompt('Seed for this run (leave empty for a random one):', this.seed ?? '');
         if (value === null) return;
+        // A shared seed code (PR1.…) also sets the trainer and the rules.
+        if (value.trim().startsWith('PR1.')) {
+          const code = decodeSeedCode(value);
+          if (!code.ok) return this.refresh({}, { notice: code.reason });
+          this.seed = code.parts.seed;
+          const trainer = services().session.content.archetypes.has(code.parts.archetypeId) ? code.parts.archetypeId : this.archetypeId;
+          this.scene.restart({ archetypeId: trainer, prep: this.prep, seed: this.seed, focus: this.focusIndex, rules: code.parts.rules, notice: code.note ?? 'Seed code loaded: seed, trainer and rules set.' } satisfies RunPrepData);
+          return;
+        }
         this.seed = value.trim() || null;
         return this.refresh();
       }
