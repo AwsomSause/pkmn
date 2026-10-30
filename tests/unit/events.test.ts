@@ -181,7 +181,7 @@ describe('events in saves', () => {
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(14);
-    expect(CURRENT_VERSIONS.run).toBe(15);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(15);
     expect(eventStops(loaded.data).length).toBe(eventStops(run).length);
   });
 });

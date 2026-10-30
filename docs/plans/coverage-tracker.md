@@ -72,7 +72,7 @@ Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.
 | C. Attrition and recovery: HP/status/PP carry between stops; rest and events heal | DONE |
 | D. Mega: Mega Energy resource, temporary Mega Stone + lent Mega Ring (stone kept on completion), Mega guardian finale that Mega Evolves, research objective, exclusive finales | DONE; achievements TODO; Mega bosses use the normal Mega rules only |
 | E. Extraction and failure rules written in `flow.ts`: completion keeps all + unlock; early extract keeps loot, no finale rewards; loss forfeits loot (share of money kept), heals, never ends the run, never loses your own Pokémon | DONE |
-| Reload mid-expedition (run v15), no double reward (gate used on entry) | DONE |
+| Reload mid-expedition (run v16), no double reward (gate used on entry) | DONE |
 | Progression table by region (tiers 1–4, unlock chain) | DONE |
 | Raid as finale or Totem as finale/stop | DONE |
 | Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
