@@ -730,6 +730,19 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('enemyHealingBlocked') }),
   /** Mega Evolution happens this many turns later than normal. */
   z.object({ kind: z.literal('megaDelay'), turns: z.number().int().positive() }),
+  // ---------- Trainer Evolutions (core/trainerEvolution.ts): each evolved trainer's own mechanic ----------
+  /** Champion Red's Last Stand: once per battle, your last Pokémon standing survives a knockout hit at 1 HP. */
+  z.object({ kind: z.literal('championLastStand') }),
+  /** Champion Blue's Smell Ya Later: on the first turn of a trainer battle your Pokémon moves before the foe's same-priority move. */
+  z.object({ kind: z.literal('firstStrike') }),
+  /** Champion Cynthia's Champion's Aura: at the start of a boss battle your lead's best stat rises by `stages`. */
+  z.object({ kind: z.literal('championsAura'), stages: z.number().int().min(1).max(6) }),
+  /** Rocket Boss Giovanni's Black Market: shops also sell stock your badges haven't opened yet, at `markup` times the price. */
+  z.object({ kind: z.literal('blackMarket'), markup: z.number().min(1) }),
+  /** King N's Voice of Pokémon: a wild Pokémon you defeat asks to join with this chance (no ball needed). */
+  z.object({ kind: z.literal('voiceOfPokemon'), chance: z.number().positive().max(1) }),
+  /** Champion Oak's Field Research: each species you catch for the first time in a run pays this much money. */
+  z.object({ kind: z.literal('fieldResearch'), money: z.number().int().positive() }),
 ]);
 export type ArchetypeModifier = z.infer<typeof ArchetypeModifierSchema>;
 export type ArchetypeModifierKind = ArchetypeModifier['kind'];
@@ -766,6 +779,11 @@ export const ArchetypeSchema = z.object({
   eventTags: z.array(z.string()).default([]),
   /** The trainer's signature mechanic (core/signature.ts), if any. */
   signatureMechanic: z.string().nullable().default(null),
+  /**
+   * A Trainer Evolution (plan Part 2c): the base trainer this is the evolved form of. It unlocks when the
+   * base trainer's quest line is finished, and runs count toward the base trainer's quests.
+   */
+  evolvedFrom: z.string().nullable().default(null),
 });
 export type Archetype = z.infer<typeof ArchetypeSchema>;
 

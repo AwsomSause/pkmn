@@ -890,6 +890,7 @@ export class BattleScene extends Phaser.Scene {
     if (end.moneyGained > 0) await this.say(`You got ₽${end.moneyGained}!`);
     for (const id of end.itemsFound) await this.say(`You found a ${content.items.get(id)?.name ?? id}!`);
     for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
+    if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
       playSfx(this, 'se.level_up');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;

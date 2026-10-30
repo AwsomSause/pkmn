@@ -13,6 +13,7 @@
 // `mon.boosts` until the Pokémon battles; stage boosts count down only while
 // it is in battle.
 
+import { hasChampionLastStand, isLastStanding } from '../trainerEvolution';
 import type { BattleBoost, BoostStat, Content, HeldHook, Move, StatusId, TypeName, Weather } from '../contentSchema';
 import type { Perks } from '../archetypes';
 import { calcStats, getSpecies } from '../pokemon';
@@ -41,6 +42,8 @@ export interface HeldContext {
   teamItems?: Record<string, number>;
   /** The trainer's perks (Trainers.md): stat multipliers for the player's side. */
   perks?: Perks;
+  /** The player's party (Champion Red's Last Stand checks who is still standing). */
+  party?: PokemonInstance[];
 }
 
 /** What happened, for the battle text. */
@@ -377,6 +380,12 @@ export function survive(ctx: HeldContext, target: Holder, damage: number, events
   for (const { itemId, hook, copies } of hooks(all, 'survive')) {
     if (!ctx.rng.chance(Math.min(1, (hook.percent * copies) / 100))) continue;
     events.push({ type: 'held', side: target.side, itemId, what: 'survive' });
+    return target.mon.hp - 1;
+  }
+  // Champion Red's Last Stand: the last Pokémon standing hangs on at 1 HP, once per battle.
+  if (target.side === 'player' && hasChampionLastStand(ctx.perks) && isLastStanding(ctx.party, target.mon.uid) && timesUsed(ctx, 'battle', 'last-stand') === 0) {
+    markUsed(ctx, 'battle', 'last-stand');
+    events.push({ type: 'held', side: target.side, itemId: 'perk-last-stand', what: 'survive' });
     return target.mon.hp - 1;
   }
   // A trainer perk (Acerola): a chance to hang on at 1 HP, once per Pokémon per battle.
