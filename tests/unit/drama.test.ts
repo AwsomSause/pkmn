@@ -404,3 +404,26 @@ describe('fair AI influence', () => {
     expect(run.battle!.ai).toBeCloseTo(0.65);
   });
 });
+
+describe('Overdrive drama events', () => {
+  const hyperEvent = (side: 'player' | 'enemy', variant: string | null = null): BattleEvent =>
+    ({ type: 'hyper', side, uid: 'x', defId: 'toughened-it-out', variant, cured: false }) as unknown as BattleEvent;
+
+  it('a boss reacts when your Pokémon has a Hyper moment', () => {
+    const run = trainerRun('Lance', 0.9);
+    run.battle!.turn = 3;
+    const lines = planDrama(content, run, structuredClone(run.battle!), [move('player', 'tackle'), hyperEvent('player')], 'high');
+    expect(lines.some((l) => l.cue?.event === 'overdriveBreakthrough')).toBe(true);
+  });
+
+  it('a boss reacts when its own Overdrive is calmed, but not for a plain unleashed one', () => {
+    const run = trainerRun('Lance', 0.9);
+    run.battle!.turn = 3;
+    const calmed = planDrama(content, run, structuredClone(run.battle!), [hyperEvent('enemy', 'calmed')], 'high');
+    expect(calmed.some((l) => l.cue?.event === 'overdriveMisfire')).toBe(true);
+    const run2 = trainerRun('Lance', 0.9);
+    run2.battle!.turn = 3;
+    const unleashed = planDrama(content, run2, structuredClone(run2.battle!), [hyperEvent('enemy', 'unleashed')], 'high');
+    expect(unleashed.some((l) => l.cue?.event === 'overdriveMisfire')).toBe(false);
+  });
+});
