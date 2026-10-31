@@ -38,6 +38,7 @@ import { openSummaryMenu } from '../ui/summaryMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
+import { stopStyle } from '../ui/stopIcons';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
@@ -375,7 +376,7 @@ export class MapScene extends Phaser.Scene {
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
-        const s = side.kind === 'event' && stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : SIDE_STYLE[side.kind];
+        const s = side.kind === 'event' ? (stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : stopStyle(content.events.get(side.eventId ?? '')?.stop)) : SIDE_STYLE[side.kind];
         const sg = this.add.graphics();
         sg.fillStyle(0x181818, side.used ? 0.3 : 1);
         sg.fillRect(sx - 11, sy - 11, 22, 22);
@@ -417,7 +418,7 @@ export class MapScene extends Phaser.Scene {
     const currentNode = stage.current ? findNode(stage.map, stage.current) : null;
     for (const side of currentNode?.sides ?? []) {
       if (side.kind !== 'shop' && side.used && !(side.kind === 'service' && serviceReusable(side))) continue;
-      buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: SIDE_STYLE[side.kind].color });
+      buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: side.kind === 'event' && !stopIsHidden(content, run, currentNode!, side) ? stopStyle(content.events.get(side.eventId ?? '')?.stop).color : SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });

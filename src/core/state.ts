@@ -638,7 +638,7 @@ export const BattleStateSchema = z.object({
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
   raid: RaidBattleSchema.optional(),
   /** A battle an event started: no reward draft after it, and `win` effects if you win (events.json). */
-  event: z.object({ eventId: z.string(), choiceIndex: z.number().int().min(0), sideId: z.string(), success: z.boolean() }).optional(),
+  event: z.object({ eventId: z.string(), choiceIndex: z.number().int().min(0), sideId: z.string(), success: z.boolean(), step: z.number().int().min(0).optional() }).optional(),
   /** Battle Drama Engine: what the trainer has already said (see core/drama). */
   drama: DramaBattleSchema.default(freshDrama),
   /** A Totem fight: aura, ally calls and phases (core/totem/totem.ts). */
@@ -915,7 +915,9 @@ export const RunStateSchema = z.object({
   /** Eggs waiting to hatch (core/eggs.ts). */
   eggs: z.array(EggSchema).default([]),
   /** Where the run goes once all pending decisions are made. */
-  afterDecisions: z.enum(['reward', 'map', 'expedition']),
+  afterDecisions: z.enum(['reward', 'map', 'expedition', 'eventChain']),
+  /** An event detour with more battles to come: the next one starts after any decisions (core/events.ts continueEventChain). */
+  eventChain: z.object({ eventId: z.string(), choiceIndex: z.number().int().min(0), sideId: z.string(), success: z.boolean(), step: z.number().int().min(0) }).optional(),
   /** The current stage and its map (null only for saves from before stage maps existed). */
   stage: StageStateSchema.nullable(),
   /** Themes and bosses (gym leaders, Elite Four, champions) already used this run (they never repeat, D6). */

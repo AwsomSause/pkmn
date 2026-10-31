@@ -293,6 +293,18 @@ export function addEventStops(content: Content, run: RunState): void {
     taken.add(id);
     place(id, false);
   }
+  // Stop types with a per-stage quota (special encounter, rare Pokémon, trade, detour, merchant): drawn first, from their own stream.
+  const quotaRng = new Rng(hashSeed(`${run.seed}::event-quota::${stageKey(run)}`));
+  for (const [stopType, [lo, hi]] of Object.entries(cfg.stopQuotas)) {
+    for (let i = quotaRng.int(lo, hi); i > 0 && candidates.length > 0; i--) {
+      const pool = eligibleEvents(content, run).filter((e) => e.stop === stopType && !taken.has(e.id));
+      if (pool.length === 0) break;
+      const e = quotaRng.pick(pool);
+      taken.add(e.id);
+      const node = quotaRng.pick(candidates);
+      node.sides.push({ id: `event-${node.sides.length + 1}-${node.id}`, kind: 'event', used: false, eventId: e.id, ...(quotaRng.chance(cfg.hiddenShare) ? { hidden: true } : {}) });
+    }
+  }
   const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules)) + (focusIs(content, run, run.regionIndex, 'mystery') ? MYSTERY_EXTRA_STOPS : 0);
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
@@ -336,6 +348,8 @@ export interface ChoiceView {
   chance: number | null;
   /** The attribute behind it, for the card's icon and colour. */
   attribute: string | null;
+  /** The player's value in that attribute, for "Charisma 45: 70%". */
+  attributeValue: number | null;
   /** With an Inquiry Mail: what happens, in words. */
   preview: string | null;
   /** What it costs for sure (paid money, an item used, HP lost), or null. Never spoils a hidden reward. */
@@ -406,7 +420,7 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
     const missing = unmet ? conditionText(content, unmet) : tradeMissing(content, run, c);
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing, tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
+    return { label: c.label, locked: missing, tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, attributeValue: c.check ? effectiveAttributes(content, run)[c.check] : null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }
@@ -872,6 +886,30 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
+}
+
+/** A detour's next battle (`chain`): same stop, no healing in between. Called once decisions from the last fight are done. */
+export function continueEventChain(content: Content, run: RunState): void {
+  const ref = run.eventChain;
+  delete run.eventChain;
+  const node = run.stage && run.stage.current !== null ? run.stage.map.nodes.find((n) => n.id === run.stage!.current) : undefined;
+  const battle = ref ? (ref.success ? content.events.get(ref.eventId)?.choices[ref.choiceIndex]?.success : content.events.get(ref.eventId)?.choices[ref.choiceIndex]?.failure)?.battle : undefined;
+  if (!ref || !node || !battle || !run.party.some((p) => p.hp > 0)) {
+    run.afterDecisions = 'map';
+    return continueAfterDecisions(content, run);
+  }
+  const rng = new Rng(hashSeed(`${run.seed}::event-chain::${stageKey(run)}::${ref.sideId}::${ref.step}`));
+  startEventBattle(content, run, node, battle, rng, ref);
+}
+
+/** Whether a won event battle leads into another of its chain (a detour). Sets up `run.eventChain` if so. */
+export function eventChainNext(content: Content, run: RunState, event: EventBattleRef): boolean {
+  const choice = content.events.get(event.eventId)?.choices[event.choiceIndex];
+  const battle = (event.success ? choice?.success : choice?.failure)?.battle;
+  const step = event.step ?? 0;
+  if (!battle || step + 1 >= battle.chain) return false;
+  run.eventChain = { eventId: event.eventId, choiceIndex: event.choiceIndex, sideId: event.sideId, success: event.success, step: step + 1 };
+  return true;
 }
 
 /** After an event battle you won: its `win` effects (mutates `run`). Returns the changes in words. */

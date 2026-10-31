@@ -434,6 +434,7 @@
   "soldGift": 500,
   "itemRarityWeights": { "common": 60, "uncommon": 25.5, "rare": 8.5, "epic": 0.85 },
   "restPerStage": 2,
+  "stopQuotas": { "special": [1, 1], "rare": [0, 1], "trade": [1, 1], "detour": [0, 1], "merchant": [1, 1] },
   "trainerMoneyPerLevel": 24,
   "explorerItems": [
    "potion",
