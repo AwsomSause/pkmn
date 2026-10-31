@@ -795,6 +795,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
   z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
+  /** This many more locked shop entries for rare or epic items are for sale early (Ginter). */
+  z.object({ kind: z.literal('shopEarlyRareStock'), count: z.number().int().positive() }),
   /** Damage taken by a Pokémon on its first turn after it enters battle (switching in). */
   z.object({ kind: z.literal('switchGuard'), value: z.number().positive() }),
   /** Damage dealt by a Pokémon that has been out for at least a full turn. */
