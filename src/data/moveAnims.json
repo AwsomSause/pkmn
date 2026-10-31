@@ -11344,7 +11344,8 @@
       "flash": null,
       "hitStopMs": 62,
       "telegraph": "normal",
-      "pack": "ess-aurora-beam"
+      "pack": "ess-aurora-beam",
+      "script": "aurorabeam"
     },
     "icy-wind": {
       "anim": "icy-wind",
@@ -11427,7 +11428,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 58,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "snarl"
     },
     "night-slash": {
       "anim": "night-slash",
@@ -11839,7 +11841,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-barrier"
+      "pack": "ess-barrier",
+      "script": "barrier"
     },
     "bitter-blade": {
       "anim": "bitter-blade",
@@ -11914,7 +11917,8 @@
       "shake": 3,
       "flash": "#a8a878",
       "hitStopMs": 87,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "boomburst"
     },
     "bouncy-bubble": {
       "anim": "bouncy-bubble",
@@ -12100,7 +12104,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-cotton-spore"
+      "pack": "ess-cotton-spore",
+      "script": "cottonspore"
     },
     "crabhammer": {
       "anim": "crabhammer",
@@ -12108,7 +12113,8 @@
       "shake": 3,
       "flash": "#6890f0",
       "hitStopMs": 73,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "crabhammer"
     },
     "cross-chop": {
       "anim": "cross-chop",
@@ -12116,7 +12122,8 @@
       "shake": 3,
       "flash": "#c03028",
       "hitStopMs": 73,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "crosschop"
     },
     "cross-poison": {
       "anim": "cross-poison",
@@ -12124,7 +12131,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "crosspoison"
     },
     "crush-claw": {
       "anim": "crush-claw",
@@ -12133,7 +12141,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-crush-claw"
+      "pack": "ess-crush-claw",
+      "script": "crushclaw"
     },
     "cut": {
       "anim": "cut",
@@ -12270,7 +12279,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "drillrun"
     },
     "drum-beating": {
       "anim": "drum-beating",
@@ -12408,7 +12418,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-fire-punch"
+      "pack": "ess-fire-punch",
+      "script": "firepunch"
     },
     "flame-charge": {
       "anim": "flame-charge",
@@ -12468,7 +12479,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "forcepalm"
     },
     "freezing-glare": {
       "anim": "freezing-glare",
@@ -12503,7 +12515,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-glare"
+      "pack": "ess-glare",
+      "script": "glare"
     },
     "grass-whistle": {
       "anim": "grass-whistle",
@@ -12512,7 +12525,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-grass-whistle"
+      "pack": "ess-grass-whistle",
+      "script": "grasswhistle"
     },
     "gunk-shot": {
       "anim": "gunk-shot",
@@ -12520,7 +12534,8 @@
       "shake": 3,
       "flash": "#a040a0",
       "hitStopMs": 80,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "gunkshot"
     },
     "hammer-arm": {
       "anim": "hammer-arm",
@@ -12571,7 +12586,8 @@
       "flash": "#f08030",
       "hitStopMs": 72,
       "telegraph": "normal",
-      "pack": "ess-heat-wave"
+      "pack": "ess-heat-wave",
+      "script": "heatwave"
     },
     "hone-claws": {
       "anim": "hone-claws",
@@ -12668,7 +12684,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-ice-punch"
+      "pack": "ess-ice-punch",
+      "script": "icepunch"
     },
     "icicle-crash": {
       "anim": "icicle-crash",
@@ -12749,7 +12766,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 62,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "leaftornado"
     },
     "leech-life": {
       "anim": "leech-life",
@@ -12827,7 +12845,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "meditate"
     },
     "mega-kick": {
       "anim": "mega-kick",
@@ -12836,7 +12855,8 @@
       "flash": "#a8a878",
       "hitStopMs": 80,
       "telegraph": "strong",
-      "pack": "ess-mega-kick"
+      "pack": "ess-mega-kick",
+      "script": "megakick"
     },
     "mega-punch": {
       "anim": "mega-punch",
@@ -12845,7 +12865,8 @@
       "flash": null,
       "hitStopMs": 67,
       "telegraph": "normal",
-      "pack": "ess-mega-punch"
+      "pack": "ess-mega-punch",
+      "script": "megapunch"
     },
     "megahorn": {
       "anim": "megahorn",
@@ -12864,7 +12885,8 @@
       "flash": "#b8b8d0",
       "hitStopMs": 70,
       "telegraph": "normal",
-      "pack": "ess-meteor-mash"
+      "pack": "ess-meteor-mash",
+      "script": "meteormash"
     },
     "mighty-cleave": {
       "anim": "mighty-cleave",
@@ -12940,7 +12962,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mysticalfire"
     },
     "mystical-power": {
       "anim": "mystical-power",
@@ -13060,7 +13083,8 @@
       "flash": null,
       "hitStopMs": 57,
       "telegraph": "normal",
-      "pack": "ess-poison-tail"
+      "pack": "ess-poison-tail",
+      "script": "poisontail"
     },
     "pounce": {
       "anim": "pounce",
@@ -13136,7 +13160,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "quiverdance"
     },
     "razor-shell": {
       "anim": "razor-shell",
@@ -13144,7 +13169,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "razorshell"
     },
     "rock-polish": {
       "anim": "rock-polish",
@@ -13226,7 +13252,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "shadowclaw"
     },
     "shadow-punch": {
       "anim": "shadow-punch",
@@ -13234,7 +13261,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "shadowpunch"
     },
     "sharpen": {
       "anim": "sharpen",
@@ -13313,7 +13341,8 @@
       "shake": 3,
       "flash": "#a040a0",
       "hitStopMs": 72,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "sludgewave"
     },
     "smog": {
       "anim": "smog",
@@ -13602,7 +13631,8 @@
       "shake": 3,
       "flash": "#6890f0",
       "hitStopMs": 80,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "wavecrash"
     },
     "wild-charge": {
       "anim": "wild-charge",
@@ -13851,7 +13881,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 53,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "dualchop"
     },
     "explosion": {
       "anim": "explosion",
@@ -13958,7 +13989,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "guillotine"
     },
     "heal-order": {
       "anim": "heal-order",
@@ -13982,7 +14014,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "horndrill"
     },
     "hurricane": {
       "anim": "hurricane",
@@ -14025,7 +14058,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "infestation"
     },
     "jet-punch": {
       "anim": "jet-punch",
@@ -14094,7 +14128,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-morning-sun"
+      "pack": "ess-morning-sun",
+      "script": "morningsun"
     },
     "pin-missile": {
       "anim": "pin-missile",
@@ -14180,7 +14215,8 @@
       "shake": 2,
       "flash": "#a8a878",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "rockclimb"
     },
     "rock-wrecker": {
       "anim": "rock-wrecker",
@@ -14196,7 +14232,8 @@
       "shake": 2,
       "flash": "#c03028",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "sacredsword"
     },
     "sand-tomb": {
       "anim": "sand-tomb",
@@ -14239,7 +14276,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-signal-beam"
+      "pack": "ess-signal-beam",
+      "script": "signalbeam"
     },
     "slack-off": {
       "anim": "slack-off",
@@ -14474,7 +14512,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "quick",
-      "pack": "ess-ally-switch"
+      "pack": "ess-ally-switch",
+      "script": "allyswitch"
     },
     "anchor-shot": {
       "anim": "anchor-shot",
@@ -14576,7 +14615,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "avalanche"
     },
     "axe-kick": {
       "anim": "axe-kick",
@@ -14635,7 +14675,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-beat-up"
+      "pack": "ess-beat-up",
+      "script": "beatup"
     },
     "behemoth-bash": {
       "anim": "behemoth-bash",
@@ -14719,7 +14760,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-block"
+      "pack": "ess-block",
+      "script": "block"
     },
     "blood-moon": {
       "anim": "blood-moon",
@@ -15338,7 +15380,8 @@
       "flash": "#f08030",
       "hitStopMs": 90,
       "telegraph": "strong",
-      "pack": "ess-eruption"
+      "pack": "ess-eruption",
+      "script": "eruption"
     },
     "eternabeam": {
       "anim": "eternabeam",
@@ -15428,7 +15471,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-final-gambit"
+      "pack": "ess-final-gambit",
+      "script": "finalgambit"
     },
     "fire-lash": {
       "anim": "fire-lash",
@@ -15609,7 +15653,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "freezedry"
     },
     "freezy-frost": {
       "anim": "freezy-frost",
@@ -16063,7 +16108,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "guardswap"
     },
     "guardian-of-alola": {
       "anim": "fairy-wind",
@@ -16199,7 +16245,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "hiddenpower"
     },
     "high-horsepower": {
       "anim": "high-horsepower",
@@ -16217,7 +16264,8 @@
       "flash": "#c03028",
       "hitStopMs": 83,
       "telegraph": "strong",
-      "pack": "ess-high-jump-kick"
+      "pack": "ess-high-jump-kick",
+      "script": "highjumpkick"
     },
     "hold-hands": {
       "anim": "hold-hands",
@@ -16258,7 +16306,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-ice-ball"
+      "pack": "ess-ice-ball",
+      "script": "iceball"
     },
     "ice-burn": {
       "anim": "ice-burn",
@@ -16341,7 +16390,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "iondeluge-up"
     },
     "ivy-cudgel": {
       "anim": "ivy-cudgel",
@@ -16374,7 +16424,8 @@
       "flash": "#c03028",
       "hitStopMs": 73,
       "telegraph": "strong",
-      "pack": "ess-jump-kick"
+      "pack": "ess-jump-kick",
+      "script": "jumpkick"
     },
     "jungle-healing": {
       "anim": "jungle-healing",
@@ -16483,7 +16534,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-lock-on"
+      "pack": "ess-lock-on",
+      "script": "lockon"
     },
     "low-kick": {
       "anim": "low-kick",
@@ -16543,7 +16595,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "quick",
-      "pack": "ess-magic-coat"
+      "pack": "ess-magic-coat",
+      "script": "magiccoat"
     },
     "magic-powder": {
       "anim": "magic-powder",
@@ -16575,7 +16628,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "magnetrise"
     },
     "magnetic-flux": {
       "anim": "magnetic-flux",
@@ -17171,7 +17225,8 @@
       "flash": null,
       "hitStopMs": 57,
       "telegraph": "normal",
-      "pack": "ess-poison-fang"
+      "pack": "ess-poison-fang",
+      "script": "poisonfang"
     },
     "pollen-puff": {
       "anim": "pollen-puff",
@@ -17227,7 +17282,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "powerswap"
     },
     "power-trick": {
       "anim": "power-trick",
@@ -17309,7 +17365,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psychicterrain"
     },
     "psycho-shift": {
       "anim": "psycho-shift",
@@ -17317,7 +17374,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psychoshift"
     },
     "psywave": {
       "anim": "psywave",
@@ -17391,7 +17449,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "ragepowder"
     },
     "raging-bull": {
       "anim": "raging-bull",
@@ -17470,7 +17529,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "refresh"
     },
     "relic-song": {
       "anim": "relic-song",
@@ -17796,7 +17856,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "skillswap"
     },
     "skitter-smack": {
       "anim": "skitter-smack",
@@ -17896,7 +17957,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "snore"
     },
     "snowscape": {
       "anim": "haze",
@@ -17938,7 +18000,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "sonicboom"
     },
     "soul-stealing-7-star-strike": {
       "anim": "lick",
@@ -18004,7 +18067,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-spikes"
+      "pack": "ess-spikes",
+      "script": "spikes"
     },
     "spiky-shield": {
       "anim": "spiky-shield",
@@ -18012,7 +18076,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "spikyshield"
     },
     "spin-out": {
       "anim": "spin-out",
@@ -18070,7 +18135,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "spotlight"
     },
     "springtide-storm": {
       "anim": "springtide-storm",
@@ -18112,7 +18178,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "stickyweb"
     },
     "stockpile": {
       "anim": "stockpile",
@@ -18161,7 +18228,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "strengthsap"
     },
     "stuff-cheeks": {
       "anim": "stuff-cheeks",
@@ -18260,7 +18328,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "switcheroo"
     },
     "synchronoise": {
       "anim": "synchronoise",
@@ -18326,7 +18395,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "tearfullook"
     },
     "teatime": {
       "anim": "teatime",
@@ -18358,7 +18428,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "teeterdance"
     },
     "telekinesis": {
       "anim": "telekinesis",
@@ -18432,7 +18503,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "throatchop"
     },
     "thunder-cage": {
       "anim": "thunder-cage",
@@ -18516,7 +18588,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "triattack"
     },
     "trick": {
       "anim": "trick",
@@ -18655,7 +18728,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "vitalthrow"
     },
     "volt-switch": {
       "anim": "volt-switch",
@@ -18705,7 +18779,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "weatherball-up"
     },
     "whirlwind": {
       "anim": "whirlwind",
