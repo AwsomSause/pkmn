@@ -47,7 +47,7 @@ export const SCOUT_EVENTS: Json[] = [
       ch('Send a Flying Pokémon', out('It circles twice and comes back with a full report.', scout(8), fr(3, 'party')), { requires: [ptype('flying')] }),
       ch('Move on', leave()),
     ]),
-  ev('fog-guide', 'A Guide in the Fog', X, { rarity: 'common', minStage: 1, cast: ['trainer.backpacker'], effect: 'fog', tint: '#242a32' },
+  ev('fog-guide', 'A Guide in the Fog', X, { rarity: 'common', minStage: 1, cast: ['trainer.hiker'], effect: 'fog', tint: '#242a32' },
     'A lantern bobs ahead. A guide steps out of the fog with a bell on their belt. "I know this ground."', [
       ch('Hire the guide (₽200)', out('They lead you by the safe stones and give you the lay of the land.', $(-200), scout(7), rp(10)), { requires: [{ kind: 'money', atLeast: 200 }] }),
       ch('Chat and trade directions', out('A fair swap. You each leave knowing more.', scout(4), fr(1, 'party')), { check: 'charisma', fail: out('They shrug. "Wrong way, friend."') }),
@@ -60,7 +60,7 @@ export const SCOUT_EVENTS: Json[] = [
       ch('Ask for sand', out('She spins the vane hard. A sandstorm rolls in, and she gives you a charm for it.', front('sand', 3), item('soft-sand'), rp(20))),
       ch('Ask for snow', out('She whistles. A cold front, and a charm against it.', front('snow', 3), item('nevermeltice'), rp(20))),
     ]),
-  ev('storm-chasers', 'Storm Chasers', X, { rarity: 'uncommon', minStage: 2, cast: ['trainer.ranger_f'], effect: 'rattle', tint: '#1c2a38' },
+  ev('storm-chasers', 'Storm Chasers', X, { rarity: 'uncommon', minStage: 2, cast: ['trainer.hiker'], effect: 'rattle', tint: '#1c2a38' },
     'A pair of chasers with a rain gauge and a pickup full of instruments. "Fronts are our living. Want in?"', [
       ch('Join the chase', out('They read the sky for you. From now on, you know where the weather turns.', scout(5), rp(35))),
       ch('Ask them to predict the next front', out('A boom of thunder and a cold front, right on cue. They give you a tip.', front('hail', 3), any(...VITAMINS), rp(20))),
@@ -300,7 +300,7 @@ export const HIDDEN_PATH_EVENTS: Json[] = [
       ch('Take the shortcut', out('It is a long way short. You come out far ahead.', ferry(), clue())),
       ch('Explore it slowly', out('You find hidden stops all the way down.', reveal(), any(...TREASURE), clue())),
     ]),
-  ev('hidden-path-keeper', 'The Path Keeper', 'Hidden Paths', { gameEvent: 'hidden-path-week', rarity: 'uncommon', minStage: 1, cast: ['trainer.ruin_maniac'], effect: 'none', tint: '#2a2830' },
+  ev('hidden-path-keeper', 'The Path Keeper', 'Hidden Paths', { gameEvent: 'hidden-path-week', rarity: 'uncommon', minStage: 1, cast: ['trainer.hiker'], effect: 'none', tint: '#2a2830' },
     'A keeper of forgotten roads has set up a table. "Prove you can see them, and I\'ll show you one."', [
       ch('Name three hidden stops', out('You know the trick. She smiles and shows you where the best of them are.', reveal(), rp(60), boss(), clue(2)), { check: 'intelligence', fail: out('She shakes her head kindly.', clue()) }),
       ch('Challenge the keeper', fight('"Then show me on the field."', trainer('Path Keeper', { cls: 'hiker', size: 3, lv: 3, win: [rp(100), reveal(), boss()] }), clue())),
@@ -360,7 +360,7 @@ export const CAMPFIRE_EVENTS: Json[] = [
 // ---------- Team Plasma Liberation Operation (§6) ----------
 const P = 'Plasma Operation';
 const pOp = (id: string, name: string, flagReq: Json | null, intro: string, tint: string, choices: Json[]): Json =>
-  ev(id, name, P, { gameEvent: 'plasma-operation', callback: true, rarity: 'rare', minStage: 1, cast: ['trainer.plasma_grunt_m'], effect: 'fog', tint, ...(flagReq ? { requires: [flagReq] } : {}) }, intro, choices);
+  ev(id, name, P, { gameEvent: 'plasma-operation', callback: true, rarity: 'rare', minStage: 1, cast: ['boss.ghetsis'], effect: 'fog', tint, ...(flagReq ? { requires: [flagReq] } : {}) }, intro, choices);
 
 export const PLASMA_OPERATION_EVENTS: Json[] = [
   pOp('plasma-op-1', 'Operation: The Supply Route', null, 'A road of crates and guards. A foreman checks a clipboard. The trucks are Plasma\'s, and so are the Pokémon in the back.', '#1a2230', [

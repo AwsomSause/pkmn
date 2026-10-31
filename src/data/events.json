@@ -33374,7 +33374,7 @@
    "minStage": 3,
    "scene": {
     "cast": [
-     "trainer.backpacker"
+     "trainer.hiker"
     ],
     "tint": "#1c2430",
     "effect": "glint"
@@ -33643,7 +33643,7 @@
    "minStage": 2,
    "scene": {
     "cast": [
-     "trainer.backpacker"
+     "trainer.hiker"
     ],
     "tint": "#2a2a30",
     "effect": "none"
@@ -33718,7 +33718,7 @@
    ],
    "scene": {
     "cast": [
-     "trainer.backpacker"
+     "trainer.hiker"
     ],
     "tint": "#26262c",
     "effect": "none"
@@ -33779,7 +33779,7 @@
    ],
    "scene": {
     "cast": [
-     "trainer.backpacker"
+     "trainer.hiker"
     ],
     "tint": "#22222c",
     "effect": "none"
@@ -34097,7 +34097,7 @@
    "minStage": 4,
    "scene": {
     "cast": [
-     "trainer.ace_trainer_m"
+     "boss.hop"
     ],
     "tint": "#1e1e2c",
     "effect": "fog"
@@ -34419,7 +34419,7 @@
    "minStage": 3,
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#1a2230",
     "effect": "fog"
@@ -34477,7 +34477,7 @@
    "minStage": 3,
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#1a2230",
     "effect": "none"
@@ -34546,7 +34546,7 @@
    "minStage": 3,
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#1a2230",
     "effect": "fog"
@@ -36216,7 +36216,7 @@
    "minStage": 1,
    "scene": {
     "cast": [
-     "trainer.backpacker"
+     "trainer.hiker"
     ],
     "tint": "#242a32",
     "effect": "fog"
@@ -36391,7 +36391,7 @@
    "minStage": 2,
    "scene": {
     "cast": [
-     "trainer.ranger_f"
+     "trainer.hiker"
     ],
     "tint": "#1c2a38",
     "effect": "rattle"
@@ -40718,7 +40718,7 @@
    "minStage": 1,
    "scene": {
     "cast": [
-     "trainer.ruin_maniac"
+     "trainer.hiker"
     ],
     "tint": "#2a2830",
     "effect": "none"
@@ -41458,7 +41458,7 @@
    "minStage": 1,
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#1a2230",
     "effect": "fog"
@@ -41581,7 +41581,7 @@
    ],
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#1c2430",
     "effect": "fog"
@@ -41735,7 +41735,7 @@
    ],
    "scene": {
     "cast": [
-     "trainer.plasma_grunt_m"
+     "boss.ghetsis"
     ],
     "tint": "#101820",
     "effect": "fog"

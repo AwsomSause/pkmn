@@ -95,7 +95,7 @@ export const EMERGENT_EVENTS: Json[] = [
     ]),
 
   // ---------- Mysterious Traveler's Map ----------
-  ev('traveler-map', 'The Traveler\'s Map', G, { rarity: 'rare', minStage: 3, cast: ['trainer.backpacker'], effect: 'glint', tint: '#1c2430' },
+  ev('traveler-map', 'The Traveler\'s Map', G, { rarity: 'rare', minStage: 3, cast: ['trainer.hiker'], effect: 'glint', tint: '#1c2430' },
     'A traveler spreads a map on a rock. One route has no name, just a ring of ink and a smudge where the notes should be.', [
       ch('Follow the unmarked route', out('The map is half right. You find the grotto it hides, and the rest of the stage opens up.', scout(5), room('traveler-grotto'))),
       ch('Buy a copy (₽300)', out('A good copy. You can see further ahead from here.', $(-300), scout(6), rp(15)), { requires: [{ kind: 'money', atLeast: 300 }] }),
@@ -118,18 +118,18 @@ export const EMERGENT_EVENTS: Json[] = [
     ]),
 
   // ---------- Third Wheel Traveling Companion (three stages) ----------
-  ev('companion-meet', 'A Stranger Falls In Step', G, { rarity: 'rare', minStage: 2, cast: ['trainer.backpacker'], effect: 'none', tint: '#2a2a30' },
+  ev('companion-meet', 'A Stranger Falls In Step', G, { rarity: 'rare', minStage: 2, cast: ['trainer.hiker'], effect: 'none', tint: '#2a2a30' },
     'A hooded traveler is going the same way as you. They fall in step without asking, and say nothing about why.', [
       ch('Let them walk with you', out('They nod. "Three stretches. No more."', flag('companion'), fr(2, 'party'))),
       ch('Ask who they are', out('"Later."', flag('companion')), { check: 'charisma', fail: out('They say nothing, but still walk beside you.', flag('companion')) }),
       ch('Say no', leave('They shrug and take another road.')),
     ]),
-  ev('companion-one', 'Walking With a Stranger', G, { rarity: 'uncommon', minStage: 2, callback: true, requires: [flagIs('companion', 1, 1)], cast: ['trainer.backpacker'], effect: 'none', tint: '#26262c' },
+  ev('companion-one', 'Walking With a Stranger', G, { rarity: 'uncommon', minStage: 2, callback: true, requires: [flagIs('companion', 1, 1)], cast: ['trainer.hiker'], effect: 'none', tint: '#26262c' },
     'The traveler walks a step behind you. When you stop for water, they have already filled two canteens.', [
       ch('Share a meal', out('They talk a little about the road behind them.', flag('companion'), fr(3, 'party'))),
       ch('Ask them to scout', out('"I know this stretch." They go ahead and come back.', flag('companion'), scout(5))),
     ]),
-  ev('companion-two', 'A Stranger Who Knows Things', G, { rarity: 'uncommon', minStage: 2, callback: true, requires: [flagIs('companion', 2, 2)], cast: ['trainer.backpacker'], effect: 'none', tint: '#22222c' },
+  ev('companion-two', 'A Stranger Who Knows Things', G, { rarity: 'uncommon', minStage: 2, callback: true, requires: [flagIs('companion', 2, 2)], cast: ['trainer.hiker'], effect: 'none', tint: '#22222c' },
     'The traveler stops at a fork and picks the right way without looking. "It is not my first time here."', [
       ch('Follow their lead', out('They are right. The next battle comes with a surprise.', flag('companion'), rp(30), item('rare-bone'))),
       ch('Ask what they want', out('"To see something finished." They won\'t say more.', flag('companion'))),
@@ -157,7 +157,7 @@ export const EMERGENT_EVENTS: Json[] = [
     ]),
 
   // ---------- Boss Rematch in Disguise ----------
-  ev('boss-rematch-disguise', 'A Familiar Stranger', G, { rarity: 'rare', minStage: 4, cast: ['trainer.ace_trainer_m'], effect: 'fog', tint: '#1e1e2c' },
+  ev('boss-rematch-disguise', 'A Familiar Stranger', G, { rarity: 'rare', minStage: 4, cast: ['boss.hop'], effect: 'fog', tint: '#1e1e2c' },
     'A trainer in a rain poncho asks for a quick battle. They walk like someone who has done this before, and they have your stride.', [
       ch('Look for a tell first', out('Under the hood: a gym badge pin. They grin and throw back the poncho.', rp(30)), { check: 'intelligence', fail: out('Nothing gives them away.') }),
       ch('Accept the battle', fight('"I\'ve changed a few things."', trainer('Stranger in a Poncho', { boss: 'blaine', size: 4, lv: 4, win: [rp(100), $(1000), any(...HELD)] }))),
@@ -184,18 +184,18 @@ export const EMERGENT_EVENTS: Json[] = [
     ]),
 
   // ---------- Team Plasma Liberation: a three-room sub-stage ----------
-  ev('plasma-substage-gate', 'A Plasma Holding Camp', G, { rarity: 'rare', minStage: 3, cast: ['trainer.plasma_grunt_m'], effect: 'fog', tint: '#1a2230' },
+  ev('plasma-substage-gate', 'A Plasma Holding Camp', G, { rarity: 'rare', minStage: 3, cast: ['boss.ghetsis'], effect: 'fog', tint: '#1a2230' },
     'Crates with air holes. A tarp that moves. Plasma grunts patrol the fence, talking about a shipment.', [
       ch('Sneak in at night', out('You cut the fence and slip inside.', room('plasma-substage-yard'))),
       ch('March in and demand they leave', out('The grunts turn. They are very surprised.', room('plasma-substage-yard'), flag('plasma-loud'))),
       ch('Leave and alert the authorities', out('You note the place, but do nothing now.', rp(20))),
     ]),
-  ev('plasma-substage-yard', 'The Plasma Yard', G, { rarity: 'rare', minStage: 3, cast: ['trainer.plasma_grunt_m'], effect: 'none', tint: '#1a2230' },
+  ev('plasma-substage-yard', 'The Plasma Yard', G, { rarity: 'rare', minStage: 3, cast: ['boss.ghetsis'], effect: 'none', tint: '#1a2230' },
     'Dozens of crates. The guards have not spotted you yet.', [
       ch('Open the crates', out('Frightened Pokémon, all of them, glad to see you. The nearest guard hears the crate lid.', room('plasma-substage-leader'), flag('plasma-freed'), good(3), rp(40))),
       ch('Fight the guards', fight('Three grunts and their Pokémon.', trainer('Plasma Guards', { cls: 'worker', size: 3, lv: 2, win: [room('plasma-substage-leader'), rp(40)] }))),
     ]),
-  ev('plasma-substage-leader', 'The Plasma Handler', G, { rarity: 'rare', minStage: 3, cast: ['trainer.plasma_grunt_m'], effect: 'fog', tint: '#1a2230' },
+  ev('plasma-substage-leader', 'The Plasma Handler', G, { rarity: 'rare', minStage: 3, cast: ['boss.ghetsis'], effect: 'fog', tint: '#1a2230' },
     'The handler steps out with a Pokémon that is clearly not theirs. "Those are company property."', [
       ch('Beat the handler', fight('The handler orders their Pokémon to attack.', trainer('Plasma Handler', { cls: 'veteran', size: 4, lv: 3, win: [rp(120), $(1200), flag('plasma-won'), join({ lv: 2 })] }))),
       ch('Talk them down', out('You make an offer they cannot refuse: the Pokémon go free.', rp(90), good(3), flag('plasma-won'), join({ lv: 1 })), { check: 'charisma', fail: fight('The handler is not impressed.', trainer('Plasma Handler', { cls: 'veteran', size: 4, lv: 3, win: [rp(90), flag('plasma-won')] })) }),
