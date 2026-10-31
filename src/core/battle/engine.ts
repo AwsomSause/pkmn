@@ -77,7 +77,7 @@ import {
 } from './abilities';
 import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
-import { absorbHit, advanceRaid, chargedDamage, cheerProblem, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
+import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
@@ -189,7 +189,7 @@ export type PlayerAction =
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number }
   /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
-  | { kind: 'cheer'; cheer: 'offense' | 'defense' | 'healing' }
+  | { kind: 'cheer'; cheer: Cheer }
   /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
   | { kind: 'idle' }
   /** A double battle: one command per spot (null for an empty or fainted spot). See battle/doubles.ts. */
@@ -949,14 +949,25 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
 }
 
 /** A raid cheer: Offense / Defense last a few turns; Healing restores some of the active Pokémon's HP and cures its status. */
-function useCheer(ctx: BattleContext, cheer: 'offense' | 'defense' | 'healing', events: BattleEvent[]): void {
+function useCheer(ctx: BattleContext, cheer: Cheer, events: BattleEvent[]): void {
   const raid = ctx.battle.raid!;
   raid.cheersLeft -= 1;
-  const text = { offense: 'Go all-out!', defense: 'Hang tough!', healing: 'Heal up!' }[cheer];
+  const text = { offense: 'Go all-out!', defense: 'Hang tough!', healing: 'Heal up!', counter: 'Turn the tables!' }[cheer];
   events.push({ type: 'raid', tone: 'info', text: `Cheer: ${text}` });
   if (cheer === 'offense') raid.cheerOffense = CHEER_TURNS + 1;
   else if (cheer === 'defense') raid.cheerDefense = CHEER_TURNS + 1;
-  else {
+  else if (cheer === 'counter') {
+    // Turn the tables: every stat change on both sides is reversed (the boss's boosts become drops, and yours too).
+    for (const side of ['player', 'enemy'] as const) {
+      const stages = side === 'player' ? ctx.battle.playerStages : ctx.battle.enemyStages;
+      for (const stat of Object.keys(stages) as BoostStat[]) {
+        const before = stages[stat];
+        if (before === 0) continue;
+        stages[stat] = -before;
+        events.push({ type: 'stat', side, stat, change: -2 * before });
+      }
+    }
+  } else {
     const mon = ctx.party[ctx.battle.activeIndex]!;
     const max = calcStats(ctx.content, mon).hp;
     const gain = Math.min(max - mon.hp, Math.max(1, Math.floor(max * HEALING_CHEER)));

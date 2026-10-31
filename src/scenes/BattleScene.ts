@@ -1238,10 +1238,11 @@ export class BattleScene extends Phaser.Scene {
       { cheer: 'offense', label: 'Go all-out!', tint: 0xc8303c },
       { cheer: 'defense', label: 'Hang tough!', tint: 0x2c6ad8 },
       { cheer: 'healing', label: 'Heal up!', tint: 0x1f9a52 },
+      { cheer: 'counter', label: 'Turn the tables!', tint: 0x9a2cc8 },
     ] as const;
     this.clearMenus();
     const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
-    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP.');
+    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.');
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
       y: MESSAGE_Y + 26,

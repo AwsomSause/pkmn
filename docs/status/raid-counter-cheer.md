@@ -1,0 +1,1 @@
+- Raid Counter cheer ("Turn the tables!"): a fourth cheer in raid fights that reverses every stat change on both sides (boss boosts become drops, yours too). Costs one of the three cheers and the turn. Higher cheer levels (field swap, Heal Block) come with the cheer-levels slice. No save change.
