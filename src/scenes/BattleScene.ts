@@ -16,6 +16,9 @@ import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primaryS
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { formIntro } from '../core/presentation/sceneEffects';
+import { finalRivalArenaTheme } from '../core/story/highHype';
+import { ultimateRival } from '../core/rivals/ultimate';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -255,9 +258,11 @@ export class BattleScene extends Phaser.Scene {
     // members and champions with a speciality fight in their own type's arena.
     const boss = this.boss();
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
-    const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
+    // The Final Rival fights in the arena of the stage where you first met (rebuilt from the run's stage themes).
+    const metTheme = finalRivalArenaTheme(session.content, run, battle.rivalId, ultimateRival(run)?.id === battle.rivalId);
+    const arena = bossType ? session.content.arenas[bossType] : metTheme ? arenaFor(session.content, getTheme(session.content, metTheme)) : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const raidArena = this.raidArena(battle);
-    const uie = raidArena ? null : this.uieArena();
+    const uie = raidArena || metTheme ? null : this.uieArena();
     const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     const backLayers: Phaser.GameObjects.Image[] = [];
@@ -1019,6 +1024,7 @@ export class BattleScene extends Phaser.Scene {
         if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
+      await this.formIntroBeat(this.shown.enemy);
       if (this.duo) {
         await this.showDuoSide('player', true);
         const second = this.duo.other.player.mon;
@@ -1099,6 +1105,15 @@ export class BattleScene extends Phaser.Scene {
     await b.done;
     over = true;
     this.advance = null;
+  }
+
+  /** Delta, Z, Spooky and regional forms get a tinted burst and a line from sceneEffects.json (presentation only). */
+  private async formIntroBeat(mon: PokemonInstance): Promise<void> {
+    const { content } = services().session;
+    const intro = formIntro(getSpecies(content, mon.speciesId), this.speciesName(mon));
+    if (!intro) return;
+    await burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 80, intro.tint, this.motion).done;
+    await this.say(intro.line);
   }
 
   private async shinySparkle(): Promise<void> {

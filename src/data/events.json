@@ -20266,6 +20266,119 @@
    ]
   },
   {
+   "id": "a-quiet-hello",
+   "name": "A Quiet Hello…",
+   "group": "Overdrive unusual events",
+   "rarity": "rare",
+   "stop": "wild",
+   "scene": {
+    "cast": [],
+    "tint": "#2a3a2f",
+    "effect": "hearts"
+   },
+   "intro": "A wild Pokémon watches your team from a distance. It is not afraid, and it is not angry. It is waiting to see what you do.",
+   "choices": [
+    {
+     "label": "Let your kind Pokémon approach",
+     "requires": [
+      {
+       "kind": "emotion",
+       "id": "kindness"
+      }
+     ],
+     "success": {
+      "text": "It sniffs the air, lets your Pokémon come close, and the two sit together for a long while. It leaves a gift before it goes.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wait quietly",
+     "success": {
+      "text": "You sit still. It comes a little closer, then wanders away, calmer.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Chase it off",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It bolts, then turns and fights!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 3
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
    "id": "it-saw-what-you-did",
    "name": "It Saw What You Did…",
    "group": "Overdrive unusual events",

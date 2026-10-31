@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import { emotionOf } from './story/emotions';
 import { featuredMapEvents, runGameEventIds } from './gameEvents';
 import { eventChanceScale } from './rules';
 import { getArchetype, runPerks } from './archetypes';
@@ -50,7 +51,7 @@ export function stageNumber(content: Content, run: RunState): number {
   return run.regionIndex * getCampaign(content, run.campaignId).stagesPerRegion + (run.stage?.index ?? 0) + 1;
 }
 
-function conditionMet(content: Content, run: RunState, c: EventCondition): boolean {
+export function conditionMet(content: Content, run: RunState, c: EventCondition): boolean {
   switch (c.kind) {
     case 'money':
       return run.money >= c.atLeast;
@@ -64,6 +65,8 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
     }
     case 'item':
       return (run.inventory[c.id] ?? 0) > 0 || (run.passives?.[c.id] ?? 0) > 0;
+    case 'emotion':
+      return run.party.some((m) => emotionOf(content, run, m.uid)?.id === c.id);
     case 'partyType':
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
     case 'partySpecies':
@@ -162,6 +165,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a ${c.type.charAt(0).toUpperCase()}${c.type.slice(1)}-type in your party`;
     case 'partySpecies':
       return `Needs ${content.species.get(c.species)?.name ?? c.species} in your party`;
+    case 'emotion':
+      return `Needs a ${c.id.charAt(0).toUpperCase()}${c.id.slice(1)} Pokémon in your party`;
     case 'eventSeen':
       return `Needs an earlier delivery`;
     case 'noTrainerTag':

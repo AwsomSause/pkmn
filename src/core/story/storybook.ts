@@ -11,7 +11,7 @@ import { legacyCard } from './legacy';
 import type { RunState } from '../state';
 
 export interface ChronicleStory {
-  kind: 'rivalry' | 'pokemon' | 'mentorship' | 'team';
+  kind: 'rivalry' | 'pokemon' | 'mentorship' | 'team' | 'nemesis' | 'region' | 'raid';
   title: string;
   body: string;
   /** Short tags shown under the story. */
@@ -99,7 +99,55 @@ function circuitStory(content: Content, run: RunState): ChronicleStory[] {
   return [{ kind: 'rivalry', title: 'Rival Tournament Circuit', body: rows.slice(0, 5).map((r) => `${r.rank}. ${r.name} (${r.state})`).join('; ') + '.', tags: ['Ranking'] }];
 }
 
+const CAUSE_TEXT: Record<string, string> = {
+  defeat: 'beat your team',
+  starterKo: 'knocked out your starter',
+  multiKo: 'knocked out several of your Pokémon',
+  escaped: 'broke free of a ball and got away',
+  avenged: 'avenged a fallen partner',
+  narrowBoss: 'lost to you by the narrowest margin',
+};
+
+/** One account per nemesis: why it formed, what it did on its return and how it ended (Techno §6.3). */
+function nemesisStories(content: Content, run: RunState): ChronicleStory[] {
+  return run.story.nemeses.map((n) => {
+    const who = species(content, n.speciesId);
+    const ending = n.settledAs === 'beaten' ? 'It was beaten at the Reckoning.' : n.settledAs === 'caught' ? 'It was caught at the Reckoning and joined the story on your side.' : n.phase === 'reckoning' ? 'The Reckoning is still ahead.' : 'It has not returned yet.';
+    return {
+      kind: 'nemesis' as const,
+      title: `${who}, the ${n.archetype.replace(/([A-Z])/g, ' $1').toLowerCase()}`,
+      body: `${who} ${CAUSE_TEXT[n.cause] ?? 'left a mark'}${n.wins > 0 ? `, and has beaten your whole team ${times(n.wins)}` : ''}. ${n.changes.length > 0 ? `${n.changes.join('; ')}. ` : ''}${ending}`,
+      tags: ['Nemesis', n.phase],
+    };
+  });
+}
+
+/** One account per cleared region and one for the raid log. */
+function regionStories(content: Content, run: RunState): ChronicleStory[] {
+  const out: ChronicleStory[] = run.regionsCleared.map((id) => {
+    const region = content.regions.get(id);
+    const crisis = Number(run.story.flags[`crisis:${id}`] ?? 0);
+    return {
+      kind: 'region' as const,
+      title: `Chapter: ${region?.name ?? id}`,
+      body: `${region?.name ?? id} is behind you. ${region ? `${region.gymLeaders.length} gym leaders stood in the way.` : ''}${crisis >= 3 ? ' Its crisis ran high before the end.' : ''}`.trim(),
+      tags: ['Region'],
+    };
+  });
+  const c = run.log.counters;
+  const raids = (c.raidsWon ?? 0) + (c.totemsWon ?? 0) + (c.anomalyRaidsWon ?? 0);
+  if (raids > 0) {
+    out.push({
+      kind: 'raid',
+      title: 'The Raid Log',
+      body: `The team won ${[c.raidsWon ? `${c.raidsWon} raid ${c.raidsWon === 1 ? 'den' : 'dens'}` : '', c.totemsWon ? `${c.totemsWon} Totem ${c.totemsWon === 1 ? 'fight' : 'fights'}` : '', c.anomalyRaidsWon ? `${c.anomalyRaidsWon} anomaly ${c.anomalyRaidsWon === 1 ? 'raid' : 'raids'}` : ''].filter(Boolean).join(', ')}.`,
+      tags: ['Raids'],
+    });
+  }
+  return out;
+}
+
 /** All the stories this run can tell right now, most personal first. */
 export function chronicleStories(content: Content, run: RunState): ChronicleStory[] {
-  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...chemistryStories(content, run), ...circuitStory(content, run), ...teamStory(content, run)];
+  return [...rivalryStories(content, run), ...pokemonStories(content, run), ...mentorStories(content, run), ...chemistryStories(content, run), ...circuitStory(content, run), ...nemesisStories(content, run), ...regionStories(content, run), ...teamStory(content, run)];
 }

@@ -3,7 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { openHistory } from '../../src/core/story/record';
-import { STAT_LABELS, summaryInfo } from '../../src/ui/summaryLook';
+import { createProfile } from '../../src/core/profile';
+import { growthInfo, STAT_LABELS, summaryInfo } from '../../src/ui/summaryLook';
 import { content } from './helpers';
 
 const newRun = () => structuredClone(chooseStarter(content, createRun(content, { runId: 'sum', seed: 'summary-screen', archetypeId: 'red' }), 0));
@@ -52,5 +53,20 @@ describe('Pokémon summary', () => {
     expect(info.memories[0]).toBe('big');
     // Outside a run there is no story to show.
     expect(summaryInfo(content, null, mon).record).toBeNull();
+  });
+
+  it('growth page lists evolutions, Mega forms and mastery', () => {
+    const run = newRun();
+    const mon = run.party[0]!;
+    const profile = createProfile(content, 'growth');
+    const base = growthInfo(content, profile, mon);
+    expect(base.evolutions.length).toBeGreaterThan(0);
+    expect(base.mastery.rank).toBeTruthy();
+    const species = content.species.get(mon.speciesId)!;
+    expect(base.evolutions.join(' ')).toBe(species.evolutions.length === 0 ? 'Fully evolved' : base.evolutions.join(' '));
+    const stone = [...content.items.values()].find((it) => it.effect.kind === 'megaStone')!;
+    const forms = (stone.effect as { forms: Record<string, string> }).forms;
+    mon.speciesId = Object.keys(forms)[0]!;
+    expect(growthInfo(content, profile, mon).forms.join(' ')).toContain(`needs ${stone.name}`);
   });
 });

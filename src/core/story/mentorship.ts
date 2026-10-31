@@ -104,6 +104,22 @@ export function answerMentorship(content: Content, run: RunState, offer: MentorO
  * Ends mentorships whose protégé has grown (evolved, or is within a level of the mentor).
  * "The Student Becomes the Teacher": the protégé gets a title and may mentor others.
  */
+/**
+ * The move a mentor hands down at graduation (Techno §4: mentor-taught move variants, mastery sharing): the
+ * mentor's most-used move that the protégé could learn and doesn't know. The path picks the kind: striker and
+ * challenger pass on an attack, the others a support move (or an attack when none fits).
+ */
+export function mentorTaughtMove(content: Content, run: RunState, rel: RelationshipRecord, mentor: PokemonInstance, prote: PokemonInstance): string | null {
+  const used = Object.entries(run.story.histories[mentor.uid]?.moves ?? {}).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const species = content.species.get(prote.speciesId);
+  if (!species) return null;
+  const pool = new Set([...(content.learnables.get(species.id) ?? (species.form ? content.learnables.get(species.form.base) : undefined) ?? []), ...species.learnset.map((e) => e.move)]);
+  const fits = used.map(([id]) => content.moves.get(id)).filter((m) => m && m.supported === true && pool.has(m.id) && !prote.moves.some((k) => k.id === m.id));
+  if (fits.length === 0) return null;
+  const wantsAttack = ['striker', 'challenger'].includes(mentorPathOf(run, rel));
+  return (fits.find((m) => (m!.category !== 'status') === wantsAttack) ?? fits[0])!.id;
+}
+
 export function graduateMentorships(content: Content, run: RunState, evolved?: string): string[] {
   const done: string[] = [];
   for (const rel of run.story.relationships) {
@@ -113,6 +129,9 @@ export function graduateMentorships(content: Content, run: RunState, evolved?: s
     if (!prote) continue;
     if (mentor && prote.uid !== evolved && prote.level < mentor.level - content.story.mentorship.graduateGap) continue;
     closeRelationship(rel);
+    // Mastery sharing: the mentor hands down a move it relied on, taught after the next battle like any other.
+    const taught = mentor ? mentorTaughtMove(content, run, rel, mentor, prote) : null;
+    if (taught && !run.pending.some((p) => p.kind === 'learnMove' && p.uid === prote.uid && p.moveId === taught)) run.pending.push({ kind: 'learnMove', uid: prote.uid, moveId: taught });
     const history = run.story.histories[prote.uid];
     if (history && !history.titles.includes('Former Protégé')) history.titles.push('Former Protégé');
     const nm = content.species.get(prote.speciesId)?.name ?? prote.speciesId;
@@ -120,7 +139,7 @@ export function graduateMentorships(content: Content, run: RunState, evolved?: s
       actors: [prote.uid],
       data: { def: 'student-teacher', suppressed: false },
       importance: 85,
-      text: `The Student Becomes the Teacher: ${nm} finished its mentorship`,
+      text: `The Student Becomes the Teacher: ${nm} finished its mentorship${taught ? ` and was taught ${content.moves.get(taught)?.name ?? taught}` : ''}`,
       emotions: ['perseverance'],
     });
     done.push(prote.uid);
