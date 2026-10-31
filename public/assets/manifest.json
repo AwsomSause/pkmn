@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T23:43:21.793Z",
+  "generatedAt": "2026-10-30T23:58:23.585Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -932,6 +932,13 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/uie/pause/top_red.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.trainercard",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/custom/trainer_card.png",
       "lazy": true
     },
     {
