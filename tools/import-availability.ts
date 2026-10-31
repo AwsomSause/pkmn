@@ -2,7 +2,7 @@
 // "Pokedex" sheet of the director's Pokemon_Spreadsheet.xlsx), matching rows to
 // species by Pokédex number. Forms and custom species have no row and get none.
 // Every value is a SUGGESTION (the sheet's levels and difficulty are invented
-// from capture rate and base stat total); nothing reads this file yet.
+// from capture rate and base stat total); core/availability.ts reads it to gate encounters.
 //
 //   npm run data:availability
 
