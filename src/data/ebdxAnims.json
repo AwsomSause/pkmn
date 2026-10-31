@@ -3561,6 +3561,1851 @@
           "vol": 0.64
         }
       ]
+    },
+    "counter": {
+      "v": 1,
+      "length": 990,
+      "layers": [
+        {
+          "img": "eb606",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        }
+      ],
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-psychic2",
+          "src": "EBDX/Anim/psychic2",
+          "vol": 0.48
+        },
+        {
+          "at": 200,
+          "id": "ebdx-anim-shine1",
+          "src": "EBDX/Anim/shine1",
+          "vol": 0.48
+        }
+      ]
+    },
+    "dragonbreath": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb59",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": "aim"
+        },
+        {
+          "img": "eb59_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 200,
+          "id": "ebdx-anim-dragon2",
+          "src": "EBDX/Anim/dragon2",
+          "vol": 0.64
+        },
+        {
+          "at": 1700,
+          "id": "ebdx-anim-dragon1",
+          "src": "EBDX/Anim/dragon1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "flamethrower": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb136",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": [
+            0,
+            0
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#82342a",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-fire2",
+          "src": "Anim/Fire2",
+          "vol": 0.64
+        },
+        {
+          "at": 1700,
+          "id": "anim-smokescreen",
+          "src": "Anim/Smokescreen",
+          "vol": 0.96
+        }
+      ]
+    },
+    "outrage": {
+      "v": 1,
+      "length": 1374,
+      "layers": [
+        {
+          "img": "eb622_bg",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 1174,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        },
+        {
+          "img": "eb622",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb057",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 300,
+          "id": "ebdx-anim-dragon2",
+          "src": "EBDX/Anim/dragon2",
+          "vol": 0.64
+        },
+        {
+          "at": 200,
+          "id": "ebdx-anim-fire2",
+          "src": "EBDX/Anim/fire2",
+          "vol": 0.48
+        },
+        {
+          "at": 300,
+          "id": "ebdx-anim-fire3",
+          "src": "EBDX/Anim/fire3",
+          "vol": 0.48
+        }
+      ]
+    },
+    "playrough": {
+      "v": 1,
+      "length": 1150,
+      "layers": [
+        {
+          "img": "eb086_bg_6",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 950,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        },
+        {
+          "img": "eb244_2",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb086_6",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-love",
+          "src": "Anim/Love",
+          "vol": 0.64
+        },
+        {
+          "at": 0,
+          "id": "ebdx-anim-normal2",
+          "src": "EBDX/Anim/normal2",
+          "vol": 0.64
+        }
+      ]
+    },
+    "dragonpulse": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb649",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": "aim"
+        },
+        {
+          "img": "eb649_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 200,
+          "id": "ebdx-anim-dragon2",
+          "src": "EBDX/Anim/dragon2",
+          "vol": 0.64
+        },
+        {
+          "at": 1700,
+          "id": "ebdx-anim-dragon1",
+          "src": "EBDX/Anim/dragon1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "aerialace": {
+      "v": 1,
+      "length": 1020,
+      "layers": [
+        {
+          "img": "eb263_bg_4",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 700,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        },
+        {
+          "img": "eb602_4",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-ground1",
+          "src": "EBDX/Anim/ground1",
+          "vol": 0.6
+        },
+        {
+          "at": 200,
+          "id": "ebdx-anim-normal3",
+          "src": "EBDX/Anim/normal3",
+          "vol": 0.68
+        }
+      ]
+    },
+    "charge": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb081_2",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        },
+        {
+          "img": "eb081",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        },
+        {
+          "img": "eb081_3",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 1600,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "sfx": [
+        {
+          "at": 1600,
+          "id": "anim-saint8",
+          "src": "Anim/Saint8",
+          "vol": 0.64
+        }
+      ]
+    },
+    "earthpower": {
+      "v": 1,
+      "length": 900,
+      "layers": [
+        {
+          "img": "eb224",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-rock1",
+          "src": "EBDX/Anim/rock1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "razorleaf": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb191_2",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": [
+            0,
+            0
+          ]
+        },
+        {
+          "img": "eb191",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb191_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 500,
+          "id": "ebdx-anim-grass2",
+          "src": "EBDX/Anim/grass2",
+          "vol": 0.64
+        },
+        {
+          "at": 200,
+          "id": "ebdx-anim-wind1",
+          "src": "EBDX/Anim/wind1",
+          "vol": 0.72
+        },
+        {
+          "at": 0,
+          "id": "ebdx-anim-grass1",
+          "src": "EBDX/Anim/grass1",
+          "vol": 0.48
+        }
+      ]
+    },
+    "spark": {
+      "v": 1,
+      "length": 1502,
+      "layers": [
+        {
+          "img": "eb064_2",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb069",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-fog2",
+          "src": "Anim/fog2",
+          "vol": 0.6
+        },
+        {
+          "at": 250,
+          "id": "anim-hit",
+          "src": "Anim/hit",
+          "vol": 0.64
+        },
+        {
+          "at": 300,
+          "id": "anim-paralyze1",
+          "src": "Anim/Paralyze1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "bubble": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb618",
+          "count": 10,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        },
+        {
+          "img": "eb618_2",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        },
+        {
+          "img": "eb618_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-bubble1",
+          "src": "Anim/Bubble1",
+          "vol": 0.8
+        },
+        {
+          "at": 250,
+          "id": "anim-bubble2",
+          "src": "Anim/Bubble2",
+          "vol": 0.8
+        }
+      ]
+    },
+    "roost": {
+      "v": 1,
+      "length": 900,
+      "layers": [
+        {
+          "img": "eb164",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        }
+      ],
+      "veil": {
+        "color": "#404040",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-wish",
+          "src": "Anim/Wish",
+          "vol": 0.64
+        }
+      ]
+    },
+    "thunderwave": {
+      "v": 1,
+      "length": 1150,
+      "layers": [
+        {
+          "img": "eb069_2",
+          "count": 3,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "cell": [
+            98,
+            430
+          ],
+          "frameMs": 80,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb069_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb069",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-thunder3",
+          "src": "Anim/Thunder3",
+          "vol": 0.64
+        },
+        {
+          "at": 0,
+          "id": "ebdx-anim-electric1",
+          "src": "EBDX/Anim/electric1",
+          "vol": 0.48
+        }
+      ]
+    },
+    "uproar": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb000",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": [
+            0,
+            0
+          ]
+        },
+        {
+          "img": "eb263_bg",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 1600,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        },
+        {
+          "img": "eb263_4",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-harden",
+          "src": "Anim/Harden",
+          "vol": 0.64
+        },
+        {
+          "at": 200,
+          "id": "anim-psych-up",
+          "src": "Anim/Psych Up",
+          "vol": 0.64
+        },
+        {
+          "at": 1600,
+          "id": "anim-comet-punch",
+          "src": "Anim/Comet Punch",
+          "vol": 0.64
+        }
+      ]
+    },
+    "bugbite": {
+      "v": 1,
+      "length": 1374,
+      "layers": [
+        {
+          "img": "eb008",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb008_2",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "ebdx-anim-bug1",
+          "src": "EBDX/Anim/bug1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "hex": {
+      "v": 1,
+      "length": 1502,
+      "layers": [
+        {
+          "img": "eb453",
+          "fill": true,
+          "count": 1,
+          "start": 0,
+          "dur": 1302,
+          "from": {
+            "at": "mid"
+          },
+          "alpha": 0.55,
+          "fade": [
+            0.2,
+            0.75
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 1000,
+          "id": "ebdx-anim-ghost2",
+          "src": "EBDX/Anim/ghost2",
+          "vol": 0.64
+        },
+        {
+          "at": 1402,
+          "id": "ebdx-anim-ghost3",
+          "src": "EBDX/Anim/ghost3",
+          "vol": 0.64
+        }
+      ]
+    },
+    "rockthrow": {
+      "v": 1,
+      "length": 1020,
+      "layers": [
+        {
+          "img": "eb504",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "ebDustParticle",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "ebdx-anim-rock2",
+          "src": "EBDX/Anim/rock2",
+          "vol": 0.56
+        }
+      ]
+    },
+    "sweetscent": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb611_2",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": "aim"
+        }
+      ],
+      "veil": {
+        "color": "#00cc66",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-whirlwind",
+          "src": "Anim/Whirlwind",
+          "vol": 0.64
+        }
+      ]
+    },
+    "babydolleyes": {
+      "v": 1,
+      "length": 900,
+      "layers": [
+        {
+          "img": "eb619_7",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "dy": 30,
+            "jx": 70
+          },
+          "to": {
+            "at": "user",
+            "dy": -60,
+            "jx": 70
+          },
+          "ease": "out",
+          "blend": "add"
+        }
+      ],
+      "sfx": [
+        {
+          "at": 125,
+          "id": "anim-leer",
+          "src": "Anim/Leer",
+          "vol": 0.64
+        }
+      ]
+    },
+    "bubblebeam": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb618",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": [
+            0,
+            0
+          ]
+        },
+        {
+          "img": "eb618_2",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb618_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#66b2ff",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-bubble1",
+          "src": "Anim/Bubble1",
+          "vol": 0.8
+        },
+        {
+          "at": 0,
+          "id": "anim-bubble2",
+          "src": "Anim/Bubble2",
+          "vol": 0.8
+        }
+      ]
+    },
+    "ironhead": {
+      "v": 1,
+      "length": 1060,
+      "layers": [
+        {
+          "img": "eb024",
+          "count": 12,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb520",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-ground1",
+          "src": "EBDX/Anim/ground1",
+          "vol": 0.64
+        },
+        {
+          "at": 200,
+          "id": "ebdx-anim-iron3",
+          "src": "EBDX/Anim/iron3",
+          "vol": 0.72
+        },
+        {
+          "at": 300,
+          "id": "ebdx-anim-iron1",
+          "src": "EBDX/Anim/iron1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "stomp": {
+      "v": 1,
+      "length": 1020,
+      "layers": [
+        {
+          "img": "eb109",
+          "count": 3,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb137_2",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-hit",
+          "src": "Anim/hit",
+          "vol": 0.64
+        }
+      ]
+    },
+    "gust": {
+      "v": 1,
+      "length": 1630,
+      "layers": [
+        {
+          "img": "eb637",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "user",
+            "jx": 16,
+            "jy": 16
+          },
+          "to": {
+            "at": "target",
+            "jx": 48,
+            "jy": 48
+          },
+          "ease": "in",
+          "fade": [
+            0.1,
+            0.8
+          ],
+          "angle": [
+            0,
+            0
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 500,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-wind8",
+          "src": "Anim/Wind8",
+          "vol": 0.64
+        }
+      ]
+    },
+    "moonblast": {
+      "v": 1,
+      "length": 1800,
+      "layers": [
+        {
+          "img": "eb519_2",
+          "count": 8,
+          "start": 0,
+          "stagger": 40,
+          "dur": 520,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb519_3",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        },
+        {
+          "img": "eb519",
+          "count": 6,
+          "start": 200,
+          "stagger": 60,
+          "dur": 420,
+          "from": {
+            "at": "target",
+            "jx": 80,
+            "jy": 80
+          },
+          "scale": [
+            0.8,
+            1.4
+          ],
+          "blend": "add",
+          "angle": [
+            0,
+            90
+          ]
+        }
+      ],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-harden",
+          "src": "Anim/Harden",
+          "vol": 0.64
+        },
+        {
+          "at": 400,
+          "id": "anim-refresh",
+          "src": "Anim/Refresh",
+          "vol": 0.64
+        },
+        {
+          "at": 1700,
+          "id": "anim-saint8",
+          "src": "Anim/Saint8",
+          "vol": 0.64
+        }
+      ]
     }
   },
   "moves": {
@@ -3646,6 +5491,31 @@
     "curse": "curse",
     "rain-dance": "raindance",
     "shadow-ball": "shadowball",
-    "close-combat": "closecombat"
+    "close-combat": "closecombat",
+    "counter": "counter",
+    "dragon-breath": "dragonbreath",
+    "flamethrower": "flamethrower",
+    "outrage": "outrage",
+    "play-rough": "playrough",
+    "dragon-pulse": "dragonpulse",
+    "aerial-ace": "aerialace",
+    "charge": "charge",
+    "earth-power": "earthpower",
+    "razor-leaf": "razorleaf",
+    "spark": "spark",
+    "bubble": "bubble",
+    "roost": "roost",
+    "thunder-wave": "thunderwave",
+    "uproar": "uproar",
+    "bug-bite": "bugbite",
+    "hex": "hex",
+    "rock-throw": "rockthrow",
+    "sweet-scent": "sweetscent",
+    "baby-doll-eyes": "babydolleyes",
+    "bubble-beam": "bubblebeam",
+    "iron-head": "ironhead",
+    "stomp": "stomp",
+    "gust": "gust",
+    "moonblast": "moonblast"
   }
 }
