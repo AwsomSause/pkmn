@@ -7,7 +7,7 @@ import { z } from 'zod';
 import cfgJson from '../data/legacyRuns.json';
 import type { Content } from './contentSchema';
 import { getBoss } from './regions';
-import type { LegacyMon, LegacyRun, Profile, RunRecord, RunState } from './state';
+import type { LegacyMon, LegacyRun, PokemonInstance, Profile, RunRecord, RunState } from './state';
 
 const LegacyRunsConfigSchema = z.object({
   note: z.string(),
@@ -15,6 +15,14 @@ const LegacyRunsConfigSchema = z.object({
   chronicleKept: z.number().int().min(0),
   ace: z.object({ perKnockout: z.number(), perBossBeaten: z.number(), perLevel: z.number(), starterBonus: z.number() }),
   moments: z.object({ minLowHpStand: z.number().int().min(1), minSurvivedFatal: z.number().int().min(1) }),
+  score: z.object({
+    regionCompleted: z.number(), gymLeader: z.number(), eliteFour: z.number(), champion: z.number(), newRegion: z.number(), rivalDefeated: z.number(),
+    legendary: z.number(), comeback: z.number(), highLevel: z.number(), campaign: z.number(), narrativeEvent: z.number(), narrativeEventMax: z.number().int().min(0),
+    perEncounter: z.number(), perShiny: z.number(), perRareMon: z.number(), highLevelAt: z.number().int(), comebackSurvivedFatal: z.number().int().min(1), memorableImportance: z.number().int(),
+  }),
+  rotation: z.object({ size: z.number().int().min(1), rotateMs: z.number().int().positive(), fadeMs: z.number().int().min(0), baseWeight: z.number().positive(), recentBonus: z.number().min(0), recentRuns: z.number().int().min(0), cooldownFactor: z.number().min(0).max(1), memorableScore: z.number() }),
+  interactions: z.object({ chance: z.number().min(0).max(1), longRunEncounters: z.number().int(), lines: z.object({ champion: z.string(), rivalEnding: z.string(), samePokemon: z.string(), longRun: z.string() }) }),
+  defeats: z.object({ chance: z.number().min(0).max(1), absentDays: z.number().int().min(1), lines: z.object({ rival: z.string(), close: z.string(), absent: z.string(), different: z.string(), fell: z.string() }) }),
 });
 export const LEGACY_RUNS = LegacyRunsConfigSchema.parse(cfgJson);
 
@@ -72,6 +80,7 @@ export function buildLegacyRun(content: Content, run: RunState, now: string, his
     lastResult: r.memory.lastBattle.result,
     resolution: r.arc?.resolution ?? null,
     team: [...r.memory.lastBattle.team],
+    rank: r.rank ?? null,
   }));
   const seenLegends = run.log.speciesSeen.filter((id) => isLegendary(content, id));
   const caughtLegends = run.log.speciesCaught.filter((id) => isLegendary(content, id));
@@ -213,4 +222,208 @@ function deepFreeze<T>(value: T): T {
     for (const v of Object.values(value)) deepFreeze(v);
   }
   return value;
+}
+
+// ---------- Legacy Score (§1.2) ----------
+
+/** How much a run deserves to be remembered (§1.2 weights in legacyRuns.json). Worked out from the record, never stored. */
+export function legacyScore(content: Content, record: LegacyRun): number {
+  const w = LEGACY_RUNS.score;
+  const cleared = record.source === 'run' ? record.regionsCleared.length : Math.max(0, record.regionReached - (record.outcome === 'victory' ? 0 : 0));
+  const narrative = record.nemeses.filter((n) => n.settledAs).length + record.chronicle.filter((c) => c.importance >= w.memorableImportance).length;
+  const rareMons = record.team.filter((m) => isLegendary(content, m.speciesId) || (content.species.get(m.speciesId)?.tags ?? []).some((t) => t === 'delta' || t === 'zform')).length;
+  return Math.round(
+    cleared * w.regionCompleted +
+      record.bosses.gym * w.gymLeader +
+      record.bosses.elite * w.eliteFour +
+      record.bosses.champion * w.champion +
+      record.regionReached * w.newRegion +
+      record.rivals.filter((r) => r.lastResult === 'win').length * w.rivalDefeated +
+      record.legendaries.caught.length * w.legendary +
+      (record.stats.survivedFatal >= w.comebackSurvivedFatal ? w.comeback : 0) +
+      (record.stats.maxLevel >= w.highLevelAt ? w.highLevel : 0) +
+      (record.outcome === 'victory' ? w.campaign : 0) +
+      Math.min(w.narrativeEventMax, narrative) * w.narrativeEvent +
+      record.encounters * w.perEncounter +
+      record.team.filter((m) => m.shiny).length * w.perShiny +
+      rareMons * w.perRareMon,
+  );
+}
+
+// ---------- the Legacy Rotation (§1.1) ----------
+
+/** One Trainer in the rotation: a past run (or the run in progress) and its Ace. */
+export interface RotationEntry {
+  runId: string;
+  current: boolean;
+  archetypeId: string;
+  ace: { speciesId: string; level: number; shiny: boolean } | null;
+  /** The region the run reached (its id), or null when unknown. */
+  regionId: string | null;
+  outcome: 'victory' | 'defeat' | 'inProgress';
+  /** Up to three short accomplishments, best first. */
+  accomplishments: string[];
+  memorable: boolean;
+  score: number;
+}
+
+/** Presentation-only randomness (never a gameplay stream): a small generator from a string. */
+export function viewRandom(seed: string): () => number {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  let a = h >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Short accomplishment lines for a record, best first. */
+export function accomplishments(content: Content, record: LegacyRun): string[] {
+  const out: string[] = [];
+  if (record.outcome === 'victory') out.push('Champion');
+  if (record.bosses.elite > 0 && record.outcome !== 'victory') out.push(`${record.bosses.elite} Elite Four beaten`);
+  const cleared = record.regionsCleared.length;
+  if (cleared > 0) out.push(`${cleared} region${cleared === 1 ? '' : 's'} cleared`);
+  if (record.bosses.gym > 0) out.push(`${record.bosses.gym} badge${record.bosses.gym === 1 ? '' : 's'}`);
+  const rivalWins = record.rivals.filter((r) => r.lastResult === 'win').length;
+  if (rivalWins > 0) out.push(`Beat ${rivalWins} rival${rivalWins === 1 ? '' : 's'}`);
+  if (record.legendaries.caught[0]) out.push(`Caught ${speciesName(content, record.legendaries.caught[0])}`);
+  if (record.stats.survivedFatal >= LEGACY_RUNS.score.comebackSurvivedFatal) out.push('Came back from the brink');
+  if (out.length === 0) out.push(`${record.encounters} encounters`);
+  return out.slice(0, 3);
+}
+
+const regionAt = (record: LegacyRun) => record.regionOrder[Math.min(record.regionReached, record.regionOrder.length - 1)] ?? null;
+
+export function rotationEntry(content: Content, record: LegacyRun): RotationEntry {
+  const ace = legacyAce(record);
+  const score = legacyScore(content, record);
+  return {
+    runId: record.runId, current: false, archetypeId: record.archetypeId,
+    ace: ace ? { speciesId: ace.speciesId, level: ace.level, shiny: ace.shiny } : null,
+    regionId: regionAt(record), outcome: record.outcome, accomplishments: accomplishments(content, record),
+    memorable: score >= LEGACY_RUNS.rotation.memorableScore, score,
+  };
+}
+
+/** The run in progress as a rotation entry (always shown first): its trainer and its strongest Pokémon. */
+export function currentRunEntry(content: Content, run: RunState): RotationEntry {
+  const best = run.party.reduce<PokemonInstance | null>((a, m) => (!a || m.level > a.level ? m : a), null);
+  const badges = run.badges.length;
+  return {
+    runId: run.runId, current: true, archetypeId: run.archetypeId,
+    ace: best ? { speciesId: best.speciesId, level: best.level, shiny: best.shiny } : null,
+    regionId: run.regionOrder[run.regionIndex] ?? null, outcome: 'inProgress',
+    accomplishments: [badges > 0 ? `${badges} badge${badges === 1 ? '' : 's'} so far` : 'Journey under way', `${run.encountersCompleted} encounters`],
+    memorable: false, score: 0,
+  };
+}
+
+/**
+ * The six-Trainer rotation (§1.1/§1.2): the run in progress first, then past runs picked by weight without
+ * replacement, so high scores show more often but the six are not always the top six. Recent runs get a bonus;
+ * runs in `cooldown` (shown last time) get much less weight. Same inputs give the same list.
+ */
+export function legacyRotation(content: Content, records: readonly LegacyRun[], opts: { seed: string; current?: RunState | null; cooldown?: readonly string[] }): RotationEntry[] {
+  const cfg = LEGACY_RUNS.rotation;
+  const out: RotationEntry[] = [];
+  if (opts.current) out.push(currentRunEntry(content, opts.current));
+  const cooldown = new Set(opts.cooldown ?? []);
+  const pool = records
+    .filter((r) => r.runId !== opts.current?.runId && r.team.length > 0)
+    .map((r, i) => {
+      const entry = rotationEntry(content, r);
+      const recent = i < cfg.recentRuns ? cfg.recentBonus * (1 - i / Math.max(1, cfg.recentRuns)) : 0;
+      return { entry, weight: (cfg.baseWeight + entry.score + recent) * (cooldown.has(r.runId) ? cfg.cooldownFactor : 1) };
+    });
+  const rand = viewRandom(`legacy-rotation:${opts.seed}`);
+  while (out.length < cfg.size && pool.length > 0) {
+    const total = pool.reduce((n, p) => n + p.weight, 0);
+    let roll = rand() * total;
+    let i = 0;
+    while (i < pool.length - 1 && roll >= pool[i]!.weight) roll -= pool[i++]!.weight;
+    out.push(pool.splice(i, 1)[0]!.entry);
+  }
+  return out;
+}
+
+// ---------- legacy interactions (§1.3) ----------
+
+/**
+ * A rare line for a past Trainer on show (§1.3): beat a Champion, lost to a rival, shared a Pokémon with the current
+ * team, or ran a long way. `roll` is a presentation roll in [0, 1); most of the time there is no line.
+ */
+export function legacyInteraction(record: LegacyRun, currentSpecies: readonly string[], roll: number): string | null {
+  const cfg = LEGACY_RUNS.interactions;
+  if (roll >= cfg.chance) return null;
+  const rivalNames = new Set(record.rivals.map((r) => r.name));
+  if (record.defeatedBy?.trainer && rivalNames.has(record.defeatedBy.trainer)) return cfg.lines.rivalEnding;
+  if (record.team.some((m) => currentSpecies.includes(m.speciesId))) return cfg.lines.samePokemon;
+  if (record.bosses.champion > 0 || record.outcome === 'victory') return cfg.lines.champion;
+  if (record.encounters >= cfg.longRunEncounters) return cfg.lines.longRun;
+  return null;
+}
+
+// ---------- the world remembers your defeats (§8.2) ----------
+
+/**
+ * Now and then, someone remembers how your last run ended (§8.2). Uses the newest record only; a won last run has
+ * nothing to remember. `roll` is a presentation roll in [0, 1). The line depends on what happened: a rival beat you,
+ * you nearly finished, you were away a long time, you came back as a different trainer, or a Pokémon ended it.
+ */
+export function rememberedDefeat(content: Content, records: readonly LegacyRun[], next: { archetypeId: string; now: string }, roll: number): string | null {
+  const cfg = LEGACY_RUNS.defeats;
+  const last = records[0];
+  if (!last || last.outcome !== 'defeat' || roll >= cfg.chance) return null;
+  const rival = last.defeatedBy?.trainer ? last.rivals.find((r) => r.name === last.defeatedBy!.trainer) : undefined;
+  if (rival) return cfg.lines.rival.replace('{rival}', rival.name);
+  const days = (Date.parse(next.now) - Date.parse(last.endedAt)) / 86400000;
+  if (Number.isFinite(days) && days >= cfg.absentDays) return cfg.lines.absent;
+  if (last.regionOrder.length > 0 && last.regionReached >= last.regionOrder.length - 1) return cfg.lines.close;
+  if (next.archetypeId !== last.archetypeId) return cfg.lines.different;
+  if (last.defeatedBy) return cfg.lines.fell.replace('{species}', speciesName(content, last.defeatedBy.speciesId));
+  return null;
+}
+
+// ---------- the Rival Hall of Fame (§8.1) ----------
+
+export interface RivalFameEntry {
+  name: string;
+  classId: string;
+  /** Its signature Pokémon (the first of its last team), if known. */
+  signature: string | null;
+  /** The region its run took place in (where it reached its rank). */
+  regionId: string | null;
+  /** Champion, finalist or Gym Leader title, or null for a rival that never ranked. */
+  title: 'champion' | 'finalist' | 'gymLeader' | null;
+  /** Its standing with you when the run ended (ladder state, or ally/retired), and how the arc ended. */
+  relationship: string;
+  resolution: 'good' | 'bad' | null;
+  encounters: number;
+  /** You beat it at least once (its last battle with you was your win, or a loss shook it). */
+  defeatedByYou: boolean;
+  runId: string;
+  endedAt: string;
+}
+
+const TITLE_ORDER = { champion: 0, finalist: 1, gymLeader: 2 } as const;
+
+/** Every rival that finished its journey (ranked), plus the strongest rivalries, across all legacy runs; champions first. */
+export function rivalHallOfFame(records: readonly LegacyRun[], limit = 24): RivalFameEntry[] {
+  const entries = records.flatMap((rec) =>
+    rec.rivals
+      .filter((r) => r.rank !== null || r.encounters >= 3 || r.state === 'nemesis' || r.state === 'contender')
+      .map((r): RivalFameEntry => ({
+        name: r.name, classId: r.classId, signature: r.team[0] ?? null, regionId: regionAt(rec), title: r.rank,
+        relationship: r.state, resolution: r.resolution, encounters: r.encounters,
+        defeatedByYou: r.lastResult === 'win' || r.setbacks > 0, runId: rec.runId, endedAt: rec.endedAt,
+      })),
+  );
+  return entries
+    .sort((a, b) => (a.title ? TITLE_ORDER[a.title] : 9) - (b.title ? TITLE_ORDER[b.title] : 9) || b.encounters - a.encounters || b.endedAt.localeCompare(a.endedAt))
+    .slice(0, limit);
 }

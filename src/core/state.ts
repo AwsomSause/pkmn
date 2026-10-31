@@ -1136,6 +1136,8 @@ export const LegacyRunSchema = z.object({
     lastResult: z.enum(['win', 'lose']).nullable(),
     resolution: z.enum(['good', 'bad']).nullable(),
     team: z.array(z.string()),
+    /** Past contender: it took over a Gym, reached the finals, or became Champion (null: none). */
+    rank: z.enum(['gymLeader', 'finalist', 'champion']).nullable().default(null),
   })),
   nemeses: z.array(z.object({ id: z.string(), speciesId: z.string(), archetype: z.string(), cause: z.string(), settledAs: z.enum(['beaten', 'caught']).nullable() })),
   /** Legendary or mythical species met, and the ones caught. */
