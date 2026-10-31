@@ -883,6 +883,18 @@
   "forgivingPenaltyAt": 15
  },
  "mechanics": {
+  "rival-alliance": {
+   "status": "limited",
+   "note": "Friends who both lost to you lend a Pokémon for one battle (rivals/relations.ts)."
+  },
+  "mentor-network": {
+   "status": "limited",
+   "note": "A rival's roster leans toward a mentor's type, shown as a telegraphed note (rivals/relations.ts)."
+  },
+  "team-identity-shift": {
+   "status": "limited",
+   "note": "A rival's roster takes a mentor's or grudge type (rival.identity, rivals/relations.ts)."
+  },
   "independent-rivalry": {
    "status": "limited",
    "note": "Rivals form enemies/friends/partners edges off-screen (rivalGraph); the edge only shows in rumours so far."

@@ -178,6 +178,8 @@ export interface NewRunOptions {
   raidTierUnlocked?: number;
   /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
   licenses?: string[];
+  /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
+  ownedTrainers?: readonly string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -219,6 +221,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedLeaders: [],
     materials: {},
     badges: [],
+    ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
     regionOrder,
     regionIndex: 0,

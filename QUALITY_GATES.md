@@ -10,7 +10,7 @@ What has to pass before a slice of work counts as done, which checks run by them
 | 2 | Unit and integration tests | `npm test` (Vitest, `tests/unit/`) | Yes: `npm run check` and CI |
 | 3 | Production build | `npm run build` | Yes: `npm run check` and CI |
 | 4 | Content gate: no content number worse than before | `npm run report:check` (below) | Yes: `npm run check` and CI |
-| 5 | Browser tests for what the player does | `npm run test:e2e` (Playwright, 60 tests, about 12 minutes) | Yes in CI once Actions is on; by hand until then |
+| 5 | Browser tests for what the player does | `npm run test:e2e` (Playwright, about 75 tests, about 12 minutes) | Yes in CI once Actions is on; by hand until then |
 | 6 | No console errors or failed requests | `viewports.spec.ts` fails on any console error, page error, failed request or HTTP 4xx/5xx on the main screens; other specs fail on page errors | Yes (main screens); by hand for new screens |
 | 7 | Screens checked at several sizes | `viewports.spec.ts` opens the menu, Hub, trainer select, map and battle at 1280×720, 1024×600, 768×1024 and 390×844 and fails if the canvas is bigger than the window or the page scrolls sideways; screenshots go to `test-results/viewport-*.png`. Whether it looks good is still a look by hand | Partly |
 | 8 | Asset loading, missing files, memory, performance | The content report finds missing files; `milestone6.spec.ts` checks lazy loading; memory and frame rate by hand | Partly |
