@@ -2303,6 +2303,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('feud') }),
   /** Champion defense: you have a Hall of Fame team on record. */
   z.object({ kind: z.literal('championGhost') }),
+  /** A retired team: a past run that did not win left a team on record. */
+  z.object({ kind: z.literal('retiredGhost') }),
   z.object({ kind: z.literal('hunt'), atLeast: z.number().int().min(0).default(0), atMost: z.number().int().min(0).default(99) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
@@ -2416,6 +2418,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     bossId: z.string().optional(),
     /** Champion defense: the team is your newest Hall of Fame team (core/story/championDefense.ts). */
     ghost: z.boolean().default(false),
+    /** The team is the newest run that did not win (core/story/championDefense.ts). */
+    retired: z.boolean().default(false),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     types: z.array(TypeNameSchema).default([]),

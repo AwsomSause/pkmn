@@ -24115,6 +24115,84 @@
    ]
   },
   {
+   "id": "retired-team",
+   "name": "The Team That Fell Short",
+   "group": "Hall of Fame",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "retiredGhost"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c1c22",
+    "effect": "glint"
+   },
+   "intro": "A weathered banner hangs over an empty field. It names a team from a run that never finished. Today the Hall has set that team out again, same Pokémon, same strength, and they have something to prove.",
+   "choices": [
+    {
+     "label": "Give them the rematch",
+     "success": {
+      "text": "The retired team takes the field.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Retired Team",
+       "retired": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Let them rest",
+     "success": {
+      "text": "You nod to the old team. They have earned their quiet.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "rival-gauntlet-entry",
    "name": "The Rival Gauntlet",
    "group": "Rival Tournament",

@@ -84,12 +84,13 @@ export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shi
   shinyMultiplier: o.shiny ?? 1,
   win: o.win ?? [],
 });
-export const trainer = (name: string, o: { cls?: string; boss?: string; size?: number; types?: string[]; lv?: number; win?: Json[]; ghost?: boolean } = {}): Json => ({
+export const trainer = (name: string, o: { cls?: string; boss?: string; size?: number; types?: string[]; lv?: number; win?: Json[]; ghost?: boolean; retired?: boolean } = {}): Json => ({
   kind: 'trainer',
   name,
   ...(o.cls ? { classId: o.cls } : {}),
   ...(o.boss ? { bossId: o.boss } : {}),
   ...(o.ghost ? { ghost: true } : {}),
+  ...(o.retired ? { retired: true } : {}),
   size: o.size ?? 2,
   types: o.types ?? [],
   levelBonus: o.lv ?? 0,
