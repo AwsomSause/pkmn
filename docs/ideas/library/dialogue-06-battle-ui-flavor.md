@@ -1,0 +1,201 @@
+# Dialogue 06: Abilities, items, moves, achievements, letters, and UI flavor (150 lines)
+
+Short text surfaces that `ideas/dialogue.md` doesn't cover: ability announcements, item descriptions with attitude, move callouts, achievement toasts, mail, loading hints keyed to state, and the Hub's tiny signage. Format: `- [surface | gate] text`.
+
+## Ability announcements (battle log, 1 line each)
+- [Intimidate] {A}'s glare shakes the foe's confidence.
+- [Static] {A} crackles, and the foe jerks back from a stray spark.
+- [Levitate] {A} floats a hand above the ground, politely refusing it.
+- [Sturdy] {A} grits its teeth: not yet.
+- [Overgrow] The grass answers {A}'s need; leaves bristle.
+- [Blaze] {A}'s embers flare, hungry.
+- [Torrent] A wave swells at {A}'s back.
+- [Swarm] The bugs gather like a held breath.
+- [Pressure] The foe's moves feel heavier under {A}'s stare.
+- [Speed Boost] {A} just keeps getting faster.
+- [Magic Guard] {A} walks through the hazards like a ghost in a hallway.
+- [Thick Fat] {A} laughs at the chill, wrapped in its own warmth.
+- [Rough Skin] The foe's strike scrapes itself on {A}'s hide.
+- [Poison Point] The foe flinches; something sharp stung back.
+- [Flame Body] The foe jerks back, singed by the contact.
+- [Cute Charm] The foe's eyes go soft against its better judgment.
+- [Sand Stream] {A} stirs the earth into a rasping storm.
+- [Drought] The sun answers {A}'s call and settles in.
+- [Drizzle] A soft rain starts at {A}'s whim.
+- [Snow Warning] The sky turns pale; snow drifts down.
+- [Moxie] {A} smiles; each victory makes it bolder.
+- [Technician] {A} chains the small hits with precision.
+- [Adaptability] {A} bends the move to fit exactly.
+- [Unaware] {A} ignores the foe's tricks like they never happened.
+- [Multiscale] {A}'s shell takes the blow like it's a sleeve.
+- [Prankster] {A} giggles; the trick lands first.
+- [Regenerator] {A} slips away and returns whole.
+- [Protean] {A} flickers into a new shape between breaths.
+- [Contrary] {A} turns misfortune inside out.
+- [Mold Breaker] {A} charges through the foe's defenses like they're paper.
+- [Clear Body] {A} shrugs off the chill; nothing sticks.
+- [Soundproof] The noise washes over {A}; it only smiles.
+- [Wonder Guard] {A} stands untouchable, except to a sharp few.
+- [Trace] {A} studies the foe, then learns its trick.
+- [Imposter] {A} smirks and puts on the foe's face.
+- [Illusion] The foe takes a step back: that isn't who it thought.
+- [Download] {A} reads the foe like an open book.
+- [Defiant] {A} snarls: "That makes me angrier."
+- [Competitive] {A} narrows its eyes; the gap only encourages it.
+- [Shed Skin] {A} sheds the pain in one smooth shake.
+- [Pickup] {A} wanders back with a berry. Nobody knows where from.
+
+## Item descriptions with attitude
+- [Potion] A spray bottle of mild optimism. Heals 20 HP, and your mood a little.
+- [Super Potion] Costs more than a Potion. Stings more too. Worth it.
+- [Hyper Potion] Doctors hate how well it works.
+- [Max Potion] Fills a Pokémon right to the top, like a dream you can drink.
+- [Revive] A second chance, in a small, expensive bottle.
+- [Max Revive] A second chance you can actually trust.
+- [Antidote] Because "just walk it off" is not a medical plan.
+- [Burn Heal] Cooling gel. Smells like regret and mint.
+- [Awakening] Louder than coffee. Faster than guilt.
+- [Full Heal] A pocket miracle that clears everything but your doubts.
+- [Escape Rope] When a plan has failed, this is plan B. It frays.
+- [Repel] Stinks to high heaven. Wild Pokémon agree and stay away.
+- [Poké Ball] The classic. It still sits in your hand like a promise.
+- [Great Ball] Slightly shinier. Slightly more convincing.
+- [Ultra Ball] For when you're out of excuses and out of time.
+- [Master Ball] Never misses. Not even your hopes. Careful.
+- [Rare Candy] Sweet, bright, and extremely against the rules of nature.
+- [Berry] Tastes like the first day of something good.
+- [Oran Berry] A little blue pill of pep. Tiny, reliable, fine.
+- [Sitrus Berry] Tangy, golden, full of life.
+- [Lum Berry] A one-time refusal to feel awful.
+- [Leftovers] Whatever it is, it's still good. Nobody asks.
+- [Choice Scarf] Speed in a scarf. The party will fight over it.
+- [Choice Band] A band that makes one move very, very loud.
+- [Life Orb] Power, at a price. Always at a price.
+- [Focus Sash] One last stand, hand-sewn.
+- [Eviolite] For the ones who aren't done evolving yet.
+- [Everstone] A paperweight that dares time itself.
+- [Shiny Charm] Looks like rubber. Feels like luck.
+- [Lucky Egg] Yolks of wisdom. Don't crack it.
+- [Amulet Coin] The coin that follows you and doubles your money. Suspicious.
+- [Exp. Share] A little hand held out to the benched.
+- [Soothe Bell] A tiny chime that quiets any hurt.
+- [Mystic Water] Water that looks at you like it knows something.
+- [Black Glasses] Makes everything darker and, somehow, cooler.
+- [Wide Lens] Sees what others miss.
+- [Mega Stone] A sliver of something bigger than the sky.
+- [Z-Crystal] An old song caught inside a stone.
+- [Tera Shard] A piece of a star that fell and decided to stay.
+- [TM] A scroll of knowledge. Possibly stale.
+- [Map Fragment] A piece of someone's plan. Hope it's a good one.
+
+## Move callouts (the first time a move is used in a fight)
+- [Tackle] {A} puts its whole body into it. It's a good body.
+- [Quick Attack] A blur and a thud. {A} is already gone.
+- [Ember] A shy flame from {A}, but it is a flame.
+- [Water Gun] {A} spits a bright arc and meets the foe straight on.
+- [Vine Whip] Two lashes in the air. {A} makes a rhythm of it.
+- [Thunderbolt] The sky itself rushes through {A}.
+- [Flamethrower] {A} breathes a ribbon of fire across the field.
+- [Hydro Pump] A rush of water that has opinions about its target.
+- [Solar Beam] {A} gathers the sun and lets it go.
+- [Psychic] The air thickens as {A} narrows its focus.
+- [Shadow Ball] A mass of darkness hums in {A}'s grasp.
+- [Earthquake] The ground cracks and sighs at {A}'s command.
+- [Ice Beam] A line of frost races across the arena.
+- [Dragon Claw] {A}'s claws arc once; the air splits.
+- [Close Combat] {A} throws everything it has into a flurry.
+- [Hyper Beam] {A} gathers itself. Then it does not hold back.
+- [Protect] {A} draws a bright circle around itself. Nothing comes through.
+- [Substitute] {A} tosses a small copy of itself into the fray, and the copy looks scared.
+- [Swords Dance] {A} twirls, sharp as a blade and just as gracefully.
+- [Calm Mind] {A} closes its eyes. The air stills.
+- [Recover] {A} breathes deep; the wounds ease away.
+- [Roar] {A}'s cry sends the foe packing.
+- [Thunder Wave] A web of sparks crawls over the foe.
+- [Toxic] A bruise-colored cloud settles in.
+- [Will-O-Wisp] A pale flame drifts, then lands.
+- [Sleep Powder] A golden dust sinks softly over the foe.
+- [Leech Seed] A seed takes root and drinks the foe's strength.
+- [Stealth Rock] Stones rise like silent teeth at the foe's feet.
+- [Spikes] A scatter of points glints on the foe's side.
+- [Trick Room] The arena folds. Slow is fast. Fast is late.
+- [Rain Dance] The clouds gather. They're listening.
+- [Sunny Day] The sky opens and light pours in.
+- [Sandstorm] The wind picks up grit and sorrow.
+- [Hail] The sky rattles with tiny, cold promises.
+- [Baton Pass] {A} hands over its strength with a nod.
+- [U-turn] {A} strikes, spins, and slips away.
+- [Explosion] {A} gives everything in one huge, dramatic moment.
+- [Destiny Bond] {A} smiles darkly: "You're coming with me."
+- [Sleep Talk] {A} snores through a perfectly competent attack.
+
+## Achievement toasts (short, in-voice)
+- [first win] "Your first victory!" The Hub gives a tiny, slightly off-key cheer.
+- [first catch] "A new friend." The party makes room.
+- [first evolution] "They grow so fast." The professor sniffs.
+- [first loss] "You'll be fine." The Nurse already has the kettle on.
+- [first shiny] "Something's different. Look closer."
+- [100 battles] "A hundred! Your boots have opinions."
+- [1000 battles] "One thousand. The route knows your gait."
+- [all gyms] "Eight badges. The wall's bright with them."
+- [all dex] "All of them. Every last one. The professor weeps."
+- [no-faint] "Nobody fainted. Nobody even tripped."
+- [shiny team] "Your whole party shines. Please sit down, the sun is jealous."
+- [rival befriended] "A rivalry becomes a friendship. The best arc."
+- [rival respected] "Even enemies see you now."
+- [legacy: 10 runs] "Ten runs. The Hub has a drawer just for your mistakes."
+- [legacy: 50 runs] "Fifty! You are the Hub's oldest regular."
+- [legacy: 100 runs] "One hundred. The mayor's making a statue. It looks a little like you."
+- [quest done] "Quest complete. Sign here. And here. And here. And a smiley."
+- [mastery up] "Your bond with the species deepens."
+- [boss no-hit] "Untouched. The boss is reconsidering its career."
+- [secret] "You found something not on any map."
+
+## Mail and letters (rival, Nurse, Professor, strangers)
+- [letter | rival friendly] "Dear {player}, I trained all week. Did you? Don't tell me. I'll find out. — {rival}"
+- [letter | rival enemy] "I'll see you at the next gym. Bring your best. I'm bringing mine. — {rival}"
+- [letter | rival lonely] "I know we aren't close. I just wanted to say hi. So: hi. — {rival}"
+- [letter | rival apology] "I was awful last time. I'm sorry. Don't write back. Or do. — {rival}"
+- [letter | Nurse] "Drink water, sleep, call your mother. Love, Nurse Joy"
+- [letter | Professor] "I found three new things today! And lost two. I'll tell you which. — Prof."
+- [letter | stranger] "Thanks for helping my Pikachu on route 3. It hums your name."
+- [letter | stranger] "I never knew who you were. I'm glad I met you."
+- [letter | child] "Dear trainer, I drew you a picture. The orange one is you. The blue one is the monster. — Sam"
+- [letter | merchant] "I'm out of stock! I swear it's the last time. Here's a coupon for the next one."
+- [letter | gym] "We've updated the lineup. Good luck. Not really. — The Gym"
+- [letter | the Hub] "The fountain's running again. The cat stays. Bring snacks. — Hub Council"
+- [letter | Old Ranger] "Frost came early. Carry a coat. I mean it. — R."
+- [letter | anonymous] "You looked tired. I hope the soup helped."
+- [letter | ghost] "I'm not dead. I'm just between jobs."
+
+## Loading-screen hints keyed to state
+- [hint | player lost 3 in a row] Tip: Resting at a Pokémon Center is not cowardice. It's math.
+- [hint | no Revive in bag] Tip: Pack at least one Revive. Even the heroes do.
+- [hint | no healing items] Tip: A Potion in the bag beats a prayer in the dark.
+- [hint | team all same type] Tip: Variety is a defense too.
+- [hint | low gold] Tip: Merchants love a good story. Sometimes they pay.
+- [hint | high gold] Tip: Spend it. The Hub isn't going to.
+- [hint | weak to rain] Tip: Rain makes Fire-types sulk. Plan around it.
+- [hint | nightfall] Tip: Night routes have stranger wanderers. Pack accordingly.
+- [hint | first boss] Tip: Bosses read your last move. Mix it up.
+- [hint | rival ahead] Tip: Your rival's team learns. Don't repeat yourself.
+- [hint | Pokémon sad] Tip: A well-timed rest can mend more than HP.
+- [hint | quiet] Tip: Sometimes the best battle is the one you don't have.
+
+## Signage and tooltips
+- [sign | gym] "Leader on duty. Please wipe your feet and your ego."
+- [sign | center] "Quiet please. The Snorlax is dreaming."
+- [sign | shop] "No refunds. No returns. No regrets. (Some regrets.)"
+- [sign | route] "Route {n}: Beware of low-hanging Pidgey."
+- [sign | cave] "Dark ahead. Bring a light, a plan, and a very good friend."
+- [sign | bridge] "Weight limit: one heroic trainer and one reluctant Snorlax."
+- [sign | forest] "Please don't feed the Caterpie. They'll follow you home."
+- [sign | beach] "Water is wet. Management is not responsible."
+- [sign | Hub gate] "Leave your worries at the door. They'll be here when you get back."
+- [sign | Hub library] "Silence. Seriously. The Psyduck is thinking."
+- [sign | arena] "Warning: loud noises. Loud Pokémon. Loud rivals."
+- [sign | mountain] "Altitude: yes. Attitude: also yes."
+- [tip | party] Drag a Pokémon to swap its place. They don't mind. Mostly.
+- [tip | bag] Press and hold to read an item's story. The stories are better than the stats.
+- [tip | map] The golden dots are shops. The red ones are bad ideas.
+- [tip | settings] Slower text is for the dramatic. Faster text is for the late.
