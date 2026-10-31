@@ -23,6 +23,7 @@ import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTur
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
+import { auditEncounter, directSpecies } from './encounterDirector';
 import {
   curveLevel,
   bossTeamSpecies,
@@ -887,8 +888,9 @@ export function fishingOffer(content: Content, run: RunState, sideId: string): {
   const shinyChance = runAttributeEffects(content, run).shinyChance;
   const out: { speciesId: string; level: number; shiny: boolean }[] = [];
   for (let i = 0; i < rod.choices; i++) {
-    let speciesId = rng.weighted(pool);
-    for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = rng.weighted(pool);
+    const hook = () => directSpecies(content, { source: 'fishing', level: curveLevel(content, scale), cap: scale.cap, draw: () => rng.weighted(pool) }).speciesId;
+    let speciesId = hook();
+    for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = hook();
     const tries = (rod.rare && i === rod.choices - 1 ? 3 : 0) + fishingRareTriesPerk(archetype.modifiers);
     if (tries > 0) {
       for (let j = 0; j < tries; j++) {
@@ -967,6 +969,7 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
 export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
+  auditEncounter(content, 'raid', boss, 'raid-boss');
   applyBossHp(def, boss);
   for (const id of def.extraMoves) {
     const mv = content.moves.get(id);

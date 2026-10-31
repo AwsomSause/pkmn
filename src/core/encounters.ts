@@ -9,6 +9,7 @@ import type { LevelBreakdown, PokemonInstance } from './state';
 import { getBoss, levelCap, type BossRole } from './regions';
 import { isUsableMove } from './pokemon';
 import { eliteLevelOffset, isLegendaryLike, wildWeightPerk } from './trainerPerks';
+import { auditEncounter, directSpecies } from './encounterDirector';
 import { baseStatTotal, pickThemeSpecies, RIVAL_CLASS, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
@@ -115,26 +116,10 @@ function wildWeightMod(content: Content, archetype: Archetype): ((speciesId: str
   };
 }
 
-/** The most total base stats a regular enemy may have at `level`: a level-9 route never throws a 550-BST brute at a level-5 party. */
-export function bstCeilingAt(content: Content, level: number): number {
-  const { base, perLevel } = content.balance.levelBst;
-  return Math.min(content.balance.wildMaxBaseStats, base + perLevel * level);
-}
-
-/** Draws up to `levelBst.retries` candidates and keeps the first that fits the level's BST ceiling (else the weakest drawn). */
-export function pickFittingSpecies(content: Content, level: number, rng: Rng, draw: () => string): string {
-  const ceiling = bstCeilingAt(content, level);
-  let best = draw();
-  for (let i = 0; i < content.balance.levelBst.retries && baseStatTotal(getSpecies(content, best)) > ceiling; i++) {
-    const next = draw();
-    if (baseStatTotal(getSpecies(content, next)) < baseStatTotal(getSpecies(content, best))) best = next;
-  }
-  return best;
-}
-
 export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
-  const speciesId = pickFittingSpecies(content, levelInfo.level, rng, () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype), curveLevel(content, scale)));
+  const gate = curveLevel(content, scale);
+  const { speciesId } = directSpecies(content, { source: 'wild', level: levelInfo.level, cap: scale.cap, draw: () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype), gate) });
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }
 
@@ -183,7 +168,8 @@ function buildTeam(
   const members = Array.from({ length: size }, (_, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === size - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
-    return { speciesId: pickFittingSpecies(content, info.level, rng, () => evolvedFormAt(content, pick(i), info.level, rng)), level: info.level };
+    const { speciesId } = directSpecies(content, { source: 'trainer', level: info.level, cap: scale.cap, draw: () => pick(i), evolve: (id, level) => evolvedFormAt(content, id, level, rng) });
+    return { speciesId, level: info.level };
   });
   return { members, levelInfo };
 }
@@ -277,6 +263,8 @@ function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId
     levelInfo.push(info);
     return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training };
   });
+  // Authored teams are checked against the role's threat budget and logged, never re-rolled (Balancing Phase 8).
+  members.forEach((m, i) => auditEncounter(content, role, createPlannedPokemon(content, m, `audit:${bossId}:${i}`), 'authored-boss-team'));
   return { classId, name: boss.name, leaderId: bossId, members, levelInfo, ai: team.ai };
 }
 

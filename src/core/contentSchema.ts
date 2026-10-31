@@ -1004,6 +1004,7 @@ export const RunPrepFileSchema = z.object({
 });
 
 export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
+const ThreatBudgetSchema = z.object({ base: z.number().positive(), perLevel: z.number().min(0), max: z.number().positive() });
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
@@ -1986,6 +1987,23 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Combat Threat Rating (core/threat.ts) and the Encounter Director (core/encounterDirector.ts). 100 = all-70 base stats with a 60-power same-type attack. */
+  threat: z.object({
+    setupBonus: z.number().min(0),
+    recoveryBonus: z.number().min(0),
+    statusBonus: z.number().min(0),
+    priorityBonus: z.number().min(0),
+    abilityBonus: z.number().min(0),
+    strongAbilities: z.array(z.string()),
+    noAttackOffense: z.number().positive(),
+    speedWeight: z.number().min(0).max(1),
+    /** Per tier: budget = min(max, base + perLevel × level). */
+    budgets: z.object({ easy: ThreatBudgetSchema, standard: ThreatBudgetSchema, challenging: ThreatBudgetSchema, elite: ThreatBudgetSchema }),
+    /** Bounded retries before the director falls back to the weakest valid candidate it drew. */
+    retries: z.number().int().min(0),
+    /** Which tier each source is held to. */
+    sourceTiers: z.record(z.string(), z.enum(['easy', 'standard', 'challenging', 'elite'])),
+  }),
   /** Spreadsheet availability (core/availability.ts): a species unlocks at its sheet minimum level minus levelSlack; rarityWeights scale the odds of unlocked ones. */
   availability: z.object({
     levelSlack: z.number().int().min(0),
