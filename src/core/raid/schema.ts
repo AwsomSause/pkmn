@@ -104,6 +104,20 @@ export const RaidDefSchema = z.object({
   /** Moves the boss knows beyond the usual four (up to two more). */
   extraMoves: z.array(z.string()).max(2).default([]),
   rewards: RaidRewardSchema,
+  /**
+   * A Gang Raid (APPROVED.md §12): an evil faction's stronghold. The boss is a Shadow Pokémon; the approaches are the
+   * ways in (stealth, direct, rescue-first). Never in the random den pool: the shadow world places it (shadowWorld/world.ts).
+   */
+  gang: z.object({
+    faction: z.string().min(1),
+    shadowBoss: z.boolean().default(true),
+    /** The Shadow boss joins you when you win (kept Shadow; purify it over the run). */
+    rescue: z.boolean().default(true),
+    /** The faction's lieutenant leads this raid (escapes twice, then is caught). */
+    lieutenant: z.boolean().default(false),
+    /** Operations of the faction that fall when you win. */
+    heatDrop: z.number().int().min(1).max(3).default(1),
+  }).optional(),
   /** The Grand-Enemy's own fights (core/story/grandEnemy): placed by the campaign, never in the random den pool. */
   grand: z.enum(['contact', 'reckoning']).optional(),
 });

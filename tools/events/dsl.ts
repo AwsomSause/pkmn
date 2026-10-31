@@ -75,8 +75,10 @@ export const flag = (key: string, amount = 1): Json => ({ kind: 'flag', key, amo
 export const reveal = (): Json => ({ kind: 'revealStops' });
 
 // ---------- battles ----------
-export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean; chain?: number } = {}): Json => ({
+export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean; chain?: number; shadow?: boolean; blissful?: boolean } = {}): Json => ({
   kind: 'wild',
+  ...(o.shadow ? { shadow: true } : {}),
+  ...(o.blissful ? { blissful: true } : {}),
   ...(o.chain ? { chain: o.chain } : {}),
   ...(o.recall ? { recall: true } : {}),
   species: o.species ?? [],
