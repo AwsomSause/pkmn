@@ -267,6 +267,6 @@ describe('raid runs', () => {
     storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 12, savedAt: '', data: old }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
-    if (loaded.status === 'ok') expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6 });
+    if (loaded.status === 'ok') expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6, escaped: [] });
   });
 });

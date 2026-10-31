@@ -64,6 +64,9 @@ import { typeEffectiveness } from '../core/battle/damage';
 import type { Move, TypeName } from '../core/contentSchema';
 
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
+const MESSAGE_DELAYS = { short: 700, normal: 1400, long: 2400 } as const;
+/** Milliseconds per character for the typewriter text speeds. */
+const TEXT_MS = { fast: 12, normal: 28 } as const;
 /** Battle events whose lines advance on their own; everything else waits for a confirm press. */
 const AUTO_EVENTS = new Set<string>(['move', 'noPp', 'miss', 'damage', 'noEffect', 'fail']);
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -133,6 +136,7 @@ export class BattleScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private moveInfo!: Phaser.GameObjects.Text;
   /** The focused move's type label and category icon (Essentials art). */
+  private typing: Phaser.Time.TimerEvent | null = null;
   private moveBadges: Phaser.GameObjects.Container | null = null;
   private commandWindow!: Phaser.GameObjects.Graphics;
   private playerBox!: InfoBox;
@@ -806,19 +810,64 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Shows one message. Move and damage lines (`auto`) move on after a short delay; every other line waits for a confirm press. */
-  private say(text: string, auto = false): Promise<void> {
-    this.message.setText(auto ? text : `${text} ▼`);
+  private say(text: string, autoLine = false): Promise<void> {
+    const settings = services().session.settings;
+    // Only move and damage lines advance by themselves, unless Settings > Auto-advance is on.
+    const auto = autoLine || settings.autoAdvance;
+    const delay = settings.autoAdvance ? MESSAGE_DELAYS[settings.messageDelay] : MESSAGE_AUTO_ADVANCE_MS;
+    this.typeText(auto ? text : `${text} ▼`, settings.textSpeed);
     this.history.push(text);
     if (this.history.length > 60) this.history.shift();
     return new Promise((resolve) => {
-      const timer = auto ? this.time.delayedCall(MESSAGE_AUTO_ADVANCE_MS, () => done()) : null;
+      const timer = auto ? this.time.delayedCall(delay, () => done()) : null;
       const done = () => {
         timer?.remove(false);
         this.advance = null;
         resolve();
       };
       // Ignore the key press that opened this message.
-      this.time.delayedCall(120, () => (this.advance = done));
+      // While the text is still being typed, the first press shows the rest of it.
+      this.time.delayedCall(120, () => (this.advance = () => (this.finishTyping() ? undefined : done())));
+    });
+  }
+
+  /** A damage number that floats up from the Pokémon that was hit (Settings > Damage numbers). */
+  private floatDamage(sprite: { x: number; y: number } | null | undefined, amount: number): void {
+    if (!sprite || this.motion === 'off') return;
+    const text = this.add.text(sprite.x, sprite.y - 60, `-${amount}`, textStyle(24, '#ffe9a8')).setOrigin(0.5).setDepth(900);
+    text.setStroke('#201020', 4);
+    this.tweens.add({ targets: text, y: text.y - 36, alpha: 0, duration: this.motion === 'full' ? 900 : 500, ease: 'Cubic.easeOut', onComplete: () => text.destroy() });
+  }
+
+  private typingFull = '';
+
+  /** Completes a message that is still being typed. Returns true when it was (the press is used up). */
+  private finishTyping(): boolean {
+    if (!this.typing) return false;
+    this.typing.remove(false);
+    this.typing = null;
+    this.message.setText(this.typingFull);
+    return true;
+  }
+
+  /** Shows a message at once, or types it out (Settings > Text speed); the full text is always the message's text. */
+  private typeText(text: string, speed: 'instant' | 'fast' | 'normal'): void {
+    this.typing?.remove(false);
+    this.typing = null;
+    this.typingFull = text;
+    if (speed === 'instant' || this.motion === 'off') {
+      this.message.setText(text);
+      return;
+    }
+    let n = 0;
+    this.message.setText('');
+    this.typing = this.time.addEvent({
+      delay: TEXT_MS[speed],
+      repeat: text.length - 1,
+      callback: () => {
+        this.message.setText(text.slice(0, ++n));
+        if (n >= text.length) this.typing = null;
+      },
     });
   }
 
@@ -1096,14 +1145,13 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     // Transformations: a fourth option that cycles off -> Tera -> Z-Move -> Dynamax -> off. (Mega and Gigantamax happen by themselves.)
     const ctx = this.battleCtx();
-    // In a double battle only the Pokémon in the engine's main spot can transform (one per turn).
-    const mainSpot = !this.run.battle?.doubles || this.cmdSpot === primarySpot(this.run.battle.doubles, 'player');
-    const tera = mainSpot ? teraOption(ctx) : null;
-    const zMove = mainSpot && zMoveOptions(ctx).some((z) => z !== null);
+    // In a double battle either Pokémon can transform (the context looks at the one being commanded).
+    const tera = teraOption(ctx);
+    const zMove = zMoveOptions(ctx).some((z) => z !== null);
     const choices: TransformRequest[] = [
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
-      ...(mainSpot && canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
+      ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind;
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
@@ -1246,7 +1294,7 @@ export class BattleScene extends Phaser.Scene {
           this.moveBadges = this.add.container(COMMAND_X + 28, MESSAGE_Y + 40, [...art, ...this.moveExtras(move)]);
           bounceIn(this, this.moveBadges, this.motion);
         } else art.forEach((o) => o.destroy());
-        this.moveInfo.setText(`${label}PP  ${slot.pp}/${maxPp(content, slot)}  ·  Power ${power}`).setY(art.length === 2 ? MESSAGE_Y + 64 : MESSAGE_Y + 30);
+        this.moveInfo.setText(`${label}${services().session.settings.typeMarkers ? `${move.type.toUpperCase()} ${move.category}  ·  ` : ''}PP  ${slot.pp}/${maxPp(content, slot)}  ·  Power ${power}`).setY(art.length === 2 ? MESSAGE_Y + 64 : MESSAGE_Y + 30);
         this.moveInfo.setColor(COLORS.textLight);
       },
       onSelect: (i) => {
@@ -1289,7 +1337,11 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
+    // Double battles: the helpers read the party's "active" Pokémon, so point them at the one being commanded.
+    const doubles = run.battle?.doubles;
+    const idx = doubles ? run.party.indexOf(this.activeMon()) : -1;
+    const battle = doubles && idx >= 0 && idx !== run.battle!.activeIndex ? { ...run.battle!, activeIndex: idx } : run.battle!;
+    return { content: services().session.content, battle, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
   }
 
   private openBag(): void {
@@ -1590,6 +1642,7 @@ export class BattleScene extends Phaser.Scene {
         case 'bindDamage':
         case 'seedDamage':
         case 'weatherDamage':
+          if (e.hpAfter < mon!.hp && services().session.settings.damageNumbers) this.floatDamage(sprite, mon!.hp - e.hpAfter);
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');

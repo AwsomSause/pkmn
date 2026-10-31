@@ -187,8 +187,8 @@ export class GameSession {
   }
 
   /** Pays for a raid den and starts the boss fight. */
-  enterRaid(sideId: string): RunState {
-    this.run = Run.enterRaid(this.content, this.requireRun(), sideId);
+  enterRaid(sideId: string, approachId?: string): RunState {
+    this.run = Run.enterRaid(this.content, this.requireRun(), sideId, approachId);
     this.persistRun();
     return this.run;
   }

@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle, itemProblem, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { raidMemories, applyBossHp, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
+import { placeRaidDens, raidMemories, applyBossHp, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
 import { raidCaptureTrack } from '../../src/core/presentation/battleMusic';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, enterRaid, takeTurn } from '../../src/core/run';
@@ -147,5 +147,72 @@ describe('raid memories', () => {
     const memories = r.story.histories[r.party[0]!.uid]?.memories.filter((m) => m.text.includes('final blow') || m.text.includes('first to face')) ?? [];
     expect(memories.length).toBeGreaterThan(0);
     expect(r.party[0]!.friendship).toBeGreaterThan(before);
+  });
+});
+
+describe('raid types', () => {
+  function denRun(raidId: string, seed: string, returning = false) {
+    const run = chooseStarter(content, createRun(content, { runId: 'rt', seed, archetypeId: 'red' }), 0);
+    const node = run.stage!.map.nodes.find((n) => n.column === 1)!;
+    node.sides = node.sides.filter((s) => s.kind !== 'raid');
+    node.sides.push({ id: 'raid-t', kind: 'raid', raidId, used: false, returning: returning || undefined });
+    run.stage!.current = node.id;
+    run.money = 99999;
+    return run;
+  }
+  const bossHp = (r: ReturnType<typeof denRun>) => maxHp(content, r.battle!.enemyTeam[0]!);
+
+  it('a regional raid: scouting costs money and makes the boss weaker than rushing', () => {
+    const scout = enterRaid(content, denRun('ridge-blight', 'rt-1'), 'raid-t', 'scout');
+    const rush = enterRaid(content, denRun('ridge-blight', 'rt-1'), 'raid-t', 'rush');
+    expect(bossHp(scout)).toBeLessThan(bossHp(rush));
+    expect(99999 - scout.money).toBe(150 + 200);
+    expect(99999 - rush.money).toBe(150);
+    expect(rush.battle!.raid!.draftDelta).toBe(1);
+  });
+
+  it('a rival raid: helping or racing starts the boss hurt; leaving skips the fight', () => {
+    const help = enterRaid(content, denRun('rival-den', 'rt-2'), 'raid-t', 'help');
+    expect(help.battle!.enemyTeam[0]!.hp / bossHp(help)).toBeLessThan(0.65);
+    expect(help.battle!.raid!.rivalHelped).toBe(true);
+    const race = enterRaid(content, denRun('rival-den', 'rt-2'), 'raid-t', 'compete');
+    expect(race.battle!.raid!.timerLeft).toBe(12);
+    const left = enterRaid(content, denRun('rival-den', 'rt-2'), 'raid-t', 'leave');
+    expect(left.battle).toBeNull();
+    expect(left.phase).toBe('map');
+    expect(left.stage!.map.nodes.flatMap((n) => n.sides).find((s) => s.id === 'raid-t')!.used).toBe(true);
+  });
+
+  it('an escaped boss comes back in a later stage, stronger, and only once', () => {
+    const base = denRun('sleeping-snorlax', 'rt-3');
+    const normal = enterRaid(content, structuredClone(base), 'raid-t');
+    const back = enterRaid(content, denRun('sleeping-snorlax', 'rt-3', true), 'raid-t');
+    expect(back.battle!.enemyTeam[0]!.level).toBe(normal.battle!.enemyTeam[0]!.level + 3);
+    expect(bossHp(back)).toBeGreaterThan(bossHp(normal));
+    expect(back.battle!.raid!.returning).toBe(true);
+    expect(back.battle!.raid!.draftDelta).toBe(1);
+  });
+
+  it('a timed-out raid lets the boss escape; the next stage has it back as a returning den', () => {
+    let run = enterRaid(content, denRun('sleeping-snorlax', 'rt-4'), 'raid-t');
+    run.battle!.raid!.timerLeft = 1;
+    run = takeTurn(content, run, { kind: 'idle' }).run;
+    expect(run.battle).toBeNull();
+    expect(run.raids.escaped).toEqual(['sleeping-snorlax']);
+    const memory = run.story.histories[run.party[0]!.uid]?.memories.some((m) => m.text.includes('The One That Got Away'));
+    expect(memory).toBe(true);
+    for (const n of run.stage!.map.nodes) n.sides = n.sides.filter((x) => x.kind !== 'raid');
+    placeRaidDens(content, run);
+    const den = run.stage!.map.nodes.flatMap((n) => n.sides).find((x) => x.kind === 'raid');
+    expect(den?.returning).toBe(true);
+    expect(den?.raidId).toBe('sleeping-snorlax');
+    expect(run.raids.escaped).toEqual([]);
+  });
+
+  it('data: every kind has what it needs', () => {
+    const raids = content.raids.raids;
+    expect(raids.filter((r) => r.kind === 'regional').every((r) => r.approaches.length >= 2)).toBe(true);
+    expect(raids.filter((r) => r.kind === 'rival').every((r) => r.approaches.some((a) => a.leave) && r.approaches.some((a) => a.rivalHelps))).toBe(true);
+    expect(raids.filter((r) => r.kind === 'anomaly').length).toBeGreaterThanOrEqual(2);
   });
 });

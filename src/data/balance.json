@@ -487,7 +487,16 @@
   "fromStage": 1,
   "wildChance": 0.12,
   "bossIds": [
-   "tate"
+   "tate",
+   "ingo",
+   "emmet",
+   "tabitha",
+   "shelly",
+   "maxie",
+   "archie",
+   "cilan",
+   "chili",
+   "cress"
   ]
  },
  "shopSale": {

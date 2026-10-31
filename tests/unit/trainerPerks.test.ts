@@ -12,7 +12,7 @@ import {
   regionLevelOffset, releaseLimit, signatureMoveFor, startingAttributes, statPerk, statusChancePerk, statusTurnsPerk,
   survivalChance, syncHpPerks, xpPerk, boxCapacity, catchLevelOffset, ppCostExtra, rivalTeamTypes, rivalCounterBonus, weatherHealPercent, burnDamagePerk, inThreeStageLine, wildWeightPerk, partyLimit, itemSlotLimit,
   hypeMeterOf, thirdBossLevels, doubleBattleRewardPerk, singleBattleXpPerk, shopRefreshPerk, statusLengthPerk, poisonDamagePerk, evasionPerk, startingLevelOffset, championMoneyPerk, ordinaryMoneyPerk, critChancePerk, bonusFriendship,
-  isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, zMoveDelayTurns,
+  isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, bossMoneyPerk, statusMoveAccuracyPerk, shopEarlyStockPerk, shopEarlyRareStockPerk, zMoveDelayTurns,
   scaleHeldBonus, postBattleHealShare, rareItemWeightPerk, critDamagePerk, megaDelayTurns, eliteLevelOffset, enemyHealingBlocked,
   critChanceBonusPerk, catchMoneyPerk, moveFlagsOf, moveStyleOf, foodCount, unusualKind, bonusRewardChancePerk, fishingRareTriesPerk,
 } from '../../src/core/trainerPerks';
@@ -319,7 +319,8 @@ describe('trainer perks, batch 2', () => {
     });
 
     it("Ginter's shop has one more early entry; Elm's catches start two levels lower", () => {
-      expect(shopEarlyStockPerk(perks('ginter'))).toBe(1);
+      expect(shopEarlyStockPerk(perks('ginter'))).toBe(0);
+      expect(shopEarlyRareStockPerk(perks('ginter'))).toBe(2);
       expect(catchLevelOffset(perks('elm'))).toBe(-2);
     });
 

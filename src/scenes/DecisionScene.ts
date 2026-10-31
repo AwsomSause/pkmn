@@ -100,8 +100,11 @@ export class DecisionScene extends Phaser.Scene {
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
 
+  private compareStep?: (d: number) => void;
+
   private handleInput(action: InputAction): void {
     if (this.done || this.hatching) return;
+    if (!this.confirmMenu && !this.picker && (action === 'left' || action === 'right')) this.compareStep?.(action === 'left' ? -1 : 1);
     if (this.confirmMenu) this.confirmMenu.handle(action);
     else if (this.picker) this.picker.handle(action);
     else this.menu?.handle(action);
@@ -413,8 +416,26 @@ export class DecisionScene extends Phaser.Scene {
     const past = reunion !== undefined;
     const title = !past ? (caught.hatched ? `${species.name} hatched from the Egg!` : `You caught ${species.name}!`) : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
-    const lines = [...catchSummary(content, caught, run.party[0]), masteryPreview(content, services().session.profile, run, caught)];
-    this.add.text(400, 92, [...lines, '', blocked ? `${blocked}.` : full ? `Your party is full (${partyMax}).` : `Party: ${run.party.length}/${partyMax}`].join('\n'), textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
+    const profile = session.profile;
+    const extras = {
+      compact: session.settings.catchDetail === 'compact',
+      firstDiscovery: !past && !profile.speciesCaught.includes(caught.speciesId),
+      source: past ? undefined : caught.hatched ? 'Hatched from an Egg' : 'Caught on this run',
+    };
+    const summaryText = this.add.text(400, 92, '', textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
+    let compareIdx = 0;
+    const drawSummary = (): void => {
+      const other = run.party[compareIdx];
+      const lines = [...catchSummary(content, caught, other, extras), masteryPreview(content, profile, run, caught)];
+      const hint = run.party.length > 1 ? `(Left/Right: compare with ${other ? getSpecies(content, other.speciesId).name : 'nobody'})` : '';
+      summaryText.setText([...lines, hint, blocked ? `${blocked}.` : full ? `Your party is full (${partyMax}).` : `Party: ${run.party.length}/${partyMax}`].join('\n'));
+    };
+    drawSummary();
+    this.compareStep = (d: number): void => {
+      if (run.party.length < 2) return;
+      compareIdx = (compareIdx + d + run.party.length) % run.party.length;
+      drawSummary();
+    };
 
     const candyText = `${candies} cand${candies === 1 ? 'y' : 'ies'}`;
     const keepsake = candies * content.balance.reunion.keepsakeCandyMultiplier;

@@ -515,6 +515,8 @@ export const BASE_COUNTER_NAMES = [
   /** Pokémon swapped at a Trade Post. */
   'tradesMade',
   'totemsWon',
+  /** Anomaly raids won. */
+  'anomalyRaidsWon',
   'rivalBattlesWon',
   /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
   'eventClues',
@@ -795,6 +797,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
   z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
+  /** This many more locked shop entries for rare or epic items are for sale early (Ginter). */
+  z.object({ kind: z.literal('shopEarlyRareStock'), count: z.number().int().positive() }),
   /** Damage taken by a Pokémon on its first turn after it enters battle (switching in). */
   z.object({ kind: z.literal('switchGuard'), value: z.number().positive() }),
   /** Damage dealt by a Pokémon that has been out for at least a full turn. */
@@ -1752,6 +1756,8 @@ export const BalanceSchema = z.object({
   focusEffects: z.boolean().default(true),
   /** Gym, Elite Four and champion aces may start a stage lower and evolve mid-battle (Battle Drama P5). */
   bossEvolution: z.boolean().default(true),
+  /** Rival battle styles (berserker, revenge-striker, last-stand) do something in the fight (Living Rivalry §3). */
+  styleTricks: z.boolean().default(true),
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),

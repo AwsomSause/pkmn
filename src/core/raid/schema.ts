@@ -35,6 +35,28 @@ export const RaidModifiersSchema = z.object({
 });
 export type RaidModifiers = z.infer<typeof RaidModifiersSchema>;
 
+/** How the player takes on a raid (regional approach, rival choice). Chosen at the den; the cost is paid on entering. */
+export const RaidApproachSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  label: z.string().min(1),
+  text: z.string().min(1),
+  cost: z.number().int().min(0).default(0),
+  /** Added to the boss's HP boost (percent; negative = a weaker boss). */
+  hpDeltaPercent: z.number().int().min(-60).max(100).default(0),
+  /** The boss starts the fight at this share of its HP (a rival already fought it); shields above it are gone. */
+  startHp: Fraction.optional(),
+  /** Sets or shifts the timer (a race): added to the raid's timer, or to 20 when it has none. */
+  timerDelta: z.number().int().min(-15).max(15).default(0),
+  /** Prize money and extra draft choices after the win. */
+  rewardPercent: z.number().int().min(10).max(200).default(100),
+  draftDelta: z.number().int().min(-2).max(2).default(0),
+  /** A rival trainer fights beside you ("The Rival Who Stood Beside You" for the Pokémon in front). */
+  rivalHelps: z.boolean().default(false),
+  /** Walk away: no fight, the den is used up. */
+  leave: z.boolean().default(false),
+});
+export type RaidApproach = z.infer<typeof RaidApproachSchema>;
+
 export const RaidRewardSchema = z.object({
   /** Prize money = this × the boss's level. */
   moneyPerLevel: z.number().int().min(0),
@@ -73,6 +95,9 @@ export const RaidDefSchema = z.object({
   /** The raid ends when the timer runs out. */
   timerTurns: z.number().int().min(5).max(60).nullable().default(null),
   weather: WeatherSchema.nullable().default(null),
+  /** wild: the plain den. regional: choose how to prepare. rival: a rival is already fighting it. anomaly: strange rules and a research find. */
+  kind: z.enum(['wild', 'regional', 'rival', 'anomaly']).default('wild'),
+  approaches: z.array(RaidApproachSchema).max(3).default([]),
   modifiers: RaidModifiersSchema.default({}),
   /** Moves the boss knows beyond the usual four (up to two more). */
   extraMoves: z.array(z.string()).max(2).default([]),
