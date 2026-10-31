@@ -164,6 +164,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   // Load/Save screens (UIE pack Graphics/Custom UI/Load and Save): the title screen's Continue card and the Save data backdrop.
   { id: 'ui.load.card', kind: 'image', category: 'ui', path: 'images/packs/uie/load/continue_card.png', lazy: true },
   { id: 'ui.save.bg', kind: 'image', category: 'ui', path: 'images/packs/uie/load/save_background.png', lazy: true },
+  // Pokédex info page art (UIE pack Graphics/Custom UI/Dex), behind a species' page in the Research Room.
+  { id: 'ui.dex.bg_info', kind: 'image', category: 'ui', path: 'images/packs/uie/dex/bg_info.png', lazy: true },
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
