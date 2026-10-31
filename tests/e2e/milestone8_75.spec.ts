@@ -42,6 +42,8 @@ async function showDraft(page: Page, draft: string[], passives: Record<string, n
     [draft, passives] as const,
   );
   await waitForScene(page, 'Reward');
+  // The card ignores Enter for its first 220 ms of game time, which runs slower than the clock on a busy runner.
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Reward').inputReady), { timeout: 10_000 }).toBe(true);
 }
 
 test.beforeEach(async ({ page }) => {
