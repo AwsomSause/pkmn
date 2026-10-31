@@ -76,6 +76,8 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
       return run.story.rivals.some((r) => r.encounters >= c.atLeast);
+    case 'rivalAlly':
+      return run.story.rivals.some((r) => r.state === 'ally');
     case 'crisis':
       return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
     case 'aid':
@@ -166,6 +168,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Your trainer won't do this`;
     case 'friendship':
       return `Needs a Pokémon with friendship ${c.atLeast}`;
+    case 'rivalAlly':
+      return 'Needs a rival who has become a friend';
     case 'rivalMet':
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':
