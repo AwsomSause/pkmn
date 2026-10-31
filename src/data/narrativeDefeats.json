@@ -1,0 +1,18 @@
+{
+  "note": "Narrative rival defeats (M12, spec section 3): a rival fight the player is meant to lose without the run ending. Rare, foreshadowed, once per rival.",
+  "enabled": true,
+  "maxPerRun": 1,
+  "defs": [
+    {
+      "id": "outclassed",
+      "minMeetings": 2,
+      "minRegionIndex": 0,
+      "levelBonus": 6,
+      "foreshadow": "It says it has been training somewhere you have not been.",
+      "introLine": "This time the rival does not hold back.",
+      "defeatLine": "Your last Pokémon can no longer stand. This is not how it ends, but it hurts.",
+      "victoryLine": "I told you I would be ahead of you. Keep up, if you can.",
+      "afterLine": "They say you were beaten by your own rival."
+    }
+  ]
+}
