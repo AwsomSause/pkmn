@@ -116,8 +116,8 @@ export function damageDealtPerk(perks: Perks | undefined, i: DamageDealtInfo): n
   v *= product(perks, 'heldItemDamageMultiplier', (m) => m.holding === Boolean(i.userHoldsItem));
   if (i.userIsMega) v *= product(perks, 'megaDamageMultiplier');
   if (i.partyHasMega && !i.userIsMega) v *= product(perks, 'nonMegaDamageMultiplier');
-  const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
-  if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'player' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
+  const wx = i.weather;
+  if (wx) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'player' && m.weather === wx && (!m.moveType || m.moveType === i.moveType));
   return v;
 }
 
@@ -146,8 +146,8 @@ export function damageTakenPerk(perks: Perks | undefined, i: DamageTakenInfo): n
   if (i.targetIsMega) v *= product(perks, 'megaDamageTakenMultiplier');
   if ((i.effectiveness ?? 1) > 1) v *= product(perks, 'superEffectiveTakenMultiplier');
   if (i.targetTurnsOut === 0) v *= product(perks, 'switchGuard');
-  const rainOrSun = i.weather === 'rain' || i.weather === 'sun' ? i.weather : null;
-  if (rainOrSun) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'enemy' && m.weather === rainOrSun && (!m.moveType || m.moveType === i.moveType));
+  const wx = i.weather;
+  if (wx) v *= product(perks, 'weatherDamageMultiplier', (m) => m.side === 'enemy' && m.weather === wx && (!m.moveType || m.moveType === i.moveType));
   return v;
 }
 
@@ -558,4 +558,9 @@ export function hypeMeterOf(perks: Perks | undefined): { needed: number; damage:
 
 export function thirdBossLevels(perks: Perks | undefined): number {
   return sum(perks, 'thirdBossLevels', (m) => m.value);
+}
+
+/** Calem: the share of a Mega Stone recipe's materials that is charged (1 without the perk). */
+export function megaCraftCost(perks: Perks | undefined): number {
+  return product(perks, 'megaCraftCost');
 }
