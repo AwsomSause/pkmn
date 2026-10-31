@@ -3,6 +3,7 @@
 import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
 import { loadAssets } from './ui/lazyAssets';
 import { installTouchControls } from './ui/touchControls';
+import { sheenSweep } from './ui/battleFx/transitions';
 import Phaser from 'phaser';
 import { regionIdentity } from './core/presentation/regionIdentity';
 import { getContent } from './data';
@@ -94,7 +95,10 @@ function start(): void {
         const aeroScenery = new Set(['Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'Minigame', 'StarterSelect', 'RunPrep', 'GameOver', 'HallOfFame', 'Credits']);
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
-            if (scene.scene.key !== 'Boot') scene.cameras.main.fadeIn(220, 14, 11, 18);
+            if (scene.scene.key !== 'Boot') {
+              scene.cameras.main.fadeIn(220, 14, 11, 18);
+              sheenSweep(scene, session.settings.battleAnimations);
+            }
             if (aeroScenery.has(scene.scene.key)) {
               // Each region tints the sky its own way (catalog 62).
               const run = session.run;

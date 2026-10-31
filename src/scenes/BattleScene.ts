@@ -52,6 +52,7 @@ import { wouldRefuse } from '../core/bond';
 import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
+import { championGlow, levelUpBanner } from '../ui/battleFx/transitions';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { addEnvironment } from '../ui/battleFx/environment';
 import { environmentStory } from '../core/presentation/environmentStory';
@@ -265,6 +266,7 @@ export class BattleScene extends Phaser.Scene {
       event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
       shadowFoe: Boolean(envFoe?.shadow),
     }), this.motion);
+    if (boss?.role === 'champion') championGlow(this, this.field, this.motion);
     this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
     this.weatherLayer.set(run.battle?.weather?.id ?? null);
     this.fieldBase = this.field.length;
@@ -1811,6 +1813,7 @@ export class BattleScene extends Phaser.Scene {
             this.shown.player.level = e.level;
             if (real && real.level === e.level) this.shown.player.hp = real.hp;
             void this.refreshInfoBox(this.playerBox, this.shown.player, false);
+            levelUpBanner(this, this.playerBox.container.x + 120, this.playerBox.container.y - 12, e.level, this.motion, services().session.settings.effectIntensity);
           }
           break;
         default:
