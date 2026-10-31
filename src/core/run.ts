@@ -1592,7 +1592,8 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
   early.push(...earlyRare);
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
-  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item))];
+  const modeStock = (content.balance.modeShops[run.rules?.modeId ?? ''] ?? []).filter((x) => content.items.has(x.item) && !content.shop.some((e) => e.item === x.item));
+  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item)), ...modeStock];
   return stock.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 

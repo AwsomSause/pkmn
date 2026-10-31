@@ -227,6 +227,8 @@ export function eligibleEvents(content: Content, run: RunState): EventDef[] {
       e.minStage <= n &&
       // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on (or a trainer who brings them).
       (!e.gameEvent || packs.has(e.gameEvent)) &&
+      // A mode's own stops (Spooky Mode's clues, boss and finale) only appear in runs of that mode.
+      (!e.mode || run.rules.modeId === e.mode) &&
       !(run.itemCounters?.[`event-seen:${e.id}`]) &&
       !recruitsOwned(run, e) &&
       e.requires.every((c) => conditionMet(content, run, c)),
@@ -244,7 +246,7 @@ function pickEvent(content: Content, run: RunState, rng: Rng, taken: Set<string>
       weight:
         (cfg.rarityWeights[e.rarity] ?? 0) *
         (theme && e.types.some((t) => theme.types.includes(t)) ? cfg.themeWeight : 1) *
-        (featured.has(e.id) || e.gameEvent ? cfg.gameEventWeight : 1),
+        (featured.has(e.id) || e.gameEvent || e.mode ? cfg.gameEventWeight : 1),
     }))
     .filter((p) => p.weight > 0);
   if (pool.length === 0) return null;
@@ -273,7 +275,8 @@ export function addEventStops(content: Content, run: RunState): void {
   const open = new Set(eligibleEvents(content, run).map((e) => e.id));
   // A run milestone (catalog 99) is offered at the middle stage of every region.
   const milestone = (run.stage?.index ?? 0) === 2 ? ['milestone-dawn', 'milestone-crossroads', 'milestone-summit', 'milestone-embers'].find((id) => open.has(id)) : undefined;
-  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone].filter((id): id is string => !!id && open.has(id));
+  const modeStops = [...open].filter((id) => content.events.get(id)!.modeStop);
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, ...modeStops].filter((id): id is string => !!id && open.has(id));
   for (const id of forced) {
     taken.add(id);
     place(id, false);
