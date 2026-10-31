@@ -6,7 +6,7 @@ Design only. Nothing here is approved or built. Parts: `features-01` (F-MENU, F-
 Hub pages and Preparation Desk, Trainer Plaza, Bank, Legacy Gallery, Research Tree, Prestige, Trainer Network, Item Museum, Regional Intelligence Board, Moment Codex, Wardrobe, Trainer Card, Event Archive, Chronicle, playstyle titles, mastery, Daily Run, Draft Lab, Regional Circuit, Research Expedition, Spooky Mode, raids, Totems, expeditions, SOS, living rival, nemesis, party life, chemistry. Entries marked `F-NEW-*` extend these directly. `ideas/features.md` (220 one-liners) overlaps some Hub/QoL ideas; entries here are broader bundles, not repeats.
 
 ## Quality note
-A depth pass was applied to parts 2 to 4: every entry now has concrete rules and a specific balance or risk note. Part 1 is the most developed; the last 3 to 4 entries of some categories (e.g. F-ACC, F-SPEC, F-COM tail) are still shorter than the rest and are the first candidates for another pass.
+A depth pass was applied to parts 2 to 4: every entry has concrete rules and a specific balance or risk note, including the accessibility, spectator and community tails. Part 1 is the most developed.
 
 ## Prioritization
 **Essential (foundations first):**

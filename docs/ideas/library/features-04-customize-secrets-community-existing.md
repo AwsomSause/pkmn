@@ -108,37 +108,37 @@ Design only; nothing approved or built. Field key and ID scheme: see `features-0
 **What:** Share a team as a code. **How:** Compact versioned encoding of species, moves, items, nicknames. **Trigger:** Menu. **Feel:** Social. **Deps:** save format. **Rarity:** always on. **Cx:** M. **Balance:** validate with Zod on import; reject illegal sets.
 
 ### F-COM-04 · Rival Exchange
-**What:** Use a friend's team as your rival. **How:** Import a code; it becomes your rival's ace line-up with their name. **Trigger:** Menu. **Feel:** Personal. **Deps:** rival. **Rarity:** always on. **Cx:** L. **Balance:** level-normalised.
+**What:** Use a friend's team as your rival. **How:** Import a team code; it becomes your rival's ace line-up and display name for the run, with persona taken from your settings. **Trigger:** Menu. **Feel:** Personal rivalry. **Deps:** rival, team codes. **Rarity:** always on. **Cx:** L. **Balance:** levels normalised to the rival curve; invalid sets rejected by Zod.
 
 ### F-COM-05 · Mod Packs
-**What:** Community data packs. **How:** Zod-validated JSON for events, trainers, dialogue; sandboxed with a content status of "community". **Trigger:** Settings. **Feel:** Extensible. **Deps:** schemas. **Rarity:** optional. **Cx:** XL. **Balance:** packs cannot change core saves; show a warning and disable achievements.
+**What:** Community data packs. **How:** Zod-validated JSON bundles (events, trainers, dialogue, cosmetics) loaded from files; packs run in a sandbox flagged "community" with their own content status. **Trigger:** Settings. **Feel:** Endless community content. **Deps:** schemas, content gate. **Rarity:** optional. **Cx:** XL. **Balance:** packs cannot change core saves, disable achievements and Daily Run, and show a warning.
 
 ### F-COM-06 · Fan Art Frames
-**What:** Frames for your own images. **How:** Local image files displayed in Hub frames. **Trigger:** Settings. **Feel:** Personal. **Deps:** files. **Rarity:** optional. **Cx:** S. **Balance:** local only.
+**What:** Frames for your own pictures. **How:** Pick local images shown in Hub frames, downscaled and stored locally. **Trigger:** Settings. **Feel:** Personal Hub. **Deps:** files. **Rarity:** optional. **Cx:** S. **Balance:** local only, size-capped to protect storage.
 
 ### F-COM-07 · Community Name Pools
-**What:** Shared lists of names. **How:** Import names and quotes lists. **Trigger:** Settings. **Feel:** Variety. **Deps:** data. **Rarity:** optional. **Cx:** S. **Balance:** filter and length cap.
+**What:** Shared name lists. **How:** Import lists for trainers, nicknames, and quotes; used for random generation. **Trigger:** Settings. **Feel:** Variety. **Deps:** data. **Rarity:** optional. **Cx:** S. **Balance:** filter and length cap on import.
 
 ### F-COM-08 · Guestbook
-**What:** A Hub guestbook. **How:** Import message codes from friends. **Trigger:** Code. **Feel:** Warm. **Deps:** Hub. **Rarity:** optional. **Cx:** M. **Balance:** filter messages.
+**What:** A Hub guestbook. **How:** Import message codes from friends; messages appear as notes on a corkboard with the sender's trainer plate. **Trigger:** Code import. **Feel:** Warm. **Deps:** Hub, rank plate. **Rarity:** optional. **Cx:** M. **Balance:** filter messages, cap to 50.
 
 ### F-COM-09 · Challenge Creator
-**What:** Design your own rules. **How:** Rule builder (modifiers, starters, limits) exporting a share code. **Trigger:** Menu. **Feel:** Creative. **Deps:** modifiers. **Rarity:** optional. **Cx:** L. **Balance:** validate solvability by sim hint.
+**What:** Design custom rule sets. **How:** Rule builder (starter sets, modifiers, bans, win condition) producing a share code and a difficulty estimate from sim. **Trigger:** Menu. **Feel:** Creative. **Deps:** modifiers, sim. **Rarity:** optional. **Cx:** L. **Balance:** warn on unwinnable combos.
 
 ### F-COM-10 · Co-Writing Events
-**What:** Players write events. **How:** Template editor with validation; export packs. **Trigger:** Menu. **Feel:** Creative. **Deps:** events. **Rarity:** optional. **Cx:** XL. **Balance:** validation and sandbox.
+**What:** Players author events. **How:** Template editor (trigger, options, outcomes, rarity) with live validation and test play; exports a pack. **Trigger:** Menu. **Feel:** Creative. **Deps:** events, schemas. **Rarity:** optional. **Cx:** XL. **Balance:** validation, rarity caps, and sandbox rules.
 
 ### F-COM-11 · Leaderboard Sheets
-**What:** Static leaderboards. **How:** Export a seed's scores as a sheet. **Trigger:** Menu. **Feel:** Competitive. **Deps:** seeds. **Rarity:** optional. **Cx:** M. **Balance:** unverified label.
+**What:** Static leaderboards for seeds. **How:** Export a seed's best results as a sheet others can import to compare. **Trigger:** Menu. **Feel:** Competitive. **Deps:** seeds. **Rarity:** optional. **Cx:** M. **Balance:** unverified label.
 
 ### F-COM-12 · Community Bingo
-**What:** Weekly bingo card. **How:** 5x5 goals from quests; shared by seed. **Trigger:** Date. **Feel:** Fun. **Deps:** quests. **Rarity:** weekly. **Cx:** M. **Balance:** no gating.
+**What:** A weekly shared bingo card. **How:** 5x5 goals from quests generated by week seed; free square in the middle. **Trigger:** Date. **Feel:** Fun. **Deps:** quests. **Rarity:** weekly. **Cx:** M. **Balance:** no gating.
 
 ### F-COM-13 · Tip Exchange
-**What:** Player tips on loading screens. **How:** Imported tip lists. **Trigger:** Settings. **Feel:** Community voice. **Deps:** loading screens. **Rarity:** optional. **Cx:** S. **Balance:** filter and length cap.
+**What:** Player tips on loading screens. **How:** Import tip lists that show alongside built-in tips. **Trigger:** Settings. **Feel:** Community voice. **Deps:** loading screens. **Rarity:** optional. **Cx:** S. **Balance:** filter and length cap.
 
 ### F-COM-14 · Shared Hall of Fame Export
-**What:** Export your Hall of Fame as a web page. **How:** Static HTML. **Trigger:** Menu. **Feel:** Pride. **Deps:** files. **Rarity:** optional. **Cx:** M. **Balance:** self-contained, no tracking.
+**What:** Hall of Fame as a web page. **How:** Generates a self-contained static HTML with teams, titles, and stats. **Trigger:** Menu. **Feel:** Pride. **Deps:** files. **Rarity:** optional. **Cx:** M. **Balance:** no tracking and no external requests.
 
 ---
 
