@@ -8,6 +8,8 @@ import { addItem, itemCount } from './items';
 import { pickStones } from './expedition/flow';
 import type { ArchetypeModifier, Content } from './contentSchema';
 import type { RunState } from './state';
+import { runPerks } from './archetypes';
+import { megaCraftCost } from './trainerPerks';
 
 const Cost = z.record(z.string(), z.number().int().positive());
 const Gives = z.discriminatedUnion('kind', [
@@ -56,9 +58,16 @@ export function gainBattleMaterials(run: RunState, types: string[], kind: 'wild'
   return gained;
 }
 
+/** The materials a recipe charges this run (Calem's discount on Mega Stones, rounded up, at least 1). */
+export function recipeCost(content: Content, run: RunState, r: Recipe): Record<string, number> {
+  if (r.gives.kind !== 'megaStone') return r.cost;
+  const share = megaCraftCost(runPerks(content, run));
+  return share === 1 ? r.cost : Object.fromEntries(Object.entries(r.cost).map(([id, n]) => [id, Math.max(1, Math.ceil(n * share))]));
+}
+
 export function recipeProblem(content: Content, run: RunState, r: Recipe): string | null {
   if (run.badges.length < r.minBadges) return `Needs ${r.minBadges} badge${r.minBadges === 1 ? '' : 's'}.`;
-  for (const [id, n] of Object.entries(r.cost)) if ((run.materials[id] ?? 0) < n) return `Needs ${n} ${materialName(id)} (you have ${run.materials[id] ?? 0}).`;
+  for (const [id, n] of Object.entries(recipeCost(content, run, r))) if ((run.materials[id] ?? 0) < n) return `Needs ${n} ${materialName(id)} (you have ${run.materials[id] ?? 0}).`;
   if (run.money < r.money) return `You need ₽${r.money}.`;
   if (r.gives.kind === 'megaStone' && pickStones(content, run, 1, new Rng(hashSeed(`${run.seed}::craft-stone`))).length === 0) return 'No one in your party can use a Mega Stone you do not own.';
   return null;
@@ -66,7 +75,7 @@ export function recipeProblem(content: Content, run: RunState, r: Recipe): strin
 
 /** Spends the cost and applies the result (mutates `run`; the caller checked `recipeProblem`). Returns a message. */
 export function applyRecipe(content: Content, run: RunState, r: Recipe): string {
-  for (const [id, n] of Object.entries(r.cost)) {
+  for (const [id, n] of Object.entries(recipeCost(content, run, r))) {
     run.materials[id] = (run.materials[id] ?? 0) - n;
     if (run.materials[id] === 0) delete run.materials[id];
   }

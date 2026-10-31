@@ -694,7 +694,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** Extra turns of weather your side sets up. */
   z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
   /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
-  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: z.enum(['rain', 'sun']), side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: WeatherSchema, side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Multiplier on how often a group of wild Pokémon is offered. */
   z.object({ kind: z.literal('encounterWeightMultiplier'), group: z.enum(['legendary', 'rare']), value: z.number().positive() }),
   /** Chance of your Hyper moments. */
@@ -745,6 +745,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
   /** Mega Evolved Pokémon of yours take more damage. */
   z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Calem: crafting a Mega Stone costs this share of its materials (rounded up, at least 1). */
+  z.object({ kind: z.literal('megaCraftCost'), value: z.number().positive().max(1) }),
   /** Your side's first attack in a battle deals `first`× damage, every later attack `later`×. */
   z.object({ kind: z.literal('firstAttackDamage'), first: z.number().positive(), later: z.number().positive() }),
   /** Damage dealt by your Pokémon that are holding an item (holding: true) or not holding one (false). */
