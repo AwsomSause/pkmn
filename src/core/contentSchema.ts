@@ -1997,6 +1997,12 @@ export const BalanceSchema = z.object({
     fortune: z.object({ categories: z.array(z.string()).min(1), weight: z.number().gt(1).max(3) }),
     /** Survival license: the defeat-prevention item the shop then stocks, its price and badge gate. */
     survival: z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) }),
+    /** Regional Accounts (tier 4): a region cleared once adds this item to every later shop. */
+    regional: z.record(z.string(), z.object({ item: z.string(), price: z.number().int().positive() })),
+    /** Loan Challenges (tier 3): extra starting money; finish with fewer badges than `badges` and the Bank takes `penalty` credits from the payout. */
+    loan: z.object({ money: z.number().int().positive(), badges: z.number().int().positive(), penalty: z.number().int().positive() }),
+    /** Collector's Vault (tier 5): keeps up to `slots` rare+ items from finished runs; one can start a later run. */
+    vault: z.object({ slots: z.number().int().positive(), minRarity: z.enum(['rare', 'epic']) }),
     /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
     milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
