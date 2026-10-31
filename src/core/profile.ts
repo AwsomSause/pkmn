@@ -27,6 +27,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     activeTitle: null,
     cardFrame: 'classic',
     lifetimeBankCredits: 0,
+    bankTier: 1,
     runHistory: [],
     lastPayout: null,
     unlockedPools: [],

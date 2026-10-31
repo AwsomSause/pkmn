@@ -287,7 +287,24 @@
    "perEliteFour": 40,
    "perChampion": 150,
    "perRegion": 100
-  }
+  },
+  "tiers": [
+   { "tier": 2, "name": "Loadouts & Field Licenses", "cost": 300, "blurb": "Two more loadout preset slots; Scavenger and Emergency Reserve licenses." },
+   { "tier": 3, "name": "Research Exchange", "cost": 900, "blurb": "The Exchange Counter swaps credits and Research Points; Fortune license." },
+   { "tier": 4, "name": "Regional Accounts", "cost": 2200, "blurb": "Survival license; regional accounts pay out after champion wins." },
+   { "tier": 5, "name": "Grand Archive", "cost": 5000, "blurb": "Prestige card frame and the Collector's Vault." }
+  ],
+  "tierPresetBonus": 2,
+  "reserveRate": 0.25,
+  "exchange": { "credits": 100, "points": 25, "backPoints": 50, "backCredits": 10 },
+  "scavenger": { "chance": 0.2, "money": 150 },
+  "fortune": { "categories": ["currency", "attribute"], "weight": 1.3 },
+  "survival": { "item": "last-stand-charm", "price": 3500, "minBadges": 2 },
+  "milestones": [
+   { "credits": 500, "title": "Saver" },
+   { "credits": 2000, "title": "Banker" },
+   { "credits": 6000, "title": "Magnate" }
+  ]
  },
  "research": {
   "perSpeciesSeen": 5,

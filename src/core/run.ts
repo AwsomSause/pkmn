@@ -47,6 +47,7 @@ import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
+import { runLicenses, survivalEntry } from './bank';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
@@ -172,6 +173,8 @@ export interface NewRunOptions {
   gameEvents?: string[];
   /** The best raid tier the account has won (profile best counter "raidBestTier"); higher tiers stay closed. Default: every tier open. */
   raidTierUnlocked?: number;
+  /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
+  licenses?: string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -223,6 +226,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     box: [],
     // A game event's themed rules work like trainer perks for the whole run.
     perkEffects: gameEventModifiers(content, opts.gameEvents ?? []),
+    licenses: runLicenses(opts.licenses ?? []),
     signatureApplied: {},
     hype: 0,
     tempEffects: [],
@@ -1352,7 +1356,7 @@ export function healParty(content: Content, run: RunState): void {
  * and the Member Card and Wepear Berry put the next locked entries on sale early.
  * Key items you own aren't sold again.
  */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects'>> & MapItemRun): Content['shop'] {
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects' | 'licenses'>> & MapItemRun): Content['shop'] {
   const noRevive = run.rules ? noRevives(run.rules) : false;
   const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
   const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
@@ -1362,7 +1366,9 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
     .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
-  return content.shop.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
+  const survival = survivalEntry(content, run.licenses);
+  const stock = survival && !content.shop.some((e) => e.item === survival.item) ? [...content.shop, survival] : content.shop;
+  return stock.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 
 /** Whether an entry is on sale only through the Black Market (your badges haven't opened it). */
@@ -1428,12 +1434,12 @@ export function sellItem(content: Content, current: RunState, itemId: string): {
 /** Buys one of an item at the shop. */
 export function buyItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
   assertPhase(current, 'shop');
-  const entry = content.shop.find((e) => e.item === itemId);
+  const entry = content.shop.find((e) => e.item === itemId) ?? (survivalEntry(content, current.licenses)?.item === itemId ? survivalEntry(content, current.licenses) : undefined);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
   if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
   const badges = shopBadgesNeeded(content, current, entry);
-  if (!shopStock(content, current).includes(entry)) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
+  if (!shopStock(content, current).some((e) => e.item === entry.item)) throw new Error(`The shop sells ${item.name} once you have ${badges} badges.`);
   const price = shopPrice(content, current, entry);
   if (current.money < price) throw new Error(`You need ₽${price} for a ${item.name}.`);
   const run = structuredClone(current);

@@ -904,6 +904,8 @@ export const RunStateSchema = z.object({
   box: z.array(PokemonInstanceSchema).default([]),
   /** Modifiers the run's signature choices added to the trainer's (core/signature.ts). */
   perkEffects: z.array(ArchetypeModifierSchema).default([]),
+  /** Bank licenses owned when the run began (Scavenger, Fortune, Survival work inside the run). Older runs have none. */
+  licenses: z.array(z.string()).optional(),
   /** Effects of the last temporary signature choice per mechanic, so the next choice can replace them. */
   /** Encore! Hype carried between battles (reset after a boss battle). */
   hype: z.number().int().min(0).default(0),
@@ -1068,6 +1070,8 @@ export const ProfileSchema = z.object({
   /** The card frame on show around the trainer card (Wardrobe, core/wardrobe.ts). */
   cardFrame: z.string(),
   lifetimeBankCredits: z.number().int().min(0),
+  /** The Bank tier (1 to 5, core/bank.ts): higher tiers open services, not bigger payouts. */
+  bankTier: z.number().int().min(1).max(5).default(1),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),

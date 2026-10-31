@@ -12,6 +12,7 @@ import { requirementProgress } from './progress';
 import { masteredStarters } from './mastery';
 import type { Rng } from './rng';
 import { baseStatTotal, isNative, isWildEligible, wildEligibleSpecies } from './themes';
+import { bankTier, presetSlotCount } from './bank';
 import type { LoadoutPreset, Profile, RunPrep } from './state';
 
 // ---------- starter pools ----------
@@ -141,6 +142,7 @@ export function licenseProblem(profile: Profile, license: License): string | nul
   const status = licenseStatus(profile, license);
   if (status === 'owned') return `You already own the ${license.name}.`;
   if (status === 'locked') return `Not yet: ${license.unlockText}.`;
+  if (bankTier(profile) < license.tier) return `Needs Bank tier ${license.tier}.`;
   if (profile.bankCredits < license.cost) return `You need ${license.cost} Bank Credits (you have ${profile.bankCredits}).`;
   return null;
 }
@@ -372,7 +374,7 @@ export function typeName(type: TypeName): string {
 
 /** Stores a loadout in a preset slot. Returns a new profile. */
 export function savePreset(content: Content, current: Profile, slot: number, preset: LoadoutPreset): Profile {
-  if (slot < 0 || slot >= content.balance.presetSlots) throw new Error(`There is no preset slot ${slot + 1}`);
+  if (slot < 0 || slot >= presetSlotCount(content, current)) throw new Error(`There is no preset slot ${slot + 1}`);
   const profile = structuredClone(current);
   while (profile.presets.length <= slot) profile.presets.push(null);
   profile.presets[slot] = structuredClone(preset);

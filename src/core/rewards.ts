@@ -16,6 +16,7 @@
 // item already at its max is a free re-roll of the draft (director, answer 5).
 
 import { noRevives } from './rules';
+import { fortuneBias } from './bank';
 import { moneyMultiplier, runArchetype } from './archetypes';
 import { evolutionLevelOffset, rareItemWeightPerk } from './trainerPerks';
 import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
@@ -122,7 +123,7 @@ export function generateDraft(
   const byTier = new Map<Rarity, Reward[]>(RARITIES.map((t) => [t, eligible.filter((r) => r.rarity === t)]));
   const repeatWeight = content.balance.repeatFamilyWeight * (1 - draftVariety);
   // A draft archetype from the Preparation Desk leans the family odds, nothing more.
-  const bias = run.prep?.tokenId ? content.prepTokens.get(run.prep.tokenId)?.draftBias ?? null : null;
+  const bias = (run.prep?.tokenId ? content.prepTokens.get(run.prep.tokenId)?.draftBias ?? null : null) ?? fortuneBias(content, run.licenses);
   const chosen: string[] = [...forced];
   if (forced.some((id) => content.rewards.get(id)!.category === 'attribute')) for (const p of byTier.values()) for (let i = p.length - 1; i >= 0; i--) if (p[i]!.category === 'attribute') p.splice(i, 1);
   const families = new Set<string>(forced.map((id) => rewardFamily(content.rewards.get(id)!)));
