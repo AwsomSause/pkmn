@@ -2307,6 +2307,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   /** Rival gauntlet: whether a chain of rival fights is running. */
   z.object({ kind: z.literal('gauntlet'), active: z.boolean() }),
+  /** Previous-Run Gauntlet: at least this many past teams are kept and no past-team gauntlet is running. */
+  z.object({ kind: z.literal('pastTeams'), atLeast: z.number().int().min(1) }),
+  /** Lost-and-Found: an item from an earlier run is waiting to be recovered. */
+  z.object({ kind: z.literal('keepsake') }),
   /** Grand-Enemy hunt: clues found so far (at least / at most). */
   /** World-state callback: a story flag (set by a `flag` effect) is at least this. */
   z.object({ kind: z.literal('flag'), key: z.string(), atLeast: z.number().int().min(0).default(1), atMost: z.number().int().min(0).default(99) }),
@@ -2398,6 +2402,10 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('tournament'), round: z.number().int().min(0).max(9) }),
   /** Rival gauntlet: starts a chain of this many rivals you have met (one per stage). */
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
+  /** Previous-Run Gauntlet: starts a chain of this many teams from your past runs (one per stage). */
+  z.object({ kind: z.literal('pastGauntlet'), teams: z.number().int().min(1).max(5) }),
+  /** Lost-and-Found: recovers one item from an earlier run, told with its history. */
+  z.object({ kind: z.literal('recoverKeepsake') }),
   /** World-state callback (catalog 75): adds to a named story flag that later events can read. */
   z.object({ kind: z.literal('flag'), key: z.string().regex(/^[a-z][a-z0-9-]*$/), amount: z.number().int().default(1) }),
   /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */

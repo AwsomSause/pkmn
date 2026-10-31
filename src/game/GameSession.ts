@@ -16,6 +16,8 @@ import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
 import { applyStartGrants, startGrants } from '../core/legacy';
+import { applyHeirloom, chooseHeirloom, spendHeirloom } from '../core/memories/heirloom';
+import { pastDigest } from '../core/memories/past';
 import * as Timeline from '../core/timeline/genesis';
 import { captureOrigin, timelineOutcome } from '../core/timeline/frontRunner';
 import { buyCandyPerk } from '../core/candyShop';
@@ -140,6 +142,10 @@ export class GameSession {
     this.run = Run.createRun(this.content, { ...opts, runId: randomId('run'), pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory });
     const grants = startGrants(this.content, this.profile, archetypeId);
     applyStartGrants(this.content, this.run, this.profile);
+    // Memories: what earlier runs left behind (ghosts, keepsakes, old friends, the chosen heirloom). Picked from the profile, not rolled.
+    this.run.past = pastDigest(this.content, this.profile);
+    const heirloom = applyHeirloom(this.content, this.run, this.profile);
+    if (heirloom) this.profile = spendHeirloom(this.profile, heirloom.runId);
     // Everything needed to rebuild this run later if it is lost (Revisit This Timeline).
     this.timeline = Timeline.rememberGenesis(this.timeline, Timeline.captureGenesis(this.run, opts, grants, new Date().toISOString()));
     this.checkSave(this.saves.saveTimeline(this.timeline));
@@ -503,6 +509,13 @@ export class GameSession {
   /** Claims a trainer in the Trainer Archive (its requirement must be met; may cost Bank Credits). */
   claimTrainer(archetypeId: string): void {
     this.profile = claimTrainer(this.content, this.profile, archetypeId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** Legacy Inheritance Choice: what a past Ace passes on to the next run (changes freely until a run starts with it). */
+  pickHeirloom(runId: string, kind: Parameters<typeof chooseHeirloom>[2]): void {
+    this.profile = chooseHeirloom(this.profile, runId, kind);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }

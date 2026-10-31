@@ -8,6 +8,7 @@
 
 import { z } from 'zod';
 import { AttributeKeySchema, BoostStatSchema } from '../contentSchema';
+import { BattleReplaySchema, WorldMemorySchema } from '../memories/schema';
 
 // ---------- domain events ----------
 
@@ -375,6 +376,10 @@ export const StoryStateSchema = z.object({
   majorCuesThisBattle: z.number().int().min(0),
   /** Nemeses made this run (run v25). */
   nemeses: z.array(NemesisSchema).default([]),
+  /** Battle Replay: the big battles of this run (core/memories/replay.ts). */
+  replays: z.array(BattleReplaySchema).default([]),
+  /** The world's memory: skipped branches, delayed consequences, villain operations (core/memories/world.ts). */
+  world: WorldMemorySchema.default({ skipped: [], consequences: [], ops: {}, helped: 0, declined: 0, npcs: {} }),
 });
 export type StoryState = z.infer<typeof StoryStateSchema>;
 

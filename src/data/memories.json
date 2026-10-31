@@ -1,0 +1,23 @@
+{
+ "note": "Run Journal, Hall of Memories, Ghost Trainers, Heirlooms and the world's memory (APPROVED.md sections 3, 7 Battle Replay and 8). Read by core/memories; a run in progress only reads the small digest taken when it starts.",
+ "replay": { "maxLines": 36, "maxPerRun": 10, "turnLinesCap": 3 },
+ "hall": { "size": 5, "minScore": 30 },
+ "fallen": { "wins": 3 },
+ "digest": { "ghosts": 3, "gauntlet": 5, "keepsakes": 6, "friends": 6 },
+ "ghosts": { "chance": 0.16, "perRun": 2, "levelBonus": 1, "moneyPerLevel": 40, "mementoFallback": "full-restore", "minEncounters": 6 },
+ "gauntlet": { "teams": 3, "levelBonus": 1, "money": 2500, "item": "full-restore", "itemCount": 2 },
+ "heirloom": { "keep": 5, "eggLevel": 5, "eggStages": 2, "minLevel": 20, "itemFallback": "everstone" },
+ "world": { "skippedKeep": 6, "perStage": 2, "echoDelay": 1, "echoLevelBonus": 2, "echoMoneyPerLevel": 30, "echoItem": "super-potion", "thanksMoney": 400, "thanksDelay": 2, "grudgeMoney": 200, "moralityAt": 8 },
+ "cameo": { "chance": 0.5, "money": 300, "friendship": 10 },
+ "lostFound": { "chance": 0.5, "discount": 0.6 },
+ "ops": { "start": 0.7, "clues": 2, "reward": 800, "loss": 0.15, "lossMax": 600 },
+ "operations": [
+  { "id": "harbor-smuggling", "org": "Team Rocket", "name": "the harbor smuggling ring", "steps": ["Crates stamped with a red R are piling up at the docks.", "Dockhands whisper that the crates move at night, always toward the same warehouse.", "The ring is ready to ship everything out of the region."], "foiled": "You tipped off the harbor guard in time. The ring's crates were seized and the reward paid out.", "succeeded": "The ring shipped its cargo out. They took a cut from every shop in town." },
+  { "id": "power-plant", "org": "Team Magma", "name": "the power plant takeover", "steps": ["A work crew nobody hired is drilling under the old power plant.", "The drilling stopped overnight, and the lights flicker on and off.", "The crew is about to switch the whole plant to its own use."], "foiled": "You found the sabotage before the switch. The plant's grateful engineers paid you.", "succeeded": "The plant went dark for a night and the crew walked off with the savings box." },
+  { "id": "stolen-fossils", "org": "Team Galactic", "name": "the museum fossil theft", "steps": ["A museum guide mentions two fossil cases that were found empty.", "Somebody left a business card for a 'private collector' in the empty case.", "The collector's crew plans to ship the fossils tonight."], "foiled": "You traced the collector's crew and handed the fossils back. The museum paid a finder's fee.", "succeeded": "The fossils left the region and the museum could not afford your reward." }
+ ],
+ "npcs": [
+  { "id": "wandering-merchant", "name": "the Wandering Merchant", "beats": ["A merchant with a huge pack waves from the roadside: 'We'll meet again, trainer.'", "The merchant is back, a little wiser about prices: 'Last time you were kind. Take this.'", "The merchant sets up a stall one last time and tips you for being a good customer."], "badBeats": ["A merchant with a huge pack waves from the roadside: 'We'll meet again, trainer.'", "The merchant remembers how you haggled. 'Not my best day,' they mutter, and the stall costs you.", "The merchant has moved on, and left a note about prices in your town."], "item": "amulet-coin", "money": 300 },
+  { "id": "old-researcher", "name": "the Old Researcher", "beats": ["A researcher in a tattered coat is cataloguing wild tracks: 'I'll be around, I always am.'", "The researcher found something in your tracks: 'You raise your Pokémon with care.'", "The researcher posts a final paper and credits your team in the margin."], "badBeats": ["A researcher in a tattered coat is cataloguing wild tracks: 'I'll be around, I always am.'", "The researcher frowns at what they found in your tracks and says nothing.", "The researcher left the region. The paper never mentioned your team."], "item": "lucky-egg", "money": 250 }
+ ]
+}

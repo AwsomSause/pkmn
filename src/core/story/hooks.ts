@@ -36,6 +36,7 @@ import { noteStruggle, recordChampionMemory } from './highHype';
 import { clearMomentFlags, detectMoments } from './moments';
 import { noteCodex } from './codex';
 import { noteRivalryLoss, noteRivalryWin } from './rivalryKinds';
+import { memoryAfterBattle } from '../memories/encounters';
 import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint, noteRivalResult } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 import { rivalProgress } from '../rivals/progression';
@@ -272,6 +273,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
 
   if (battle.outcome === 'win') trainerVow(content, run, triggers, events.length - 1, where);
   if (battle.outcome) {
+    memoryAfterBattle(content, run);
     for (const m of nemesisAfterBattle(content, run, where)) {
       const def = content.story.definitions.find((d) => d.triggerConditions.trigger === m.trigger);
       if (def) triggers.push({ ...makeTrigger(run, def, events.length - 1, triggers.length, m.names, null, m.uid), side: m.side, combat: false });
