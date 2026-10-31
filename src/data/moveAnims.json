@@ -10931,7 +10931,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-smokescreen"
+      "pack": "ess-smokescreen",
+      "script": "smokescreen"
     },
     "harden": {
       "anim": "harden",
@@ -11035,7 +11036,8 @@
       "flash": null,
       "hitStopMs": 55,
       "telegraph": "normal",
-      "pack": "ess-vine-whip"
+      "pack": "ess-vine-whip",
+      "script": "vinewhip"
     },
     "razor-leaf": {
       "anim": "razor-leaf",
@@ -11585,7 +11587,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "flashcannon"
     },
     "iron-head": {
       "anim": "iron-head",
@@ -11604,7 +11607,8 @@
       "flash": null,
       "hitStopMs": 62,
       "telegraph": "normal",
-      "pack": "ess-thunder-fang"
+      "pack": "ess-thunder-fang",
+      "script": "thunderfang"
     },
     "thunderbolt": {
       "anim": "thunderbolt",
@@ -11825,7 +11829,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "aurasphere"
     },
     "barrier": {
       "anim": "barrier",
@@ -11933,7 +11938,8 @@
       "shake": 3,
       "flash": "#a890f0",
       "hitStopMs": 80,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "bravebird"
     },
     "brick-break": {
       "anim": "brick-break",
@@ -11942,7 +11948,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-brick-break"
+      "pack": "ess-brick-break",
+      "script": "brickbreak"
     },
     "bubble": {
       "anim": "bubble",
@@ -12014,7 +12021,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "chargebeam"
     },
     "chilling-water": {
       "anim": "chilling-water",
@@ -12057,7 +12065,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "coil"
     },
     "confide": {
       "anim": "confide",
@@ -12150,7 +12159,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "dazzlinggleam"
     },
     "decorate": {
       "anim": "decorate",
@@ -12251,7 +12261,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "drillpeck"
     },
     "drill-run": {
       "anim": "drill-run",
@@ -12360,7 +12371,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "featherdance"
     },
     "fiery-dance": {
       "anim": "fiery-dance",
@@ -12386,7 +12398,8 @@
       "flash": "#f08030",
       "hitStopMs": 77,
       "telegraph": "strong",
-      "pack": "ess-fire-blast"
+      "pack": "ess-fire-blast",
+      "script": "fireblast"
     },
     "fire-punch": {
       "anim": "fire-punch",
@@ -12532,7 +12545,8 @@
       "shake": 3,
       "flash": "#b8a038",
       "hitStopMs": 90,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "headsmash"
     },
     "headlong-rush": {
       "anim": "headlong-rush",
@@ -12574,7 +12588,8 @@
       "flash": null,
       "hitStopMs": 62,
       "telegraph": "normal",
-      "pack": "ess-horn-attack"
+      "pack": "ess-horn-attack",
+      "script": "hornattack"
     },
     "horn-leech": {
       "anim": "horn-leech",
@@ -12643,7 +12658,8 @@
       "shake": 2,
       "flash": "#98d8d8",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "icebeam"
     },
     "ice-punch": {
       "anim": "ice-punch",
@@ -12660,7 +12676,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 68,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "iciclecrash"
     },
     "inferno": {
       "anim": "inferno",
@@ -12669,7 +12686,8 @@
       "flash": "#f08030",
       "hitStopMs": 73,
       "telegraph": "strong",
-      "pack": "ess-inferno"
+      "pack": "ess-inferno",
+      "script": "inferno"
     },
     "iron-tail": {
       "anim": "iron-tail",
@@ -12677,7 +12695,8 @@
       "shake": 3,
       "flash": "#b8b8d0",
       "hitStopMs": 73,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "irontail"
     },
     "kinesis": {
       "anim": "kinesis",
@@ -12702,7 +12721,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "lavaplume"
     },
     "leaf-blade": {
       "anim": "leaf-blade",
@@ -12711,7 +12731,8 @@
       "flash": "#78c850",
       "hitStopMs": 70,
       "telegraph": "normal",
-      "pack": "ess-leaf-blade"
+      "pack": "ess-leaf-blade",
+      "script": "leafblade"
     },
     "leaf-storm": {
       "anim": "leaf-storm",
@@ -12754,7 +12775,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 68,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "liquidation"
     },
     "lovely-kiss": {
       "anim": "lovely-kiss",
@@ -12832,7 +12854,8 @@
       "flash": "#a8b820",
       "hitStopMs": 80,
       "telegraph": "strong",
-      "pack": "ess-megahorn"
+      "pack": "ess-megahorn",
+      "script": "megahorn"
     },
     "meteor-mash": {
       "anim": "meteor-mash",
@@ -12899,7 +12922,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 62,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mudbomb"
     },
     "muddy-water": {
       "anim": "muddy-water",
@@ -12907,7 +12931,8 @@
       "shake": 2,
       "flash": "#6890f0",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "muddywater"
     },
     "mystical-fire": {
       "anim": "mystical-fire",
@@ -12998,7 +13023,8 @@
       "flash": "#f08030",
       "hitStopMs": 83,
       "telegraph": "strong",
-      "pack": "ess-overheat"
+      "pack": "ess-overheat",
+      "script": "overheat"
     },
     "parabolic-charge": {
       "anim": "parabolic-charge",
@@ -13014,7 +13040,8 @@
       "shake": 2,
       "flash": "#78c850",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "petalblizzard"
     },
     "poison-gas": {
       "anim": "poison-gas",
@@ -13023,7 +13050,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-poison-gas"
+      "pack": "ess-poison-gas",
+      "script": "poisongas"
     },
     "poison-tail": {
       "anim": "poison-tail",
@@ -13083,7 +13111,8 @@
       "flash": null,
       "hitStopMs": 63,
       "telegraph": "normal",
-      "pack": "ess-psycho-cut"
+      "pack": "ess-psycho-cut",
+      "script": "psychocut"
     },
     "psyshield-bash": {
       "anim": "psyshield-bash",
@@ -13238,7 +13267,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-sing"
+      "pack": "ess-sing",
+      "script": "sing"
     },
     "sizzly-slide": {
       "anim": "sizzly-slide",
@@ -13264,7 +13294,8 @@
       "flash": null,
       "hitStopMs": 62,
       "telegraph": "normal",
-      "pack": "ess-sludge"
+      "pack": "ess-sludge",
+      "script": "sludgebomb"
     },
     "sludge-bomb": {
       "anim": "sludge-bomb",
@@ -13273,7 +13304,8 @@
       "flash": "#a040a0",
       "hitStopMs": 70,
       "telegraph": "normal",
-      "pack": "ess-sludge-bomb"
+      "pack": "ess-sludge-bomb",
+      "script": "sludgebomb"
     },
     "sludge-wave": {
       "anim": "sludge-wave",
@@ -13407,7 +13439,8 @@
       "shake": 2,
       "flash": "#6890f0",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "surf"
     },
     "sweet-scent": {
       "anim": "sweet-scent",
@@ -13479,7 +13512,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-thunder-punch"
+      "pack": "ess-thunder-punch",
+      "script": "thunderpunch"
     },
     "thunderous-kick": {
       "anim": "thunderous-kick",
@@ -13576,7 +13610,8 @@
       "shake": 2,
       "flash": "#f8d030",
       "hitStopMs": 70,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "wildcharge"
     },
     "will-o-wisp": {
       "anim": "will-o-wisp",
@@ -13585,7 +13620,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-will-o-wisp"
+      "pack": "ess-will-o-wisp",
+      "script": "willowisp"
     },
     "wood-hammer": {
       "anim": "wood-hammer",
@@ -13593,7 +13629,8 @@
       "shake": 3,
       "flash": "#78c850",
       "hitStopMs": 80,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "woodhammer"
     },
     "work-up": {
       "anim": "work-up",
@@ -13620,7 +13657,8 @@
       "flash": "#f8d030",
       "hitStopMs": 80,
       "telegraph": "strong",
-      "pack": "ess-zap-cannon"
+      "pack": "ess-zap-cannon",
+      "script": "zapcannon"
     },
     "zen-headbutt": {
       "anim": "zen-headbutt",
@@ -13831,7 +13869,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 53,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "falseswipe"
     },
     "fire-spin": {
       "anim": "fire-spin",
@@ -14045,7 +14084,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-moonlight"
+      "pack": "ess-moonlight",
+      "script": "moonlight"
     },
     "morning-sun": {
       "anim": "morning-sun",
@@ -14063,7 +14103,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-pin-missile"
+      "pack": "ess-pin-missile",
+      "script": "pinmissile"
     },
     "play-nice": {
       "anim": "play-nice",
@@ -14163,7 +14204,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 52,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "sandtomb"
     },
     "secret-sword": {
       "anim": "secret-sword",
@@ -14265,7 +14307,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-sweet-kiss"
+      "pack": "ess-sweet-kiss",
+      "script": "sweetkiss"
     },
     "synthesis": {
       "anim": "synthesis",
@@ -14315,7 +14358,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 52,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "whirlpool"
     },
     "wrap": {
       "anim": "wrap",
@@ -14368,7 +14412,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "ominouswind"
     },
     "10-000-000-volt-thunderbolt": {
       "anim": "thunder-shock",
@@ -14446,7 +14491,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-aqua-ring"
+      "pack": "ess-aqua-ring",
+      "script": "aquaring"
     },
     "aromatherapy": {
       "anim": "aromatherapy",
@@ -14496,7 +14542,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "attract"
     },
     "aura-wheel": {
       "anim": "aura-wheel",
@@ -14520,7 +14567,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "autotomize"
     },
     "avalanche": {
       "anim": "avalanche",
@@ -14851,7 +14899,8 @@
       "flash": null,
       "hitStopMs": 57,
       "telegraph": "normal",
-      "pack": "ess-clear-smog"
+      "pack": "ess-clear-smog",
+      "script": "clearsmog"
     },
     "coaching": {
       "anim": "coaching",
@@ -15142,7 +15191,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-dragon-rage"
+      "pack": "ess-dragon-rage",
+      "script": "dragonrage"
     },
     "dragon-tail": {
       "anim": "dragon-tail",
@@ -15150,7 +15200,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "dragontail"
     },
     "dream-eater": {
       "anim": "dream-eater",
@@ -15199,7 +15250,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "electricterrain"
     },
     "electrify": {
       "anim": "electrify",
@@ -15418,7 +15470,8 @@
       "flash": null,
       "hitStopMs": 63,
       "telegraph": "normal",
-      "pack": "ess-flame-burst"
+      "pack": "ess-flame-burst",
+      "script": "flameburst"
     },
     "flatter": {
       "anim": "flatter",
@@ -15434,7 +15487,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "fling"
     },
     "flip-turn": {
       "anim": "flip-turn",
@@ -15521,7 +15575,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-foresight"
+      "pack": "ess-foresight",
+      "script": "foresight"
     },
     "forests-curse": {
       "anim": "forests-curse",
@@ -16034,7 +16089,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-hail"
+      "pack": "ess-hail",
+      "script": "hail"
     },
     "happy-hour": {
       "anim": "happy-hour",
@@ -16074,7 +16130,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "healblock"
     },
     "heal-pulse": {
       "anim": "heal-pulse",
@@ -16091,7 +16148,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "healingwish"
     },
     "heart-swap": {
       "anim": "heart-swap",
@@ -16149,7 +16207,8 @@
       "shake": 3,
       "flash": "#e0c068",
       "hitStopMs": 72,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "highhorsepower"
     },
     "high-jump-kick": {
       "anim": "high-jump-kick",
@@ -16265,7 +16324,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "ingrain"
     },
     "instruct": {
       "anim": "instruct",
@@ -16346,7 +16406,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "laserfocus"
     },
     "lash-out": {
       "anim": "lash-out",
@@ -16440,7 +16501,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-lucky-chant"
+      "pack": "ess-lucky-chant",
+      "script": "luckychant"
     },
     "lumina-crash": {
       "anim": "lumina-crash",
@@ -16822,7 +16884,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mirrorcoat"
     },
     "mirror-move": {
       "anim": "mirror-move",
@@ -16856,7 +16919,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mistyterrain"
     },
     "moongeist-beam": {
       "anim": "moongeist-beam",
@@ -16880,7 +16944,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mudsport"
     },
     "multi-attack": {
       "anim": "multi-attack",
@@ -17045,7 +17110,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "perishsong"
     },
     "petal-dance": {
       "anim": "petal-dance",
@@ -17054,7 +17120,8 @@
       "flash": "#78c850",
       "hitStopMs": 80,
       "telegraph": "strong",
-      "pack": "ess-petal-dance"
+      "pack": "ess-petal-dance",
+      "script": "petaldance"
     },
     "phantom-force": {
       "anim": "phantom-force",
@@ -17258,7 +17325,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psywave"
     },
     "pulverizing-pancake": {
       "anim": "pulverizing-pancake",
@@ -17375,7 +17443,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "recycle"
     },
     "reflect": {
       "anim": "reflect",
@@ -17518,7 +17587,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "round"
     },
     "ruination": {
       "anim": "ruination",
@@ -17650,7 +17720,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "shellsmash"
     },
     "shell-trap": {
       "anim": "shell-trap",
@@ -17691,7 +17762,8 @@
       "flash": null,
       "hitStopMs": 60,
       "telegraph": "normal",
-      "pack": "ess-silver-wind"
+      "pack": "ess-silver-wind",
+      "script": "silverwind"
     },
     "simple-beam": {
       "anim": "simple-beam",
@@ -17964,7 +18036,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "spitup"
     },
     "spite": {
       "anim": "spite",
@@ -18047,7 +18120,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "stockpile"
     },
     "stoked-sparksurfer": {
       "anim": "thunder-shock",
@@ -18417,7 +18491,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "toxicspikes"
     },
     "toxic-thread": {
       "anim": "toxic-thread",
@@ -18596,7 +18671,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "wakeupslap"
     },
     "water-pledge": {
       "anim": "water-pledge",
