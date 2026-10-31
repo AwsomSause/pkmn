@@ -13,7 +13,17 @@
    "Calvin",
    "Timmy",
    "Dan"
-  ]
+  ],
+  "style": "swarm",
+  "personality": [
+   "cocky",
+   "eager"
+  ],
+  "lines": {
+   "intro": "My Pokémon is the best!",
+   "win": "Told you I was the best!",
+   "lose": "Aw, I lost..."
+  }
  },
  {
   "id": "bug-catcher",
@@ -29,7 +39,17 @@
    "Sammy",
    "Kent",
    "Greg"
-  ]
+  ],
+  "style": "swarm",
+  "personality": [
+   "eager",
+   "cheerful"
+  ],
+  "lines": {
+   "intro": "Bugs are tougher than they look!",
+   "win": "Better luck next time!",
+   "lose": "My bugs! Next time..."
+  }
  },
  {
   "id": "hiker",
@@ -46,7 +66,17 @@
    "Lenny",
    "Alan",
    "Clark"
-  ]
+  ],
+  "style": "defensive",
+  "personality": [
+   "stubborn",
+   "hearty"
+  ],
+  "lines": {
+   "intro": "Mountains make Pokémon stubborn!",
+   "win": "Better luck next time!",
+   "lose": "The mountain bows to you."
+  }
  },
  {
   "id": "fisherman",
@@ -62,7 +92,17 @@
    "Elliot",
    "Barny",
    "Ralph"
-  ]
+  ],
+  "style": "balanced",
+  "personality": [
+   "patient",
+   "calm"
+  ],
+  "lines": {
+   "intro": "Patience is the whole trick.",
+   "win": "Better luck next time!",
+   "lose": "Got away from me."
+  }
  },
  {
   "id": "bird-keeper",
@@ -78,7 +118,17 @@
    "Toby",
    "Perry",
    "Bret"
-  ]
+  ],
+  "style": "tricky",
+  "personality": [
+   "proud",
+   "free"
+  ],
+  "lines": {
+   "intro": "Watch them ride the wind!",
+   "win": "Better luck next time!",
+   "lose": "They flew too low."
+  }
  },
  {
   "id": "black-belt",
@@ -94,7 +144,17 @@
    "Hitoshi",
    "Lao",
    "Ricky"
-  ]
+  ],
+  "style": "aggressive",
+  "personality": [
+   "disciplined",
+   "fierce"
+  ],
+  "lines": {
+   "intro": "Hup! Train the body!",
+   "win": "Better luck next time!",
+   "lose": "I need more training."
+  }
  },
  {
   "id": "firebreather",
@@ -110,7 +170,17 @@
    "Ned",
    "Ray",
    "Lyle"
-  ]
+  ],
+  "style": "aggressive",
+  "personality": [
+   "showy",
+   "hot-headed"
+  ],
+  "lines": {
+   "intro": "Feel the heat!",
+   "win": "Better luck next time!",
+   "lose": "Burned out..."
+  }
  },
  {
   "id": "guitarist",
@@ -126,7 +196,17 @@
    "Shawn",
    "Dalton",
    "Fabian"
-  ]
+  ],
+  "style": "tricky",
+  "personality": [
+   "flashy",
+   "loud"
+  ],
+  "lines": {
+   "intro": "Let us rock!",
+   "win": "Better luck next time!",
+   "lose": "The show is over."
+  }
  },
  {
   "id": "aroma-lady",
@@ -142,7 +222,17 @@
    "Daisy",
    "Celina",
    "Elaine"
-  ]
+  ],
+  "style": "defensive",
+  "personality": [
+   "gentle",
+   "refined"
+  ],
+  "lines": {
+   "intro": "Let the scent calm you.",
+   "win": "Better luck next time!",
+   "lose": "How unpleasant."
+  }
  },
  {
   "id": "snow-worker",
@@ -158,7 +248,17 @@
    "Olaf",
    "Pierce",
    "Kurt"
-  ]
+  ],
+  "style": "defensive",
+  "personality": [
+   "quiet",
+   "tough"
+  ],
+  "lines": {
+   "intro": "Cold never bothers me.",
+   "win": "Better luck next time!",
+   "lose": "Thawed out."
+  }
  },
  {
   "id": "biker",
@@ -174,7 +274,17 @@
    "Ernest",
    "Hideo",
    "Charles"
-  ]
+  ],
+  "style": "aggressive",
+  "personality": [
+   "rowdy",
+   "impatient"
+  ],
+  "lines": {
+   "intro": "Out of my way!",
+   "win": "Better luck next time!",
+   "lose": "You got me!"
+  }
  },
  {
   "id": "psychic",
@@ -190,7 +300,17 @@
    "Fidel",
    "Nathan",
    "Cameron"
-  ]
+  ],
+  "style": "tricky",
+  "personality": [
+   "mysterious",
+   "calm"
+  ],
+  "lines": {
+   "intro": "I foresaw this battle.",
+   "win": "Better luck next time!",
+   "lose": "I did not foresee that."
+  }
  },
  {
   "id": "hex-maniac",
@@ -206,7 +326,17 @@
    "Patricia",
    "Kindra",
    "Darcy"
-  ]
+  ],
+  "style": "tricky",
+  "personality": [
+   "eerie",
+   "whispery"
+  ],
+  "lines": {
+   "intro": "You feel it, do you not?",
+   "win": "Better luck next time!",
+   "lose": "The spirits are displeased."
+  }
  },
  {
   "id": "dragon-tamer",
@@ -222,7 +352,17 @@
    "Keegan",
    "Darren",
    "Lance"
-  ]
+  ],
+  "style": "aggressive",
+  "personality": [
+   "proud",
+   "intense"
+  ],
+  "lines": {
+   "intro": "Dragons obey only the strong.",
+   "win": "Better luck next time!",
+   "lose": "Strong indeed."
+  }
  },
  {
   "id": "roughneck",
@@ -238,7 +378,17 @@
    "Rocco",
    "Brett",
    "Duke"
-  ]
+  ],
+  "style": "aggressive",
+  "personality": [
+   "mean",
+   "swaggering"
+  ],
+  "lines": {
+   "intro": "Wanna go?",
+   "win": "Better luck next time!",
+   "lose": "Tch. Not bad."
+  }
  },
  {
   "id": "worker",
@@ -254,7 +404,17 @@
    "Zack",
    "Moe",
    "Brendan"
-  ]
+  ],
+  "style": "defensive",
+  "personality": [
+   "hardworking",
+   "steady"
+  ],
+  "lines": {
+   "intro": "Back to work after this!",
+   "win": "Better luck next time!",
+   "lose": "Break time."
+  }
  },
  {
   "id": "fairy-tale-girl",
@@ -270,7 +430,300 @@
    "Rapunzel",
    "Belle",
    "Gretel"
-  ]
+  ],
+  "style": "tricky",
+  "personality": [
+   "dreamy",
+   "sweet"
+  ],
+  "lines": {
+   "intro": "Once upon a time...",
+   "win": "Better luck next time!",
+   "lose": "And they lived happily after."
+  }
+ },
+ {
+  "id": "lass",
+  "name": "Lass",
+  "spriteAssetId": "boss.npc_lass",
+  "moneyPerLevel": 20,
+  "names": [
+   "Janice",
+   "Robin",
+   "Crissy",
+   "Miriam",
+   "Dalia"
+  ],
+  "types": [
+   "normal",
+   "fairy"
+  ],
+  "style": "balanced",
+  "personality": [
+   "sweet",
+   "playful"
+  ],
+  "lines": {
+   "intro": "Be gentle, okay?",
+   "win": "Better luck next time!",
+   "lose": "Oh no, my friends!"
+  },
+  "extra": true
+ },
+ {
+  "id": "camper",
+  "name": "Camper",
+  "spriteAssetId": "boss.npc_camper",
+  "moneyPerLevel": 20,
+  "names": [
+   "Liam",
+   "Ethan",
+   "Jeff",
+   "Shane",
+   "Todd"
+  ],
+  "types": [
+   "ground",
+   "grass"
+  ],
+  "style": "balanced",
+  "personality": [
+   "outdoorsy",
+   "friendly"
+  ],
+  "lines": {
+   "intro": "Nothing beats a night under the stars!",
+   "win": "Better luck next time!",
+   "lose": "Time to pack up."
+  },
+  "extra": true
+ },
+ {
+  "id": "picnicker",
+  "name": "Picnicker",
+  "spriteAssetId": "boss.npc_picnicker",
+  "moneyPerLevel": 20,
+  "names": [
+   "Gina",
+   "Heidi",
+   "Kelsey",
+   "Tina",
+   "Becky"
+  ],
+  "types": [
+   "grass",
+   "normal"
+  ],
+  "style": "defensive",
+  "personality": [
+   "cheerful",
+   "friendly"
+  ],
+  "lines": {
+   "intro": "We packed sandwiches for the whole team!",
+   "win": "Better luck next time!",
+   "lose": "Lunch is over."
+  },
+  "extra": true
+ },
+ {
+  "id": "swimmer",
+  "name": "Swimmer",
+  "spriteAssetId": "boss.npc_swimmer_f",
+  "moneyPerLevel": 24,
+  "names": [
+   "Nora",
+   "Dawn",
+   "Tanya",
+   "Jerome",
+   "Marcus"
+  ],
+  "types": [
+   "water"
+  ],
+  "style": "swarm",
+  "personality": [
+   "sporty",
+   "splashy"
+  ],
+  "lines": {
+   "intro": "Dive in, the water is fine!",
+   "win": "Better luck next time!",
+   "lose": "I am all washed up."
+  },
+  "extra": true
+ },
+ {
+  "id": "breeder",
+  "name": "Breeder",
+  "spriteAssetId": "boss.npc_pokemonbreeder",
+  "moneyPerLevel": 28,
+  "names": [
+   "Janet",
+   "Isaac",
+   "Marta",
+   "Colin",
+   "Opal"
+  ],
+  "types": [
+   "normal",
+   "grass",
+   "fairy"
+  ],
+  "style": "defensive",
+  "personality": [
+   "caring",
+   "patient"
+  ],
+  "lines": {
+   "intro": "Healthy Pokémon are strong Pokémon.",
+   "win": "Better luck next time!",
+   "lose": "They need rest now."
+  },
+  "extra": true
+ },
+ {
+  "id": "battle-girl",
+  "name": "Battle Girl",
+  "spriteAssetId": "boss.npc_crushgirl",
+  "moneyPerLevel": 32,
+  "names": [
+   "Kaori",
+   "Mei",
+   "Sakura",
+   "Reiko",
+   "Tomoe"
+  ],
+  "types": [
+   "fighting"
+  ],
+  "style": "aggressive",
+  "personality": [
+   "fierce",
+   "sporty"
+  ],
+  "lines": {
+   "intro": "I train every single day!",
+   "win": "Better luck next time!",
+   "lose": "I will train harder."
+  },
+  "extra": true
+ },
+ {
+  "id": "ranger",
+  "name": "Ranger",
+  "spriteAssetId": "boss.npc_pokemonranger_m",
+  "moneyPerLevel": 36,
+  "names": [
+   "Bryce",
+   "Lena",
+   "Hiro",
+   "Willa",
+   "Drew"
+  ],
+  "types": [
+   "grass",
+   "bug",
+   "flying"
+  ],
+  "style": "tricky",
+  "personality": [
+   "brave",
+   "protective"
+  ],
+  "lines": {
+   "intro": "The wilds are my home.",
+   "win": "Better luck next time!",
+   "lose": "Impressive tactics."
+  },
+  "extra": true
+ },
+ {
+  "id": "ace-trainer",
+  "name": "Ace Trainer",
+  "spriteAssetId": "boss.npc_cooltrainer_m",
+  "moneyPerLevel": 56,
+  "names": [
+   "Ashton",
+   "Violet",
+   "Cole",
+   "Reina",
+   "Marlon"
+  ],
+  "types": [
+   "dragon",
+   "steel",
+   "psychic",
+   "fire"
+  ],
+  "style": "aggressive",
+  "personality": [
+   "confident",
+   "polished"
+  ],
+  "lines": {
+   "intro": "Only the best make Ace.",
+   "win": "Better luck next time!",
+   "lose": "So that is your level."
+  },
+  "extra": true
+ },
+ {
+  "id": "veteran",
+  "name": "Veteran",
+  "spriteAssetId": "boss.npc_sailor",
+  "moneyPerLevel": 64,
+  "names": [
+   "Gareth",
+   "Nadine",
+   "Abel",
+   "Otto",
+   "Rosa"
+  ],
+  "types": [
+   "fighting",
+   "steel",
+   "dark"
+  ],
+  "style": "balanced",
+  "personality": [
+   "seasoned",
+   "calm"
+  ],
+  "lines": {
+   "intro": "I have seen a thousand battles.",
+   "win": "Better luck next time!",
+   "lose": "You fight well."
+  },
+  "extra": true
+ },
+ {
+  "id": "reporter",
+  "name": "Reporter",
+  "spriteAssetId": "boss.npc_painter",
+  "moneyPerLevel": 24,
+  "names": [
+   "Quinn",
+   "Saskia",
+   "Dex",
+   "Marlo",
+   "June"
+  ],
+  "types": [
+   "normal",
+   "psychic"
+  ],
+  "style": "tricky",
+  "personality": [
+   "nosy",
+   "chatty"
+  ],
+  "lines": {
+   "intro": "Smile! This one is for the front page!",
+   "win": "Better luck next time!",
+   "lose": "That is a headline."
+  },
+  "extra": true
  },
  {
   "id": "rival",
@@ -286,6 +739,15 @@
    "Silver",
    "Barry",
    "Hop"
-  ]
+  ],
+  "style": "balanced",
+  "personality": [
+   "driven"
+  ],
+  "lines": {
+   "intro": "Let us see who is better!",
+   "win": "Better luck next time!",
+   "lose": "Next time I win."
+  }
  }
 ]
