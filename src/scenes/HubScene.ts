@@ -35,6 +35,7 @@ import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { LegacyRotationView } from '../ui/legacyRotation';
 import { legacyRotation } from '../core/legacyRuns';
+import { hubRivalNote } from '../core/rivals/living';
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
@@ -267,6 +268,14 @@ export class HubScene extends Phaser.Scene {
     const ready = [...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'claimable').length;
     this.buildTiles(ready);
 
+    // Living Rival: a letter or a visit from a rival of a finished run; every Hub visit changes which.
+    const rivalNote = hubRivalNote(p.rivalArchive, rotationVisits * 7 + p.stats.runsEnded, { achievements: earned, runsEnded: p.stats.runsEnded });
+    if (rivalNote) {
+      const note = this.add
+        .text(GAME_WIDTH / 2, data.notice ? 160 : 110, rivalNote.text, textStyle(16, rivalNote.tone === 'sharp' ? COLORS.gold : COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } }))
+        .setOrigin(0.5, 0);
+      this.tweens.add({ targets: note, alpha: 0, delay: 7000, duration: 800 });
+    }
     if (data.notice) {
       const notice = this.add
         .text(GAME_WIDTH / 2, 110, data.notice, textStyle(20, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))

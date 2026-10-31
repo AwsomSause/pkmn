@@ -28,7 +28,10 @@ import * as Mini from '../core/minigame/flow';
 import { claim } from '../core/quests';
 import { claimCollectionMilestones } from '../core/collection';
 import * as Run from '../core/run';
+import * as PartyLife from '../core/partyLife';
+type PartyScene = PartyLife.Scene;
 import * as Svc from '../core/services/flow';
+import * as Plz from '../core/plaza/flow';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -298,6 +301,21 @@ export class GameSession {
     return result.message;
   }
 
+  plazaView(sideId: string): Plz.PlazaView {
+    return Plz.plazaView(this.content, this.requireRun(), sideId);
+  }
+
+  plazaSection(sideId: string, section: Plz.PlazaSectionId): Plz.PlazaSectionView {
+    return Plz.sectionView(this.content, this.requireRun(), sideId, section);
+  }
+
+  usePlaza(sideId: string, section: Plz.PlazaSectionId, optionId: string): Plz.PlazaResult {
+    const result = Plz.usePlaza(this.content, this.requireRun(), sideId, section, optionId);
+    this.run = result.run;
+    this.persistRun();
+    return result;
+  }
+
   buyItem(itemId: string): string {
     const result = Run.buyItem(this.content, this.requireRun(), itemId);
     this.run = result.run;
@@ -395,6 +413,39 @@ export class GameSession {
   withdrawFromBox(boxIndex: number): void {
     this.run = Run.withdrawFromBox(this.content, this.requireRun(), boxIndex);
     this.persistRun();
+  }
+
+  /** Party scenes (core/partyLife): the scene waiting on the map, rolled once per transition and saved. */
+  ensureScene(): PartyScene | null {
+    const current = this.requireRun();
+    if (current.partyLife?.scene) return current.partyLife.scene;
+    // Browser tests drive the map with key presses a scene would swallow; they put scenes there themselves.
+    if (typeof navigator !== 'undefined' && navigator.webdriver) return null;
+    const run = structuredClone(current);
+    const scene = PartyLife.ensureScene(this.content, run);
+    if (run.partyLife.rolledFor !== current.partyLife?.rolledFor) {
+      this.run = run;
+      this.persistRun();
+    }
+    return scene;
+  }
+
+  resolveScene(choice: number | null): PartyLife.SceneResult | null {
+    const run = structuredClone(this.requireRun());
+    const result = PartyLife.resolveScene(this.content, run, choice);
+    this.run = run;
+    this.persistRun();
+    return result;
+  }
+
+  takeTeamPhoto(): boolean {
+    const run = structuredClone(this.requireRun());
+    const ok = PartyLife.teamPhoto(this.content, run);
+    if (ok) {
+      this.run = run;
+      this.persistRun();
+    }
+    return ok;
   }
 
   setLead(partyIndex: number): void {

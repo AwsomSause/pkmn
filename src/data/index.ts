@@ -70,6 +70,8 @@ import typeChartJson from './typeChart.json';
 import storyJson from './story.json';
 import raidsJson from './raids.json';
 import totemsJson from './totems.json';
+import shadowWorldJson from './shadowWorld.json';
+import { ShadowWorldFileSchema } from '../core/shadowWorld/schema';
 import expeditionsJson from './expeditions.json';
 import { ExpeditionFileSchema } from '../core/expedition/schema';
 import minigamesJson from './minigames.json';
@@ -116,6 +118,7 @@ export interface RawContent {
   raids: unknown;
   events: unknown;
   totems: unknown;
+  shadowWorld: unknown;
   expeditions: unknown;
   minigames: unknown;
   zMoves: unknown;
@@ -168,6 +171,7 @@ export const RAW_CONTENT: RawContent = {
   raids: raidsJson,
   events: eventsJson,
   totems: totemsJson,
+  shadowWorld: shadowWorldJson,
   expeditions: expeditionsJson,
   minigames: minigamesJson,
   // Generated: npm run data:zmoves.
@@ -235,12 +239,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
+  const shadowWorld = parse(ShadowWorldFileSchema, raw.shadowWorld, 'shadowWorld.json', problems);
   const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
   const expeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
+  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
     throw new ContentError(problems);
   }
 
@@ -277,6 +282,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     raids,
     events: toMap(eventsFile.events, 'events.json', problems),
     totems,
+    shadowWorld,
     expeditions,
     minigames,
     zMoves,
@@ -330,6 +336,18 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     for (const r of raid.rewards.items) if (!content.items.has(r.item)) problems.push(`raids.json "${raid.id}" gives unknown item "${r.item}"`);
     if (raid.shield && raid.shield.at.length * raid.shield.points >= 0.9) problems.push(`raids.json "${raid.id}" shields are too big`);
     if (raid.phases.some((p, i) => i > 0 && p.atHp >= raid.phases[i - 1]!.atHp)) problems.push(`raids.json "${raid.id}" phases must go down in HP`);
+  }
+  // Shadow world: every gang raid belongs to a faction, every faction has a raid, every blessing an event hands out exists.
+  const factionIds = new Set(shadowWorld.factions.map((f) => f.id));
+  for (const raid of raids.raids) if (raid.gang && !factionIds.has(raid.gang.faction)) problems.push(`raids.json "${raid.id}" belongs to unknown faction "${raid.gang.faction}"`);
+  for (const f of shadowWorld.factions) if (!raids.raids.some((r) => r.gang?.faction === f.id)) problems.push(`shadowWorld.json faction "${f.id}" has no gang raid`);
+  const blessingIds = new Set(shadowWorld.blessings.map((b) => b.id));
+  for (const ev of eventsFile.events) {
+    for (const ch of ev.choices) {
+      for (const o of [ch.success, ch.failure]) {
+        for (const e of [...(o?.effects ?? []), ...(o?.battle?.win ?? [])]) if (e.kind === 'blessing' && !blessingIds.has(e.id)) problems.push(`events.json "${ev.id}" gives unknown blessing "${e.id}"`);
+      }
+    }
   }
   for (const t of totems.totems) {
     for (const id of [...t.species, t.ally?.species, t.rewards.rareJoin?.species]) if (id && !content.species.has(id)) problems.push(`totems.json "${t.id}" has unknown species "${id}"`);

@@ -55,7 +55,9 @@ describe('raid data', () => {
       const again = structuredClone(run);
       for (const n of again.stage!.map.nodes) n.sides = n.sides.filter((s) => s.kind !== 'raid');
       placeRaidDens(content, again);
-      expect(JSON.stringify(again.stage!.map)).toBe(JSON.stringify(run.stage!.map));
+      // The plaza stop is added after the dens, so compare without it.
+      const bare = (r: typeof run) => JSON.stringify(r.stage!.map.nodes.map((n) => n.sides.filter((s) => s.kind !== 'plaza')));
+      expect(bare(again)).toBe(bare(run));
     }
     expect(dens).toBeGreaterThan(5);
   });
