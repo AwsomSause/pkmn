@@ -1204,7 +1204,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const gauntlet = rule && !back ? gauntletRival(content, run) : null;
-    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;

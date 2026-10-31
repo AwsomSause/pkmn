@@ -3,7 +3,7 @@
 // It remembers its team, comes back stronger, and swaps ONE member for a Pokémon from the
 // planned team that resists the type of attack you use most; the player is told which.
 
-import { RIVAL_FOCUS_GAP_CUT, regionFocus } from '../campaign/focus';
+import { focusIs, RIVAL_FOCUS_GAP_CUT } from '../campaign/focus';
 import { runPerks } from '../archetypes';
 import { rivalCounterBonus, rivalLevelOffset, rivalTeamTypes } from '../trainerPerks';
 import { typeEffectiveness } from '../battle/damage';
@@ -38,12 +38,12 @@ const LADDER: Rival['state'][] = ['recognized', 'recurring', 'nemesis', 'active'
  * once, a recurring one every few stages, a nemesis rarely), never fewer than the floor, and no rival appears in the stage after
  * another. On cooldown, away or allied rivals sit out. Among those due, the higher state and the greater rivalry win.
  */
-export function waitingRival(run: RunState): Rival | null {
+export function waitingRival(run: RunState, content?: Content): Rival | null {
   const sched = RIVAL_CONFIG.scheduler;
   const now = scheduleKey(run);
   const lastAny = run.story.flags[RIVAL_SEEN_ANY];
   // A region focused on rivals brings them back a stage sooner.
-  const gapCut = regionFocus(run, run.regionIndex) === 'rivals' ? RIVAL_FOCUS_GAP_CUT : 0;
+  const gapCut = content && focusIs(content, run, run.regionIndex, 'rivals') ? RIVAL_FOCUS_GAP_CUT : 0;
   if (typeof lastAny === 'number' && now - lastAny < sched.anyGap) return null;
   const due = run.story.rivals.filter((r) => {
     if (!isHostile(r) || r.cooldown > 0) return false;

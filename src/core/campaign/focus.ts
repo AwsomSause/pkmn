@@ -21,3 +21,7 @@ export function regionFocus(run: Pick<RunState, 'seed' | 'regionOrder'>, regionI
 export const MYSTERY_EXTRA_STOPS = 1;
 /** Rival regions bring rivals back a stage sooner (never below one stage apart). */
 export const RIVAL_FOCUS_GAP_CUT = 1;
+
+/** Whether the region's focus changes the rules (switchable in balance for old-seed checks). */
+export const focusIs = (content: { balance: { focusEffects: boolean } }, run: Pick<RunState, 'seed' | 'regionOrder'>, regionIndex: number, focus: Focus): boolean =>
+  content.balance.focusEffects && regionFocus(run, regionIndex) === focus;
