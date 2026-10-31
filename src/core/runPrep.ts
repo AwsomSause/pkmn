@@ -12,6 +12,7 @@ import { requirementProgress } from './progress';
 import { masteredStarters } from './mastery';
 import type { Rng } from './rng';
 import { baseStatTotal, isNative, isWildEligible, wildEligibleSpecies } from './themes';
+import { candyStart } from './candyShop';
 import { bankTier, presetSlotCount } from './bank';
 import type { LoadoutPreset, Profile, RunPrep } from './state';
 
@@ -352,7 +353,7 @@ export interface StartingResources {
 }
 
 /** Money and items at the start of a run: the base Bag, the trainer's signature items and the preparation token. */
-export function startingResources(content: Content, archetype: Archetype, prep: RunPrep): StartingResources {
+export function startingResources(content: Content, archetype: Archetype, prep: RunPrep, candyPerks: readonly string[] = []): StartingResources {
   const items: Record<string, number> = { ...content.balance.startingItems };
   const add = (from: Record<string, number>) => {
     for (const [id, n] of Object.entries(from)) items[id] = (items[id] ?? 0) + n;
@@ -361,8 +362,10 @@ export function startingResources(content: Content, archetype: Archetype, prep: 
   const token = prep.tokenId ? content.prepTokens.get(prep.tokenId) : undefined;
   if (token) add(token.items);
   if (prep.vaultItem) add({ [prep.vaultItem]: 1 });
+  const candy = candyStart(content, candyPerks);
+  add(candy.items);
   const loan = prep.loan ? content.balance.bank.loan.money : 0;
-  return { money: content.balance.money.startingMoney + (token?.money ?? 0) + loan, items };
+  return { money: content.balance.money.startingMoney + (token?.money ?? 0) + loan + candy.money, items };
 }
 
 export function itemsText(content: Content, items: Record<string, number>): string {

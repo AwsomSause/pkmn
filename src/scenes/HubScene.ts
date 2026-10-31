@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
 import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
@@ -1178,6 +1179,7 @@ export class HubScene extends Phaser.Scene {
         : { label: `Bank tier ${bankTier(p)}: top tier`, sub: 'Every Bank service is open.', right: '', problem: 'The Bank is already at its top tier.', run: () => undefined, notice: '' },
       { label: 'Exchange Counter: credits → Research', sub: `${x.credits} credits for ${x.points} Research Points.`, right: bankTier(p) >= 3 ? '' : 'Tier 3', problem: exchangeProblem(content, p, 'toPoints'), run: () => session.exchangeAtBank('toPoints'), notice: `Exchanged ${x.credits} credits for ${x.points} Research Points.` },
       { label: 'Exchange Counter: Research → credits', sub: `${x.backPoints} Research Points for ${x.backCredits} credits.`, right: bankTier(p) >= 3 ? '' : 'Tier 3', problem: exchangeProblem(content, p, 'toCredits'), run: () => session.exchangeAtBank('toCredits'), notice: `Exchanged ${x.backPoints} Research Points for ${x.backCredits} credits.` },
+      ...content.balance.candyShop.map((perk) => ({ label: `Candy Shop: ${perk.name}`, sub: perk.description, right: p.candyPerks.includes(perk.id) ? 'Owned' : `${perk.cost} candies`, problem: candyPerkProblem(content, p, perk.id), run: () => session.buyCandyPerk(perk.id), notice: `You bought the ${perk.name}.` })),
     ];
     const serviceRows: PickerRow[] = bankServices.map((s) => ({
       problem: null,
@@ -1202,7 +1204,7 @@ export class HubScene extends Phaser.Scene {
       };
     })];
     this.openPicker({
-      title: `Bank licenses  ·  ${p.bankCredits} Bank Credits`,
+      title: `Bank  ·  ${p.bankCredits} credits  ·  ${p.candies} candies`,
       rows,
       columns: 1,
       rowHeight: 60,

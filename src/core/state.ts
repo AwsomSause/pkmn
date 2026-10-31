@@ -1100,6 +1100,8 @@ export const ProfileSchema = z.object({
   bankTier: z.number().int().min(1).max(5).default(1),
   /** Items kept in the Collector's Vault (Bank tier 5). */
   vault: z.array(z.string()).default([]),
+  /** Candy Shop perks bought with candies (balance.candyShop): they add to every run's starting Bag. */
+  candyPerks: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),
