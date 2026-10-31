@@ -1,0 +1,1 @@
+- Raid cheer levels: cheers grow with raids won (0 = Lv.1, 1 to 2 = Lv.2, 3+ = Lv.3). Offense x1.3/1.45/1.6, Defense x0.7/0.6/0.5, Healing 30/45/60% (Lv.3 also refills PP), Turn the tables Lv.2 swaps screens and hazards, Lv.3 also blocks healing on both sides. Level shown in the cheer menu; `RaidBattle.cheerLevel` defaults to 1, so no save bump.

@@ -948,7 +948,7 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
   }
 }
 
-/** A raid cheer: Offense / Defense last a few turns; Healing restores some of the active Pokémon's HP and cures its status. */
+/** A raid cheer: Offense / Defense last a few turns; Healing restores some of the active Pokémon's HP and cures its status (level 3 also refills its PP). */
 function useCheer(ctx: BattleContext, cheer: Cheer, events: BattleEvent[]): void {
   const raid = ctx.battle.raid!;
   raid.cheersLeft -= 1;
@@ -967,15 +967,25 @@ function useCheer(ctx: BattleContext, cheer: Cheer, events: BattleEvent[]): void
         events.push({ type: 'stat', side, stat, change: -2 * before });
       }
     }
+    if (raid.cheerLevel >= 2) {
+      const fx = ctx.battle.sideEffects;
+      [fx.player, fx.enemy] = [fx.enemy, fx.player];
+      events.push({ type: 'raid', tone: 'info', text: 'The two sides swap their screens and hazards!' });
+    }
+    if (raid.cheerLevel >= 3) {
+      for (const vol of [ctx.battle.playerVolatile, ctx.battle.enemyVolatile]) vol.healBlock = Math.max(vol.healBlock, 5);
+      events.push({ type: 'raid', tone: 'info', text: 'Neither side can heal for a while!' });
+    }
   } else {
     const mon = ctx.party[ctx.battle.activeIndex]!;
     const max = calcStats(ctx.content, mon).hp;
-    const gain = Math.min(max - mon.hp, Math.max(1, Math.floor(max * HEALING_CHEER)));
+    const gain = Math.min(max - mon.hp, Math.max(1, Math.floor(max * HEALING_CHEER[raid.cheerLevel - 1]!)));
     if (gain > 0 && mon.hp > 0) {
       mon.hp += gain;
       events.push({ type: 'heal', side: 'player', amount: gain, hpAfter: mon.hp });
     }
     mon.status = null;
+    if (raid.cheerLevel >= 3) for (const m of mon.moves) m.pp = content_maxPp(ctx, m);
   }
 }
 

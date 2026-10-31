@@ -48,6 +48,12 @@ describe('release gate: saves', () => {
     expect(animationFlags({ ...off, disableAllAnimations: false })).toMatchObject({ rivalAnimations: false, abilityAnimations: true });
   });
 
+  it('a v8 settings file loads', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 8, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ musicVolume: 0.3, disableAllAnimations: false });
+  });
+
   it('refuses a run from a newer game and survives garbage without throwing', () => {
     const storage = new MemoryStorageProvider();
     const saves = new SaveManager(storage, content);
