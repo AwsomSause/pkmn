@@ -7,7 +7,8 @@ import Phaser from 'phaser';
 import { buildCatalog, type AssetManifest } from '../assets/catalog';
 import { bossSpriteIds } from '../core/regions';
 import { animCatalogInputs } from '../core/presentation/moveAnims';
-import { moveAnims } from '../data/presentation';
+import { scriptAssets } from '../core/presentation/scriptAnim';
+import { ebdxAnims, moveAnims } from '../data/presentation';
 import { AssetRegistry, setServices } from '../game/services';
 import type { GameSession } from '../game/GameSession';
 import { queueAsset } from '../ui/lazyAssets';
@@ -33,6 +34,7 @@ export class BootScene extends Phaser.Scene {
       itemAssetIds: [...content.rewards.values(), ...content.items.values()].map((r) => r.iconAssetId),
       backgroundAssetIds: Object.values(content.arenas).filter((id): id is string => Boolean(id)),
       battleAnims: animCatalogInputs(moveAnims()),
+      ebdxAnims: scriptAssets(ebdxAnims()),
     });
     const assets = new AssetRegistry(manifest, catalog);
     setServices({ session, assets });

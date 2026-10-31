@@ -908,6 +908,8 @@ export const ArchetypeSchema = z.object({
   signatureSpecies: z.array(z.string()).default([]),
   /** The trainer's own starter set in the Starter Laboratory. */
   signaturePool: z.string().nullable().default(null),
+  /** A fixed four-move set per signature species, used when that species is picked as the starter (never forced onto other Pokémon). */
+  signatureMovesets: z.record(z.string(), z.array(z.string()).min(1).max(4)).default({}),
   /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
   eventTags: z.array(z.string()).default([]),
   /** The trainer's signature mechanic (core/signature.ts), if any. */
@@ -927,7 +929,7 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
-export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event'] as const;
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event', 'challenge', 'special'] as const;
 export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
 
 export const StarterPoolSchema = z.object({
@@ -954,6 +956,8 @@ export const StarterPoolSchema = z.object({
   mastered: z.boolean().default(false),
   /** An earned set that may hold special forms (Spooky forms...), which every other pool leaves out (core/specialForms.ts). */
   specialForms: z.boolean().default(false),
+  /** Special Specimen set: may list legendary and mythical first stages (see balance.specialSpecimen for the restrictions). */
+  specimens: z.boolean().default(false),
 }).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
@@ -1497,8 +1501,77 @@ export const TrainerClassSchema = z.object({
   names: z.array(z.string()).min(1),
   /** The types this class specialises in. A stage only uses classes that share a type with its theme. */
   types: z.array(TypeNameSchema).min(1),
+  /** How this class battles, for flavour and dialogue (it does not change the AI yet). */
+  style: z.enum(['balanced', 'aggressive', 'defensive', 'tricky', 'swarm']).default('balanced'),
+  /** Personality tags dialogue and events can react to. */
+  personality: z.array(z.string()).default([]),
+  /** What they say before and after a battle. */
+  lines: z.object({ intro: z.string(), win: z.string(), lose: z.string() }).optional(),
+  /** Classes outside the original 17 only appear when balance.extraTrainerClasses is on. */
+  extra: z.boolean().default(false),
 });
 export type TrainerClass = z.infer<typeof TrainerClassSchema>;
+
+// Trainer tiers (M10 §2, docs/status/trainer-tiers.md): ordinary trainers grow more skilled with progress
+// without losing their class: per-class species rungs, held items, signature moves and a training stat.
+const TierClassSchema = z.object({
+  /** Species rungs by tier id; a tier without a rung uses the nearest lower one. */
+  ladder: z.record(z.string(), z.array(z.string()).min(1)).default({}),
+  held: z.array(z.string()).default([]),
+  /** Moves the team's lead / ace gets from the advanced tier on (hazards, weather, setup, signature attacks). */
+  leadMoves: z.array(z.string()).default([]),
+  aceMoves: z.array(z.string()).default([]),
+  trainStat: StatNameSchema.default('atk'),
+  /** False: a static class that never returns changed by what you did to it. */
+  remembers: z.boolean().default(true),
+});
+export const TrainerTiersSchema = z.object({
+  enabled: z.boolean(),
+  score: z.object({
+    stageWeight: z.number().min(0),
+    /** Per level of party-strength correction (LevelScale.party). */
+    partyWeight: z.number().min(0),
+    /** Per earlier win over the same class this run. */
+    repeatWeight: z.number().min(0),
+    rematchWeight: z.number().min(0),
+    /** Added for an important trainer (a rival); bosses keep their authored teams. */
+    importanceWeight: z.number().min(0),
+  }),
+  /** The highest tier an ordinary trainer reaches (the champion tier is for bosses). */
+  maxOrdinaryTier: z.string(),
+  tiers: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        minScore: z.number().min(0),
+        /** Chance each member comes from the class's rung for this tier. */
+        ladderChance: z.number().min(0).max(1),
+        heldChance: z.number().min(0).max(1),
+        /** Vitamin-style stacks in the class's training stat. */
+        training: z.number().int().min(0).max(3),
+        /** Swap a weak move for a stronger attack (STAB first, then coverage). */
+        coverageMoves: z.boolean(),
+        strategyMoves: z.boolean(),
+        /** TrainerPlan.ai: how often it picks its best move. */
+        ai: z.number().min(0).max(1),
+      }),
+    )
+    .min(1),
+  default: TierClassSchema,
+  memory: z.object({
+    /** Chance a class that remembers acts on it. */
+    chance: z.number().min(0).max(1),
+    /** Extra levels for the Pokémon it brings back after losing it. */
+    levelBonus: z.number().int().min(0),
+    /** Counter types worth a coverage move against the type that beat it. */
+    counterTypes: z.number().int().min(0),
+    maxRemembered: z.number().int().min(1),
+  }),
+  classes: z.record(z.string(), TierClassSchema),
+});
+export type TrainerTiers = z.infer<typeof TrainerTiersSchema>;
+export type TierClass = z.infer<typeof TierClassSchema>;
 
 /** Where a boss can stand: at the end of a stage, in an Elite Four, or as champion. */
 export const BOSS_ROLES = ['gym', 'elite', 'champion'] as const;
@@ -1762,6 +1835,10 @@ export const BalanceSchema = z.object({
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
+  /** Trainer classes added after the first 17 (5.17) can appear as ordinary trainers. Off keeps old seeds' trainer picks. */
+  extraTrainerClasses: z.boolean().default(true),
+  /** Legendary and mythical starters (Special Specimen pools): they start this many levels lower, and only the standard draft rule can be used with them. */
+  specialSpecimen: z.object({ levelPenalty: z.number().int().min(0) }).default({ levelPenalty: 3 }),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
@@ -2486,6 +2563,8 @@ export interface Content {
   shop: ShopEntry[];
   ruleset: Ruleset;
   balance: Balance;
+  /** Trainer difficulty tiers (trainerTiers.json, core/trainerTiers.ts). */
+  trainerTiers: TrainerTiers;
   /** Story layer settings and story event definitions (story.json, core/story). */
   story: StoryConfig;
   /** Raid bosses and den placement (raids.json, core/raid). */

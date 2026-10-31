@@ -103,8 +103,19 @@
    "name": "Daily Set",
    "description": "A bright, sunny pack earned in the Daily Run: Sunkern, Cherubi, Castform, Eevee, Togepi, Pichu and Azurill.",
    "category": "event",
-   "species": ["sunkern", "cherubi", "castform", "eevee", "togepi", "pichu", "azurill"],
-   "unlock": { "kind": "claim", "key": "daily:fourth-gym" },
+   "species": [
+    "sunkern",
+    "cherubi",
+    "castform",
+    "eevee",
+    "togepi",
+    "pichu",
+    "azurill"
+   ],
+   "unlock": {
+    "kind": "claim",
+    "key": "daily:fourth-gym"
+   },
    "unlockText": "Win four gyms in a Daily Run"
   },
   {
@@ -207,6 +218,93 @@
    },
    "unlockText": "Win a full campaign",
    "researchCost": 800
+  },
+  {
+   "id": "challenge-underdogs",
+   "name": "Underdogs",
+   "description": "Humble first-stage Pokémon with the weakest lines. A challenge for the brave.",
+   "category": "challenge",
+   "species": [
+    "magikarp",
+    "caterpie",
+    "weedle",
+    "rattata",
+    "pidgey",
+    "zubat",
+    "sunkern",
+    "wurmple",
+    "feebas",
+    "kricketot"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "challenge-singles",
+   "name": "One of a Kind",
+   "description": "Pokémon with no evolutions at all. What you pick is what you get.",
+   "category": "challenge",
+   "species": [
+    "farfetchd",
+    "tauros",
+    "kangaskhan",
+    "lapras",
+    "heracross",
+    "miltank",
+    "absol",
+    "chimecho",
+    "luvdisc",
+    "delibird"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "champion-material"
+   },
+   "unlockText": "Defeat a champion",
+   "researchCost": 300
+  },
+  {
+   "id": "special-specimen",
+   "name": "Special Specimens",
+   "description": "Legendary and mythical Pokémon as starters. They start 3 levels lower and need the Standard draft rule.",
+   "category": "special",
+   "specimens": true,
+   "species": [
+    "articuno",
+    "zapdos",
+    "moltres",
+    "mew",
+    "raikou",
+    "entei",
+    "suicune",
+    "celebi",
+    "regirock",
+    "regice",
+    "registeel",
+    "latias",
+    "latios",
+    "jirachi",
+    "uxie",
+    "mesprit",
+    "azelf",
+    "cresselia",
+    "victini",
+    "cobalion",
+    "terrakion",
+    "virizion",
+    "type-null",
+    "cosmog"
+   ],
+   "unlock": {
+    "kind": "achievement",
+    "id": "grand-victor"
+   },
+   "unlockText": "Win a full campaign",
+   "researchCost": 1200
   },
   {
    "id": "sinnoh",

@@ -96,7 +96,7 @@ describe('reward draft', () => {
   it('throws a configuration error with fewer than five eligible rewards', () => {
     // Without the catalog, a single plain event stands in for events.json (its events give catalog items).
     const EMPTY_EVENT = { id: 'quiet', name: 'Quiet Path', group: 'Test', scene: { cast: [] }, intro: 'Nothing here.', choices: [{ label: 'Walk on', success: { text: 'You walk on.', effects: [] } }] };
-    const small = buildContent({ ...RAW_CONTENT, rewards: (RAW_CONTENT.rewards as unknown[]).slice(0, 4), itemCatalog: [], events: { events: [EMPTY_EVENT] }, gameEvents: { events: (RAW_CONTENT.gameEvents as { events: object[] }).events.map((e) => ({ ...e, mapEvents: [] })) } });
+    const small = buildContent({ ...RAW_CONTENT, rewards: (RAW_CONTENT.rewards as unknown[]).slice(0, 4), itemCatalog: [], trainerTiers: { ...(RAW_CONTENT.trainerTiers as object), classes: {}, default: { held: [] } }, events: { events: [EMPTY_EVENT] }, gameEvents: { events: (RAW_CONTENT.gameEvents as { events: object[] }).events.map((e) => ({ ...e, mapEvents: [] })) } });
     const run = chooseStarter(small, createRun(small, { runId: 'r', seed: 's', archetypeId: 'red' }), 0);
     expect(() => generateDraft(small, run, new Rng(hashSeed('x')))).toThrow(RewardConfigError);
   });

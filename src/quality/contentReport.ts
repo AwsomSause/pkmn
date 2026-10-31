@@ -90,6 +90,8 @@ export function untestedMigrations(migrations: Record<string, number[]>, testSou
   const tested = new Set<string>();
   for (const text of testSources) {
     for (const m of text.matchAll(/record:\s*'(\w+)',\s*schemaVersion:\s*(\d+)/g)) tested.add(`${m[1]} v${m[2]}`);
+    // The release-gate tests build old saves with `envelope('settings', 8, ...)`.
+    for (const m of text.matchAll(/envelope\(\s*'(\w+)',\s*(\d+)\s*,/g)) tested.add(`${m[1]} v${m[2]}`);
   }
   return Object.entries(migrations).flatMap(([record, versions]) => versions.filter((v) => !tested.has(`${record} v${v}`)).map((v) => `${record} v${v} -> v${v + 1}`));
 }

@@ -24,6 +24,7 @@ import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
 import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
+import { shinyCatchBurst, targetReticle } from '../ui/battleFx/arenaLife';
 import { addContactShadows, addParallax, addVignette, ArenaLight, dressArena, type ShadowTarget } from '../ui/battleFx/arenaLife';
 import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
@@ -55,7 +56,7 @@ import { wouldRefuse } from '../core/bond';
 import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
-import { championGlow, levelUpBanner } from '../ui/battleFx/transitions';
+import { championGlow, levelUpBanner, platformEdgeLight } from '../ui/battleFx/transitions';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { addEnvironment } from '../ui/battleFx/environment';
 import { environmentStory } from '../core/presentation/environmentStory';
@@ -152,6 +153,8 @@ export class BattleScene extends Phaser.Scene {
   private field!: Phaser.GameObjects.Container;
   /** Index in `field` just above the arena art. */
   private fieldBase = 0;
+  /** The doubles target picker's marker on the highlighted Pokémon. */
+  private reticle: Phaser.GameObjects.Graphics | null = null;
   private arenaLight: ArenaLight | null = null;
   private arenaPhase = 0;
   /** The stage's types, for the ambience and the intro. */
@@ -269,6 +272,12 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    if (this.motion !== 'off' && !battle.doubles) {
+      const edge = TYPE_COLORS[this.arenaTypes[0] ?? 'normal'] ?? 0xffffff;
+      for (const at of [ENEMY_POS, PLAYER_POS]) {
+        platformEdgeLight(this, this.field, at.x, at.y + 6, edge, this.motion);
+      }
+    }
     // Environmental storytelling (catalog 67): crisis weather, villain banners, ruins, lab panels, Shadow miasma.
     const envEvent = run.battle?.event ? session.content.events.get(run.battle.event.eventId) : undefined;
     const envFoe = run.battle ? run.battle.enemyTeam[run.battle.enemyIndex] : undefined;
@@ -609,7 +618,10 @@ export class BattleScene extends Phaser.Scene {
   private prefetchMoves(mon: PokemonInstance): void {
     prefetchCinematics(this);
     const data = moveAnims();
-    this.fx.prefetch(mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim));
+    this.fx.prefetch(
+      mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim),
+      mon.moves.flatMap((m) => presentationFor(data, m.id).script ?? []),
+    );
   }
 
   /**
@@ -946,6 +958,9 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private clearMenus(): void {
+    this.tweens.killTweensOf(this.reticle ?? []);
+    this.reticle?.destroy();
+    this.reticle = null;
     this.menu?.destroy();
     this.menu = null;
     this.picker?.close();
@@ -968,6 +983,8 @@ export class BattleScene extends Phaser.Scene {
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
         await this.say(isUltimateBattle(this.run) ? `${title}, your Ultimate Rival, blocks the way!` : battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
+        const classLine = !battle.rival && !battle.rivalId && !battle.returning && !battle.nemesis && !battle.hunted ? services().session.content.trainers.get(battle.trainer?.classId ?? '')?.lines?.intro : undefined;
+        if (classLine) await this.say(`"${classLine}"`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         if (this.duo) {
@@ -1181,6 +1198,15 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     this.clearMenus();
+    // A reticle follows the highlighted foe (or the partner).
+    const reticle = targetReticle(this, 0xffe070, this.motion);
+    const aim = (i: number) => {
+      const t = choices[i]!.target;
+      const at = DUO_POS[t.side][t.spot];
+      reticle.aimAt(at.x, at.y - 50);
+    };
+    aim(0);
+    this.reticle = reticle;
     this.message.setText(`Use ${move.name} on which Pokémon?`);
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
@@ -1193,6 +1219,7 @@ export class BattleScene extends Phaser.Scene {
       fontSize: 26,
       color: COLORS.textLight,
       glass: { tints: choices.map((c) => mixColor(c.tint, 0x000000, 0.3)), motion: this.motion },
+      onFocus: aim,
       onSelect: (i) => this.submit(action, choices[i]!.target),
       onBack: () => this.showMoveMenu(),
     });
@@ -1277,7 +1304,7 @@ export class BattleScene extends Phaser.Scene {
     ] as const;
     this.clearMenus();
     const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
-    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.');
+    this.message.setText(blocked.find((b) => b) ?? `Cheer Lv.${battle.raid!.cheerLevel}: cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.`);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
       y: MESSAGE_Y + 26,
@@ -1517,6 +1544,13 @@ export class BattleScene extends Phaser.Scene {
       this.scene.start(sceneForRun(result.run));
       return;
     }
+    if (result.narrativeDefeat) {
+      await this.say(result.narrativeDefeat.defeatLine);
+      await this.say(result.narrativeDefeat.victoryLine);
+      await exitWipe(this, this.motion, this.wipeMask());
+      this.scene.start(sceneForRun(result.run));
+      return;
+    }
     if (result.wiped) {
       await this.say(result.run.phase === 'battle' ? 'The VS Recorder rewinds the tape... the battle starts again!' : result.run.rules.modeId === 'adventure' ? 'Your party fainted... you return to the start of the stage, healed.' : 'Death-Block! You return to the start of the stage with your party healed.');
       this.scene.start(sceneForRun(result.run));
@@ -1746,6 +1780,18 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, y: sprite.y + 30, duration: 400 });
           break;
+        case 'miss': {
+          // The target slips aside and back (presentation only; the miss itself is already decided).
+          const target = e.side === 'player' ? this.enemySprite : this.playerSprite;
+          if (target && battleAnimations !== 'off') {
+            const dx = (e.side === 'player' ? 36 : -36) * (battleAnimations === 'full' ? 1 : 0.4);
+            const x = target.x;
+            await tween(this, { targets: target, x: x + dx, alpha: 0.6, duration: 130, yoyo: true, ease: 'Sine.easeOut' });
+            target.x = x;
+            target.setAlpha(1);
+          }
+          break;
+        }
         case 'switchOut':
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, duration: 250 });
@@ -1981,6 +2027,11 @@ export class BattleScene extends Phaser.Scene {
         for (const [i, colour] of [0xff80c0, 0x80d0ff, 0xa0ff90, 0xffd060].entries()) burstReveal(this, ball.x + (i - 1.5) * 34, ball.y - 24 + (i % 2) * 36, colour, this.motion);
       }
       await tween(this, { targets: ball, alpha: 0.6, duration: 150, yoyo: true });
+      // A shiny catch gets its own gold ring and sparkles.
+      if (this.shown.enemy.shiny) {
+        playSfx(this, 'se.shiny');
+        await shinyCatchBurst(this, ball.x, ball.y, this.motion);
+      }
       await reveal.done;
       return;
     }

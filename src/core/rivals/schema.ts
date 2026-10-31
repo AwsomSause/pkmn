@@ -36,6 +36,13 @@ export const RivalConfigSchema = z.object({
   /** The Rival Who Wins Without You (rivals/promotion.ts): progress needed for Gym Leader, finalist and Champion, the chance per unseen win, and the ladder states that may climb. */
   promotion: z.object({ progress: z.array(z.number().int().min(0)).length(3), chance: z.number().min(0).max(1), states: z.array(z.string()).min(1) }),
   world: z.object({ unseenWinBase: z.number(), progressCap: z.number().int(), unseenWinPotential: z.number(), privateGoalChance: z.number(), privateGoalMinAmbition: z.number(), fragileResilience: z.number(), toughResilience: z.number(), edgeChance: z.number(), distortedRumorChance: z.number(), friendMinEmpathy: z.number(), rivalMinAmbition: z.number() }),
+  /** Rival world progression (rivals/progression.ts): lead bounds, badge roll, Champion Candidate badges, milestones kept, and per-kind lead and fame changes. */
+  progression: z.object({
+    note: z.string(),
+    leadMin: z.number().int(), leadMax: z.number().int(), badgeChance: z.number().min(0).max(1), candidateBadges: z.number().int().min(1), milestonesKept: z.number().int().min(1),
+    lead: z.record(z.string(), z.number().int()),
+    fame: z.record(z.string(), z.number().int()),
+  }),
   relations: z.object({ exchangeChance: z.number(), exchangeShift: z.number(), influenceConfidence: z.number(), triangleGain: z.number(), triangleMinVindictiveness: z.number(), substituteStrain: z.number(), legacyCloseNote: z.boolean() }),
   ultimate: z.object({
     weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),

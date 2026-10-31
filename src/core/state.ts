@@ -450,6 +450,8 @@ export const RaidBattleSchema = z.object({
   cheersLeft: z.number().int().min(0).default(3),
   cheerOffense: z.number().int().min(0).default(0),
   cheerDefense: z.number().int().min(0).default(0),
+  /** Cheer level 1 to 3 (earned by winning raids): stronger and richer cheers. */
+  cheerLevel: z.number().int().min(1).max(3).default(1),
   /** Who earned a raid memory (uids): started the raid, broke a shield, took a charged attack under a Defense cheer, survived a charged attack. */
   lead: z.string().nullable().default(null),
   breaker: z.string().nullable().default(null),
@@ -457,6 +459,9 @@ export const RaidBattleSchema = z.object({
   survivor: z.string().nullable().default(null),
   /** Raid types: a rival fights beside you, the boss is back after escaping, and the approach's prize changes. */
   rivalHelped: z.boolean().default(false),
+  /** The named rival fighting the boss (or racing you for the last hit), and whether it landed the final blow. */
+  rival: z.object({ id: z.string(), name: z.string(), speciesId: z.string(), level: z.number().int().min(1), mode: z.enum(['help', 'race']) }).nullable().default(null),
+  rivalFinished: z.boolean().default(false),
   returning: z.boolean().default(false),
   rewardPercent: z.number().int().default(100),
   draftDelta: z.number().int().default(0),
@@ -617,6 +622,8 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Narrative rival defeat (M12): losing this rival fight is part of the story and does not end the run (rivals/narrativeDefeat.ts). */
+  narrative: z.object({ id: z.string() }).optional(),
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),

@@ -11471,7 +11471,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"My Rattata is in the top percentage of Rattata!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "rattata": [
+        "quick-attack",
+        "tackle",
+        "bite",
+        "tail-whip"
+      ],
+      "spearow": [
+        "peck",
+        "fury-attack",
+        "growl"
+      ],
+      "ekans": [
+        "poison-sting",
+        "bite",
+        "leer",
+        "wrap"
+      ],
+      "nidoran-m": [
+        "poison-sting",
+        "tackle",
+        "leer",
+        "peck"
+      ],
+      "meowth": [
+        "fake-out",
+        "scratch",
+        "bite",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-lass-janice",
@@ -11519,7 +11550,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Be gentle, okay? They are my friends.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "pidgey": [
+        "gust",
+        "quick-attack",
+        "tackle",
+        "sand-attack"
+      ],
+      "clefairy": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "jigglypuff": [
+        "covet",
+        "disarming-voice",
+        "echoed-voice",
+        "sing"
+      ],
+      "oddish": [
+        "acid",
+        "absorb",
+        "growth"
+      ],
+      "eevee": [
+        "covet",
+        "tackle",
+        "double-kick",
+        "tail-whip"
+      ]
+    }
   },
   {
     "id": "npc-bug-catcher-wade",
@@ -11569,7 +11631,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Bugs are way tougher than they look!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "caterpie": [
+        "bug-bite",
+        "tackle",
+        "string-shot"
+      ],
+      "weedle": [
+        "bug-bite",
+        "poison-sting",
+        "string-shot"
+      ],
+      "paras": [
+        "absorb",
+        "scratch",
+        "sleep-powder"
+      ],
+      "venonat": [
+        "struggle-bug",
+        "confusion",
+        "foresight",
+        "tackle"
+      ],
+      "scyther": [
+        "aerial-ace",
+        "silver-wind",
+        "false-swipe",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-camper-liam",
@@ -11620,7 +11711,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Nothing beats a night under the stars.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "sandshrew": [
+        "rapid-spin",
+        "defense-curl",
+        "fury-cutter",
+        "scratch"
+      ],
+      "geodude": [
+        "rock-throw",
+        "rollout",
+        "tackle",
+        "defense-curl"
+      ],
+      "diglett": [
+        "mud-slap",
+        "magnitude",
+        "scratch",
+        "growl"
+      ],
+      "cubone": [
+        "bone-club",
+        "mud-slap",
+        "headbutt",
+        "growl"
+      ],
+      "rhyhorn": [
+        "horn-attack",
+        "sand-attack",
+        "stomp"
+      ]
+    }
   },
   {
     "id": "npc-picnicker-gina",
@@ -11670,7 +11792,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"We packed sandwiches for the whole team!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "bulbasaur": [
+        "vine-whip",
+        "tackle",
+        "growl"
+      ],
+      "oddish": [
+        "acid",
+        "absorb",
+        "growth"
+      ],
+      "bellsprout": [
+        "vine-whip",
+        "wrap",
+        "growth"
+      ],
+      "exeggcute": [
+        "absorb",
+        "uproar",
+        "hypnosis",
+        "barrage"
+      ],
+      "tangela": [
+        "absorb",
+        "confusion",
+        "ingrain",
+        "constrict"
+      ]
+    }
   },
   {
     "id": "npc-hiker-anthony",
@@ -11721,7 +11872,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Mountains make for stubborn Pokémon.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "geodude": [
+        "rock-throw",
+        "rollout",
+        "tackle",
+        "defense-curl"
+      ],
+      "onix": [
+        "bulldoze",
+        "rock-tomb",
+        "rock-throw",
+        "mud-sport"
+      ],
+      "machop": [
+        "low-sweep",
+        "karate-chop",
+        "bullet-punch",
+        "leer"
+      ],
+      "rhyhorn": [
+        "horn-attack",
+        "sand-attack",
+        "stomp"
+      ],
+      "sandshrew": [
+        "rapid-spin",
+        "defense-curl",
+        "fury-cutter",
+        "scratch"
+      ]
+    }
   },
   {
     "id": "npc-fisherman-elliot",
@@ -11769,7 +11951,35 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Patience is the whole trick.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "magikarp": [
+        "splash"
+      ],
+      "poliwag": [
+        "bubble",
+        "water-gun",
+        "pound",
+        "water-sport"
+      ],
+      "krabby": [
+        "bubble",
+        "water-gun",
+        "vise-grip",
+        "mud-sport"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ]
+    }
   },
   {
     "id": "npc-bird-keeper-perry",
@@ -11819,7 +12029,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Watch them ride the wind!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "pidgey": [
+        "gust",
+        "quick-attack",
+        "tackle",
+        "sand-attack"
+      ],
+      "spearow": [
+        "peck",
+        "fury-attack",
+        "growl"
+      ],
+      "doduo": [
+        "quick-attack",
+        "peck",
+        "fury-attack",
+        "growl"
+      ],
+      "farfetchd": [
+        "aerial-ace",
+        "quick-attack",
+        "poison-jab",
+        "mirror-move"
+      ],
+      "hoothoot": [
+        "tackle",
+        "peck",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-black-belt-kenji",
@@ -11868,7 +12108,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Hup! Train the body, train the Pokémon.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "mankey": [
+        "karate-chop",
+        "low-kick",
+        "covet",
+        "leer"
+      ],
+      "machop": [
+        "low-sweep",
+        "karate-chop",
+        "bullet-punch",
+        "leer"
+      ],
+      "tyrogue": [
+        "fake-out",
+        "helping-hand",
+        "tackle"
+      ],
+      "hitmonlee": [
+        "brick-break",
+        "low-sweep",
+        "revenge",
+        "helping-hand"
+      ],
+      "hitmonchan": [
+        "drain-punch",
+        "revenge",
+        "bullet-punch",
+        "helping-hand"
+      ]
+    }
   },
   {
     "id": "npc-biker-ryder",
@@ -11917,7 +12188,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Out of my way, rookie!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "koffing": [
+        "clear-smog",
+        "smog",
+        "assurance",
+        "poison-gas"
+      ],
+      "grimer": [
+        "pound",
+        "poison-gas",
+        "mud-slap"
+      ],
+      "ekans": [
+        "poison-sting",
+        "bite",
+        "leer",
+        "wrap"
+      ],
+      "zubat": [
+        "gust",
+        "leech-life",
+        "supersonic",
+        "bite"
+      ],
+      "houndour": [
+        "ember",
+        "smog",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-burglar-quinn",
@@ -11965,7 +12266,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Finders keepers, right?\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ],
+      "vulpix": [
+        "ember",
+        "quick-attack",
+        "tail-whip",
+        "tackle"
+      ],
+      "ponyta": [
+        "ember",
+        "quick-attack",
+        "growl",
+        "tackle"
+      ],
+      "magmar": [
+        "flame-wheel",
+        "ember",
+        "feint-attack",
+        "leer"
+      ],
+      "charmander": [
+        "ember",
+        "dragon-breath",
+        "growl",
+        "metal-claw"
+      ]
+    }
   },
   {
     "id": "npc-channeler-hester",
@@ -12015,7 +12347,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"I feel something behind you...\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "gastly": [
+        "astonish",
+        "lick",
+        "hypnosis"
+      ],
+      "misdreavus": [
+        "shadow-sneak",
+        "astonish",
+        "confusion",
+        "growl"
+      ],
+      "shuppet": [
+        "astonish",
+        "knock-off",
+        "screech"
+      ],
+      "duskull": [
+        "astonish",
+        "absorb",
+        "leer"
+      ],
+      "drifloon": [
+        "gust",
+        "astonish",
+        "confusion",
+        "minimize"
+      ]
+    }
   },
   {
     "id": "npc-cooltrainer-marcus",
@@ -12064,7 +12425,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Only the best trainers get my respect.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "dratini": [
+        "twister",
+        "wrap",
+        "leer"
+      ],
+      "bagon": [
+        "bite",
+        "leer",
+        "ember",
+        "rage"
+      ],
+      "gible": [
+        "dragon-breath",
+        "twister",
+        "tackle",
+        "sand-attack"
+      ],
+      "larvitar": [
+        "rock-throw",
+        "chip-away",
+        "leer",
+        "bite"
+      ],
+      "charmander": [
+        "ember",
+        "dragon-breath",
+        "growl",
+        "metal-claw"
+      ]
+    }
   },
   {
     "id": "npc-cooltrainer-selene",
@@ -12114,7 +12506,33 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"My strategy is flawless.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "abra": [
+        "teleport"
+      ],
+      "ralts": [
+        "confusion",
+        "disarming-voice",
+        "growl"
+      ],
+      "slowpoke": [
+        "confusion",
+        "water-gun",
+        "tackle",
+        "curse"
+      ],
+      "natu": [
+        "peck",
+        "leer"
+      ],
+      "espeon": [
+        "confusion",
+        "take-down",
+        "growl",
+        "bite"
+      ]
+    }
   },
   {
     "id": "npc-crush-girl-tamsin",
@@ -12163,7 +12581,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Throw a punch, then another!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "makuhita": [
+        "vital-throw",
+        "arm-thrust",
+        "fake-out",
+        "focus-energy"
+      ],
+      "meditite": [
+        "confusion",
+        "low-kick",
+        "pound",
+        "work-up"
+      ],
+      "machop": [
+        "low-sweep",
+        "karate-chop",
+        "bullet-punch",
+        "leer"
+      ],
+      "riolu": [
+        "counter",
+        "rock-smash",
+        "bite",
+        "endure"
+      ],
+      "mankey": [
+        "karate-chop",
+        "low-kick",
+        "covet",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-crush-kin-ivan-and-mira",
@@ -12213,7 +12663,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Two trainers, double the pressure!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "tyrogue": [
+        "fake-out",
+        "helping-hand",
+        "tackle"
+      ],
+      "timburr": [
+        "low-kick",
+        "rock-throw",
+        "leer",
+        "pound"
+      ],
+      "mankey": [
+        "karate-chop",
+        "low-kick",
+        "covet",
+        "leer"
+      ],
+      "makuhita": [
+        "vital-throw",
+        "arm-thrust",
+        "fake-out",
+        "focus-energy"
+      ],
+      "machop": [
+        "low-sweep",
+        "karate-chop",
+        "bullet-punch",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-cue-ball-dutch",
@@ -12262,7 +12743,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Show me what you have got!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "machop": [
+        "low-sweep",
+        "karate-chop",
+        "bullet-punch",
+        "leer"
+      ],
+      "mankey": [
+        "karate-chop",
+        "low-kick",
+        "covet",
+        "leer"
+      ],
+      "makuhita": [
+        "vital-throw",
+        "arm-thrust",
+        "fake-out",
+        "focus-energy"
+      ],
+      "meditite": [
+        "confusion",
+        "low-kick",
+        "pound",
+        "work-up"
+      ],
+      "riolu": [
+        "counter",
+        "rock-smash",
+        "bite",
+        "endure"
+      ]
+    }
   },
   {
     "id": "npc-engineer-baxter",
@@ -12312,7 +12825,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Everything runs on current, even teams.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "magnemite": [
+        "thunder-shock",
+        "tackle",
+        "supersonic"
+      ],
+      "voltorb": [
+        "spark",
+        "thunder-shock",
+        "tackle",
+        "charge"
+      ],
+      "electabuzz": [
+        "spark",
+        "thunder-shock",
+        "quick-attack",
+        "leer"
+      ],
+      "elekid": [
+        "spark",
+        "thunder-shock",
+        "quick-attack",
+        "leer"
+      ],
+      "pikachu": [
+        "electro-ball",
+        "thunder-shock",
+        "quick-attack",
+        "sweet-kiss"
+      ]
+    }
   },
   {
     "id": "npc-gambler-lucky",
@@ -12360,7 +12904,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Double or nothing on this battle!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "meowth": [
+        "fake-out",
+        "scratch",
+        "bite",
+        "growl"
+      ],
+      "snubbull": [
+        "fire-fang",
+        "growl",
+        "ice-fang",
+        "thunder-fang"
+      ],
+      "eevee": [
+        "covet",
+        "tackle",
+        "double-kick",
+        "tail-whip"
+      ],
+      "lickitung": [
+        "tackle",
+        "bulldoze",
+        "supersonic",
+        "acid"
+      ],
+      "chansey": [
+        "covet",
+        "echoed-voice",
+        "disarming-voice",
+        "sweet-kiss"
+      ]
+    }
   },
   {
     "id": "npc-gentleman-alfred",
@@ -12408,7 +12984,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Proper form, proper manners.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ],
+      "meowth": [
+        "fake-out",
+        "scratch",
+        "bite",
+        "growl"
+      ],
+      "snubbull": [
+        "fire-fang",
+        "growl",
+        "ice-fang",
+        "thunder-fang"
+      ],
+      "eevee": [
+        "covet",
+        "tackle",
+        "double-kick",
+        "tail-whip"
+      ],
+      "houndour": [
+        "ember",
+        "smog",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-juggler-pierre",
@@ -12458,7 +13064,33 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Keep your eyes on the ball. And the Pokémon.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "drowzee": [
+        "confusion",
+        "pound",
+        "hypnosis"
+      ],
+      "abra": [
+        "teleport"
+      ],
+      "voltorb": [
+        "spark",
+        "thunder-shock",
+        "tackle",
+        "charge"
+      ],
+      "mr-mime": [
+        "confusion",
+        "magical-leaf",
+        "barrier",
+        "pound"
+      ],
+      "natu": [
+        "peck",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-lady-cordelia",
@@ -12506,7 +13138,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"My Pokémon are only the finest.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "clefairy": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "togepi": [
+        "draining-kiss",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "snubbull": [
+        "fire-fang",
+        "growl",
+        "ice-fang",
+        "thunder-fang"
+      ],
+      "jigglypuff": [
+        "covet",
+        "disarming-voice",
+        "echoed-voice",
+        "sing"
+      ],
+      "cleffa": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "splash"
+      ]
+    }
   },
   {
     "id": "npc-painter-vera",
@@ -12556,7 +13220,34 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Every battle is a canvas.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "smoochum": [
+        "powder-snow",
+        "pound",
+        "sweet-kiss",
+        "lick"
+      ],
+      "bellsprout": [
+        "vine-whip",
+        "wrap",
+        "growth"
+      ],
+      "oddish": [
+        "acid",
+        "absorb",
+        "growth"
+      ],
+      "ditto": [
+        "transform"
+      ],
+      "mime-jr": [
+        "confusion",
+        "pound",
+        "barrier",
+        "double-slap"
+      ]
+    }
   },
   {
     "id": "npc-poke-maniac-rex",
@@ -12604,7 +13295,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"I collect them all, and I mean all!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "cubone": [
+        "bone-club",
+        "mud-slap",
+        "headbutt",
+        "growl"
+      ],
+      "omanyte": [
+        "water-gun",
+        "rollout",
+        "bite",
+        "withdraw"
+      ],
+      "kabuto": [
+        "scratch",
+        "harden",
+        "absorb"
+      ],
+      "aerodactyl": [
+        "wing-attack",
+        "fire-fang",
+        "supersonic",
+        "ice-fang"
+      ],
+      "lileep": [
+        "acid",
+        "ingrain",
+        "astonish",
+        "wrap"
+      ]
+    }
   },
   {
     "id": "npc-pokemon-breeder-delia",
@@ -12652,7 +13374,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Raised with love since the egg.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "togepi": [
+        "draining-kiss",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "pichu": [
+        "thunder-shock",
+        "nuzzle",
+        "play-nice"
+      ],
+      "cleffa": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "splash"
+      ],
+      "igglybuff": [
+        "disarming-voice",
+        "pound",
+        "sing"
+      ],
+      "azurill": [
+        "bubble-beam",
+        "splash",
+        "bubble",
+        "water-gun"
+      ]
+    }
   },
   {
     "id": "npc-pokemon-ranger-hal",
@@ -12700,7 +13452,35 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Keep the wild safe, and the wild keeps us safe.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "bulbasaur": [
+        "vine-whip",
+        "tackle",
+        "growl"
+      ],
+      "bellsprout": [
+        "vine-whip",
+        "wrap",
+        "growth"
+      ],
+      "oddish": [
+        "acid",
+        "absorb",
+        "growth"
+      ],
+      "pikachu": [
+        "electro-ball",
+        "thunder-shock",
+        "quick-attack",
+        "sweet-kiss"
+      ],
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ]
+    }
   },
   {
     "id": "npc-pokemon-ranger-willa",
@@ -12748,7 +13528,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Capture on, ranger style!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "pidgey": [
+        "gust",
+        "quick-attack",
+        "tackle",
+        "sand-attack"
+      ],
+      "taillow": [
+        "wing-attack",
+        "quick-attack",
+        "peck",
+        "growl"
+      ],
+      "starly": [
+        "wing-attack",
+        "gust",
+        "quick-attack",
+        "growl"
+      ],
+      "hoothoot": [
+        "tackle",
+        "peck",
+        "growl"
+      ],
+      "spearow": [
+        "peck",
+        "fury-attack",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-psychic-edmund",
@@ -12798,7 +13608,32 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"I knew you were coming.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "abra": [
+        "teleport"
+      ],
+      "drowzee": [
+        "confusion",
+        "pound",
+        "hypnosis"
+      ],
+      "slowpoke": [
+        "confusion",
+        "water-gun",
+        "tackle",
+        "curse"
+      ],
+      "natu": [
+        "peck",
+        "leer"
+      ],
+      "ralts": [
+        "confusion",
+        "disarming-voice",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-psychic-lorna",
@@ -12848,7 +13683,34 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Your next move is already in my head.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "ralts": [
+        "confusion",
+        "disarming-voice",
+        "growl"
+      ],
+      "abra": [
+        "teleport"
+      ],
+      "mime-jr": [
+        "confusion",
+        "pound",
+        "barrier",
+        "double-slap"
+      ],
+      "wynaut": [
+        "mirror-coat",
+        "counter",
+        "encore"
+      ],
+      "espeon": [
+        "confusion",
+        "take-down",
+        "growl",
+        "bite"
+      ]
+    }
   },
   {
     "id": "npc-rocker-axel",
@@ -12898,7 +13760,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Turn it up to eleven!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "voltorb": [
+        "spark",
+        "thunder-shock",
+        "tackle",
+        "charge"
+      ],
+      "magnemite": [
+        "thunder-shock",
+        "tackle",
+        "supersonic"
+      ],
+      "elekid": [
+        "spark",
+        "thunder-shock",
+        "quick-attack",
+        "leer"
+      ],
+      "pikachu": [
+        "electro-ball",
+        "thunder-shock",
+        "quick-attack",
+        "sweet-kiss"
+      ],
+      "shinx": [
+        "spark",
+        "thunder-shock",
+        "bite",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-ruin-maniac-hadrian",
@@ -12949,7 +13842,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"These ruins hold such secrets.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "sandshrew": [
+        "rapid-spin",
+        "defense-curl",
+        "fury-cutter",
+        "scratch"
+      ],
+      "geodude": [
+        "rock-throw",
+        "rollout",
+        "tackle",
+        "defense-curl"
+      ],
+      "cubone": [
+        "bone-club",
+        "mud-slap",
+        "headbutt",
+        "growl"
+      ],
+      "baltoy": [
+        "psybeam",
+        "confusion",
+        "rock-tomb",
+        "harden"
+      ],
+      "trapinch": [
+        "mud-slap",
+        "bite",
+        "laser-focus",
+        "feint-attack"
+      ]
+    }
   },
   {
     "id": "npc-sailor-murphy",
@@ -12998,7 +13923,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Hoist the sails, matey!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "tentacool": [
+        "acid",
+        "bubble",
+        "water-gun",
+        "supersonic"
+      ],
+      "krabby": [
+        "bubble",
+        "water-gun",
+        "vise-grip",
+        "mud-sport"
+      ],
+      "shellder": [
+        "water-gun",
+        "tackle",
+        "withdraw",
+        "icicle-spear"
+      ],
+      "wingull": [
+        "wing-attack",
+        "water-gun",
+        "growl"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ]
+    }
   },
   {
     "id": "npc-scientist-dr-orson",
@@ -13048,7 +14003,34 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"A fascinating battle sample.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "magnemite": [
+        "thunder-shock",
+        "tackle",
+        "supersonic"
+      ],
+      "porygon": [
+        "tackle",
+        "psybeam",
+        "conversion",
+        "thunder-shock"
+      ],
+      "grimer": [
+        "pound",
+        "poison-gas",
+        "mud-slap"
+      ],
+      "voltorb": [
+        "spark",
+        "thunder-shock",
+        "tackle",
+        "charge"
+      ],
+      "ditto": [
+        "transform"
+      ]
+    }
   },
   {
     "id": "npc-sis-and-bro-amy-and-tim",
@@ -13098,7 +14080,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"We always fight together!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "poliwag": [
+        "bubble",
+        "water-gun",
+        "pound",
+        "water-sport"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "tentacool": [
+        "acid",
+        "bubble",
+        "water-gun",
+        "supersonic"
+      ],
+      "staryu": [
+        "water-gun",
+        "rapid-spin",
+        "harden",
+        "tackle"
+      ],
+      "psyduck": [
+        "bubble",
+        "water-gun",
+        "confusion",
+        "water-sport"
+      ]
+    }
   },
   {
     "id": "npc-super-nerd-miles",
@@ -13148,7 +14161,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"I did the math on your odds.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "grimer": [
+        "pound",
+        "poison-gas",
+        "mud-slap"
+      ],
+      "koffing": [
+        "clear-smog",
+        "smog",
+        "assurance",
+        "poison-gas"
+      ],
+      "magnemite": [
+        "thunder-shock",
+        "tackle",
+        "supersonic"
+      ],
+      "voltorb": [
+        "spark",
+        "thunder-shock",
+        "tackle",
+        "charge"
+      ],
+      "porygon": [
+        "tackle",
+        "psybeam",
+        "conversion",
+        "thunder-shock"
+      ]
+    }
   },
   {
     "id": "npc-swimmer-kai",
@@ -13198,7 +14241,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"The water is perfect today!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "tentacool": [
+        "acid",
+        "bubble",
+        "water-gun",
+        "supersonic"
+      ],
+      "staryu": [
+        "water-gun",
+        "rapid-spin",
+        "harden",
+        "tackle"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ],
+      "psyduck": [
+        "bubble",
+        "water-gun",
+        "confusion",
+        "water-sport"
+      ]
+    }
   },
   {
     "id": "npc-swimmer-marina",
@@ -13248,7 +14322,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Dive in with me!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "staryu": [
+        "water-gun",
+        "rapid-spin",
+        "harden",
+        "tackle"
+      ],
+      "shellder": [
+        "water-gun",
+        "tackle",
+        "withdraw",
+        "icicle-spear"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ],
+      "wooper": [
+        "mud-shot",
+        "water-gun",
+        "slam",
+        "tail-whip"
+      ],
+      "azurill": [
+        "bubble-beam",
+        "splash",
+        "bubble",
+        "water-gun"
+      ]
+    }
   },
   {
     "id": "npc-swimmer-finn",
@@ -13299,7 +14405,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Cannonball into battle!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "krabby": [
+        "bubble",
+        "water-gun",
+        "vise-grip",
+        "mud-sport"
+      ],
+      "poliwag": [
+        "bubble",
+        "water-gun",
+        "pound",
+        "water-sport"
+      ],
+      "slowpoke": [
+        "confusion",
+        "water-gun",
+        "tackle",
+        "curse"
+      ],
+      "totodile": [
+        "water-gun",
+        "bite",
+        "leer",
+        "scratch"
+      ],
+      "mudkip": [
+        "water-gun",
+        "rock-smash",
+        "growl",
+        "tackle"
+      ]
+    }
   },
   {
     "id": "npc-swimmer-coral",
@@ -13347,7 +14485,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Swim and splash!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "seel": [
+        "water-gun",
+        "headbutt",
+        "growl",
+        "icy-wind"
+      ],
+      "lapras": [
+        "ice-shard",
+        "water-gun",
+        "growl"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "lotad": [
+        "bubble",
+        "water-gun",
+        "astonish",
+        "growl"
+      ],
+      "marill": [
+        "bubble-beam",
+        "bubble",
+        "slam",
+        "splash"
+      ]
+    }
   },
   {
     "id": "npc-tamer-garrett",
@@ -13396,7 +14564,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Wild or not, they listen to me.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ],
+      "sandshrew": [
+        "rapid-spin",
+        "defense-curl",
+        "fury-cutter",
+        "scratch"
+      ],
+      "rhyhorn": [
+        "horn-attack",
+        "sand-attack",
+        "stomp"
+      ],
+      "mankey": [
+        "karate-chop",
+        "low-kick",
+        "covet",
+        "leer"
+      ],
+      "houndour": [
+        "ember",
+        "smog",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-team-rocket-grunt-boris",
@@ -13444,7 +14641,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Hand over your Pokémon!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "rattata": [
+        "quick-attack",
+        "tackle",
+        "bite",
+        "tail-whip"
+      ],
+      "zubat": [
+        "gust",
+        "leech-life",
+        "supersonic",
+        "bite"
+      ],
+      "koffing": [
+        "clear-smog",
+        "smog",
+        "assurance",
+        "poison-gas"
+      ],
+      "ekans": [
+        "poison-sting",
+        "bite",
+        "leer",
+        "wrap"
+      ],
+      "houndour": [
+        "ember",
+        "smog",
+        "leer"
+      ]
+    }
   },
   {
     "id": "npc-team-rocket-grunt-jessa",
@@ -13492,7 +14720,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Prepare for trouble, rookie!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "ekans": [
+        "poison-sting",
+        "bite",
+        "leer",
+        "wrap"
+      ],
+      "grimer": [
+        "pound",
+        "poison-gas",
+        "mud-slap"
+      ],
+      "zubat": [
+        "gust",
+        "leech-life",
+        "supersonic",
+        "bite"
+      ],
+      "meowth": [
+        "fake-out",
+        "scratch",
+        "bite",
+        "growl"
+      ],
+      "koffing": [
+        "clear-smog",
+        "smog",
+        "assurance",
+        "poison-gas"
+      ]
+    }
   },
   {
     "id": "npc-tuber-pip",
@@ -13540,7 +14799,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Float on, battle later.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "psyduck": [
+        "bubble",
+        "water-gun",
+        "confusion",
+        "water-sport"
+      ],
+      "poliwag": [
+        "bubble",
+        "water-gun",
+        "pound",
+        "water-sport"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ],
+      "marill": [
+        "bubble-beam",
+        "bubble",
+        "slam",
+        "splash"
+      ],
+      "wooper": [
+        "mud-shot",
+        "water-gun",
+        "slam",
+        "tail-whip"
+      ]
+    }
   },
   {
     "id": "npc-tuber-dot",
@@ -13588,7 +14879,39 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Splash fight!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "marill": [
+        "bubble-beam",
+        "bubble",
+        "slam",
+        "splash"
+      ],
+      "psyduck": [
+        "bubble",
+        "water-gun",
+        "confusion",
+        "water-sport"
+      ],
+      "azurill": [
+        "bubble-beam",
+        "splash",
+        "bubble",
+        "water-gun"
+      ],
+      "lotad": [
+        "bubble",
+        "water-gun",
+        "astonish",
+        "growl"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ]
+    }
   },
   {
     "id": "npc-tuber-rudy",
@@ -13636,7 +14959,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Tube life is the best life.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "wooper": [
+        "mud-shot",
+        "water-gun",
+        "slam",
+        "tail-whip"
+      ],
+      "poliwag": [
+        "bubble",
+        "water-gun",
+        "pound",
+        "water-sport"
+      ],
+      "tentacool": [
+        "acid",
+        "bubble",
+        "water-gun",
+        "supersonic"
+      ],
+      "krabby": [
+        "bubble",
+        "water-gun",
+        "vise-grip",
+        "mud-sport"
+      ],
+      "magikarp": [
+        "splash"
+      ]
+    }
   },
   {
     "id": "npc-tuber-sunny",
@@ -13684,7 +15036,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Come join the waves!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "staryu": [
+        "water-gun",
+        "rapid-spin",
+        "harden",
+        "tackle"
+      ],
+      "lotad": [
+        "bubble",
+        "water-gun",
+        "astonish",
+        "growl"
+      ],
+      "marill": [
+        "bubble-beam",
+        "bubble",
+        "slam",
+        "splash"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "wingull": [
+        "wing-attack",
+        "water-gun",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-twins-nia-and-mia",
@@ -13734,7 +15116,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Two for the price of one!\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "clefairy": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "cleffa": [
+        "disarming-voice",
+        "fairy-wind",
+        "pound",
+        "splash"
+      ],
+      "togepi": [
+        "draining-kiss",
+        "fairy-wind",
+        "pound",
+        "growl"
+      ],
+      "jigglypuff": [
+        "covet",
+        "disarming-voice",
+        "echoed-voice",
+        "sing"
+      ],
+      "pichu": [
+        "thunder-shock",
+        "nuzzle",
+        "play-nice"
+      ]
+    }
   },
   {
     "id": "npc-young-couple-dan-and-eri",
@@ -13784,7 +15197,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Together we cannot lose.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "eevee": [
+        "covet",
+        "tackle",
+        "double-kick",
+        "tail-whip"
+      ],
+      "vulpix": [
+        "ember",
+        "quick-attack",
+        "tail-whip",
+        "tackle"
+      ],
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ],
+      "pichu": [
+        "thunder-shock",
+        "nuzzle",
+        "play-nice"
+      ],
+      "meowth": [
+        "fake-out",
+        "scratch",
+        "bite",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-beauty-bianca",
@@ -13832,7 +15275,38 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"My Pokémon sparkle, and so do I.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "staryu": [
+        "water-gun",
+        "rapid-spin",
+        "harden",
+        "tackle"
+      ],
+      "goldeen": [
+        "horn-attack",
+        "tail-whip",
+        "quick-attack",
+        "peck"
+      ],
+      "seel": [
+        "water-gun",
+        "headbutt",
+        "growl",
+        "icy-wind"
+      ],
+      "horsea": [
+        "bubble",
+        "water-gun",
+        "smokescreen"
+      ],
+      "marill": [
+        "bubble-beam",
+        "bubble",
+        "slam",
+        "splash"
+      ]
+    }
   },
   {
     "id": "npc-aroma-lady-rosalind",
@@ -13880,7 +15354,36 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Smell the flowers, then fall to them.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "oddish": [
+        "acid",
+        "absorb",
+        "growth"
+      ],
+      "bellsprout": [
+        "vine-whip",
+        "wrap",
+        "growth"
+      ],
+      "hoppip": [
+        "absorb",
+        "fairy-wind",
+        "splash",
+        "tackle"
+      ],
+      "budew": [
+        "mega-drain",
+        "absorb",
+        "poison-sting",
+        "growth"
+      ],
+      "bulbasaur": [
+        "vine-whip",
+        "tackle",
+        "growl"
+      ]
+    }
   },
   {
     "id": "npc-cool-couple-leon-and-sky",
@@ -13930,6 +15433,37 @@
     ],
     "signatureMechanic": null,
     "unlockFlavor": "\"Stylish and strong, that is us.\"",
-    "unlockStatus": "supported"
+    "unlockStatus": "supported",
+    "signatureMovesets": {
+      "eevee": [
+        "covet",
+        "tackle",
+        "double-kick",
+        "tail-whip"
+      ],
+      "ponyta": [
+        "ember",
+        "quick-attack",
+        "growl",
+        "tackle"
+      ],
+      "vulpix": [
+        "ember",
+        "quick-attack",
+        "tail-whip",
+        "tackle"
+      ],
+      "growlithe": [
+        "ember",
+        "bite",
+        "howl"
+      ],
+      "pikachu": [
+        "electro-ball",
+        "thunder-shock",
+        "quick-attack",
+        "sweet-kiss"
+      ]
+    }
   }
 ]

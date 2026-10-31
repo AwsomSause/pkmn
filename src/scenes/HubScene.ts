@@ -19,7 +19,7 @@ import { moveLore, moveRank, topMoves } from '../core/moveMastery';
 import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { arenasOpen, CARD_FRAMES, CRY_THEMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
-import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
+import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_BADGES, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { Profile, RunRecord } from '../core/state';
@@ -37,9 +37,10 @@ import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 import { codexEntries, codexTotals } from '../core/story/codex';
+import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -64,6 +65,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'intel', label: 'Intelligence Board', blurb: 'What you know about each region and its League. Grows with visits and the Tree.' },
   { room: 'moves', label: 'Move Research', blurb: 'Your moves, their mastery, and training with Research Points (Enter).' },
   { room: 'seeds', label: 'Seed Shelf', blurb: 'Keep shared seed codes and start a run from one (Enter).' },
+  { room: 'options', label: 'Game settings', blurb: 'Display, audio, gameplay, animations, text and accessibility. The same settings as the title screen.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -103,6 +105,8 @@ const POOL_CATEGORY_LABEL: Record<StarterPoolCategory, string> = {
   event: 'Event Sets',
   research: 'Research',
   rare: 'Rare',
+  challenge: 'Challenge Sets',
+  special: 'Special Specimens',
 };
 
 const POOL_LABEL: Record<PoolStatus, string> = {
@@ -132,10 +136,10 @@ const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = 
 const BLURB_Y = 382;
 
 const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
-  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
+  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'intel', 'museum', 'seeds'], blurb: "This week's event, your past runs, the Hall of Fame, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'codex', 'intel', 'museum', 'seeds'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -177,11 +181,10 @@ interface Tile {
 export class HubScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private dexInfo: DexInfo | null = null;
-  private detail!: Phaser.GameObjects.Container;
   private tiles: Tile[] = [];
   private tileIndex = 2;
-  /** The small menu above a tile with several rooms, while it is open. */
-  private submenu: { menu: Menu; layer: Phaser.GameObjects.Container; rooms: Room[] } | null = null;
+  /** The page of a tile with several rooms, while it is open; room pages open on top of it. */
+  private section: Picker | null = null;
   private blurb!: Phaser.GameObjects.Text;
   private blurbPill!: Phaser.GameObjects.Graphics;
   private showcase!: ShowcaseMon;
@@ -213,7 +216,7 @@ export class HubScene extends Phaser.Scene {
     const { session } = services();
     session.closeRun();
     this.picker = null;
-    this.submenu = null;
+    this.section = null;
     this.tiles = [];
     playMusicLazy(this, 'bgm.hub');
     const p = session.profile;
@@ -241,7 +244,6 @@ export class HubScene extends Phaser.Scene {
       .setOrigin(1, 0);
     this.drawCardFrame(card, getFrame(p.cardFrame));
 
-    this.detail = this.add.container(0, 0);
     this.blurbPill = this.add.graphics();
     this.blurb = this.add.text(GAME_WIDTH / 2, BLURB_Y, '', textStyle(16, COLORS.textLight, { align: 'center' })).setOrigin(0.5, 0.5);
 
@@ -259,7 +261,7 @@ export class HubScene extends Phaser.Scene {
     const room = data.focus !== undefined ? ROOMS[Math.min(data.focus, ROOMS.length - 1)]!.room : 'run';
     const tile = Math.max(0, TILES.findIndex((t) => t.rooms.includes(room)));
     this.focusTile(tile, false);
-    if (data.focus !== undefined && TILES[tile]!.rooms.length > 1) this.openSubmenu(TILES[tile]!.rooms.indexOf(room));
+    if (data.focus !== undefined && TILES[tile]!.rooms.length > 1) this.openSection(TILES[tile]!.rooms.indexOf(room));
 
     onInputAction(this, (a) => this.handle(a));
   }
@@ -282,11 +284,10 @@ export class HubScene extends Phaser.Scene {
       root.add([idle, lit, icon, label]);
       const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
-        if (!this.picker && !this.submenu) this.focusTile(i);
+        if (!this.picker && !this.section) this.focusTile(i);
       });
       zone.on('pointerdown', () => {
-        if (this.picker) return;
-        if (this.submenu) this.closeSubmenu();
+        if (this.picker || this.section) return;
         this.focusTile(i, false);
         this.confirmTile();
       });
@@ -316,7 +317,6 @@ export class HubScene extends Phaser.Scene {
     this.setBlurb(t.blurb);
     const mon = this.tileMons[i];
     if (mon) this.showcase.show(mon);
-    this.showDetail(t.rooms[0]!);
   }
 
   /** The one-line description above the tiles, on a dark pill. */
@@ -332,52 +332,44 @@ export class HubScene extends Phaser.Scene {
     const t = TILES[this.tileIndex]!;
     playSfx(this, 'ui.select');
     if (t.rooms.length === 1) this.enter(t.rooms[0]!);
-    else this.openSubmenu(0);
+    else this.openSection(0);
   }
 
-  private openSubmenu(focus: number): void {
+  /** A tile with several rooms opens its own full page: one card per room, with a Back button. */
+  private openSection(focus: number): void {
     const t = TILES[this.tileIndex]!;
-    const tile = this.tiles[this.tileIndex]!;
-    const w = 280;
-    const itemH = 46;
-    const h = t.rooms.length * itemH + 28;
-    const x = Phaser.Math.Clamp(tile.x + tile.w / 2 - w / 2, 12, GAME_WIDTH - w - 12);
-    const y = TILE_Y - TILE_H / 2 - TILE_RISE - h - 8;
-    const layer = this.add.container(0, 0).setDepth(50);
-    layer.add(paintWindow(this.add.graphics(), x, y, w, h, { border: COLORS.accent }));
-    t.rooms.forEach((room, n) => {
-      const icon = ROOM_ICON[room];
-      if (icon) layer.add(itemVisual(this, icon, x + w - 30, y + 14 + n * itemH + 16, 1));
+    this.section?.close();
+    const rows: PickerRow[] = t.rooms.map((room) => {
+      const info = ROOMS.find((r) => r.room === room)!;
+      const summary = this.roomSummary(room);
+      return {
+        problem: null,
+        hint: info.blurb,
+        draw: (scene, box, w, h) => {
+          const icon = ROOM_ICON[room];
+          if (icon) box.add(itemVisual(scene, icon, 34, h / 2, 1));
+          box.add(scene.add.text(66, 8, info.label, textStyle(24, COLORS.textLight)));
+          if (summary) box.add(scene.add.text(66, 38, summary, textStyle(16, COLORS.gold, { wordWrap: { width: w - 80 } })));
+        },
+      };
     });
-    const menu = new Menu(this, {
-      x: x + 18,
-      y: y + 16,
-      options: t.rooms.map((room) => ({ label: ROOMS.find((r) => r.room === room)!.label })),
-      itemHeight: itemH,
-      fontSize: 24,
-      onFocus: (n) => {
-        const room = t.rooms[n]!;
-        this.setBlurb(ROOMS.find((r) => r.room === room)!.blurb || t.blurb);
-        this.showDetail(room);
-      },
+    this.section = new Picker(this, {
+      title: t.label,
+      rows,
+      columns: 2,
+      rowHeight: 68,
+      start: Phaser.Math.Clamp(focus, 0, rows.length - 1),
       onSelect: (n) => this.enter(t.rooms[n]!),
-      onBack: () => this.closeSubmenu(),
+      onBack: () => this.closeSection(),
+      backLabel: 'back to the Hub',
     });
-    menu.container.setDepth(51);
-    layer.setAlpha(0);
-    menu.container.setAlpha(0);
-    this.tweens.add({ targets: [layer, menu.container], alpha: 1, duration: 160 });
-    this.submenu = { menu, layer, rooms: t.rooms };
-    menu.focus(Phaser.Math.Clamp(focus, 0, t.rooms.length - 1), false);
   }
 
-  private closeSubmenu(): void {
-    if (!this.submenu) return;
-    this.submenu.menu.destroy();
-    this.submenu.layer.destroy();
-    this.submenu = null;
-    this.focusTile(this.tileIndex, false);
+  private closeSection(): void {
+    this.section?.close();
+    this.section = null;
   }
+
 
   private handle(a: InputAction): void {
     if (this.dexInfo) {
@@ -388,13 +380,8 @@ export class HubScene extends Phaser.Scene {
       this.picker.handle(a);
       return;
     }
-    if (this.submenu) {
-      if (a === 'left' || a === 'right') {
-        this.closeSubmenu();
-        this.focusTile((this.tileIndex + (a === 'left' ? TILES.length - 1 : 1)) % TILES.length);
-      } else {
-        this.submenu.menu.handle(a);
-      }
+    if (this.section) {
+      this.section.handle(a);
       return;
     }
     if (a === 'left') this.focusTile((this.tileIndex + TILES.length - 1) % TILES.length);
@@ -412,79 +399,32 @@ export class HubScene extends Phaser.Scene {
     this.scene.restart({ notice, focus: this.focusIndex(room) });
   }
 
-  // ---------- the information card on the right ----------
+  // ---------- one-line room summaries (shown on the section page) ----------
 
-  private line(y: number, text: string, size = 18, color: string = COLORS.textLight): number {
-    const t = this.add.text(32, y, text, textStyle(size, color, { wordWrap: { width: 270 } }));
-    this.detail.add(t);
-    return y + t.height + 4;
-  }
-
-  private showDetail(room: Room): void {
-    this.detail.removeAll(true);
+  private roomSummary(room: Room): string {
     const { session } = services();
     const p = session.profile;
-    const card = this.add.graphics();
-    this.detail.add(card);
-    let y = 136;
+    const c = session.content;
     switch (room) {
-      case 'bank': {
-        y = this.line(y, 'Bank', 22);
-        y = this.line(y, `Bank Credits: ${p.bankCredits}`, 16);
-        y = this.line(y, `Earned in total: ${p.lifetimeBankCredits}`, 16, COLORS.textMuted);
-        y = this.line(y, `Research Points: ${p.researchPoints}`, 16);
-        y = this.line(y, `Candies: ${p.candies}`, 16);
-        const last = p.lastPayout;
-        y = last ? this.line(y + 4, `Last run paid ${last.total} credits`, 16, COLORS.gold) : this.line(y + 4, 'No runs paid out yet.', 16, COLORS.textMuted);
-        y = this.line(y, `Bank tier: ${bankTier(p)} of ${BANK_MAX_TIER}`, 16, COLORS.gold);
-        if (bankTier(p) >= 5) y = this.line(y, `Vault: ${p.vault.length ? p.vault.map((id) => session.content.items.get(id)?.name ?? id).join(', ') : 'empty'}`, 16);
-        y = this.line(y, `Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned`, 16);
-        break;
-      }
+      case 'bank':
+        return `${p.bankCredits} credits · tier ${bankTier(p)} of ${BANK_MAX_TIER} · ${p.licenses.length}/${c.licenses.size} licenses`;
       case 'archive': {
-        y = this.line(y, 'Trainers', 22);
-        for (const a of session.content.archetypes.values()) y = this.line(y, `${a.name}  ·  ${STATUS_LABEL[trainerStatus(p, a)]}`, 16, trainerStatus(p, a) === 'unlocked' ? COLORS.textLight : COLORS.textMuted);
-        break;
+        const all = [...c.archetypes.values()];
+        const ready = all.filter((a) => trainerStatus(p, a) === 'claimable').length;
+        return `${all.filter((a) => trainerStatus(p, a) === 'unlocked').length}/${all.length} unlocked${ready ? ` · ${ready} ready to claim` : ''}`;
       }
       case 'lab': {
-        y = this.line(y, 'Starter Laboratory', 22);
-        y = this.line(y, `Research Points: ${p.researchPoints}`, 16);
-        for (const c of STARTER_POOL_CATEGORIES) {
-          const pools = [...session.content.starterPools.values()].filter((pool) => pool.category === c);
-          const open = pools.filter((pool) => poolStatus(session.content, p, pool) === 'unlocked').length;
-          if (pools.length > 0) y = this.line(y, `${POOL_CATEGORY_LABEL[c]}  ·  ${open}/${pools.length} unlocked`, 16);
-        }
-        break;
+        const pools = [...c.starterPools.values()];
+        return `${pools.filter((pool) => poolStatus(c, p, pool) === 'unlocked').length}/${pools.length} sets unlocked · ${p.researchPoints} RP`;
       }
-      case 'attributes': {
-        y = this.line(y, 'Attributes', 22);
-        const a = readAttributes(session.content, p.attributes);
-        for (const k of ATTRIBUTE_KEYS) y = this.line(y, attributeText(k, a[k]), 16);
-        break;
-      }
-      case 'achievements': {
-        y = this.line(y, 'Achievement Hall', 22);
-        y = this.line(y, `${Object.keys(p.achievements).length} of ${session.content.achievements.size} earned`, 16);
-        if (p.titles.length > 0) y = this.line(y, `Titles: ${p.titles.join(', ')}`, 16);
-        break;
-      }
+      case 'achievements':
+        return `${Object.keys(p.achievements).length} of ${c.achievements.size} earned`;
       case 'quests': {
-        y = this.line(y, 'Trainer Quests', 22);
-        const lines = [...session.content.questLines.values()];
-        const finished = lines.filter((l) => stepsDone(session.content, p, l.trainerId) === l.steps.length).length;
-        y = this.line(y, `${finished} of ${lines.length} quest lines finished`, 16);
-        y = this.line(y, `Steps done: ${lines.reduce((n, l) => n + stepsDone(session.content, p, l.trainerId), 0)} of ${lines.length * 5}`, 16, COLORS.textMuted);
-        break;
+        const lines = [...c.questLines.values()];
+        return `${lines.filter((l) => stepsDone(c, p, l.trainerId) === l.steps.length).length} of ${lines.length} quest lines finished`;
       }
-      case 'events': {
-        y = this.line(y, 'Event Hall', 22);
-        for (const a of activeGameEvents(session.content, new Date())) {
-          const views = objectiveViews(p, a.event, a.edition);
-          y = this.line(y, `${a.event.name} (${views.filter((v) => v.done).length}/${views.length})`, 16, a.event.visualTheme.color);
-          y = this.line(y, `Ends in ${durationText(a.endsIn)}`, 14, COLORS.textMuted);
-        }
-        break;
-      }
+      case 'events':
+        return `${activeGameEvents(c, new Date()).length} events on now`;
       case 'tree':
       case 'prestige':
       case 'network':
@@ -492,90 +432,32 @@ export class HubScene extends Phaser.Scene {
       case 'intel':
       case 'moves':
       case 'seeds': {
-        for (const l of legacySummary(session.content, p, room)) y = this.line(y, l.text, l.size ?? 16, l.muted ? COLORS.textMuted : COLORS.textLight);
-        break;
+        const lines = legacySummary(c, p, room);
+        return (lines[1] ?? lines[0])?.text ?? '';
       }
       case 'research': {
-        y = this.line(y, 'Research Room', 22);
-        const t = researchTotals(session.content, p);
-        y = this.line(y, `Met ${t.met} · Caught ${t.caught} of ${t.total}`, 16);
-        y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
-        y = this.line(y, `Shinies found ${t.shinies} · ${t.shinySpecies} species`, 16, COLORS.textMuted);
-        for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
-        break;
+        const t = researchTotals(c, p);
+        return `Met ${t.met} · Caught ${t.caught} of ${t.total}`;
       }
       case 'codex': {
-        y = this.line(y, 'Moment Codex', 22);
-        const t = codexTotals(session.content, p);
-        y = this.line(y, `${t.found} of ${t.total} moments discovered`, 16);
-        y = this.line(y, 'A moment counts once you see it in a battle and the run ends.', 14, COLORS.textMuted);
-        break;
+        const t = codexTotals(c, p);
+        return `${t.found} of ${t.total} moments found`;
       }
-      case 'card': {
-        y = this.line(y, 'Trainer Card', 22);
-        const frame = getFrame(p.cardFrame);
-        const scale = 270 / 620;
-        if (this.textures.exists('ui.trainercard')) {
-          const art = this.add.image(32, y, 'ui.trainercard').setOrigin(0).setScale(scale);
-          this.detail.add(art);
-          const pad = 0.5;
-          const border = this.add.graphics();
-          border.lineStyle(2, Phaser.Display.Color.HexStringToColor(frame.color).color, 1).strokeRoundedRect(32 - pad, y - pad, 620 * scale + pad * 2, 356 * scale + pad * 2, 6);
-          this.detail.add(border);
-          const label = (row: number, text: string): void => {
-            this.detail.add(this.add.text(32 + 38 * scale, y + (92 + row * 48) * scale, text, textStyle(11, '#ffffff')).setShadow(1, 1, '#103050', 0, false, true));
-          };
-          label(0, p.activeTitle ?? 'Trainer');
-          label(1, `Runs ${p.stats.runsEnded}`);
-          label(2, `Wins ${p.stats.battlesWon}`);
-          label(3, `Best ${p.stats.bestEncounters} encounters`);
-          const badges = Math.min(8, p.best.badges ?? 0);
-          for (let i = 0; i < badges; i++) this.detail.add(this.add.circle(32 + (40 + i * 44) * scale, y + 316 * scale, 5, 0xf8d848).setStrokeStyle(1, 0x805800));
-          y += 356 * scale + 8;
-        }
-        y = this.line(y, `Frame: ${frame.name}`, 14, frame.color);
-        this.line(y, 'Change title and frame in the Wardrobe.', 14, COLORS.textMuted);
-        break;
-      }
-      case 'wardrobe': {
-        y = this.line(y, 'Wardrobe', 22);
-        const frame = getFrame(p.cardFrame);
-        y = this.line(y, `Title: ${p.activeTitle ?? 'none'}`, 16);
-        y = this.line(y, `Frame: ${frame.name}`, 16, frame.color);
-        y = this.line(y, `${CARD_FRAMES.filter((f) => frameOpen(p, f)).length}/${CARD_FRAMES.length} frames open`, 14, COLORS.textMuted);
-        const stamps = Object.entries(p.stamps ?? {});
-        y = this.line(y, stamps.length ? `Stamps: ${stamps.map(([n, c]) => `${n} ×${c}`).join(' · ')}` : 'Stamps: none yet', 14, COLORS.textMuted);
-        break;
-      }
-      case 'mastery': {
-        y = this.line(y, 'Species Mastery', 22);
-        const families = masteryFamilies(session.content, p);
-        y = this.line(y, `${families.length} families met`, 16);
-        for (const rank of ['bronze', 'silver', 'gold', 'master'] as const) {
-          const n = families.filter((f) => familyRank(session.content, p, f) === rank).length;
-          if (n > 0) y = this.line(y, `${RANK_NAMES[rank]}: ${n}`, 16, RANK_COLOR[rank]);
-        }
-        break;
-      }
-      case 'history': {
-        y = this.line(y, 'Past Runs', 22);
-        const runs = p.runHistory.slice(0, 4);
-        if (runs.length === 0) y = this.line(y, 'No finished runs yet.', 16, COLORS.textMuted);
-        for (const r of runs) y = this.line(y, historyLine(r), 16);
-        break;
-      }
-      case 'run': {
-        y = this.line(y, 'New Run', 22);
-        y = this.line(y, `Trainers unlocked: ${[...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'unlocked').length}`, 16);
-        if (session.savedRun.status === 'ok') y = this.line(y, 'You have a run in progress: starting a new one replaces it.', 16, COLORS.bad);
-        break;
+      case 'wardrobe':
+        return `Title: ${p.activeTitle ?? 'none'} · ${CARD_FRAMES.filter((f) => frameOpen(p, f)).length}/${CARD_FRAMES.length} frames`;
+      case 'mastery':
+        return `${masteryFamilies(c, p).length} families met`;
+      case 'history':
+        return p.runHistory.length ? `${p.runHistory.length} runs recorded` : 'No finished runs yet';
+      case 'attributes': {
+        const a = readAttributes(c, p.attributes);
+        return attributeText(ATTRIBUTE_KEYS[0]!, a[ATTRIBUTE_KEYS[0]!]);
       }
       default:
-        card.destroy();
-        return;
+        return '';
     }
-    paintWindow(card, 16, 124, 300, y - 116, { thin: true, fill: 0x221d29, border: COLORS.borderMuted, alpha: 0.88 });
   }
+
 
   // ---------- rooms ----------
 
@@ -634,6 +516,9 @@ export class HubScene extends Phaser.Scene {
       case 'seeds':
         this.openLegacy(room);
         break;
+      case 'options':
+        this.scene.start('Settings', { from: 'Hub' });
+        break;
       case 'save':
         this.openSaveData();
         break;
@@ -644,7 +529,6 @@ export class HubScene extends Phaser.Scene {
   }
 
   private openPicker(config: ConstructorParameters<typeof Picker>[1]): void {
-    if (this.submenu) this.submenu.menu.enabled = false;
     this.picker = new Picker(this, config);
   }
 
@@ -652,7 +536,6 @@ export class HubScene extends Phaser.Scene {
     this.archiveOpen = false;
     this.picker?.close();
     this.picker = null;
-    if (this.submenu) this.submenu.menu.enabled = true;
   }
 
   /** The game events on now (objectives, rewards, time left), the next weeks' events, and rewards already earned. */
@@ -976,9 +859,11 @@ export class HubScene extends Phaser.Scene {
         draw: (scene, box, w, h) => {
           const species = content.species.get(f)!;
           box.add(pokemonIcon(scene, species, 30, h / 2 + 2, 0.9));
+          const frame = RANK_BADGES[rank].frame;
+          if (frame !== null) box.add(scene.add.rectangle(30, h / 2 + 2, 46, 46).setStrokeStyle(2, frame));
           box.add(scene.add.text(64, 8, species.name, textStyle(19)));
           box.add(scene.add.text(64, 32, familyMembers(content, f).map((id) => content.species.get(id)!.name).slice(0, 3).join(' → '), textStyle(13, COLORS.textMuted)));
-          const medal = scene.add.text(w - 14, h / 2, RANK_NAMES[rank], textStyle(18, RANK_COLOR[rank])).setOrigin(1, 0.5);
+          const medal = scene.add.text(w - 14, h / 2, `${RANK_BADGES[rank].glyph} ${RANK_NAMES[rank]}`.trim(), textStyle(18, RANK_COLOR[rank])).setOrigin(1, 0.5);
           box.add(medal);
           // A gentle bob for ranked families (none when motion is reduced or off).
           if (motion === 'full' && atLeast(rank, 'bronze')) scene.tweens.add({ targets: medal, y: h / 2 - 3, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
@@ -1653,26 +1538,6 @@ function archiveHint(a: Archetype, status: TrainerStatus, p: Profile): string {
   if (status === 'claimable') return `Enter: claim for ${a.unlockCost} Bank Credits (you have ${p.bankCredits}).  ${effects}`;
   const parts = a.unlock ? requirementParts(p, a.unlock).map((x) => `${x.met ? '✓' : '•'} ${x.label}${x.target > 1 ? ` (${x.current.toLocaleString('en-US')}/${x.target.toLocaleString('en-US')})` : ''}`).join('  ') : a.unlockText;
   return `${a.unlockFlavor ? `${a.unlockFlavor}  ` : ''}Challenge: ${parts}${a.unlockCost ? `  Then ${a.unlockCost} Bank Credits.` : ''}  ${effects}`;
-}
-
-function downloadText(filename: string, text: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function pickTextFile(onText: (text: string) => void): void {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json,application/json';
-  input.onchange = () => {
-    const file = input.files?.[0];
-    if (file) void file.text().then(onText);
-  };
-  input.click();
 }
 
 function questRewardText(r: QuestReward): string {

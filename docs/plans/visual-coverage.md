@@ -29,9 +29,9 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Item | Status | Where / note |
 |---|---|---|
 | Layer 1 arena + weather/ambient animation | BUILT | `battleFx/ambience.ts`: preset per type (all 18), second type adds accents (slice 2) |
-| Layer 2 platforms, contact shadows, edge lights | PART | PokeRogue bases already draw a shadow patch under each side; edge lights: slice 4 |
+| Layer 2 platforms, contact shadows, edge lights | BUILT | PokeRogue bases already draw a shadow patch under each side; edge lights: slice 4 |
 | Layer 3 sprites: idle breathing, entry | BUILT | slice 1 |
-| Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | PART | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
+| Sprite states: hit, dodge/miss, attack lunge, status, faint, celebrate | BUILT | hit/lunge/faint exist (M9); miss dodge + victory hop: slice 2 |
 | Layer 4 HP/status panels, party indicators | BUILT | glass databoxes, EBDX status icons, team dots |
 | Held item / ability badges when supported | BUILT | slice 9 Summary: ability + description, held item icons, EBUI gender marks and stat arrows |
 | Boss phase indicator | BUILT | header phase count (other thread) + NEW PHASE banner with the phase's rule (slice 7) |
@@ -46,7 +46,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Shiny reveal sparkle (once) | BUILT | `shinySparkle` |
 | Battle intro transition (EBDX transitions) | BUILT | `battleFx/spectacle.ts`: wild streak + ball wipe (indoor streaks in dark arenas), VS screens for trainers / rivals (Evil) / bosses (Skull); skippable (slice 2) |
 | Exit transition / victory beat | BUILT | hop (slice 2); glass-shutter exit wipe on every battle exit (slice 4) |
-| Animation profiles fast / standard / showcase | PART | battle speed normal/fast/quick exists (settings v3); showcase: slice 4 |
+| Animation profiles fast / standard / showcase | BUILT | battle speed normal/fast/quick exists (settings v3); showcase: slice 4 |
 | Reduced motion, reduced flash, shake option, skip | BUILT | battleAnimations + effectIntensity + skip |
 | Reduce particles option | PART | ambience off when animations off/reduced |
 | Pause ambient loops when tab hidden | BUILT | Phaser pauses the loop on hidden tabs |

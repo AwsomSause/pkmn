@@ -30,8 +30,11 @@ export function firstStage(content: Content, id: string): Species | undefined {
  * counting moves: one with no usable move stays in so the content report
  * flags it instead of the pool hiding it.
  */
-function isStarterEligible(content: Content, s: Species, specialForms = false): boolean {
-  if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
+function isStarterEligible(content: Content, s: Species, specialForms = false, specimens = false): boolean {
+  const special = s.tags.includes('legendary') || s.tags.includes('mythical');
+  // A Special Specimen set takes plain legendary and mythical species, whatever their stats.
+  if (specimens && special && s.evolutionStage === 1 && !s.form && !isSpecialForm(s)) return true;
+  if (s.evolutionStage !== 1 || special) return false;
   // An earned special-form set (Spooky Set) may offer its forms; every other pool leaves them out.
   if (specialForms && isSpecialForm(s)) return baseStatTotal(s) <= content.balance.wildMaxBaseStats;
   if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
@@ -55,7 +58,7 @@ export function eligibleSpecies(content: Content, pool: StarterPool, mastered: r
   const ids = new Set<string>();
   for (const id of pool.species) {
     const s = firstStage(content, id);
-    if (s && isStarterEligible(content, s, pool.specialForms)) ids.add(s.id);
+    if (s && isStarterEligible(content, s, pool.specialForms, pool.specimens)) ids.add(s.id);
   }
   // Bosses' Pokémon are picked for their final forms, so a first stage with no usable move (Abra) is skipped.
   for (const id of pool.bosses.flatMap((b) => content.bosses.get(b)?.signature ?? [])) {
@@ -219,7 +222,10 @@ export function resolvePrep(content: Content, profile: Profile, archetypeId: str
     prep.poolId = base.poolId;
   }
   const rule = content.draftRules.get(prep.draftRuleId);
-  if (!rule || !draftRuleAvailable(profile, rule)) {
+  if (content.starterPools.get(prep.poolId)?.specimens && rule && rule.kind !== 'standard') {
+    problems.push(`Special Specimen starters only use the ${standardRule(content).name} rule.`);
+    prep.draftRuleId = base.draftRuleId;
+  } else if (!rule || !draftRuleAvailable(profile, rule)) {
     problems.push(`The ${rule?.name ?? prep.draftRuleId} rule isn't available; using ${standardRule(content).name}.`);
     prep.draftRuleId = base.draftRuleId;
   }

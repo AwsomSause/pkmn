@@ -106,7 +106,8 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { pickRaidRival } from './raid/rivalAlly';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
@@ -118,6 +119,7 @@ import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { itemSlotLimit } from './trainerPerks';
+import { applyTrainerTier, readTrainerMemory } from './trainerTiers';
 import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
 import {
   ensureHistories,
@@ -134,6 +136,7 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { styleTrick } from './rivals/tricks';
+import { dueNarrativeDefeat, foreshadowNote, getNarrativeDef, narrativeWon, recordNarrativeDefeat } from './rivals/narrativeDefeat';
 import { rivalBond } from './drama/bond';
 import { recapLines } from './drama/recap';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
@@ -149,6 +152,9 @@ import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
 import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
+import { noteProtagonistTitle, rivalSighting } from './rivals/recognition';
+import { rivalRivalries, rivalTeamUp } from './rivals/rivalries';
+import { ensureAce, withSignatureAce } from './rivals/signatureTeam';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -348,10 +354,14 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers)), 'p')];
+  const special = getSpecies(content, speciesId).tags.some((t) => t === 'legendary' || t === 'mythical');
+  const specimenPenalty = special ? content.balance.specialSpecimen.levelPenalty : 0;
+  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers) - specimenPenalty), 'p')];
   if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = runArchetype(content, run).modifiers;
+  const fixed = runArchetype(content, run).signatureMovesets[speciesId];
+  if (fixed) run.party[0]!.moves = fixed.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
   if (signature && !run.party[0]!.moves.some((m) => m.id === signature)) {
     const starter = run.party[0]!;
@@ -462,6 +472,9 @@ function enterStage(content: Content, run: RunState, index: number): void {
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
+  rivalRivalries(content, run);
+  rivalSighting(content, run);
+  noteProtagonistTitle(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
   applyGrandInfluence(content, run);
@@ -1018,6 +1031,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
   if (approach) {
     if (approach.startHp) raidState.pendingShields = raidState.pendingShields.filter((at) => at < approach.startHp!);
@@ -1025,6 +1039,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
     raidState.rewardPercent = approach.rewardPercent;
     raidState.draftDelta = approach.draftDelta;
     raidState.rivalHelped = approach.rivalHelps;
+    if (approach.rivalHelps || approach.rivalRaces) raidState.rival = pickRaidRival(content, run, level, approach.rivalRaces ? 'race' : 'help');
   }
   if (opts.returning) {
     raidState.returning = true;
@@ -1133,6 +1148,26 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
   return { items, draftExtra: def.rewards.draftExtra, money };
 }
 
+/**
+ * NARRATIVE_DEFEAT (M12): the rival won a battle the story needed the player to lose. The run goes on as if the fight were won:
+ * the node counts as done, but no prize, EXP, badge, win counters, defeat record or protection item is touched, and
+ * nobody is harmed (the party is healed). Only the story and rival layers record the loss.
+ */
+function narrativeDefeatEnd(content: Content, run: RunState, def: NonNullable<ReturnType<typeof getNarrativeDef>>): void {
+  const battle = run.battle!;
+  recordNarrativeDefeat(content, run, def, battle.rivalId);
+  healParty(content, run);
+  count(run, 'narrativeDefeats');
+  run.hype = 0;
+  run.battle = null;
+  delete run.recorder;
+  run.encountersCompleted += 1;
+  count(run, 'encountersCompleted');
+  tickEggs(content, run, 'battle');
+  run.afterDecisions = 'map';
+  continueAfterDecisions(content, run);
+}
+
 /** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
 function failRaid(content: Content, run: RunState): void {
   const battle = run.battle!;
@@ -1168,7 +1203,7 @@ function failRaid(content: Content, run: RunState): void {
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
   const def = getRaid(content, battle.raid!.id);
   const boss = currentEnemy(battle);
-  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent) / 100);
+  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
   run.money += money;
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::raid-reward::${def.id}:${run.encountersCompleted}`));
@@ -1196,7 +1231,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   // Raid memories: rewards follow contribution, not only the last hit.
   const bossName = speciesName(content, boss.speciesId);
   const earned = new Set<string>();
-  for (const m of raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
+  for (const m of battle.raid!.rivalFinished ? [] : raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
     const mon = run.party.find((p) => p.uid === m.uid);
     if (!mon) continue;
     emit(content, run, 'storyMoment', { actors: [mon.uid], data: { raidMemory: m.key, raid: def.id }, importance: 70, text: `${m.title}: ${m.text(speciesName(content, mon.speciesId), bossName)}` });
@@ -1204,9 +1239,19 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     earned.add(mon.uid);
   }
   const lead = run.party.find((p) => p.uid === battle.raid!.lead);
-  if (battle.raid!.rivalHelped && lead) {
-    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id }, importance: 70, text: `The Rival Who Stood Beside You: a rival fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
+  const named = battle.raid!.rival;
+  const rivalName = named?.name ?? 'a rival';
+  if (battle.raid!.rivalHelped && lead && !battle.raid!.rivalFinished) {
+    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id, rival: named?.id ?? null }, importance: 70, text: `The Rival Who Stood Beside You: ${rivalName} fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
     changeFriendship(content, lead, RAID_MEMORY_FRIENDSHIP);
+  }
+  if (named) {
+    const rival = run.story.rivals.find((r) => r.id === named.id);
+    // A raced boss makes the rivalry hotter whoever wins; a rival that took the last hit is proud of it.
+    if (rival && named.mode === 'race') rival.rivalPotential += battle.raid!.rivalFinished ? 2 : 1;
+    if (named.mode === 'race' || battle.raid!.rivalFinished) {
+      emit(content, run, 'storyMoment', { actors: lead ? [lead.uid] : [], data: { raidMemory: 'rival-race', raid: def.id, rival: named.id, rivalFinished: battle.raid!.rivalFinished }, importance: 65, text: battle.raid!.rivalFinished ? `${rivalName} took the last hit on ${bossName}.` : `You beat ${rivalName} to the last hit on ${bossName}.` });
+    }
   }
   // An anomaly raid adds a research find and its own counter.
   if (def.kind === 'anomaly') {
@@ -1301,6 +1346,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
+    // Trainer tiers: an ordinary trainer's team grows more skilled with progress (its own seed, so no roll changes).
+    if (node.kind === 'trainer') {
+      const known = readTrainerMemory(run, plan.classId);
+      plan = applyTrainerTier(content, plan, { stageNumber, partyBonus: scale.party ?? 0, classWins: known.wins, rematch: !!rematch, important: false }, scale.cap, `${run.seed}::${run.regionIndex}::${node.id}`, known.memory);
+    }
     // Meteor's Prophecy: every third boss is stronger.
     const bossLevels = thirdBossLevels(runPerks(content, run));
     if (bossLevels > 0 && (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion')) {
@@ -1334,14 +1384,32 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
+    let narrativeDef: ReturnType<typeof dueNarrativeDefeat> = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
+      ensureAce(content, rivalBack);
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
+      ret.plan = withSignatureAce(content, rivalBack, ret.plan);
       const trained = withTrainingEvolution(content, ret.plan.members);
       plan = { ...ret.plan, members: trained.members };
       trainingIndex = trained.index;
       const finale = finalRivalLine(content, run, rivalBack.id, ultimateRival(run)?.id === rivalBack.id);
       rivalNote = finale ? [ret.note, finale].filter(Boolean).join(' ') : ret.note;
+      // Narrative defeat (M12): this meeting is the one the player is meant to lose; the meeting before hints at it.
+      narrativeDef = dueNarrativeDefeat(run, rivalBack, !plan.leaderId);
+      if (narrativeDef) {
+        plan = { ...plan, members: plan.members.map((m) => ({ ...m, level: m.level + narrativeDef!.levelBonus })) };
+        rivalNote = [rivalNote, narrativeDef.introLine].filter(Boolean).join(' ');
+      } else {
+        const hint = foreshadowNote(run, rivalBack);
+        if (hint) rivalNote = [rivalNote, hint].filter(Boolean).join(' ');
+      }
+      // A rival far ahead of you: an ally or one of its enemies may join forces with you (heals your team, once per pair).
+      const teamUp = narrativeDef ? null : rivalTeamUp(content, run, rivalBack);
+      if (teamUp) {
+        healParty(content, run);
+        rivalNote = [rivalNote, teamUp].filter(Boolean).join(' ');
+      }
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
       run.story.flags[rivalSeenFlag(rivalBack.id)] = scheduleKey(run);
@@ -1408,6 +1476,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
+      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
@@ -1666,6 +1735,8 @@ export interface TurnResult {
   raidFailed?: boolean;
   /** The whole party fainted but the rules sent the run back to its checkpoint. */
   wiped?: boolean;
+  /** A narrative rival defeat (M12): the battle was lost for the story, the party is healed and the run goes on. Never a game over. */
+  narrativeDefeat?: { id: string; defeatLine: string; victoryLine: string };
   /** What the trainer says during the turn (presentation only). */
   drama: DramaLine[];
 }
@@ -1818,6 +1889,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
+  if (battle.outcome === 'lose' && battle.narrative && getNarrativeDef(battle.narrative.id)) {
+    const def = getNarrativeDef(battle.narrative.id)!;
+    narrativeDefeatEnd(content, run, def);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, narrativeDefeat: { id: def.id, defeatLine: def.defeatLine, victoryLine: def.victoryLine } };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
@@ -2085,6 +2162,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
   let extraChoices = raidWin?.draftExtra ?? 0;
   if (battle.firstRival) run.story.flags[FIRST_RIVAL_FLAG] = 'met';
+  if (battle.narrative) narrativeWon(run, battle.narrative.id);
   // RSVP Mail: beating the rival gives the gym leader's odds and one more choice.
   if (outcome === 'win' && battle.rival) {
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
