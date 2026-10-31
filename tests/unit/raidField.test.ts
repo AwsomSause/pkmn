@@ -97,6 +97,19 @@ describe('cheers', () => {
     expect(() => resolveTurn(ctx, { kind: 'cheer', cheer: 'offense' })).toThrow(/No cheers/);
   });
 
+  it('Turn the tables reverses the stat changes of both teams', () => {
+    const { ctx, battle } = fight('sleeping-snorlax');
+    battle.enemyStages.acc = 2;
+    battle.enemyStages.eva = -1;
+    battle.playerStages.eva = 3;
+    const events = resolveTurn(ctx, { kind: 'cheer', cheer: 'counter' });
+    expect(battle.raid!.cheersLeft).toBe(2);
+    expect(battle.enemyStages.acc).toBe(-2);
+    expect(battle.enemyStages.eva).toBe(1);
+    expect(battle.playerStages.eva).toBe(-3);
+    expect(events.filter((e) => e.type === 'stat').length).toBeGreaterThanOrEqual(3);
+  });
+
   it('cheers only exist in raids', () => {
     const { ctx, battle } = fight('sleeping-snorlax');
     delete battle.raid;

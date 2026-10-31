@@ -152,7 +152,7 @@ export const OFFENSE_CHEER = 1.3;
 export const DEFENSE_CHEER = 0.7;
 export const HEALING_CHEER = 0.3;
 export const CHEER_TURNS = 3;
-export type Cheer = 'offense' | 'defense' | 'healing';
+export type Cheer = 'offense' | 'defense' | 'healing' | 'counter';
 
 /** Why a cheer can't be used now, or null. */
 export function cheerProblem(content: Content, battle: BattleState, cheer: Cheer): string | null {
