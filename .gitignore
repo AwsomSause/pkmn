@@ -7,3 +7,4 @@ playwright-report/
 .DS_Store
 __MACOSX/
 .cache/
+public/assets/manifest.json
