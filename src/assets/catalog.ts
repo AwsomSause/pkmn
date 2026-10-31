@@ -134,6 +134,9 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bgm.battle', kind: 'audio', category: 'music', path: 'audio/bgm/battle_wild.mp3' },
   ...['ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}.mp3` })),
   { id: 'bgm.raid.basic', kind: 'audio', category: 'music', path: 'audio/bgm/raid_basic.mp3', lazy: true },
+  // Raid Dens / Adventures UI art, and the four raid capture jingles (played when a beaten boss offers to join).
+  ...['den_entry', 'adv_header'].map((n): AssetEntry => ({ id: `ui.raid.${n}`, kind: 'image', category: 'ui', path: `images/packs/raid/ui/${n}.png` })),
+  ...['basic', 'ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.capture.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_capture_${n}.mp3`, lazy: true })),
   // Variant battle songs from the Raid Battles pack (see asset-provenance); chosen by raid id in `raidMusic`.
   { id: 'bgm.raid.basic2', kind: 'audio', category: 'music', path: 'audio/bgm/raid_basic_v2.mp3', lazy: true },
   ...['ultra', 'max', 'tera'].flatMap((n) => [2, 3].map((v): AssetEntry => ({ id: `bgm.raid.${n}${v}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_${n}_v${v}.mp3`, lazy: true }))),

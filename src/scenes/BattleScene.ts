@@ -25,7 +25,7 @@ import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
-import { getRaid } from '../core/raid/raid';
+import { cheerProblem, getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
@@ -477,6 +477,13 @@ export class BattleScene extends Phaser.Scene {
     if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
     if (cls) return { assetId: cls.spriteAssetId, label: cls.name };
+    // A boss's ace back as a nemesis: drawn as that boss (the battle itself is not a boss fight).
+    const nemesisBoss = this.run.story.nemeses.find((n) => n.id === this.run.battle?.nemesis)?.trainer;
+    const nemesisRole = nemesisBoss?.leaderId ? bossRoleForClass(nemesisBoss.classId) : null;
+    if (nemesisBoss?.leaderId && nemesisRole) {
+      const info = bossInfo(content, nemesisRole, nemesisBoss.leaderId);
+      return { assetId: info.spriteAssetId, label: info.name };
+    }
     // A map event's trainer is drawn with the event's first cast member.
     const eventId = this.run.battle?.event?.eventId;
     const cast = eventId ? content.events.get(eventId)?.scene.cast[0] : undefined;
@@ -651,9 +658,10 @@ export class BattleScene extends Phaser.Scene {
     }
     if (box.xpBar) {
       const species = getSpecies(content, mon.speciesId);
-      const lo = xpForLevel(species.growthRate, mon.level);
-      const hi = xpForLevel(species.growthRate, mon.level + 1);
-      void box.xpBar.set(mon.level >= 100 ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
+      const { maxLevel, highLevelXp } = content.balance.difficulty;
+      const lo = xpForLevel(species.growthRate, mon.level, highLevelXp);
+      const hi = xpForLevel(species.growthRate, mon.level + 1, highLevelXp);
+      void box.xpBar.set(mon.level >= maxLevel ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
     }
     if (box.teamText) {
       const battle = this.run.battle;
@@ -823,7 +831,7 @@ export class BattleScene extends Phaser.Scene {
       const art = this.trainerArt();
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
-        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
+        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         if (this.duo) {
@@ -835,6 +843,7 @@ export class BattleScene extends Phaser.Scene {
           this.showSprite('enemy', this.shown.enemy);
           await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
           if (battle.rivalNote) await this.say(battle.rivalNote);
+          if (battle.nemesisNote) await this.say(battle.nemesisNote);
           await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
         }
       } else if (this.duo) {
@@ -845,7 +854,8 @@ export class BattleScene extends Phaser.Scene {
       } else {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
-        await this.say(`A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        await this.say(battle.nemesis ? `Your nemesis, ${this.speciesName(this.shown.enemy)}, appeared!` : `A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
       if (this.duo) {
@@ -1078,7 +1088,7 @@ export class BattleScene extends Phaser.Scene {
               ? ' It will Dynamax!'
               : '';
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
-    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon()) : null;
+    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon(), this.run.party) : null;
     const shadow = this.activeMon().shadow;
     this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
@@ -1086,6 +1096,10 @@ export class BattleScene extends Phaser.Scene {
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
     const kinds = [...new Set(choices.map(label))];
     if (choices.length > 0) options.push({ label: choice ? `${onLabel(choice)}: ON` : `${kinds.join('/')}: OFF` });
+    // Raid cheers (Raid Battles pack) sit after the transformation toggle.
+    const raid = this.run.battle?.raid;
+    const cheerAt = raid && raid.cheersLeft > 0 && !this.duo ? options.length : -1;
+    if (cheerAt >= 0) options.push({ label: `Cheer ×${raid!.cheersLeft}` });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -1097,9 +1111,10 @@ export class BattleScene extends Phaser.Scene {
       fontSize: 30,
       color: COLORS.textLight,
       // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
-      glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8], motion: this.motion },
+      glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8, 0x2c8ad8], motion: this.motion },
       onSelect: (i) => {
-        if (i === 0) this.showMoveMenu();
+        if (i === cheerAt) this.showCheerMenu();
+        else if (i === 0) this.showMoveMenu();
         else if (i === 1) this.openBag();
         else if (i === 2) this.openPartyPicker(false);
         else {
@@ -1110,6 +1125,33 @@ export class BattleScene extends Phaser.Scene {
       },
       // Double battles: back from the second Pokémon's menu goes back to the first's.
       onBack: this.duo && this.cmdSpot === 1 && this.commands[0] ? () => this.promptSpot(0) : undefined,
+    });
+  }
+
+  /** The three raid cheers: Offense, Defense, Healing (each costs one of three cheers and the turn). */
+  private showCheerMenu(): void {
+    const battle = this.run.battle!;
+    const content = services().session.content;
+    const cheers = [
+      { cheer: 'offense', label: 'Go all-out!', tint: 0xc8303c },
+      { cheer: 'defense', label: 'Hang tough!', tint: 0x2c6ad8 },
+      { cheer: 'healing', label: 'Heal up!', tint: 0x1f9a52 },
+    ] as const;
+    this.clearMenus();
+    const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
+    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP.');
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 26,
+      options: cheers.map((c, i) => ({ label: c.label, disabled: blocked[i] !== null })),
+      columns: 2,
+      itemWidth: 170,
+      itemHeight: 50,
+      fontSize: 26,
+      color: COLORS.textLight,
+      glass: { tints: cheers.map((c) => c.tint), motion: this.motion },
+      onSelect: (i) => this.submit({ kind: 'cheer', cheer: cheers[i]!.cheer }),
+      onBack: () => this.showRootMenu(),
     });
   }
 

@@ -38,11 +38,11 @@ export type Status = z.infer<typeof StatusSchema>;
 export const PokemonInstanceSchema = z.object({
   uid: z.string(),
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   /** Total experience points (the level is derived from growth rate). */
   xp: z.number().int().min(0),
   hp: z.number().int().min(0),
-  moves: z.array(MoveSlotSchema).min(1).max(4),
+  moves: z.array(MoveSlotSchema).min(1).max(6),
   status: StatusSchema.nullable(),
   /** Vitamin stacks per stat; each stack multiplies that stat. */
   vitamins: z.record(StatNameSchema, z.number().int().min(0)),
@@ -444,6 +444,10 @@ export const RaidBattleSchema = z.object({
   timerLeft: z.number().int().nullable(),
   /** Messages for the player; the engine turns them into events at the end of the turn. */
   notes: z.array(z.object({ tone: z.enum(['shield', 'phase', 'warn', 'info']), text: z.string() })),
+  /** Cheers left (Raid Battles pack: Offense / Defense / Healing), and the turns the Offense and Defense cheers still last. */
+  cheersLeft: z.number().int().min(0).default(3),
+  cheerOffense: z.number().int().min(0).default(0),
+  cheerDefense: z.number().int().min(0).default(0),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -601,6 +605,11 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
+  nemesis: z.string().optional(),
+  nemesisNote: z.string().optional(),
+  /** "The Hunter Has Become the Hunted!": an ordinary trainer whose class you beat too often, with a counter-team. */
+  hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
@@ -698,7 +707,7 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   /** A Pokémon that knows four moves wants to learn another. */
   z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
   /** A caught Pokémon waiting to join the party (or be released for candies). */
-  z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
+  z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema, /** A beaten raid boss joining: the raid's tier (picks the capture jingle). */ raidTier: z.number().int().min(1).max(6).optional() }),
   /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
   z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
   /** A Pokémon from a past run wants to join (story slice 5, core/story/reunion.ts); `hallOfFame`: it won a past run with you. */
@@ -738,6 +747,10 @@ export const RunPrepSchema = z.object({
   directive: TypeNameSchema.nullable(),
   /** The Field License (Untitled doc §10): one exploration hint for the run, or none. */
   license: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
+  /** A Bank loan (core/bank.ts): extra starting money, repaid by reaching enough badges. */
+  loan: z.boolean().default(false),
+  /** An item taken out of the Collector's Vault to start this run with. */
+  vaultItem: z.string().nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 
@@ -777,7 +790,7 @@ export type RunPhase = z.infer<typeof RunPhaseSchema>;
 /** A Pokémon kept from a finished run, that may come back in a later one (core/story/reunion.ts). */
 export const PastPokemonSchema = z.object({
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   shiny: z.boolean(),
   abilitySlot: z.number().int().min(-1),
   moves: z.array(z.string()).min(1).max(4),
@@ -818,7 +831,7 @@ export const EggSchema = z.object({
   uid: z.string(),
   /** The first stage of its line; what hatches. */
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   left: z.number().int().min(0),
   unit: z.enum(['battle', 'stage']),
   /** Rolled when the Egg was found, so reloading never changes it. */
@@ -1068,6 +1081,8 @@ export const ProfileSchema = z.object({
   lifetimeBankCredits: z.number().int().min(0),
   /** The Bank tier (1 to 5, core/bank.ts): higher tiers open services, not bigger payouts. */
   bankTier: z.number().int().min(1).max(5).default(1),
+  /** Items kept in the Collector's Vault (Bank tier 5). */
+  vault: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),
