@@ -602,5 +602,102 @@
    "gimmickMaxWait": 3,
    "prediction": true
   }
+ },
+ "world": {
+  "fogSight": 3,
+  "fogIntelligencePerSight": 15,
+  "fogAbilities": [
+   "keen-eye",
+   "illuminate",
+   "compound-eyes",
+   "frisk",
+   "anticipation",
+   "telepathy",
+   "sniper",
+   "tinted-lens"
+  ],
+  "frontChance": 0.6,
+  "frontLength": [
+   3,
+   5
+  ],
+  "frontWeathers": [
+   "rain",
+   "sun",
+   "sand",
+   "snow",
+   "hail"
+  ],
+  "frontForecast": 3,
+  "roamerMinStage": 3,
+  "roamerChance": 0.3,
+  "roamerRestChance": 0.34,
+  "roamers": [
+   {
+    "species": "latios",
+    "name": "Latios",
+    "weight": 3,
+    "gameEvent": null
+   },
+   {
+    "species": "latias",
+    "name": "Latias",
+    "weight": 3,
+    "gameEvent": null
+   },
+   {
+    "species": "cresselia",
+    "name": "Cresselia",
+    "weight": 2,
+    "gameEvent": null
+   },
+   {
+    "species": "tornadus",
+    "name": "Tornadus",
+    "weight": 2,
+    "gameEvent": null
+   },
+   {
+    "species": "thundurus",
+    "name": "Thundurus",
+    "weight": 2,
+    "gameEvent": null
+   },
+   {
+    "species": "landorus",
+    "name": "Landorus",
+    "weight": 2,
+    "gameEvent": null
+   },
+   {
+    "species": "mesprit",
+    "name": "Mesprit",
+    "weight": 2,
+    "gameEvent": null
+   },
+   {
+    "species": "raikou",
+    "name": "Raikou",
+    "weight": 0,
+    "gameEvent": "legendary-beasts-chase"
+   },
+   {
+    "species": "entei",
+    "name": "Entei",
+    "weight": 0,
+    "gameEvent": "legendary-beasts-chase"
+   },
+   {
+    "species": "suicune",
+    "name": "Suicune",
+    "weight": 0,
+    "gameEvent": "legendary-beasts-chase"
+   }
+  ],
+  "campEvery": 2,
+  "campColumns": [
+   9,
+   12
+  ]
  }
 }

@@ -712,6 +712,8 @@ export const SideStopSchema = z.object({
   used: z.boolean(),
   /** An event stop's event (events.json). */
   eventId: z.string().optional(),
+  /** A roaming Legendary's stop: which species is here (it moves with you, see core/world.ts). */
+  roamer: z.string().optional(),
   /** A hidden event shows as "?" until the player reaches its node (or Intelligence or a Silph Scope reveals it). */
   hidden: z.boolean().optional(),
 });
@@ -757,6 +759,12 @@ export const StageStateSchema = z.object({
   /** The node the player is on (null before choosing the first one). */
   current: z.string().nullable(),
   visited: z.array(z.string()),
+  /** Fog of war: the map shows every column up to this one (scouting); 0 = only what you can see. */
+  scoutedTo: z.number().int().min(0).default(0),
+  /** Fronts that rolled in during the stage (an event's `front` effect); the stage's own come from its seed (core/world.ts). */
+  extraFronts: z.array(z.object({ weather: WeatherSchema, from: z.number().int().min(1), to: z.number().int().min(1) })).default([]),
+  /** Roaming Legendaries on this map: where each is now and whether it is still roaming. */
+  roamers: z.array(z.object({ species: z.string(), nodeId: z.string().nullable(), status: z.enum(['roaming', 'done', 'gone']) })).default([]),
 });
 export type StageState = z.infer<typeof StageStateSchema>;
 

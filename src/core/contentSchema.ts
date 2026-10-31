@@ -1829,6 +1829,35 @@ export const TrainerAiSchema = z.object({
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
 export type EventRarity = (typeof EVENT_RARITIES)[number];
 
+/** Exploration numbers (core/world.ts). */
+export const WorldBalanceSchema = z.object({
+  /** Fog of war: columns ahead of you the map shows, +1 per `fogIntelligencePerSight` Intelligence, +1 if a party Pokémon has a scouting ability or a Flying type. */
+  fogSight: z.number().int().min(1),
+  fogIntelligencePerSight: z.number().int().min(1),
+  fogAbilities: z.array(z.string()),
+  /** Weather fronts: chance a stage has one, how many columns it covers, and the weather it can bring. */
+  frontChance: z.number().min(0).max(1),
+  frontLength: z.tuple([z.number().int().min(1), z.number().int().min(1)]),
+  frontWeathers: z.array(WeatherSchema).min(1),
+  /** Columns before a front the map shows its forecast. */
+  frontForecast: z.number().int().min(1),
+  /** Roaming Legendaries: the stage they start turning up, the chance a stage has one, and the chance one stays put when you step. */
+  roamerMinStage: z.number().int().min(1),
+  roamerChance: z.number().min(0).max(1),
+  roamerRestChance: z.number().min(0).max(1),
+  roamers: z.array(z.object({
+    species: z.string(),
+    name: z.string(),
+    weight: z.number().min(0),
+    /** Only roams while this game event (gameEvents.json) is on; then every such Legendary roams together. */
+    gameEvent: z.string().nullable().default(null),
+  })).min(1),
+  /** Checkpoint camps: one every `campEvery` stages, near these columns. */
+  campEvery: z.number().int().min(1),
+  campColumns: z.tuple([z.number().int().min(1), z.number().int().min(1)]),
+});
+export type WorldBalance = z.infer<typeof WorldBalanceSchema>;
+
 export const BalanceSchema = z.object({
   trainerAi: TrainerAiSchema,
   /** Double battles: the chance an ordinary trainer fights two at a time, from this stage number (0 = the first stage). */
@@ -2049,6 +2078,8 @@ export const BalanceSchema = z.object({
     /** Map events a running game event features (gameEvents.json mapEvents) are this many times as likely. */
     gameEventWeight: z.number().min(1),
   }),
+  /** Exploration (core/world.ts): fog of war, weather fronts, roaming Legendaries and checkpoint camps. */
+  world: WorldBalanceSchema,
   attributeGrowth: z.array(
     z.object({
       attribute: AttributeKeySchema,
@@ -2334,6 +2365,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   /** A retired team: a past run that did not win left a team on record. */
   z.object({ kind: z.literal('retiredGhost') }),
   z.object({ kind: z.literal('hunt'), atLeast: z.number().int().min(0).default(0), atMost: z.number().int().min(0).default(99) }),
+  /** Exploration: a party member has one of these abilities (a secret path opens for it). */
+  z.object({ kind: z.literal('partyAbility'), abilities: z.array(z.string()).min(1), label: z.string().min(1) }),
+  /** Exploration: a roaming Legendary is on this stage's map right now. */
+  z.object({ kind: z.literal('roaming') }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2434,6 +2469,14 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** An NPC trainer joins your roster for good (unlocked when the run ends; the run records it in `itemCounters["recruit:<id>"]`). */
   z.object({ kind: z.literal('recruit'), trainer: z.string().min(1) }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
+  /** Exploration: the map shows this many more columns ahead for the rest of the stage (fog of war). */
+  z.object({ kind: z.literal('scout'), columns: z.number().int().min(1).max(20) }),
+  /** Exploration: another event stop opens beside this node (a next room of a landmark, a follow-up scene). */
+  z.object({ kind: z.literal('addEvent'), eventId: z.string().min(1) }),
+  /** Exploration: like addEvent, but the next room is one of these, picked by the event's roll (a Mystery Dungeon floor). */
+  z.object({ kind: z.literal('addEventFrom'), ids: z.array(z.string().min(1)).min(1) }),
+  /** Exploration: a front of this weather rolls in over the columns ahead (it hits the routes it covers). */
+  z.object({ kind: z.literal('front'), weather: WeatherSchema, columns: z.number().int().min(1).max(8).default(3) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 
@@ -2586,6 +2629,12 @@ export const EventDefSchema = z.object({
   mode: z.string().nullable().default(null),
   /** With `mode`: always gets a stop on a stage where it is eligible, so a mode's objectives can't be missed by luck. */
   modeStop: z.boolean().default(false),
+  /** A room of a landmark, dungeon or tower: only opens from another event's `addEvent`, never drawn on its own. */
+  room: z.boolean().default(false),
+  /** A follow-up scene: gets a stop on the next stage where it is eligible (its `requires` hold), so a kindness shows up again later. */
+  callback: z.boolean().default(false),
+  /** A secret path: shows as "?" until one of these holds (a Pokémon with the right ability or type), then the real stop. */
+  secret: z.array(EventConditionSchema).default([]),
   scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
   intro: z.string(),
   choices: z.array(EventChoiceSchema).min(1).max(4),

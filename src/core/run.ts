@@ -61,6 +61,7 @@ import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
+import { advanceRoamers, applyFrontWeather, spawnRoamers } from './world';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
@@ -488,7 +489,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   noteJournal(content, run);
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
-  run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [] };
+  run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [], scoutedTo: 0, extraFronts: [], roamers: [] };
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
@@ -505,6 +506,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);
+  spawnRoamers(content, run);
   placeRaidDens(content, run);
   placeGangDen(content, run);
   placeTotem(content, run);
@@ -537,6 +539,9 @@ function enterLeague(content: Content, run: RunState): void {
     map,
     current: null,
     visited: [],
+    scoutedTo: 0,
+    extraFronts: [],
+    roamers: [],
   };
   startStageEffects(run);
   syncHpPerks(content, runArchetype(content, run).modifiers, run.party);
@@ -647,6 +652,8 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   stage.visited.push(nodeId);
   // Bridge Mail adds a stop beside the node the player reaches.
   addBridgeStops(content, run, nodeId);
+  // Roaming Legendaries move on as you do.
+  advanceRoamers(content, run, node);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
   // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
   if (mode === 'machBike' && node.kind === 'wild') {
@@ -660,6 +667,8 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
     return run;
   }
   startEncounter(content, run, node);
+  // A weather front over the node sets the battle's weather.
+  applyFrontWeather(content, run, node);
   recordBattleStart(content, run);
   return run;
 }
