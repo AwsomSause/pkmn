@@ -109,7 +109,7 @@ Kice asked to "search even further". Four more searches: the Untitled document a
 | 5.16 | **Reward economy pieces:** a Legendary/Event reward tier (rarities stop at epic; 1 epic reward), Discovery-style Luck rewards (Discovery Charm, Research Lead, Supply Coupon, Form Clue, Draft Refractor), attribute tonic vs manual (manual has a drawback, repeat boosts diminish), Rare Goods Dealer and Research Exchange shops, "x/4 toward next point" on attributes | Untitled §3.1, 3.4–3.6, §6.3 | NONE/PART | M |
 | 5.17 | **Generic trainer classes as data:** Lass, Camper, Picnicker, Swimmer, Breeder, Battle Girl, Ranger, Ace Trainer, Veteran, Reporter... with personality/dialogue tags and a battle style (today 18 classes, name + sprite only); fixed movesets for the 51 NPC trainers | Untitled §7.2; NPC trainers thread | PART | M |
 | 5.18 | **Starter Lab extras:** Challenge and Daily set categories; Special Specimen (legendary/mythical starters with restrictions; today they're excluded everywhere); per-species mastery cosmetics (badges, sprite borders, frames) | Untitled §9.1, §18; GAME_DESIGN §14.5 | NONE/PART | M |
-| 5.19 | **Hyper moment codex** on the account (moment types you've discovered) | Hyper/Overdrive §7 | NONE | S |
+| 5.19 | **Hyper moment codex** on the account (moment types you've discovered) | Hyper/Overdrive §7 | DONE (`core/story/codex.ts`, Hub Moment Codex) | S |
 | 5.20 | **Adventure mode:** show the wipe count and offer "end run" (now a silent cap of 8) | Playtest thread | PART | S |
 | 5.21 | **Playtest in CI:** ~50 bot seeds per PR, fail on any crash or stuck run | Playtest thread | NONE | S |
 | 5.22 | **Trainer unlock challenges** count feats from every run, not only runs as that trainer | Trainer unlocks thread | LIMITED | S |

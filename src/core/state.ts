@@ -1136,6 +1136,8 @@ export const ProfileSchema = z.object({
   gameEvents: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   /** Legacy & Live hub systems: Research Tree, Prestige, Trainer Network, Item Museum, Intelligence Board, Seed Shelf (core/legacy.ts). */
   legacy: LegacySchema.optional(),
+  /** Hyper moment codex (core/story/codex.ts): times each story moment (story.json id) was seen, over all runs. */
+  momentCodex: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

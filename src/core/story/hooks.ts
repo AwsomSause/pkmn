@@ -34,6 +34,7 @@ import { graduateMentorships } from './mentorship';
 import { awardLegacyTitles, recordEpitaph } from './legacy';
 import { noteStruggle, recordChampionMemory } from './highHype';
 import { clearMomentFlags, detectMoments } from './moments';
+import { noteCodex } from './codex';
 import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint, noteRivalResult } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
@@ -410,6 +411,7 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
       emotions: def.emotions,
     });
     advanceChains(content, run, def.id, t.side === 'player' ? actor : undefined);
+    if (!suppressed) noteCodex(run, def.id);
     // Effects the engine has not already applied (it decides every Hyper moment's effect itself).
     if (!suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind)) {
       const id = isBattleEffect(def.effect) ? cooldownKey(def, actor) : `${event.id}:${def.id}`;
