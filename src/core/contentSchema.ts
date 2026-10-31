@@ -1571,6 +1571,8 @@ export const RegionSchema = z.object({
   champions: z.array(z.string()),
   /** The Grand Region always comes last. */
   grand: z.boolean().default(false),
+  /** One of the game's own regions (D6), not one from the main series. */
+  custom: z.boolean().default(false),
   /** The generations of Pokémon native to this region (empty = every generation is native). */
   generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
@@ -1743,6 +1745,8 @@ export const BalanceSchema = z.object({
   /** SOS calls (core/battle/sos.ts): hurt wild Pokémon may call a friend. Off = never (old-seed checks switch it off). */
   /** Campaign Director focus effects (mystery: more event stops; rivals: sooner returns). */
   focusEffects: z.boolean().default(true),
+  /** Gym, Elite Four and champion aces may start a stage lower and evolve mid-battle (Battle Drama P5). */
+  bossEvolution: z.boolean().default(true),
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
@@ -2059,6 +2063,15 @@ export const BalanceSchema = z.object({
     /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
     milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
+  /** The Candy Shop (D7): permanent starting perks bought once with candies. */
+  candyShop: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    description: z.string(),
+    cost: z.number().int().positive(),
+    money: z.number().int().min(0).default(0),
+    items: z.record(z.string(), z.number().int().positive()).default({}),
+  })),
   /** Research Points for discoveries (first time ever seen or caught). */
   research: z.object({
     perSpeciesSeen: z.number().int().min(0),

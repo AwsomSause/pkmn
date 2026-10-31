@@ -16,10 +16,10 @@ export const PROFILE_INFO: Record<AccessibilityProfile, { label: string; blurb: 
 };
 
 const PRESETS: Record<Exclude<AccessibilityProfile, 'custom'>, Partial<Settings>> = {
-  reducedMotion: { battleAnimations: 'reduced', effectIntensity: 0.25, dialogueFrequency: 'low' },
-  lowFlash: { battleAnimations: 'full', effectIntensity: 0.25 },
+  reducedMotion: { battleAnimations: 'reduced', effectIntensity: 0.25, shakeIntensity: 0.25, reduceParticles: true, dialogueFrequency: 'low' },
+  lowFlash: { battleAnimations: 'full', effectIntensity: 0.25, shakeIntensity: 0.25 },
   moreDetail: { damageDetails: true, dialogueFrequency: 'high' },
-  fastBattles: { battleSpeed: 'quick', effectIntensity: 0.5, dialogueFrequency: 'low' },
+  fastBattles: { battleSpeed: 'quick', effectIntensity: 0.5, shakeIntensity: 0.5, dialogueFrequency: 'low' },
 };
 
 export function applyProfile(settings: Settings, profile: AccessibilityProfile): Settings {

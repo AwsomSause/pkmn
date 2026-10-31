@@ -119,7 +119,7 @@
   "benchXpPercent": 50,
   "variance": 1,
   "minLevel": 2,
-  "maxLevel": 100,
+  "maxLevel": 500,
   "trainerBonus": 1,
   "gymBonus": 0,
   "aceBonus": 1,
@@ -316,6 +316,9 @@
    "alola": { "item": "ice-stone", "price": 2500 },
    "galar": { "item": "galarica-cuff", "price": 3000 },
    "paldea": { "item": "sweet-apple", "price": 2500 },
+   "torren": { "item": "dusk-stone", "price": 2500 },
+   "frontier-isles": { "item": "protector", "price": 3000 },
+   "trial-archipelago": { "item": "dawn-stone", "price": 2500 },
    "grand": { "item": "dragon-scale", "price": 3500 }
   },
   "loan": { "money": 2000, "badges": 3, "penalty": 200 },
@@ -326,6 +329,13 @@
    { "credits": 6000, "title": "Magnate" }
   ]
  },
+ "candyShop": [
+  { "id": "satchel", "name": "Super Satchel", "description": "Every run starts with 3 Super Potions.", "cost": 30, "items": { "super-potion": 3 } },
+  { "id": "pantry", "name": "Pocket Pantry", "description": "Every run starts with 3 Potions.", "cost": 15, "items": { "potion": 3 } },
+  { "id": "ball-belt", "name": "Ball Belt", "description": "Every run starts with 5 Poké Balls.", "cost": 15, "items": { "poke-ball": 5 } },
+  { "id": "lucky-coin", "name": "Lucky Coin", "description": "Every run starts with ₽500 more.", "cost": 25, "money": 500 },
+  { "id": "revive-kit", "name": "Revive Kit", "description": "Every run starts with a Revive.", "cost": 60, "items": { "revive": 1 } }
+ ],
  "research": {
   "perSpeciesSeen": 5,
   "perSpeciesCaught": 10,

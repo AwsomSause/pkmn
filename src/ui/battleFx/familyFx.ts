@@ -20,6 +20,8 @@ export interface FamilyStage {
   color: number;
   /** 0–1 from the effect-intensity setting. */
   intensity: number;
+  /** Shake strength; defaults to `intensity`. */
+  shake?: number;
   /** 1 normal, 2 fast, 3 quick. */
   speed: number;
 }
@@ -164,7 +166,7 @@ async function impact(stage: FamilyStage, kind: FamilyRecipe['impact'], at: { x:
       });
       break;
     case 'quake':
-      scene.cameras.main.shake(260 / stage.speed, 0.008 * stage.intensity);
+      scene.cameras.main.shake(260 / stage.speed, 0.008 * (stage.shake ?? stage.intensity));
       [-40, 0, 40].forEach((dx, i) => {
         const d = add(scene.add.ellipse(at.x + dx, at.y + 50, 40, 14, color, 0.6));
         jobs.push(tween(stage, { targets: d, y: at.y + 30, scaleX: 1.8, alpha: 0, duration: 300, delay: i * 40 }));

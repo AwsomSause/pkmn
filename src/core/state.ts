@@ -1105,6 +1105,8 @@ export const ProfileSchema = z.object({
   bankTier: z.number().int().min(1).max(5).default(1),
   /** Items kept in the Collector's Vault (Bank tier 5). */
   vault: z.array(z.string()).default([]),
+  /** Candy Shop perks bought with candies (balance.candyShop): they add to every run's starting Bag. */
+  candyPerks: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),
@@ -1152,10 +1154,14 @@ export const SettingsSchema = z.object({
   muted: z.boolean(),
   /** Battle animations: full, reduced (no flashing, shaking or big motion), or off (skipped). */
   battleAnimations: z.enum(['full', 'reduced', 'off']),
-  /** 0–1: how strong screen shake and flashes are. */
+  /** 0–1: how strong flashes are (the "Flashes" setting). */
   effectIntensity: z.number().min(0).max(1),
-  /** How fast battles play: normal, fast (2×) or quick (3×). Outcomes never depend on it. */
-  battleSpeed: z.enum(['normal', 'fast', 'quick']),
+  /** 0–1: how strong screen shake is, separate from flashes. */
+  shakeIntensity: z.number().min(0).max(1).default(1),
+  /** Skip the drifting ambience particles (clouds, fog and rays stay). */
+  reduceParticles: z.boolean().default(false),
+  /** How fast battles play: showcase (0.75×, lingering), normal, fast (2×) or quick (3×). Outcomes never depend on it. */
+  battleSpeed: z.enum(['showcase', 'normal', 'fast', 'quick']),
   /** How much trainers talk in battle: off, low, normal or high. */
   dialogueFrequency: z.enum(['off', 'low', 'normal', 'high']),
   /** Show why damage came out as it did (effectiveness, STAB, crit) in the battle text. */

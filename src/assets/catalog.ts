@@ -160,6 +160,9 @@ export const FIXED_ASSETS: AssetEntry[] = [
   // Party status badges (7 rows of 16 px: SLP PSN BRN PAR FRZ FNT PKRS) and held-item mark, from the UIE pack Custom UI/Party.
   { id: 'ui.party.statuses', kind: 'image', category: 'ui', path: 'images/packs/uie/party/statuses.png', lazy: true },
   { id: 'ui.party.icon_item', kind: 'image', category: 'ui', path: 'images/packs/uie/party/icon_item.png', lazy: true },
+  // Load/Save screens (UIE pack Graphics/Custom UI/Load and Save): the title screen's Continue card and the Save data backdrop.
+  { id: 'ui.load.card', kind: 'image', category: 'ui', path: 'images/packs/uie/load/continue_card.png', lazy: true },
+  { id: 'ui.save.bg', kind: 'image', category: 'ui', path: 'images/packs/uie/load/save_background.png', lazy: true },
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),

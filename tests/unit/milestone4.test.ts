@@ -103,10 +103,12 @@ describe('regions', () => {
     expect(run.stage!.map.columns).toBe(DEV.columns);
   });
 
-  it('each region raises the level cap by 50, stopping at 100 for now (D14)', () => {
+  it('each region raises the level cap by 50, up to 500 in the Grand Region (D14)', () => {
     expect(levelCap(content, 0)).toBe(50);
     expect(levelCap(content, 1)).toBe(100);
-    expect(levelCap(content, 5)).toBe(100);
+    expect(levelCap(content, 5)).toBe(300);
+    expect(levelCap(content, 9)).toBe(500);
+    expect(levelCap(content, 12)).toBe(500);
   });
 
   it('a Pokémon stops gaining levels at the region cap', () => {
