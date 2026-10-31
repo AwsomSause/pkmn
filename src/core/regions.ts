@@ -20,9 +20,11 @@ export function getRegion(content: Content, id: string): Region {
 }
 
 /** A shuffled list of regular regions (as many as the campaign wants), then the Grand Region if it has one. */
-export function generateRegionOrder(content: Content, campaign: Campaign, rng: Rng): string[] {
+export function generateRegionOrder(content: Content, campaign: Campaign, rng: Rng, chosen: string | null = null): string[] {
   const all = [...content.regions.values()];
-  const regular = rng.shuffle(all.filter((r) => !r.grand).map((r) => r.id)).slice(0, campaign.regularRegions);
+  const shuffled = rng.shuffle(all.filter((r) => !r.grand).map((r) => r.id));
+  // A chosen region (Regional Circuit) replaces the random pick, after the shuffle so no later roll moves.
+  const regular = campaign.regularRegions === 1 && chosen && shuffled.includes(chosen) ? [chosen] : shuffled.slice(0, campaign.regularRegions);
   const grand = campaign.grandRegion ? all.filter((r) => r.grand).map((r) => r.id) : [];
   return [...regular, ...grand];
 }

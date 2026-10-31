@@ -531,6 +531,11 @@ export const BASE_COUNTER_NAMES = [
   'bestFriends',
   'mentorshipsStarted',
   'mentorshipsGraduated',
+  /** Hidden achievements, worked out when a won run ends (core/relationships.ts): few purchases, no rest stops, six different types, and a win after a wipe. */
+  'frugalWins',
+  'noHealWins',
+  'rainbowWins',
+  'comebackWins',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -1846,6 +1851,8 @@ export const BalanceSchema = z.object({
   specialSpecimen: z.object({ levelPenalty: z.number().int().min(0) }).default({ levelPenalty: 3 }),
   /** Extra stock the shop carries in a mode (key: the mode id). */
   modeShops: z.record(z.string(), z.array(z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) }))).default({}),
+  /** Penny Pincher: a won run that spent at most this much in shops. */
+  frugalRunMaxSpent: z.number().int().min(0).default(300),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
@@ -2284,6 +2291,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('rivalAlly') }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
+  /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */
+  z.object({ kind: z.literal('starter'), type: TypeNameSchema.optional(), species: z.string().optional(), tag: z.enum(SPECIES_TAGS).optional() }).refine((c) => c.type !== undefined || c.species !== undefined || c.tag !== undefined, { message: 'a starter condition needs a type, species or tag' }),
   /** Event Director: two of your Pokémon share an open bond. */
   z.object({ kind: z.literal('bond') }),
   /** Event Director: the region's focus (mystery, rivals, raids, exploration). */

@@ -47,4 +47,26 @@ describe('Spooky Mode content', () => {
     expect(modeBattleLine('spooky', true)).not.toBe(modeBattleLine('spooky', false));
     expect(modeBattleLine('standard', false)).toBeNull();
   });
+  it('the Spooky NPCs are on screen and the Medium sells a clue', () => {
+    for (const id of ['spooky-whispering-grave', 'spooky-pale-visitor', 'spooky-hexed-keeper', 'spooky-hollow-mirror', 'spooky-medium']) expect(content.events.get(id)!.scene.cast.length, id).toBeGreaterThan(0);
+    const medium = content.events.get('spooky-medium')!;
+    expect(medium.mode).toBe('spooky');
+    expect(medium.choices[0]!.success.effects.some((e) => e.kind === 'count' && e.counter === 'eventClues')).toBe(true);
+  });
+});
+
+describe('starter-tagged events', () => {
+  it('only appear for a matching starter', () => {
+    const run = standard('tag');
+    run.stage!.index = 4;
+    const starter = run.party.find((m) => m.uid === run.log.starterUid)!;
+    const types = content.species.get(starter.speciesId)!.types;
+    const open = () => eligibleEvents(content, run).map((e) => e.id);
+    const typeEvent: Record<string, string> = { fire: 'starter-ember-shrine', water: 'starter-tide-pool', grass: 'starter-old-orchard', electric: 'starter-power-hum' };
+    for (const [type, id] of Object.entries(typeEvent)) expect(open().includes(id), `${type} ${id}`).toBe(types.includes(type as never));
+    starter.speciesId = 'eevee';
+    expect(open()).toContain('starter-first-pal');
+    run.party = run.party.filter((m) => m.uid !== run.log.starterUid);
+    expect(open().filter((id) => id.startsWith('starter-'))).toEqual([]);
+  });
 });

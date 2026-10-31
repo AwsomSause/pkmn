@@ -72,6 +72,11 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
     case 'partySpecies':
       return run.party.some((m) => m.speciesId === c.species);
+    case 'starter': {
+      const starter = run.party.find((m) => m.uid === run.log.starterUid);
+      const species = starter ? content.species.get(starter.speciesId) : undefined;
+      return !!species && (c.type === undefined || species.types.includes(c.type)) && (c.species === undefined || species.id === c.species) && (c.tag === undefined || species.tags.includes(c.tag));
+    }
     case 'eventSeen':
       return (run.itemCounters?.[`event-seen:${c.id}`] ?? 0) > 0;
     case 'noTrainerTag':
@@ -182,6 +187,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':
       return `Needs a ${c.tag} Pokémon in your party`;
+    case 'starter':
+      return 'Needs a particular starter';
     case 'bond':
       return 'Needs two bonded Pokémon';
     case 'focus':

@@ -133,7 +133,7 @@ export class GameSession {
    * Starts a new run. `campaignId` picks a shorter campaign such as "dev" (default "full");
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
-  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
+  newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice, starterOverride?: string[]): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
     const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes };

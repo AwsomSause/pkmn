@@ -44,8 +44,8 @@ export interface RunPrepData {
   modCursor?: number;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'loan', 'vault', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'region' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'loan', 'vault', 'mode', 'region', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
 /** Cuts a menu label so it stays inside the left panel. */
 function fitLabel(text: string, max = 38): string {
@@ -108,6 +108,7 @@ export class RunPrepScene extends Phaser.Scene {
       loan: `Bank loan: ${this.prep.loan ? `ON (+₽${content.balance.bank.loan.money})` : 'off'}`,
       vault: `Vault item: ${this.prep.vaultItem ? content.items.get(this.prep.vaultItem)?.name ?? this.prep.vaultItem : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
+      region: `Circuit region: ${this.rules.regionId ? content.regions.get(this.rules.regionId)?.name ?? this.rules.regionId : 'by seed'}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
       modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
       deathBlock: `Death-Block: ${this.rules.deathBlock ? 'on' : 'off'}`,
@@ -118,7 +119,7 @@ export class RunPrepScene extends Phaser.Scene {
     this.menu = new Menu(this, {
       x: 40,
       y: 72,
-      options: ROWS.map((r) => ({ label: fitLabel(labels[r]), disabled: r === 'type' && rule.kind !== 'typeFocus' })),
+      options: ROWS.map((r) => ({ label: fitLabel(labels[r]), disabled: (r === 'type' && rule.kind !== 'typeFocus') || (r === 'region' && getMode(this.rules.modeId)?.campaignId !== 'regional-circuit') })),
       itemWidth: 370,
       itemHeight: 22,
       fontSize: 16,
@@ -227,6 +228,11 @@ export class RunPrepScene extends Phaser.Scene {
         const ids = RUN_RULES.modes.filter((m) => m.status === 'supported').map((m) => m.id);
         return this.refresh({}, { rules: { ...this.rules, modeId: next(ids, this.rules.modeId) } });
       }
+      case 'region': {
+        if (getMode(this.rules.modeId)?.campaignId !== 'regional-circuit') return playSfx(this, 'ui.error', 0.5);
+        const ids = [null, ...[...content.regions.values()].filter((r) => !r.grand).map((r) => r.id)];
+        return this.refresh({}, { rules: { ...this.rules, regionId: next<string | null>(ids, this.rules.regionId ?? null) } });
+      }
       case 'difficulty': {
         const ids = RUN_RULES.difficulties.map((d) => d.id);
         return this.refresh({}, { rules: { ...this.rules, difficultyId: next(ids, this.rules.difficultyId) } });
@@ -283,17 +289,18 @@ export class RunPrepScene extends Phaser.Scene {
     let seed = this.seed ?? undefined;
     let rules = this.rules;
     let prep = this.prep;
+    let daily: ReturnType<typeof dailySetup> | undefined;
     if (getMode(rules.modeId)?.dailySeed) {
       // Daily Run: the date is the seed; the day's account rewards pay once.
       const today = new Date().toISOString();
-      const daily = dailySetup(session.content, today, this.prep, rules);
+      daily = dailySetup(session.content, today, this.prep, rules);
       seed = daily.seed;
       prep = daily.prep;
       const key = dailyClaimKey(today);
       rules = { ...daily.rules, noRewards: isClaimed(session.profile, key) };
       if (!rules.noRewards) session.claimOnce(key);
     }
-    session.newRun(this.archetypeId, seed, undefined, prep, rules);
+    session.newRun(this.archetypeId, seed, undefined, prep, rules, daily?.starters);
     this.scene.start('StarterSelect');
   }
 
