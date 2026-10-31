@@ -34,7 +34,7 @@ for f in sorted(os.listdir(D)):
     for i in range(1, len(parts), 2):
         n, b = parts[i], parts[i + 1].split('EliteBattle.defineMoveAnimation')[0]
         m = re.search(r'playMoveAnimation\(:(\w+)', b)
-        if m and len(b.strip().splitlines()) < 6: alias[n] = m.group(1)
+        if m and len([l for l in b.strip().splitlines() if not l.lstrip().startswith('#')]) < 6: alias[n] = m.group(1)
         else: defs[n] = b
 
 def root_of(n):
@@ -125,7 +125,7 @@ for r in rank:
     try: script = build(r, defs[r])
     except Exception as e:
         print('skip', r, e); continue
-    if not script['layers']: continue
+    if not script['layers'] and not script['sfx'] and not script.get('hit') and not script.get('userShake'): continue
     file['scripts'][key] = script
     for m in cover[r]: file['moves'][m] = key
     made += 1

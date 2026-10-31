@@ -34,3 +34,6 @@ Added 22 scripts (26 moves): psychic (confusion, extrasensory, psychic-noise), l
 
 ## Slice 9 (draft-generated, 75 scripts)
 75 more generator drafts (the list is in `ebdxAnims.json`): poltergeist, trailblaze, volt-tackle and more. Total 403 moves (374 scripts). About 245 unported EBDX scripts remain.
+
+## Slice 10 (last roots, 75 scripts)
+Every EBDX move that exists in our move list now has a script: 479 moves (419 scripts). The generator now also reads aliases that end with comment lines, and makes picture-less scripts (black veil, hit squash/flash and the original sound effects) for EBDX moves that only animate the Pokémon sprites (take-down, double-edge, agility and similar). About 57 EBDX names (e.g. fly-down, dig-up, haywire-kick) are not moves in our list, so they are not ported. Drafts are approximate: tune a script by hand in `ebdxAnims.json`; the generator never overwrites those.

@@ -26735,6 +26735,852 @@
           "vol": 0.64
         }
       ]
+    },
+    "takedown": {
+      "v": 1,
+      "length": 1150,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 500,
+          "id": "anim-takedowncharge",
+          "src": "Anim/TakeDownCharge",
+          "vol": 0.8
+        },
+        {
+          "at": 1000,
+          "id": "anim-takedownattack",
+          "src": "Anim/TakeDownAttack",
+          "vol": 0.8
+        }
+      ]
+    },
+    "doubleteam": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "earthquake": {
+      "v": 1,
+      "length": 1470,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "squash": 0.1,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-rock1",
+          "src": "EBDX/Anim/rock1",
+          "vol": 0.88
+        }
+      ]
+    },
+    "bulletpunch": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "feintattack": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "tailwhip": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.8
+        }
+      ]
+    },
+    "helpinghand": {
+      "v": 1,
+      "length": 1150,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "superpower": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "aquajet": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#2a4b83",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-water2",
+          "src": "Anim/Water2",
+          "vol": 0.8
+        },
+        {
+          "at": 200,
+          "id": "anim-water1",
+          "src": "Anim/Water1",
+          "vol": 0.8
+        }
+      ]
+    },
+    "splash": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 0,
+          "id": "anim-bubble1",
+          "src": "Anim/Bubble1",
+          "vol": 0.8
+        }
+      ]
+    },
+    "roar": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "powertrip": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "futuresight": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "rocksmash": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "dig": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "nightshade": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "shake": {
+          "ms": 500,
+          "amp": 4
+        },
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "anim-fog2",
+          "src": "Anim/fog2",
+          "vol": 0.64
+        }
+      ]
+    },
+    "solarbeam": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "bounce": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "shadowsneak": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "iceshard": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#009999",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "howl": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "shadowforce": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "uturn": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#68832a",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "shockwave": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "razorwind": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "focuspunch": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "skyattack": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "dynamicpunch": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "wish": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "dive": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "quickattack": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "skullbash": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "fly": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "machpunch": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 100,
+          "id": "ebdx-anim-move1",
+          "src": "EBDX/Anim/move1",
+          "vol": 0.64
+        }
+      ]
+    },
+    "dizzypunch": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "flash": {
+      "v": 1,
+      "length": 1342,
+      "layers": [],
+      "veil": {
+        "color": "#ffffff",
+        "alpha": 0.3,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": [
+        {
+          "at": 500,
+          "id": "anim-flash2",
+          "src": "Anim/Flash2",
+          "vol": 0.8
+        }
+      ]
+    },
+    "skydrop": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "sleeptalk": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "scald": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "solarblade": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "aurawheel": {
+      "v": 1,
+      "length": 1800,
+      "layers": [],
+      "sfx": [
+        {
+          "at": 200,
+          "id": "ebdx-anim-fire2",
+          "src": "EBDX/Anim/fire2",
+          "vol": 0.8
+        }
+      ]
+    },
+    "shoreup": {
+      "v": 1,
+      "length": 1800,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "sfx": [
+        {
+          "at": 400,
+          "id": "anim-rock2",
+          "src": "Anim/rock2",
+          "vol": 0.68
+        },
+        {
+          "at": 400,
+          "id": "anim-absorb2",
+          "src": "Anim/Absorb2",
+          "vol": 0.8
+        },
+        {
+          "at": 1700,
+          "id": "anim-saint8",
+          "src": "Anim/Saint8",
+          "vol": 0.56
+        }
+      ]
+    },
+    "doomdesire": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "shelltrap": {
+      "v": 1,
+      "length": 990,
+      "layers": [],
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
+    },
+    "coaching": {
+      "v": 1,
+      "length": 900,
+      "layers": [],
+      "veil": {
+        "color": "#000000",
+        "alpha": 0.5,
+        "inMs": 300,
+        "outMs": 400
+      },
+      "hit": {
+        "at": 200,
+        "flash": {
+          "color": "#ffffff",
+          "ms": 250
+        }
+      },
+      "sfx": []
     }
   },
   "moves": {
@@ -27140,6 +27986,82 @@
     "grass-pledge": "grasspledge",
     "poltergeist": "poltergeist",
     "trailblaze": "trailblaze",
-    "volt-tackle": "volttackle"
+    "volt-tackle": "volttackle",
+    "take-down": "takedown",
+    "body-slam": "takedown",
+    "return": "takedown",
+    "facade": "takedown",
+    "flail": "takedown",
+    "endeavor": "takedown",
+    "strength": "takedown",
+    "slam": "takedown",
+    "double-edge": "takedown",
+    "struggle": "takedown",
+    "frustration": "takedown",
+    "double-team": "doubleteam",
+    "minimize": "doubleteam",
+    "acupressure": "doubleteam",
+    "sketch": "doubleteam",
+    "agility": "doubleteam",
+    "earthquake": "earthquake",
+    "fissure": "earthquake",
+    "bulldoze": "earthquake",
+    "magnitude": "earthquake",
+    "rototiller": "earthquake",
+    "fake-out": "bulletpunch",
+    "chip-away": "bulletpunch",
+    "me-first": "bulletpunch",
+    "feint-attack": "feintattack",
+    "pursuit": "feintattack",
+    "tail-whip": "tailwhip",
+    "helping-hand": "helpinghand",
+    "superpower": "superpower",
+    "revenge": "superpower",
+    "aqua-jet": "aquajet",
+    "fishious-rend": "aquajet",
+    "soak": "aquajet",
+    "splash": "splash",
+    "mimic": "splash",
+    "metronome": "splash",
+    "roar": "roar",
+    "power-trip": "powertrip",
+    "punishment": "powertrip",
+    "foul-play": "powertrip",
+    "future-sight": "futuresight",
+    "rock-smash": "rocksmash",
+    "dig": "dig",
+    "night-shade": "nightshade",
+    "solar-beam": "solarbeam",
+    "bounce": "bounce",
+    "shadow-sneak": "shadowsneak",
+    "ice-shard": "iceshard",
+    "howl": "howl",
+    "shadow-force": "shadowforce",
+    "phantom-force": "shadowforce",
+    "skitter-smack": "uturn",
+    "first-impression": "uturn",
+    "lunge": "uturn",
+    "shock-wave": "shockwave",
+    "razor-wind": "razorwind",
+    "focus-punch": "focuspunch",
+    "sky-attack": "skyattack",
+    "dynamic-punch": "dynamicpunch",
+    "wish": "wish",
+    "dive": "dive",
+    "extreme-speed": "quickattack",
+    "skull-bash": "skullbash",
+    "fly": "fly",
+    "mach-punch": "machpunch",
+    "dizzy-punch": "dizzypunch",
+    "flash": "flash",
+    "sky-drop": "skydrop",
+    "sleep-talk": "sleeptalk",
+    "scald": "scald",
+    "solar-blade": "solarblade",
+    "aura-wheel": "aurawheel",
+    "shore-up": "shoreup",
+    "doom-desire": "doomdesire",
+    "shell-trap": "shelltrap",
+    "coaching": "coaching"
   }
 }
