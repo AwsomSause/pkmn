@@ -66,7 +66,8 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
     if (layer.fill) {
       const tile = scene.add.tileSprite(480, 270, 960, 540, key).setAlpha(0).setVisible(false).setTileScale(EBDX_SCALE);
       field.add(tile);
-      field.bringToTop(tile);
+      // Backdrops sit behind the Pokémon, just above the arena art.
+      field.moveTo(tile, Math.min(stage.backgroundIndex + 1, field.length - 1));
       fills.push({ tile, layer });
       return;
     }
@@ -158,7 +159,7 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
     }
     for (const { tile, layer } of fills) {
       const life = (t - layer.start) / layer.dur;
-      const a = lifeAlpha(life, layer.fade) * layer.alpha;
+      const a = lifeAlpha(life, layer.fade) * Math.min(layer.alpha, 0.35);
       tile.setVisible(a > 0.01).setAlpha(a);
       tile.tilePositionX = t * 0.15;
     }
