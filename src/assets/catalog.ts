@@ -151,6 +151,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.optionsbg', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/options_bg.png', lazy: true },
   // Trainer card art (UIE pack Graphics/Custom UI/Trainer), shown in the Hub's Trainer Card room.
   { id: 'ui.trainercard', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/trainer_card.png', lazy: true },
+  // Party list icon boxes (UIE pack Graphics/Custom UI/Party), loaded the first time a party list opens.
+  ...['icon_box', 'icon_box_faint'].map((n): AssetEntry => ({ id: `ui.party.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/party/${n}.png`, lazy: true })),
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
