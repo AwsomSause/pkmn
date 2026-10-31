@@ -1863,11 +1863,28 @@ function applyHeldAttributes(content: Content, run: RunState, events: BattleEven
   }
 }
 
+/** Transformation mastery (catalog 82): which counter a player transformation feeds once the battle is won. */
+const MASTERY_OF: Partial<Record<string, 'megaMastery' | 'teraMastery' | 'dynamaxMastery' | 'zMastery'>> = {
+  mega: 'megaMastery', primal: 'megaMastery', tera: 'teraMastery', dynamax: 'dynamaxMastery', gigantamax: 'dynamaxMastery', zmove: 'zMastery',
+};
+
+/** A won battle turns the transformations used in it into mastery; any other end drops them. */
+function settleMastery(run: RunState, won: boolean): void {
+  for (const k of ['megaMastery', 'teraMastery', 'dynamaxMastery', 'zMastery'] as const) {
+    const key = `xform.${k}`;
+    const n = run.itemCounters?.[key] ?? 0;
+    if (n > 0 && won) count(run, k, n);
+    if (run.itemCounters && key in run.itemCounters) run.itemCounters = { ...run.itemCounters, [key]: 0 };
+  }
+}
+
 /** Counts what grows attributes: stats your Pokémon raise on themselves, and enemies defeated or caught by type. */
 function countAttributeGrowth(content: Content, run: RunState, events: BattleEvent[]): void {
   const battle = run.battle!;
   for (const e of events) {
     if (e.type === 'stat' && e.side === 'player' && e.change > 0) count(run, 'statsBoosted');
+    const xform = e.type === 'transform' && e.side === 'player' ? MASTERY_OF[e.kind] : undefined;
+    if (xform) run.itemCounters = { ...run.itemCounters, [`xform.${xform}`]: (run.itemCounters?.[`xform.${xform}`] ?? 0) + 1 };
     const defeated =
       e.type === 'faint' && e.side === 'enemy' ? battle.enemyTeam.find((m) => m.uid === e.uid) : e.type === 'ball' && e.caught ? currentEnemy(battle) : undefined;
     if (defeated) for (const type of getSpecies(content, defeated.speciesId).types) count(run, `defeatedOrCaught.${type}`);
@@ -2043,6 +2060,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     }
   }
   count(run, 'evolutions', evolutions.length);
+  settleMastery(run, battle.outcome === 'win');
   const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
   const recap = battle.outcome === 'win' && battle.kind === 'trainer' && (battle.ai >= 0.5 || battle.trainer?.leaderId || battle.rivalId) ? recapLines(content, run, battle) : [];
   // The caught Pokémon's decision comes first.

@@ -515,6 +515,11 @@ export const BASE_COUNTER_NAMES = [
   /** Pokémon swapped at a Trade Post. */
   'tradesMade',
   'totemsWon',
+  /** Transformation mastery (catalog 82): Mega/Primal, Tera, Dynamax/Gigantamax and Z-Move uses that were followed by a won battle. */
+  'megaMastery',
+  'teraMastery',
+  'dynamaxMastery',
+  'zMastery',
   /** Anomaly raids won. */
   'anomalyRaidsWon',
   'rivalBattlesWon',

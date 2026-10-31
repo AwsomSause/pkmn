@@ -953,5 +953,237 @@
   "reward": {
    "bankCredits": 500
   }
+ },
+ {
+  "id": "megaMastery-5",
+  "name": "Mega Mastery I",
+  "description": "Win 5 battles in which you used Mega or Primal power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "megaMastery",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "megaMastery",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 5,
+   "candies": 0
+  }
+ },
+ {
+  "id": "megaMastery-25",
+  "name": "Mega Mastery II",
+  "description": "Win 25 battles in which you used Mega or Primal power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "megaMastery",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "megaMastery",
+   "atLeast": 25
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 10,
+   "candies": 0
+  }
+ },
+ {
+  "id": "megaMastery-100",
+  "name": "Mega Mastery III",
+  "description": "Win 100 battles in which you used Mega or Primal power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "megaMastery",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "megaMastery",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 20,
+   "candies": 0,
+   "title": "Mega Mentor"
+  }
+ },
+ {
+  "id": "teraMastery-5",
+  "name": "Tera Mastery I",
+  "description": "Win 5 battles in which you used Terastallized power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "teraMastery",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "teraMastery",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 5,
+   "candies": 0
+  }
+ },
+ {
+  "id": "teraMastery-25",
+  "name": "Tera Mastery II",
+  "description": "Win 25 battles in which you used Terastallized power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "teraMastery",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "teraMastery",
+   "atLeast": 25
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 10,
+   "candies": 0
+  }
+ },
+ {
+  "id": "teraMastery-100",
+  "name": "Tera Mastery III",
+  "description": "Win 100 battles in which you used Terastallized power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "teraMastery",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "teraMastery",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 20,
+   "candies": 0,
+   "title": "Tera Tactician"
+  }
+ },
+ {
+  "id": "dynamaxMastery-5",
+  "name": "Dynamax Mastery I",
+  "description": "Win 5 battles in which you used Dynamaxed power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "dynamaxMastery",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "dynamaxMastery",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 5,
+   "candies": 0
+  }
+ },
+ {
+  "id": "dynamaxMastery-25",
+  "name": "Dynamax Mastery II",
+  "description": "Win 25 battles in which you used Dynamaxed power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "dynamaxMastery",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "dynamaxMastery",
+   "atLeast": 25
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 10,
+   "candies": 0
+  }
+ },
+ {
+  "id": "dynamaxMastery-100",
+  "name": "Dynamax Mastery III",
+  "description": "Win 100 battles in which you used Dynamaxed power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "dynamaxMastery",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "dynamaxMastery",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 20,
+   "candies": 0,
+   "title": "Max Master"
+  }
+ },
+ {
+  "id": "zMastery-5",
+  "name": "Z-Move Mastery I",
+  "description": "Win 5 battles in which you used Z-Move power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "zMastery",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "zMastery",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 5,
+   "candies": 0
+  }
+ },
+ {
+  "id": "zMastery-25",
+  "name": "Z-Move Mastery II",
+  "description": "Win 25 battles in which you used Z-Move power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "zMastery",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "zMastery",
+   "atLeast": 25
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 10,
+   "candies": 0
+  }
+ },
+ {
+  "id": "zMastery-100",
+  "name": "Z-Move Mastery III",
+  "description": "Win 100 battles in which you used Z-Move power.",
+  "category": "battle",
+  "hidden": false,
+  "chain": "zMastery",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "zMastery",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 0,
+   "researchPoints": 20,
+   "candies": 0,
+   "title": "Z-Ring Veteran"
+  }
  }
 ]
