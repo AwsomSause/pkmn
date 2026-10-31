@@ -63,11 +63,23 @@ export const MENU_ICON_ITEMS = [
   'mystery_egg', 'exp_charm', 'map', 'pair_of_tickets', 'dna_splicers', 'candy',
 ];
 
+/** UIE battleback names (tools/import-battlebacks.py). */
+export const UIE_ARENAS: readonly string[] = [
+  'cave1', 'cave2', 'cave3', 'champion1', 'champion2', 'city', 'city_eve', 'city_night', 'distortion', 'elite1', 'elite2', 'elite3', 'elite4', 'elite5', 'elite6', 'elite7', 'elite8', 'field', 'field_eve', 'field_night', 'forest', 'forest_eve', 'forest_night', 'indoor1', 'indoor2', 'indoor3', 'rocky', 'rocky_eve', 'rocky_night', 'snow', 'snow_eve', 'snow_night', 'underwater', 'water', 'water_eve', 'water_night',
+];
+export const uieArenaId = (name: string) => `bg.uie.${name}`;
+
 /** Fixed UI/audio assets used by the screens. */
 export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bg.battle', kind: 'image', category: 'background', path: 'images/arenas/grass_bg.png' },
   // Raid arenas from the Raid Battles pack (resized to the game's 320×180).
   ...['max', 'tera', 'ultra', 'tera2'].map((n): AssetEntry => ({ id: `bg.raid.${n}`, kind: 'image', category: 'background', path: `images/arenas/raid_${n}_bg.png` })),
+  // UIE battlebacks (Pokemon Essentials 21.1 UIE): league halls, evening/night fields, the distortion (tools/import-battlebacks.py).
+  ...UIE_ARENAS.flatMap((n): AssetEntry[] => [
+    { id: uieArenaId(n), kind: 'image', category: 'background', path: `images/arenas/uie/${n}_bg.png`, lazy: true },
+    { id: `${uieArenaId(n)}.player`, kind: 'image', category: 'background', path: `images/arenas/uie/${n}_a.png`, lazy: true },
+    { id: `${uieArenaId(n)}.enemy`, kind: 'image', category: 'background', path: `images/arenas/uie/${n}_b.png`, lazy: true },
+  ]),
   { id: 'bg.battle.player', kind: 'image', category: 'background', path: 'images/arenas/grass_a.png' },
   { id: 'bg.battle.enemy', kind: 'image', category: 'background', path: 'images/arenas/grass_b.png' },
   // PokeRogue's interface art: the menu pointer, battle info boxes and message bar.
