@@ -19,7 +19,7 @@ import { moveLore, moveRank, topMoves } from '../core/moveMastery';
 import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { arenasOpen, CARD_FRAMES, CRY_THEMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
-import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
+import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_BADGES, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
 import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { Profile, RunRecord } from '../core/state';
@@ -103,6 +103,8 @@ const POOL_CATEGORY_LABEL: Record<StarterPoolCategory, string> = {
   event: 'Event Sets',
   research: 'Research',
   rare: 'Rare',
+  challenge: 'Challenge Sets',
+  special: 'Special Specimens',
 };
 
 const POOL_LABEL: Record<PoolStatus, string> = {
@@ -852,9 +854,11 @@ export class HubScene extends Phaser.Scene {
         draw: (scene, box, w, h) => {
           const species = content.species.get(f)!;
           box.add(pokemonIcon(scene, species, 30, h / 2 + 2, 0.9));
+          const frame = RANK_BADGES[rank].frame;
+          if (frame !== null) box.add(scene.add.rectangle(30, h / 2 + 2, 46, 46).setStrokeStyle(2, frame));
           box.add(scene.add.text(64, 8, species.name, textStyle(19)));
           box.add(scene.add.text(64, 32, familyMembers(content, f).map((id) => content.species.get(id)!.name).slice(0, 3).join(' → '), textStyle(13, COLORS.textMuted)));
-          const medal = scene.add.text(w - 14, h / 2, RANK_NAMES[rank], textStyle(18, RANK_COLOR[rank])).setOrigin(1, 0.5);
+          const medal = scene.add.text(w - 14, h / 2, `${RANK_BADGES[rank].glyph} ${RANK_NAMES[rank]}`.trim(), textStyle(18, RANK_COLOR[rank])).setOrigin(1, 0.5);
           box.add(medal);
           // A gentle bob for ranked families (none when motion is reduced or off).
           if (motion === 'full' && atLeast(rank, 'bronze')) scene.tweens.add({ targets: medal, y: h / 2 - 3, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });

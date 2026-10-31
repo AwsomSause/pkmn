@@ -929,7 +929,7 @@ export type Archetype = z.infer<typeof ArchetypeSchema>;
  * game yet are skipped, so a pool can list species ahead of the full Pokédex;
  * a pool with too few known first-stage species shows as "coming later".
  */
-export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event'] as const;
+export const STARTER_POOL_CATEGORIES = ['classic', 'region', 'type', 'role', 'trainer', 'evilTeam', 'league', 'spinOff', 'research', 'rare', 'event', 'challenge', 'special'] as const;
 export type StarterPoolCategory = (typeof STARTER_POOL_CATEGORIES)[number];
 
 export const StarterPoolSchema = z.object({
@@ -956,6 +956,8 @@ export const StarterPoolSchema = z.object({
   mastered: z.boolean().default(false),
   /** An earned set that may hold special forms (Spooky forms...), which every other pool leaves out (core/specialForms.ts). */
   specialForms: z.boolean().default(false),
+  /** Special Specimen set: may list legendary and mythical first stages (see balance.specialSpecimen for the restrictions). */
+  specimens: z.boolean().default(false),
 }).refine((p) => p.species.length > 0 || p.bosses.length > 0 || p.filter !== undefined || p.mastered, { message: 'a starter pool needs species, bosses, a filter or mastered' });
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
@@ -1774,6 +1776,8 @@ export const BalanceSchema = z.object({
   /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
   /** Trainer classes added after the first 17 (5.17) can appear as ordinary trainers. Off keeps old seeds' trainer picks. */
   extraTrainerClasses: z.boolean().default(true),
+  /** Legendary and mythical starters (Special Specimen pools): they start this many levels lower, and only the standard draft rule can be used with them. */
+  specialSpecimen: z.object({ levelPenalty: z.number().int().min(0) }).default({ levelPenalty: 3 }),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),

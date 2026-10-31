@@ -31,7 +31,7 @@ describe('starter sets', () => {
         const s = content.species.get(id)!;
         expect(s.evolutionStage, `${p.id}: ${id}`).toBe(1);
         // An earned special-form set (Spooky Set) offers forms the wild never does.
-        if (!p.specialForms) expect(isWildEligible(content, s), `${p.id}: ${id}`).toBe(true);
+        if (!p.specialForms && !p.specimens) expect(isWildEligible(content, s), `${p.id}: ${id}`).toBe(true);
       }
     }
   });
@@ -79,5 +79,38 @@ describe('starter sets', () => {
     const raw2 = structuredClone(RAW_CONTENT) as any;
     raw2.runPrep.starterPools.push({ id: 'x', name: 'X', description: '', bosses: ['nobody'], filter: { region: 'atlantis' } });
     expect(() => buildContent(raw2)).toThrow(/unknown boss "nobody"[\s\S]*atlantis|atlantis[\s\S]*nobody/);
+  });
+});
+
+import { resolvePrep } from '../../src/core/runPrep';
+import { chooseStarter, createRun } from '../../src/core/run';
+import { RANK_BADGES } from '../../src/core/mastery';
+
+describe('challenge sets, Special Specimens and mastery frames', () => {
+  const pool = (id: string) => content.starterPools.get(id)!;
+  it('challenge sets are filled and Special Specimens offer only legendary or mythical Pokémon', () => {
+    expect(eligibleSpecies(content, pool('challenge-underdogs')).length).toBeGreaterThanOrEqual(3);
+    expect(eligibleSpecies(content, pool('challenge-singles')).length).toBeGreaterThanOrEqual(3);
+    const ids = eligibleSpecies(content, pool('special-specimen'));
+    expect(ids.length).toBeGreaterThanOrEqual(3);
+    for (const id of ids) expect(content.species.get(id)!.tags.some((t) => t === 'legendary' || t === 'mythical'), id).toBe(true);
+    for (const p of content.starterPools.values()) if (!p.specimens) for (const id of eligibleSpecies(content, p)) expect(content.species.get(id)!.tags.includes('legendary'), `${p.id} ${id}`).toBe(false);
+  });
+  it('a Special Specimen run is limited to the Standard draft rule and starts lower', () => {
+    const profile = createProfile(content, 'p');
+    const wanted = { ...defaultPrep(content), poolId: 'special-specimen', draftRuleId: 'expanded-research' };
+    // Not unlocked yet: falls back to the default pool, so unlock it directly for the rule check.
+    profile.unlockedPools.push('special-specimen');
+    const resolved = resolvePrep(content, profile, 'red', wanted);
+    expect(resolved.prep.draftRuleId).toBe(defaultPrep(content).draftRuleId);
+    const draft = draftStarters(content, new Rng(hashSeed('sp')), { ...defaultPrep(content), poolId: 'special-specimen' });
+    const run = createRun(content, { runId: 'sp', seed: 'sp', archetypeId: 'red', prep: { ...defaultPrep(content), poolId: 'special-specimen' } });
+    run.starterChoices = draft.choices;
+    const started = chooseStarter(content, run, 0);
+    expect(started.party[0]!.level).toBe(content.balance.starterLevel - content.balance.specialSpecimen.levelPenalty);
+  });
+  it('Silver and above earn a frame', () => {
+    expect(RANK_BADGES.caught.frame).toBeNull();
+    for (const r of ['bronze', 'silver', 'gold', 'master'] as const) expect(RANK_BADGES[r].frame).not.toBeNull();
   });
 });
