@@ -1056,7 +1056,8 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
  */
 function ballRuleProblem(ctx: Pick<BattleContext, 'battle'>, rule: Extract<ItemEffect, { kind: 'catch' }>['rule']): string | null | undefined {
   const { battle } = ctx;
-  const foe = currentEnemy(battle);
+  const foe = (battle.enemyTeam as BattleState['enemyTeam'] | undefined)?.[battle.enemyIndex];
+  if (!foe) return undefined;
   if (rule === 'snag') {
     if (battle.kind !== 'trainer') return 'A Snag Ball only works on a Shadow Pokémon held by an enemy trainer.';
     if (battle.narrative || battle.trainer?.leaderId || battle.doubles) return "This trainer's Pokémon are protected: a Snag Ball can't take them.";

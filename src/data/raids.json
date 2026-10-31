@@ -1307,7 +1307,7 @@
         "heatDrop": 1
       },
       "rewards": {
-        "moneyPerLevel": 130,
+        "moneyPerLevel": 80,
         "items": [
           {
             "item": "super-potion",
@@ -1402,7 +1402,7 @@
         "heatDrop": 2
       },
       "rewards": {
-        "moneyPerLevel": 170,
+        "moneyPerLevel": 130,
         "items": [
           {
             "item": "hyper-potion",
@@ -1484,7 +1484,7 @@
         "heatDrop": 1
       },
       "rewards": {
-        "moneyPerLevel": 150,
+        "moneyPerLevel": 100,
         "items": [
           {
             "item": "hyper-potion",
@@ -1580,7 +1580,7 @@
         "heatDrop": 2
       },
       "rewards": {
-        "moneyPerLevel": 190,
+        "moneyPerLevel": 170,
         "items": [
           {
             "item": "full-restore",

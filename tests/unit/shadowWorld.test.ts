@@ -12,6 +12,8 @@ import { heartStage, makeShadow, shadowResists, sootheAmount, soothePartyAfterBa
 import { blissfulAfterBattle, blissfulAtRest, grantBlessing, isBlissful, makeBlissful } from '../../src/core/shadowWorld/blissful';
 import { addFlag, advanceShadowWorld, flagOf, gangNotes, gangRaidWon, outbreakShadow, placeGangDen } from '../../src/core/shadowWorld/world';
 import { PokemonInstanceSchema } from '../../src/core/state';
+import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
+import { MemoryStorageProvider } from '../../src/save/storage';
 import { content } from './helpers';
 
 const fresh = (seed: string) => structuredClone(chooseStarter(content, createRun(content, { runId: seed, seed, archetypeId: 'red' }), 0));
@@ -297,6 +299,17 @@ describe('Events', () => {
 });
 
 describe('Saves', () => {
+  it('a version 25 run loads with no Blissful Pokémon and nothing snagged', () => {
+    const storage = new MemoryStorageProvider();
+    const run = fresh('save25');
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 25, savedAt: '', data: run }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(25);
+    expect(loaded.data.party[0]!.blissful).toBeUndefined();
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(26);
+  });
   it('Blissful and snagged state survive a save round trip', () => {
     const mon = createPokemon(content, 'togetic', 10, 'a');
     makeBlissful(content, mon);
