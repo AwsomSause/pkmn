@@ -313,7 +313,8 @@ describe('Terastallization', () => {
 
   it('a boss ace with no Mega form Terastallizes into the boss speciality', () => {
     const p = mon('snorlax', 60, 'p1', 'splash');
-    const ace = mon('rattata', 30, 'e2', 'splash');
+    // A Rock move, so the Tera gives it STAB at once (Advanced AI timing holds a Tera that does nothing).
+    const ace = mon('rattata', 30, 'e2', 'rock-throw');
     const { battle, ctx } = setup([p], [mon('pidgey', 5, 'e1', 'splash'), ace], {});
     battle.trainer = { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' };
     battle.transform.enemyMechanics = ['mega', 'tera'];

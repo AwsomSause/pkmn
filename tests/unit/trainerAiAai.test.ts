@@ -237,3 +237,76 @@ describe('field play (batch 2)', () => {
     expect(moveValue(b.brain(), b.battle.enemyTeam[0]!, 'trick-room')).toBe(0);
   });
 });
+
+describe('batch 3: items, pivots, endgame, personality, Illusion, gimmick timing', () => {
+  it('no Ground move into an Air Balloon until it pops', () => {
+    const user = mon('garchomp', 50, 'u', ['earthquake', 'dragon-claw']);
+    const target = mon('heatran', 50, 't', ['flamethrower']);
+    target.held = { 'air-balloon': 1 };
+    const { battle, brain } = fight(user, target);
+    expect(moveValue(brain(), user, 'earthquake')).toBe(0);
+    battle.held.popped.push(target.uid);
+    expect(moveValue(brain(), user, 'earthquake')).toBeGreaterThan(0);
+  });
+
+  it('Baton Pass only with boosts and a teammate', () => {
+    const user = mon('ninjask', 40, 'u', ['baton-pass', 'x-scissor']);
+    const target = mon('snorlax', 40, 't', ['tackle']);
+    const { battle, brain } = fight(user, target);
+    expect(moveValue(brain(), user, 'baton-pass')).toBe(0);
+    battle.enemyStages = { ...freshStages(), spe: 2, atk: 1 };
+    expect(moveValue({ ...brain(), stages: battle.enemyStages }, user, 'baton-pass')).toBeGreaterThan(0);
+  });
+
+  it('a last, slower Pokémon about to fall drops its status moves', () => {
+    const user = mon('scyther', 30, 'u', ['swords-dance', 'wing-attack']);
+    const target = mon('arcanine', 70, 't', ['flamethrower']);
+    const { battle, brain } = fight(user, target);
+    battle.enemyTeam[1]!.hp = 0;
+    expect(moveValue(brain(withAai({ setupSafety: false })), user, 'swords-dance')).toBe(0);
+    expect(moveValue(brain(withAai({ setupSafety: false, endgame: false })), user, 'swords-dance')).toBeGreaterThan(0);
+  });
+
+  it('a trainer style comes from its team and weights its moves', async () => {
+    const { aaiPersonality, personalityFactor } = await import('../../src/core/battle/aai');
+    const sweepers = ['scyther', 'gyarados', 'dragonite', 'garchomp'].map((s, i) => mon(s, 50, `s${i}`, ['swords-dance', 'dragon-dance', 'earthquake']));
+    expect(aaiPersonality(content, sweepers)).toBe('hyperOffensive');
+    const walls = ['blissey', 'chansey'].map((s, i) => mon(s, 50, `w${i}`, ['soft-boiled', 'toxic']));
+    expect(aaiPersonality(content, walls)).toBe('defensive');
+    expect(personalityFactor('defensive', content.moves.get('soft-boiled')!)).toBeCloseTo(1.4);
+    expect(personalityFactor('aggressive', content.moves.get('soft-boiled')!)).toBeCloseTo(0.7);
+  });
+
+  it('Illusion fools the trainer: it scores against the disguise', () => {
+    const user = mon('machamp', 40, 'u', ['cross-chop']);
+    const target = mon('zoroark', 40, 't', ['night-daze']);
+    const { battle, brain } = fight(user, target);
+    const real = moveValue(brain(), user, 'cross-chop');
+    battle.playerVolatile.illusion = 'gengar'; // Fighting does nothing to a Ghost
+    expect(moveValue(brain(), user, 'cross-chop')).toBe(0);
+    expect(moveValue(brain(withAai({ illusion: false })), user, 'cross-chop')).toBeCloseTo(real);
+  });
+
+  it('Tera waits until it helps, at most gimmickMaxWait turns', async () => {
+    const { aaiGimmickReady } = await import('../../src/core/battle/aai');
+    const ace = mon('dragonite', 50, 'a', ['dragon-claw', 'extreme-speed']);
+    const foe = mon('pikachu', 50, 'f', ['thunderbolt']);
+    const base = { aceTypes: ['dragon', 'flying'] as const, foeKnown: [], turnsOut: 0 };
+    expect(aaiGimmickReady(content, 'tera', ace, foe, { ...base, teraType: 'water' })).toBe(false);
+    expect(aaiGimmickReady(content, 'tera', ace, foe, { ...base, teraType: 'normal' })).toBe(true); // STAB on Extreme Speed
+    expect(aaiGimmickReady(content, 'tera', ace, foe, { ...base, teraType: 'water', turnsOut: 3 })).toBe(true);
+    const ice = content.moves.get('ice-beam')!;
+    expect(aaiGimmickReady(content, 'tera', ace, foe, { ...base, teraType: 'water', foeKnown: [ice] })).toBe(true);
+    expect(aaiGimmickReady(withAai({ gimmickTiming: false }), 'tera', ace, foe, { ...base, teraType: 'water' })).toBe(true);
+  });
+
+  it('no Z-Move into an immune foe, no Dynamax to finish a nearly-down foe', async () => {
+    const { aaiGimmickReady } = await import('../../src/core/battle/aai');
+    const ace = mon('machamp', 50, 'a', ['cross-chop']);
+    const ghost = mon('gengar', 50, 'g', ['shadow-ball']);
+    const base = { aceTypes: ['fighting'] as const, foeKnown: [], turnsOut: 0 };
+    expect(aaiGimmickReady(content, 'zmove', ace, ghost, { ...base, zMoveType: 'fighting' })).toBe(false);
+    ghost.hp = 1;
+    expect(aaiGimmickReady(content, 'dynamax', ace, ghost, base)).toBe(false);
+  });
+});

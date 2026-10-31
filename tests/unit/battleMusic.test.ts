@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { battleTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { battleTrack, MAP_TRACKS, mapTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
 
@@ -72,5 +72,15 @@ describe('form sprites from the Essentials kit', () => {
   it('the Keldeo Resolution switches Keldeo to its Resolute form', () => {
     const hooks = content.catalog.get('keldeo-resolution')!.effect;
     expect(hooks).toMatchObject({ kind: 'held', hooks: expect.arrayContaining([{ hook: 'formHeld', from: 'keldeo', to: 'keldeo-resolute' }]) });
+  });
+});
+
+describe('map music', () => {
+  it('a region keeps its song, all three songs get used, all are in the catalog', () => {
+    expect(mapTrack('kanto')).toBe(mapTrack('kanto'));
+    const seen = new Set(['kanto', 'johto', 'hoenn', 'sinnoh', 'unova', 'kalos', 'alola', 'galar', 'paldea', 'grand'].map(mapTrack));
+    expect(seen.size).toBeGreaterThan(1);
+    const ids = new Set(FIXED_ASSETS.map((a) => a.id));
+    for (const id of MAP_TRACKS) expect(ids.has(id), id).toBe(true);
   });
 });

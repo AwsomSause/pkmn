@@ -1709,8 +1709,22 @@ export const TrainerAiSchema = z.object({
       repetition: z.boolean().default(false),
       /** Weather, terrain and speed: rain/sun/terrain damage, weather or terrain moves that help itself more than the foe, Trick Room when slower, Thunder Wave when slower, priority to pick off a worn target. */
       fieldPlay: z.boolean().default(false),
+      /** The target's held items: Air Balloon, resist berries, damage-taken items, status-immunity items. */
+      itemReads: z.boolean().default(false),
+      /** U-turn / Volt Switch out of a bad matchup; Baton Pass only with boosts to pass. */
+      pivot: z.boolean().default(false),
+      /** A last Pokémon about to be KO'd only attacks. */
+      endgame: z.boolean().default(false),
+      /** The trainer's style (aggressive, defensive, balanced, hyper offensive) read from its team weights its moves. */
+      personality: z.boolean().default(false),
+      /** A Zoroark's Illusion fools the trainer: it scores against the disguise. */
+      illusion: z.boolean().default(false),
+      /** A boss's ace holds Tera, its Z-Move or Dynamax until it helps... */
+      gimmickTiming: z.boolean().default(false),
+      /** ...but never more than this many turns. */
+      gimmickMaxWait: z.number().int().min(0).default(3),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3 }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
