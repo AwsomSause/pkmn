@@ -30,12 +30,12 @@ Kice asked (2026-10-30 23:49): "Look through every file, chat, and document in t
 ## P1 — big systems the design docs specify that are not built
 | # | Item | Source | State now | Size |
 |---|---|---|---|---|
-| 1.1 | **Advanced AI port, the other ~44 scripts.** Only 3 of 47 are in (KO bonus, priority KO, danger switch). Port in batches: item use in battle (potions, X items, status heals), ability-aware choices (immunities, Levitate, Flash Fire, Wonder Guard), setup and stat-stage logic, status move timing, weather/terrain play, doubles targeting and partner protection, smarter switching (predict, sack, pivot). Each batch behind `balance.trainerAi.*` with a test per behaviour. | `[000_AAI] Advanced AI System.zip`; priority list #1 "smarter trainers"; zip-coverage Z8 | PART (3/47) | L |
+| 1.1 | **Advanced AI port, the other ~44 scripts.** Only 3 of 47 are in (KO bonus, priority KO, danger switch); trainers already heal with items and switch on purpose (`balance.trainerAi` healBelow, maxItems, maxSwitches), so the item batch covers only what goes beyond that. Port in batches: item use in battle (potions, X items, status heals), ability-aware choices (immunities, Levitate, Flash Fire, Wonder Guard), setup and stat-stage logic, status move timing, weather/terrain play, doubles targeting and partner protection, smarter switching (predict, sack, pivot). Each batch behind `balance.trainerAi.*` with a test per behaviour. | `[000_AAI] Advanced AI System.zip`; priority list #1 "smarter trainers"; zip-coverage Z8 | PART (3/47) | L |
 | 1.2 | **Encounter Director and Combat Threat Rating.** One encounter service for wild, trainer, gym, Elite Four/champion, event, quest and reward Pokémon: read progression state → eligible pool → rarity/level/form rules → weighted pick → validate (level, moves, ability, threat) → bounded retry → logged fallback. Threat rating per species/config with stage budgets (easy/standard/challenging/elite). Route event Pokémon through it so no event can bypass caps. 10,000-sample report per early stage and a per-stage diagnostics report (level spread, rarity, rejections, one-hit KOs, fallbacks). | Balancing Overhaul Phases 2, 4–10 (tracker: "2, 4–11 TODO") | NONE (caps, `levelBst` and the opening rules exist, but each source rolls its own way) | L |
 | 1.3 | **Nemesis system + the missing Overdrive moments.** An enemy (wild Pokémon, trainer ace or boss) that KOs your starter, beats several Pokémon, escapes a close fight or was spared becomes a nemesis: Incident → Return (changed moves/trait, telegraphed) → Reckoning (rare reward, memory, title). Archetypes: Survivor, Avenger, Stalker, Fallen Ace, Unfinished Business, Nemesis of the Nemesis. Missing moments (none in the code): "It Remembers That Defeat!", "This Isn't Over Between Us!", "The Enemy Is Fighting for Its Pride!", "Its Anger Is Becoming Dangerous!", "It Has Something to Prove!", "The Hunter Has Become the Hunted!", "This Enemy Will Return…". Respect the 30% rarity roll. | Techno §2 Nemesis; Hyper/Overdrive §1 and §3 "Rivalries, grudges, returning enemies" (tracker: 12 TODO); Electric M8.9 "rivalry, nemeses" | NONE ("nemesis" is only a rival ladder state) | M–L |
-| 1.4 | **Bank and the rest of the Out-of-Run design.** Bank tiers 1–5 (services, not multipliers); licenses Scavenger, Fortune, Survival (3 of 6 exist); Emergency Reserve, Exchange Counter, Collector's Vault, Regional Accounts, Loan Challenges, savings milestones; draft modifiers Expanded Research, Regional Research, Rare Specimen, Evolution Specialist (Standard/Balanced/Blind/Type Focus exist); prep tokens for first-region intel, an item category and a small attribute bonus; Trainer Research (using a trainer reveals story and events); species-tagged starter events; achievements: the Relationship category (0 now), tier chains and hidden achievements (31 achievements today). | GAME_DESIGN §14.2–14.5, §14.7; CHECKLIST M8.75 D, E, F | PART | L |
+| 1.4 | **Bank and the rest of the Out-of-Run design.** Bank tiers 1–5 (services, not multipliers); licenses Scavenger, Fortune, Survival (3 of 6 exist); Emergency Reserve, Exchange Counter, Collector's Vault, Regional Accounts, Loan Challenges, savings milestones; draft modifiers Expanded Research, Regional Research, Rare Specimen, Evolution Specialist (Standard/Balanced/Blind/Type Focus exist); prep tokens for first-region intel, an item category and a small attribute bonus; Trainer Research (using a trainer reveals story and events); species-tagged starter events; achievements: the Relationship category (0 now), more chains and hidden achievements (31 today: 17 in chains, 2 hidden). | GAME_DESIGN §14.2–14.5, §14.7; CHECKLIST M8.75 D, E, F | PART | L |
 | 1.5 | **Legacy & Live hub systems (Electric "M11").** Trainer Network (other trainers give small utility services), Research Tree, Prestige (never deletes collection), Permanent Item Museum, Regional Intelligence Board, Move Research room, a Hub that grows visually as you unlock things, shared seeds. | GAME_DESIGN §14.1, §14.6, §14.8; CHECKLIST M8.75 H; Electric §6 | NONE (Hall of Fame, Wardrobe, Contracts, Rival Ghosts, Berry Garden stop exist) | L |
-| 1.6 | **Levels above 100 (to 500) and +100 per region.** Level cap stops at 100 today. Grand Region curve and endgame cap stated in data; stat formula, XP curve, caps and boss teams checked by the playtest bot before and after. Also the "party-strength correction" in difficulty. | D14 (decided 2026-10-25: up to 500); Balancing Phase 2 (+100/region); CHECKLIST M8.75 G | NONE (`balance.maxLevel` 100) | L |
+| 1.6 | **Levels above 100 (to 500) and a bigger cap step per region** (the Balancing doc says +100, IMPLEMENTATION_PLAN §6j G says +50: Kice picks). Level cap stops at 100 today. Grand Region curve and endgame cap stated in data; stat formula, XP curve, caps and boss teams checked by the playtest bot before and after. Also the "party-strength correction" in difficulty. | D14 (decided 2026-10-25: up to 500); Balancing Phase 2 (+100/region); CHECKLIST M8.75 G | NONE (`balance.maxLevel` 100) | L |
 | 1.7 | **Custom regions.** D6 says the campaign mixes original and custom regions; only the Grand Region is custom. Design 2–3 custom regions (themes, roster rules, Torren-style identity) and add them to `regions.json`. | D6; CHECKLIST M8.75 G | NONE | L |
 | 1.8 | **Raid Battles pack, the parts left.** Cheer actions in raids (3 cheer UI images), Raid Dens UI and Adventures UI art on the den preview and expedition screens; raid modifiers terrain, elemental surge, healing restriction, rotating weaknesses; bosses with more than four moves; a capture moment after a raid win (then the 4 skipped capture jingles fit). | Raid Battles.zip; Blueprint §1 TODO lines; zip-coverage | PART | M |
 | 1.9 | **Totems with doubles.** True 2v1 (Totem and ally both on the field) now that the doubles engine exists; a unique status field effect; held-item uniques, Mega energy/stones and cross-run unlocks as rewards; Totem and expedition achievements; more expedition routes. | Blueprint §2–3 TODO lines | PART | M |
@@ -70,6 +70,71 @@ Kice asked (2026-10-30 23:49): "Look through every file, chat, and document in t
 - Hidden Power's type is fixed per Pokémon (D2, no IVs).
 - Windowskins (RPG Maker frames; the Aero look replaces them).
 - Gen 1 music: the packs don't have any; GB Sounds uses an original stand-in.
+
+---
+
+## Second sweep (2026-10-31): more gaps found
+Kice asked to "search even further". Four more searches: the Untitled document and GAME_DESIGN line by line, the four visual docs, the other design docs (Blueprint, both Rivalry docs, Drama, Overdrive/Techno, Trainers.md, IMPLEMENTATION_PLAN §6j, QUALITY_GATES), and every thread's history (Kice's requests plus each thread's "not done" notes). Each item was grepped on `origin/main`. Item numbers continue the waves they belong to.
+
+### Bugs and wrong data (do first, all S)
+| # | Item | Source | Evidence |
+|---|---|---|---|
+| 4.1 | Daily Run's fourth-gym reward unlocks pool `daily-set`, which doesn't exist; its claim key `daily:fourth-gym` pays once ever, not once per daily | Untitled §16.2, §17.1 | `daily-set` appears only in `runRules.json`; `grantUnlocks` accepts any id with no check |
+| 4.2 | Six trainers show raw sprite file names: `Spr_HGSS_Ethan`, `Spr_HGSS_Silver`, `Spr_Pt_Barry`, `Spr_Pt_Dawn`, `Spr_Pt_Looker`, `Spr_Pt_Lucas` | GAME_DESIGN D12 | `archetypes.json` names |
+| 4.3 | Support statuses are stale: `mechanics.json` marks double-battles, egg-hatching and overdrive-events "disabled" and battle-drama/trainer-perks "limited"; notes still say G-Max effects, genders and doubles "not built"; `rivalCatalog.json` still marks alliance, mentor network and team-identity shift "planned". Re-check the 31 disabled forms, 64 limited evolutions and 4 disabled items | QUALITY_GATES; Electric rule 4 | `docs/quality/CONTENT_REPORT.md`, `src/quality/supportStatus.ts:121,131,153-155` |
+| 4.4 | Recruit events offer NPC trainers you already own | Early NPC trainers thread | `npc-meet-*` events have no ownership condition |
+| 4.5 | CI skips `report:assets` and `report:perf`, so the asset audit and load budget never gate a PR | QUALITY_GATES gates 4, 8 | `.github/workflows/ci.yml` |
+| 4.6 | Battle badges (super effective, crit) repeat on every hit of a multi-hit move | Visual Bible 4.6 | `core/presentation/cues.ts:108-110` |
+| 4.7 | Attribute growth: the economy report still shows ~10.8 points per run after #233 slowed it. Re-run the report and tune if still high | Untitled §6.3 | `docs/quality/ECONOMY_REPORT.md:51` |
+| 4.8 | More stale tracker lines for 0.4: coverage-tracker says 180/220 trainers and raid crafting TODO; catalog-coverage says 148-150 and 154 TODO; CHECKLIST:206 says egg moves unsupported; QUALITY_GATES says 60 Playwright tests | several | grep as quoted |
+
+### Wave 1–2 additions
+| # | Item | Source | State | Size |
+|---|---|---|---|---|
+| 5.1 | **Candies can't be spent.** They're earned (release, keepsakes, events) but nothing uses them. Add a candy shop: trainer unlocks, starting buffs (D7) | IMPLEMENTATION_PLAN §6j D, D7 | NONE | S–M |
+| 5.2 | **Achievements awarded when they happen**, not only at run end, with a toast | §6j E | NONE | S |
+| 5.3 | **More rivalry moments:** "The Rivalry Has Only Grown Stronger!", "It Has Studied Your Strategy!", "It Hasn't Forgotten Your Kindness!", "It Hasn't Forgotten Your Cruelty!" (with 1.3) | Hyper/Overdrive §3 | NONE | S |
+| 5.4 | **Pokémon-to-Pokémon rivalry kinds:** Friendly (duo attacks, shared bonus), Bitter (reckless), One-Sided (pays off when mutual), Generational | Techno §1 | PART | M |
+| 5.5 | **Rival who wins without you:** a rival can become a Gym Leader, regional finalist or Champion; ladder states past "contender" | Rivalry Engine §15, phases 5, 7 | NONE | M |
+| 5.6 | **Ultimate Rival presentation:** intro, emblem/title, custom battle intro, quest chain, "Previous Ultimate Rivals" in the Chronicle | Rivalry Engine §7, §14, phase 8 | PART | S–M |
+| 5.7 | **Rival simulation report** over many seeds (how many rivals, resolutions, repeats, contradictions) + QA scenarios | Rivalry Engine phase 13 | NONE | S |
+| 5.8 | **Raid memories** (First to Face the Beast, Broke Its Guard, Took the Hit for Everyone, The Final Blow Belonged to…, The One That Survived, The Rival Who Stood Beside You, The One That Got Away) and contribution rewards | Techno §3 | NONE | S–M |
+| 5.9 | **Raid types:** Regional Raid, Rival Raid (help, race for the last hit, or leave), Anomaly Raid; a boss that escapes and returns | Techno §3; Blueprint §1 Resolve | NONE | M |
+| 5.10 | **Doubles limits:** only the left Pokémon can transform; Hyper moments and rage follow only the left pair; only Tate & Liza fight boss doubles | Doubles thread | LIMITED | M |
+| 5.11 | **Daily Run as its own format:** curated daily starter set, daily modifiers, shorter route with a set final boss | Untitled §16.2 | PART | M |
+| 5.12 | **Spooky Mode content:** its own events, shop stock, NPCs, bosses, battle lines and objectives (now it only turns 1 in 4 wilds Spooky) | Untitled §16.4 | PART | M |
+| 5.13 | **Later modes:** Draft Lab, Regional Circuit, Research Expedition (Boss Gauntlet ≈ Boss Rush) | Untitled §16.7 | NONE | M |
+| 5.14 | **Settings:** text speed, auto-advance, message delay, high contrast, colour-blind type markers, UI scale, sprite-animation toggle, damage-number toggle, "always show full catch details", last-save time | Untitled §12.1–12.2 | PART | M |
+| 5.15 | **Fuller catch reveal:** Pokédex number, weaknesses/resistances, all abilities and Hidden Ability, move type/power/accuracy/PP, unsupported-move warning, catch source, first discovery, compare with a party member you pick, compact mode | Untitled §4.1–4.3 | PART | S–M |
+| 5.16 | **Reward economy pieces:** a Legendary/Event reward tier (rarities stop at epic; 1 epic reward), Discovery-style Luck rewards (Discovery Charm, Research Lead, Supply Coupon, Form Clue, Draft Refractor), attribute tonic vs manual (manual has a drawback, repeat boosts diminish), Rare Goods Dealer and Research Exchange shops, "x/4 toward next point" on attributes | Untitled §3.1, 3.4–3.6, §6.3 | NONE/PART | M |
+| 5.17 | **Generic trainer classes as data:** Lass, Camper, Picnicker, Swimmer, Breeder, Battle Girl, Ranger, Ace Trainer, Veteran, Reporter... with personality/dialogue tags and a battle style (today 18 classes, name + sprite only); fixed movesets for the 51 NPC trainers | Untitled §7.2; NPC trainers thread | PART | M |
+| 5.18 | **Starter Lab extras:** Challenge and Daily set categories; Special Specimen (legendary/mythical starters with restrictions; today they're excluded everywhere); per-species mastery cosmetics (badges, sprite borders, frames) | Untitled §9.1, §18; GAME_DESIGN §14.5 | NONE/PART | M |
+| 5.19 | **Hyper moment codex** on the account (moment types you've discovered) | Hyper/Overdrive §7 | NONE | S |
+| 5.20 | **Adventure mode:** show the wipe count and offer "end run" (now a silent cap of 8) | Playtest thread | PART | S |
+| 5.21 | **Playtest in CI:** ~50 bot seeds per PR, fail on any crash or stuck run | Playtest thread | NONE | S |
+| 5.22 | **Trainer unlock challenges** count feats from every run, not only runs as that trainer | Trainer unlocks thread | LIMITED | S |
+
+### Wave 3 (visual) additions
+| # | Item | Source | State | Size |
+|---|---|---|---|---|
+| 6.1 | Screens still plain (no glass or motion): Expedition, Minigame panel, DecisionScene (6 of 7 menus: learn move, teach, mentorship, PP Up...), GameOver menu, Briefing (no motion), Starter Select, Run Prep | Kice's style (Aero/DS/Wii, bouncy); VB | PART | M |
+| 6.2 | Battle: contact shadows that follow the Pokémon and lifted flyers/levitators; parallax and foreground framing; gym and Elite Four arenas that build up (not plain type arenas); boss phase changes shift the arena light; target reticle in doubles; richer shiny/rare catch | VB 4.1–4.8; CR 5.1, 5.5, 6, 14 | NONE/PART | M |
+| 6.3 | Separate shake and flash settings (one slider today; tracker wrongly says built) | VB 8; Brief phase 2 | PART | S |
+| 6.4 | Healing stop animation; layered map backdrop with a stage landmark; reward cards saying who can use an evolution item / Mega Stone; summary tab for evolution, form and mastery | CR 6; VB 5, 6 | PART | S–M |
+| 6.5 | Remaster deliverables: style guide (palettes, motion curves, layering), list of rejected/unresolved assets, a visual test gallery (move families, environments, cinematics, transitions), pixel compare for Hub and Trainer Select, a "before" set and a final report | CR 4, 7, 12, 13 | NONE/PART | S–M |
+| 6.6 | EBDX's 442 scripted move animations are not played (only their graphics); port the most-used ones | Visuals thread | LIMITED | L |
+| 6.7 | Essentials Kit battle UI: the EXP strip was never seen working; add a screenshot check | HP bars thread | untested | S |
+| 6.8 | Art gaps: King N and Champion Oak evolutions reuse base art; Z-Crystal and Z-Ring icons are drawn placeholders (DBK has Z art) | Starter-sets thread; `tools/draw-z-icons.ts` | LIMITED | S |
+
+### Corrections to the first sweep
+- 1.1: trainers already heal and switch with purpose; only the AAI behaviours beyond that are missing.
+- 1.4: hidden achievements and chains exist (thinly); only Relationship is at 0.
+- 1.6: the per-region cap step conflicts between docs (+100 vs +50); Kice decides.
+- "Between-Level interactions" are built (the rest-spot events: Feed, Play, Groom, Talk, Train, Race, Spar, Treasure hunt, Photograph).
+
+### Kice requests not fully finished
+- Playtest 500: Kice asked for a comment after every five runs; the thread wrote one log file instead. Round 2 is still running.
+- Asset zips: Custom UI screens still in progress (trainer card, options, party, dex, bag).
 
 ---
 
