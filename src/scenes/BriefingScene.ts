@@ -12,6 +12,7 @@ import { eventIdOf } from '../core/gameEvents';
 import { questTrainer, runQuestOf, stepsDone } from '../core/quests';
 import { itemsText } from '../core/runPrep';
 import { getTheme } from '../core/themes';
+import { rememberedDefeat, viewRandom } from '../core/legacyRuns';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
@@ -66,6 +67,9 @@ export class BriefingScene extends Phaser.Scene {
     const questLine = content.questLines.get(questTrainer(content, run.archetypeId));
     const done = stepsDone(content, session.profile, questTrainer(content, run.archetypeId));
     if (questLine && done < questLine.steps.length) line('Trainer quest', `${questLine.name}, step ${done + 1}/5: ${questLine.steps[done]!.goal}`);
+    // The world remembers your defeats (§8.2): now and then, a word about how the last run ended.
+    const remembered = rememberedDefeat(content, session.profile.legacyRuns, { archetypeId: run.archetypeId, now: new Date().toISOString() }, viewRandom(`remember:${run.seed}`)());
+    if (remembered) line('Someone remembers', `“${remembered}”`);
     line('Seed', `${run.seed}   (the same seed replays the same run)`);
 
     this.layoutRows(rows);

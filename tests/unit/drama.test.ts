@@ -521,6 +521,23 @@ describe('battle recap (catalog 14)', () => {
   });
 });
 
+describe('signature moments (catalog 15)', () => {
+  it('finds a sweep and a clutch in the fight\'s own numbers', async () => {
+    const { recapLines, tallyRecap, freshRecap } = await import('../../src/core/drama/recap');
+    const run = trainerRun('Joey', 0.5);
+    const mon = run.party[0]!;
+    const tally = freshRecap();
+    const faint = (uid: string): BattleEvent => ({ type: 'faint', side: 'enemy', uid }) as BattleEvent;
+    const hit: BattleEvent = { type: 'damage', side: 'enemy', amount: 9, hpAfter: 0, effectiveness: 1, crit: false };
+    tallyRecap(content, run, tally, mon.uid, [move('player', 'tackle'), hit, faint('a'), faint('b'), faint('c')]);
+    tallyRecap(content, run, tally, mon.uid, [move('enemy', 'tackle'), { type: 'damage', side: 'player', amount: 3, hpAfter: 1, effectiveness: 1, crit: false }]);
+    run.battle!.drama.recap = tally;
+    const lines = recapLines(content, run, run.battle!);
+    expect(lines.some((l) => l.includes('knocked out 3 foes on its own'))).toBe(true);
+    expect(lines.some((l) => l.includes('carried the fight'))).toBe(true);
+  });
+});
+
 describe('evolution-eligible event (2.1)', () => {
   it('the trainer feels an evolution coming once, before it happens', () => {
     const run = trainerRun('Joey', 0.5);

@@ -23,4 +23,4 @@ Uses only existing keys: Hyper/Overdrive, Interaction and Rival Animations switc
 - Rival expressions use the existing trainer art (no new poses); per-rival signature intros are not data-driven yet.
 - No silence/audio duck during Pushed Back Up (no audio ducking API).
 - Party enter/leave outside battle, achievement and unlock animations were not touched (existing toasts).
-- Tested by unit tests only (mapping, cues, switches, reduced mode); not watched in a browser here.
+- Tested by unit tests (mapping, cues, switches, reduced mode) and `tests/e2e/storyAnims.spec.ts` (headless: every flourish draws, cleans up and restores both Pokémon). Frames were reviewed by eye: sparks are now drawn as stars (the pixel fonts lack the glyphs, so text sparks were invisible), rings are stronger. Rival entrance checked in a headless frame sequence.

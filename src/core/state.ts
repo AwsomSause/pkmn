@@ -603,6 +603,8 @@ export const BattleStateSchema = z.object({
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
+  /** A temporary ally (event battle): its uid. It fights beside you in a double battle and leaves the party when the battle ends. */
+  loaner: z.string().optional(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
   /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */
@@ -1074,6 +1076,100 @@ export const RunRecordSchema = z.object({
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
+/** The kinds of moment a legacy run keeps for Relive the Moment (core/legacyRuns.ts). */
+export const LEGACY_MOMENT_KINDS = ['firstGym', 'firstLegendary', 'rivalDefeat', 'rivalLoss', 'championVictory', 'finalStanding', 'lastSecond', 'runEnding'] as const;
+export const LegacyMomentKindSchema = z.enum(LEGACY_MOMENT_KINDS);
+export type LegacyMomentKind = z.infer<typeof LegacyMomentKindSchema>;
+
+/** One party Pokémon as it was when the run ended. */
+export const LegacyMonSchema = z.object({
+  uid: z.string(),
+  speciesId: z.string(),
+  level: z.number().int(),
+  shiny: z.boolean(),
+  moves: z.array(z.string()),
+  abilitySlot: z.number().int(),
+  nature: z.string().nullable(),
+  held: z.array(z.string()),
+  starter: z.boolean(),
+  knockouts: z.number().int().min(0),
+  bossesBeaten: z.number().int().min(0),
+  titles: z.array(z.string()),
+});
+export type LegacyMon = z.infer<typeof LegacyMonSchema>;
+
+/**
+ * A finished run, written once when it ends and never changed afterwards (profile v14, core/legacyRuns.ts).
+ * It keeps enough to rebuild the run's start (seed, trainer, campaign, prep, rules, starter, region order) and the
+ * story of what happened (team, ace, bosses, rivals, nemeses, legendaries, chronicle, moments). The Legacy Score is
+ * worked out from it when needed, never stored, so the weights can change without a migration.
+ */
+export const LegacyRunSchema = z.object({
+  /** The record's own format (bump it with a migration when the shape changes). */
+  format: z.literal(1),
+  /** "run": written at the end of a run. "history": rebuilt from an older Run History entry (fewer facts). */
+  source: z.enum(['run', 'history']),
+  runId: z.string(),
+  endedAt: z.string(),
+  seed: z.string(),
+  archetypeId: z.string(),
+  campaignId: z.string(),
+  /** The Preparation Desk choices and rules the run started with (null for rebuilt records). */
+  prep: RunPrepSchema.extend({ note: z.string().nullable() }).nullable(),
+  rules: RunRulesSchema.nullable(),
+  starter: z.object({ speciesId: z.string(), choices: z.array(z.string()) }).nullable(),
+  regionOrder: z.array(z.string()),
+  regionsCleared: z.array(z.string()),
+  /** The region index the run reached (0: the first region). */
+  regionReached: z.number().int().min(0),
+  outcome: z.enum(['victory', 'defeat']),
+  encounters: z.number().int().min(0),
+  battlesWon: z.number().int().min(0),
+  /** Gym leader ids, in the order beaten. */
+  badges: z.array(z.string()),
+  bosses: z.object({ gym: z.number().int().min(0), elite: z.number().int().min(0), champion: z.number().int().min(0) }),
+  team: z.array(LegacyMonSchema),
+  /** The Ace Pokémon's uid (a team member), or null when the team is empty. */
+  aceUid: z.string().nullable(),
+  rivals: z.array(z.object({
+    id: z.string(), name: z.string(), classId: z.string(), archetype: z.string(), state: z.string(),
+    encounters: z.number().int().min(0), setbacks: z.number().int().min(0),
+    /** The last battle with it, from your side. */
+    lastResult: z.enum(['win', 'lose']).nullable(),
+    resolution: z.enum(['good', 'bad']).nullable(),
+    team: z.array(z.string()),
+    /** Past contender: it took over a Gym, reached the finals, or became Champion (null: none). */
+    rank: z.enum(['gymLeader', 'finalist', 'champion']).nullable().default(null),
+    /** Its off-screen journey when the run ended (core/rivals/progression.ts): lead in stages, region, badges, regions done, wins, defeats, fame, milestone kinds oldest first. Null: it had none. */
+    world: z.object({ lead: z.number().int(), region: z.number().int().min(0), badges: z.number().int().min(0), regionsDone: z.number().int().min(0), wins: z.number().int().min(0), defeats: z.number().int().min(0), fame: z.number().int().min(0), milestones: z.array(z.string()) }).nullable().default(null),
+    /** Narrative defeats it handed you (M12): story losses that did not end the run. */
+    narrativeWins: z.number().int().min(0).default(0),
+  })),
+  nemeses: z.array(z.object({ id: z.string(), speciesId: z.string(), archetype: z.string(), cause: z.string(), settledAs: z.enum(['beaten', 'caught']).nullable() })),
+  /** Legendary or mythical species met, and the ones caught. */
+  legendaries: z.object({ seen: z.array(z.string()), caught: z.array(z.string()) }),
+  defeatedBy: z.object({ speciesId: z.string(), level: z.number().int(), trainer: z.string().nullable() }).nullable(),
+  /** The last battle of the run: the one that ended it, or the champion fight. */
+  finalBattle: z.object({ result: z.enum(['win', 'lose']), speciesId: z.string().nullable(), level: z.number().int().nullable(), trainer: z.string().nullable() }).nullable(),
+  stats: z.object({ maxLevel: z.number().int().min(0), survivedFatal: z.number().int().min(0), closeCalls: z.number().int().min(0), caught: z.number().int().min(0), shinies: z.number().int().min(0), rivalWins: z.number().int().min(0) }),
+  /** Game events and run-scope story effects that happened (ids), for unique narrative events. */
+  narrative: z.array(z.string()),
+  /** The run's most memorable chronicle entries, most memorable first. */
+  chronicle: z.array(z.object({ type: z.string(), text: z.string(), importance: z.number().int(), region: z.number().int().min(0), stage: z.number().int().min(0).nullable() })),
+  /** Relive the Moment: the run's key moments, oldest first. */
+  moments: z.array(z.object({ kind: LegacyMomentKindSchema, text: z.string(), speciesId: z.string().nullable(), region: z.number().int().min(0).nullable() })),
+  /** The map, stage by stage. */
+  journal: z.array(z.string()),
+  epitaph: z.string().nullable(),
+  /**
+   * Everything the run began with (core/timeline/schema.ts RunGenesisSchema, plus how it ended as `origin`), so Revisit
+   * This Timeline rebuilds a lost run from this record. Kept loose here (the timeline module parses it) to avoid an
+   * import cycle. Null for runs that began before timelines were recorded.
+   */
+  genesis: z.record(z.string(), z.unknown()).nullable().default(null),
+});
+export type LegacyRun = z.infer<typeof LegacyRunSchema>;
+
 /** Legacy & Live hub systems (core/legacy.ts). Optional: older profiles have none and load as empty. */
 export const LegacySchema = z.object({
   /** Prestige rank 0 to 5: a title and more contacts, nothing is ever deleted. */
@@ -1167,6 +1263,8 @@ export const ProfileSchema = z.object({
   legacy: LegacySchema.optional(),
   /** Hyper moment codex (core/story/codex.ts): times each story moment (story.json id) was seen, over all runs. */
   momentCodex: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Legacy runs (core/legacyRuns.ts): every finished run's immutable record, newest first (profile v14). */
+  legacyRuns: z.array(LegacyRunSchema).default([]),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

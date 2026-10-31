@@ -8,8 +8,10 @@ import { validateLeagueMap, validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
 import { hashSeed } from '../core/rng';
 import { createStoryState } from '../core/story/record';
+import { legacyRunFromHistory } from '../core/legacyRuns';
 import {
   ProfileSchema,
+  RunRecordSchema,
   RunStateSchema,
   SettingsSchema,
   type Profile,
@@ -25,7 +27,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 13, run: 25, settings: 9, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 25, settings: 9, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -101,6 +103,12 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v13 (Hyper moment codex): older profiles have seen no moments yet.
     12: (data) => ({ ...(data as Json), momentCodex: {} }),
+    // v14 (legacy runs, M9): each older Run History entry becomes a thin legacy record (source "history").
+    13: (data) => {
+      const profile = data as Json;
+      const history = Array.isArray(profile.runHistory) ? (profile.runHistory as Json[]) : [];
+      return { ...profile, legacyRuns: history.flatMap((r) => { const parsed = RunRecordSchema.safeParse(r); return parsed.success ? [legacyRunFromHistory(parsed.data)] : []; }) };
+    },
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against

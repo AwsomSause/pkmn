@@ -1,0 +1,67 @@
+{
+ "note": "Legacy runs (M9): the immutable record kept for every finished run. Scores and the rotation read these records; nothing here changes a run in progress.",
+ "recordCap": 60,
+ "chronicleKept": 8,
+ "ace": {
+  "perKnockout": 1,
+  "perBossBeaten": 3,
+  "perLevel": 0.2,
+  "starterBonus": 2
+ },
+ "moments": {
+  "minLowHpStand": 3,
+  "minSurvivedFatal": 1
+ },
+ "score": {
+  "regionCompleted": 15,
+  "gymLeader": 5,
+  "eliteFour": 10,
+  "champion": 25,
+  "newRegion": 10,
+  "rivalDefeated": 15,
+  "legendary": 8,
+  "comeback": 12,
+  "highLevel": 5,
+  "campaign": 50,
+  "narrativeEvent": 10,
+  "narrativeEventMax": 3,
+  "perEncounter": 0.25,
+  "perShiny": 6,
+  "perRareMon": 4,
+  "highLevelAt": 70,
+  "comebackSurvivedFatal": 2,
+  "memorableImportance": 80
+ },
+ "rotation": {
+  "size": 6,
+  "rotateMs": 7000,
+  "fadeMs": 900,
+  "baseWeight": 10,
+  "recentBonus": 30,
+  "recentRuns": 3,
+  "cooldownFactor": 0.2,
+  "memorableScore": 80
+ },
+ "interactions": {
+  "chance": 0.18,
+  "longRunEncounters": 60,
+  "lines": {
+   "champion": "You've come a long way since then.",
+   "rivalEnding": "You remember how this ended…",
+   "samePokemon": "That Pokémon has been with you before.",
+   "longRun": "A journey worth remembering."
+  }
+ },
+ "defeats": {
+  "chance": 0.35,
+  "absentDays": 14,
+  "lines": {
+   "rival": "I heard you were defeated by {rival}.",
+   "close": "You almost made it last time.",
+   "absent": "I thought you'd given up.",
+   "different": "You look different from the last time I saw you.",
+   "fell": "Last time, {species} ended your journey. Not this time?",
+   "narrative": "I heard {rival} beat you, and you kept going anyway."
+  }
+ }
+}

@@ -20,7 +20,8 @@ import { curveLevel, enemyLevel, evolvedFormAt, levelScale, rollShiny, withParty
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
-import { championTeam } from './story/championDefense';
+import { makeDoubles } from './battle/doubles';
+import { championTeam, retiredTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
 import { openFeud, settleFeud } from './story/feud';
 import { noteEventMorality } from './story/nemesis';
@@ -95,6 +96,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return openFeud(run) !== null;
     case 'championGhost':
       return championTeam(run.story).length > 0;
+    case 'retiredGhost':
+      return retiredTeam(run.story).length > 0;
     case 'hunt':
       return huntClues(run) >= c.atLeast && huntClues(run) <= c.atMost && !(c.atLeast > 0 && huntDone(run));
     case 'gauntlet':
@@ -197,6 +200,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs two rivals who are feuding';
     case 'championGhost':
       return 'Needs a won run in your Hall of Fame';
+    case 'retiredGhost':
+      return 'Needs a past run that did not win';
     case 'hunt':
       return 'Needs more clues about the Grand-Enemy';
     case 'gauntlet':
@@ -837,7 +842,7 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
-    const ghost = b.ghost ? championTeam(run.story) : [];
+    const ghost = b.retired ? retiredTeam(run.story) : b.ghost ? championTeam(run.story) : [];
     const authored = ghost.length > 0 ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
     const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
@@ -846,6 +851,15 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
     run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: b.name, leaderId: null });
+    if (b.ally && content.species.has(b.ally) && team.length >= 2) {
+      // A temporary ally joins the party for this fight only (finishBattle sends it home).
+      const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');
+      run.party.push(ally);
+      makeDoubles(run.battle, run.party);
+      run.battle.doubles!.player.index = run.party.length - 1;
+      run.battle.participants = [run.party[activeIndex]!.uid, ally.uid];
+      run.battle.loaner = ally.uid;
+    }
   }
   run.battle.event = event;
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
