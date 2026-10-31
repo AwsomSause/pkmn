@@ -55,6 +55,7 @@ import { wouldRefuse } from '../core/bond';
 import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
+import { championGlow, levelUpBanner } from '../ui/battleFx/transitions';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { addEnvironment } from '../ui/battleFx/environment';
 import { environmentStory } from '../core/presentation/environmentStory';
@@ -69,7 +70,7 @@ import type { Move, TypeName } from '../core/contentSchema';
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 const MESSAGE_DELAYS = { short: 700, normal: 1400, long: 2400 } as const;
 /** Milliseconds per character for the typewriter text speeds. */
-const TEXT_MS = { fast: 12, normal: 28 } as const;
+const TEXT_MS = { fast: 12, normal: 28, slow: 50 } as const;
 /** Battle events whose lines advance on their own; everything else waits for a confirm press. */
 const AUTO_EVENTS = new Set<string>(['move', 'noPp', 'miss', 'damage', 'noEffect', 'fail']);
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -278,6 +279,7 @@ export class BattleScene extends Phaser.Scene {
       event: envEvent ? { id: envEvent.id, group: envEvent.group } : null,
       shadowFoe: Boolean(envFoe?.shadow),
     }), this.motion);
+    if (boss?.role === 'champion') championGlow(this, this.field, this.motion);
     this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
     this.weatherLayer.set(run.battle?.weather?.id ?? null);
     this.arenaLight = new ArenaLight(this, this.field, this.field.length, this.motion);
@@ -909,7 +911,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Shows a message at once, or types it out (Settings > Text speed); the full text is always the message's text. */
-  private typeText(text: string, speed: 'instant' | 'fast' | 'normal'): void {
+  private typeText(text: string, speed: 'instant' | 'fast' | 'normal' | 'slow'): void {
     this.typing?.remove(false);
     this.typing = null;
     this.typingFull = text;
@@ -1203,14 +1205,13 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     // Transformations: a fourth option that cycles off -> Tera -> Z-Move -> Dynamax -> off. (Mega and Gigantamax happen by themselves.)
     const ctx = this.battleCtx();
-    // In a double battle only the Pokémon in the engine's main spot can transform (one per turn).
-    const mainSpot = !this.run.battle?.doubles || this.cmdSpot === primarySpot(this.run.battle.doubles, 'player');
-    const tera = mainSpot ? teraOption(ctx) : null;
-    const zMove = mainSpot && zMoveOptions(ctx).some((z) => z !== null);
+    // In a double battle either Pokémon can transform (the context looks at the one being commanded).
+    const tera = teraOption(ctx);
+    const zMove = zMoveOptions(ctx).some((z) => z !== null);
     const choices: TransformRequest[] = [
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
-      ...(mainSpot && canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
+      ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind;
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
@@ -1272,10 +1273,11 @@ export class BattleScene extends Phaser.Scene {
       { cheer: 'offense', label: 'Go all-out!', tint: 0xc8303c },
       { cheer: 'defense', label: 'Hang tough!', tint: 0x2c6ad8 },
       { cheer: 'healing', label: 'Heal up!', tint: 0x1f9a52 },
+      { cheer: 'counter', label: 'Turn the tables!', tint: 0x9a2cc8 },
     ] as const;
     this.clearMenus();
     const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
-    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP.');
+    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.');
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
       y: MESSAGE_Y + 26,
@@ -1396,7 +1398,11 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
+    // Double battles: the helpers read the party's "active" Pokémon, so point them at the one being commanded.
+    const doubles = run.battle?.doubles;
+    const idx = doubles ? run.party.indexOf(this.activeMon()) : -1;
+    const battle = doubles && idx >= 0 && idx !== run.battle!.activeIndex ? { ...run.battle!, activeIndex: idx } : run.battle!;
+    return { content: services().session.content, battle, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
   }
 
   private openBag(): void {
@@ -1609,6 +1615,7 @@ export class BattleScene extends Phaser.Scene {
       const mon = result.run.party.find((m) => m.uid === t.uid);
       if (mon) await this.say(`Close to you, ${getSpecies(content, mon.speciesId).name} learned ${content.moves.get(t.moveId)!.name}!`);
     }
+    for (const line of end.recap ?? []) await this.say(line);
     await exitWipe(this, this.motion, this.wipeMask());
     this.scene.start(sceneForRun(result.run));
   }
@@ -1866,6 +1873,7 @@ export class BattleScene extends Phaser.Scene {
             this.shown.player.level = e.level;
             if (real && real.level === e.level) this.shown.player.hp = real.hp;
             void this.refreshInfoBox(this.playerBox, this.shown.player, false);
+            levelUpBanner(this, this.playerBox.container.x + 120, this.playerBox.container.y - 12, e.level, this.motion, services().session.settings.effectIntensity);
           }
           break;
         default:

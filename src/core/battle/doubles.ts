@@ -609,7 +609,9 @@ function runPlanned(ctx: BattleContext, field: Field, turn: TurnState, p: Planne
   const doubles = ctx.doublesTurn!;
   doubles.hit = (u, _t, m, movedFirst, evts) => hitAll(ctx, field, turn, u, targets, m, movedFirst, evts);
   const mark = events.length;
-  S.executeMove(ctx, user, first, move, p.slot, !turn.acted.has(first.mon.uid), events);
+  // Rage (Hyper moments): an enemy that was hurt too much unleashes it; a player move can counter the foe it hits.
+  const rageFoe = user.side === 'enemy' ? user : (targets.find((t) => t.side === 'enemy') ?? field.alive('enemy')[0] ?? first);
+  S.actWithRage(ctx, user, rageFoe, events, () => S.executeMove(ctx, user, first, move, p.slot, !turn.acted.has(first.mon.uid), events));
   doubles.hit = undefined;
   doubles.spread = false;
   // Dancer: other dancers copy a dance move that worked.

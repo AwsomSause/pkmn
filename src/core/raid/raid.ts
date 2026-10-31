@@ -12,7 +12,7 @@ import { grandRaidFor } from '../story/grandEnemy';
 import type { TypeName } from '../contentSchema';
 import { isUnlockedAt } from '../availability';
 import { levelCap } from '../regions';
-import type { RaidDef, RaidPhase } from './schema';
+import type { RaidApproach, RaidDef, RaidPhase } from './schema';
 
 export function getRaid(content: Content, id: string): RaidDef {
   const raid = content.raids.raids.find((r) => r.id === id);
@@ -78,6 +78,10 @@ export function freshRaidBattle(def: RaidDef): RaidBattle {
     breaker: null,
     tank: null,
     survivor: null,
+    rivalHelped: false,
+    returning: false,
+    rewardPercent: 100,
+    draftDelta: 0,
   };
 }
 
@@ -148,7 +152,7 @@ export const OFFENSE_CHEER = 1.3;
 export const DEFENSE_CHEER = 0.7;
 export const HEALING_CHEER = 0.3;
 export const CHEER_TURNS = 3;
-export type Cheer = 'offense' | 'defense' | 'healing';
+export type Cheer = 'offense' | 'defense' | 'healing' | 'counter';
 
 /** Why a cheer can't be used now, or null. */
 export function cheerProblem(content: Content, battle: BattleState, cheer: Cheer): string | null {
@@ -250,6 +254,9 @@ export interface RaidPreview {
   entryCost: number;
   mechanics: string[];
   rewards: string[];
+  kind: RaidDef['kind'];
+  returning: boolean;
+  approaches: { id: string; label: string; text: string; cost: number; leave: boolean }[];
 }
 
 export function describeMechanics(def: RaidDef): string[] {
@@ -288,6 +295,7 @@ export function placeRaidDens(content: Content, run: RunState): void {
   if (!stage || stage.kind !== 'stage') return;
   const rng = new Rng(hashSeed(`${run.seed}::raid-den::${run.regionIndex}:${stage.index}`));
   placeGrandEnemy(content, run, rng);
+  if (placeReturning(content, run, rng)) return;
   if (!rng.chance(content.raids.denChance + focusDenBonus(run, 'raids'))) return;
   const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
   if (candidates.length === 0) return;
@@ -335,3 +343,30 @@ export function raidMemories(battle: BattleState, finisherUid: string | undefine
 
 /** Friendship each distinct contributor gets for a won raid (a share of it per memory, so contribution counts). */
 export const RAID_MEMORY_FRIENDSHIP = 4;
+
+/** A boss that escaped earlier comes back as a den in this stage (one per stage, stronger); returns true when it did. */
+function placeReturning(content: Content, run: RunState, rng: Rng): boolean {
+  const stage = run.stage!;
+  const raidId = run.raids.escaped[0];
+  if (!raidId || !content.raids.raids.some((r) => r.id === raidId)) {
+    run.raids.escaped.shift();
+    return false;
+  }
+  const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
+  if (candidates.length === 0) return false;
+  run.raids.escaped.shift();
+  rng.pick(candidates).sides.push({ id: `raid-return-${stage.index}`, kind: 'raid', raidId, used: false, returning: true });
+  return true;
+}
+
+/** The approach a player picked at a den: the one named, else the first (so older callers and bots still work). */
+export function pickApproach(def: RaidDef, approachId: string | undefined): RaidApproach | null {
+  if (def.approaches.length === 0) return null;
+  const found = approachId ? def.approaches.find((a) => a.id === approachId) : def.approaches.find((a) => !a.leave);
+  if (!found) throw new Error(`Unknown approach "${approachId}"`);
+  return found;
+}
+
+/** Stat and reward changes of a returning boss ("the one that got away", back and changed). */
+export const RETURNING_LEVEL_BONUS = 3;
+export const RETURNING_HP_PERCENT = 50;

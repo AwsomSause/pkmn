@@ -59,6 +59,15 @@ describe('The Rival Who Wins Without You', () => {
     expect(finalist.rank).toBe('finalist');
   });
 
+  it('active rivals and nemeses may climb too, not only contenders', () => {
+    for (const state of ['active', 'nemesis'] as const) {
+      const run = newRun();
+      const r = rival({ state });
+      run.story.rivals = [r];
+      expect(promote(run, r)).toContain('took over a Gym');
+    }
+  });
+
   it('stands in for the next boss of its rank in a later stage, keeping the boss role', () => {
     const run = structuredClone(newRun());
     const r = rival();

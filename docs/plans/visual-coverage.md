@@ -12,7 +12,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Baseline screenshots: reward, shop, event, league, run end | BUILT | `tests/e2e/visualBaseline.spec.ts` (seed `visual-base`, 960×540, 800×450, 480×800 → `test-results/visual/baseline-*.png`) |
 | Repo visibility / asset rights decision | BUILT | D4 private; director approved pack imports 2026-10-30 |
 | Asset provenance manifest | BUILT | `docs/quality/asset-provenance.md` |
-| Record sizes, load time, frame pacing baseline | TODO | slice V5 perf pass |
+| Record sizes, load time, frame pacing baseline | BUILT | `tests/e2e/perfBaseline.spec.ts` |
 
 ## V1 — visual system (BR 1, VB 3, VB 13 V1, CR 4)
 | Item | Status | Where / note |
@@ -93,7 +93,7 @@ Status: BUILT, PART (what's missing is noted), TODO, KEEP (doc says keep as is).
 | Event choice: illustration, 2–4 options with costs, consequence ack | BUILT | slice 11: glass illustration frame with data-driven motif (rarity rim, group pill, emblem bubble when no cast), cards with the kind of risk and sure costs (`choiceRisk`), sparkle/shudder chips and a money pill that rolls to the new total |
 | League escalation, game over, run recap, victory | PART | glass run-end panels; run-end screen ignores mashed keys for its first moment (slice 5); **league escalation BUILT (slice 13: rising glass steps, growing tokens, champion gold rays)**; **run-end composition BUILT (slice 14: last party beside the title, victory hop + confetti, dimmed settle on defeat)**. **credits BUILT (slice 16: Aero sky, glass column, party parade, gold motes, looping `bgm.credits`)**. Region stamps are on the recap (#238) |
 | Briefing, loading transitions, visual settings | PART | glass briefing panels (slice 5); loading transitions: slice 10 |
-| Level-up / reward reveal / milestone transitions | TODO | slice 8 |
+| Level-up / reward reveal / milestone transitions | BUILT | level-up banner (`transitions.ts`), reward reveal burst |
 | Regional progression look (new palettes per region) | PART | each stage's map takes its types' ambience (slice 6); per-region palettes: later |
 | Hall of Fame screen (champion teams, unusual wins, rare forms, records, Legacy Cards, epitaphs) | BUILT | Hub **Events → Hall of Fame**: glass rows for records, champion teams with epitaph and why a win was unusual, shiny Pokémon, Legacy Cards with titles; icons bob, shinies sparkle (`core/hallOfFame.ts`, `scenes/HallOfFameScene.ts`). Runs from before profile v12 have no epitaph or cards |
 | Bond screen for the Bond Engine (traits, mood, bond level) | BUILT | map **Bonds** button: glass card per Pokémon, trait, floating mood bubble, 7 bars that fill with a bounce, hint explains the mood, practiced partners and refusal risk (`ui/bondMenu.ts`) |

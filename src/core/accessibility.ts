@@ -30,3 +30,23 @@ export function applyProfile(settings: Settings, profile: AccessibilityProfile):
 export function nextProfile(current: AccessibilityProfile): AccessibilityProfile {
   return PROFILE_ORDER[(PROFILE_ORDER.indexOf(current) + 1) % PROFILE_ORDER.length]!;
 }
+
+export const ANIMATION_KEYS = ['abilityAnimations', 'battleTextAnimations', 'interactionAnimations', 'hyperAnimations', 'rivalAnimations', 'evolutionAnimations', 'battleScreenEffects'] as const;
+export type AnimationKey = (typeof ANIMATION_KEYS)[number];
+
+/** Which animation groups play: `disableAllAnimations` turns every one off but never changes the saved individual switches. */
+export function animationFlags(s: Settings): Record<AnimationKey, boolean> {
+  const out = {} as Record<AnimationKey, boolean>;
+  for (const k of ANIMATION_KEYS) out[k] = !s.disableAllAnimations && s[k];
+  return out;
+}
+
+/** Duration multiplier for animations: slow 1.5×, normal 1×, fast 0.6×. Presentation only. */
+export function animationTimeScale(s: Settings): number {
+  return { slow: 1.5, normal: 1, fast: 0.6 }[s.animationSpeed];
+}
+
+/** Strength multiplier for animation effects: reduced 0.5×, normal 1×, enhanced 1.4×. Presentation only. */
+export function animationStrength(s: Settings): number {
+  return { reduced: 0.5, normal: 1, enhanced: 1.4 }[s.animationIntensity];
+}

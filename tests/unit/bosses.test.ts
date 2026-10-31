@@ -67,7 +67,7 @@ describe('boss teams', () => {
 
   it('a gym battle uses the team for that stage, with its moves and training', () => {
     const boss = content.bosses.get('brock')!;
-    for (const stageNumber of [0, 5, 12, 30]) {
+    for (const stageNumber of [0, 5, 12]) {
       const plan = planGymLeader(content, RED, 'brock', stageNumber, scaleAt(stageNumber % 8, FULL.columns, Math.floor(stageNumber / 8)), new Rng(hashSeed(`gym-${stageNumber}`)));
       const team = boss.teams.gym[Math.min(stageNumber, 15)]!;
       expect(plan.members.map((m) => m.speciesId)).toEqual(team.members.map((m) => m.speciesId));
@@ -75,6 +75,10 @@ describe('boss teams', () => {
       expect(plan.ai).toBe(team.ai);
       expect(plan.leaderId).toBe('brock');
     }
+    // Past level 100 (stage 30 is region 4) the last team is upgraded for its band (bossBands.ts): sharper AI, held items.
+    const late = planGymLeader(content, RED, 'brock', 30, scaleAt(30 % 8, FULL.columns, Math.floor(30 / 8)), new Rng(hashSeed('gym-30')));
+    expect(late.ai).toBeGreaterThan(boss.teams.gym[15]!.ai);
+    expect(late.members.every((m) => m.held && Object.keys(m.held).length === 1)).toBe(true);
   });
 
   it('a planned boss Pokémon knows its team moves and carries its training', () => {

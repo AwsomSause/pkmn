@@ -136,13 +136,13 @@ export class MainMenuScene extends Phaser.Scene {
     };
     const onOff = (v: boolean) => (v ? 'On' : 'Off');
     const labels = {
-      textSpeed: { instant: 'Instant', fast: 'Fast', normal: 'Normal' },
+      textSpeed: { instant: 'Instant', fast: 'Fast', normal: 'Normal', slow: 'Slow' },
       messageDelay: { short: 'Short', normal: 'Normal', long: 'Long' },
       uiScale: { full: '100%', medium: '90%', small: '80%' },
       catchDetail: { full: 'Full', compact: 'Compact' },
     } as const;
     moreOptions.push(
-      { option: { label: `Text speed: ${labels.textSpeed[st.textSpeed]}` }, action: cycle('textSpeed', ['instant', 'fast', 'normal']) },
+      { option: { label: `Text speed: ${labels.textSpeed[st.textSpeed]}` }, action: cycle('textSpeed', ['instant', 'fast', 'normal', 'slow']) },
       { option: { label: `Auto-advance messages: ${onOff(st.autoAdvance)}` }, action: cycle('autoAdvance', [false, true]) },
       { option: { label: `Message delay: ${labels.messageDelay[st.messageDelay]}`, disabled: !st.autoAdvance }, action: cycle('messageDelay', ['short', 'normal', 'long']) },
       { option: { label: `High contrast: ${onOff(st.highContrast)}` }, action: cycle('highContrast', [false, true]) },

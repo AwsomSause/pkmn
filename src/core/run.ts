@@ -60,7 +60,7 @@ import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsks
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
-import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
+import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
@@ -106,8 +106,8 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { RAID_MEMORY_FRIENDSHIP, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
-import type { RaidDef } from './raid/schema';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
@@ -133,7 +133,9 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
+import { styleTrick } from './rivals/tricks';
 import { rivalBond } from './drama/bond';
+import { recapLines } from './drama/recap';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
@@ -255,7 +257,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
-    raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
+    raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
     expeditions: { completed: [], failed: [], unlocked: [], last: [] },
@@ -949,7 +951,13 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const def = getRaid(content, side.raidId!);
   const { speciesId, level } = raidBoss(content, current, def, node.id + sideId);
   const notes = def.grand ? grandNotes(content, current, speciesId) : [];
-  return { id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level, entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def) };
+  const returning = Boolean(side.returning);
+  if (returning) notes.push('It got away before, and it is back, stronger.');
+  return {
+    id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level: level + (returning ? RETURNING_LEVEL_BONUS : 0),
+    entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def), kind: def.kind, returning,
+    approaches: def.approaches.map((a) => ({ id: a.id, label: a.label, text: a.text, cost: a.cost, leave: a.leave })),
+  };
 }
 
 function raidDen(run: RunState, sideId: string): { node: MapNode; side: SideStop } {
@@ -969,37 +977,59 @@ function raidBoss(content: Content, run: RunState, def: RaidDef, key: string): {
 }
 
 /** Pays the entry cost and starts the raid battle. The den is used up at once, so a reload can't charge or reward twice. */
-export function enterRaid(content: Content, current: RunState, sideId: string): RunState {
+export function enterRaid(content: Content, current: RunState, sideId: string, approachId?: string): RunState {
   assertPhase(current, 'map');
   const { node, side } = raidDen(current, sideId);
   if (side.used) throw new Error('This raid has already been fought');
   const def = getRaid(content, side.raidId!);
-  if (current.money < def.entryCost) throw new Error(`You need ₽${def.entryCost} to enter this raid`);
+  const approach = pickApproach(def, approachId);
+  const cost = def.entryCost + (approach?.cost ?? 0);
+  if (current.money < (approach?.leave ? 0 : cost)) throw new Error(`You need ₽${cost} to enter this raid`);
   const activeIndex = current.party.findIndex((p) => p.hp > 0);
   if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
   const run = structuredClone(current);
   raidDen(run, sideId).side.used = true;
-  run.money -= def.entryCost;
+  if (approach?.leave) {
+    emit(content, run, 'storyMoment', { actors: [], data: { raid: def.id, choice: 'leave' }, importance: 40, text: `You left ${def.name} to ${def.kind === 'rival' ? 'your rival' : 'someone else'}.` });
+    return run;
+  }
+  run.money -= cost;
   const { speciesId, level } = raidBoss(content, run, def, node.id + sideId);
-  startRaidBattle(content, run, def, speciesId, level);
+  const returning = Boolean(side.returning);
+  startRaidBattle(content, run, def, speciesId, level + (returning ? RETURNING_LEVEL_BONUS : 0), { approach, returning });
   return run;
 }
 
 /** Builds the raid battle (mutates `run`): the boss with its HP pool, the raid state and its field. */
-export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number): void {
+export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number, opts: { approach?: RaidApproach | null; returning?: boolean } = {}): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
   auditEncounter(content, 'raid', boss, 'raid-boss');
   applyBossHp(def, boss);
+  const approach = opts.approach ?? null;
+  boss.statBoosts = { ...boss.statBoosts, hp: Math.max(0, (boss.statBoosts?.hp ?? 0) + (approach?.hpDeltaPercent ?? 0) + (opts.returning ? RETURNING_HP_PERCENT : 0)) };
   for (const id of def.extraMoves) {
     const mv = content.moves.get(id);
     if (mv && !boss.moves.some((m) => m.id === id)) boss.moves.push({ id, pp: mv.pp });
   }
   boss.hp = maxHp(content, boss);
+  if (approach?.startHp) boss.hp = Math.max(1, Math.floor(boss.hp * approach.startHp));
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  const raidState = run.battle.raid;
+  if (approach) {
+    if (approach.startHp) raidState.pendingShields = raidState.pendingShields.filter((at) => at < approach.startHp!);
+    if (approach.timerDelta !== 0) raidState.timerLeft = Math.max(3, (def.timerTurns ?? 20) + approach.timerDelta);
+    raidState.rewardPercent = approach.rewardPercent;
+    raidState.draftDelta = approach.draftDelta;
+    raidState.rivalHelped = approach.rivalHelps;
+  }
+  if (opts.returning) {
+    raidState.returning = true;
+    raidState.draftDelta += 1;
+  }
   if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
   if (def.modifiers.terrain) run.battle.terrain = { id: def.modifiers.terrain, turns: 999 };
   run.raids.entered += 1;
@@ -1109,6 +1139,15 @@ function failRaid(content: Content, run: RunState): void {
   const raidId = battle.raid?.id ?? battle.totem!.id;
   if (battle.raid && getRaid(content, battle.raid.id).grand) endGrandBattle(content, run, false, run.party[battle.activeIndex]?.uid);
   const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
+  // The timer ran out: the boss escapes and comes back in a later stage, changed (once).
+  const raid = battle.raid;
+  if (raid && raid.timerLeft !== null && raid.timerLeft <= 0 && !raid.returning) {
+    run.raids.escaped.push(raid.id);
+    const lead = run.party.find((p) => p.uid === raid.lead);
+    if (lead) {
+      emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'gotAway', raid: raid.id }, importance: 70, text: `The One That Got Away: ${speciesName(content, currentEnemy(battle).speciesId)} escaped from ${speciesName(content, lead.speciesId)}'s team.` });
+    }
+  }
   for (const mon of run.party) {
     mon.hp = Math.max(1, Math.floor(maxHp(content, mon) * frac));
     mon.status = null;
@@ -1129,7 +1168,7 @@ function failRaid(content: Content, run: RunState): void {
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
   const def = getRaid(content, battle.raid!.id);
   const boss = currentEnemy(battle);
-  const money = def.rewards.moneyPerLevel * boss.level;
+  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent) / 100);
   run.money += money;
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::raid-reward::${def.id}:${run.encountersCompleted}`));
@@ -1164,6 +1203,16 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     if (!earned.has(mon.uid)) changeFriendship(content, mon, RAID_MEMORY_FRIENDSHIP);
     earned.add(mon.uid);
   }
+  const lead = run.party.find((p) => p.uid === battle.raid!.lead);
+  if (battle.raid!.rivalHelped && lead) {
+    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id }, importance: 70, text: `The Rival Who Stood Beside You: a rival fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
+    changeFriendship(content, lead, RAID_MEMORY_FRIENDSHIP);
+  }
+  // An anomaly raid adds a research find and its own counter.
+  if (def.kind === 'anomaly') {
+    count(run, 'anomalyRaidsWon');
+    run.totems.research += 2;
+  }
   run.raids.won += 1;
   count(run, 'raidsWon');
   run.raids.bestTier = Math.max(run.raids.bestTier, def.tier);
@@ -1171,7 +1220,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   run.log.counters.raidBestTier = run.raids.bestTier;
   run.raids.done.push(def.id);
   if (def.grand) endGrandBattle(content, run, true, run.party[battle.activeIndex]?.uid);
-  return { items, draftExtra: def.rewards.draftExtra, money };
+  return { items, draftExtra: Math.max(0, def.rewards.draftExtra + battle.raid!.draftDelta), money };
 }
 
 /**
@@ -1552,7 +1601,7 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   afterPurchase(content, run, priceMultiplierFromItems(content, current) === 0);
   if (item.effect.kind === 'attribute') {
     // Attribute items work as soon as they're bought.
-    const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
+    const value = addItemAttribute(content, run, item.effect.attribute, item.effect.amount);
     return { run, message: `You bought a ${item.name} for ₽${price}: ${attributeText(item.effect.attribute, value)}.` };
   }
   addItem(run.inventory, itemId, 1);
@@ -1587,6 +1636,8 @@ export interface BattleEndResult {
   evolutions: (EvolutionResult & { uid: string })[];
   /** Moves devoted Pokémon learned from their bond after this win. */
   bondTaught?: { uid: string; moveId: string }[];
+  /** Recap lines after a big trainer win (MVP, narrowest survival, turning point). */
+  recap?: string[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -1727,6 +1778,9 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
   const evolved = midBattleEvolution(content, run);
   if (evolved) events.push(evolved);
+  // A rival's battle style may do something now (berserker rage, revenge, last stand).
+  const trick = styleTrick(content, run);
+  if (trick) events.push(trick);
   // Bond Engine: a Pokémon at half HP may reveal a move it was ready to learn; a feeling may take hold.
   const rivalHere = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   const reveal = [revealMove(content, run, 'player', false), revealMove(content, run, 'enemy', Boolean(rivalHere) && rivalBond(rivalHere, currentEnemy(battle).speciesId).confidence >= 40)];
@@ -1990,6 +2044,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   count(run, 'evolutions', evolutions.length);
   const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
+  const recap = battle.outcome === 'win' && battle.kind === 'trainer' && (battle.ai >= 0.5 || battle.trainer?.leaderId || battle.rivalId) ? recapLines(content, run, battle) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2121,7 +2176,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**
