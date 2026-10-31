@@ -310,3 +310,28 @@ describe('batch 3: items, pivots, endgame, personality, Illusion, gimmick timing
     expect(aaiGimmickReady(content, 'dynamax', ace, ghost, base)).toBe(false);
   });
 });
+
+describe('switch prediction', () => {
+  const noGuess = withAai({ prediction: false });
+
+  it('expects a switch when it has a super-effective hit and the player barely scratches it', () => {
+    const user = mon('golem', 50, 'u', ['earthquake', 'spikes']);
+    const target = mon('pikachu', 30, 't', ['thunder-shock']);
+    const { brain } = fight(user, target);
+    // Ground beats Electric and Thunder Shock does nothing to Golem: Spikes gets a free-turn bonus.
+    expect(moveValue(brain(), user, 'spikes')).toBeCloseTo(moveValue(brain(noGuess), user, 'spikes') * 1.5);
+    const alone = fight(user, target, false);
+    expect(moveValue(alone.brain(), user, 'spikes')).toBe(moveValue(alone.brain(noGuess), user, 'spikes'));
+  });
+
+  it('judges an attack on the bench too when a switch is expected', () => {
+    const user = mon('golem', 50, 'u', ['earthquake', 'rock-slide']);
+    const target = mon('pikachu', 30, 't', ['thunder-shock']);
+    const { party, brain } = fight(user, target);
+    party[1] = mon('pidgeot', 30, 'p2', ['gust']); // Flying: immune to Earthquake, weak to Rock Slide
+    const eq = moveValue(brain(), user, 'earthquake') / moveValue(brain(noGuess), user, 'earthquake');
+    const slide = moveValue(brain(), user, 'rock-slide') / moveValue(brain(noGuess), user, 'rock-slide');
+    expect(eq).toBeCloseTo(0.5);
+    expect(slide).toBeGreaterThan(1);
+  });
+});

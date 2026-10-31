@@ -522,6 +522,10 @@ export const BASE_COUNTER_NAMES = [
   'eventClues',
   'eventBossesWon',
   'eventFinalesWon',
+  /** Relationship counters, worked out when a run ends (core/relationships.ts). */
+  'bestFriends',
+  'mentorshipsStarted',
+  'mentorshipsGraduated',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -696,7 +700,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** Extra turns of weather your side sets up. */
   z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
   /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
-  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: z.enum(['rain', 'sun']), side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: WeatherSchema, side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Multiplier on how often a group of wild Pokémon is offered. */
   z.object({ kind: z.literal('encounterWeightMultiplier'), group: z.enum(['legendary', 'rare']), value: z.number().positive() }),
   /** Chance of your Hyper moments. */
@@ -747,6 +751,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
   /** Mega Evolved Pokémon of yours take more damage. */
   z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Calem: crafting a Mega Stone costs this share of its materials (rounded up, at least 1). */
+  z.object({ kind: z.literal('megaCraftCost'), value: z.number().positive().max(1) }),
   /** Your side's first attack in a battle deals `first`× damage, every later attack `later`×. */
   z.object({ kind: z.literal('firstAttackDamage'), first: z.number().positive(), later: z.number().positive() }),
   /** Damage dealt by your Pokémon that are holding an item (holding: true) or not holding one (false). */
@@ -1000,6 +1006,7 @@ export const RunPrepFileSchema = z.object({
 });
 
 export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
+const ThreatBudgetSchema = z.object({ base: z.number().positive(), perLevel: z.number().min(0), max: z.number().positive() });
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
@@ -1566,6 +1573,8 @@ export const RegionSchema = z.object({
   champions: z.array(z.string()),
   /** The Grand Region always comes last. */
   grand: z.boolean().default(false),
+  /** One of the game's own regions (D6), not one from the main series. */
+  custom: z.boolean().default(false),
   /** The generations of Pokémon native to this region (empty = every generation is native). */
   generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
@@ -1721,8 +1730,10 @@ export const TrainerAiSchema = z.object({
       gimmickTiming: z.boolean().default(false),
       /** ...but never more than this many turns. */
       gimmickMaxWait: z.number().int().min(0).default(3),
+      /** Guess the player's switch (bad matchup for them): hazards and set-up get a free turn, attacks are also judged on the player's bench. */
+      prediction: z.boolean().default(false),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3 }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3, prediction: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
@@ -1738,6 +1749,8 @@ export const BalanceSchema = z.object({
   /** SOS calls (core/battle/sos.ts): hurt wild Pokémon may call a friend. Off = never (old-seed checks switch it off). */
   /** Campaign Director focus effects (mystery: more event stops; rivals: sooner returns). */
   focusEffects: z.boolean().default(true),
+  /** Gym, Elite Four and champion aces may start a stage lower and evolve mid-battle (Battle Drama P5). */
+  bossEvolution: z.boolean().default(true),
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
@@ -1982,6 +1995,23 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Combat Threat Rating (core/threat.ts) and the Encounter Director (core/encounterDirector.ts). 100 = all-70 base stats with a 60-power same-type attack. */
+  threat: z.object({
+    setupBonus: z.number().min(0),
+    recoveryBonus: z.number().min(0),
+    statusBonus: z.number().min(0),
+    priorityBonus: z.number().min(0),
+    abilityBonus: z.number().min(0),
+    strongAbilities: z.array(z.string()),
+    noAttackOffense: z.number().positive(),
+    speedWeight: z.number().min(0).max(1),
+    /** Per tier: budget = min(max, base + perLevel × level). */
+    budgets: z.object({ easy: ThreatBudgetSchema, standard: ThreatBudgetSchema, challenging: ThreatBudgetSchema, elite: ThreatBudgetSchema }),
+    /** Bounded retries before the director falls back to the weakest valid candidate it drew. */
+    retries: z.number().int().min(0),
+    /** Which tier each source is held to. */
+    sourceTiers: z.record(z.string(), z.enum(['easy', 'standard', 'challenging', 'elite'])),
+  }),
   /** Spreadsheet availability (core/availability.ts): a species unlocks at its sheet minimum level minus levelSlack; rarityWeights scale the odds of unlocked ones. */
   availability: z.object({
     levelSlack: z.number().int().min(0),
@@ -2037,6 +2067,15 @@ export const BalanceSchema = z.object({
     /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
     milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
+  /** The Candy Shop (D7): permanent starting perks bought once with candies. */
+  candyShop: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    description: z.string(),
+    cost: z.number().int().positive(),
+    money: z.number().int().min(0).default(0),
+    items: z.record(z.string(), z.number().int().positive()).default({}),
+  })),
   /** Research Points for discoveries (first time ever seen or caught). */
   research: z.object({
     perSpeciesSeen: z.number().int().min(0),

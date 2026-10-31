@@ -1,0 +1,1 @@
+- Left-out 2.8 (first perk re-reads): Raihan's weather boost now covers sandstorm and hail (`weatherDamageMultiplier` takes any weather); Calem's Mega discount is real (`megaCraftCost`: Mega Stone crafting costs 20% fewer materials; `recipeCost` in `core/crafting.ts`). Still reinterpreted: Ginter, Giacomo/Ilima, Trevor, Team Rocket, Wally, Thorton, Hilda. No save change.

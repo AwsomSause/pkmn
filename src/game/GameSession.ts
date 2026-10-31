@@ -6,9 +6,9 @@
 //   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
-import type { Content } from '../core/contentSchema';
+import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
-import { claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
+import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { setCardFrame, setCryTheme, setMenuArena } from '../core/wardrobe';
 import { buyNote } from '../core/researchNotes';
 import { makeRandomSeed } from '../core/rng';
@@ -16,6 +16,7 @@ import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
 import { applyStartGrants } from '../core/legacy';
+import { buyCandyPerk } from '../core/candyShop';
 import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
@@ -72,7 +73,34 @@ export class GameSession {
     this.lastSaveError = result.ok ? null : result.reason;
   }
 
+  /** Achievements earned mid-run that no screen has announced yet. */
+  private toasts: Achievement[] = [];
+  private liveSignature = '';
+
+  /** The achievements earned during the run since the last call (for the toast on the map). */
+  takeAchievementToasts(): Achievement[] {
+    const out = this.toasts;
+    this.toasts = [];
+    return out;
+  }
+
+  /** Awards achievements as soon as a run's progress meets them; checked only when a counter moved. */
+  private checkLiveAchievements(): void {
+    const run = this.run;
+    if (!run) return;
+    const sig = `${run.runId}:${Object.values(run.log.counters).reduce((a, b) => a + b, 0)}:${run.log.speciesCaught.length}:${run.log.speciesSeen.length}:${run.party.length}`;
+    if (sig === this.liveSignature) return;
+    this.liveSignature = sig;
+    const profile = structuredClone(this.profile);
+    const earned = awardLiveAchievements(this.content, profile, run, new Date().toISOString());
+    if (earned.length === 0) return;
+    this.profile = profile;
+    this.toasts.push(...earned);
+    this.checkSave(this.saves.saveProfile(this.profile));
+  }
+
   private persistRun(): void {
+    this.checkLiveAchievements();
     if (this.run) this.checkSave(this.saves.saveRun(this.run));
     this.changed();
   }
@@ -93,7 +121,7 @@ export class GameSession {
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile) , ownedTrainers: this.profile.unlockedArchetypes });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks , ownedTrainers: this.profile.unlockedArchetypes });
     applyStartGrants(this.content, this.run, this.profile);
     this.profile = recordRunStarted(this.profile);
     if (prep?.vaultItem) {
@@ -269,6 +297,13 @@ export class GameSession {
     this.persistRun();
   }
 
+  /** Ends an Adventure run from the map. */
+  endRunEarly(): void {
+    this.run = Run.endRunEarly(this.requireRun());
+    this.persistRun();
+    this.finishRun();
+  }
+
   /** Battle start: entry abilities (Intimidate, Drizzle), saved so they happen once. */
   beginBattle(): Run.RunEvent[] {
     const result = Run.beginBattle(this.content, this.requireRun());
@@ -406,6 +441,13 @@ export class GameSession {
   /** Buys the next Bank tier. */
   buyBankTier(): void {
     this.profile = buyTier(this.content, this.profile, new Date().toISOString());
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** Buys a Candy Shop perk. */
+  buyCandyPerk(id: string): void {
+    this.profile = buyCandyPerk(this.content, this.profile, id);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }

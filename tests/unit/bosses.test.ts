@@ -96,8 +96,11 @@ describe('boss teams', () => {
       expect(Math.max(...plan.members.map((m) => m.level))).toBe(content.bosses.get('misty')!.teams.gym[k]!.level - 1 + d.gymBonus);
     }
     for (let r = 0; r < LEAGUE_TEAM_COUNT; r++) {
-      const champ = planChampion(flat, RED, 'lance', r, leagueScale(flat, r), new Rng(hashSeed("1")));
-      expect(Math.max(...champ.members.map((m) => m.level))).toBe(content.bosses.get('lance')!.teams.champion[r]!.level);
+      const scale = leagueScale(flat, r);
+      const champ = planChampion(flat, RED, 'lance', r, scale, new Rng(hashSeed("1")));
+      // Teams were built for caps up to 100; past that (+50 per region to 500, D14) the same team plays at the higher level.
+      const expected = scale.cap <= 100 ? content.bosses.get('lance')!.teams.champion[r]!.level : Math.min(scale.cap, scale.end + d.championBonus + d.aceBonus);
+      expect(Math.max(...champ.members.map((m) => m.level))).toBe(expected);
     }
   });
 

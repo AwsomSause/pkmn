@@ -2295,6 +2295,10 @@
       {
         "kind": "megaDamageTakenMultiplier",
         "value": 1.1
+      },
+      {
+        "kind": "megaCraftCost",
+        "value": 0.8
       }
     ],
     "signatureTypes": [],
@@ -6999,6 +7003,30 @@
       {
         "kind": "weatherDamageMultiplier",
         "weather": "sun",
+        "side": "enemy",
+        "value": 1.15
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "sand",
+        "side": "player",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "sand",
+        "side": "enemy",
+        "value": 1.15
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "hail",
+        "side": "player",
+        "value": 1.2
+      },
+      {
+        "kind": "weatherDamageMultiplier",
+        "weather": "hail",
         "side": "enemy",
         "value": 1.15
       }

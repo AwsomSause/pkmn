@@ -1,0 +1,1 @@
+- Zip coverage Z6f: the Bag menu header carries the UIE bag picture (`Picker` `badge` option, `ui/partyPanel.ts`; lazy asset `ui.bag.main`). Test `tests/e2e/bagBadge.spec.ts`. Presentation only.

@@ -15,7 +15,7 @@ import { abilityOf, addLevels, createPokemon, maxHp, maxPp, usableLearnset, getS
 import { specialFamily } from '../specialForms';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry } from '../catalog';
 import { addItem, itemUseProblem } from '../items';
-import { applyRecipe, CRAFTING, materialName, recipeProblem } from '../crafting';
+import { applyRecipe, CRAFTING, materialName, recipeCost, recipeProblem } from '../crafting';
 import { isHostile } from '../rivals/outcome';
 import { changeFriendship } from '../friendship';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
@@ -307,7 +307,7 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
     case 'workshop': {
       const have = Object.entries(run.materials).filter(([, n]) => n > 0).map(([id, n]) => `${n} ${materialName(id)}`).join(', ');
       add('look', 'Check your materials', have ? `You hold: ${have}.` : 'You hold no materials yet. Win battles and raids to collect them.', 0);
-      for (const r of CRAFTING.recipes) add(`craft:${r.id}`, r.name, `Costs ${Object.entries(r.cost).map(([id, n]) => `${n} ${materialName(id)}`).join(', ')}${r.money ? ` and ₽${r.money}` : ''}.`, 0, recipeProblem(content, run, r));
+      for (const r of CRAFTING.recipes) add(`craft:${r.id}`, r.name, `Costs ${Object.entries(recipeCost(content, run, r)).map(([id, n]) => `${n} ${materialName(id)}`).join(', ')}${r.money ? ` and ₽${r.money}` : ''}.`, 0, recipeProblem(content, run, r));
       break;
     }
     case 'hall':

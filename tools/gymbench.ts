@@ -11,7 +11,7 @@ await closeModules();
 const ids = [...buildContent().archetypes.values()].filter((a) => a.available !== false).map((a) => a.id);
 const [from, count, out, diff = 'standard'] = [Number(process.argv[2]), Number(process.argv[3]), process.argv[4], process.argv[5]];
 for (let i = from; i < from + count; i++) {
-  const run = autoplay({ seed: `gb${i}`, archetypeId: ids[(i * 7) % ids.length], rules: { modeId: 'standard', difficultyId: diff, modifierIds: [], deathBlock: false }, steps: 2500, healOnMap: true, smart: true });
+  const run = autoplay({ seed: `gb${i}`, archetypeId: ids[(i * 7) % ids.length], rules: { modeId: process.env.MODE ?? 'standard', difficultyId: diff, modifierIds: [], deathBlock: false }, steps: 2500, healOnMap: true, smart: true });
   const line = JSON.stringify({ i, fights: run.encountersCompleted, badges: run.badges.length, by: run.log.defeatedBy?.trainer ?? null });
   if (out) appendFileSync(out, line + '\n'); else console.log(line);
 }

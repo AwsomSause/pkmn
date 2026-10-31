@@ -44,6 +44,10 @@ export interface PickerConfig {
   start?: number;
   /** Opt-in Aero look (glass panels, glossy rows). Hub screens leave it off. */
   glass?: boolean;
+  /** A small picture in the header (a lazy asset id); it appears once loaded. */
+  badge?: string;
+  /** A full-screen picture (a lazy asset id) drawn instead of the panel and title band, once loaded. */
+  backdrop?: string;
 }
 
 const LIST_TOP = 82;
@@ -65,7 +69,10 @@ export class Picker {
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
     const glass = config.glass === true;
-    if (glass) {
+    const backdrop = config.backdrop && scene.textures.exists(config.backdrop) ? config.backdrop : null;
+    if (backdrop) {
+      this.root.add(scene.add.image(0, 0, backdrop).setOrigin(0).setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setName('picker-backdrop'));
+    } else if (glass) {
       this.root.add(drawGlass(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { radius: 26 }));
       this.root.add(drawGlass(scene, 36, 24, GAME_WIDTH - 72, 46, { tint: AERO.sky, rim: AERO.rim, glow: false, radius: 20 }));
     } else {
@@ -77,6 +84,14 @@ export class Picker {
       this.root.add(band);
     }
     this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
+    if (config.badge) {
+      const id = config.badge;
+      const put = (): void => {
+        if (!this.closed) this.root.add(scene.add.image(GAME_WIDTH - 260, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
+      };
+      if (scene.textures.exists(id)) put();
+      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
+    }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
 

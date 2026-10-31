@@ -233,7 +233,7 @@
       "checkpoints": false,
       "campaignId": "quick-route",
       "rewardScale": 0.6,
-      "xpScale": 1.35,
+      "xpScale": 4.0,
       "blurb": "A real run on a shorter road (3 stages per region). Achievements, unlocks and rewards count, but account rewards pay 60% because the road is shorter."
     },
     {
