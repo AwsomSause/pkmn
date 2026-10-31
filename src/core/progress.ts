@@ -186,6 +186,30 @@ export function awardAchievements(content: Content, profile: Profile, now: strin
   return earned;
 }
 
+/**
+ * Achievements earned right now, mid-run (GAME_DESIGN §14.4: "progress is tracked automatically"):
+ * the profile's counters plus this run's so far. Pays the rewards into `profile` at once (each
+ * achievement is only ever earned once, so the run-end pass never pays it twice). Returns what was earned.
+ */
+export function awardLiveAchievements(content: Content, profile: Profile, run: RunState, now: string): Achievement[] {
+  if (!(campaignCounts(getCampaign(content, run.campaignId), run.rules.modeId) && run.rules.progressionEligible)) return [];
+  const probe: Profile = structuredClone(profile);
+  const counters = { ...run.log.counters, ...relationshipCounters(content, run) };
+  for (const [name, value] of Object.entries(counters)) {
+    if (value <= 0) continue;
+    probe.counters[name] = (probe.counters[name] ?? 0) + value;
+    probe.best[name] = Math.max(probe.best[name] ?? 0, value);
+  }
+  probe.speciesSeen = [...new Set([...probe.speciesSeen, ...run.log.speciesSeen])];
+  probe.speciesCaught = [...new Set([...probe.speciesCaught, ...run.log.speciesCaught])];
+  const earned = awardAchievements(content, probe, now);
+  for (const a of earned) {
+    profile.achievements[a.id] = { earnedAt: now };
+    applyReward(profile, a.reward);
+  }
+  return earned;
+}
+
 /** The Bank's payout for a finished run: savings from leftover money plus a stipend for progress. */
 export function runPayout(content: Content, run: RunState, licenses: readonly string[] = []): Omit<Payout, 'achievements' | 'total'> {
   const { moneyConversionRate, stipend } = content.balance.bank;

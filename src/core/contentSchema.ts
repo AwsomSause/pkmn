@@ -1728,8 +1728,10 @@ export const TrainerAiSchema = z.object({
       gimmickTiming: z.boolean().default(false),
       /** ...but never more than this many turns. */
       gimmickMaxWait: z.number().int().min(0).default(3),
+      /** Guess the player's switch (bad matchup for them): hazards and set-up get a free turn, attacks are also judged on the player's bench. */
+      prediction: z.boolean().default(false),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3 }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3, prediction: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
@@ -2063,6 +2065,15 @@ export const BalanceSchema = z.object({
     /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
     milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
+  /** The Candy Shop (D7): permanent starting perks bought once with candies. */
+  candyShop: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    description: z.string(),
+    cost: z.number().int().positive(),
+    money: z.number().int().min(0).default(0),
+    items: z.record(z.string(), z.number().int().positive()).default({}),
+  })),
   /** Research Points for discoveries (first time ever seen or caught). */
   research: z.object({
     perSpeciesSeen: z.number().int().min(0),
