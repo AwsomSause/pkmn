@@ -249,6 +249,9 @@
  {
   "id": "torren",
   "name": "Torren",
+  "specialWilds": [
+   "delta"
+  ],
   "gymLeaders": [
    "zinnia",
    "maxie",

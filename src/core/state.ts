@@ -363,6 +363,8 @@ export const LevelBreakdownSchema = z.object({
   progress: z.number(),
   variance: z.number(),
   archetypeOffset: z.number(),
+  /** Party-strength correction (levels), when it applied. */
+  party: z.number().optional(),
   bonus: z.number(),
   unclamped: z.number(),
   level: z.number(),

@@ -82,7 +82,7 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
         run.battle.levelInfo.forEach((b, i) => {
           const f = (n: number) => (Math.round(n * 100) / 100).toString();
           const clamp = b.unclamped !== b.level ? ` (clamped from ${f(b.unclamped)})` : '';
-          lines.push(`  #${i + 1}: ${f(b.base)} + ${f(b.progress)} + ${f(b.variance)} + ${f(b.archetypeOffset)} + ${f(b.bonus)} = Lv${b.level}${clamp}`);
+          lines.push(`  #${i + 1}: ${f(b.base)} + ${f(b.progress)} + ${f(b.party ?? 0)} + ${f(b.variance)} + ${f(b.archetypeOffset)} + ${f(b.bonus)} = Lv${b.level}${clamp}`);
         });
       }
       if (run.pending.length) lines.push(`pending: ${run.pending.map((d) => d.kind).join(', ')}`);
