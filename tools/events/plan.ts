@@ -2,7 +2,7 @@
 // in its order: the twelve approved events, the 96 drafts in nine groups, one
 // event per type, the draft map stops and the rest spots.
 
-import { $, BALLS, BERRIES, FOSSILS, HEALING, HELD, STONES, TREASURE, VITAMINS, any, att, better, ch, cure, ev, evil, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, item, join, egg, eggMove, leave, lose, lv, money, out, party, peace, ptype, rage, isRage, isPeace, reveal, rp, status, trainer, wild, attr, type Json } from './dsl.ts';
+import { $, BALLS, BERRIES, FOSSILS, HEALING, HELD, STONES, TREASURE, VITAMINS, any, att, better, ch, cure, ev, evil, fierce, fight, fr, good, gym, has, heal, hurt, isEvil, isGood, item, join, egg, eggMove, leave, lose, lv, money, out, party, peace, ptype, rage, isRage, isPeace, reveal, rp, status, trade, trainer, wild, attr, type Json } from './dsl.ts';
 
 const A = 'Approved events';
 const M = 'Merchants and deals';
@@ -25,7 +25,7 @@ export const PLAN_EVENTS: Json[] = [
     ch('Leave it', leave()),
   ]),
   ev('shady-dealer', 'Shady Dealer', A, { stop: 'merchant', cast: ['trainer.roughneck'], effect: 'fog', tint: '#2a1838' }, '"Psst. Trade me one of yours and I\'ll give you something… stronger."', [
-    ch('Trade for a stronger Pokémon', out('He hands over a Poké Ball with a wink.', join({ lv: 4 }), evil(10)), { requires: [party(2)] }),
+    ch('Trade an unevolved Pokémon for a stronger one', out('He takes your Pokémon and hands over a Poké Ball with a wink.', trade('an unevolved Pokémon', { stage: 1 }), join({ lv: 4 }), evil(10))),
     ch('Refuse', leave('"Your loss, kid."')),
   ]),
   ev('lost-pokemon', 'Lost Pokémon', A, { cast: [], effect: 'hearts' }, 'A small Pokémon is crying by the path. Its trainer is nowhere to be seen.', [

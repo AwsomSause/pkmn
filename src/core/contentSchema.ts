@@ -2087,6 +2087,24 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
+/**
+ * What a trade partner asks for: every filter given must match. `label` is the requirement in words
+ * ("a Water-type", "a Pokémon over 100 kg") shown on the locked choice.
+ */
+export const TradeWantSchema = z.object({
+  label: z.string().min(1),
+  species: z.array(z.string()).default([]),
+  type: TypeNameSchema.optional(),
+  tag: z.enum(SPECIES_TAGS).optional(),
+  /** 1 = has no pre-evolution; 3 = last of a three-stage line. */
+  stage: z.number().int().min(1).max(3).optional(),
+  minWeight: z.number().positive().optional(),
+  maxWeight: z.number().positive().optional(),
+  generation: z.number().int().min(1).max(9).optional(),
+  minLevel: z.number().int().min(1).max(100).optional(),
+});
+export type TradeWant = z.infer<typeof TradeWantSchema>;
+
 /** One thing an outcome does. `share` is a fraction of max HP. */
 export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('money'), amount: z.number().int() }),
@@ -2095,6 +2113,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('itemFrom'), ids: z.array(z.string()).min(1), count: z.number().int().positive().default(1) }),
   /** A random item from the Bag is lost (never a key item). */
   z.object({ kind: z.literal('loseItem'), id: z.string().optional() }),
+  /** A trade: the lowest-level party Pokémon that fits `want` leaves with the partner. The choice stays locked without one (and while only one Pokémon is left). */
+  z.object({ kind: z.literal('tradeAway'), want: TradeWantSchema }),
   /** A healing spot, shop or fishing spot opens beside this node. */
   z.object({ kind: z.literal('addStop'), stop: z.enum(['heal', 'shop', 'fish']) }),
   /** A ferry: jump to a node next to the gym (SS Ticket). */
