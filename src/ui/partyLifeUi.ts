@@ -24,10 +24,10 @@ export function openPartyScene(host: FieldMenuHost, scene: Scene, done: (lines: 
     hint: scene.choices.length > 0 ? 'Different Pokémon like different answers. The nicest-sounding one is not always the best.' : 'Press to continue.',
     draw: (s, box, w) => {
       icons.slice(0, 2).forEach((m, i) => box.add(pokemonIcon(s, content.species.get(m.speciesId)!, 36 + i * 52, 40, 1.2)));
-      box.add(s.add.text(130, 10, scene.lines.join('\n'), textStyle(17, '#ffffff', wrap(w - 150))));
+      box.add(s.add.text(130, 10, scene.lines.join('\n\n'), textStyle(22, '#ffffff', wrap(w - 150))));
     },
   };
-  const rows: PickerRow[] = [story, ...scene.choices.map((c): PickerRow => ({ problem: null, draw: (s, box, w) => box.add(s.add.text(16, 14, c.label, textStyle(20, '#fff2b0', wrap(w - 32)))) }))];
+  const rows: PickerRow[] = [story, ...scene.choices.map((c): PickerRow => ({ problem: null, draw: (s, box, w) => box.add(s.add.text(16, 14, c.label, textStyle(24, '#fff2b0', wrap(w - 32)))) }))];
   const picker: Picker = new Picker(host.scene, {
     glass: true,
     title: scene.caption,
