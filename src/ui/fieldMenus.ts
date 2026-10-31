@@ -7,6 +7,8 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
+import { pastUltimateRivals } from '../core/rivals/legacy';
+import { ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { standingSummary } from '../core/rivals/standing';
 import { boxCapacity } from '../core/trainerPerks';
 import { runLevelCap } from '../core/regions';
@@ -99,13 +101,28 @@ export function openStoryMenu(host: FieldMenuHost): void {
     const speciesId = run.story.histories[uid]?.speciesId ?? run.party.find((m) => m.uid === uid)?.speciesId;
     return speciesId ? content.species.get(speciesId)?.name : undefined;
   };
-  const rivalRows = rivalChronicle(content, run).map((r) => ({
-    problem: null,
-    hint: `${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}`,
-    draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
-      box.add(scene.add.text(14, 8, `${r.ultimate ? '★★ Ultimate Rival' : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
-    },
-  }));
+  const rivalRows = rivalChronicle(content, run).map((r) => {
+    const quest = r.quest.length > 0 ? `  Quest: ${r.quest.map((q) => `${q.done ? '✓' : '○'} ${q.text}`).join('; ')}.` : '';
+    return {
+      problem: null,
+      hint: `${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}${quest}`,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, `${r.ultimate ? `${ULTIMATE_EMBLEM} Ultimate Rival` : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
+      },
+    };
+  });
+  // Previous Ultimate Rivals: the rivals that defined earlier runs, from the account archive.
+  for (const past of pastUltimateRivals(session.profile)) {
+    const cls = content.trainers.get(past.classId)?.name ?? 'Trainer';
+    const ended = past.resolution === 'good' ? 'ended as friends' : past.resolution === 'bad' ? 'ended in bitterness' : `ended as ${past.state}`;
+    rivalRows.push({
+      problem: null,
+      hint: `${cls} ${past.name} fought you ${past.encounters} time${past.encounters === 1 ? '' : 's'} and ${ended}.${past.team?.length ? ` Team: ${past.team.map((id) => content.species.get(id)?.name ?? id).join(', ')}.` : ''}`,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, `Previous Ultimate Rival: ${cls} ${past.name}`, textStyle(20, '#c8a8ff', { fixedWidth: w - 28 })));
+      },
+    });
+  }
   const standing = standingSummary(run);
   if (standing) {
     rivalRows.unshift({

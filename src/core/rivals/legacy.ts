@@ -6,6 +6,7 @@ import { hashSeed, Rng } from '../rng';
 import type { Profile, RunState } from '../state';
 import { TRAIT_KEYS, type ArchivedRival, type Rival, type Traits } from '../story/schema';
 import { RIVAL_CONFIG } from './schema';
+import { everUltimateFlag, ULTIMATE_FLAG, ultimateDoneFlag } from './ultimate';
 
 /** Story flag set once the run's legacy rival has shaped a rival. */
 export const LEGACY_USED = 'legacy-rival-used';
@@ -16,9 +17,17 @@ export function archiveRivals(profile: Profile, run: RunState): void {
   const have = new Set(profile.rivalArchive.map((a) => `${a.runId}:${a.name}:${a.classId}`));
   for (const r of run.story.rivals) {
     if (r.encounters < cfg.minEncounters || have.has(`${run.runId}:${r.name}:${r.classId}`)) continue;
-    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null, team: [...r.memory.lastBattle.team] });
+    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null, team: [...r.memory.lastBattle.team], ...(isUltimate(run, r.id) ? { ultimate: true } : {}) });
   }
   profile.rivalArchive = profile.rivalArchive.slice(-cfg.archiveMax);
+}
+
+/** It was the run's Ultimate Rival at the end, or finished the Ultimate Rival quest. */
+const isUltimate = (run: RunState, id: string) => run.story.flags[ULTIMATE_FLAG] === id || Boolean(run.story.flags[ultimateDoneFlag(id)]) || (run.story.flags[ULTIMATE_FLAG] === undefined && Boolean(run.story.flags[everUltimateFlag(id)]));
+
+/** The account's Previous Ultimate Rivals, newest first. */
+export function pastUltimateRivals(profile: Pick<Profile, 'rivalArchive'>, limit = RIVAL_CONFIG.ultimate.pastShown): ArchivedRival[] {
+  return profile.rivalArchive.filter((a) => a.ultimate).reverse().slice(0, limit);
 }
 
 /** The archived rival that may shape this new run (or null): chosen from the seed, never from earlier rolls. */
