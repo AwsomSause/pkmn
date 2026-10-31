@@ -58,3 +58,18 @@ describe('reward comparison (catalog #118)', () => {
     expect(JSON.stringify(run)).toBe(before);
   });
 });
+
+describe('reward synergy for Mega Stones', () => {
+  it('says who can Mega Evolve with a Mega Stone reward', async () => {
+    const { rewardSynergy } = await import('../../src/core/rewardSynergy');
+    const { createRun, chooseStarter } = await import('../../src/core/run');
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'syn2', archetypeId: 'red' }), 0);
+    const stone = [...content.rewards.values()].find((r) => r.effect.kind === 'addItem' && content.items.get(r.effect.item)?.effect.kind === 'megaStone')!;
+    expect(stone).toBeDefined();
+    const forms = (content.items.get((stone.effect as { item: string }).item)!.effect as { forms: Record<string, string> }).forms;
+    run.party[0]!.speciesId = 'zzz-none';
+    expect(rewardSynergy(content, run, stone)).toContain('Nobody in your party can Mega Evolve');
+    run.party[0]!.speciesId = Object.keys(forms)[0]!;
+    expect(rewardSynergy(content, run, stone)).toMatch(/can Mega Evolve$/);
+  });
+});
