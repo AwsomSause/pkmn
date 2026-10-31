@@ -2939,6 +2939,80 @@
       "variants": {}
     },
     {
+      "id": "overdrive-exhaustion",
+      "displayName": "Spent!",
+      "messagePool": [
+        "{name} gave everything in that burst and is running on empty."
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "overdriveExhaustion"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spe",
+        "stages": -1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Burned out after an emotional burst"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#9aa4b5",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "not-until-over",
+      "displayName": "Not Until It's Over!",
+      "messagePool": [
+        "{name} would not go down, and it won the battle on its last breath!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "notUntilOver"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 90,
+        "text": "Won a battle on its last breath, with the whole team behind it fallen"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff9d5c",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
       "id": "perfect-timing",
       "displayName": "Perfect Timing!",
       "messagePool": [
@@ -4000,6 +4074,14 @@
   },
   "legacyTitles": [
     {
+      "title": "Never Down",
+      "needs": {
+        "anyMoment": [
+          "not-until-over"
+        ]
+      }
+    },
+    {
       "title": "Iron Will",
       "needs": {
         "survivedFatal": 2
@@ -4114,6 +4196,8 @@
     "cooldownBattles": 2,
     "hyperScale": 0.4,
     "exempt": [
+      "notUntilOver",
+      "overdriveExhaustion",
       "megaOverdrive",
       "zHeart",
       "dynamaxResolve",
