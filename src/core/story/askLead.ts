@@ -16,7 +16,7 @@ const flag = (run: RunState) => `askLead:${run.regionIndex}.${run.stage?.index ?
 
 /** A benched, healthy Pokémon with at most one fight asks to lead; later, a quiet one with at most two does the same at the campfire. */
 export function planAskLead(content: Content, run: RunState): AskLead | null {
-  if (run.story.flags[flag(run)] !== undefined || run.party.length < 2) return null;
+  if (content.story.definitions.length === 0 || run.story.flags[flag(run)] !== undefined || run.party.length < 2) return null;
   const fights = (uid: string) => run.story.histories[uid]?.battles ?? 99;
   const benched = run.party.filter((m, i) => i > 0 && m.hp > 0);
   const idle = benched.find((m) => fights(m.uid) <= 1);
