@@ -274,6 +274,37 @@ export function draftStarters(content: Content, rng: Rng, prep: RunPrep, mastere
       note: `This pool has only ${matching.length} ${typeName(type)}-type starter${matching.length === 1 ? '' : 's'}; the rest are random.`,
     };
   }
+  // Expanded Research: the draw also reaches into the Research pool's unusual first stages.
+  if (rule.kind === 'expanded') {
+    const extra = content.starterPools.get('research');
+    const wide = rng.shuffle([...new Set([...eligible, ...(extra ? eligibleSpecies(content, extra) : [])])]);
+    return { choices: wide.slice(0, n), note: null };
+  }
+  // Regional Research: all starters come from one region (the first drawn species' home).
+  if (rule.kind === 'regional') {
+    for (const first of shuffled) {
+      const s = content.species.get(first)!;
+      const region = [...content.regions.values()].find((r) => r.id !== 'grand' && isNative(content, s, r.id));
+      if (!region) continue;
+      const home = shuffled.filter((id) => isNative(content, content.species.get(id)!, region.id));
+      if (home.length >= n) return { choices: home.slice(0, n), note: `All three starters are native to ${region.name}.` };
+    }
+    return { choices: shuffled.slice(0, n), note: 'No region has three native starters in this pool; they are random.' };
+  }
+  // Rare Specimen: one of the three comes from the Rare pool.
+  if (rule.kind === 'rareSpecimen') {
+    const rare = content.starterPools.get('rare');
+    const rareIds = rare ? eligibleSpecies(content, rare).filter((id) => !shuffled.slice(0, n - 1).includes(id)) : [];
+    if (rareIds.length === 0) return { choices: shuffled.slice(0, n), note: 'The Rare pool has no specimen to add; the starters are random.' };
+    return { choices: [...shuffled.slice(0, n - 1), rng.pick(rareIds)], note: 'One starter is a rare specimen.' };
+  }
+  // Evolution Specialist: only species that evolve twice (three-stage lines).
+  if (rule.kind === 'evolution') {
+    const chain = (id: string) => (content.species.get(id)!.evolutions ?? []).some((e) => (content.species.get(e.to)?.evolutions ?? []).length > 0);
+    const lines = shuffled.filter(chain);
+    if (lines.length >= n) return { choices: lines.slice(0, n), note: 'Every starter evolves twice.' };
+    return { choices: [...lines, ...shuffled.filter((id) => !lines.includes(id))].slice(0, n), note: `This pool has only ${lines.length} three-stage line${lines.length === 1 ? '' : 's'}; the rest are random.` };
+  }
   if (rule.kind === 'balanced') {
     const picked: string[] = [];
     for (const id of shuffled) {
@@ -308,6 +339,12 @@ export function withSignatureStarter(content: Content, rng: Rng, archetype: Arch
 }
 
 // ---------- starting resources and the build summary ----------
+
+/** A token's small attribute bonus, added to the run's starting modifiers. */
+export function withTokenAttribute<T extends Record<string, number>>(content: Content, prep: RunPrep, mods: T): T {
+  const a = prep.tokenId ? content.prepTokens.get(prep.tokenId)?.attribute : null;
+  return a ? { ...mods, [a.key]: (mods[a.key] ?? 0) + a.amount } : mods;
+}
 
 export interface StartingResources {
   money: number;

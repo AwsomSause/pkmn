@@ -7,7 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
-import { licenseName, licenseNote } from '../core/license';
+import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
@@ -702,7 +702,7 @@ export class MapScene extends Phaser.Scene {
       rows.push({ action: null, itemId: 'fame-checker', title: 'Fame Checker', text: `Next gym leaders: ${text}`, problem: `Next gym leaders: ${text}` });
     }
     const licenseText = licenseNote(content, run);
-    if (licenseText) rows.push({ action: null, itemId: '', title: `Field License: ${licenseName(run.prep.license!)}`, text: licenseText, problem: licenseText });
+    if (licenseText) rows.push({ action: null, itemId: '', title: `${run.prep.license ? 'Field License' : 'Intel'}: ${licenseName(fieldHintId(content, run)!)}`, text: licenseText, problem: licenseText });
     const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
     const gymText = gym ? this.previewText(gym) : '';
     if (gym && gymText) {

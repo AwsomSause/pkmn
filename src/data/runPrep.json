@@ -5919,6 +5919,34 @@
    "description": "Three starters of the type you choose, when the pool has enough.",
    "kind": "typeFocus",
    "license": "type-specialist"
+  },
+  {
+   "id": "expanded-research",
+   "name": "Expanded Research",
+   "description": "The draw also reaches into the Research pool's unusual starters.",
+   "kind": "expanded",
+   "license": "research"
+  },
+  {
+   "id": "regional-research",
+   "name": "Regional Research",
+   "description": "All three starters are native to one region, when the pool allows it.",
+   "kind": "regional",
+   "license": "research"
+  },
+  {
+   "id": "rare-specimen",
+   "name": "Rare Specimen",
+   "description": "One of the three starters is a rare specimen.",
+   "kind": "rareSpecimen",
+   "license": "rare-specimen"
+  },
+  {
+   "id": "evolution-specialist",
+   "name": "Evolution Specialist",
+   "description": "Starters whose line evolves twice, when the pool allows it.",
+   "kind": "evolution",
+   "license": "evolution-specialist"
   }
  ],
  "tokens": [
@@ -6021,6 +6049,56 @@
     ],
     "weight": 1.8
    }
+  },
+  {
+   "id": "scout-report",
+   "name": "Scout Report",
+   "description": "In the first region, the map shows each stage leader's types.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "first-badge"
+   },
+   "unlockText": "Earn your first badge",
+   "intel": "boss"
+  },
+  {
+   "id": "weakness-notes",
+   "name": "Weakness Notes",
+   "description": "In the first region, the map names the types that hit each leader hardest.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "region-cleared"
+   },
+   "unlockText": "Clear a region",
+   "intel": "weakness"
+  },
+  {
+   "id": "training-regimen",
+   "name": "Training Regimen",
+   "description": "Start the run with +1 Strength.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "battles-100"
+   },
+   "unlockText": "Win 100 battles",
+   "attribute": {
+    "key": "strength",
+    "amount": 1
+   }
+  },
+  {
+   "id": "lucky-charm-token",
+   "name": "Lucky Charm",
+   "description": "Start the run with +1 Luck.",
+   "unlock": {
+    "kind": "achievement",
+    "id": "shiny-1"
+   },
+   "unlockText": "Find a shiny",
+   "attribute": {
+    "key": "luck",
+    "amount": 1
+   }
   }
  ],
  "licenses": [
@@ -6069,6 +6147,20 @@
    "description": "The shop stocks a Last Stand Charm from the second badge.",
    "cost": 1500,
    "tier": 4
+  },
+  {
+   "id": "rare-specimen",
+   "name": "Rare Specimen License",
+   "description": "Adds the Rare Specimen draft rule: one starter comes from the Rare pool.",
+   "cost": 1200,
+   "tier": 3
+  },
+  {
+   "id": "evolution-specialist",
+   "name": "Evolution Specialist License",
+   "description": "Adds the Evolution Specialist draft rule: starters from three-stage lines.",
+   "cost": 800,
+   "tier": 2
   }
  ]
 }

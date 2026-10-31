@@ -15,9 +15,15 @@ export const LICENSES = [
 export type LicenseId = (typeof LICENSES)[number]['id'];
 export const licenseName = (id: string): string => LICENSES.find((l) => l.id === id)?.name ?? id;
 
+/** The hint in force: the chosen Field License, or a Scout Report / Weakness Notes token in the first region. */
+export function fieldHintId(content: Content, run: Pick<RunState, 'prep'> & Partial<Pick<RunState, 'regionIndex'>>): LicenseId | null {
+  const intel = run.prep.tokenId ? content.prepTokens.get(run.prep.tokenId)?.intel ?? null : null;
+  return run.prep.license ?? (intel && (run.regionIndex ?? 0) === 0 ? intel : null);
+}
+
 /** What the run's Field License says right now, or null when the run has none (or nothing to say). */
-export function licenseNote(content: Content, run: Pick<RunState, 'prep' | 'stage' | 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects'>>): string | null {
-  const id = run.prep.license;
+export function licenseNote(content: Content, run: Pick<RunState, 'prep' | 'stage' | 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'regionIndex'>> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects'>>): string | null {
+  const id = fieldHintId(content, run);
   if (!id || !run.stage) return null;
   const league = run.stage.kind === 'league';
   const leader = bossInfo(content, league ? 'champion' : 'gym', run.stage.leaderId);

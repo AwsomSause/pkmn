@@ -948,7 +948,7 @@ export const StarterPoolSchema = z.object({
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
-export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind'] as const;
+export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind', 'expanded', 'regional', 'rareSpecimen', 'evolution'] as const;
 export const DraftRuleSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -970,6 +970,10 @@ export const PrepTokenSchema = z.object({
   items: z.record(z.string(), z.number().int().positive()).default({}),
   /** Draft archetype (catalog 97): reward families in these categories are drawn `weight` times as often, for the whole run. Chance, not a guarantee. */
   draftBias: z.object({ categories: z.array(z.string()).min(1), weight: z.number().gt(1).max(3) }).nullable().default(null),
+  /** First-region intel: this Field License hint is shown for the first region only. */
+  intel: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
+  /** A small run attribute bonus. */
+  attribute: z.object({ key: z.enum(PLAIN_ATTRIBUTES), amount: z.number().int().min(1).max(2) }).nullable().default(null),
 });
 export type PrepToken = z.infer<typeof PrepTokenSchema>;
 
