@@ -8,7 +8,7 @@ import { compareReward } from '../core/rewardCompare';
 import { isRerollReward, rewardTargetProblem } from '../core/rewards';
 import { draftItemUses, type DraftItemKind } from '../core/run';
 import { services } from '../game/services';
-import { playSfx } from '../ui/audio';
+import { playSfx, playSfxLazy } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { partyRows, Picker } from '../ui/partyPanel';
@@ -177,7 +177,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private focus(i: number, sound = true): void {
-    if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
+    if (sound && i !== this.index) playSfx(this, 'ui.cursor', 0.5);
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
     // The focused card lifts a little; the others settle back.
@@ -257,7 +257,7 @@ export class RewardScene extends Phaser.Scene {
       this.scene.restart({ notice: result.reward.messages.join(' '), focus: 0 });
       return;
     }
-    playSfx(this, 'se.level_up', 0.6);
+    playSfxLazy(this, 'me.item_get', 0.8);
     // The chosen card flies up into the bag with a burst; the result shows on a glass plate.
     const card = this.cards[draftIndex];
     if (card && this.motion !== 'off') {

@@ -18,7 +18,7 @@ import { evolutionUnlocked, questLineView, stepsDone } from '../core/quests';
 import { eligibleSpecies, licenseProblem, licenseStatus, poolProblem, poolStatus, type LicenseStatus, type PoolStatus } from '../core/runPrep';
 import type { Profile, RunRecord } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
@@ -189,7 +189,7 @@ export class HubScene extends Phaser.Scene {
     this.picker = null;
     this.submenu = null;
     this.tiles = [];
-    playMusic(this, 'bgm.menu');
+    playMusicLazy(this, 'bgm.hub');
     const p = session.profile;
 
     new ArenaBackdrop(this, { platformAt: { x: GAME_WIDTH / 2, y: 350 } });
@@ -270,7 +270,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   private focusTile(i: number, sound = true): void {
-    if (sound && i !== this.tileIndex) playSfx(this, 'ui.select', 0.5);
+    if (sound && i !== this.tileIndex) playSfx(this, 'ui.cursor', 0.5);
     this.tileIndex = i;
     this.tiles.forEach((tile, n) => {
       const on = n === i;
@@ -965,7 +965,7 @@ export class HubScene extends Phaser.Scene {
         const act = rows[i]!.act;
         if (!act) return;
         act();
-        playSfx(this, 'ui.select', 0.5);
+        playSfx(this, 'ui.cursor', 0.5);
         this.openMasteryFamily(family);
       },
       onBack: () => {
@@ -1040,7 +1040,7 @@ export class HubScene extends Phaser.Scene {
     const n = TRAINER_SORT_KEYS.length;
     const key = TRAINER_SORT_KEYS[(TRAINER_SORT_KEYS.indexOf(s.trainerSort) + n + step) % n]!;
     session.saveSettings({ ...s, trainerSort: key, trainerSortReverse: flip ? !s.trainerSortReverse : s.trainerSortReverse });
-    playSfx(this, 'ui.select', 0.5);
+    playSfx(this, 'ui.cursor', 0.5);
     this.closePicker();
     this.openArchive();
   }

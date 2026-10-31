@@ -111,7 +111,7 @@ export class TrainerSelectScene extends Phaser.Scene {
     session.saveSettings({ ...session.settings, trainerSort: this.sortKey, trainerSortReverse: this.sortReverse });
     this.applySort();
     this.updateSortText();
-    playSfx(this, 'ui.select', 0.5);
+    playSfx(this, 'ui.cursor', 0.5);
     this.page = -1;
     this.focus(Math.max(0, this.slots.findIndex((s) => s?.archetype.id === keep)), false);
   }
@@ -199,7 +199,7 @@ export class TrainerSelectScene extends Phaser.Scene {
   }
 
   private focus(i: number, sound = true): void {
-    if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
+    if (sound && i !== this.index) playSfx(this, 'ui.cursor', 0.5);
     this.index = i;
     if (Math.floor(i / PAGE) !== this.page) {
       this.page = Math.floor(i / PAGE);

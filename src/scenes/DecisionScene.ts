@@ -27,7 +27,7 @@ const PATH_BLURB: Record<MentorPath, string> = {
 };
 import type { MoveSlot, PokemonInstance } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { partyRows, Picker } from '../ui/partyPanel';
 import { fitHeight } from '../ui/showcase';
@@ -76,7 +76,7 @@ export class DecisionScene extends Phaser.Scene {
     this.confirmMenu = null;
     this.confirmLayer = null;
     this.done = false;
-    playMusic(this, 'bgm.menu');
+    playMusicLazy(this, 'bgm.event');
 
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);

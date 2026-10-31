@@ -17,7 +17,7 @@ import type { AttributeKey } from '../core/contentSchema';
 import { eventView, type ChoiceView, type EventResult } from '../core/events';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { loadAssets } from '../ui/lazyAssets';
 import { pokemonVisual, trainerVisual } from '../ui/sprites';
@@ -72,7 +72,7 @@ export class EventScene extends Phaser.Scene {
     this.phase = 'choose';
     this.result = null;
     this.calm = session.settings.battleAnimations !== 'full';
-    playMusic(this, 'bgm.menu');
+    playMusicLazy(this, 'bgm.event');
     const view = eventView(content, run, this.sideId);
     const scene = view.event.scene;
 

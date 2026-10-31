@@ -21,10 +21,13 @@ Opening the .rar: no unrar/7z in the container, so `node-unrar-js` (npm, WASM) l
 | Z2 | Battle weather overlays (rain, hail, snow, sand, sun) from UIE `Graphics/Weather` | BUILT (#274); checked in a browser screenshot |
 | Z3 | Expedition route music (Raid adventure songs, by tier) | BUILT (#276) |
 | Z4 | `public/assets/manifest.json` was stale: raid songs and weather art never loaded in-game. Regenerated; a unit test now fails when a fixed catalog asset is missing from it | BUILT |
+| Z9 | Left-out plan 0.2: map, Hub, shop and event songs (ORAS Route 101, Littleroot, Petalburg, Oldale); boss songs (gym leader ORAS 048, Elite Four B2W2 PWT Final Round, rival EBDX Low HP Battle; champion and final boss reuse raid songs); Elite Four win song (PWT Winning); 11 jingles (UIE `ME`: item, key item, badge, new Pokémon, evolution start/success, healing, save, TM, berry, forgotten move); 20 UI/battle sounds (UIE `SE`: cursor, cancel, menus, party switch, ability, item, flee, recall, buy, PC, door...); stat up/down and the five status sounds (pack animation clips). `ui.select`/`ui.error` are now the pack's decision and buzzer. Wired: map/Hub/shop/event/decision screens, `BattleScene` roles (`battleRole`), stat/status/item/badge/evolution/shop/reward sounds, hover cursor everywhere | BUILT |
 
 ## Not built, and why
 | Item | Status | Note |
 |---|---|---|
+| UIE `.mid` songs (Elite, Champion, Cave, Gym, Poke Center/Mart, Safari...) | SKIP | MIDI cannot play in the browser without a soundfont renderer; ogg stand-ins used instead. The ~880 other SE are move-animation clips already in `audio/battle_anims` or RPG overworld sounds (doors, mining, slots) with no screen yet |
+| Low-HP battle song, Evolution song, Surfing, Bicycle, Title songs | TODO | not wired (no low-HP swap, evolution scene or overworld); Low HP Battle is the rival song |
 | Raid "capture" jingles (4 tracks) | SKIP | no raid-capture moment to play them at (a raid win gives the boss as a reward card) |
 | `Graphics/Custom UI` (pause bars, trainer card, load/options backgrounds) | PARTIAL (Z6) | Pause Menu top bars (6 colours) tint the map header by region; the Trainer card art is the Hub Trainer Card room (Z6b). Not used: load/options/save backgrounds, party, dex, bag art (each needs its own layout pass; Aero glass stays the look elsewhere) |
 | `Graphics/Transitions` masks | BUILT (Z5) | 12 grayscale masks drive a rule wipe when a battle ends (`ui/battleFx/ruleWipe.ts`); one in 4 battles keeps the glass shutters; reduced motion = fade, off = none. Browser screenshots checked. `__pkr.wipe(mask)` plays one for tests |

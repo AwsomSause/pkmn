@@ -1,7 +1,22 @@
 // Which music track a battle plays, and which victory fanfare follows a win. Pure and presentation-only:
 // the track never changes the battle.
 
+/** Who the player faces; picks the battle song and the win fanfare. */
+export type BattleRole = 'wild' | 'trainer' | 'rival' | 'gym' | 'elite' | 'champion' | 'final';
+
+/** Battle songs per role: ORAS Gym Leader, B2W2 PWT Final Round, EBDX Low HP Battle; the champion and final boss borrow raid songs. */
+const ROLE_TRACKS: Record<'rival' | 'gym' | 'elite' | 'champion' | 'final', string> = {
+  rival: 'bgm.battle_rival',
+  gym: 'bgm.battle_leader',
+  elite: 'bgm.battle_elite',
+  champion: 'bgm.raid.ultra3',
+  final: 'bgm.raid.tera3',
+};
+export const ROLE_TRACK_IDS: readonly string[] = Object.values(ROLE_TRACKS);
+
 export interface BattleMusicInput {
+  /** Set for rivals and bosses; wild and ordinary trainer fights leave it off. */
+  role?: BattleRole;
   /** The raid arena's track (bgm.raid.*), if this is a raid. */
   raidTrack: string | null;
   trainer: boolean;
@@ -12,16 +27,18 @@ export interface BattleMusicInput {
 export function battleTrack(i: BattleMusicInput): string {
   if (i.raidTrack) return i.raidTrack;
   if (i.gbSounds) return 'bgm.battle_gb';
+  if (i.role && i.role !== 'wild' && i.role !== 'trainer') return ROLE_TRACKS[i.role];
   return i.trainer ? 'bgm.battle_trainer' : 'bgm.battle';
 }
 
 /** The victory fanfare: the big one for bosses (gym leaders, Elite Four, champions), then trainers, then wild. */
-export function victoryTrack(i: { trainer: boolean; boss: boolean }): string {
+export function victoryTrack(i: { trainer: boolean; boss: boolean; role?: BattleRole }): string {
+  if (i.role === 'elite') return 'bgm.victory_elite';
   if (i.boss) return 'bgm.victory_leader';
   return i.trainer ? 'bgm.victory_trainer' : 'bgm.victory_wild';
 }
 
-export const VICTORY_TRACKS = ['bgm.victory_wild', 'bgm.victory_trainer', 'bgm.victory_leader'] as const;
+export const VICTORY_TRACKS = ['bgm.victory_wild', 'bgm.victory_trainer', 'bgm.victory_leader', 'bgm.victory_elite'] as const;
 
 /** Raid battle tracks per tier group: the first is always loaded, the rest load lazily with the battle. */
 const RAID_TRACKS = {

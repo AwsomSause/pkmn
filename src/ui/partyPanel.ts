@@ -129,7 +129,7 @@ export class Picker {
 
   private focus(i: number, sound = true): void {
     if (i < 0 || i >= this.config.rows.length) return;
-    if (sound && i !== this.index) playSfx(this.scene, 'ui.select', 0.5);
+    if (sound && i !== this.index) playSfx(this.scene, 'ui.cursor', 0.5);
     this.index = i;
     this.highlights.forEach((h, n) => h.setVisible(n === i));
     this.scrollTo(i);
@@ -185,7 +185,7 @@ export class Picker {
         break;
       case 'back':
         if (this.config.onBack) {
-          playSfx(this.scene, 'ui.select', 0.5);
+          playSfx(this.scene, 'ui.cursor', 0.5);
           this.config.onBack();
         }
         break;

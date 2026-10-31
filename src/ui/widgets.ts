@@ -238,7 +238,7 @@ export class Menu {
 
   focus(i: number, sound = true): void {
     if (i < 0 || i >= this.config.options.length) return;
-    if (sound && i !== this.index) playSfx(this.scene, 'ui.select', 0.5);
+    if (sound && i !== this.index) playSfx(this.scene, 'ui.cursor', 0.5);
     this.index = i;
     const { x, y } = this.position(i);
     this.cursor.setPosition(x + 4, y + this.cursorOffsetY);
