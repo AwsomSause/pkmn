@@ -36,3 +36,18 @@ describe('Event Director conditions', () => {
     for (const id of ['doesnt-want-to-fight', 'it-saw-what-you-did', 'this-place-remembers']) expect(content.events.get(id)!.rarity).toBe('rare');
   });
 });
+
+describe('a rival who became a friend (left-out 2.2)', () => {
+  it('only an allied rival offers a gift or a swap, and the gift adds a Pokémon', () => {
+    const run = late('dir-ev-ally');
+    run.party.push(createPokemon(content, 'rattata', 5, 'extra'));
+    run.story.rivals.push({ encounters: 3, state: 'recurring' } as never);
+    expect(ids(run)).not.toContain('rival-gift');
+    expect(ids(run)).not.toContain('rival-swap');
+    run.story.rivals[0]!.state = 'ally';
+    expect(ids(run)).toContain('rival-gift');
+    expect(ids(run)).toContain('rival-swap');
+    const gift = content.events.get('rival-gift')!;
+    expect(JSON.stringify(gift)).toContain('"join"');
+  });
+});
