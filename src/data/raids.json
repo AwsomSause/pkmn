@@ -1045,6 +1045,7 @@
           "cost": 0,
           "startHp": 0.6,
           "timerDelta": -8,
+          "rivalRaces": true,
           "rewardPercent": 110,
           "draftDelta": 1
         },
@@ -1104,6 +1105,7 @@
           "cost": 0,
           "startHp": 0.6,
           "timerDelta": -8,
+          "rivalRaces": true,
           "rewardPercent": 110,
           "draftDelta": 1
         },

@@ -80,6 +80,8 @@ export function freshRaidBattle(def: RaidDef): RaidBattle {
     tank: null,
     survivor: null,
     rivalHelped: false,
+    rival: null,
+    rivalFinished: false,
     returning: false,
     rewardPercent: 100,
     draftDelta: 0,

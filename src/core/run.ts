@@ -106,6 +106,7 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
+import { pickRaidRival } from './raid/rivalAlly';
 import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
@@ -1029,6 +1030,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
     raidState.rewardPercent = approach.rewardPercent;
     raidState.draftDelta = approach.draftDelta;
     raidState.rivalHelped = approach.rivalHelps;
+    if (approach.rivalHelps || approach.rivalRaces) raidState.rival = pickRaidRival(content, run, level, approach.rivalRaces ? 'race' : 'help');
   }
   if (opts.returning) {
     raidState.returning = true;
@@ -1192,7 +1194,7 @@ function failRaid(content: Content, run: RunState): void {
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
   const def = getRaid(content, battle.raid!.id);
   const boss = currentEnemy(battle);
-  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent) / 100);
+  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
   run.money += money;
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::raid-reward::${def.id}:${run.encountersCompleted}`));
@@ -1220,7 +1222,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   // Raid memories: rewards follow contribution, not only the last hit.
   const bossName = speciesName(content, boss.speciesId);
   const earned = new Set<string>();
-  for (const m of raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
+  for (const m of battle.raid!.rivalFinished ? [] : raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
     const mon = run.party.find((p) => p.uid === m.uid);
     if (!mon) continue;
     emit(content, run, 'storyMoment', { actors: [mon.uid], data: { raidMemory: m.key, raid: def.id }, importance: 70, text: `${m.title}: ${m.text(speciesName(content, mon.speciesId), bossName)}` });
@@ -1228,9 +1230,19 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     earned.add(mon.uid);
   }
   const lead = run.party.find((p) => p.uid === battle.raid!.lead);
-  if (battle.raid!.rivalHelped && lead) {
-    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id }, importance: 70, text: `The Rival Who Stood Beside You: a rival fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
+  const named = battle.raid!.rival;
+  const rivalName = named?.name ?? 'a rival';
+  if (battle.raid!.rivalHelped && lead && !battle.raid!.rivalFinished) {
+    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id, rival: named?.id ?? null }, importance: 70, text: `The Rival Who Stood Beside You: ${rivalName} fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
     changeFriendship(content, lead, RAID_MEMORY_FRIENDSHIP);
+  }
+  if (named) {
+    const rival = run.story.rivals.find((r) => r.id === named.id);
+    // A raced boss makes the rivalry hotter whoever wins; a rival that took the last hit is proud of it.
+    if (rival && named.mode === 'race') rival.rivalPotential += battle.raid!.rivalFinished ? 2 : 1;
+    if (named.mode === 'race' || battle.raid!.rivalFinished) {
+      emit(content, run, 'storyMoment', { actors: lead ? [lead.uid] : [], data: { raidMemory: 'rival-race', raid: def.id, rival: named.id, rivalFinished: battle.raid!.rivalFinished }, importance: 65, text: battle.raid!.rivalFinished ? `${rivalName} took the last hit on ${bossName}.` : `You beat ${rivalName} to the last hit on ${bossName}.` });
+    }
   }
   // An anomaly raid adds a research find and its own counter.
   if (def.kind === 'anomaly') {
