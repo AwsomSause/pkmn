@@ -56,3 +56,11 @@ export function regionDim(sky: number, base = 0x06152a, amount = 0.45): number {
   const mix = (a: number, b: number) => Math.round(a + (b - a) * amount);
   return (mix((base >> 16) & 255, (sky >> 16) & 255) << 16) | (mix((base >> 8) & 255, (sky >> 8) & 255) << 8) | mix(base & 255, sky & 255);
 }
+
+/** Soft rim lights on a platform: a pulsing coloured ring and a bright core under a Pokémon's spot. */
+export function platformEdgeLight(scene: Phaser.Scene, field: Phaser.GameObjects.Container, x: number, y: number, tint: number, motion: MotionLevel): void {
+  const ring = scene.add.ellipse(x, y, 190, 44).setStrokeStyle(3, tint, 0.55).setBlendMode('ADD');
+  const core = scene.add.ellipse(x, y, 120, 26, tint, 0.12).setBlendMode('ADD');
+  field.add([core, ring]);
+  if (motion === 'full') scene.tweens.add({ targets: [ring, core], alpha: 0.4, duration: 1600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+}

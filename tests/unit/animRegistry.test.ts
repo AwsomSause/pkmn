@@ -27,3 +27,11 @@ describe('animation registry', () => {
     expect(resolveAnim('nope', { mode: 'full', intensity: 1 })).toBeNull();
   });
 });
+
+describe('settings 6.6 switches', () => {
+  it('a switched-off category does not play; speed and intensity scale', () => {
+    expect(resolveAnim('test.burst', { mode: 'full', intensity: 1, enabled: { ui: false } })!.play).toBe(false);
+    const p = resolveAnim('test.burst', { mode: 'full', intensity: 0.5, timeScale: 1.5, strength: 0.5 })!;
+    expect(p).toMatchObject({ ms: 600, flash: 0.25 });
+  });
+});

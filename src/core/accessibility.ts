@@ -2,6 +2,7 @@
 // Pure. Outcomes never depend on any of these settings.
 
 import type { Settings } from './state';
+import type { AnimSettings } from './presentation/animRegistry';
 
 export type AccessibilityProfile = Settings['accessibilityProfile'];
 
@@ -49,4 +50,18 @@ export function animationTimeScale(s: Settings): number {
 /** Strength multiplier for animation effects: reduced 0.5×, normal 1×, enhanced 1.4×. Presentation only. */
 export function animationStrength(s: Settings): number {
   return { reduced: 0.5, normal: 1, enhanced: 1.4 }[s.animationIntensity];
+}
+
+/** What the animation registry needs from the settings: every animation reads them this one way. */
+export function animSettingsFrom(s: Settings): AnimSettings {
+  const flags = animationFlags(s);
+  return {
+    mode: s.battleAnimations,
+    intensity: s.effectIntensity,
+    shake: s.shakeIntensity,
+    reduceParticles: s.reduceParticles,
+    enabled: { ability: flags.abilityAnimations, text: flags.battleTextAnimations, interaction: flags.interactionAnimations, overdrive: flags.hyperAnimations, rival: flags.rivalAnimations },
+    timeScale: animationTimeScale(s),
+    strength: animationStrength(s),
+  };
 }

@@ -23,6 +23,7 @@ import { playSfx } from '../audio';
 import { loadAssets } from '../lazyAssets';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
+import { animSettingsFrom } from '../../core/accessibility';
 import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry';
 import '../../core/presentation/abilityAnims';
 import { playAbilityAnim, playTextAnim } from './abilityFx';
@@ -116,8 +117,7 @@ export class BattleFx {
 
   /** The registered animation for an id, shaped by the player's motion, intensity, shake and particle settings. */
   private plan(id: string): AnimPlan | null {
-    const s = this.settings;
-    return resolveAnim(id, { mode: s.battleAnimations, intensity: s.effectIntensity, shake: s.shakeIntensity, reduceParticles: s.reduceParticles });
+    return resolveAnim(id, animSettingsFrom(this.settings));
   }
 
   private wait(ms: number): Promise<void> {

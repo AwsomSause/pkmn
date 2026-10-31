@@ -1,10 +1,8 @@
 // Title screen: Continue, the Hub (start a run, Bank, trainers, achievements), sound toggle, and any save warnings.
 
 import Phaser from 'phaser';
-import type { Settings } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, refreshMusicVolume, stopMusic } from '../ui/audio';
-import { applyProfile, nextProfile, PROFILE_INFO } from '../core/accessibility';
+import { playMusic, stopMusic } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
@@ -12,23 +10,20 @@ import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { loadAssets, queueAssets } from '../ui/lazyAssets';
 import { continueCard } from '../ui/loadCard';
 import { pokemonAssetIds } from '../assets/catalog';
-import { BATTLE_UI_LABELS, BATTLE_UI_STYLES } from '../ui/battleUiStyles';
 import { sceneForRun } from './routing';
 
 export class MainMenuScene extends Phaser.Scene {
   private menu!: Menu;
-  private page: 'main' | 'settings' | 'more' = 'main';
 
   constructor() {
     super('MainMenu');
   }
 
   preload(): void {
-    queueAssets(this, ['ui.optionsbg', 'ui.load.card']);
+    queueAssets(this, ['ui.load.card']);
   }
 
-  create(data?: { focus?: number; page?: 'settings' | 'more' }): void {
-    this.page = data?.page ?? 'main';
+  create(data?: { focus?: number }): void {
     const { session } = services();
     session.closeRun();
     playMusic(this, 'bgm.menu');
@@ -41,7 +36,7 @@ export class MainMenuScene extends Phaser.Scene {
       shade.fillRect(i * 24, 0, 24, GAME_HEIGHT);
     }
     // With a saved run, the UIE Load card shows it (trainer, stage, party) where the random Pokémon would stand.
-    const card = this.page === 'main' && session.savedRun.status === 'ok' ? continueCard(this, session.content, session.savedRun.data, 470, 130) : null;
+    const card = session.savedRun.status === 'ok' ? continueCard(this, session.content, session.savedRun.data, 470, 130) : null;
     const species = [...session.content.species.values()].filter((sp) => !sp.id.includes('-'));
     const mon = new ShowcaseMon(this, 740, 336, PIXEL_SCALE, 230);
     const pick = () => {
@@ -53,13 +48,8 @@ export class MainMenuScene extends Phaser.Scene {
       this.time.addEvent({ delay: 6500, loop: true, callback: pick });
     }
 
-    if (this.page !== 'main' && this.textures.exists('ui.optionsbg')) {
-      // The UIE Options screen (its own "Options" title bar) replaces the logo while settings are open.
-      this.add.image(0, 0, 'ui.optionsbg').setOrigin(0).setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setDepth(-19).setAlpha(0.94).setName('options-bg');
-    } else {
-      drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
-      this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
-    }
+    drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
+    this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
 
     drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });
 
@@ -74,93 +64,7 @@ export class MainMenuScene extends Phaser.Scene {
       options.push({ option: { label: 'Continue', disabled: true }, action: () => undefined });
     }
     options.push({ option: { label: 'Enter the Hub', disabled: damaged }, action: () => this.scene.start('Hub') });
-    // Main page: Continue, Hub, Settings. Settings page: every setting, then Back.
-    const settingsOptions: typeof options = [];
-    settingsOptions.push({
-      option: { label: session.settings.muted ? 'Sound: Off' : 'Sound: On' },
-      action: () => this.toggleSound(),
-    });
-    const pct = (v: number) => `${Math.round(v * 100)}%`;
-    settingsOptions.push({ option: { label: `Music volume: ${pct(session.settings.musicVolume)}` }, action: () => this.cycleVolume('musicVolume') });
-    settingsOptions.push({ option: { label: `Effects volume: ${pct(session.settings.sfxVolume)}` }, action: () => this.cycleVolume('sfxVolume') });
-    const animLabels = { full: 'Full', reduced: 'Reduced motion', off: 'Off' } as const;
-    settingsOptions.push({
-      option: { label: `Animations: ${animLabels[session.settings.battleAnimations]}` },
-      action: () => this.cycleAnimations(),
-    });
-    settingsOptions.push({
-      option: { label: `Flashes: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
-      action: () => this.cycleIntensity('effectIntensity'),
-    });
-    settingsOptions.push({
-      option: { label: `Screen shake: ${Math.round(session.settings.shakeIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
-      action: () => this.cycleIntensity('shakeIntensity'),
-    });
-    settingsOptions.push({
-      option: { label: `Particles: ${session.settings.reduceParticles ? 'Reduced' : 'Full'}` },
-      action: () => this.toggleParticles(),
-    });
-
-    const speedLabels = { showcase: 'Showcase', normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
-    settingsOptions.push({
-      option: { label: `Battle speed: ${speedLabels[session.settings.battleSpeed]}` },
-      action: () => this.cycleSpeed(),
-    });
-
-    const talkLabels = { off: 'Off', low: 'Low', normal: 'Normal', high: 'High' } as const;
-    settingsOptions.push({
-      option: { label: `Trainer talk: ${talkLabels[session.settings.dialogueFrequency]}` },
-      action: () => this.cycleTalk(),
-    });
-
-    settingsOptions.push({
-      option: { label: `Accessibility: ${PROFILE_INFO[session.settings.accessibilityProfile].label}` },
-      action: () => this.cycleProfile(),
-    });
-    settingsOptions.push({
-      option: { label: `Battle UI: ${BATTLE_UI_LABELS[session.settings.battleUi]}` },
-      action: () => this.cycleBattleUi(),
-    });
-    settingsOptions.push({
-      option: { label: `Damage details: ${session.settings.damageDetails ? 'On' : 'Off'}` },
-      action: () => this.toggleDetails(),
-    });
-
-    // A second page keeps the list readable: text, display and catch-screen settings.
-    settingsOptions.push({ option: { label: 'More settings…' }, action: () => this.scene.restart({ page: 'more' }) });
-    const moreOptions: typeof options = [];
-    const st = session.settings;
-    const cycle = <K extends keyof Settings>(key: K, order: readonly Settings[K][]) => () => {
-      session.saveSettings({ ...session.settings, [key]: order[(order.indexOf(session.settings[key]) + 1) % order.length]!, accessibilityProfile: 'custom' });
-      this.scene.restart({ focus: this.menu.index, page: 'more' });
-    };
-    const onOff = (v: boolean) => (v ? 'On' : 'Off');
-    const labels = {
-      textSpeed: { instant: 'Instant', fast: 'Fast', normal: 'Normal', slow: 'Slow' },
-      messageDelay: { short: 'Short', normal: 'Normal', long: 'Long' },
-      uiScale: { full: '100%', medium: '90%', small: '80%' },
-      catchDetail: { full: 'Full', compact: 'Compact' },
-    } as const;
-    moreOptions.push(
-      { option: { label: `Text speed: ${labels.textSpeed[st.textSpeed]}` }, action: cycle('textSpeed', ['instant', 'fast', 'normal', 'slow']) },
-      { option: { label: `Auto-advance messages: ${onOff(st.autoAdvance)}` }, action: cycle('autoAdvance', [false, true]) },
-      { option: { label: `Message delay: ${labels.messageDelay[st.messageDelay]}`, disabled: !st.autoAdvance }, action: cycle('messageDelay', ['short', 'normal', 'long']) },
-      { option: { label: `High contrast: ${onOff(st.highContrast)}` }, action: cycle('highContrast', [false, true]) },
-      { option: { label: `Type names in words: ${onOff(st.typeMarkers)}` }, action: cycle('typeMarkers', [false, true]) },
-      { option: { label: `Screen size: ${labels.uiScale[st.uiScale]}` }, action: cycle('uiScale', ['full', 'medium', 'small']) },
-      { option: { label: `Sprite animations: ${onOff(st.spriteAnimations)}` }, action: cycle('spriteAnimations', [true, false]) },
-      { option: { label: `Damage numbers: ${onOff(st.damageNumbers)}` }, action: cycle('damageNumbers', [true, false]) },
-      { option: { label: `Catch details: ${labels.catchDetail[st.catchDetail]}` }, action: cycle('catchDetail', ['full', 'compact']) },
-    );
-    if (this.page === 'more') {
-      options.length = 0;
-      options.push(...moreOptions, { option: { label: 'Back' }, action: () => this.scene.restart({ page: 'settings' }) });
-    } else if (this.page === 'settings') {
-      options.length = 0;
-      options.push(...settingsOptions, { option: { label: 'Back' }, action: () => this.scene.restart({}) });
-    } else {
-      options.push({ option: { label: 'Settings' }, action: () => this.scene.restart({ page: 'settings' }) });
-    }
+    options.push({ option: { label: 'Settings' }, action: () => this.scene.start('Settings', { from: 'MainMenu' }) });
 
     const rowH = Math.min(46, Math.floor(272 / options.length));
     this.menu = new Menu(this, {
@@ -174,9 +78,7 @@ export class MainMenuScene extends Phaser.Scene {
     });
     if (data?.focus) this.menu.focus(data.focus, false);
     onInputAction(this, (a) => {
-      if (a === 'back' && this.page === 'more') this.scene.restart({ page: 'settings' });
-      else if (a === 'back' && this.page === 'settings') this.scene.restart({});
-      else this.menu.handle(a);
+      this.menu.handle(a);
     });
 
     // Messages: damaged saves, storage problems, save failures.
@@ -187,11 +89,6 @@ export class MainMenuScene extends Phaser.Scene {
     if (notes.length > 0) {
       this.add
         .text(48, 482, notes.join('\n'), textStyle(16, COLORS.bad, { wordWrap: { width: 560 } }));
-    }
-
-    if (this.page !== 'main') {
-      const at = session.saves.lastSavedAt();
-      this.add.text(48, 488, at ? `Last saved: ${new Date(at).toLocaleString()}` : 'Nothing saved yet.', textStyle(14, COLORS.textMuted));
     }
 
     const s = session.profile.stats;
@@ -209,87 +106,6 @@ export class MainMenuScene extends Phaser.Scene {
 
   private discardDamaged(): void {
     services().session.discardDamagedRun();
-    this.scene.restart({ page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Battle animations: full → reduced motion (no flashing or shaking) → off (skipped). */
-  private cycleAnimations(): void {
-    const { session } = services();
-    const order = ['full', 'reduced', 'off'] as const;
-    const next = order[(order.indexOf(session.settings.battleAnimations) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, battleAnimations: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Trainer dialogue: normal → high → off → low. */
-  private cycleTalk(): void {
-    const { session } = services();
-    const order = ['normal', 'high', 'off', 'low'] as const;
-    const next = order[(order.indexOf(session.settings.dialogueFrequency) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, dialogueFrequency: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Accessibility presets: custom → Reduced Motion → Low Flash → More Combat Detail → Fast Battles. */
-  private cycleProfile(): void {
-    const { session } = services();
-    session.saveSettings(applyProfile(session.settings, nextProfile(session.settings.accessibilityProfile)));
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  private toggleDetails(): void {
-    const { session } = services();
-    session.saveSettings({ ...session.settings, damageDetails: !session.settings.damageDetails, accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Battle UI style: Aero Glass → Essentials Kit → Essentials Kit (long foe). */
-  private cycleBattleUi(): void {
-    const { session } = services();
-    const next = BATTLE_UI_STYLES[(BATTLE_UI_STYLES.indexOf(session.settings.battleUi) + 1) % BATTLE_UI_STYLES.length]!;
-    session.saveSettings({ ...session.settings, battleUi: next });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Battle speed: normal → fast → quick. */
-  private cycleSpeed(): void {
-    const { session } = services();
-    const order = ['normal', 'fast', 'quick', 'showcase'] as const;
-    const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
-    session.saveSettings({ ...session.settings, battleSpeed: next , accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Reduced particles: ambience keeps its clouds and fog but drops the drifting specks. */
-  private toggleParticles(): void {
-    const { session } = services();
-    session.saveSettings({ ...session.settings, reduceParticles: !session.settings.reduceParticles, accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Strength of flashes or of screen shake: 100% → 50% → 25% → 0%. */
-  private cycleIntensity(key: 'effectIntensity' | 'shakeIntensity'): void {
-    const { session } = services();
-    const order = [1, 0.5, 0.25, 0];
-    const i = order.findIndex((v) => Math.abs(v - session.settings[key]) < 0.01);
-    session.saveSettings({ ...session.settings, [key]: order[(i + 1) % order.length]!, accessibilityProfile: 'custom' });
-    this.scene.restart({ focus: this.menu.index, page: this.page === 'main' ? undefined : this.page });
-  }
-
-  /** Music or effects volume: 100% → 75% → 50% → 25% → 0% → 100%. */
-  private cycleVolume(key: 'musicVolume' | 'sfxVolume'): void {
-    const { session } = services();
-    const order = [1, 0.75, 0.5, 0.25, 0];
-    const i = order.findIndex((v) => Math.abs(v - session.settings[key]) < 0.13);
-    session.saveSettings({ ...session.settings, [key]: order[(i + 1) % order.length]!, accessibilityProfile: 'custom' });
-    if (key === 'musicVolume') refreshMusicVolume();
-    this.scene.restart({ focus: this.menu.index, page: 'settings' });
-  }
-
-  private toggleSound(): void {
-    const { session } = services();
-    session.saveSettings({ ...session.settings, muted: !session.settings.muted });
-    if (session.settings.muted) stopMusic();
-    this.scene.restart({ page: this.page === 'main' ? undefined : this.page });
+    this.scene.restart({});
   }
 }
