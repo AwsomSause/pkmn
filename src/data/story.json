@@ -3737,7 +3737,9 @@
       },
       "priority": "emotionalOverdrive",
       "eligibilityTags": [],
-      "emotions": [],
+      "emotions": [
+        "perseverance"
+      ],
       "variants": {}
     }
   ],
