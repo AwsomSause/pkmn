@@ -1,0 +1,1 @@
+- E2E reliability: the milestone10 trainer VS intro and gym ACE tests poll for the VS art, challenge line, title card and lab panels with 8-15 s timeouts instead of fixed waits (they flaked under CI load); perfBaseline's median frame budget is 110 ms (software WebGL measures about 66 ms on a clean main). Test-only.
