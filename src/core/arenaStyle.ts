@@ -45,3 +45,12 @@ export function pickUieArena(q: ArenaQuery): string | null {
   const name = `${family}_${tod}`;
   return UIE_ARENAS.includes(name) ? name : null;
 }
+
+/** How far a floating Pokémon's shadow sits below its feet. */
+export const FLYER_LIFT = 12;
+
+/** Shadow shape for a sprite lifted `lift` px above its home: smaller and fainter the higher it is. */
+export function shadowLook(width: number, lift: number, flyer: boolean): { width: number; alpha: number; dy: number } {
+  const air = Math.max(0, lift) + (flyer ? FLYER_LIFT : 0);
+  return { width: Math.max(16, (width * 0.6) / (1 + air / 140)), alpha: Math.max(0.1, 0.3 - air / 420), dy: flyer ? FLYER_LIFT : 0 };
+}
