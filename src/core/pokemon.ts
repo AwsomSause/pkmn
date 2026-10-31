@@ -61,10 +61,29 @@ export function maxHp(content: Content, mon: PokemonInstance): number {
   return calcStats(content, mon).hp;
 }
 
-/** Total experience needed to reach `level` for a growth rate (standard formulas). */
-export function xpForLevel(rate: GrowthRate, level: number): number {
+/** The highest level any Pokémon can reach (D14); balance.difficulty.maxLevel may be lower. */
+export const LEVEL_LIMIT = 1000;
+/** Default for balance.difficulty.highLevelXp (see xpForLevel). */
+export const HIGH_LEVEL_XP = 0.4;
+
+/**
+ * Total experience needed to reach `level` for a growth rate. Up to 100 these are
+ * the standard formulas. Above 100 each level costs `highLevelXp` × (the cost of
+ * level 100) × level / 100, so the cost per level grows in step with the EXP a
+ * same-level foe gives, and a region's 100 levels take about as many battles as
+ * the region has (docs/plans/levels-and-regions-plan.md).
+ */
+export function xpForLevel(rate: GrowthRate, level: number, highLevelXp = HIGH_LEVEL_XP): number {
   if (level <= 1) return 0;
-  const n = level;
+  if (level > 100) {
+    const top = standardXp(rate, 100);
+    const step = top - standardXp(rate, 99);
+    return top + Math.floor((highLevelXp * step * ((level * (level + 1)) / 2 - 5050)) / 100);
+  }
+  return standardXp(rate, level);
+}
+
+function standardXp(rate: GrowthRate, n: number): number {
   switch (rate) {
     case 'fast':
       return Math.floor((4 * n ** 3) / 5);
@@ -86,10 +105,15 @@ export function xpForLevel(rate: GrowthRate, level: number): number {
   }
 }
 
-export function levelFromXp(rate: GrowthRate, xp: number): number {
-  let level = 1;
-  while (level < 100 && xpForLevel(rate, level + 1) <= xp) level++;
-  return level;
+export function levelFromXp(rate: GrowthRate, xp: number, maxLevel = 100, highLevelXp = HIGH_LEVEL_XP): number {
+  let lo = 1;
+  let hi = Math.max(1, Math.min(LEVEL_LIMIT, maxLevel));
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (xpForLevel(rate, mid, highLevelXp) <= xp) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
 }
 
 /** Whether a Pokémon can learn and use this move (it exists and the battle engine supports it). */
@@ -178,7 +202,7 @@ export function createPokemon(
     uid,
     speciesId,
     level,
-    xp: xpForLevel(species.growthRate, level),
+    xp: xpForLevel(species.growthRate, level, content.balance.difficulty.highLevelXp),
     hp: 1,
     moves,
     status: null,
@@ -218,13 +242,15 @@ export interface LevelUpResult {
  * reported as skipped (the run then asks the player whether to forget a move).
  * Experience stops at `levelCap` (the region's level cap, D14).
  */
-export function gainXp(content: Content, mon: PokemonInstance, amount: number, levelCap = 100): LevelUpResult {
+export function gainXp(content: Content, mon: PokemonInstance, amount: number, levelCap = LEVEL_LIMIT): LevelUpResult {
   const species = getSpecies(content, mon.speciesId);
   const oldLevel = mon.level;
   const oldMax = maxHp(content, mon);
-  const maxXp = Math.max(mon.xp, xpForLevel(species.growthRate, Math.min(100, levelCap)));
+  const { maxLevel, highLevelXp } = content.balance.difficulty;
+  const top = Math.min(maxLevel, levelCap);
+  const maxXp = Math.max(mon.xp, xpForLevel(species.growthRate, top, highLevelXp));
   mon.xp = Math.min(mon.xp + Math.max(0, Math.floor(amount)), maxXp);
-  mon.level = levelFromXp(species.growthRate, mon.xp);
+  mon.level = Math.max(oldLevel, levelFromXp(species.growthRate, mon.xp, Math.max(oldLevel, top), highLevelXp));
   const learnedMoves: string[] = [];
   const skippedMoves: string[] = [];
   if (mon.level > oldLevel) {
@@ -245,10 +271,10 @@ export function gainXp(content: Content, mon: PokemonInstance, amount: number, l
 }
 
 /** Raises the level directly (Rare Candy): sets XP to the start of the new level. */
-export function addLevels(content: Content, mon: PokemonInstance, levels: number, levelCap = 100): LevelUpResult {
+export function addLevels(content: Content, mon: PokemonInstance, levels: number, levelCap = LEVEL_LIMIT): LevelUpResult {
   const species = getSpecies(content, mon.speciesId);
-  const target = Math.min(100, levelCap, mon.level + levels);
-  const needed = xpForLevel(species.growthRate, target) - mon.xp;
+  const target = Math.min(content.balance.difficulty.maxLevel, levelCap, mon.level + levels);
+  const needed = xpForLevel(species.growthRate, target, content.balance.difficulty.highLevelXp) - mon.xp;
   return gainXp(content, mon, Math.max(0, needed), levelCap);
 }
 
