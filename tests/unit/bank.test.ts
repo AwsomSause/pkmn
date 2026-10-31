@@ -102,13 +102,13 @@ describe('Regional Accounts, Vault and loans', () => {
 });
 
 import { draftStarters, defaultPrep, withTokenAttribute, startingResources } from '../../src/core/runPrep';
-import { Rng } from '../../src/core/rng';
+import { Rng, hashSeed } from '../../src/core/rng';
 import { licenseNote } from '../../src/core/license';
 import { chooseStarter, createRun } from '../../src/core/run';
 
 describe('draft modifiers and tokens', () => {
   const prepOf = (draftRuleId: string, poolId = 'classic') => ({ ...defaultPrep(content), draftRuleId, poolId });
-  const draft = (rule: string, seed: string, pool?: string) => draftStarters(content, new Rng(seed), prepOf(rule, pool));
+  const draft = (rule: string, seed: string, pool?: string) => draftStarters(content, new Rng(hashSeed(seed)), prepOf(rule, pool));
   it('every new rule drafts three distinct starters, deterministically', () => {
     for (const rule of ['expanded-research', 'regional-research', 'rare-specimen', 'evolution-specialist']) {
       for (let i = 0; i < 20; i++) {

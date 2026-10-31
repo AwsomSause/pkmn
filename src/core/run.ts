@@ -147,6 +147,9 @@ import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
+import { withTeamTypes } from './rivals/adapt';
+import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
+import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
 
@@ -278,6 +281,8 @@ function restoreAfterWipe(content: Content, run: RunState): RunState | null {
   const maxWipes = getMode(run.rules.modeId)?.maxWipes;
   if (adventure && maxWipes !== undefined && run.rules.wipes >= maxWipes) return null;
   const back = structuredClone(run.checkpoint) as unknown as RunState;
+  // A nemesis made (or made stronger) by the wipe is remembered after it.
+  back.story.nemeses = structuredClone(run.story.nemeses);
   back.rules = { ...run.rules, wipes: run.rules.wipes + 1, deathBlockUsed: run.rules.deathBlockUsed || block };
   if (adventure) back.money = Math.floor(back.money * (1 - (getMode(run.rules.modeId)?.wipeMoneyLoss ?? 0)));
   healParty(content, back);
@@ -1150,11 +1155,18 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const opened = legendary ? { speciesId, level: plan.level } : openingWild(content, run, speciesId, plan.level, `wild:${node.id}`);
     speciesId = opened.speciesId;
     // The gentle opening caps the wild level after the difficulty bonus too, so Nightmare's first fight is not a level 9 against a level 5 starter.
-    const enemy = newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
-    enemy.shiny = plan.shiny;
+    // A wild nemesis takes this encounter instead (built from the planned level, so no roll changes).
+    const nemesis = legendary ? null : dueNemesis(content, run, 'wild');
+    const back = nemesis ? nemesisMember(content, nemesis, opened.level) : null;
+    const enemy = back
+      ? newMon(content, run, back.member.speciesId, back.member.level, 'e', content.balance.difficulty.maxLevel)
+      : newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
+    if (back) enemy.moves = back.member.moves!.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
+    enemy.shiny = back ? false : plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
+    if (nemesis && back) beginNemesisBattle(content, run, nemesis, back.change, null);
     const setup = wildBattleSetup(content, run, mods);
     if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
@@ -1227,8 +1239,22 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.story.flags[RIVAL_SEEN_ANY] = scheduleKey(run);
       rivalBack.away = 0;
     }
+    // Nemesis system: a nemesis takes the first ordinary trainer slot of a later stage (its Return, then its Reckoning).
+    const nemesis = rule && !back && !rivalBack ? dueNemesis(content, run, 'trainer') : null;
+    let nemesisSetup: { change: string | null; partner: Nemesis | null } | null = null;
+    if (nemesis) {
+      const r = nemesisTrainerPlan(content, run, nemesis, plan);
+      plan = r.plan;
+      nemesisSetup = r;
+    }
+    // The Hunter Has Become the Hunted!: a class you keep beating sends a team built to beat your lead (once per region).
+    const hunted = rule && !back && !rivalBack && !nemesis && isHunted(content, run, plan.classId);
+    if (hunted) {
+      plan = withTeamTypes(content, plan, counterTypes(content, getSpecies(content, run.party[activeIndex]!.speciesId).types));
+      markHunted(run);
+    }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -1250,11 +1276,13 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
     if (firstRival) run.battle.firstRival = true;
+    if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
+    if (hunted) run.battle.hunted = true;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
     if (plan.leaderId && doublesCfg.bossIds.includes(plan.leaderId) && canBeDoubles(run.party, team)) makeDoubles(run.battle, run.party);
-    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
       if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
     }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
