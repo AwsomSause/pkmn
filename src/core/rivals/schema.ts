@@ -41,6 +41,10 @@ export const RivalConfigSchema = z.object({
     weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),
     minEncounters: z.number().int().min(0),
     switchMargin: z.number().min(0),
+    /** The Ultimate Rival quest chain: wins that settle it, and its one-time reward. */
+    quest: z.object({ settleWins: z.number().int().min(1), money: z.number().int().min(0), itemId: z.string(), quantity: z.number().int().min(1) }),
+    /** How many Previous Ultimate Rivals the Story screen lists. */
+    pastShown: z.number().int().min(0),
   }),
 });
 export type RivalConfig = z.infer<typeof RivalConfigSchema>;
