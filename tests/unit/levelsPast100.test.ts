@@ -1,7 +1,8 @@
 // Levels to 500 (left-out plan 1.6): party-strength correction, threat budgets past 100, custom regions.
 import { describe, expect, it } from 'vitest';
 import { getArchetype } from '../../src/core/archetypes';
-import { curveLevel, enemyLevel, levelScale, withPartyStrength } from '../../src/core/encounters';
+import { bossBand, strongestMoves } from '../../src/core/bossBands';
+import { createPlannedPokemon, curveLevel, enemyLevel, levelScale, planChampion, withPartyStrength } from '../../src/core/encounters';
 import { getCampaign, levelCap } from '../../src/core/regions';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { threatBudget } from '../../src/core/threat';
@@ -83,5 +84,54 @@ describe('levels past 100', () => {
     expect(ghost).toContain('charmander-delta');
     expect(typesPool(content, ['ghost'], 'kanto', 30).map((p) => p.speciesId)).not.toContain('charmander-delta');
     expect(regionSpecialWilds(content, 'kanto')).toEqual([]);
+  });
+});
+
+describe('boss teams past level 100 (bossBands)', () => {
+  const plan = (level: number) => {
+    const scale = { start: level - 5, end: level - 5, t: 1, cap: level };
+    return planChampion(content, RED, 'lance', 9, scale, new Rng(hashSeed('band')));
+  };
+
+  it('leaves teams at 100 and below exactly as authored', () => {
+    const p = plan(100);
+    const authored = content.bosses.get('lance')!.teams.champion[9]!;
+    expect(p.members.map((m) => m.speciesId)).toEqual(authored.members.map((m) => m.speciesId));
+    expect(p.members.every((m) => !m.held)).toBe(true);
+    expect(p.ai).toBe(authored.ai);
+  });
+
+  it('every band item is a real held item and bands rise with level', () => {
+    const bands = content.balance.bossBands;
+    for (let i = 1; i < bands.length; i++) expect(bands[i]!.minLevel).toBeGreaterThan(bands[i - 1]!.minLevel);
+    for (const b of bands) for (const id of b.items) expect(content.catalog.get(id)?.effect?.kind, id).toBe('held');
+  });
+
+  it('later bands bring more training, items, sharper AI and only usable moves', () => {
+    const low = plan(100);
+    for (const level of [150, 250, 350, 450]) {
+      const p = plan(level);
+      const band = bossBand(content, Math.max(...p.members.map((m) => m.level)))!;
+      expect(band).toBeDefined();
+      expect(p.ai).toBeCloseTo(Math.min(1, low.ai + band.ai));
+      for (const m of p.members) {
+        expect(m.held && Object.keys(m.held).length).toBe(1);
+        expect(m.moves!.length).toBeGreaterThan(0);
+        for (const id of m.moves!) expect(content.moves.has(id), id).toBe(true);
+        expect(Math.max(...Object.values(m.training ?? {}))).toBeGreaterThanOrEqual(band.training);
+      }
+      const mon = createPlannedPokemon(content, p.members.at(-1)!, 'ace');
+      expect(Object.keys(mon.held ?? {})).toHaveLength(1);
+    }
+    expect(plan(450)).toEqual(plan(450));
+  });
+
+  it('strongest moves are damaging, one per type, best first', () => {
+    const s = content.species.get('garchomp')!;
+    const moves = strongestMoves(content, s, 100);
+    expect(moves.length).toBeGreaterThan(2);
+    const types = moves.map((id) => content.moves.get(id)!.type);
+    expect(new Set(types).size).toBe(types.length);
+    expect(moves.every((id) => content.moves.get(id)!.category !== 'status')).toBe(true);
   });
 });

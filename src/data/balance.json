@@ -162,7 +162,13 @@
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
   "levelBst": { "base": 290, "perLevel": 9, "retries": 10 },
-  "threat": { "setupBonus": 0.1, "recoveryBonus": 0.08, "statusBonus": 0.05, "priorityBonus": 0.05, "abilityBonus": 0.15,
+ "bossBands": [
+  { "minLevel": 101, "training": 1, "ai": 0.05, "signatureSwaps": 1, "items": ["leftovers", "sitrus-berry"] },
+  { "minLevel": 201, "training": 2, "ai": 0.1, "signatureSwaps": 2, "items": ["leftovers", "life-orb", "sitrus-berry"] },
+  { "minLevel": 301, "training": 3, "ai": 0.15, "signatureSwaps": 3, "items": ["life-orb", "leftovers", "expert-belt", "assault-vest"] },
+  { "minLevel": 401, "training": 4, "ai": 0.2, "signatureSwaps": 4, "items": ["life-orb", "focus-sash", "leftovers", "expert-belt", "assault-vest", "sitrus-berry"] }
+ ],
+ "threat": { "setupBonus": 0.1, "recoveryBonus": 0.08, "statusBonus": 0.05, "priorityBonus": 0.05, "abilityBonus": 0.15,
   "strongAbilities": ["huge-power", "pure-power", "speed-boost", "wonder-guard", "moody", "shadow-tag", "arena-trap", "parental-bond", "protean", "libero", "magic-guard", "regenerator"],
   "noAttackOffense": 0.3, "speedWeight": 0.25, "retries": 10,
   "budgets": { "easy": { "base": 70, "perLevel": 1.2, "max": 170, "perLevelAbove100": 0.15 }, "standard": { "base": 80, "perLevel": 1.6, "max": 200, "perLevelAbove100": 0.25 }, "challenging": { "base": 90, "perLevel": 2.6, "max": 260, "perLevelAbove100": 0.3 }, "elite": { "base": 120, "perLevel": 3.5, "max": 320, "perLevelAbove100": 0.35 } },
