@@ -132,6 +132,7 @@ import {
 import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
+import { styleTrick } from './rivals/tricks';
 import { rivalBond } from './drama/bond';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
@@ -1720,6 +1721,9 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   // A rival's training Pokémon may evolve now that the turn is over (Battle Drama Engine, Phase 5).
   const evolved = midBattleEvolution(content, run);
   if (evolved) events.push(evolved);
+  // A rival's battle style may do something now (berserker rage, revenge, last stand).
+  const trick = styleTrick(content, run);
+  if (trick) events.push(trick);
   // Bond Engine: a Pokémon at half HP may reveal a move it was ready to learn; a feeling may take hold.
   const rivalHere = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   const reveal = [revealMove(content, run, 'player', false), revealMove(content, run, 'enemy', Boolean(rivalHere) && rivalBond(rivalHere, currentEnemy(battle).speciesId).confidence >= 40)];
