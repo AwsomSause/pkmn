@@ -9,6 +9,7 @@ import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSc
 import { STREAM_NAMES, type StreamName } from './rng';
 import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
 import { freshHyperBattle } from './battle/hyper';
+import { SpectacleBattleSchema } from './battle/spectacle';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
@@ -645,6 +646,8 @@ export const BattleStateSchema = z.object({
   totem: TotemBattleSchema.optional(),
   /** A wild Pokémon that called for help (core/battle/sos.ts); absent until the first call. */
   sos: SosBattleSchema.optional(),
+  /** Battle Drama spectacle: Momentum, Counter, Guard, Last Stand, Revenge, boss phases (core/battle/spectacle.ts); absent until first used. */
+  spectacle: SpectacleBattleSchema.optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */

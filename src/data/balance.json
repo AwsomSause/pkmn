@@ -519,6 +519,29 @@
    "amount": 1
   }
  ],
+ "spectacle": {
+  "enabled": true,
+  "momentum": { "max": 100, "superEffective": 12, "streak": 8, "knockout": 25, "counter": 25, "faintKeeps": 0.5, "ralliesPerBattle": 2, "rallyDamage": 1.5 },
+  "lastStand": { "chance": 0.3, "minBond": 60, "lastMonBonus": 20, "perBattle": 1, "boost": { "atk": 1, "spa": 1, "spe": 1 } },
+  "counter": { "perBattle": 3, "taken": 0.5, "reflect": 0.5 },
+  "guard": { "classes": { "gym-leader": 2, "elite-four": 3, "champion": 4 }, "finalBonus": 1, "taken": 0.75, "superEffective": 2, "staggerTurns": 2, "staggerDamage": 1.5, "rebuilds": 1 },
+  "revenge": { "chance": 0.35, "minBond": 55, "boost": { "atk": 1, "spa": 1 } },
+  "phases": {
+   "classes": {
+    "gym-leader": [ { "atHp": 0.4, "text": "The Gym Leader grits their teeth: this is their ace's last stand!", "boost": { "atk": 1, "spa": 1 } } ],
+    "elite-four": [
+     { "atHp": 0.55, "text": "The Elite Four member's ace stands taller. The air changes!", "boost": { "atk": 1, "spa": 1 } },
+     { "atHp": 0.25, "text": "No more holding back! Their ace shakes off every setback!", "boost": { "spe": 1 }, "cleanse": true }
+    ],
+    "champion": [
+     { "atHp": 0.6, "text": "The Champion's ace braces. Their whole career rides on this!", "boost": { "def": 1, "spd": 1 } },
+     { "atHp": 0.3, "text": "The Champion pushes past every limit, and your boosts are swept away!", "boost": { "atk": 1, "spa": 1, "spe": 1 }, "clearPlayerStages": true }
+    ]
+   },
+   "final": [ { "atHp": 0.15, "text": "The finale demands everything: their ace burns with a last, blazing light!", "boost": { "atk": 1, "spa": 1 }, "cleanse": true } ]
+  },
+  "rematch": { "enabled": true, "chance": 0.5, "levelBonus": 3, "guardBonus": 1, "ai": 0.85 }
+ },
  "sos": {
   "enabled": true
  },

@@ -11,6 +11,7 @@ import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
 import { abilityAnimId, impliedAbility } from './abilityAnims';
 import { hyperAnimId } from './storyAnims';
+import { SPECTACLE_ANIM } from './spectacleAnims';
 import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
 export type AnimationMode = 'full' | 'reduced' | 'off';
@@ -145,6 +146,9 @@ export function planCues(
         break;
       case 'hyper':
         if (animated) cues.push({ kind: 'storyAnim', side: e.side, anim: hyperAnimId(e.defId) });
+        break;
+      case 'spectacle':
+        if (animated && SPECTACLE_ANIM[e.kind]) cues.push({ kind: 'storyAnim', side: e.side, anim: SPECTACLE_ANIM[e.kind]! });
         break;
       case 'switchIn':
         if (animated) cues.push({ kind: 'storyAnim', side: e.side, anim: 'interaction.enter' });
