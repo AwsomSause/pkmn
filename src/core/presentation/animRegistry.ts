@@ -35,6 +35,12 @@ export interface AnimSettings {
   /** 0–1 shake strength; defaults to `intensity`. */
   shake?: number;
   reduceParticles?: boolean;
+  /** Per-category switches (settings 6.6); a category set to false does not play. */
+  enabled?: Partial<Record<AnimCategory, boolean>>;
+  /** Duration multiplier (animation speed setting); default 1. */
+  timeScale?: number;
+  /** Strength multiplier (animation intensity setting); default 1. Scales flash and shake, capped at 1. */
+  strength?: number;
 }
 
 export interface AnimPlan {
@@ -72,13 +78,15 @@ export function resolveAnim(id: string, settings: AnimSettings): AnimPlan | null
   const def = defs.get(id);
   if (!def) return null;
   const full = settings.mode === 'full';
-  const intensity = clamp01(settings.intensity);
-  const shake = clamp01(settings.shake ?? settings.intensity);
+  const strength = settings.strength ?? 1;
+  const intensity = clamp01(settings.intensity * strength);
+  const shake = clamp01((settings.shake ?? settings.intensity) * strength);
+  const on = settings.mode !== 'off' && settings.enabled?.[def.category] !== false;
   return {
     id,
-    play: settings.mode !== 'off',
+    play: on,
     reduced: !full,
-    ms: full ? def.ms : Math.round(def.ms * 0.5),
+    ms: Math.round(def.ms * (full ? 1 : 0.5) * (settings.timeScale ?? 1)),
     color: def.color,
     glyph: def.glyph ?? '',
     flash: full && def.flashes ? intensity : 0,
