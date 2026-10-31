@@ -1,10 +1,10 @@
 // Legacy runs (M9): every finished run leaves one immutable record on the profile (v14).
 
 import { describe, expect, it } from 'vitest';
-import { buildLegacyRun, legacyAce, legacyRunStart, LEGACY_RUNS, pickAce, recordLegacyRun } from '../../src/core/legacyRuns';
+import { buildLegacyRun, legacyAce, legacyInteraction, legacyRotation, legacyRunStart, legacyScore, LEGACY_RUNS, pickAce, recordLegacyRun, rememberedDefeat, rivalHallOfFame, viewRandom } from '../../src/core/legacyRuns';
 import { createProfile, finalizeRun } from '../../src/core/profile';
 import { chooseStarter, createRun } from '../../src/core/run';
-import { LegacyRunSchema, ProfileSchema, type RunRecord } from '../../src/core/state';
+import { LegacyRunSchema, ProfileSchema, type LegacyRun, type RunRecord } from '../../src/core/state';
 import { CURRENT_VERSIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { content } from './helpers';
@@ -99,5 +99,74 @@ describe('legacy runs', () => {
     expect(b).toMatchObject({ outcome: 'victory', bosses: { champion: 1 } });
     expect(legacyRunStart(a!)).toBeNull();
     expect(ProfileSchema.parse(profile).legacyRuns).toHaveLength(2);
+  });
+
+  const rec = (id: string, over: Partial<LegacyRun> = {}): LegacyRun => ({ ...buildLegacyRun(content, started(id), NOW), ...over });
+  const rival = (over: Partial<LegacyRun['rivals'][number]> = {}): LegacyRun['rivals'][number] => ({ id: 'rv', name: 'Gary', classId: 'youngster', archetype: 'a', state: 'active', encounters: 3, setbacks: 0, lastResult: 'win', resolution: null, team: ['pidgey'], rank: null, ...over });
+
+  it('scores a run by the §1.2 weights', () => {
+    const w = LEGACY_RUNS.score;
+    const plain = rec('s1', { encounters: 0 });
+    const base = legacyScore(content, plain);
+    expect(legacyScore(content, { ...plain, outcome: 'victory', bosses: { gym: 8, elite: 4, champion: 1 } })).toBe(base + w.campaign + 8 * w.gymLeader + 4 * w.eliteFour + w.champion);
+    expect(legacyScore(content, { ...plain, rivals: [rival()] })).toBe(base + w.rivalDefeated);
+    expect(legacyScore(content, { ...plain, legendaries: { seen: ['mewtwo'], caught: ['mewtwo'] } })).toBe(base + w.legendary);
+    expect(legacyScore(content, { ...plain, encounters: 40 })).toBe(Math.round(base + 40 * w.perEncounter));
+  });
+
+  it('rotates up to six Trainers: the run in progress first, weighted but not just the top six, same seed same list', () => {
+    const records = Array.from({ length: 12 }, (_, i) => rec(`r${i}`, { encounters: i * 10 }));
+    const current = started('now');
+    const a = legacyRotation(content, records, { seed: 'x', current });
+    expect(a).toHaveLength(LEGACY_RUNS.rotation.size);
+    expect(a[0]).toMatchObject({ current: true, runId: 'now', outcome: 'inProgress' });
+    expect(new Set(a.map((e) => e.runId)).size).toBe(a.length);
+    expect(legacyRotation(content, records, { seed: 'x', current })).toEqual(a);
+    const picks = new Set<string>();
+    for (let s = 0; s < 40; s++) for (const e of legacyRotation(content, records, { seed: `s${s}` })) picks.add(e.runId);
+    expect(picks.size).toBeGreaterThan(6);
+    // A run on cooldown shows up far less often.
+    const shown = (cooldown: string[]) => Array.from({ length: 200 }, (_, s) => legacyRotation(content, records.slice(0, 8), { seed: `c${s}`, cooldown })).filter((l) => l.some((e) => e.runId === 'r0')).length;
+    expect(shown(['r0'])).toBeLessThan(shown([]));
+    expect(legacyRotation(content, [], { seed: 'x' })).toEqual([]);
+  });
+
+  it('legacy interactions are rare and fit the past Trainer', () => {
+    const lines = LEGACY_RUNS.interactions.lines;
+    const champ = rec('i1', { outcome: 'victory', bosses: { gym: 8, elite: 4, champion: 1 } });
+    expect(legacyInteraction(champ, [], 0.99)).toBeNull();
+    expect(legacyInteraction(champ, [], 0)).toBe(lines.champion);
+    expect(legacyInteraction(champ, [champ.team[0]!.speciesId], 0)).toBe(lines.samePokemon);
+    expect(legacyInteraction(rec('i2', { rivals: [rival()], defeatedBy: { speciesId: 'pidgey', level: 9, trainer: 'Gary' } }), [], 0)).toBe(lines.rivalEnding);
+    expect(legacyInteraction(rec('i3', { encounters: LEGACY_RUNS.interactions.longRunEncounters }), [], 0)).toBe(lines.longRun);
+  });
+
+  it('the world remembers how the last run ended', () => {
+    const lines = LEGACY_RUNS.defeats.lines;
+    const lost = rec('d1', { outcome: 'defeat', defeatedBy: { speciesId: 'onix', level: 14, trainer: null } });
+    const next = { archetypeId: lost.archetypeId, now: NOW };
+    expect(rememberedDefeat(content, [lost], next, 0.99)).toBeNull();
+    expect(rememberedDefeat(content, [{ ...lost, outcome: 'victory' }], next, 0)).toBeNull();
+    expect(rememberedDefeat(content, [{ ...lost, rivals: [rival()], defeatedBy: { speciesId: 'pidgey', level: 9, trainer: 'Gary' } }], next, 0)).toBe(lines.rival.replace('{rival}', 'Gary'));
+    expect(rememberedDefeat(content, [lost], { ...next, now: '2027-03-01T00:00:00Z' }, 0)).toBe(lines.absent);
+    expect(rememberedDefeat(content, [{ ...lost, regionReached: lost.regionOrder.length - 1 }], next, 0)).toBe(lines.close);
+    expect(rememberedDefeat(content, [lost], { ...next, archetypeId: 'someone-else' }, 0)).toBe(lines.different);
+    expect(rememberedDefeat(content, [lost], next, 0)).toContain('Onix');
+    expect(rememberedDefeat(content, [], next, 0)).toBeNull();
+  });
+
+  it('the Rival Hall of Fame lists ranked rivals first, then the deepest rivalries', () => {
+    const a = rec('h1', { rivals: [rival({ name: 'Low', encounters: 1 }), rival({ name: 'Deep', encounters: 6, lastResult: 'lose' })] });
+    const b = rec('h2', { rivals: [rival({ name: 'Champ', rank: 'champion', encounters: 2 })] });
+    const fame = rivalHallOfFame([a, b]);
+    expect(fame.map((f) => f.name)).toEqual(['Champ', 'Deep']);
+    expect(fame[0]).toMatchObject({ title: 'champion', signature: 'pidgey', defeatedByYou: true });
+    expect(fame[1]).toMatchObject({ defeatedByYou: false, encounters: 6 });
+  });
+
+  it('presentation randomness is its own seeded generator', () => {
+    const a = viewRandom('k');
+    const b = viewRandom('k');
+    expect([a(), a()]).toEqual([b(), b()]);
   });
 });

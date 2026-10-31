@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { hallOfFame } from '../core/hallOfFame';
+import { rivalHallOfFame } from '../core/legacyRuns';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { AERO, type MotionLevel } from '../ui/aero';
@@ -26,7 +27,7 @@ export class HallOfFameScene extends Phaser.Scene {
 
   preload(): void {
     const { session } = services();
-    const ids = new Set(session.profile.runHistory.flatMap((r) => [...r.party.map((m) => m.speciesId), ...r.legacy.map((c) => c.speciesId)]));
+    const ids = new Set([...session.profile.runHistory.flatMap((r) => [...r.party.map((m) => m.speciesId), ...r.legacy.map((c) => c.speciesId)]), ...session.profile.legacyRuns.flatMap((r) => r.rivals.flatMap((v) => v.team.slice(0, 1)))]);
     preloadPokemon(this, [...ids].flatMap((id) => session.content.species.get(id) ?? []), { icon: true });
   }
 
@@ -159,6 +160,21 @@ export class HallOfFameScene extends Phaser.Scene {
           const badges = [...card.titles.map((t) => `“${t}”`), ...card.tags, ...(card.mentor ? [`Carried ${name(card.mentor)}'s legacy`] : [])].join('  ·  ');
           box.add(this.add.text(70, 38, badges, textStyle(15, GOLD, { wordWrap: { width: w - 90 } })));
           if (card.signature) box.add(this.add.text(70, 64, card.signature, textStyle(14, '#cfefff', { wordWrap: { width: w - 90 } })));
+        },
+      });
+    }
+    // The Rival Hall of Fame (§8.1): rivals who finished their journeys, and the deepest rivalries, beside your champions.
+    const rivals = rivalHallOfFame(session.profile.legacyRuns);
+    const TITLE = { champion: '♛ Champion', finalist: 'Finalist', gymLeader: 'Gym Leader' } as const;
+    for (const [i, rv] of rivals.entries()) {
+      const region = rv.regionId ? content.regions.get(rv.regionId)?.name ?? rv.regionId : 'an unknown region';
+      rows.push({
+        problem: null,
+        hint: `${rv.name} · ${rv.title ? `${TITLE[rv.title]} of ${region}` : `rival in ${region}`} · met ${rv.encounters}× · ${rv.relationship}${rv.resolution ? ` (${rv.resolution} ending)` : ''} · ${rv.defeatedByYou ? 'you beat them' : 'you never beat them'} · ${rv.endedAt.slice(0, 10)}`,
+        draw: (_scene, box, w) => {
+          heading(box, `⚔ Rival Hall of Fame · ${rv.name}${rv.title ? ` · ${TITLE[rv.title]}` : ''}`, '#ff9fb8');
+          if (rv.signature) icon(box, rv.signature, 40, 64, 1.8, false, i);
+          box.add(this.add.text(80, 46, `${rv.signature ? `${name(rv.signature)}  ·  ` : ''}${region}  ·  met ${rv.encounters}×  ·  ${rv.relationship}  ·  ${rv.defeatedByYou ? 'You beat them' : 'Undefeated by you'}`, textStyle(16, '#ffffff', { wordWrap: { width: w - 100 } })));
         },
       });
     }
