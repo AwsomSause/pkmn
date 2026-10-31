@@ -27,6 +27,8 @@ import { animSettingsFrom } from '../../core/accessibility';
 import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry';
 import '../../core/presentation/abilityAnims';
 import { playAbilityAnim, playTextAnim } from './abilityFx';
+import '../../core/presentation/storyAnims';
+import { playStoryAnim } from './storyFx';
 import { playAnim, type PlayHandle } from './animPlayer';
 import { playScript } from './scriptPlayer';
 import { playFamily } from './familyFx';
@@ -158,7 +160,25 @@ export class BattleFx {
       case 'textAnim':
         this.textAnim(cue.side, cue.anim, cue.label);
         return;
+      case 'storyAnim':
+        return this.flourish(cue.side, cue.anim);
     }
+  }
+
+  /**
+   * A registered Hyper/Overdrive, interaction or rival flourish on one side. `at` places it when
+   * the Pokémon is already off the field. Decoration only; resolves when it has mostly played.
+   */
+  async flourish(side: Side, anim: string, at?: { x: number; y: number }): Promise<void> {
+    const plan = this.plan(anim);
+    if (!plan || !plan.play) return;
+    const visual = this.opts.sprite(side);
+    const spot = visual ? this.centre(visual) : at;
+    if (!spot) return;
+    const other = this.opts.sprite(side === 'player' ? 'enemy' : 'player');
+    const foe = other ? { visual: other, at: this.centre(other) } : null;
+    const tools = { scene: this.scene, field: this.opts.field, side, at: spot, label: '', plan, slot: 0, shake: (px: number) => this.shake(px), visual: visual ?? null, foe };
+    await Promise.race([playStoryAnim(tools), this.wait(plan.ms + 400)]);
   }
 
   // ---------------------------------------------------------------- loading

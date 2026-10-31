@@ -38,6 +38,10 @@ import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
+import { animSettingsFrom } from '../core/accessibility';
+import { resolveAnim } from '../core/presentation/animRegistry';
+import '../core/presentation/storyAnims';
+import { rivalIntro } from '../ui/battleFx/storyFx';
 import { itemVisual, pokemonIcon, pokemonVisual, trainerVisual, type Visual } from '../ui/sprites';
 import { bossVictory } from '../ui/battleFx/victoryLook';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, STATUS_LABELS, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
@@ -1067,6 +1071,8 @@ export class BattleScene extends Phaser.Scene {
     } else if (title && isUltimateBattle(this.run)) {
       await this.playBeat(titleCard(this, `${ULTIMATE_EMBLEM} ULTIMATE RIVAL ${ULTIMATE_EMBLEM}`, title, ROLE_RIMS.ultimate, this.motion));
     } else if (title && (battle.rivalId || battle.rival)) {
+      // The rival's own entrance (6.5) comes before the usual title card.
+      await this.playBeat(rivalIntro(this, resolveAnim('rival.intro', animSettingsFrom(services().session.settings)), `${title.toUpperCase()} CHALLENGES YOU`, art ? (x, y) => trainerVisual(this, art.assetId, art.label, x, y, 2.5) : undefined, ROLE_RIMS.rival));
       await this.playBeat(titleCard(this, 'RIVAL', title, ROLE_RIMS.rival, this.motion));
     }
   }
@@ -1544,6 +1550,7 @@ export class BattleScene extends Phaser.Scene {
       this.scene.start(sceneForRun(result.run));
       return;
     }
+    if (this.role === 'rival' && (result.narrativeDefeat || result.wiped || result.defeated)) await this.fx.flourish('enemy', 'rival.win', ENEMY_POS);
     if (result.narrativeDefeat) {
       await this.say(result.narrativeDefeat.defeatLine);
       await this.say(result.narrativeDefeat.victoryLine);
@@ -1574,6 +1581,8 @@ export class BattleScene extends Phaser.Scene {
       playMusic(this, victoryTrack({ trainer: Boolean(trainer), boss: Boolean(bossWin), role: this.role }));
     }
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
+    // The rival's victory and defeat poses (6.5); pure decoration after the battle is decided.
+    if (this.role === 'rival' && end.outcome === 'win') void this.fx.flourish('enemy', 'rival.lose', ENEMY_POS);
     if (end.outcome === 'win' && trainer) {
       await this.playBeat(stamp(this, 'VICTORY!', trainer, this.foeRim(), this.motion));
       if (bossWin) {
@@ -1832,6 +1841,7 @@ export class BattleScene extends Phaser.Scene {
             const team = this.run.battle?.enemyTeam ?? [];
             if (e.side === 'enemy' && this.run.battle?.trainer && team.length > 1 && team[team.length - 1]!.uid === e.uid) {
               void burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 80, this.foeRim(), this.motion);
+              if (this.role === 'rival') void this.fx.flourish('enemy', 'rival.ace');
               await this.playBeat(stamp(this, 'ACE!', this.speciesName(this.shown.enemy), this.foeRim(), this.motion));
             }
           }
@@ -1904,6 +1914,7 @@ export class BattleScene extends Phaser.Scene {
         case 'ball':
           await this.say(`You threw a ${content.items.get(e.itemId)?.name ?? 'ball'}!`);
           await this.animateBall(e.itemId, e.shakes, e.caught);
+          if (e.caught) await this.fx.flourish('enemy', 'interaction.catch', ENEMY_POS);
           break;
         case 'xp':
           if (e.uid === this.shown.player.uid) {
