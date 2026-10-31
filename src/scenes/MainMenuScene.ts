@@ -9,6 +9,7 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/t
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
 import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { loadAssets, queueAssets } from '../ui/lazyAssets';
+import { continueCard } from '../ui/loadCard';
 import { pokemonAssetIds } from '../assets/catalog';
 import { BATTLE_UI_LABELS, BATTLE_UI_STYLES } from '../ui/battleUiStyles';
 import { sceneForRun } from './routing';
@@ -22,7 +23,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   preload(): void {
-    queueAssets(this, ['ui.optionsbg']);
+    queueAssets(this, ['ui.optionsbg', 'ui.load.card']);
   }
 
   create(data?: { focus?: number; page?: 'settings' }): void {
@@ -38,14 +39,18 @@ export class MainMenuScene extends Phaser.Scene {
       shade.fillStyle(0x0e0b12, 0.6 * (1 - i / 20));
       shade.fillRect(i * 24, 0, 24, GAME_HEIGHT);
     }
+    // With a saved run, the UIE Load card shows it (trainer, stage, party) where the random Pokémon would stand.
+    const card = this.page === 'main' && session.savedRun.status === 'ok' ? continueCard(this, session.content, session.savedRun.data, 470, 130) : null;
     const species = [...session.content.species.values()].filter((sp) => !sp.id.includes('-'));
     const mon = new ShowcaseMon(this, 740, 336, PIXEL_SCALE, 230);
     const pick = () => {
       const sp = Phaser.Utils.Array.GetRandom(species);
       if (sp) void loadAssets(this, [pokemonAssetIds(sp.assets).front]).then(() => this.scene.isActive() && mon.show(sp));
     };
-    pick();
-    this.time.addEvent({ delay: 6500, loop: true, callback: pick });
+    if (!card) {
+      pick();
+      this.time.addEvent({ delay: 6500, loop: true, callback: pick });
+    }
 
     if (this.page === 'settings' && this.textures.exists('ui.optionsbg')) {
       // The UIE Options screen (its own "Options" title bar) replaces the logo while settings are open.
@@ -83,11 +88,19 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.cycleAnimations(),
     });
     settingsOptions.push({
-      option: { label: `Effects: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
-      action: () => this.cycleIntensity(),
+      option: { label: `Flashes: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
+      action: () => this.cycleIntensity('effectIntensity'),
+    });
+    settingsOptions.push({
+      option: { label: `Screen shake: ${Math.round(session.settings.shakeIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
+      action: () => this.cycleIntensity('shakeIntensity'),
+    });
+    settingsOptions.push({
+      option: { label: `Particles: ${session.settings.reduceParticles ? 'Reduced' : 'Full'}` },
+      action: () => this.toggleParticles(),
     });
 
-    const speedLabels = { normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
+    const speedLabels = { showcase: 'Showcase', normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
     settingsOptions.push({
       option: { label: `Battle speed: ${speedLabels[session.settings.battleSpeed]}` },
       action: () => this.cycleSpeed(),
@@ -205,18 +218,25 @@ export class MainMenuScene extends Phaser.Scene {
   /** Battle speed: normal → fast → quick. */
   private cycleSpeed(): void {
     const { session } = services();
-    const order = ['normal', 'fast', 'quick'] as const;
+    const order = ['normal', 'fast', 'quick', 'showcase'] as const;
     const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleSpeed: next , accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
-  /** Strength of screen shake and flashes: 100% → 50% → 25%. */
-  private cycleIntensity(): void {
+  /** Reduced particles: ambience keeps its clouds and fog but drops the drifting specks. */
+  private toggleParticles(): void {
     const { session } = services();
-    const order = [1, 0.5, 0.25];
-    const i = order.findIndex((v) => Math.abs(v - session.settings.effectIntensity) < 0.01);
-    session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! , accessibilityProfile: 'custom' });
+    session.saveSettings({ ...session.settings, reduceParticles: !session.settings.reduceParticles, accessibilityProfile: 'custom' });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
+  }
+
+  /** Strength of flashes or of screen shake: 100% → 50% → 25% → 0%. */
+  private cycleIntensity(key: 'effectIntensity' | 'shakeIntensity'): void {
+    const { session } = services();
+    const order = [1, 0.5, 0.25, 0];
+    const i = order.findIndex((v) => Math.abs(v - session.settings[key]) < 0.01);
+    session.saveSettings({ ...session.settings, [key]: order[(i + 1) % order.length]!, accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 

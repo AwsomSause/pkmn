@@ -3588,6 +3588,157 @@
       "eligibilityTags": [],
       "emotions": [],
       "variants": {}
+    },
+    {
+      "id": "bitter-rivalry",
+      "displayName": "It Hasn't Forgotten That Loss!",
+      "messagePool": [
+        "{name} sees {enemy} again, the one that beat it when it was nearly down. It won't lose twice!",
+        "{name} glares at {enemy}. This time will be different!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "bitterRivalry"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Faced {enemy} again, its bitter rival"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#e2463c",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "rivalry-mutual",
+      "displayName": "Now It's a Real Rivalry!",
+      "messagePool": [
+        "{name} finally beat {enemy}! Now {enemy} knows its name.",
+        "{enemy} never noticed {name} before. It will now!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "rivalryMutual"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "friendship",
+        "amount": 10
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Finally beat {enemy}, and the rivalry became mutual"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb23e",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "friendly-tag",
+      "displayName": "Friendly Rivals Tag In!",
+      "messagePool": [
+        "{name} tags in for {other}: \"Watch this!\"",
+        "{other} steps back and {name} jumps in, determined to outdo it!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "friendlyTag"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Tagged in for its friendly rival {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#52d18b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "generational-rivalry",
+      "displayName": "It Has Grown Since Last Time!",
+      "messagePool": [
+        "{trainer}'s {other} has evolved into {name} since your last battle!",
+        "Last time it was {other}. Now {trainer} brings {name}!"
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "generationalRivalry"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Saw {trainer}'s {other} return as {name}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#9a7bff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -4005,6 +4156,7 @@
       }
     ],
     "moralityAt": 3,
-    "studiedAfter": 3
+    "studiedAfter": 3,
+    "oneSidedGap": 5
   }
 }

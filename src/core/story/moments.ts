@@ -18,6 +18,8 @@ import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
 import { emotionOf } from './emotions';
 import { mentorshipOf } from './mentorship';
+import { grownSince, speciesRivalry } from './rivalryKinds';
+import { friendlyRivalsOf } from './hyper';
 import { forgetMorality, nemesisById, rememberedMorality, rivalryBothWays } from './nemesis';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
@@ -92,6 +94,10 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   studiedStrategy: 'enemyStage',
   notForgottenKindness: 'enemyStage',
   notForgottenCruelty: 'enemyStage',
+  bitterRivalry: 'statStage',
+  rivalryMutual: 'friendship',
+  friendlyTag: 'statStage',
+  generationalRivalry: 'flair',
   rememberDefeat: 'flair',
   notOverBetweenUs: 'flair',
   fightingForPride: 'enemyStage',
@@ -229,8 +235,12 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
         break;
       case 'switchIn':
         if (e.side === 'player') {
+          const from = leadUid ? run.party.find((m) => m.uid === leadUid) : undefined;
           leadUid = e.uid;
           const mon = run.party.find((m) => m.uid === e.uid);
+          // Friendly rivals (left-out 5.4): one tags in for the other while both can still fight.
+          if (mon && from && from.uid !== mon.uid && from.hp > 0 && friendlyRivalsOf(run, mon.uid).includes(from.uid)) fire('friendlyTag', 'player', mon.uid, i, { name: nameOf(mon.speciesId), other: nameOf(from.speciesId) });
+          if (mon && speciesRivalry(run, mon.uid, foe.speciesId)?.tone === 'bitter') fire('bitterRivalry', 'player', mon.uid, i, { name: nameOf(mon.speciesId), enemy: nameOf(foe.speciesId) });
           if (mon && boss && mon.friendship >= 150) fire('makeYouProud', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
           if (mon && flags[flagKey('fell')]) fire('cameToAid', 'player', mon.uid, i, { name: nameOf(mon.speciesId) });
           // Bond pairs (More Than Teammates): They Understand Each Other Perfectly / It Won't Let Its Friend Fight Alone.
@@ -341,6 +351,11 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (feltRival && stung && stung.result === 'win' && stung.hpLeftShare >= content.story.nemesis.proveShare && rareFoe('somethingToProve', foe.uid)) {
       fire('somethingToProve', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
     }
+    // Bitter Rivalry (left-out 5.4): your lead meets the species that beat it when it was nearly down.
+    if (speciesRivalry(run, lead.uid, foe.speciesId)?.tone === 'bitter') fire('bitterRivalry', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
+    // Generational Rivalry: a returning rival's Pokémon has evolved since the last battle.
+    const grown = feltRival ? grownSince(content, feltRival.memory.lastBattle.team, battle.enemyTeam.map((m) => m.speciesId)) : null;
+    if (grown) fire('generationalRivalry', 'enemy', foe.uid, -1, { name: nameOf(grown.to), other: nameOf(grown.from), trainer: battle.trainer?.name ?? feltRival!.name });
     // Rivalry callbacks (left-out 5.3): both sides have won, or it has faced your team often enough to study it.
     if (feltRival && rivalryBothWays(run, feltRival.id) && rareFoe('rivalryGrown', foe.uid)) fire('rivalryGrown', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
     if (feltRival && feltRival.encounters >= content.story.nemesis.studiedAfter && rareFoe('studiedStrategy', foe.uid)) fire('studiedStrategy', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });

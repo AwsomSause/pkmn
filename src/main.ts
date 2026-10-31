@@ -81,6 +81,9 @@ function start(): void {
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
+        // Screen readers get a name for the game area (the game itself is drawn on the canvas).
+        g.canvas.setAttribute('role', 'application');
+        g.canvas.setAttribute('aria-label', 'Pocket Raiders, a Pokémon roguelike. Keyboard: arrows, Z/Enter to confirm, X/Esc to go back.');
         // Every screen fades in. Screens without their own scenery get a dimmed,
         // slowly changing battlefield behind them (the battle and map draw their own).
         const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
