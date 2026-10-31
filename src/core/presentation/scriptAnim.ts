@@ -69,7 +69,7 @@ export const ScriptAnimSchema = z.object({
   length: z.number().positive().max(4000),
   /** A colour veil over the field, to make the effect stand out. */
   veil: z.object({ color: z.string().regex(/^#[0-9a-f]{6}$/i), alpha: z.number().min(0).max(1), inMs: z.number().min(0), outMs: z.number().min(0) }).optional(),
-  layers: z.array(Layer).min(1).max(8),
+  layers: z.array(Layer).max(8),
   /** What the target does: a bounce-back squash, a shake, a colour flash. */
   hit: z
     .object({
@@ -79,6 +79,8 @@ export const ScriptAnimSchema = z.object({
       flash: z.object({ color: z.string().regex(/^#[0-9a-f]{6}$/i), ms: z.number().positive() }).optional(),
     })
     .optional(),
+  /** The user's own shake (a roar, a wind-up). */
+  userShake: z.object({ at: z.number().min(0), ms: z.number().positive(), amp: z.number().positive() }).optional(),
   /** Sound effects: ids of public/assets/audio/ebdx/<id>.m4a and when they play. */
   sfx: z.array(z.object({ at: z.number().min(0), id: z.string().min(1), vol: z.number().min(0).max(1).default(0.6) })).default([]),
 });
