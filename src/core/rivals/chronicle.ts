@@ -6,7 +6,7 @@ import catalog from '../../data/rivalCatalog.json';
 import { FEELING_NAMES, rivalFeeling } from './feelings';
 import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG, RIVAL_WORLD } from './schema';
-import { ultimateRival } from './ultimate';
+import { everUltimateFlag, ultimateQuest, ultimateRival, type UltimateQuestStep } from './ultimate';
 
 export interface RivalLine {
   /** "Youngster Joey, The Prodigy". */
@@ -21,6 +21,8 @@ export interface RivalLine {
   state: string;
   /** True for the rival the story follows. */
   ultimate: boolean;
+  /** The Ultimate Rival quest chain, for a rival that is or was the Ultimate Rival (else empty). */
+  quest: UltimateQuestStep[];
 }
 
 export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
@@ -37,6 +39,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       summary: `Fights as ${style?.name ?? r.style}. Strongest trait: ${topTrait[0]} (${topTrait[1]}).`,
       state: `${r.state[0]!.toUpperCase() + r.state.slice(1)}, feels ${FEELING_NAMES[rivalFeeling(r).feeling].toLowerCase()}`,
       ultimate: ultimateRival(run)?.id === r.id,
+      quest: run.story.flags[everUltimateFlag(r.id)] ? ultimateQuest(run, r) : [],
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
       bonds: [...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };

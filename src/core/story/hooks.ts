@@ -22,7 +22,7 @@ import { advanceArc } from '../rivals/arcs';
 import { afterBattleBehavior } from '../rivals/bonds';
 import { applyDefeat } from '../rivals/outcome';
 import { triangleEffect } from '../rivals/relations';
-import { evaluateUltimate } from '../rivals/ultimate';
+import { evaluateUltimate, settleUltimateQuest } from '../rivals/ultimate';
 import { applyAnomaly } from './anomaly';
 import { eliteReward } from './elite';
 import { gauntletWon } from './gauntlet';
@@ -505,6 +505,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       advanceArc(content, run, rivalBack);
       afterBattleBehavior(content, run, rivalBack, false);
       triangleEffect(run, rivalBack);
+      if (settleUltimateQuest(content, run, rivalBack)) say(`You settled things with ${title}, the rival who defined your journey`);
       const chosen = evaluateUltimate(run);
       if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
     }

@@ -33,12 +33,18 @@ export const RivalConfigSchema = z.object({
   alliance: z.object({ chance: z.number().min(0).max(1) }),
   identity: z.object({ mentorChance: z.number().min(0).max(1), mentorMinAdaptability: z.number(), grudgeSetbacks: z.number().int(), grudgeMaxEmpathy: z.number() }),
   scheduler: z.object({ intervals: z.record(z.string(), z.number().int().min(1)), minGap: z.number().int().min(1), anyGap: z.number().int().min(0) }),
+  /** The Rival Who Wins Without You (rivals/promotion.ts): progress needed for Gym Leader, finalist and Champion, and the chance per unseen win. */
+  promotion: z.object({ progress: z.array(z.number().int().min(0)).length(3), chance: z.number().min(0).max(1) }),
   world: z.object({ unseenWinBase: z.number(), progressCap: z.number().int(), unseenWinPotential: z.number(), privateGoalChance: z.number(), privateGoalMinAmbition: z.number(), fragileResilience: z.number(), toughResilience: z.number(), edgeChance: z.number(), distortedRumorChance: z.number(), friendMinEmpathy: z.number(), rivalMinAmbition: z.number() }),
   relations: z.object({ exchangeChance: z.number(), exchangeShift: z.number(), influenceConfidence: z.number(), triangleGain: z.number(), triangleMinVindictiveness: z.number(), substituteStrain: z.number(), legacyCloseNote: z.boolean() }),
   ultimate: z.object({
     weights: z.object({ intensity: z.number(), history: z.number(), threat: z.number(), stakes: z.number(), relevance: z.number(), progression: z.number(), unresolved: z.number() }),
     minEncounters: z.number().int().min(0),
     switchMargin: z.number().min(0),
+    /** The Ultimate Rival quest chain: wins that settle it, and its one-time reward. */
+    quest: z.object({ settleWins: z.number().int().min(1), money: z.number().int().min(0), itemId: z.string(), quantity: z.number().int().min(1) }),
+    /** How many Previous Ultimate Rivals the Story screen lists. */
+    pastShown: z.number().int().min(0),
   }),
 });
 export type RivalConfig = z.infer<typeof RivalConfigSchema>;

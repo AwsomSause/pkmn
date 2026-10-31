@@ -20722,6 +20722,114 @@
    ]
   },
   {
+   "id": "rival-gift",
+   "name": "A Friend Pays You Back",
+   "group": "Event Director events",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalAlly"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a38",
+    "effect": "hearts"
+   },
+   "intro": "A rival you once fought, now a friend, is waiting by the road with a worn Poké Ball. \"I trained this one for you. Take it. You earned it.\"",
+   "choices": [
+    {
+     "label": "Accept the gift",
+     "success": {
+      "text": "The Pokémon is yours, raised by someone who respected you.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": 2,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline politely",
+     "success": {
+      "text": "\"Then keep it in mind for later.\" They share training tips instead.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-swap",
+   "name": "A Swap Between Friends",
+   "group": "Event Director events",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalAlly"
+    },
+    {
+     "kind": "partySize",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a38",
+    "effect": "sparkle"
+   },
+   "intro": "Your old rival wants to trade, no tricks: one of your weaker Pokémon for one of theirs, both raised well.",
+   "choices": [
+    {
+     "label": "Trade (an unevolved Pokémon goes)",
+     "success": {
+      "text": "A fair swap between friends.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "an unevolved Pokémon",
+         "stage": 1
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": 3,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "quiet-bond",
    "name": "Two Who Understand Each Other",
    "group": "Event Director events",

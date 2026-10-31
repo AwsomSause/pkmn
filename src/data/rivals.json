@@ -38,7 +38,13 @@
    "unresolved": 5
   },
   "minEncounters": 1,
-  "switchMargin": 10
+  "switchMargin": 10,
+  "quest": { "settleWins": 3, "money": 2500, "itemId": "full-restore", "quantity": 2 },
+  "pastShown": 5
+ },
+ "promotion": {
+  "progress": [1, 2, 3],
+  "chance": 0.5
  },
  "world": {
   "unseenWinBase": 0.5,
