@@ -49,7 +49,7 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
     expect(result.during, `${name} draws pictures`).toBeGreaterThan(0);
     expect(result.left, `${name} cleans up`).toBe(0);
     expect(result.after, `${name} restores the Pokémon`).toEqual(result.before);
-    if (i === 3) await page.screenshot({ path: 'test-results/ebdx-thunderbolt.png' });
+    if (name === 'thunderbolt') await page.screenshot({ path: 'test-results/ebdx-thunderbolt.png' });
   }
   expect(errors).toEqual([]);
 });

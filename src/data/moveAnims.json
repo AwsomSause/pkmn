@@ -10900,7 +10900,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-growl"
+      "pack": "ess-growl",
+      "script": "growl"
     },
     "tail-whip": {
       "anim": "tail-whip",
@@ -11926,7 +11927,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "quick",
-      "pack": "ess-bullet-punch"
+      "pack": "ess-bullet-punch",
+      "script": "comet-punch"
     },
     "buzzy-buzz": {
       "anim": "buzzy-buzz",
@@ -12273,7 +12275,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-fake-tears"
+      "pack": "ess-fake-tears",
+      "script": "growl"
     },
     "false-surrender": {
       "anim": "false-surrender",
@@ -12876,7 +12879,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "nuzzle": {
       "anim": "nuzzle",
@@ -13257,7 +13261,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 62,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "steel-wing": {
       "anim": "steel-wing",
@@ -13407,7 +13412,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "torch-song": {
       "anim": "torch-song",
@@ -13646,7 +13652,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-comet-punch"
+      "pack": "ess-comet-punch",
+      "script": "comet-punch"
     },
     "confuse-ray": {
       "anim": "confuse-ray",
@@ -13966,7 +13973,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "protect": {
       "anim": "protect",
@@ -14297,7 +14305,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "all-out-pummeling": {
       "anim": "bulk-up",
@@ -14356,7 +14365,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "assurance": {
       "anim": "assurance",
@@ -14502,7 +14512,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "bestow": {
       "anim": "bestow",
@@ -15148,7 +15159,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "eruption": {
       "anim": "eruption",
@@ -15812,7 +15824,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "grass-pledge": {
       "anim": "grass-pledge",
@@ -16877,7 +16890,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "pay-day": {
       "anim": "pay-day",
@@ -17210,7 +17224,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "razor-wind": {
       "anim": "razor-wind",
@@ -18547,7 +18562,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     }
   },
   "commonPack": {
