@@ -150,7 +150,7 @@ export interface PlannedMember {
   moves?: string[];
   /** Bosses only: extra vitamin-style stacks per stat. */
   training?: Partial<Record<StatName, number>>;
-  /** Bosses past level 100 only (bossBands.ts): held items (item id → copies). */
+  /** Held items (item id → copies): bosses past level 100 (bossBands.ts) and trainer tiers (trainerTiers.ts). */
   held?: Record<string, number>;
 }
 

@@ -1,0 +1,775 @@
+{
+ "enabled": true,
+ "score": {
+  "stageWeight": 1,
+  "partyWeight": 0.5,
+  "repeatWeight": 1.5,
+  "rematchWeight": 3,
+  "importanceWeight": 8
+ },
+ "maxOrdinaryTier": "elite",
+ "tiers": [
+  {
+   "id": "early",
+   "label": "Early",
+   "minScore": 0,
+   "ladderChance": 0,
+   "heldChance": 0,
+   "training": 0,
+   "coverageMoves": false,
+   "strategyMoves": false,
+   "ai": 0
+  },
+  {
+   "id": "developing",
+   "label": "Developing",
+   "minScore": 6,
+   "ladderChance": 0.5,
+   "heldChance": 0,
+   "training": 0,
+   "coverageMoves": true,
+   "strategyMoves": false,
+   "ai": 0.2
+  },
+  {
+   "id": "experienced",
+   "label": "Experienced",
+   "minScore": 14,
+   "ladderChance": 0.6,
+   "heldChance": 0.4,
+   "training": 1,
+   "coverageMoves": true,
+   "strategyMoves": false,
+   "ai": 0.4
+  },
+  {
+   "id": "advanced",
+   "label": "Advanced",
+   "minScore": 24,
+   "ladderChance": 0.7,
+   "heldChance": 0.7,
+   "training": 2,
+   "coverageMoves": true,
+   "strategyMoves": true,
+   "ai": 0.6
+  },
+  {
+   "id": "elite",
+   "label": "Elite",
+   "minScore": 40,
+   "ladderChance": 0.8,
+   "heldChance": 1,
+   "training": 3,
+   "coverageMoves": true,
+   "strategyMoves": true,
+   "ai": 0.8
+  },
+  {
+   "id": "champion",
+   "label": "Champion",
+   "minScore": 9999,
+   "ladderChance": 0.9,
+   "heldChance": 1,
+   "training": 3,
+   "coverageMoves": true,
+   "strategyMoves": true,
+   "ai": 0.9
+  }
+ ],
+ "default": {
+  "held": [
+   "leftovers",
+   "sitrus-berry",
+   "life-orb"
+  ],
+  "leadMoves": [],
+  "aceMoves": [],
+  "trainStat": "atk",
+  "remembers": true
+ },
+ "memory": {
+  "chance": 0.6,
+  "levelBonus": 2,
+  "counterTypes": 1,
+  "maxRemembered": 1
+ },
+ "classes": {
+  "youngster": {
+   "ladder": {
+    "early": [
+     "rattata",
+     "pidgey"
+    ],
+    "developing": [
+     "raticate",
+     "fearow",
+     "pidgeotto"
+    ],
+    "advanced": [
+     "pidgeot",
+     "persian",
+     "tauros",
+     "snorlax"
+    ],
+    "elite": [
+     "pidgeot",
+     "tauros",
+     "snorlax",
+     "persian"
+    ]
+   },
+   "held": [
+    "scope-lens",
+    "quick-claw",
+    "muscle-band"
+   ],
+   "leadMoves": [
+    "u-turn"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "extreme-speed"
+   ],
+   "trainStat": "atk",
+   "remembers": false
+  },
+  "bug-catcher": {
+   "ladder": {
+    "early": [
+     "caterpie",
+     "weedle",
+     "wurmple"
+    ],
+    "developing": [
+     "metapod",
+     "kakuna",
+     "silcoon",
+     "cascoon"
+    ],
+    "advanced": [
+     "butterfree",
+     "beedrill",
+     "heracross",
+     "vespiquen"
+    ],
+    "elite": [
+     "scizor",
+     "volcarona",
+     "heracross",
+     "pinsir"
+    ]
+   },
+   "held": [
+    "insect-plate",
+    "wise-glasses",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "sticky-web",
+    "toxic-spikes"
+   ],
+   "aceMoves": [
+    "quiver-dance",
+    "bug-buzz"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "hiker": {
+   "ladder": {
+    "early": [
+     "geodude",
+     "onix"
+    ],
+    "developing": [
+     "graveler",
+     "onix"
+    ],
+    "advanced": [
+     "golem",
+     "rhydon",
+     "steelix"
+    ],
+    "elite": [
+     "tyranitar",
+     "rhydon",
+     "golem"
+    ]
+   },
+   "held": [
+    "hard-stone",
+    "soft-sand",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "stealth-rock",
+    "sandstorm"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "stone-edge"
+   ],
+   "trainStat": "def",
+   "remembers": true
+  },
+  "fisherman": {
+   "ladder": {
+    "early": [
+     "magikarp",
+     "goldeen",
+     "tentacool"
+    ],
+    "developing": [
+     "poliwhirl",
+     "seaking",
+     "tentacruel"
+    ],
+    "advanced": [
+     "gyarados",
+     "starmie",
+     "lapras"
+    ],
+    "elite": [
+     "politoed",
+     "gyarados",
+     "lapras"
+    ]
+   },
+   "held": [
+    "mystic-water",
+    "sitrus-berry",
+    "leftovers"
+   ],
+   "leadMoves": [
+    "rain-dance",
+    "toxic-spikes"
+   ],
+   "aceMoves": [
+    "dragon-dance",
+    "scald"
+   ],
+   "trainStat": "hp",
+   "remembers": true
+  },
+  "bird-keeper": {
+   "ladder": {
+    "early": [
+     "pidgey",
+     "spearow"
+    ],
+    "developing": [
+     "pidgeotto",
+     "fearow",
+     "swellow"
+    ],
+    "advanced": [
+     "pidgeot",
+     "staraptor",
+     "honchkrow"
+    ],
+    "elite": [
+     "braviary",
+     "corviknight",
+     "pidgeot"
+    ]
+   },
+   "held": [
+    "sharp-beak",
+    "scope-lens",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "tailwind",
+    "u-turn"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "brave-bird"
+   ],
+   "trainStat": "spe",
+   "remembers": true
+  },
+  "black-belt": {
+   "ladder": {
+    "early": [
+     "mankey",
+     "machop",
+     "makuhita"
+    ],
+    "developing": [
+     "primeape",
+     "machoke",
+     "hariyama"
+    ],
+    "advanced": [
+     "machamp",
+     "medicham",
+     "lucario"
+    ],
+    "elite": [
+     "conkeldurr",
+     "lucario",
+     "machamp"
+    ]
+   },
+   "held": [
+    "black-belt",
+    "muscle-band",
+    "expert-belt"
+   ],
+   "leadMoves": [
+    "fake-out",
+    "mach-punch"
+   ],
+   "aceMoves": [
+    "bulk-up",
+    "close-combat"
+   ],
+   "trainStat": "atk",
+   "remembers": true
+  },
+  "firebreather": {
+   "ladder": {
+    "early": [
+     "growlithe",
+     "vulpix",
+     "charmander"
+    ],
+    "developing": [
+     "ponyta",
+     "magmar",
+     "houndour"
+    ],
+    "advanced": [
+     "arcanine",
+     "ninetales",
+     "charizard",
+     "houndoom"
+    ],
+    "elite": [
+     "talonflame",
+     "chandelure",
+     "magmortar",
+     "volcarona"
+    ]
+   },
+   "held": [
+    "charcoal",
+    "heat-rock",
+    "life-orb"
+   ],
+   "leadMoves": [
+    "sunny-day",
+    "will-o-wisp"
+   ],
+   "aceMoves": [
+    "calm-mind",
+    "flamethrower"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "guitarist": {
+   "ladder": {
+    "early": [
+     "pikachu",
+     "voltorb",
+     "magnemite"
+    ],
+    "developing": [
+     "electrode",
+     "magneton",
+     "shinx"
+    ],
+    "advanced": [
+     "raichu",
+     "luxray",
+     "manectric"
+    ],
+    "elite": [
+     "jolteon",
+     "rotom",
+     "zebstrika"
+    ]
+   },
+   "held": [
+    "magnet",
+    "wise-glasses",
+    "choice-scarf"
+   ],
+   "leadMoves": [
+    "electric-terrain",
+    "thunder-wave"
+   ],
+   "aceMoves": [
+    "nasty-plot",
+    "thunderbolt"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "aroma-lady": {
+   "ladder": {
+    "early": [
+     "oddish",
+     "bellsprout",
+     "bulbasaur"
+    ],
+    "developing": [
+     "gloom",
+     "weepinbell",
+     "ivysaur"
+    ],
+    "advanced": [
+     "vileplume",
+     "victreebel",
+     "venusaur",
+     "roserade"
+    ],
+    "elite": [
+     "roserade",
+     "tangrowth",
+     "whimsicott",
+     "lilligant"
+    ]
+   },
+   "held": [
+    "miracle-seed",
+    "leftovers",
+    "sitrus-berry"
+   ],
+   "leadMoves": [
+    "leech-seed",
+    "sleep-powder"
+   ],
+   "aceMoves": [
+    "spore",
+    "energy-ball"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "snow-worker": {
+   "ladder": {
+    "early": [
+     "snorunt",
+     "swinub",
+     "sneasel"
+    ],
+    "developing": [
+     "glalie",
+     "piloswine",
+     "sneasel"
+    ],
+    "advanced": [
+     "froslass",
+     "weavile",
+     "mamoswine"
+    ],
+    "elite": [
+     "abomasnow",
+     "weavile",
+     "mamoswine",
+     "glaceon"
+    ]
+   },
+   "held": [
+    "nevermeltice",
+    "icy-rock",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "snowscape",
+    "aurora-veil"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "ice-shard"
+   ],
+   "trainStat": "atk",
+   "remembers": true
+  },
+  "biker": {
+   "ladder": {
+    "early": [
+     "ekans",
+     "grimer",
+     "koffing"
+    ],
+    "developing": [
+     "arbok",
+     "muk",
+     "weezing"
+    ],
+    "advanced": [
+     "crobat",
+     "toxicroak",
+     "drapion"
+    ],
+    "elite": [
+     "crobat",
+     "toxicroak",
+     "drapion",
+     "gengar"
+    ]
+   },
+   "held": [
+    "poison-barb",
+    "black-belt",
+    "life-orb"
+   ],
+   "leadMoves": [
+    "toxic-spikes",
+    "toxic"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "poison-jab"
+   ],
+   "trainStat": "atk",
+   "remembers": true
+  },
+  "psychic": {
+   "ladder": {
+    "early": [
+     "abra",
+     "drowzee",
+     "ralts"
+    ],
+    "developing": [
+     "kadabra",
+     "hypno",
+     "kirlia"
+    ],
+    "advanced": [
+     "alakazam",
+     "gardevoir",
+     "espeon"
+    ],
+    "elite": [
+     "alakazam",
+     "gardevoir",
+     "espeon",
+     "jynx"
+    ]
+   },
+   "held": [
+    "twistedspoon",
+    "wise-glasses",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "psychic-terrain",
+    "reflect",
+    "light-screen"
+   ],
+   "aceMoves": [
+    "calm-mind",
+    "psychic"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "hex-maniac": {
+   "ladder": {
+    "early": [
+     "gastly",
+     "duskull",
+     "shuppet"
+    ],
+    "developing": [
+     "haunter",
+     "dusclops",
+     "banette"
+    ],
+    "advanced": [
+     "gengar",
+     "mismagius",
+     "dusknoir"
+    ],
+    "elite": [
+     "gengar",
+     "chandelure",
+     "spiritomb",
+     "mismagius"
+    ]
+   },
+   "held": [
+    "spell-tag",
+    "wise-glasses",
+    "focus-sash"
+   ],
+   "leadMoves": [
+    "will-o-wisp",
+    "curse"
+   ],
+   "aceMoves": [
+    "nasty-plot",
+    "shadow-ball"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  },
+  "dragon-tamer": {
+   "ladder": {
+    "early": [
+     "dratini",
+     "bagon",
+     "axew"
+    ],
+    "developing": [
+     "dragonair",
+     "shelgon",
+     "fraxure"
+    ],
+    "advanced": [
+     "dragonite",
+     "salamence",
+     "haxorus"
+    ],
+    "elite": [
+     "dragonite",
+     "salamence",
+     "haxorus"
+    ]
+   },
+   "held": [
+    "dragon-fang",
+    "life-orb",
+    "lum-berry"
+   ],
+   "leadMoves": [
+    "rain-dance",
+    "tailwind"
+   ],
+   "aceMoves": [
+    "dragon-dance",
+    "outrage"
+   ],
+   "trainStat": "atk",
+   "remembers": true
+  },
+  "roughneck": {
+   "ladder": {
+    "early": [
+     "poochyena",
+     "houndour",
+     "scraggy"
+    ],
+    "developing": [
+     "mightyena",
+     "houndour",
+     "scrafty"
+    ],
+    "advanced": [
+     "absol",
+     "umbreon",
+     "krookodile",
+     "bisharp"
+    ],
+    "elite": [
+     "tyranitar",
+     "weavile",
+     "bisharp",
+     "krookodile"
+    ]
+   },
+   "held": [
+    "black-belt",
+    "life-orb",
+    "expert-belt"
+   ],
+   "leadMoves": [
+    "sandstorm",
+    "stealth-rock"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "crunch"
+   ],
+   "trainStat": "atk",
+   "remembers": true
+  },
+  "worker": {
+   "ladder": {
+    "early": [
+     "bronzor",
+     "klink",
+     "magnemite"
+    ],
+    "developing": [
+     "klang",
+     "magneton",
+     "bronzor"
+    ],
+    "advanced": [
+     "klinklang",
+     "bronzong",
+     "steelix",
+     "aggron"
+    ],
+    "elite": [
+     "scizor",
+     "excadrill",
+     "metagross",
+     "ferrothorn"
+    ]
+   },
+   "held": [
+    "metal-coat",
+    "leftovers",
+    "rocky-helmet"
+   ],
+   "leadMoves": [
+    "stealth-rock",
+    "spikes"
+   ],
+   "aceMoves": [
+    "swords-dance",
+    "iron-head"
+   ],
+   "trainStat": "def",
+   "remembers": true
+  },
+  "fairy-tale-girl": {
+   "ladder": {
+    "early": [
+     "togepi",
+     "snubbull",
+     "marill"
+    ],
+    "developing": [
+     "clefairy",
+     "granbull",
+     "marill"
+    ],
+    "advanced": [
+     "clefable",
+     "azumarill",
+     "togekiss"
+    ],
+    "elite": [
+     "sylveon",
+     "florges",
+     "togekiss",
+     "azumarill"
+    ]
+   },
+   "held": [
+    "leftovers",
+    "wise-glasses",
+    "sitrus-berry"
+   ],
+   "leadMoves": [
+    "misty-terrain",
+    "reflect"
+   ],
+   "aceMoves": [
+    "calm-mind",
+    "moonblast"
+   ],
+   "trainStat": "spa",
+   "remembers": true
+  }
+ }
+}
