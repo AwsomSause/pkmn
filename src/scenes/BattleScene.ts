@@ -1582,6 +1582,7 @@ export class BattleScene extends Phaser.Scene {
       const mon = result.run.party.find((m) => m.uid === t.uid);
       if (mon) await this.say(`Close to you, ${getSpecies(content, mon.speciesId).name} learned ${content.moves.get(t.moveId)!.name}!`);
     }
+    for (const line of end.recap ?? []) await this.say(line);
     await exitWipe(this, this.motion, this.wipeMask());
     this.scene.start(sceneForRun(result.run));
   }

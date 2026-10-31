@@ -14,6 +14,7 @@ import { calcStats } from '../pokemon';
 import type { Rival } from '../story/schema';
 import { DRAMA, VOICES, pickIndex, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
 import { rivalBond } from './bond';
+import { freshRecap, tallyRecap } from './recap';
 import { afterBattleCandidates, favouredType, flavorPool, playerDeclarationCandidates } from './flavor';
 import { pickWitness, libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 
@@ -132,6 +133,12 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
   const name = (id: string | undefined) => (id ? (content.species.get(id)?.name ?? 'Pokémon') : 'Pokémon');
   const foeMon = run.party[battle.activeIndex];
   const dramaEvents = deriveDramaEvents(content, run, prior, events);
+  state.recap ??= freshRecap();
+  const tallied = `recap:${key}:t${turn}:${events.length}`;
+  if (!state.seen.includes(tallied)) {
+    state.seen.push(tallied);
+    tallyRecap(content, run, state.recap, run.party[(prior ?? battle).activeIndex]?.uid, events);
+  }
 
   // The trainer notes the moves you actually used (visible), and your repeats.
   let habit: { at: number; moveId: string; id: string } | null = null as { at: number; moveId: string; id: string } | null;
