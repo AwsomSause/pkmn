@@ -494,7 +494,8 @@
    "sideMoves": true,
    "setupSafety": true,
    "statusTiming": true,
-   "repetition": true
+   "repetition": true,
+   "fieldPlay": true
   }
  }
 }

@@ -1699,8 +1699,10 @@ export const TrainerAiSchema = z.object({
       statusTiming: z.boolean().default(false),
       /** No Protect twice in a row. */
       repetition: z.boolean().default(false),
+      /** Weather, terrain and speed: rain/sun/terrain damage, weather or terrain moves that help itself more than the foe, Trick Room when slower, Thunder Wave when slower, priority to pick off a worn target. */
+      fieldPlay: z.boolean().default(false),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
