@@ -4933,6 +4933,7 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
 
 /** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
 export const doublesSteps = {
+  actWithRage,
   totemAura,
   totemPhases,
   totemFieldEffect,

@@ -872,6 +872,372 @@
         "rareEncounters": 2
       },
       "grand": "reckoning"
+    },
+    {
+      "id": "ridge-blight",
+      "name": "Blight on the Ridge",
+      "tier": 3,
+      "kind": "regional",
+      "blurb": "A regional threat has cut the ridge road. Scout first, or charge in.",
+      "species": [
+        "houndoom",
+        "weavile"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 230,
+      "entryCost": 150,
+      "shield": {
+        "at": [
+          0.6
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The threat howls across the ridge!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "approaches": [
+        {
+          "id": "scout",
+          "label": "Scout the ridge",
+          "text": "Pay for intel: the boss is weaker and you get more time.",
+          "cost": 200,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 100,
+          "draftDelta": 0
+        },
+        {
+          "id": "rush",
+          "label": "Charge in",
+          "text": "No prep: a tougher boss, a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 15,
+          "rewardPercent": 120,
+          "draftDelta": 1
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.4
+      }
+    },
+    {
+      "id": "harbor-storm",
+      "name": "Harbor Storm",
+      "tier": 4,
+      "kind": "regional",
+      "blurb": "A storm Pokémon has closed the harbor. How you prepare changes the fight.",
+      "species": [
+        "kingdra",
+        "milotic"
+      ],
+      "levelBonus": 3,
+      "hpBoostPercent": 300,
+      "entryCost": 300,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.4,
+          "text": "The storm builds!",
+          "boost": {
+            "spa": 1
+          },
+          "weather": "rain"
+        }
+      ],
+      "approaches": [
+        {
+          "id": "scout",
+          "label": "Gather intel",
+          "text": "Weaker boss, more time.",
+          "cost": 300,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 100,
+          "draftDelta": 0
+        },
+        {
+          "id": "rush",
+          "label": "Sail in now",
+          "text": "A tougher boss and a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 20,
+          "rewardPercent": 130,
+          "draftDelta": 1
+        }
+      ],
+      "modifiers": {
+        "surge": {
+          "type": "water",
+          "boost": 1.2,
+          "text": "The storm surges! Water moves hit harder!"
+        }
+      },
+      "rewards": {
+        "moneyPerLevel": 130,
+        "items": [
+          {
+            "item": "revive",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.4,
+        "rareEncounters": 1
+      }
+    },
+    {
+      "id": "rival-den",
+      "name": "Rival at the Den",
+      "tier": 2,
+      "kind": "rival",
+      "blurb": "A rival trainer is already fighting this Pokémon when you arrive.",
+      "species": [
+        "scizor",
+        "aggron"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 200,
+      "entryCost": 0,
+      "shield": null,
+      "phases": [
+        {
+          "atHp": 0.3,
+          "text": "It lashes out in desperation!",
+          "boost": {
+            "atk": 1
+          }
+        }
+      ],
+      "approaches": [
+        {
+          "id": "help",
+          "label": "Help your rival",
+          "text": "Fight beside them: the boss is already hurt, but the prize is shared.",
+          "cost": 0,
+          "startHp": 0.6,
+          "rewardPercent": 60,
+          "rivalHelps": true
+        },
+        {
+          "id": "compete",
+          "label": "Race for the last hit",
+          "text": "The boss is hurt, but the clock is short.",
+          "cost": 0,
+          "startHp": 0.6,
+          "timerDelta": -8,
+          "rewardPercent": 110,
+          "draftDelta": 1
+        },
+        {
+          "id": "leave",
+          "label": "Leave them to it",
+          "text": "Walk away.",
+          "leave": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 80,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.4
+      }
+    },
+    {
+      "id": "rival-summit",
+      "name": "Rival at the Summit",
+      "tier": 3,
+      "kind": "rival",
+      "blurb": "Your rival has cornered a mighty Pokémon on the summit.",
+      "species": [
+        "lucario",
+        "gallade"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 230,
+      "entryCost": 0,
+      "shield": {
+        "at": [
+          0.3
+        ],
+        "points": 0.15
+      },
+      "phases": [],
+      "approaches": [
+        {
+          "id": "help",
+          "label": "Fight together",
+          "text": "Fight beside them: the boss is already hurt, but the prize is shared.",
+          "cost": 0,
+          "startHp": 0.6,
+          "rewardPercent": 60,
+          "rivalHelps": true
+        },
+        {
+          "id": "compete",
+          "label": "Race for the last hit",
+          "text": "The boss is hurt, but the clock is short.",
+          "cost": 0,
+          "startHp": 0.6,
+          "timerDelta": -8,
+          "rewardPercent": 110,
+          "draftDelta": 1
+        },
+        {
+          "id": "leave",
+          "label": "Let them have it",
+          "text": "Walk away.",
+          "leave": true
+        }
+      ],
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 0.4
+      }
+    },
+    {
+      "id": "anomaly-mirror",
+      "name": "Mirror Anomaly",
+      "tier": 4,
+      "kind": "anomaly",
+      "blurb": "The arena bends: the weakness shifts every few turns and the terrain hums.",
+      "species": [
+        "espeon",
+        "umbreon"
+      ],
+      "levelBonus": 3,
+      "hpBoostPercent": 280,
+      "entryCost": 300,
+      "shield": {
+        "at": [
+          0.5
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.4,
+          "text": "The air warps!",
+          "boost": {
+            "spa": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "modifiers": {
+        "terrain": "psychic",
+        "rotatingWeakness": {
+          "types": [
+            "bug",
+            "ghost",
+            "dark"
+          ],
+          "everyTurns": 3,
+          "boost": 1.5
+        },
+        "noHealing": true
+      },
+      "rewards": {
+        "moneyPerLevel": 130,
+        "items": [
+          {
+            "item": "revive",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.4,
+        "rareEncounters": 1
+      }
+    },
+    {
+      "id": "anomaly-static",
+      "name": "Static Anomaly",
+      "tier": 5,
+      "kind": "anomaly",
+      "blurb": "A distorted arena where one type surges and healing fails.",
+      "species": [
+        "honchkrow",
+        "togekiss"
+      ],
+      "levelBonus": 4,
+      "hpBoostPercent": 350,
+      "entryCost": 500,
+      "shield": {
+        "at": [
+          0.6,
+          0.3
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "Static fills the arena!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          }
+        }
+      ],
+      "telegraph": {
+        "everyTurns": 4,
+        "boost": 1.5,
+        "text": "The anomaly is charging!"
+      },
+      "modifiers": {
+        "surge": {
+          "type": "flying",
+          "boost": 1.3,
+          "text": "The sky surges! Flying moves hit harder!"
+        },
+        "terrain": "electric",
+        "noHealing": true
+      },
+      "rewards": {
+        "moneyPerLevel": 170,
+        "items": [
+          {
+            "item": "revive",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 2,
+        "joinChance": 0.5,
+        "rareEncounters": 2,
+        "megaStones": 1
+      }
     }
   ]
 }
