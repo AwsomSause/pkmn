@@ -620,7 +620,7 @@ export const BattleStateSchema = z.object({
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
   /** Narrative rival defeat (M12): losing this rival fight is part of the story and does not end the run (rivals/narrativeDefeat.ts). */
-  narrative: z.object({ id: z.string() }).optional(),
+  narrative: z.object({ id: z.string(), maxTurns: z.number().int().min(1).default(60) }).optional(),
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),

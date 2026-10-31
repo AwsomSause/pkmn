@@ -1,7 +1,7 @@
 {
   "note": "Narrative rival defeats (M12, spec section 3): a rival fight the player is meant to lose without the run ending. Rare, foreshadowed, once per rival.",
   "enabled": true,
-  "maxPerRun": 1,
+  "maxPerRun": 2,
   "defs": [
     {
       "id": "outclassed",
@@ -12,7 +12,32 @@
       "introLine": "This time the rival does not hold back.",
       "defeatLine": "Your last Pokémon can no longer stand. This is not how it ends, but it hurts.",
       "victoryLine": "I told you I would be ahead of you. Keep up, if you can.",
-      "afterLine": "They say you were beaten by your own rival."
+      "afterLine": "They say you were beaten by your own rival.",
+      "maxTurns": 60
+    },
+    {
+      "id": "second-chapter",
+      "minMeetings": 4,
+      "minRegionIndex": 1,
+      "levelBonus": 8,
+      "maxTurns": 60,
+      "foreshadow": "It smiles like it has already seen how this ends.",
+      "introLine": "The rival's whole team is back, and every one of them looks ready.",
+      "defeatLine": "One by one your Pokémon fall. You gave everything and it was still not enough.",
+      "victoryLine": "Not yet. Come find me when you are really ready.",
+      "afterLine": "Word is the rival crushed you again."
+    },
+    {
+      "id": "last-straw",
+      "minMeetings": 6,
+      "minRegionIndex": 2,
+      "levelBonus": 10,
+      "maxTurns": 60,
+      "foreshadow": "It says the next time you meet will decide everything.",
+      "introLine": "This is the fight the rival has been waiting for.",
+      "defeatLine": "Your last Pokémon goes down. The silence afterwards is the worst part.",
+      "victoryLine": "I did it. I finally did it. Now get up and prove I was right to wait for you.",
+      "afterLine": "They say the rival finally settled it with you."
     }
   ]
 }
