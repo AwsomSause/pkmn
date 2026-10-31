@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { buildEpilogue } from '../core/ending';
 import { materialName } from '../core/crafting';
 import { genderSign } from '../core/gender';
@@ -98,7 +99,7 @@ interface DuoOther {
 }
 
 /** Databox and title-card rim colour for each kind of opponent. */
-const ROLE_RIMS = { wild: 0xff4fd8, trainer: 0xff8a3c, rival: 0xff3048, gym: 0xffc840, elite: 0xb070ff, champion: 0xfff4a0 } as const;
+const ROLE_RIMS = { wild: 0xff4fd8, trainer: 0xff8a3c, rival: 0xff3048, ultimate: 0xff6a20, gym: 0xffc840, elite: 0xb070ff, champion: 0xfff4a0 } as const;
 
 interface InfoBox {
   container: Phaser.GameObjects.Container;
@@ -481,6 +482,8 @@ export class BattleScene extends Phaser.Scene {
     const trainer = this.run.battle?.trainer;
     if (!trainer) return null;
     const boss = this.boss();
+    // A rival standing in for this boss (left-out 5.5) keeps the role's title with its own name.
+    if (boss && this.run.battle?.rivalId) return `${boss.title.replace(boss.name, '').trim()} ${trainer.name}`.trim();
     if (boss) return boss.title;
     const cls = services().session.content.trainers.get(trainer.classId);
     return cls ? `${cls.name} ${trainer.name}` : trainer.name;
@@ -492,6 +495,9 @@ export class BattleScene extends Phaser.Scene {
     if (!trainer) return null;
     const content = services().session.content;
     const boss = this.boss();
+    const standIn = boss && this.run.battle?.rivalId ? this.run.story.rivals.find((r) => r.id === this.run.battle?.rivalId) : undefined;
+    const standInClass = standIn ? content.trainers.get(standIn.classId) : undefined;
+    if (standInClass) return { assetId: standInClass.spriteAssetId, label: trainer.name };
     if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
     if (cls) return { assetId: cls.spriteAssetId, label: cls.name };
@@ -901,7 +907,7 @@ export class BattleScene extends Phaser.Scene {
       const art = this.trainerArt();
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
-        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
+        await this.say(isUltimateBattle(this.run) ? `${title}, your Ultimate Rival, blocks the way!` : battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         if (this.duo) {
@@ -981,6 +987,8 @@ export class BattleScene extends Phaser.Scene {
     if (boss) {
       const types = boss.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join(' / ');
       await this.playBeat(titleCard(this, boss.title, types ? `${types} specialist` : '', ROLE_RIMS[boss.role], this.motion));
+    } else if (title && isUltimateBattle(this.run)) {
+      await this.playBeat(titleCard(this, `${ULTIMATE_EMBLEM} ULTIMATE RIVAL ${ULTIMATE_EMBLEM}`, title, ROLE_RIMS.ultimate, this.motion));
     } else if (title && (battle.rivalId || battle.rival)) {
       await this.playBeat(titleCard(this, 'RIVAL', title, ROLE_RIMS.rival, this.motion));
     }
@@ -992,7 +1000,7 @@ export class BattleScene extends Phaser.Scene {
     const boss = this.boss();
     if (boss) return ROLE_RIMS[boss.role];
     if (!battle?.trainer) return ROLE_RIMS.wild;
-    return battle.rivalId || battle.rival ? ROLE_RIMS.rival : ROLE_RIMS.trainer;
+    return isUltimateBattle(this.run) ? ROLE_RIMS.ultimate : battle.rivalId || battle.rival ? ROLE_RIMS.rival : ROLE_RIMS.trainer;
   }
 
   /** Waits for a presentation beat; confirm/back skips it. */

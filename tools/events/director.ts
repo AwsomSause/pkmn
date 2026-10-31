@@ -2,7 +2,7 @@
 // form in the party, a rival you have fought, a bond between two Pokémon or the region's focus.
 // Each has two to four options with clear risks, so the Director can offer them as "important" stops.
 
-import { $, any, att, better, ch, ev, fight, fr, good, has, heal, leave, lv, out, rp, trainer, type Json, TREASURE } from './dsl.ts';
+import { $, any, join, party, trade, att, better, ch, ev, fight, fr, good, has, heal, leave, lv, out, rp, trainer, type Json, TREASURE } from './dsl.ts';
 
 const D = 'Event Director events';
 const tag = (t: string): Json => ({ kind: 'partyTag', tag: t });
@@ -23,6 +23,16 @@ export const DIRECTOR_EVENTS: Json[] = [
       ch('Train together (safe)', out('You swap training tips. Your team grows.', lv(1, 'party'), fr(5, 'party'))),
       ch('Friendly match', fight('"Right then. No holding back!"', trainer('Old Rival', { size: 3, lv: 1, win: [$(900), any(...TREASURE)] }))),
       ch('Walk on', leave()),
+    ]),
+  ev('rival-gift', 'A Friend Pays You Back', D, { rarity: 'rare', minStage: 3, requires: [{ kind: 'rivalAlly' }], cast: [], effect: 'hearts', tint: '#1d2a38' },
+    'A rival you once fought, now a friend, is waiting by the road with a worn Poké Ball. "I trained this one for you. Take it. You earned it."', [
+      ch('Accept the gift', out('The Pokémon is yours, raised by someone who respected you.', join({ lv: 2 }), fr(8, 'party'))),
+      ch('Decline politely', out('"Then keep it in mind for later." They share training tips instead.', lv(1, 'party'))),
+    ]),
+  ev('rival-swap', 'A Swap Between Friends', D, { rarity: 'rare', minStage: 3, requires: [{ kind: 'rivalAlly' }, party(2)], cast: [], effect: 'sparkle', tint: '#2a2a38' },
+    'Your old rival wants to trade, no tricks: one of your weaker Pokémon for one of theirs, both raised well.', [
+      ch('Trade (an unevolved Pokémon goes)', out('A fair swap between friends.', trade('an unevolved Pokémon', { stage: 1 }), join({ lv: 3 }))),
+      ch('Not today', leave()),
     ]),
   ev('quiet-bond', 'Two Who Understand Each Other', D, { rarity: 'uncommon', minStage: 2, requires: [{ kind: 'bond' }], cast: [], effect: 'hearts', tint: '#2a2a1d' },
     'Two of your Pokémon have drifted away from the group and sit together, watching the sunset without a word.', [

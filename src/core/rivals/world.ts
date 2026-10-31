@@ -16,6 +16,7 @@ import { isHostile, stateFor } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 import { rivalSponsorRoll } from './standing';
 import { rivalTransfers } from './transfer';
+import { promoteRival } from './promotion';
 
 type Edge = RunState['story']['rivalGraph'][number];
 
@@ -65,7 +66,8 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       r.progress = Math.min(w.progressCap, r.progress + 1);
       r.rivalPotential += w.unseenWinPotential;
       r.state = stateFor(r);
-      rumor ??= `${who} won a big battle while you were away`;
+      const promoted = promoteRival(content, run, r, `${run.regionIndex}.${stage}`);
+      rumor = promoted ?? rumor ?? `${who} won a big battle while you were away`;
     } else if (r.traits.resilience < w.fragileResilience) {
       // Unseen defeat that shakes it: it sits out a stage to recover.
       r.cooldown = Math.max(r.cooldown, 1);

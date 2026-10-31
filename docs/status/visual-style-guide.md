@@ -1,0 +1,1 @@
+- Visual style guide (left-out 6.5, part): `docs/quality/VISUAL_STYLE_GUIDE.md` (palettes, layers, motion curves, rejected/unresolved assets, where the visual test shots live). 6.7 (EXP strip check) was already done by `tests/e2e/kitPlates.spec.ts`. Not yet: pixel compare for Hub/Trainer Select, a "before" set, final report.

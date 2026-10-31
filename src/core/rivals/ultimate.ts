@@ -2,12 +2,20 @@
 // stakes and standing make the most compelling central conflict. Evaluated at milestones, never
 // locked at the start, and it can change when the story does.
 
+import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
+import { applyStoryEffect } from '../story/effects';
 import type { Rival } from '../story/schema';
 import { isHostile } from './outcome';
 import { RIVAL_CONFIG } from './schema';
 
 export const ULTIMATE_FLAG = 'ultimateRival';
+/** Set once a rival has ever been the run's Ultimate Rival (it stays in the archive even if the story moves on). */
+export const everUltimateFlag = (id: string) => `ultimate:ever:${id}`;
+/** Set once the Ultimate Rival quest chain for this rival is complete and rewarded. */
+export const ultimateDoneFlag = (id: string) => `ultimate:done:${id}`;
+/** The emblem shown beside the Ultimate Rival's name. */
+export const ULTIMATE_EMBLEM = '★★';
 
 const cap = (n: number) => Math.max(0, Math.min(100, n));
 
@@ -52,5 +60,44 @@ export function evaluateUltimate(run: RunState): Rival | null {
   if (keep && best.r.id !== keep.id && best.score < ultimateScore(keep, run.regionIndex) + RIVAL_CONFIG.ultimate.switchMargin) return null;
   if (keep && best.r.id === keep.id) return null;
   run.story.flags[ULTIMATE_FLAG] = best.r.id;
+  run.story.flags[everUltimateFlag(best.r.id)] = true;
   return best.r;
+}
+
+/** The current battle is against the Ultimate Rival. */
+export function isUltimateBattle(run: RunState): boolean {
+  const id = run.battle?.rivalId;
+  return Boolean(id) && ultimateRival(run)?.id === id;
+}
+
+export interface UltimateQuestStep {
+  text: string;
+  done: boolean;
+}
+
+const rivalWins = (run: RunState, id: string) => Number(run.story.flags[`rivalW:${id}`] ?? 0);
+
+/** The Ultimate Rival quest chain (Rivalry Engine §14): chosen, beaten once, then settled. */
+export function ultimateQuest(run: RunState, rival: Rival): UltimateQuestStep[] {
+  const q = RIVAL_CONFIG.ultimate.quest;
+  const wins = rivalWins(run, rival.id);
+  return [
+    { text: 'Become each other\'s Ultimate Rival', done: Boolean(run.story.flags[everUltimateFlag(rival.id)]) },
+    { text: 'Beat them in a rival battle', done: wins >= 1 },
+    { text: `Settle it: win ${q.settleWins} times, or end the rivalry for good`, done: wins >= q.settleWins || !isHostile(rival) || rival.arc?.resolution != null },
+  ];
+}
+
+/**
+ * After a battle against `rival`: if it is (or was) the Ultimate Rival and every quest step is done, pays the
+ * one-time reward and returns true. Mutates `run`.
+ */
+export function settleUltimateQuest(content: Content, run: RunState, rival: Rival): boolean {
+  if (!run.story.flags[everUltimateFlag(rival.id)] || run.story.flags[ultimateDoneFlag(rival.id)]) return false;
+  if (!ultimateQuest(run, rival).every((s) => s.done)) return false;
+  const q = RIVAL_CONFIG.ultimate.quest;
+  applyStoryEffect(content, run, `ultimate:${rival.id}:money`, { kind: 'money', amount: q.money });
+  applyStoryEffect(content, run, `ultimate:${rival.id}:item`, { kind: 'item', itemId: q.itemId, quantity: q.quantity });
+  run.story.flags[ultimateDoneFlag(rival.id)] = true;
+  return true;
 }

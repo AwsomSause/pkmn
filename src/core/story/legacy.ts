@@ -5,6 +5,7 @@
 
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
+import { playstyleOf } from '../playstyle';
 import { recordGrandLegacy } from './grandEnemy';
 import { emit } from './record';
 import type { PokemonHistory } from './schema';
@@ -114,4 +115,6 @@ export function recordEpitaph(content: Content, run: RunState): void {
   awardLegacyTitles(content, run);
   const text = runEpitaph(content, run);
   if (text) emit(content, run, 'storyMoment', { actors: [], data: { def: 'run-epitaph', suppressed: false }, importance: 95, text: `Epitaph: ${text}` });
+  const style = playstyleOf(run);
+  if (style) emit(content, run, 'storyMoment', { actors: [], data: { def: 'run-playstyle', suppressed: false }, importance: 90, text: `Playstyle: ${style.title}. ${style.line}` });
 }

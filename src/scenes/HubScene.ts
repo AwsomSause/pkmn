@@ -28,6 +28,8 @@ import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { drawHubProps } from '../ui/hubProps';
 import { Picker, type PickerRow } from '../ui/partyPanel';
+import { DexInfo } from '../ui/dexInfo';
+import { dexState } from '../core/presentation/dexInfo';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
@@ -174,6 +176,7 @@ interface Tile {
 
 export class HubScene extends Phaser.Scene {
   private picker: Picker | null = null;
+  private dexInfo: DexInfo | null = null;
   private detail!: Phaser.GameObjects.Container;
   private tiles: Tile[] = [];
   private tileIndex = 2;
@@ -377,6 +380,10 @@ export class HubScene extends Phaser.Scene {
   }
 
   private handle(a: InputAction): void {
+    if (this.dexInfo) {
+      if (a === 'confirm' || a === 'back') this.dexInfo.close();
+      return;
+    }
     if (this.picker) {
       this.picker.handle(a);
       return;
@@ -734,6 +741,41 @@ export class HubScene extends Phaser.Scene {
 
   /** Titles and card frames for the trainer card. Enter puts one on. */
   /** Collection sets (generations and special forms) with their milestones; opening it pays any new milestone. */
+  /** One Pokédex set's members with their seen/caught state; Enter opens the species page. */
+  private openDexSet(set: { id: string; name: string; members: string[] }): void {
+    const { session } = services();
+    const rows: PickerRow[] = set.members.map((id) => {
+      const sp = session.content.species.get(id)!;
+      const state = dexState(session.profile, id);
+      return {
+        problem: null,
+        hint: state === 'unknown' ? 'Not met yet.' : `${sp.name}: ${sp.types.join(' / ')}. Enter opens its page.`,
+        draw: (scene, box, _w, h) => {
+          if (state !== 'unknown') box.add(pokemonIcon(scene, sp, 30, h / 2, 1));
+          const mark = state === 'unknown' ? null : state === 'caught' ? 'ui.dex.caught' : 'ui.dex.seen';
+          if (mark && scene.textures.exists(mark)) box.add(scene.add.image(_w - 24, h / 2, mark).setScale(0.6));
+          box.add(scene.add.text(64, h / 2, `${String(sp.dex).padStart(4, '0')}  ${state === 'unknown' ? '???' : sp.name}`, textStyle(22, state === 'unknown' ? COLORS.textMuted : COLORS.textLight)).setOrigin(0, 0.5));
+        },
+      };
+    });
+    this.closePicker();
+    this.openPicker({
+      title: set.name,
+      rows,
+      columns: 2,
+      rowHeight: 48,
+      onSelect: (i) => {
+        this.dexInfo = new DexInfo(this, session.content, session.profile, set.members[i]!, () => {
+          this.dexInfo = null;
+        });
+      },
+      onBack: () => {
+        this.closePicker();
+        this.openResearch();
+      },
+    });
+  }
+
   private openResearch(): void {
     const { session } = services();
     const paid = session.claimCollections();
@@ -743,7 +785,7 @@ export class HubScene extends Phaser.Scene {
       const prog = setProgress(set, p);
       return {
         problem: null,
-        hint: `${prog.caught} of ${set.members.length} caught, ${prog.seen} met. Milestones at 25/50/75/100% pay ${MILESTONE_PAY.join('/')} Research Points once each.`,
+        hint: `${prog.caught} of ${set.members.length} caught, ${prog.seen} met. Milestones at 25/50/75/100% pay ${MILESTONE_PAY.join('/')} Research Points once each. Enter opens the Pokédex list.`,
         draw: (scene, box, w, h) => {
           box.add(scene.add.text(12, 6, set.name, textStyle(19)));
           // UIE Pokédex marks: caught ball, then seen eye (lazy; shown once loaded).
@@ -800,7 +842,12 @@ export class HubScene extends Phaser.Scene {
       columns: 1,
       rowHeight: 58,
       onSelect: (i) => {
-        const note = notes[i - collectionSets(session.content).length];
+        const sets = collectionSets(session.content);
+        if (i < sets.length) {
+          this.openDexSet(sets[i]!);
+          return;
+        }
+        const note = notes[i - sets.length];
         if (!note || noteOpen(session.profile, note.id)) return;
         try {
           session.buyResearchNote(note.id);
