@@ -31,7 +31,7 @@ import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
 import { freshSos, rollSos } from './sos';
-import { aaiDamageFactor, aaiSpecialAttack, aaiStatusValue, aaiTacticFactor, aaiSurvivesKo, type AaiView } from './aai';
+import { aaiDamageFactor, aaiPersonality, aaiSpecialAttack, personalityFactor, aaiStatusValue, aaiTacticFactor, aaiSurvivesKo, type AaiView } from './aai';
 import { currentEnemy, freshExtra, freshHeldState, freshSideEffects, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
@@ -354,7 +354,7 @@ function aaiView(brain: EnemyBrain, user: PokemonInstance, best: number): AaiVie
     userAbility: abilityOf(content, user),
     targetAbility: abilityOf(content, target),
     userTypes: getSpecies(content, user.speciesId).types,
-    targetTypes: getSpecies(content, target.speciesId).types,
+    targetTypes: getSpecies(content, (side === 'enemy' && content.balance.trainerAi.aai.illusion ? battle?.playerVolatile.illusion : null) ?? target.speciesId).types,
     userMax: userStats.hp,
     targetMax: targetStats.hp,
     userFaster: trickRoom ? userStats.spe < targetStats.spe : userStats.spe > targetStats.spe,
@@ -402,13 +402,22 @@ export function estimateDamage(brain: EnemyBrain, user: PokemonInstance, moveId:
   return score > 0 ? damageFromScore(user.level, score, move.accuracy ?? 100) : 0;
 }
 
-/** Rough value of a move for a clever enemy (higher is better). */
+/** Rough value of a move for a clever enemy (higher is better). A trainer's style (Advanced AI personalities) weights it. */
 export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
+  const value = moveValueBase(brain, user, moveId);
+  const move = brain.content.moves.get(moveId);
+  if (!move || value <= 0 || brain.raw || (brain.side ?? 'enemy') !== 'enemy' || brain.battle?.kind !== 'trainer' || !brain.content.balance.trainerAi.aai.personality) return value;
+  return value * personalityFactor(aaiPersonality(brain.content, brain.battle.enemyTeam), move);
+}
+
+function moveValueBase(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
   const { content, target, stages } = brain;
   const move = content.moves.get(moveId);
   if (!move) return 0;
   const userSpecies = getSpecies(content, user.speciesId);
-  const targetSpecies = getSpecies(content, target.speciesId);
+  // Illusion (Advanced AI Illusion_Perception): a trainer is fooled by a disguised Zoroark and scores against the disguise.
+  const disguise = (brain.side ?? 'enemy') === 'enemy' && content.balance.trainerAi.aai.illusion ? brain.battle?.playerVolatile.illusion : null;
+  const targetSpecies = getSpecies(content, disguise ?? target.speciesId);
   const userStats = calcStats(content, user);
   const targetStats = calcStats(content, target);
   const targetAbilityId = abilityOf(content, target);
@@ -691,7 +700,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
-  if (battle.totem && !battle.outcome) totemPhases(ctx, enemy, events);
+  if (battle.totem && !battle.outcome) {
+    totemPhases(ctx, enemy, events);
+    totemFieldEffect(ctx, enemy, [playerC], events);
+  }
 
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -885,6 +897,18 @@ function totemPhases(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]
     t.phasesDone.push(i);
     applyBossPhase(ctx, enemy, phase, events);
   });
+}
+
+/** The Totem's territory spreads its status: each of your Pokémon without one may catch it (battle stream, once per Pokémon per turn). */
+function totemFieldEffect(ctx: BattleContext, source: Combatant, targets: Combatant[], events: BattleEvent[]): void {
+  const t = ctx.battle.totem;
+  if (!t || ctx.battle.outcome) return;
+  const fx = getTotem(ctx.content, t.id).fieldEffect;
+  if (!fx) return;
+  for (const target of targets) {
+    if (target.mon.hp <= 0 || target.mon.status || !ctx.rng.chance(fx.chance)) continue;
+    if (tryInflictStatus(ctx, source, target, fx.status, undefined, events, false)) events.push({ type: 'raid', tone: 'warn', text: fx.text });
+  }
 }
 
 /** Clears a stuck two-turn or lock-in move (its move slot is gone), keeping the other conditions. */
@@ -4894,6 +4918,9 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
 
 /** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
 export const doublesSteps = {
+  totemAura,
+  totemPhases,
+  totemFieldEffect,
   executeMove,
   runMove,
   resolveMove,

@@ -948,7 +948,7 @@ export const StarterPoolSchema = z.object({
 export type StarterPool = z.infer<typeof StarterPoolSchema>;
 
 /** How the three starters are drawn from the pool. Rules change the choice, not the power. */
-export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind'] as const;
+export const DRAFT_RULE_KINDS = ['standard', 'typeFocus', 'balanced', 'blind', 'expanded', 'regional', 'rareSpecimen', 'evolution'] as const;
 export const DraftRuleSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -970,6 +970,10 @@ export const PrepTokenSchema = z.object({
   items: z.record(z.string(), z.number().int().positive()).default({}),
   /** Draft archetype (catalog 97): reward families in these categories are drawn `weight` times as often, for the whole run. Chance, not a guarantee. */
   draftBias: z.object({ categories: z.array(z.string()).min(1), weight: z.number().gt(1).max(3) }).nullable().default(null),
+  /** First-region intel: this Field License hint is shown for the first region only. */
+  intel: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
+  /** A small run attribute bonus. */
+  attribute: z.object({ key: z.enum(PLAIN_ATTRIBUTES), amount: z.number().int().min(1).max(2) }).nullable().default(null),
 });
 export type PrepToken = z.infer<typeof PrepTokenSchema>;
 
@@ -1701,8 +1705,22 @@ export const TrainerAiSchema = z.object({
       repetition: z.boolean().default(false),
       /** Weather, terrain and speed: rain/sun/terrain damage, weather or terrain moves that help itself more than the foe, Trick Room when slower, Thunder Wave when slower, priority to pick off a worn target. */
       fieldPlay: z.boolean().default(false),
+      /** The target's held items: Air Balloon, resist berries, damage-taken items, status-immunity items. */
+      itemReads: z.boolean().default(false),
+      /** U-turn / Volt Switch out of a bad matchup; Baton Pass only with boosts to pass. */
+      pivot: z.boolean().default(false),
+      /** A last Pokémon about to be KO'd only attacks. */
+      endgame: z.boolean().default(false),
+      /** The trainer's style (aggressive, defensive, balanced, hyper offensive) read from its team weights its moves. */
+      personality: z.boolean().default(false),
+      /** A Zoroark's Illusion fools the trainer: it scores against the disguise. */
+      illusion: z.boolean().default(false),
+      /** A boss's ace holds Tera, its Z-Move or Dynamax until it helps... */
+      gimmickTiming: z.boolean().default(false),
+      /** ...but never more than this many turns. */
+      gimmickMaxWait: z.number().int().min(0).default(3),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3 }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
@@ -1962,6 +1980,11 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Spreadsheet availability (core/availability.ts): a species unlocks at its sheet minimum level minus levelSlack; rarityWeights scale the odds of unlocked ones. */
+  availability: z.object({
+    levelSlack: z.number().int().min(0),
+    rarityWeights: z.object({ common: z.number().positive(), uncommon: z.number().positive(), rare: z.number().positive(), veryRare: z.number().positive(), legendary: z.number().positive(), mythical: z.number().positive() }),
+  }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
   opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0), maxLevel: z.number().int().min(1) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */

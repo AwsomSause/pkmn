@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run assets:manifest",
     "dev": "vite",
+    "prebuild": "npm run assets:manifest",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "pretest": "npm run assets:manifest",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

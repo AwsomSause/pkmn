@@ -10,10 +10,10 @@ Statuses: BUILT, PART (some of the script), BATCH n (planned), EXISTS (the game 
 | 2 | 1_Core/Core.rb | N/A | Essentials AI hook-up; our entry points are `chooseEnemyMove` and `trainerAiTurn` |
 | 3 | 1_Core/Combat_Utilities.rb | BUILT | `estimateDamage`, `damageFromScore`, `aaiView` (speed order, reserves, threat) |
 | 4 | 1_Core/Utilities.rb | N/A | Ruby helpers (type lookups, logging) covered by `core/pokemon.ts` and `battle/damage.ts` |
-| 5 | 1_Core/Illusion_Perception.rb | BATCH 3 | |
+| 5 | 1_Core/Illusion_Perception.rb | BUILT | a disguised Zoroark fools the trainer: it scores against the disguise's types (`aai.illusion`) |
 | 6 | 1_Core/Debug_Menu.rb | N/A | RPG Maker debug menu |
 | 7 | 1_Core/OptionsMenu.rb | N/A | RPG Maker options entry (our switches are data) |
-| 8 | 2_Move_Intelligence/0_Move_Scorer.rb | PART | damage, type, STAB, accuracy, KO and priority-KO bonus (Z8), set-up safety, status utility, recoil risk, contact punishment, protect repetition, Prankster/Dark, Sturdy/Sash; batch 2–3 add the rest |
+| 8 | 2_Move_Intelligence/0_Move_Scorer.rb | BUILT | damage, type, STAB, accuracy, KO and priority-KO bonus (Z8), set-up safety, status utility, recoil risk, contact punishment, protect repetition, Prankster/Dark, Sturdy/Sash, Knock Off, pivots, item disruption. Not ported: Moody, Mirror Herb, crit-stage scoring |
 | 9 | 2_Move_Intelligence/Move_Categories.rb | BUILT | move effects in `moves.json` (`sideMove`, `disrupt`, `userFaint`, `protect`...) are the categories |
 | 10 | 2_Move_Intelligence/Move_Memory.rb | BUILT | Taunt, Heal Block and screens read only moves the player has used this battle (`movesUsed`) |
 | 11 | 2_Move_Intelligence/Special_Moves.rb | BUILT | Pain Split, Destiny Bond, Substitute, Memento / Healing Wish / Lunar Dance, Final Gambit, Endeavor, hazard removal |
@@ -21,29 +21,29 @@ Statuses: BUILT, PART (some of the script), BATCH n (planned), EXISTS (the game 
 | 13 | 3_Combat_Mechanics/Recoil_Tracking.rb | BUILT | recoil, Mind Blown-style HP cost, crash on miss, at low HP |
 | 14 | 3_Combat_Mechanics/Weather_Terrain_Wars.rb | BUILT | a weather or terrain move only when it helps the user more than the foe (boosted attack types, Swift Swim-style abilities, Sand/Snow typing), never when already up (`aai.fieldPlay`) |
 | 15 | 3_Combat_Mechanics/Field_Effects.rb | BUILT | rain/sun damage (Utility Umbrella aware), Electric/Grassy/Psychic Terrain boosts, Misty Terrain vs Dragon, Grassy Terrain vs Earthquake, Psychic Terrain blocks priority, Misty/Electric Terrain status blocks, Trick Room only for the slower side. Gravity: kept at the engine's base value |
-| 16 | 3_Combat_Mechanics/Advanced_Abilities.rb | PART | Soundproof, Bulletproof, Wind Rider, Earth Eater, Well-Baked Body, Thick Fat, Heatproof, Water Bubble, Purifying Salt, Dry Skin, Fluffy, Ice Scales, Fur Coat, Multiscale, Shadow Shield, Filter/Solid Rock/Prism Armor, Disguise/Ice Face, Mold Breaker; Volt Absorb-style and Levitate/Wonder Guard existed |
-| 17 | 4_Battle_Strategy/Threat_Assessment.rb | BATCH 3 | |
-| 18 | 4_Battle_Strategy/Team_Preview_Intelligence.rb | BATCH 3 | |
-| 19 | 4_Battle_Strategy/Prediction_System.rb | BATCH 3 | |
-| 20 | 4_Battle_Strategy/Role_Detection.rb | BATCH 3 | |
-| 21 | 4_Battle_Strategy/Tactical_Enhancements.rb | PART | Magic Bounce, Good as Gold, Sturdy, Focus Sash, Multiscale, Disguise/Ice Face, Guts/Facade, Poison Heal; the rest in batch 2–3 |
+| 16 | 3_Combat_Mechanics/Advanced_Abilities.rb | BUILT | Soundproof, Bulletproof, Wind Rider, Earth Eater, Well-Baked Body, Thick Fat, Heatproof, Water Bubble, Purifying Salt, Dry Skin, Fluffy, Ice Scales, Fur Coat, Multiscale, Shadow Shield, Filter/Solid Rock/Prism Armor, Disguise/Ice Face, Mold Breaker; Volt Absorb-style and Levitate/Wonder Guard existed |
+| 17 | 4_Battle_Strategy/Threat_Assessment.rb | BUILT | `threat` in `aaiView` (the foe's best hit) drives set-up safety, Destiny Bond, pivots and endgame; doubles target choice EXISTS in `battle/doubles.ts` |
+| 18 | 4_Battle_Strategy/Team_Preview_Intelligence.rb | N/A | no team preview: trainers' order is fixed (ace last, Mega/Tera rules depend on it), and the player can't see the foe's team before battle |
+| 19 | 4_Battle_Strategy/Prediction_System.rb | PART | it remembers the player's moves (Move Memory) and reads the last move (Encore, Disable). Not ported: guessing the player's switch, because the player picks after seeing the foe's intent and a guessing AI would need its own seeded stream |
+| 20 | 4_Battle_Strategy/Role_Detection.rb | BUILT | sweeper / wall / staller counts per team feed the personality (row 34) |
+| 21 | 4_Battle_Strategy/Tactical_Enhancements.rb | BUILT | Magic Bounce, Mold Breaker, Sturdy, Focus Sash, Multiscale, Disguise/Ice Face, Guts/Facade, Poison Heal, Trick Room setter, Belly Drum-style HP cost (set-up safety), two-turn moves (endgame). Not ported: Wish/Future Sight planning, Booster Energy |
 | 22 | 4_Battle_Strategy/Setup_Recognition.rb | BUILT | no set-up into a KO; Haze / Roar-style moves against a +2 foe |
 | 23 | 4_Battle_Strategy/Switch_Intelligence.rb | EXISTS | type-matchup switch and danger switch (`switchRatio`, `dangerSwitch`) |
-| 24 | 4_Battle_Strategy/Item_Intelligence.rb | BATCH 3 | (in-battle potions EXIST: `healBelow`, `maxItems`) |
-| 25 | 4_Battle_Strategy/Advanced_Items.rb | BATCH 3 | |
-| 26 | 4_Battle_Strategy/Strategic_Awareness.rb | BATCH 3 | |
-| 27 | 5_Format_Specific/Pivot_Moves.rb | BATCH 3 | |
+| 24 | 4_Battle_Strategy/Item_Intelligence.rb | BUILT | reads the target's held items through their hooks: Air Balloon, damage-taken items, status-immunity items (`aai.itemReads`); Choice lock is the engine's. In-battle potions EXIST (`healBelow`, `maxItems`) |
+| 25 | 4_Battle_Strategy/Advanced_Items.rb | BUILT | resist berries; Rocky Helmet (recoil); Trick with Choice items / Orbs / Sticky Barb (disruption). Not ported: Eject Button/Pack prediction |
+| 26 | 4_Battle_Strategy/Strategic_Awareness.rb | PART | sack logic is the endgame rule and the danger switch; win-condition preservation is the ace-last order. Not ported: archetype labels for the player's team |
+| 27 | 5_Format_Specific/Pivot_Moves.rb | BUILT | U-turn / Volt Switch worth more when the foe threatens half its HP and it has a teammate; Baton Pass only with +2 boosts to pass (`aai.pivot`) |
 | 28 | 5_Format_Specific/Priority_Tiers.rb | BUILT | priority KO from the slower side (Z8); a slower user picks off a target under 25% with priority; no priority into Psychic Terrain |
 | 29 | 5_Format_Specific/Doubles_Coordination.rb | EXISTS | doubles AI picks best move and target, avoids hitting its partner (`battle/doubles.ts`) |
 | 30 | 5_Format_Specific/Speed_Tiers.rb | BUILT | speed order (Trick Room aware) in `aaiView`; Thunder Wave worth more when slower, less when faster; Tailwind when slower; Trick Room |
 | 31 | 5_Format_Specific/Doubles_Strategy.rb | EXISTS | as row 29 |
-| 32 | 6_Meta_Mechanics/Mega_Intelligence.rb | BATCH 3 | |
-| 33 | 6_Meta_Mechanics/Terastallization_Intelligence.rb | BATCH 3 | |
-| 34 | 6_Meta_Mechanics/Battle_Personalities.rb | BATCH 3 | |
-| 35 | 6_Meta_Mechanics/Endgame_Scenarios.rb | BATCH 3 | |
-| 36 | 6_Meta_Mechanics/ZMove_Intelligence.rb | BATCH 3 | |
-| 37 | 6_Meta_Mechanics/Dynamax_Intelligence.rb | BATCH 3 | |
-| 38 | 6_Meta_Mechanics/Win_Conditions.rb | BATCH 3 | |
+| 32 | 6_Meta_Mechanics/Mega_Intelligence.rb | EXISTS | a boss's ace Mega Evolves as soon as it is out (the pack's advice: Mega at once) |
+| 33 | 6_Meta_Mechanics/Terastallization_Intelligence.rb | BUILT | Tera waits until it gains or keeps STAB or saves it from a super-effective hit the player has shown, under 50% HP, or `gimmickMaxWait` turns (`aai.gimmickTiming`) |
+| 34 | 6_Meta_Mechanics/Battle_Personalities.rb | BUILT | aggressive / defensive / balanced / hyper offensive, read from the trainer's team, with the pack's bonuses as score shares (`aai.personality`) |
+| 35 | 6_Meta_Mechanics/Endgame_Scenarios.rb | BUILT | the last, slower Pokémon about to be KO'd only attacks, no two-turn moves (`aai.endgame`) |
+| 36 | 6_Meta_Mechanics/ZMove_Intelligence.rb | BUILT | no Z-Move into an immune foe or a foe under 25% |
+| 37 | 6_Meta_Mechanics/Dynamax_Intelligence.rb | BUILT | no Dynamax just to finish a foe under 25% |
+| 38 | 6_Meta_Mechanics/Win_Conditions.rb | PART | KO bonus, endgame, set-up safety and the ace-last order. Not ported: naming the player's win condition |
 | 39 | 7_Integration/Custom_Content.rb | N/A | hooks for fan-game moves; our moves are data |
 | 40 | 7_Integration/Debug_Replacement.rb | N/A | Essentials debug logging |
 | 41 | 7_Integration/Hotfixes.rb | N/A | patches for Essentials bugs |

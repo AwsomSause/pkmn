@@ -161,6 +161,7 @@
  "nativeWeight": 3,
  "wildMaxBaseStats": 560,
   "levelBst": { "base": 290, "perLevel": 9, "retries": 10 },
+  "availability": { "levelSlack": 6, "rarityWeights": { "common": 1, "uncommon": 0.75, "rare": 0.5, "veryRare": 0.3, "legendary": 0.2, "mythical": 0.1 } },
  "opening": { "encounters": 4, "maxBaseStats": 340, "levelOffset": 3, "minLevel": 2, "softMovesUntilLevel": 15,
   "maxLevel": 4 },
  "rival": { "stage": 1, "level": 5, "starters": ["bulbasaur", "charmander", "squirtle", "chikorita", "cyndaquil", "totodile", "treecko", "torchic", "mudkip"] },
@@ -495,7 +496,14 @@
    "setupSafety": true,
    "statusTiming": true,
    "repetition": true,
-   "fieldPlay": true
+   "fieldPlay": true,
+   "itemReads": true,
+   "pivot": true,
+   "endgame": true,
+   "personality": true,
+   "illusion": true,
+   "gimmickTiming": true,
+   "gimmickMaxWait": 3
   }
  }
 }

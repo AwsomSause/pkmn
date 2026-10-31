@@ -1047,6 +1047,23 @@ export const RunRecordSchema = z.object({
 });
 export type RunRecord = z.infer<typeof RunRecordSchema>;
 
+/** Legacy & Live hub systems (core/legacy.ts). Optional: older profiles have none and load as empty. */
+export const LegacySchema = z.object({
+  /** Prestige rank 0 to 5: a title and more contacts, nothing is ever deleted. */
+  prestige: z.number().int().min(0).max(5).default(0),
+  /** Research Tree nodes bought with Research Points. */
+  tree: z.array(z.string()).default([]),
+  /** Trainer Network contacts switched on (trainer ids). */
+  contacts: z.array(z.string()).default([]),
+  /** Item Museum: every item id ever held in a finished run. */
+  museum: z.array(z.string()).default([]),
+  /** Regional Intelligence Board: what the account knows of each region. */
+  regionIntel: z.record(z.string(), z.object({ visits: z.number().int().min(0), clears: z.number().int().min(0), bestBadges: z.number().int().min(0) })).default({}),
+  /** Seed Shelf: shared seed codes kept for later (core/seedCode.ts). */
+  seedShelf: z.array(z.object({ code: z.string(), label: z.string(), at: z.string() })).default([]),
+});
+export type LegacyState = z.infer<typeof LegacySchema>;
+
 export const ProfileSchema = z.object({
   profileId: z.string(),
   unlockedArchetypes: z.array(z.string()),
@@ -1117,6 +1134,8 @@ export const ProfileSchema = z.object({
   mastery: z.record(z.string(), MasteryRecordSchema),
   /** Game event progress (core/gameEvents.ts): counters summed over each edition's runs, by edition ("rivalry-week@2026-W44"). */
   gameEvents: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
+  /** Legacy & Live hub systems: Research Tree, Prestige, Trainer Network, Item Museum, Intelligence Board, Seed Shelf (core/legacy.ts). */
+  legacy: LegacySchema.optional(),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

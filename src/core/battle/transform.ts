@@ -41,6 +41,7 @@
 // The engine only emits 'transform' events; the battle screen turns them into
 // presentation (text, sprite swap; cinematics come in M9.5).
 
+import { aaiGimmickReady } from './aai';
 import type { BoostStat, Content, MaxEffect, Move, TransformKind, TypeName } from '../contentSchema';
 import { clampStage } from './damage';
 import { teraTypeOf } from '../items';
@@ -402,22 +403,32 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   const may = (kind: TransformKind) =>
     !ctx.disabledMechanics?.includes(kind) && battle.transform.enemyMechanics.includes(kind) && !battle.transform.used.enemy.includes(kind);
   const isAce = battle.enemyTeam.indexOf(enemy) === battle.enemyTeam.length - 1;
+  // Advanced AI timing: Tera, a Z-Move or Dynamax waits until it helps (a Mega Evolution never waits).
+  const ready = (kind: 'tera' | 'zmove' | 'dynamax', extra: { teraType?: TypeName; zMoveType?: TypeName }) =>
+    aaiGimmickReady(content, kind, enemy, player, {
+      aceTypes: getSpecies(content, enemy.speciesId).types,
+      foeKnown: (battle.playerVolatile.movesUsed ?? []).map((id) => content.moves.get(id)).filter((m): m is Move => Boolean(m)),
+      turnsOut: battle.enemyVolatile.turnsOut,
+      ...extra,
+    });
   if (enemy.hp > 0 && isAce && !battle.transform.forms[enemy.uid] && !battle.transform.mechanics[enemy.uid]) {
     const option = may('mega') ? stoneForms(content, enemy.speciesId, false)[0] : undefined;
     if (option) {
       changeForm(ctx, 'enemy', enemy, 'mega', { ...option, itemId: null }, events);
       battle.transform.used.enemy.push('mega');
     } else if (may('zmove') && bossZMove(content, enemy)) {
+      if (!ready('zmove', { zMoveType: bossZMove(content, enemy)!.type })) return;
       const move = bossZMove(content, enemy)!;
       battle.transform.mechanics[enemy.uid] = 'zmove';
       battle.transform.used.enemy.push('zmove');
       events.push({ type: 'transform', side: 'enemy', uid: enemy.uid, kind: 'zmove', from: enemy.speciesId, to: enemy.speciesId, itemId: null, moveId: move.id, zMoveId: zMoveFor(content, move)!.id });
     } else if (may('dynamax')) {
-      dynamax(ctx, 'enemy', enemy, events);
+      if (ready('dynamax', {})) dynamax(ctx, 'enemy', enemy, events);
     } else if (may('tera')) {
       // A type specialist Terastallizes into their speciality.
       const specialty = battle.trainer?.leaderId ? content.bosses.get(battle.trainer.leaderId)?.types[0] : undefined;
-      terastallize(ctx, 'enemy', enemy, specialty ?? teraTypeOf(content, enemy), events);
+      const teraType = specialty ?? teraTypeOf(content, enemy);
+      if (ready('tera', { teraType })) terastallize(ctx, 'enemy', enemy, teraType, events);
     }
   }
 }

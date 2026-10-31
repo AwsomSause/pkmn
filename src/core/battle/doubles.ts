@@ -233,7 +233,18 @@ export function startDoubles(ctx: BattleContext): BattleEvent[] {
   runEntries(ctx, field, field.alive(), events);
   settle(ctx, field, events);
   rest(ctx, events);
+  S.totemAura(ctx, events);
   return events;
+}
+
+/** A Totem on the field: its behaviour phases and its territory's status, once per turn (same rules as one-on-one). */
+function totemEndOfTurn(ctx: BattleContext, field: Field, events: BattleEvent[]): void {
+  const t = ctx.battle.totem;
+  if (!t) return;
+  const totem = field.alive('enemy').find((c) => c.mon.uid === t.uid);
+  if (!totem) return;
+  S.totemPhases(ctx, totem, events);
+  S.totemFieldEffect(ctx, totem, field.alive('player'), events);
 }
 
 // ---------- the turn ----------
@@ -413,7 +424,10 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
   }
 
   // 5. End of turn.
-  if (!sideOut(field, 'player') && !sideOut(field, 'enemy')) endOfTurn(ctx, field, commands, events);
+  if (!sideOut(field, 'player') && !sideOut(field, 'enemy')) {
+    endOfTurn(ctx, field, commands, events);
+    totemEndOfTurn(ctx, field, events);
+  }
 
   // 6. Faints, replacements, the outcome.
   ctx.doublesTurn = undefined;
