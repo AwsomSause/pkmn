@@ -14555,5 +14555,32 @@
     }
    ]
   }
+ },
+ {
+  "id": "adrenaline-orb",
+  "name": "Adrenaline Orb",
+  "family": "Battle boosters (X items, Dire Hit, Guard Spec.)",
+  "description": "+1 Speed for 5 turns and wild Pokémon call for help far more (a second call may be answered)",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "use",
+  "icon": "pass-orb",
+  "status": "supported",
+  "effect": {
+   "kind": "battleBoost",
+   "boosts": [
+    {
+     "kind": "stage",
+     "stat": "spe",
+     "stages": 1,
+     "turns": 5
+    },
+    {
+     "kind": "sos",
+     "turns": 5
+    }
+   ]
+  }
  }
 ]

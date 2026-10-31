@@ -36,7 +36,7 @@ import { hashSeed, Rng } from './rng';
 import { continueAfterDecisions, healParty, newMon } from './run';
 import type { MapNode, RunState, SideStop } from './state';
 import { applyReward, rewardTargetProblem } from './rewards';
-import { regionFocus } from './campaign/director';
+import { MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { getTheme, typesPool } from './themes';
@@ -260,7 +260,7 @@ export function addEventStops(content: Content, run: RunState): void {
     taken.add(id);
     place(id, false);
   }
-  const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules));
+  const wanted = Math.round(rng.int(cfg.perStage[0], cfg.perStage[1]) * eventChanceScale(run.rules)) + (regionFocus(run, run.regionIndex) === 'mystery' ? MYSTERY_EXTRA_STOPS : 0);
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
     if (!e) break;

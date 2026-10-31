@@ -1229,6 +1229,8 @@ export const BattleBoostSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('stage'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive() }),
   /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
   z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
+  /** Adrenaline Orb: wild Pokémon call for help more, and may answer a second call, for `turns` turns. */
+  z.object({ kind: z.literal('sos'), turns: z.number().int().positive() }),
   /** Can't get this status (or confusion) during its next battle. */
   z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion', 'infatuation']) }),
 ]);

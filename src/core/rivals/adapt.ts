@@ -3,6 +3,7 @@
 // It remembers its team, comes back stronger, and swaps ONE member for a Pokémon from the
 // planned team that resists the type of attack you use most; the player is told which.
 
+import { RIVAL_FOCUS_GAP_CUT, regionFocus } from '../campaign/focus';
 import { runPerks } from '../archetypes';
 import { rivalCounterBonus, rivalLevelOffset, rivalTeamTypes } from '../trainerPerks';
 import { typeEffectiveness } from '../battle/damage';
@@ -41,11 +42,13 @@ export function waitingRival(run: RunState): Rival | null {
   const sched = RIVAL_CONFIG.scheduler;
   const now = scheduleKey(run);
   const lastAny = run.story.flags[RIVAL_SEEN_ANY];
+  // A region focused on rivals brings them back a stage sooner.
+  const gapCut = regionFocus(run, run.regionIndex) === 'rivals' ? RIVAL_FOCUS_GAP_CUT : 0;
   if (typeof lastAny === 'number' && now - lastAny < sched.anyGap) return null;
   const due = run.story.rivals.filter((r) => {
     if (!isHostile(r) || r.cooldown > 0) return false;
     const last = run.story.flags[rivalSeenFlag(r.id)];
-    if (typeof last === 'number' && now - last < Math.max(sched.minGap, sched.intervals[r.state] ?? sched.minGap)) return false;
+    if (typeof last === 'number' && now - last < Math.max(1, Math.max(sched.minGap, sched.intervals[r.state] ?? sched.minGap) - gapCut)) return false;
     const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
     return !met || met.region !== run.regionIndex || met.stage !== (run.stage?.index ?? null);
   });

@@ -787,7 +787,8 @@ function sosCall(ctx: BattleContext, events: BattleEvent[]): void {
   const caller = currentEnemy(battle);
   const { player } = activeCombatants(ctx);
   const scary = ['intimidate', 'unnerve', 'pressure'].includes(abilityIn(ctx, player) ?? '');
-  const result = rollSos({ battle, caller, maxHp: maxHp(content, caller), scary });
+  const orb = (ctx.party[battle.activeIndex]?.boosts ?? []).some((b) => b.kind === 'sos');
+  const result = rollSos({ battle, caller, maxHp: maxHp(content, caller), scary, orb });
   if (result.kind === 'none') return;
   const sos = (battle.sos ??= freshSos());
   sos.lastTurnCalled = battle.turn;
