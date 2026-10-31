@@ -378,7 +378,7 @@ function clubBattleOf(content: Content, run: RunState, f: ClubFormat, theme: str
     bossId = rng.pick(ids);
     name = content.bosses.get(bossId)?.name ?? name;
   }
-  return { kind: 'trainer', name, classId: f.classId, bossId, ghost: false, retired: false, chain: 1, size: f.size, types: theme ? [theme as TypeName] : [], levelBonus: f.levelBonus + Math.floor(round / 2), win: [] };
+  return { kind: 'trainer', name, classId: f.classId, bossId, ghost: false, retired: false, chain: 1, rival: false, shadow: 0, size: f.size, types: theme ? [theme as TypeName] : [], levelBonus: f.levelBonus + Math.floor(round / 2), win: [] };
 }
 
 function beginClubRound(content: Content, run: RunState, sideId: string): void {
