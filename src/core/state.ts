@@ -448,6 +448,11 @@ export const RaidBattleSchema = z.object({
   cheersLeft: z.number().int().min(0).default(3),
   cheerOffense: z.number().int().min(0).default(0),
   cheerDefense: z.number().int().min(0).default(0),
+  /** Who earned a raid memory (uids): started the raid, broke a shield, took a charged attack under a Defense cheer, survived a charged attack. */
+  lead: z.string().nullable().default(null),
+  breaker: z.string().nullable().default(null),
+  tank: z.string().nullable().default(null),
+  survivor: z.string().nullable().default(null),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 

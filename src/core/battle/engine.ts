@@ -1847,9 +1847,18 @@ function takeHp(
   hit: number | null = null,
 ): { lost: number; lastStand: string | null; hyper: HyperEvent | null; knockedDown: boolean } {
   // Raids: shields soak the boss's damage; a charged attack hits the player harder.
+  let chargedLanded = false;
   if (ctx.battle.raid) {
-    if (c.side === 'enemy') amount = absorbHit(ctx.content, ctx.battle, c.mon, amount);
-    else if (hit !== null) amount = chargedDamage(ctx.content, ctx.battle, amount);
+    const raid = ctx.battle.raid;
+    if (c.side === 'enemy') {
+      const shielded = raid.shieldHp > 0;
+      amount = absorbHit(ctx.content, ctx.battle, c.mon, amount);
+      // The Pokémon in front when a shield breaks earns "The One Who Broke Its Guard".
+      if (shielded && raid.shieldHp === 0) raid.breaker ??= ctx.party[ctx.battle.activeIndex]?.uid ?? null;
+    } else if (hit !== null) {
+      amount = chargedDamage(ctx.content, ctx.battle, amount);
+      chargedLanded = raid.charging;
+    }
   }
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
@@ -1874,6 +1883,11 @@ function takeHp(
     }
   }
   c.mon.hp -= lost;
+  // Survived the boss's charged (signature) attack: a raid memory; under a Defense cheer it also took the hit for the team.
+  if (chargedLanded && lost > 0 && c.mon.hp > 0 && ctx.battle.raid) {
+    ctx.battle.raid.survivor ??= c.mon.uid;
+    if (ctx.battle.raid.cheerDefense > 0) ctx.battle.raid.tank ??= c.mon.uid;
+  }
   return { lost, lastStand, hyper: null, knockedDown: false };
 }
 

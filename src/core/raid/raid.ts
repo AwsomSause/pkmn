@@ -74,6 +74,10 @@ export function freshRaidBattle(def: RaidDef): RaidBattle {
     cheersLeft: 3,
     cheerOffense: 0,
     cheerDefense: 0,
+    lead: null,
+    breaker: null,
+    tank: null,
+    survivor: null,
   };
 }
 
@@ -304,3 +308,30 @@ function placeGrandEnemy(content: Content, run: RunState, rng: Rng): void {
   const node = rng.pick(candidates);
   node.sides.push({ id: `raid-grand-${stage.index}`, kind: 'raid', raidId: def.id, used: false });
 }
+
+/** A Pokémon-specific raid memory earned by what it did (Overdrive §3 "Raid memories"). */
+export interface RaidMemory {
+  uid: string;
+  key: 'lead' | 'breaker' | 'tank' | 'finisher' | 'survivor';
+  title: string;
+  text: (name: string, boss: string) => string;
+}
+
+/**
+ * The memories a won raid hands out: contribution, not only the last hit. A Pokémon can earn more than one;
+ * the same Pokémon is not listed twice for the same memory.
+ */
+export function raidMemories(battle: BattleState, finisherUid: string | undefined): RaidMemory[] {
+  const raid = battle.raid;
+  if (!raid) return [];
+  const out: RaidMemory[] = [];
+  if (raid.lead) out.push({ uid: raid.lead, key: 'lead', title: 'First to Face the Beast', text: (n, b) => `${n} was first to face ${b}.` });
+  if (raid.breaker) out.push({ uid: raid.breaker, key: 'breaker', title: 'The One Who Broke Its Guard', text: (n, b) => `${n} broke ${b}'s guard.` });
+  if (raid.tank) out.push({ uid: raid.tank, key: 'tank', title: 'It Took the Hit for Everyone', text: (n, b) => `${n} took ${b}'s charged attack for the whole team.` });
+  if (raid.survivor) out.push({ uid: raid.survivor, key: 'survivor', title: 'The One That Survived', text: (n, b) => `${n} survived ${b}'s signature attack.` });
+  if (finisherUid) out.push({ uid: finisherUid, key: 'finisher', title: 'The Final Blow Belonged to...', text: (n, b) => `${n} landed the final blow on ${b}.` });
+  return out;
+}
+
+/** Friendship each distinct contributor gets for a won raid (a share of it per memory, so contribution counts). */
+export const RAID_MEMORY_FRIENDSHIP = 4;
