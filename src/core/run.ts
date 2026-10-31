@@ -119,6 +119,7 @@ import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { itemSlotLimit } from './trainerPerks';
+import { applyTrainerTier, readTrainerMemory } from './trainerTiers';
 import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
 import {
   ensureHistories,
@@ -354,7 +355,9 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers)), 'p')];
+  const special = getSpecies(content, speciesId).tags.some((t) => t === 'legendary' || t === 'mythical');
+  const specimenPenalty = special ? content.balance.specialSpecimen.levelPenalty : 0;
+  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers) - specimenPenalty), 'p')];
   if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = runArchetype(content, run).modifiers;
@@ -1344,6 +1347,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
+    // Trainer tiers: an ordinary trainer's team grows more skilled with progress (its own seed, so no roll changes).
+    if (node.kind === 'trainer') {
+      const known = readTrainerMemory(run, plan.classId);
+      plan = applyTrainerTier(content, plan, { stageNumber, partyBonus: scale.party ?? 0, classWins: known.wins, rematch: !!rematch, important: false }, scale.cap, `${run.seed}::${run.regionIndex}::${node.id}`, known.memory);
+    }
     // Meteor's Prophecy: every third boss is stronger.
     const bossLevels = thirdBossLevels(runPerks(content, run));
     if (bossLevels > 0 && (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion')) {
@@ -1458,6 +1466,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
+    if (plan.memoryNote && !hunted && !nemesis) run.battle.memoryNote = plan.memoryNote;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
@@ -1469,7 +1478,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
-      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id };
+      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id, maxTurns: narrativeDef.maxTurns };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.

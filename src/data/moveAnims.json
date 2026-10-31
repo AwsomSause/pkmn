@@ -10854,7 +10854,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-scratch"
+      "pack": "ess-scratch",
+      "script": "scratch"
     },
     "pound": {
       "anim": "pound",
@@ -10883,7 +10884,8 @@
       "flash": null,
       "hitStopMs": 63,
       "telegraph": "normal",
-      "pack": "ess-headbutt"
+      "pack": "ess-headbutt",
+      "script": "headbutt"
     },
     "take-down": {
       "anim": "take-down",
@@ -10919,7 +10921,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-leer"
+      "pack": "ess-leer",
+      "script": "leer"
     },
     "smokescreen": {
       "anim": "smokescreen",
@@ -10937,7 +10940,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-harden"
+      "pack": "ess-harden",
+      "script": "harden"
     },
     "defense-curl": {
       "anim": "defense-curl",
@@ -11170,7 +11174,8 @@
       "flash": null,
       "hitStopMs": 60,
       "telegraph": "normal",
-      "pack": "ess-bite"
+      "pack": "ess-bite",
+      "script": "bite"
     },
     "lick": {
       "anim": "lick",
@@ -11246,7 +11251,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psychic"
     },
     "psybeam": {
       "anim": "psybeam",
@@ -11254,7 +11260,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 62,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psybeam"
     },
     "psychic": {
       "anim": "psychic",
@@ -11263,7 +11270,8 @@
       "flash": "#f85888",
       "hitStopMs": 70,
       "telegraph": "normal",
-      "pack": "ess-psychic"
+      "pack": "ess-psychic",
+      "script": "psychic"
     },
     "extrasensory": {
       "anim": "extrasensory",
@@ -11271,7 +11279,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psychic"
     },
     "hypnosis": {
       "anim": "hypnosis",
@@ -11382,7 +11391,8 @@
       "flash": null,
       "hitStopMs": 67,
       "telegraph": "normal",
-      "pack": "ess-crunch"
+      "pack": "ess-crunch",
+      "script": "crunch"
     },
     "snarl": {
       "anim": "snarl",
@@ -11431,7 +11441,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-charm"
+      "pack": "ess-charm",
+      "script": "charm"
     },
     "play-rough": {
       "anim": "play-rough",
@@ -11496,7 +11507,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "astonish"
     },
     "shadow-sneak": {
       "anim": "shadow-sneak",
@@ -11600,7 +11612,8 @@
       "flash": null,
       "hitStopMs": 60,
       "telegraph": "normal",
-      "pack": "ess-water-pulse"
+      "pack": "ess-water-pulse",
+      "script": "waterpulse"
     },
     "air-slash": {
       "anim": "air-slash",
@@ -11617,7 +11630,8 @@
       "flash": null,
       "hitStopMs": 63,
       "telegraph": "normal",
-      "pack": "ess-slash"
+      "pack": "ess-slash",
+      "script": "slash"
     },
     "agility": {
       "anim": "agility",
@@ -11635,7 +11649,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-screech"
+      "pack": "ess-screech",
+      "script": "screech"
     },
     "scary-face": {
       "anim": "scary-face",
@@ -11644,7 +11659,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-scary-face"
+      "pack": "ess-scary-face",
+      "script": "scaryface"
     },
     "accelerock": {
       "anim": "accelerock",
@@ -12521,7 +12537,8 @@
       "flash": "#6890f0",
       "hitStopMs": 77,
       "telegraph": "strong",
-      "pack": "ess-hydro-pump"
+      "pack": "ess-hydro-pump",
+      "script": "hydropump"
     },
     "hyper-drill": {
       "anim": "hyper-drill",
@@ -13353,7 +13370,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-swords-dance"
+      "pack": "ess-swords-dance",
+      "script": "swordsdance"
     },
     "tail-glow": {
       "anim": "tail-glow",
@@ -13982,7 +14000,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "protect"
     },
     "psyshock": {
       "anim": "psyshock",
@@ -14238,7 +14257,8 @@
       "flash": null,
       "hitStopMs": 60,
       "telegraph": "normal",
-      "pack": "ess-ancient-power"
+      "pack": "ess-ancient-power",
+      "script": "ancientpower"
     },
     "chatter": {
       "anim": "chatter",
@@ -14529,7 +14549,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "endure"
     },
     "black-hole-eclipse": {
       "anim": "nasty-plot",
@@ -15151,7 +15172,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "quick"
+      "telegraph": "quick",
+      "script": "endure"
     },
     "entrainment": {
       "anim": "entrainment",
@@ -15377,7 +15399,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-focus-energy"
+      "pack": "ess-focus-energy",
+      "script": "focusenergy"
     },
     "focus-punch": {
       "anim": "focus-punch",
@@ -17103,7 +17126,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "psychic"
     },
     "psychic-terrain": {
       "anim": "psychic-terrain",
@@ -18100,7 +18124,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "taunt"
     },
     "tearful-look": {
       "anim": "tearful-look",
@@ -18205,7 +18230,8 @@
       "shake": 3,
       "flash": "#a8a878",
       "hitStopMs": 80,
-      "telegraph": "strong"
+      "telegraph": "strong",
+      "script": "thrash"
     },
     "throat-chop": {
       "anim": "throat-chop",

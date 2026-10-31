@@ -738,6 +738,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!battle.outcome && battle.enemyIndex !== enemyBefore) warnRage(ctx, currentEnemy(battle), events);
   battle.turn += 1;
   if (raidTimeout && !battle.outcome) battle.outcome = 'lose';
+  // A narrative fight that drags on ends as the story loss (the rival cannot be beaten, so it must end).
+  if (battle.narrative && !battle.outcome && battle.turn > battle.narrative.maxTurns) battle.outcome = 'lose';
   applyHype(ctx, events);
   return events;
 }
@@ -4921,6 +4923,12 @@ function settleFaints(ctx: BattleContext, events: BattleEvent[]): void {
     if (next < 0) {
       // Both sides out at once: the user of Explosion loses, the user of a recoil move wins; otherwise the player wins.
       const playerOut = !ctx.party.some((p) => p.hp > 0);
+      // A narrative rival fight (M12) cannot be won: the rival's last Pokémon holds on until the story loss plays.
+      if (battle.narrative && !playerOut) {
+        enemy.hp = 1;
+        events.push({ type: 'raid', tone: 'info', text: `${getSpecies(ctx.content, enemy.speciesId).name} refuses to go down!` });
+        return;
+      }
       battle.outcome = playerOut && ctx.doubleKoLoser === 'player' ? 'lose' : 'win';
       return;
     }

@@ -24,6 +24,7 @@ import {
   RegionSchema,
   RewardSchema,
   RulesetSchema,
+  TrainerTiersSchema,
   ShopEntrySchema,
   SpeciesSchema,
   ThemesFileSchema,
@@ -57,6 +58,7 @@ import regionsJson from './regions.json';
 import movesJson from './moves.json';
 import rewardsJson from './rewards.json';
 import rulesetJson from './ruleset.json';
+import trainerTiersJson from './trainerTiers.json';
 import shopJson from './shop.json';
 import speciesJson from './species.json';
 import customSpeciesJson from './customSpecies.json';
@@ -108,6 +110,7 @@ export interface RawContent {
   themes: unknown;
   shop: unknown;
   ruleset: unknown;
+  trainerTiers: unknown;
   balance: unknown;
   story: unknown;
   raids: unknown;
@@ -159,6 +162,7 @@ export const RAW_CONTENT: RawContent = {
   themes: themesJson,
   shop: shopJson,
   ruleset: rulesetJson,
+  trainerTiers: trainerTiersJson,
   balance: balanceJson,
   story: storyJson,
   raids: raidsJson,
@@ -226,6 +230,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const themes = parse(ThemesFileSchema, raw.themes, 'themes.json', problems);
   const shop = parse(z.array(ShopEntrySchema), raw.shop, 'shop.json', problems);
   const ruleset = parse(RulesetSchema, raw.ruleset, 'ruleset.json', problems);
+  const trainerTiers = parse(TrainerTiersSchema, raw.trainerTiers, 'trainerTiers.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
@@ -235,7 +240,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !balance) {
+  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
     throw new ContentError(problems);
   }
 
@@ -266,6 +271,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     arenas: themes.arenas,
     shop,
     ruleset,
+    trainerTiers,
     balance,
     story,
     raids,
@@ -436,6 +442,20 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   if (!content.campaigns.has('full')) problems.push('balance.json has no "full" campaign');
   for (const r of content.regions.values()) {
     for (const id of [...r.gymLeaders, ...r.eliteFour, ...r.champions]) if (!content.bosses.has(id)) problems.push(`region "${r.id}" lists unknown boss "${id}"`);
+  }
+  {
+    const ids = new Set(trainerTiers.tiers.map((t) => t.id));
+    if (!ids.has(trainerTiers.maxOrdinaryTier)) problems.push(`trainerTiers.json maxOrdinaryTier "${trainerTiers.maxOrdinaryTier}" is not a tier`);
+    if (trainerTiers.tiers.some((t, i) => i > 0 && t.minScore < trainerTiers.tiers[i - 1]!.minScore)) problems.push('trainerTiers.json tiers must be in rising minScore order');
+    for (const [cid, c] of Object.entries({ default: trainerTiers.default, ...trainerTiers.classes })) {
+      if (cid !== 'default' && !content.trainers.has(cid)) problems.push(`trainerTiers.json class "${cid}" is not a trainer class`);
+      for (const [tid, list] of Object.entries(c.ladder)) {
+        if (!ids.has(tid)) problems.push(`trainerTiers.json ${cid} ladder tier "${tid}" is not a tier`);
+        for (const sp of list) if (!content.species.has(sp)) problems.push(`trainerTiers.json ${cid} ladder species "${sp}" is unknown`);
+      }
+      for (const m of [...c.leadMoves, ...c.aceMoves]) if (!content.moves.has(m)) problems.push(`trainerTiers.json ${cid} move "${m}" is unknown`);
+      for (const it of c.held) if (!content.catalog.has(it)) problems.push(`trainerTiers.json ${cid} held item "${it}" is not in the catalog`);
+    }
   }
   if (!content.moves.has(ruleset.struggleMoveId)) problems.push(`ruleset struggleMoveId "${ruleset.struggleMoveId}" is not a move`);
   for (const id of balance.wildPool) {

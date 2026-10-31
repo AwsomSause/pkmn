@@ -25,14 +25,14 @@ export interface FxTools {
 const col = (hex: string) => Phaser.Display.Color.HexStringToColor(hex).color;
 
 /** A ring that grows (or shrinks inward) and fades. */
-function ring(t: FxTools, x: number, y: number, from: number, to: number, ms: number, delay = 0): void {
+export function ring(t: FxTools, x: number, y: number, from: number, to: number, ms: number, delay = 0): void {
   const g = t.scene.add.circle(x, y, from).setStrokeStyle(4, col(t.plan.color), 0.9).setFillStyle(col(t.plan.color), 0.12).setAlpha(0);
   t.field.add(g);
   t.scene.tweens.add({ targets: g, alpha: { from: 0.9, to: 0 }, radius: to, delay, duration: ms, ease: 'Sine.easeOut', onStart: () => g.setAlpha(0.9), onComplete: () => g.destroy() });
 }
 
 /** Little glyph sparks. `mode` sets where they travel: out from the middle, up, or in from the edge. */
-function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
+export function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
   if (!t.plan.particles) return;
   const { x, y } = t.at;
   for (let i = 0; i < count; i++) {
@@ -46,7 +46,7 @@ function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
   }
 }
 
-function flash(t: FxTools, alpha: number): void {
+export function flash(t: FxTools, alpha: number): void {
   if (t.plan.flash <= 0) return;
   const w = t.scene.scale.width;
   const h = t.scene.scale.height;
