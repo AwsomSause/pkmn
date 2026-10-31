@@ -9,6 +9,7 @@
 import { moveFamily, type FamilyId } from './families';
 import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
+import { abilityAnimId } from './abilityAnims';
 import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
 export type AnimationMode = 'full' | 'reduced' | 'off';
@@ -38,7 +39,11 @@ export type Cue =
   | { kind: 'badge'; side: Side; badge: EffectivenessBadge | 'crit' }
   /** Status and healing animations (common-burn, common-health-up …). */
   | { kind: 'commonAnim'; side: Side; anim: string; alt?: string }
-  | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean };
+  | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean }
+  /** An ability triggering: banner with its name plus the category's flourish (registry id `ability.*`). */
+  | { kind: 'abilityAnim'; side: Side; anim: string; label: string }
+  /** The badge's animated words (registry id `text.*`); `miss` has no badge text of its own. */
+  | { kind: 'textAnim'; side: Side; anim: string; label: string };
 
 const other = (side: Side): Side => (side === 'player' ? 'enemy' : 'player');
 
@@ -60,7 +65,7 @@ const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected', 'av
  */
 export function planCues(
   events: readonly { type: string }[],
-  content: Pick<Content, 'moves'>,
+  content: Pick<Content, 'moves'> & Partial<Pick<Content, 'abilities'>>,
   anims: MoveAnims,
   settings: PresentationSettings,
 ): Cue[][] {
@@ -123,6 +128,12 @@ export function planCues(
       }
       case 'noEffect':
         cues.push({ kind: 'badge', side: e.side, badge: 'immune' });
+        break;
+      case 'miss':
+        if (animated) cues.push({ kind: 'textAnim', side: e.side, anim: 'text.miss', label: 'MISS' });
+        break;
+      case 'ability':
+        if (animated) cues.push({ kind: 'abilityAnim', side: e.side, anim: abilityAnimId(e.ability), label: content.abilities?.get(e.ability)?.name ?? e.ability });
         break;
       case 'residual':
       case 'recoil':

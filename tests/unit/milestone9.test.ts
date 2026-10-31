@@ -139,10 +139,10 @@ describe('presentation cues', () => {
     expect(cues.flat().filter((c) => c.kind === 'number')).toHaveLength(3);
   });
 
-  it('skips the animation of a move that misses but still shows the marker', () => {
+  it('skips the animation of a move that misses but still shows the marker and the MISS text', () => {
     const events: BattleEvent[] = [{ type: 'move', side: 'enemy', moveId: 'tackle' }, { type: 'miss', side: 'enemy' }];
     const cues = planCues(events, content, data, FULL);
-    expect(kinds(cues)).toEqual(['telegraph']);
+    expect(kinds(cues)).toEqual(['telegraph', 'textAnim']);
   });
 
   it('two-turn moves play their wind-up on the charging turn, not the attack', () => {
