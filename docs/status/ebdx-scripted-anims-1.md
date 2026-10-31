@@ -22,3 +22,6 @@ Added 22 scripts (26 moves): psychic (confusion, extrasensory, psychic-noise), l
 
 ## Slice 5 (draft-generated)
 25 more scripts via the generator (25 moves): counter, dragon-breath, flamethrower, outrage, play-rough, dragon-pulse, aerial-ace, charge, earth-power, razor-leaf, spark, bubble, roost, thunder-wave, uproar, bug-bite, hex, rock-throw, sweet-scent, baby-doll-eyes, bubble-beam, iron-head, stomp, gust, moonblast. Total 108 moves (80 scripts).
+
+## Slice 6 (draft-generated, 75 scripts)
+75 more generator drafts (75 moves; the list is in `ebdxAnims.json`), taking the total to 183 moves (155 scripts). Fixes found in headless screenshots: full-field backdrops (`fill`) now sit behind the Pokémon and cap at 35% opacity (they washed out the whole battle), and wide short beam pictures are no longer mistaken for backdrops (only 512x384 art counts). The browser test plays an even sample (about 40 scripts) plus fixed screenshot picks; the unit test checks every script. Screenshot tip: `EBDX_ONLY=ember,bite EBDX_SHOT_MS=250 npx playwright test tests/e2e/ebdxAnims.spec.ts` writes `test-results/ebdx-<name>.png` (capture latency means effects may already be fading).
